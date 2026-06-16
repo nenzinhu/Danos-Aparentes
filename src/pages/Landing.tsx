@@ -142,6 +142,33 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* Preço */}
+      <section style={sectionStyle}>
+        <h2 style={{ textAlign: 'center', fontSize: '1.6rem', fontWeight: 800, marginBottom: 40 }}>
+          Um plano <span style={{ color: '#00aaff' }}>simples</span>, sem pegadinha
+        </h2>
+        <div style={{
+          maxWidth: 360, margin: '0 auto', background: 'var(--card-bg)', border: '1px solid var(--card-border)',
+          borderRadius: 20, padding: '32px 28px', textAlign: 'center', backdropFilter: 'blur(14px)',
+        }}>
+          <div style={{ color: 'var(--text-muted)', fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 8 }}>
+            Plano único
+          </div>
+          <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#fff', marginBottom: 2 }}>
+            R$ 49,90<span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: 600 }}>/mês</span>
+          </div>
+          <div style={{ color: '#00d4ff', fontSize: '0.8rem', fontWeight: 700, marginBottom: 22 }}>7 dias grátis pra testar</div>
+          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 24px', textAlign: 'left', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {['Vistorias ilimitadas', 'Laudo em PDF com QR Code', 'Sincronização em nuvem', '7 dias grátis pra testar'].map(item => (
+              <li key={item} style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--text-muted)', fontSize: '0.86rem' }}>
+                <span style={{ color: '#00aaff', fontWeight: 800 }}>✓</span> {item}
+              </li>
+            ))}
+          </ul>
+          <a href="/app.html" style={{ ...ctaButton, width: '100%' }}>Criar conta grátis</a>
+        </div>
+      </section>
+
       {/* CTA final */}
       <section style={{ ...sectionStyle, textAlign: 'center', paddingBottom: 100 }}>
         <h2 style={{ fontSize: '1.7rem', fontWeight: 800, marginBottom: 14 }}>
