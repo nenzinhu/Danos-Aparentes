@@ -1,10 +1,12 @@
+import type { SubscriptionStatus } from '../hooks/useSubscription'
+
 interface Props {
   darkMode: boolean
   onToggleDark: () => void
   onOpenSaved: () => void
   onSignOut?: () => void
   syncStatus?: 'synced' | 'pending' | 'offline'
-  subscription?: { status: 'trialing' | 'active' | 'past_due' | 'canceled'; trialDaysLeft: number }
+  subscription?: { status: SubscriptionStatus; trialDaysLeft: number }
   onManageSubscription?: () => void
 }
 
