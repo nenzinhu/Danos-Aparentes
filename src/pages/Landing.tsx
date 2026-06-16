@@ -1,4 +1,5 @@
 import Logo from '../components/Logo'
+import IntroAnimation from '../components/IntroAnimation'
 import VehicleDefs from '../components/vehicles/VehicleDefs'
 import CarLateralLeft from '../components/vehicles/CarLateralLeft'
 
@@ -56,6 +57,7 @@ const ctaSecondary: React.CSSProperties = {
 export default function Landing() {
   return (
     <div style={{ minHeight: '100vh', color: 'var(--text-main)', fontFamily: 'Outfit,sans-serif', overflowX: 'hidden' }}>
+      <IntroAnimation />
       <VehicleDefs />
 
       {/* Hero — full-bleed com veículo 3D de fundo */}
