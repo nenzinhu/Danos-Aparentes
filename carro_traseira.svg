@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 350">
+  <g fill="none" stroke="#334155" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Silhueta Traseira -->
+    <path d="M100 280 C60 280 50 260 50 240 L50 160 C50 120 80 80 200 80 C320 80 350 120 350 160 L350 240 C350 260 340 280 300 280 Z" />
+    
+    <!-- Vidro Traseiro -->
+    <path d="M85 150 C85 115 120 105 200 105 C280 105 315 115 315 150 L305 175 L95 175 Z" fill="#F1F5F9" opacity="0.5" />
+    
+    <!-- Porta-malas -->
+    <path d="M50 210 C100 205 300 205 350 210" />
+    <path d="M140 230 L260 230 C270 230 270 260 260 260 L140 260 C130 260 130 230 140 230" /> <!-- Placa -->
+    
+    <!-- Lanternas -->
+    <rect x="60" y="215" width="70" height="25" rx="5" fill="#EF4444" opacity="0.8" />
+    <rect x="270" y="215" width="70" height="25" rx="5" fill="#EF4444" opacity="0.8" />
+    
+    <!-- Rodas (Vistas de trás) -->
+    <rect x="65" y="275" width="40" height="15" rx="3" fill="#334155" />
+    <rect x="295" y="275" width="40" height="15" rx="3" fill="#334155" />
+    
+    <!-- Detalhe Para-choque -->
+    <path d="M100 260 L300 260" stroke-width="1.5" opacity="0.5" />
+  </g>
+</svg>

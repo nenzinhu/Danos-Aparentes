@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300">
+  <!-- Estilo Moderno: Linhas limpas, espessura constante, cantos arredondados -->
+  <g fill="none" stroke="#334155" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Silhueta Principal -->
+    <path d="M120 220 L70 220 C60 220 50 210 50 200 L55 170 C57 155 70 145 85 145 L110 145" /> <!-- Parachoque frontal -->
+    <path d="M110 145 C130 145 150 100 220 85 C280 72 450 72 520 85 C580 95 620 145 660 145" /> <!-- Teto e Capô -->
+    <path d="M660 145 L720 145 C735 145 745 155 747 170 L752 200 C752 210 742 220 732 220 L680 220" /> <!-- Traseira -->
+    
+    <!-- Linhas das Portas -->
+    <path d="M230 85 L230 220" /> <!-- Divisão Frontal/Porta -->
+    <path d="M400 78 L400 220" /> <!-- Divisão Portas -->
+    <path d="M550 90 L550 220" /> <!-- Divisão Porta/Traseira -->
+    
+    <!-- Rodas (Placeholder Moderno) -->
+    <circle cx="180" cy="220" r="45" fill="white" />
+    <circle cx="180" cy="220" r="35" stroke-dasharray="4 2" />
+    <circle cx="620" cy="220" r="45" fill="white" />
+    <circle cx="620" cy="220" r="35" stroke-dasharray="4 2" />
+    
+    <!-- Janelas -->
+    <path d="M245 95 L385 95 L385 145 L245 145 Z" fill="#F1F5F9" opacity="0.5" />
+    <path d="M415 95 L530 95 L520 145 L415 145 Z" fill="#F1F5F9" opacity="0.5" />
+    
+    <!-- Detalhes -->
+    <path d="M70 180 L110 180" stroke-width="1.5" opacity="0.6" /> <!-- Linha Farol -->
+    <path d="M710 180 L745 180" stroke-width="1.5" opacity="0.6" /> <!-- Linha Lanterna -->
+  </g>
+</svg>
