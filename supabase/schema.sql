@@ -112,3 +112,38 @@ create policy "insert_own_photos" on storage.objects
 drop policy if exists "delete_own_photos" on storage.objects;
 create policy "delete_own_photos" on storage.objects
   for delete using (bucket_id = 'damage-photos' and auth.uid()::text = (storage.foldername(name))[1]);
+
+-- ─── Assinaturas (trial de 7 dias + Stripe) ───────────────────────────────────
+create table if not exists subscriptions (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  status text not null default 'trialing', -- 'trialing' | 'active' | 'past_due' | 'canceled'
+  trial_ends_at timestamptz not null,
+  stripe_customer_id text,
+  stripe_subscription_id text,
+  current_period_end timestamptz,
+  updated_at timestamptz not null default now(),
+  created_at timestamptz not null default now()
+);
+
+alter table subscriptions enable row level security;
+
+drop policy if exists "select_own_subscription" on subscriptions;
+create policy "select_own_subscription" on subscriptions
+  for select using (auth.uid() = user_id);
+
+-- Cria o trial de 7 dias automaticamente quando uma conta é criada.
+-- Roda no banco (security definer) — não depende do client, não pode ser burlado.
+create or replace function public.handle_new_user_trial()
+returns trigger as $$
+begin
+  insert into public.subscriptions (user_id, status, trial_ends_at)
+  values (new.id, 'trialing', now() + interval '7 days')
+  on conflict (user_id) do nothing;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists on_auth_user_created_trial on auth.users;
+create trigger on_auth_user_created_trial
+  after insert on auth.users
+  for each row execute function public.handle_new_user_trial();
