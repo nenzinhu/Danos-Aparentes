@@ -167,3 +167,9 @@ select option {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.7); }
 }
+
+@keyframes intro-glow-reveal {
+  0% { opacity: 0; filter: drop-shadow(0 0 0px #00aaff); transform: scale(0.9); }
+  40% { opacity: 1; filter: drop-shadow(0 0 40px #00aaff); }
+  100% { opacity: 1; filter: drop-shadow(0 0 12px rgba(0,170,255,0.4)); transform: scale(1); }
+}
