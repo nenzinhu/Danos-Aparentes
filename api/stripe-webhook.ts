@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import type Stripe from 'stripe'
-import { stripe } from './_lib/stripeClient'
-import { supabaseAdmin } from './_lib/supabaseAdmin'
+import { stripe } from './_lib/stripeClient.js'
+import { supabaseAdmin } from './_lib/supabaseAdmin.js'
 
 // Desliga o parser automático de JSON: precisamos do corpo "crú" (raw) da
 // requisição pra validar a assinatura criptográfica do Stripe.
