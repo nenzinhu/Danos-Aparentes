@@ -21,15 +21,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const { data: sub } = await supabaseAdmin
-    .from('subscriptions')
-    .select('stripe_customer_id')
-    .eq('user_id', user.id)
-    .maybeSingle()
-
   const origin = (req.headers.origin as string) || `https://${req.headers.host}`
 
   try {
+    const { data: sub } = await supabaseAdmin
+      .from('subscriptions')
+      .select('stripe_customer_id')
+      .eq('user_id', user.id)
+      .maybeSingle()
+
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
@@ -42,6 +42,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     res.status(200).json({ url: session.url })
   } catch (err) {
-    res.status(500).json({ error: `Erro ao criar sessão de checkout: ${(err as Error).message}` })
+    console.error('Erro ao criar sessão de checkout:', err)
+    res.status(500).json({ error: 'Erro ao criar sessão de checkout. Tente novamente em alguns instantes.' })
   }
 }
