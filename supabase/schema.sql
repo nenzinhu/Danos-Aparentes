@@ -116,7 +116,8 @@ create policy "delete_own_photos" on storage.objects
 -- ─── Assinaturas (trial de 7 dias + Stripe) ───────────────────────────────────
 create table if not exists subscriptions (
   user_id uuid primary key references auth.users(id) on delete cascade,
-  status text not null default 'trialing', -- 'trialing' | 'active' | 'past_due' | 'canceled'
+  status text not null default 'trialing' -- 'trialing' | 'active' | 'past_due' | 'canceled'
+    check (status in ('trialing', 'active', 'past_due', 'canceled')),
   trial_ends_at timestamptz not null,
   stripe_customer_id text,
   stripe_subscription_id text,
@@ -125,11 +126,18 @@ create table if not exists subscriptions (
   created_at timestamptz not null default now()
 );
 
+create index if not exists idx_subscriptions_stripe_subscription_id
+  on subscriptions(stripe_subscription_id);
+
 alter table subscriptions enable row level security;
 
 drop policy if exists "select_own_subscription" on subscriptions;
 create policy "select_own_subscription" on subscriptions
   for select using (auth.uid() = user_id);
+
+-- Não há policies de insert/update/delete por escolha: a escrita nesta tabela
+-- é feita apenas pelo backend via service role (trigger de trial e webhook do
+-- Stripe), que ignora RLS. Usuários autenticados só podem ler seus próprios dados.
 
 -- Cria o trial de 7 dias automaticamente quando uma conta é criada.
 -- Roda no banco (security definer) — não depende do client, não pode ser burlado.
@@ -141,7 +149,7 @@ begin
   on conflict (user_id) do nothing;
   return new;
 end;
-$$ language plpgsql security definer;
+$$ language plpgsql security definer set search_path = public, pg_temp;
 
 drop trigger if exists on_auth_user_created_trial on auth.users;
 create trigger on_auth_user_created_trial
