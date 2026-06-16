@@ -4,6 +4,8 @@ interface Props {
   onOpenSaved: () => void
   onSignOut?: () => void
   syncStatus?: 'synced' | 'pending' | 'offline'
+  subscription?: { status: 'trialing' | 'active' | 'past_due' | 'canceled'; trialDaysLeft: number }
+  onManageSubscription?: () => void
 }
 
 const SYNC_LABEL: Record<'synced' | 'pending' | 'offline', { icon: string; text: string; color: string }> = {
@@ -12,7 +14,7 @@ const SYNC_LABEL: Record<'synced' | 'pending' | 'offline', { icon: string; text:
   offline: { icon: '📡', text: 'Offline', color: '#ef4444' },
 }
 
-export default function Header({ darkMode, onToggleDark, onOpenSaved, onSignOut, syncStatus }: Props) {
+export default function Header({ darkMode, onToggleDark, onOpenSaved, onSignOut, syncStatus, subscription, onManageSubscription }: Props) {
   return (
     <header style={{ textAlign: 'center', width: '100%', maxWidth: 1250, padding: '40px 20px 28px', position: 'relative' }}>
       <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 600, height: 300, background: 'radial-gradient(ellipse at center top, rgba(0,170,255,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -44,6 +46,16 @@ export default function Header({ darkMode, onToggleDark, onOpenSaved, onSignOut,
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.04)', border: `1px solid ${SYNC_LABEL[syncStatus].color}33`, borderRadius: 8, padding: '6px 14px', fontSize: '0.78rem', fontWeight: 600, color: SYNC_LABEL[syncStatus].color }}>
             {SYNC_LABEL[syncStatus].icon} {SYNC_LABEL[syncStatus].text}
           </div>
+        )}
+        {subscription?.status === 'trialing' && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', borderRadius: 8, padding: '6px 14px', fontSize: '0.78rem', fontWeight: 600, color: '#eab308' }}>
+            🎁 Teste grátis: {subscription.trialDaysLeft} dia{subscription.trialDaysLeft !== 1 ? 's' : ''} restante{subscription.trialDaysLeft !== 1 ? 's' : ''}
+          </div>
+        )}
+        {subscription?.status === 'active' && (
+          <button type="button" onClick={onManageSubscription} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 8, padding: '6px 14px', fontSize: '0.78rem', fontWeight: 700, color: '#22c55e', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>
+            ✓ Assinatura ativa — Gerenciar
+          </button>
         )}
       </div>
 
