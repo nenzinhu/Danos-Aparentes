@@ -43,6 +43,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         app: resolve(__dirname, 'app.html'),
         verify: resolve(__dirname, 'verify.html'),
+        demo: resolve(__dirname, 'demo.html'),
       },
     },
   },
