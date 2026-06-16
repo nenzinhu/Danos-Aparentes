@@ -60,8 +60,8 @@ if (!projectUrl) {
 
   const okTemplate = await patchConfig(
     {
-      mailer_subjects_confirmation: 'Confirme seu cadastro - Vistoria+',
-      mailer_templates_confirmation_content: `<h2>Vistoria+</h2>
+      mailer_subjects_confirmation: 'Confirme seu cadastro - Danos Aparentes',
+      mailer_templates_confirmation_content: `<h2>Danos Aparentes</h2>
 <p>Ola! Confirme seu cadastro para acessar suas vistorias de qualquer dispositivo.</p>
 <p><a href="{{ .ConfirmationURL }}">Confirmar meu e-mail</a></p>
 <p>Se voce nao criou essa conta, ignore este e-mail.</p>`,

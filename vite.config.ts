@@ -15,8 +15,8 @@ export default defineConfig({
         navigateFallback: '/app.html',
       },
       manifest: {
-        name: 'Vistoria de Avarias Aparentes',
-        short_name: 'Vistoria',
+        name: 'Danos Aparentes',
+        short_name: 'Danos Aparentes',
         description: 'Mapeamento interativo de avarias veiculares com suporte offline e relatórios profissionais.',
         lang: 'pt-BR',
         start_url: '/app.html',
