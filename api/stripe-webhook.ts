@@ -9,10 +9,24 @@ export const config = {
   api: { bodyParser: false },
 }
 
+// Payloads de webhook do Stripe são tipicamente pequenos (poucos KB). 1MB é
+// uma margem generosa que ainda protege contra payloads gigantes de origem
+// não confiável consumindo memória antes da validação de assinatura.
+const MAX_BODY_BYTES = 1024 * 1024
+
 function readRawBody(req: VercelRequest): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = []
-    req.on('data', (chunk) => chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)))
+    let totalBytes = 0
+    req.on('data', (chunk) => {
+      const buf = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)
+      totalBytes += buf.length
+      if (totalBytes > MAX_BODY_BYTES) {
+        reject(new Error('Corpo da requisição excede o tamanho máximo permitido'))
+        return
+      }
+      chunks.push(buf)
+    })
     req.on('end', () => resolve(Buffer.concat(chunks)))
     req.on('error', reject)
   })
@@ -62,12 +76,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const session = event.data.object as Stripe.Checkout.Session
       const userId = session.client_reference_id
       if (userId && session.customer && session.subscription) {
-        await supabaseAdmin.from('subscriptions').update({
+        const { data, error } = await supabaseAdmin.from('subscriptions').update({
           status: 'active',
           stripe_customer_id: session.customer as string,
           stripe_subscription_id: session.subscription as string,
           updated_at: new Date().toISOString(),
-        }).eq('user_id', userId)
+        }).eq('user_id', userId).select('user_id')
+
+        if (error) {
+          console.error(`[stripe-webhook] Falha ao ativar assinatura do usuário ${userId}:`, error)
+        } else if (!data || data.length === 0) {
+          console.error(`[stripe-webhook] checkout.session.completed: nenhuma linha em subscriptions para user_id=${userId} — assinante fantasma (pago no Stripe, sem acesso liberado).`)
+        }
       }
     }
 
@@ -78,11 +98,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         : mapStripeStatus(subscription.status)
       const periodEndUnix = getCurrentPeriodEnd(subscription)
 
-      await supabaseAdmin.from('subscriptions').update({
+      const { data, error } = await supabaseAdmin.from('subscriptions').update({
         status,
         current_period_end: periodEndUnix ? new Date(periodEndUnix * 1000).toISOString() : null,
         updated_at: new Date().toISOString(),
-      }).eq('stripe_subscription_id', subscription.id)
+      }).eq('stripe_subscription_id', subscription.id).select('user_id')
+
+      if (error) {
+        console.error(`[stripe-webhook] Falha ao atualizar assinatura stripe_subscription_id=${subscription.id}:`, error)
+      } else if (!data || data.length === 0) {
+        console.error(`[stripe-webhook] ${event.type}: nenhuma linha em subscriptions para stripe_subscription_id=${subscription.id} — atualização perdida.`)
+      }
     }
 
     res.status(200).json({ received: true })
