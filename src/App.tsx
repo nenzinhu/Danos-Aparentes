@@ -4,9 +4,11 @@ import { useDamages } from './hooks/useDamages'
 import { useTts } from './hooks/useTts'
 import { useSavedReports } from './hooks/useSavedReports'
 import { useAuth } from './hooks/useAuth'
+import { useSubscription } from './hooks/useSubscription'
 import { useSyncStatus } from './lib/sync'
 import { supabaseEnabled } from './lib/supabase'
 import Header from './components/Header'
+import Paywall from './components/Paywall'
 import VehicleSelector, { VehicleIconSvg } from './components/VehicleSelector'
 import ViewSelector from './components/ViewSelector'
 import VehicleViewer from './components/VehicleViewer'
@@ -87,6 +89,7 @@ export default function App() {
   const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts()
   const { saved, saveReport, deleteReport } = useSavedReports(session?.user.id)
   const { status: syncStatus } = useSyncStatus(session?.user.id)
+  const { info: subscription, loading: subLoading, startCheckout, openPortal } = useSubscription(session?.user.id, session?.access_token)
 
   useEffect(() => {
     if (darkMode) {
@@ -122,6 +125,14 @@ export default function App() {
     await saveReport(vehicleInfo, damages)
     showToast('✅ Vistoria salva!')
   }, [vehicleInfo, damages, saveReport])
+
+  const handleManageSubscription = useCallback(async () => {
+    try {
+      await openPortal()
+    } catch (err) {
+      showToast(err instanceof Error ? `❌ ${err.message}` : '❌ Não foi possível abrir o portal de gerenciamento')
+    }
+  }, [openPortal])
 
   function handleLoad(r: { vehicleInfo: VehicleInfo; damages: Damage[] }) {
     setVehicleInfo(r.vehicleInfo)
@@ -161,6 +172,18 @@ export default function App() {
     return <Login onSignIn={signIn} onSignUp={signUp} onResetPassword={resetPassword} />
   }
 
+  if (supabaseEnabled && session && subLoading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-main)' }}>
+        Carregando...
+      </div>
+    )
+  }
+
+  if (supabaseEnabled && session && subscription && !subscription.hasAccess) {
+    return <Paywall status={subscription.status} onSubscribe={startCheckout} onSignOut={signOut} />
+  }
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -177,6 +200,8 @@ export default function App() {
         onOpenSaved={() => setSavedModal(true)}
         onSignOut={supabaseEnabled ? signOut : undefined}
         syncStatus={supabaseEnabled ? syncStatus : undefined}
+        subscription={supabaseEnabled && subscription ? { status: subscription.status, trialDaysLeft: subscription.trialDaysLeft } : undefined}
+        onManageSubscription={handleManageSubscription}
       />
 
       <main style={{ width: '100%', maxWidth: 1250, padding: '0 15px', display: 'flex', flexDirection: 'column', gap: 20 }}>
