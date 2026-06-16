@@ -7,20 +7,19 @@ const FADE_MS = 350
 type Phase = 'playing' | 'fading' | 'done'
 
 export default function IntroAnimation() {
-  const [phase, setPhase] = useState<Phase>('playing')
+  const [phase, setPhase] = useState<Phase>(() =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'done' : 'playing'
+  )
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReducedMotion) {
-      setPhase('done')
-      return
-    }
+    if (phase !== 'playing') return
     const fadeTimer = setTimeout(() => setPhase('fading'), GLOW_DURATION_MS + HOLD_MS)
     const doneTimer = setTimeout(() => setPhase('done'), GLOW_DURATION_MS + HOLD_MS + FADE_MS)
     return () => {
       clearTimeout(fadeTimer)
       clearTimeout(doneTimer)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (phase === 'done') return null
@@ -32,7 +31,7 @@ export default function IntroAnimation() {
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 9999,
+        zIndex: 999999,
         background: '#02060d',
         display: 'flex',
         alignItems: 'center',
@@ -47,7 +46,7 @@ export default function IntroAnimation() {
         alt=""
         width={220}
         height={220}
-        style={{ animation: 'intro-glow-reveal 1.4s ease-out both' }}
+        style={{ animation: `intro-glow-reveal ${GLOW_DURATION_MS}ms ease-out both` }}
       />
     </div>
   )
