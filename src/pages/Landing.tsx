@@ -63,6 +63,11 @@ export default function Landing() {
       {/* Hero — full-bleed com veículo 3D de fundo */}
       <section style={{ position: 'relative', padding: '28px 20px 90px', overflow: 'hidden' }}>
         <div style={{
+          position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)',
+          width: 'min(1400px, 200vw)', height: 700, opacity: 0.08, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse at center, #00d4ff 0%, transparent 60%)',
+        }} />
+        <div style={{
           position: 'absolute', top: '8%', left: '50%', transform: 'translateX(-50%)',
           width: 'min(900px, 140vw)', opacity: 0.16, pointerEvents: 'none',
         }}>
@@ -105,7 +110,7 @@ export default function Landing() {
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 18 }}>
           {FEATURES.map(f => (
-            <div key={f.title} style={{
+            <div key={f.title} className="feature-card" style={{
               background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 14,
               padding: 22, backdropFilter: 'blur(12px)',
             }}>
@@ -135,6 +140,7 @@ export default function Landing() {
                 width: 44, height: 44, borderRadius: '50%', background: 'rgba(0,170,255,0.12)',
                 border: '1px solid rgba(0,170,255,0.3)', color: '#00aaff', fontWeight: 800,
                 display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px', fontSize: '1.1rem',
+                boxShadow: '0 0 16px rgba(0,170,255,0.25)',
               }}>{i + 1}</div>
               <div style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>{s}</div>
             </div>

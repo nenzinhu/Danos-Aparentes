@@ -163,6 +163,15 @@ select option {
   .main-grid { grid-template-columns: 1fr !important; }
 }
 
+.feature-card {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+.feature-card:hover {
+  border-color: rgba(0,170,255,0.4);
+  box-shadow: 0 0 24px rgba(0,170,255,0.15);
+  transform: translateY(-2px);
+}
+
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.7); }
