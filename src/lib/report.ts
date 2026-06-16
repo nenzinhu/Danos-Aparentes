@@ -28,7 +28,7 @@ export function formatReport(info: VehicleInfo, damages: Damage[]): string {
       txt += '\n'
     })
   }
-  txt += `━━━━━━━━━━━━━━━━━━━━━━━━━\nGerado por AvariasAPARENTES PWA`
+  txt += `━━━━━━━━━━━━━━━━━━━━━━━━━\nGerado por Danos Aparentes`
   return txt
 }
 

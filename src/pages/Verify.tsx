@@ -43,7 +43,7 @@ export default function Verify() {
 
   const ICONS: Record<Status, { icon: string; color: string; title: string; desc: string }> = {
     loading:   { icon: '⏳', color: '#eab308', title: 'Verificando...', desc: 'Consultando o registro digital deste documento.' },
-    valid:     { icon: '✅', color: '#22c55e', title: 'Documento Autêntico', desc: 'Este hash corresponde a um relatório emitido pelo sistema AvariasAPARENTES PWA.' },
+    valid:     { icon: '✅', color: '#22c55e', title: 'Documento Autêntico', desc: 'Este hash corresponde a um relatório emitido pelo sistema Danos Aparentes.' },
     not_found: { icon: '❌', color: '#ef4444', title: 'Hash Não Encontrado', desc: 'Este código não corresponde a nenhum documento emitido — o PDF pode ter sido alterado ou não foi gerado por este sistema.' },
     no_hash:   { icon: '⚠️', color: '#f97316', title: 'Código Inválido', desc: 'Nenhum código de verificação foi informado na URL.' },
     offline:   { icon: '⚠️', color: '#f97316', title: 'Verificação Indisponível', desc: 'A verificação online não está configurada neste ambiente. Compare manualmente o HASH impresso no PDF.' },
@@ -59,7 +59,7 @@ export default function Verify() {
     }}>
       <div style={cardStyle}>
         <div style={{ fontSize: '0.68rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 18 }}>
-          AvariasAPARENTES PWA • Verificação de Documento
+          Danos Aparentes • Verificação de Documento
         </div>
 
         <div style={{ fontSize: '3.2rem', lineHeight: 1, marginBottom: 14 }}>{view.icon}</div>
