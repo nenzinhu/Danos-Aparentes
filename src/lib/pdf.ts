@@ -360,9 +360,9 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td style="vertical-align:top;">
-          <p style="font-size:8px;font-weight:700;color:rgba(255,255,255,0.42);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:5px;">AvariasAPARENTES PWA • Sistema de Vistoria Veicular</p>
+          <p style="font-size:8px;font-weight:700;color:rgba(255,255,255,0.42);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:5px;">Danos Aparentes • Sistema de Vistoria Veicular</p>
           <p style="font-size:22px;font-weight:900;color:#ffffff;letter-spacing:-0.5px;line-height:1.1;margin-bottom:5px;">RELATÓRIO DE VISTORIA VEICULAR</p>
-          <p style="font-size:10px;color:rgba(255,255,255,0.62);margin-bottom:12px;">Documento Técnico de Mapeamento de Avarias Aparentes</p>
+          <p style="font-size:10px;color:rgba(255,255,255,0.62);margin-bottom:12px;">Documento Técnico de Mapeamento de Danos Aparentes</p>
           ${buildStatusBadge(damages)}
         </td>
         <td style="vertical-align:top;text-align:right;padding-left:16px;white-space:nowrap;">
@@ -430,7 +430,7 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
           </div>`}
         </td>
         <td style="text-align:right;vertical-align:middle;">
-          <p style="font-size:8px;color:#94a3b8;margin-bottom:2px;">AvariasAPARENTES PWA • Sistema de Vistoria Veicular</p>
+          <p style="font-size:8px;color:#94a3b8;margin-bottom:2px;">Danos Aparentes • Sistema de Vistoria Veicular</p>
           <p style="font-size:8px;color:#64748b;font-weight:700;">Placa: ${plate} • OS: ${osRef} • ${damages.length} avaria${damages.length !== 1 ? 's' : ''}</p>
           <p style="font-size:8px;color:#94a3b8;margin-top:2px;">${date}</p>
         </td>

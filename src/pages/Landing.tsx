@@ -152,7 +152,7 @@ export default function Landing() {
       </section>
 
       <footer style={{ textAlign: 'center', padding: '24px 20px', color: 'var(--text-muted)', fontSize: '0.78rem', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-        © {new Date().getFullYear()} Vistoria+ — Vistoria de Danos Aparentes
+        © {new Date().getFullYear()} Danos Aparentes — App de Inspeção e Registro
       </footer>
     </div>
   )

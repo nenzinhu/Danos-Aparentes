@@ -27,7 +27,7 @@ export default function Header({ darkMode, onToggleDark, onOpenSaved, onSignOut,
       </div>
 
       <h1 style={{ fontSize: 'clamp(2rem,5vw,3.5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: -1.5, background: 'linear-gradient(135deg,#fff 0%,#a8d8ff 40%,#00aaff 70%,#00d4ff 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: 12 }}>
-        Avarias Aparentes
+        Danos Aparentes
       </h1>
       <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 500, margin: '0 auto 20px' }}>
         Inspeção veicular interativa — registre danos com precisão

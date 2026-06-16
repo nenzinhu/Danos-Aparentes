@@ -23,8 +23,8 @@ export default function Paywall({ status, onSubscribe, onSignOut }: Props) {
     : 'Seu teste grátis de 7 dias acabou'
 
   const description = status === 'past_due'
-    ? 'Não conseguimos confirmar o pagamento da sua assinatura. Atualize seu cartão para continuar usando o Vistoria+.'
-    : 'Assine o Vistoria+ para continuar registrando vistorias, gerando laudos em PDF e usando a sincronização em nuvem.'
+    ? 'Não conseguimos confirmar o pagamento da sua assinatura. Atualize seu cartão para continuar usando o Danos Aparentes.'
+    : 'Assine o Danos Aparentes para continuar registrando vistorias, gerando laudos em PDF e usando a sincronização em nuvem.'
 
   async function handleClick() {
     if (loading) return
