@@ -22,6 +22,7 @@ import SavedReportsModal from '@/src/components/SavedReportsModal'
 import DashboardView from '@/src/components/DashboardView'
 import Login from '@/src/views/Login'
 import CompanySettingsModal from '@/src/components/CompanySettingsModal'
+import CompanyLogoButton from '@/src/components/CompanyLogoButton'
 import TermsModal from '@/src/components/TermsModal'
 
 function ClearAllIcon({ size = 14 }: { size?: number }) {
@@ -240,6 +241,7 @@ export default function AppMainPage() {
           >
             📊 Estatísticas
           </button>
+          <CompanyLogoButton onClick={() => setSettingsModal(true)} />
         </div>
       </div>
 
