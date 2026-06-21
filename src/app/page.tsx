@@ -3,7 +3,6 @@ import { ViewTransition } from 'react'
 import { DirectionalTransition } from './DirectionalTransition'
 import Link from 'next/link'
 import IntroVideo from '../components/IntroVideo'
-import CarLateralLeft from '../components/vehicles/CarLateralLeft'
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
@@ -12,6 +11,7 @@ const PricingSection = dynamic(() => import('../components/PricingSection'), { s
 const FAQSection = dynamic(() => import('../components/FAQSection'), { ssr: false });
 const VehicleShowcaseSection = dynamic(() => import('../components/VehicleShowcaseSection'), { ssr: false });
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'), { ssr: false });
+const CarLateralLeft = dynamic(() => import('../components/vehicles/CarLateralLeft'), { ssr: false });
 
 function TextCarousel() {
   const slides = [
@@ -154,14 +154,14 @@ export default function LandingPage() {
       <div aria-hidden="true" className="fixed inset-0 bg-[linear-gradient(var(--grid-color)_1px,transparent_1px),linear-gradient(90deg,var(--grid-color)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none z-0" />
 
       {/* Header */}
-      <header className="w-full px-8 py-6 flex justify-between items-center z-50 shrink-0">
-        <div className="flex items-center gap-3">
-          <Image src="/logo.svg" alt="Logo" width={48} height={48} className="object-contain" priority />
-          <span className="text-base sm:text-lg font-extrabold tracking-tight uppercase bg-clip-text text-transparent whitespace-nowrap" style={{ backgroundImage: 'var(--header-title-gradient)' }}>
+      <header className="w-full px-4 sm:px-8 py-6 flex justify-between items-center gap-3 z-50 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <Image src="/logo.svg" alt="Logo" width={48} height={48} className="object-contain shrink-0" priority />
+          <span className="hidden sm:inline text-base sm:text-lg font-extrabold tracking-tight uppercase bg-clip-text text-transparent whitespace-nowrap" style={{ backgroundImage: 'var(--header-title-gradient)' }}>
             Danos Aparentes
           </span>
         </div>
-        <nav className="flex items-center gap-4 sm:gap-6 flex-wrap">
+        <nav className="flex items-center gap-3 sm:gap-6 shrink-0">
           <a href="#pricing" onClick={scrollToPricing} className="hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             Planos
           </a>
