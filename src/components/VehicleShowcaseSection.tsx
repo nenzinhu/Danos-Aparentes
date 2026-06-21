@@ -189,7 +189,7 @@ export default function VehicleShowcaseSection() {
 
         {/* Coluna Direita: Renderizador interativo de SVG */}
         <div className="lg:col-span-7 flex flex-col justify-center items-center relative group min-h-[350px]">
-          <div className="absolute inset-0 bg-primary/5 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,170,255,0.06) 0%, transparent 70%)' }} />
           <div className="w-full max-w-[480px] filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] bg-[var(--card-bg)] border border-[var(--card-border)] p-8 rounded-3xl relative backdrop-blur-md">
 
             {/* Etiqueta indicando vista */}

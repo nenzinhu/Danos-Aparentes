@@ -463,4 +463,10 @@ html.light .glass-card .text-orange-400 {
   .landing-container .shadow-ground {
     filter: none;
   }
+
+  /* backdrop-filter é caríssimo no WebKit (iOS) — desligar no mobile */
+  .backdrop-blur-sm, .backdrop-blur, .backdrop-blur-md, .backdrop-blur-lg, .backdrop-blur-xl, .backdrop-blur-2xl, .backdrop-blur-3xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }

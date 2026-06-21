@@ -146,8 +146,8 @@ export default function LandingPage() {
       `}} />
 
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
-        <div aria-hidden="true" className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] bg-primary/5 blur-[120px] rounded-full" />
-        <div aria-hidden="true" className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/5 blur-[100px] rounded-full" />
+        <div aria-hidden="true" className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full" style={{ background: 'radial-gradient(circle, rgba(0,170,255,0.07) 0%, transparent 70%)' }} />
+        <div aria-hidden="true" className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full" style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)' }} />
       </div>
 
       {/* Grid Overlay */}
@@ -236,7 +236,7 @@ export default function LandingPage() {
 
           {/* Right: Visualizer / Rive */}
           <div className="relative group perspective-1000 hidden lg:block animate-in fade-in slide-in-from-right-12 duration-1000 delay-200 motion-reduce:animate-none">
-            <div aria-hidden="true" className="absolute inset-0 bg-primary/10 blur-[120px] rounded-full group-hover:bg-primary/20 transition-all duration-700" />
+            <div aria-hidden="true" className="absolute inset-0 rounded-full transition-all duration-700" style={{ background: 'radial-gradient(circle, rgba(0,170,255,0.12) 0%, transparent 70%)' }} />
             <div className="relative transform-gpu rotate-y-[-12deg] group-hover:rotate-y-[-5deg] transition-all duration-1000 ease-out">
               {/* Note: I'm using the SVG component here for now, but the idea is to replace with Rive */}
               <ViewTransition name="car-visualizer" share="morph" default="none">
