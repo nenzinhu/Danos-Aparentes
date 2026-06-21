@@ -1,73 +1,510 @@
+'use client';
+import React, { memo, useState, useEffect, useRef } from 'react'
 import type { SubscriptionStatus } from '../hooks/useSubscription'
 
 interface Props {
   darkMode: boolean
   onToggleDark: () => void
   onOpenSaved: () => void
+  onOpenSettings?: () => void
   onSignOut?: () => void
-  syncStatus?: 'synced' | 'pending' | 'offline'
+  syncStatus?: 'synced' | 'pending' | 'offline' | 'error'
   subscription?: { status: SubscriptionStatus; trialDaysLeft: number }
   onManageSubscription?: () => void
+  onSubscribe?: () => void | Promise<void>
 }
 
-const SYNC_LABEL: Record<'synced' | 'pending' | 'offline', { icon: string; text: string; color: string }> = {
-  synced: { icon: '☁️', text: 'Sincronizado', color: '#22c55e' },
-  pending: { icon: '🔄', text: 'Pendente sincronização', color: '#eab308' },
-  offline: { icon: '📡', text: 'Offline', color: '#ef4444' },
+const SYNC_LABEL: Record<'synced' | 'pending' | 'offline' | 'error', { icon: string; text: string; color: string; bgColor: string; borderColor: string }> = {
+  synced:  { icon: '✔️', text: 'Sincronizado',            color: 'text-green-500',  bgColor: 'bg-green-500/10',  borderColor: 'border-green-500/30'  },
+  pending: { icon: '🔄', text: 'Pendente sincronização',  color: 'text-yellow-500', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/30' },
+  offline: { icon: '📡', text: 'Offline',                 color: 'text-red-500',    bgColor: 'bg-red-500/10',    borderColor: 'border-red-500/30'    },
+  error:   { icon: '⚠️', text: 'Erro de sincronização',  color: 'text-orange-500', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/30' },
 }
 
-export default function Header({ darkMode, onToggleDark, onOpenSaved, onSignOut, syncStatus, subscription, onManageSubscription }: Props) {
+// ─── Benefícios PRO ──────────────────────────────────────────────────────────
+const PRO_BENEFITS = [
+  { icon: '📄', title: 'PDF Profissional', desc: 'Laudo com hash SHA-256 e QR Code de autenticidade' },
+  { icon: '✍️', title: 'Assinatura Digital', desc: 'Vistoriador e cliente assinam na tela do celular' },
+  { icon: '📡', title: '100% Offline', desc: 'Funciona sem internet, sincroniza quando conectar' },
+  { icon: '🏢', title: 'Marca Própria', desc: 'Logo e nome da empresa em todos os relatórios' },
+  { icon: '🔍', title: 'Consulta de Placas', desc: 'Preenchimento automático dos dados do veículo' },
+  { icon: '💬', title: 'Envio por WhatsApp', desc: 'Compartilhe o laudo em 1 clique diretamente pelo app' },
+  { icon: '📊', title: 'Painel de Estatísticas', desc: 'Dashboard com histórico e análise das vistorias' },
+  { icon: '🗣️', title: 'Voz Antoni PT-BR', desc: 'Narração das peças via ElevenLabs em português' },
+]
+
+function ProBenefitsButton({
+  subscription,
+  onManageSubscription,
+  onSubscribe,
+}: {
+  subscription?: { status: SubscriptionStatus; trialDaysLeft: number }
+  onManageSubscription?: () => void
+  onSubscribe?: () => void | Promise<void>
+}) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  // Fecha ao clicar fora
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
+
+  const isActive  = subscription?.status === 'active'
+  const isTrial   = subscription?.status === 'trialing'
+
   return (
-    <header style={{ textAlign: 'center', width: '100%', maxWidth: 1250, padding: '40px 20px 28px', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: 600, height: 300, background: 'radial-gradient(ellipse at center top, rgba(0,170,255,0.15) 0%, transparent 70%)', pointerEvents: 'none' }} />
+    <div ref={ref} style={{ position: 'relative', display: 'inline-block' }}>
+      {/* ── Trigger button ── */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 8,
+          padding: '8px 20px',
+          borderRadius: 999,
+          background: isActive
+            ? 'linear-gradient(135deg, rgba(34,197,94,0.15), rgba(16,185,129,0.08))'
+            : 'linear-gradient(135deg, rgba(0,170,255,0.12), rgba(99,102,241,0.08))',
+          border: isActive
+            ? '1px solid rgba(34,197,94,0.4)'
+            : '1px solid rgba(0,170,255,0.35)',
+          cursor: 'pointer',
+          fontFamily: 'Outfit, sans-serif',
+          fontSize: '0.82rem',
+          fontWeight: 800,
+          color: isActive ? '#4ade80' : '#38bdf8',
+          letterSpacing: '0.02em',
+          boxShadow: isActive
+            ? '0 0 18px rgba(34,197,94,0.15)'
+            : '0 0 18px rgba(0,170,255,0.12)',
+          transition: 'all 0.2s',
+        }}
+      >
+        {isActive ? (
+          <><span>✓</span> Plano PRO Ativo</>
+        ) : isTrial ? (
+          <><span>🎁</span> Teste PRO — {subscription!.trialDaysLeft} dia{subscription!.trialDaysLeft !== 1 ? 's' : ''} restante{subscription!.trialDaysLeft !== 1 ? 's' : ''}</>
+        ) : (
+          <><span style={{ fontSize: '0.9rem' }}>✦</span> Ver benefícios PRO</>
+        )}
+        {/* Chevron */}
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+          <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
 
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(0,170,255,0.08)', border: '1px solid rgba(0,170,255,0.22)', borderRadius: 100, padding: '5px 16px', fontSize: '0.72rem', fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--neon-cyan)', marginBottom: 20 }}>
-        <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--neon-cyan)', boxShadow: '0 0 8px var(--neon-cyan)', animation: 'pulse 2s ease-in-out infinite' }} />
-        Sistema de Vistoria PRO
-      </div>
+      {/* ── Dropdown panel ── */}
+      {open && (
+        <div style={{
+          position: 'absolute',
+          top: 'calc(100% + 10px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: 360,
+          background: 'rgba(8,15,35,0.97)',
+          border: '1px solid rgba(0,170,255,0.22)',
+          borderRadius: 16,
+          boxShadow: '0 24px 48px rgba(0,0,0,0.5), 0 0 60px rgba(0,170,255,0.08)',
+          overflow: 'hidden',
+          zIndex: 9999,
+          backdropFilter: 'blur(20px)',
+          animation: 'dropdownFadeIn 0.18s ease',
+        }}>
+          <style>{`
+            @keyframes dropdownFadeIn {
+              from { opacity:0; transform: translateX(-50%) translateY(-6px); }
+              to   { opacity:1; transform: translateX(-50%) translateY(0); }
+            }
+          `}</style>
 
-      <h1 style={{ fontSize: 'clamp(2rem,5vw,3.5rem)', fontWeight: 800, lineHeight: 1.1, letterSpacing: -1.5, background: 'linear-gradient(135deg,#fff 0%,#a8d8ff 40%,#00aaff 70%,#00d4ff 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', marginBottom: 12 }}>
+          {/* Header do dropdown */}
+          <div style={{
+            padding: '14px 18px 12px',
+            borderBottom: '1px solid rgba(0,170,255,0.12)',
+            background: 'linear-gradient(135deg, rgba(0,170,255,0.07), rgba(99,102,241,0.04))',
+          }}>
+            <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#e8f4ff', letterSpacing: '-0.01em' }}>
+              ✦ Plano PRO — Vistoria Profissional
+            </div>
+            <div style={{ fontSize: '0.73rem', color: '#64748b', marginTop: 2 }}>
+              Tudo que você precisa para vistorias perfeitas
+            </div>
+          </div>
+
+          {/* Grid de benefícios */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: 1,
+            background: 'rgba(255,255,255,0.04)',
+          }}>
+            {PRO_BENEFITS.map((b, i) => (
+              <div key={i} style={{
+                padding: '12px 14px',
+                background: 'rgba(8,15,35,0.97)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 3,
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: '1rem' }}>{b.icon}</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#cbd5e1', fontFamily: 'Outfit, sans-serif' }}>{b.title}</span>
+                </div>
+                <span style={{ fontSize: '0.67rem', color: '#475569', lineHeight: 1.4, fontFamily: 'Outfit, sans-serif' }}>{b.desc}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA footer */}
+          <div style={{ padding: '12px 18px', borderTop: '1px solid rgba(0,170,255,0.1)' }}>
+            {isActive ? (
+              <button
+                onClick={() => { onManageSubscription?.(); setOpen(false) }}
+                style={{
+                  width: '100%', padding: '9px', borderRadius: 10,
+                  background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)',
+                  color: '#4ade80', fontWeight: 700, fontSize: '0.8rem',
+                  cursor: 'pointer', fontFamily: 'Outfit, sans-serif',
+                }}
+              >
+                Gerenciar Assinatura →
+              </button>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: '#94a3b8', fontFamily: 'Outfit, sans-serif' }}>
+                  A partir de <strong style={{ color: '#38bdf8' }}>R$ 49,90/mês</strong> · Cancele quando quiser
+                </div>
+                {onSubscribe ? (
+                  <button
+                    onClick={() => { onSubscribe(); setOpen(false) }}
+                    style={{
+                      width: '100%', textAlign: 'center', padding: '9px',
+                      borderRadius: 10, background: 'linear-gradient(135deg, #0088cc, #0066aa)',
+                      color: '#fff', fontWeight: 800, fontSize: '0.8rem', border: 'none',
+                      cursor: 'pointer', fontFamily: 'Outfit, sans-serif',
+                      boxShadow: '0 0 20px rgba(0,170,255,0.2)',
+                    }}
+                  >
+                    Assinar agora →
+                  </button>
+                ) : (
+                  <a
+                    href="/app"
+                    style={{
+                      display: 'block', textAlign: 'center', padding: '9px',
+                      borderRadius: 10, background: 'linear-gradient(135deg, #0088cc, #0066aa)',
+                      color: '#fff', fontWeight: 800, fontSize: '0.8rem',
+                      textDecoration: 'none', fontFamily: 'Outfit, sans-serif',
+                      boxShadow: '0 0 20px rgba(0,170,255,0.2)',
+                    }}
+                  >
+                    Começar Teste Grátis →
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+
+
+function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, onSignOut, syncStatus, subscription, onManageSubscription, onSubscribe }: Props) {
+  const [companyLogo, setCompanyLogo] = useState('')
+  const [companyName, setCompanyName] = useState('')
+
+  // Carrega logo/nome do localStorage e mantém sincronizado
+  useEffect(() => {
+    const sync = () => {
+      setCompanyLogo(localStorage.getItem('company_logo') || '')
+      setCompanyName(localStorage.getItem('company_name') || '')
+    }
+    sync()
+    window.addEventListener('storage', sync)
+    const interval = setInterval(sync, 800)
+    return () => {
+      window.removeEventListener('storage', sync)
+      clearInterval(interval)
+    }
+  }, [])
+
+  return (
+    <header className='relative w-full max-w-[1250px] mx-auto text-center px-5 pt-20 sm:pt-12 pb-7 font-outfit'>
+
+      {/* Decorative gradient background */}
+      <div className='absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[600px] h-[300px] bg-[radial-gradient(ellipse_at_center_top,rgba(0,170,255,0.15)_0%,transparent_70%)] pointer-events-none' />
+
+      {/* Main Title */}
+      <h1
+        className='text-[clamp(2rem,5vw,3.5rem)] font-extrabold leading-[1.1] tracking-tighter mb-3 bg-clip-text text-transparent'
+        style={{ backgroundImage: 'var(--header-title-gradient)' }}
+      >
         Danos Aparentes
       </h1>
-      <p style={{ color: 'var(--text-muted)', fontSize: '1rem', maxWidth: 500, margin: '0 auto 20px' }}>
+
+      <p className='text-slate-400 text-base max-w-[500px] mx-auto mb-6'>
         Inspeção veicular interativa — registre danos com precisão
       </p>
 
-      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap' }}>
-        {[
-          { label: '🛡️ Offline', desc: 'PWA' },
-          { label: '💾 IndexedDB', desc: 'Local' },
-          { label: '📄 PDF', desc: 'Profissional' },
-          { label: '🗣️ TTS', desc: 'Gratuito' },
-        ].map(b => (
-          <div key={b.label} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, padding: '6px 14px', fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)' }}>
-            {b.label} <span style={{ opacity: 0.6 }}>{b.desc}</span>
-          </div>
-        ))}
-        {syncStatus && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(255,255,255,0.04)', border: `1px solid ${SYNC_LABEL[syncStatus].color}33`, borderRadius: 8, padding: '6px 14px', fontSize: '0.78rem', fontWeight: 600, color: SYNC_LABEL[syncStatus].color }}>
-            {SYNC_LABEL[syncStatus].icon} {SYNC_LABEL[syncStatus].text}
-          </div>
-        )}
-        {subscription?.status === 'trialing' && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(234,179,8,0.1)', border: '1px solid rgba(234,179,8,0.3)', borderRadius: 8, padding: '6px 14px', fontSize: '0.78rem', fontWeight: 600, color: '#eab308' }}>
-            🎁 Teste grátis: {subscription.trialDaysLeft} dia{subscription.trialDaysLeft !== 1 ? 's' : ''} restante{subscription.trialDaysLeft !== 1 ? 's' : ''}
-          </div>
-        )}
-        {subscription?.status === 'active' && (
-          <button type="button" onClick={onManageSubscription} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', borderRadius: 8, padding: '6px 14px', fontSize: '0.78rem', fontWeight: 700, color: '#22c55e', cursor: 'pointer', fontFamily: 'Outfit,sans-serif' }}>
-            ✓ Assinatura ativa — Gerenciar
+      {/* PRO Benefits Dropdown Button */}
+      <ProBenefitsButton
+        subscription={subscription}
+        onManageSubscription={onManageSubscription}
+        onSubscribe={onSubscribe}
+      />
+
+      {/* Floating Action Buttons */}
+      <div className='absolute top-4 right-4 flex items-center gap-2 scale-[0.8] origin-top-right sm:scale-100 sm:top-10 sm:right-10'>
+
+        {/* ── BOTÃO LOGO DA EMPRESA ── */}
+        {onOpenSettings && (
+          <button
+            onClick={onOpenSettings}
+            title='Clique para adicionar o logo da sua empresa nos relatórios'
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
+            {companyLogo ? (
+              /* Logo cadastrado — exibe dentro de moldura neon */
+              <div style={{
+                height: 40,
+                padding: '0 10px',
+                background: 'rgba(0,0,0,0.35)',
+                border: '1px solid rgba(0,220,255,0.4)',
+                borderRadius: 10,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: '0 0 10px rgba(0,220,255,0.2)',
+                backdropFilter: 'blur(8px)',
+              }}>
+                <img
+                  src={companyLogo}
+                  alt={companyName || 'Logo da empresa'}
+                  style={{ maxHeight: 26, maxWidth: 160, objectFit: 'contain' }}
+                />
+              </div>
+            ) : (
+              /* SVG neon placeholder */
+              <svg
+                width="158" height="44"
+                viewBox="0 0 158 44"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ display: 'block', overflow: 'visible' }}
+              >
+                <defs>
+                  {/* Neon glow filter */}
+                  <filter id="neon-glow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="2.5" result="blur1" />
+                    <feGaussianBlur stdDeviation="5"   result="blur2" />
+                    <feMerge>
+                      <feMergeNode in="blur2" />
+                      <feMergeNode in="blur1" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                  <filter id="neon-text" x="-10%" y="-40%" width="120%" height="180%">
+                    <feGaussianBlur stdDeviation="2" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                  {/* Shimmer gradient */}
+                  <linearGradient id="shimmer-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%"   stopColor="#00dcff" stopOpacity="0" />
+                    <stop offset="50%"  stopColor="#00dcff" stopOpacity="0.18" />
+                    <stop offset="100%" stopColor="#00dcff" stopOpacity="0" />
+                    <animateTransform
+                      attributeName="gradientTransform"
+                      type="translate"
+                      from="-1 0" to="1 0"
+                      dur="1.8s"
+                      repeatCount="indefinite"
+                    />
+                  </linearGradient>
+                  {/* Dashed border dash animation */}
+                  <rect id="border-rect" x="1" y="1" width="156" height="42" rx="9" />
+                </defs>
+
+                {/* Background */}
+                <rect x="1" y="1" width="156" height="42" rx="9"
+                  fill="rgba(0,18,36,0.55)" />
+
+                {/* Shimmer sweep */}
+                <rect x="1" y="1" width="156" height="42" rx="9"
+                  fill="url(#shimmer-grad)" />
+
+                {/* Neon dashed border — animated */}
+                <rect x="1" y="1" width="156" height="42" rx="9"
+                  fill="none"
+                  stroke="#00dcff"
+                  strokeWidth="1.5"
+                  strokeDasharray="6 4"
+                  filter="url(#neon-glow)"
+                  opacity="0.9"
+                >
+                  <animate
+                    attributeName="stroke-dashoffset"
+                    from="0" to="20"
+                    dur="1.2s"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="opacity"
+                    values="0.7;1;0.7"
+                    dur="2s"
+                    repeatCount="indefinite"
+                  />
+                </rect>
+
+                {/* Camera / building icon */}
+                <g transform="translate(14, 13)" filter="url(#neon-glow)">
+                  {/* Simple building SVG icon */}
+                  <rect x="0" y="5" width="14" height="13" rx="1"
+                    fill="none" stroke="#00dcff" strokeWidth="1.4" />
+                  <rect x="2" y="0" width="10" height="6" rx="1"
+                    fill="none" stroke="#00dcff" strokeWidth="1.4" />
+                  <rect x="3.5" y="8" width="3" height="3" rx="0.5"
+                    fill="#00dcff" opacity="0.7" />
+                  <rect x="7.5" y="8" width="3" height="3" rx="0.5"
+                    fill="#00dcff" opacity="0.7" />
+                </g>
+
+                {/* Main text: SEU LOGO */}
+                <text
+                  x="37" y="17"
+                  fontFamily="Outfit, sans-serif"
+                  fontWeight="800"
+                  fontSize="11"
+                  fill="#00dcff"
+                  letterSpacing="1.5"
+                  filter="url(#neon-text)"
+                >
+                  SEU LOGO
+                </text>
+
+                {/* Sub text */}
+                <text
+                  x="37" y="30"
+                  fontFamily="Outfit, sans-serif"
+                  fontWeight="600"
+                  fontSize="8.5"
+                  fill="#38bdf8"
+                  letterSpacing="0.3"
+                  opacity="0.78"
+                >
+                  clique para adicionar
+                </text>
+
+                {/* Plus icon on the right */}
+                <g transform="translate(136, 15)" filter="url(#neon-glow)">
+                  <circle cx="7" cy="7" r="6.5" fill="none" stroke="#00dcff" strokeWidth="1.2" opacity="0.8" />
+                  <line x1="7" y1="3.5" x2="7" y2="10.5" stroke="#00dcff" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="3.5" y1="7" x2="10.5" y2="7" stroke="#00dcff" strokeWidth="1.5" strokeLinecap="round" />
+                </g>
+              </svg>
+            )}
           </button>
         )}
-      </div>
 
-      <div style={{ position: 'absolute', top: 20, right: 20, display: 'flex', gap: 8 }}>
-        <button onClick={onOpenSaved} style={{ background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', borderRadius: 10, padding: '8px 14px', color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontSize: '0.82rem', fontWeight: 700 }}>📦 Salvas</button>
-        <button onClick={onToggleDark} style={{ background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', borderRadius: 10, padding: '8px 12px', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '1rem' }}>{darkMode ? '☀️' : '🌙'}</button>
+        <button
+          onClick={onOpenSaved}
+          title="Ver vistorias salvas"
+          className="group h-10 px-4 bg-slate-800/40 hover:bg-sky-500/10 border border-slate-700/60 hover:border-sky-500/50 rounded-xl text-slate-300 hover:text-sky-400 transition-all duration-300 text-[0.82rem] font-bold backdrop-blur-md shadow-lg hover:shadow-sky-500/10 flex items-center justify-center gap-2 hover:-translate-y-0.5 active:translate-y-0"
+        >
+          <svg 
+            className="w-[18px] h-[18px] text-slate-400 group-hover:text-sky-400 transition-colors duration-300"
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor" 
+            strokeWidth="2.2"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+          </svg>
+          <span>Salvas</span>
+        </button>
+
+        <button
+          onClick={onToggleDark}
+          title={darkMode ? 'Mudar para Modo Claro' : 'Mudar para Modo Escuro'}
+          className="group w-10 h-10 bg-slate-800/40 border border-slate-700/60 rounded-xl transition-all duration-300 backdrop-blur-md shadow-lg flex items-center justify-center hover:-translate-y-0.5 active:translate-y-0"
+          style={{
+            borderColor: darkMode ? 'rgba(251,191,36,0.2)' : 'rgba(56,189,248,0.2)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = darkMode ? 'rgba(251,191,36,0.08)' : 'rgba(56,189,248,0.08)';
+            e.currentTarget.style.borderColor = darkMode ? 'rgba(251,191,36,0.45)' : 'rgba(56,189,248,0.45)';
+            e.currentTarget.style.boxShadow = darkMode ? '0 0 15px rgba(251,191,36,0.2)' : '0 0 15px rgba(56,189,248,0.2)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'rgba(30,41,59,0.4)';
+            e.currentTarget.style.borderColor = 'rgba(51,65,85,0.6)';
+            e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.1)';
+          }}
+        >
+          {darkMode ? (
+            <svg 
+              className="w-5 h-5 text-amber-400 group-hover:rotate-45 transition-transform duration-500" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor" 
+              strokeWidth="2.2"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m0 13.5V21M4.978 4.978l1.591 1.591m10.862 10.862l1.591 1.591M21 12h-2.25m-13.5 0H3m2.285-7.02l1.591 1.591M16.12 16.12l1.591 1.591M12 7.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z" />
+            </svg>
+          ) : (
+            <svg 
+              className="w-5 h-5 text-slate-400 group-hover:text-sky-400 group-hover:-rotate-12 transition-all duration-500" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor" 
+              strokeWidth="2.2"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+            </svg>
+          )}
+        </button>
+
         {onSignOut && (
-          <button onClick={onSignOut} style={{ background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', borderRadius: 10, padding: '8px 12px', color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontSize: '0.82rem', fontWeight: 700 }} title="Sair">🚪</button>
+          <button
+            onClick={onSignOut}
+            title="Sair da conta"
+            className="group w-10 h-10 bg-slate-800/40 hover:bg-rose-500/10 border border-slate-700/60 hover:border-rose-500/50 rounded-xl text-slate-400 hover:text-rose-400 transition-all duration-300 backdrop-blur-md shadow-lg hover:shadow-rose-500/10 flex items-center justify-center hover:-translate-y-0.5 hover:translate-x-0.5 active:translate-y-0 active:translate-x-0"
+          >
+            <svg 
+              className="w-[18px] h-[18px] text-slate-400 group-hover:text-rose-400 transition-colors duration-300" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor" 
+              strokeWidth="2.2"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            </svg>
+          </button>
         )}
       </div>
     </header>
   )
 }
+
+export default memo(HeaderComponent)

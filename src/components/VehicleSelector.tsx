@@ -1,9 +1,10 @@
-import { useRef, useLayoutEffect } from 'react'
+'use client';
+import React, { memo } from 'react'
 import { VehicleType } from '../types'
 
 export const VEHICLES: { id: VehicleType; label: string; svgContent: string; viewBox: string }[] = [
   {
-    id: 'car', label: 'Carro', viewBox: '0 0 38 22',
+    id: 'car', label: 'Carro 4P', viewBox: '0 0 38 22',
     svgContent: `
       <defs>
         <linearGradient id="vg-body" x1="0" y1="0" x2="0" y2="1">
@@ -32,6 +33,36 @@ export const VEHICLES: { id: VehicleType; label: string; svgContent: string; vie
     `
   },
   {
+    id: 'car2d', label: 'Carro 2P', viewBox: '0 0 38 22',
+    svgContent: `
+      <defs>
+        <linearGradient id="vg2-body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#44ccff"/>
+          <stop offset="45%" stop-color="#0099ee"/>
+          <stop offset="100%" stop-color="#0044aa"/>
+        </linearGradient>
+        <linearGradient id="vg2-glass" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#aaf0ff" stop-opacity=".95"/>
+          <stop offset="100%" stop-color="#00aadd" stop-opacity=".6"/>
+        </linearGradient>
+        <linearGradient id="vg2-wheel" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#55ddff"/>
+          <stop offset="100%" stop-color="#0055bb"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="19" cy="19" rx="15" ry="2.2" fill="#00bbff" opacity=".2"/>
+      <path d="M5 13.5 C5 13.5 8 6 12 5 L15 4 L23 4 L26 5 C30 6 33 13.5 33 13.5 L33 16 C33 17 32 17 31 17 L7 17 C6 17 5 17 5 16 Z" fill="url(#vg2-body)"/>
+      <path d="M12 9 L18 6 L24 6 L27 9 Z" fill="white" opacity=".18"/>
+      <path d="M10 9 L15 5.5 L23 5.5 L28 9 Z" fill="url(#vg2-glass)" opacity=".9"/>
+      <path d="M6 12.5 L32 12.5" stroke="white" stroke-width="0.7" opacity=".22"/>
+      <line x1="20" y1="9" x2="20" y2="17" stroke="white" stroke-width="0.6" opacity=".35"/>
+      <circle cx="11" cy="17" r="3.6" fill="#050f24" stroke="url(#vg2-wheel)" stroke-width="2"/>
+      <circle cx="11" cy="17" r="1.4" fill="#55ddff" opacity=".7"/>
+      <circle cx="27" cy="17" r="3.6" fill="#050f24" stroke="url(#vg2-wheel)" stroke-width="2"/>
+      <circle cx="27" cy="17" r="1.4" fill="#55ddff" opacity=".7"/>
+    `
+  },
+  {
     id: 'moto', label: 'Moto', viewBox: '0 0 38 24',
     svgContent: `
       <defs>
@@ -45,7 +76,7 @@ export const VEHICLES: { id: VehicleType; label: string; svgContent: string; vie
       <circle cx="8" cy="17" r="1.8" fill="#55eeff" opacity=".65"/>
       <circle cx="30" cy="17" r="5.2" fill="#050f24" stroke="url(#vg-moto)" stroke-width="2"/>
       <circle cx="30" cy="17" r="1.8" fill="#55eeff" opacity=".65"/>
-      <path d="M8 17 L15 10 L21 8 L30 17" fill="none" stroke="url(#vg-moto)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M8 17 L15 10 L21 8 L30 17" fill="none" stroke="url(#vg-moto)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>    
       <path d="M20 8 L24 5.5 L28 7.5" fill="none" stroke="#55eeff" stroke-width="1.8" stroke-linecap="round"/>
       <path d="M13 12 L20 9 L25 11 L22 14 L14 14 Z" fill="#0088dd" opacity=".7"/>
       <path d="M14 11 L20 9 L23 10.5" stroke="white" stroke-width="0.7" opacity=".3" fill="none"/>
@@ -103,6 +134,29 @@ export const VEHICLES: { id: VehicleType; label: string; svgContent: string; vie
     `
   },
   {
+    id: 'microbus', label: 'Micro-ônibus', viewBox: '0 0 40 24',
+    svgContent: `
+      <defs>
+        <linearGradient id="vg-mbus" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#33ccff"/>
+          <stop offset="55%" stop-color="#0077dd"/>
+          <stop offset="100%" stop-color="#003399"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="20" cy="21" rx="15" ry="2" fill="#00bbff" opacity=".18"/>
+      <rect x="5" y="5" width="30" height="14" rx="3" fill="url(#vg-mbus)"/>
+      <path d="M6 6 L34 6" stroke="white" stroke-width="0.9" opacity=".22"/>
+      <rect x="7" y="8" width="6" height="5" rx="1" fill="#aaf0ff" opacity=".6"/>
+      <rect x="15" y="8" width="6" height="5" rx="1" fill="#aaf0ff" opacity=".55"/>
+      <rect x="23" y="8" width="5" height="5" rx="1" fill="#aaf0ff" opacity=".5"/>
+      <rect x="29" y="7" width="5" height="7" rx="1" fill="#aaf0ff" opacity=".5"/>
+      <circle cx="12" cy="19" r="3.4" fill="#050f24" stroke="#33bbff" stroke-width="2"/>
+      <circle cx="12" cy="19" r="1.3" fill="#55ddff" opacity=".7"/>
+      <circle cx="28" cy="19" r="3.4" fill="#050f24" stroke="#33bbff" stroke-width="2"/>
+      <circle cx="28" cy="19" r="1.3" fill="#55ddff" opacity=".7"/>
+    `
+  },
+  {
     id: 'van', label: 'Van', viewBox: '0 0 40 24',
     svgContent: `
       <defs>
@@ -139,7 +193,8 @@ export function VehicleIconSvg({ type, size = 28 }: { type: VehicleType; size?: 
     <svg
       viewBox={v.viewBox}
       xmlns="http://www.w3.org/2000/svg"
-      style={{ width: size, height: size * 0.6, display: 'block', flexShrink: 0, filter: 'brightness(1.3) drop-shadow(0 0 4px #00ccff)' }}
+      className="block shrink-0 drop-shadow-[0_0_4px_#00ccff] brightness-[1.3]"
+      style={{ width: size, height: size * 0.6 }}
       dangerouslySetInnerHTML={{ __html: v.svgContent }}
     />
   )
@@ -150,82 +205,53 @@ interface Props {
   onChange: (v: VehicleType) => void
 }
 
-export default function VehicleSelector({ current, onChange }: Props) {
-  const pillRef = useRef<HTMLDivElement>(null)
-  const btnRefs = useRef<(HTMLButtonElement | null)[]>([])
-
-  function updatePill() {
-    const idx = VEHICLES.findIndex(v => v.id === current)
-    const btn = btnRefs.current[idx]
-    const pill = pillRef.current
-    if (btn && pill) {
-      pill.style.transform = `translateX(${btn.offsetLeft - 5}px)`
-      pill.style.width = `${btn.offsetWidth}px`
-    }
-  }
-
-  useLayoutEffect(() => {
-    updatePill()
-  })
+function VehicleSelectorComponent({ current, onChange }: Props) {
+  const idx = Math.max(0, VEHICLES.findIndex(v => v.id === current))
+  const numItems = VEHICLES.length
 
   return (
-    <div style={{
-      position: 'relative', display: 'flex',
-      background: 'rgba(4,10,28,0.82)', border: '1px solid rgba(0,170,255,0.22)',
-      borderRadius: 18, padding: 5, gap: 3,
-      backdropFilter: 'blur(18px)', overflow: 'hidden',
-      boxShadow: '0 0 0 1px rgba(0,100,200,0.12), inset 0 1px 0 rgba(255,255,255,0.04)',
-    }}>
+    <div className="relative flex bg-slate-950/80 border border-sky-500/20 rounded-[18px] p-[5px] gap-[3px] backdrop-blur-xl overflow-hidden shadow-[0_0_0_1px_rgba(0,100,200,0.12),inset_0_1px_0_rgba(255,255,255,0.04)] font-outfit">
       {/* sliding pill */}
-      <div ref={pillRef} style={{
-        position: 'absolute', top: 5, left: 5,
-        height: 'calc(100% - 10px)', borderRadius: 13,
-        background: 'linear-gradient(145deg,#0055bb,#0099ee 50%,#00ccff)',
-        boxShadow: '0 0 0 1px rgba(0,210,255,0.4), 0 4px 20px rgba(0,160,255,0.55), 0 0 30px rgba(0,200,255,0.2)',
-        transition: 'transform 0.38s cubic-bezier(0.34,1.56,0.64,1), width 0.32s cubic-bezier(0.4,0,0.2,1)',
-        pointerEvents: 'none', zIndex: 0,
-      }} />
+      <div
+        className="absolute top-[5px] h-[calc(100%-10px)] rounded-[13px] bg-gradient-to-br from-blue-800 via-blue-700 to-sky-700 shadow-[0_0_0_1px_rgba(0,210,255,0.4),0_4px_20px_rgba(0,160,255,0.55),0_0_30px_rgba(0,200,255,0.2)] transition-all duration-[0.38s] ease-[cubic-bezier(0.34,1.56,0.64,1)] pointer-events-none z-0"
+        style={{
+          width: `calc((100% - 10px - (${numItems} - 1) * 3px) / ${numItems})`,
+          left: `calc(5px + ${idx} * ((100% - 10px - (${numItems} - 1) * 3px) / ${numItems} + 3px))`
+        }}
+      />
 
       {VEHICLES.map((v, i) => {
         const isActive = current === v.id
         return (
           <button
             key={v.id}
-            ref={el => { btnRefs.current[i] = el }}
             onClick={() => onChange(v.id)}
-            style={{
-              position: 'relative', zIndex: 1,
-              background: 'transparent', border: 'none',
-              padding: '8px 12px 7px', borderRadius: 13,
-              cursor: 'pointer', display: 'flex', flexDirection: 'column',
-              alignItems: 'center', gap: 5, flex: 1,
-              color: isActive ? '#ffffff' : 'rgba(180,210,240,0.62)',
-              fontSize: '0.73rem', fontWeight: 800,
-              letterSpacing: '0.02em',
-              fontFamily: 'Outfit,sans-serif',
-              textShadow: isActive ? '0 0 6px rgba(0,220,255,0.95), 0 0 14px rgba(0,180,255,0.7)' : 'none',
-              whiteSpace: 'nowrap', minWidth: 0,
-              transition: 'color 0.22s',
-            }}
+            className={`relative z-10 bg-transparent border-none py-2 px-3 pb-[7px] rounded-[13px] cursor-pointer flex flex-col items-center gap-1.5 flex-1 transition-colors duration-200 min-w-0 ${
+              isActive ? 'text-white' : 'text-slate-400'
+            }`}
           >
             <svg
               viewBox={v.viewBox}
               xmlns="http://www.w3.org/2000/svg"
-              style={{
-                width: 36, height: 21, display: 'block', flexShrink: 0,
-                opacity: isActive ? 1 : 0.42,
-                filter: isActive
-                  ? 'brightness(1.6) saturate(1.4) drop-shadow(0 0 4px #00ccff) drop-shadow(0 0 10px rgba(0,210,255,0.85))'
-                  : 'saturate(0.25) brightness(0.65)',
-                transform: isActive ? 'scale(1.14) translateY(-2px)' : 'none',
-                transition: 'filter 0.28s ease, opacity 0.28s ease, transform 0.32s cubic-bezier(0.34,1.56,0.64,1)',
-              }}
+              className={`block shrink-0 transition-all duration-300 ${
+                isActive
+                  ? 'opacity-100 scale-110 -translate-y-0.5 filter brightness-[1.6] saturate-[1.4] drop-shadow-[0_0_4px_#00ccff] drop-shadow-[0_0_10px_rgba(0,210,255,0.85)]'
+                  : 'opacity-40 filter saturate-[0.25] brightness-[0.65]'
+              }`}
+              style={{ width: 36, height: 21 }}
               dangerouslySetInnerHTML={{ __html: v.svgContent }}
             />
-            <span>{v.label}</span>
+            <span className={`text-[0.7rem] font-bold tracking-tight uppercase whitespace-nowrap ${
+              isActive ? 'drop-shadow-[0_0_8px_rgba(0,220,255,0.8)]' : ''
+            }`}>
+              {v.label}
+            </span>
           </button>
         )
       })}
     </div>
   )
 }
+
+export default memo(VehicleSelectorComponent)
+

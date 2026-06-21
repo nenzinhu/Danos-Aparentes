@@ -1,10 +1,16 @@
-export type VehicleType = 'car' | 'moto' | 'truck' | 'van' | 'bus'
+export type Brand<K, T> = K & { readonly __brand?: T };
+
+export type Plate = Brand<string, 'Plate'>;
+export type ReportId = Brand<string, 'ReportId'>;
+export type DamageId = Brand<string, 'DamageId'>;
+
+export type VehicleType = 'car' | 'car2d' | 'moto' | 'truck' | 'van' | 'bus' | 'microbus' | 'custom'
 export type ViewType = 'lateral-left' | 'lateral-right' | 'frontal' | 'traseira'
 export type DamageType = 'scratch' | 'dent' | 'broken'
 export type Severity = 'low' | 'medium' | 'high'
 
 export interface Damage {
-  id: string
+  id: DamageId
   vehicle: VehicleType
   view: ViewType
   partId: string
@@ -21,7 +27,7 @@ export interface VehicleInfo {
   owner: string
   phone: string
   brand: string
-  plate: string
+  plate: Plate
   generalNotes: string
   // NEW fields:
   profile: 'oficina' | 'perito' | 'seguradora' | ''
@@ -30,6 +36,11 @@ export interface VehicleInfo {
   vehicleTypeDesc: string  // Tipo do veículo (textual)
   city: string
   state: string
+  cpf?: string
+  cnh?: string
+  cnhCategory?: string
+  inspectorSignature?: string
+  clientSignature?: string
   customFields?: CustomField[]
 }
 
@@ -40,7 +51,7 @@ export interface CustomField {
 }
 
 export interface SavedReport {
-  id: string
+  id: ReportId
   savedAt: number
   vehicleInfo: VehicleInfo
   damages: Damage[]
@@ -49,11 +60,12 @@ export interface SavedReport {
 export interface TtsConfig {
   active: boolean
   hoverActive: boolean
-  engine: 'native' | 'google-tts'
+  engine: 'native' | 'google-tts' | 'elevenlabs'
   gender: 'male' | 'female'
   rate: number
   pitch: number
   volume: number
+  voiceId?: string
 }
 
 export interface VehicleProps {
@@ -61,4 +73,13 @@ export interface VehicleProps {
   selectedPartId: string | null
   onPartClick: (id: string, name: string) => void
   onPartHover: (id: string, name: string) => void
+}
+
+/**
+ * Helper utility for compile-time exhaustive type checking.
+ * If a new option is added to a union type and not handled,
+ * TypeScript will throw a compilation error.
+ */
+export function assertNever(value: never): never {
+  throw new Error(`Unhandled union value: ${JSON.stringify(value)}`);
 }

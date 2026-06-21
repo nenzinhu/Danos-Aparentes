@@ -1,23 +1,26 @@
+'use client';
+
 interface Props {
   size?: number
   showText?: boolean
 }
 
-const ICON_ASPECT_RATIO = 300 / 175
-
-export default function Logo({ size = 36, showText = true }: Props) {
+export default function Logo({ size = 48, showText = true }: Props) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+    <div className="flex items-center gap-2.5">
       <img
-        src="/brand/logo-icon.png"
+        src="/logo.svg"
         alt="Danos Aparentes"
-        width={Math.round(size * ICON_ASPECT_RATIO)}
-        height={size}
-        style={{ borderRadius: size * 0.18, objectFit: 'contain', flexShrink: 0 }}
+        style={{ height: size }}
+        className="object-contain flex-shrink-0"
+        fetchPriority="high"
         onError={(e) => { e.currentTarget.style.display = 'none' }}
       />
       {showText && (
-        <div style={{ fontFamily: 'Outfit,sans-serif', fontWeight: 800, fontSize: size * 0.5, color: '#e8f4ff', letterSpacing: 0.3 }}>
+        <div 
+          style={{ fontSize: size * 0.45 }}
+          className="font-outfit font-extrabold text-[var(--text-main)] tracking-wider"
+        >
           Danos Aparentes
         </div>
       )}

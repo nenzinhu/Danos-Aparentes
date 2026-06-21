@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mockups — Layout do Laudo PDF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #11151c;
+    color: #e8eef5;
+    font-family: 'IBM Plex Sans', sans-serif;
+    padding: 32px 20px 64px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .head { max-width: 1340px; margin: 0 auto 28px; }
+  .head h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; }
+  .head p { color: #8aa0b6; font-size: 13px; margin-top: 4px; }
+  .grid {
+    max-width: 1340px; margin: 0 auto;
+    display: flex; gap: 28px; flex-wrap: wrap; justify-content: center;
+    align-items: flex-start;
+  }
+  .col { width: 410px; }
+  .label {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 700; margin-bottom: 12px; color: #cfe0f0;
+  }
+  .label .dot { width: 10px; height: 10px; border-radius: 3px; }
+  .label .tag { margin-left: auto; font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .06em; padding: 3px 8px; border-radius: 6px; }
+
+  /* A4 page */
+  .page {
+    background: #fff; color: #1e293b; border-radius: 6px;
+    box-shadow: 0 14px 40px rgba(0,0,0,.45);
+    width: 410px; min-height: 580px; overflow: hidden;
+    font-size: 9px; line-height: 1.45;
+  }
+  .pad { padding: 18px 20px; }
+  svg { display: block; }
+  table { border-collapse: collapse; width: 100%; }
+
+  /* ============ shared mini car ============ */
+  .cardiag { display: block; width: 100%; }
+
+  /* ===================== MODELO A — MODERNO ===================== */
+  .A .topbar { height: 5px; background: linear-gradient(90deg,#1d4ed8,#06b6d4,#3b82f6); }
+  .A .hdr { display:flex; justify-content:space-between; align-items:center; padding:14px 20px 12px; border-bottom:1px solid #e2e8f0; }
+  .A .logo { width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#1d4ed8,#0891b2);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;}
+  .A .htitle { font-family:'IBM Plex Sans'; font-weight:800; font-size:13px; color:#0f172a; letter-spacing:-.01em; }
+  .A .hsub { font-size:7.5px; color:#94a3b8; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+  .A .os { text-align:right; }
+  .A .os .pill { background:#dcfce7;color:#15803d;border:1px solid #bbf7d0;font-size:7px;font-weight:800;padding:2px 6px;border-radius:5px;text-transform:uppercase;}
+  .A .section { font-size:8px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.12em;margin:14px 0 7px;}
+  .A .card { border:1px solid #e2e8f0; border-radius:9px; padding:11px 13px; background:#f8fafc; }
+  .A .kv { display:grid;grid-template-columns:1fr 1fr;gap:8px 16px; }
+  .A .kv .k { font-size:7px;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;display:block;}
+  .A .kv .v { font-size:9.5px;font-weight:700;color:#334155;}
+  .A th { background:#0f172a;color:#fff;font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:6px 7px;text-align:left;}
+  .A td { padding:6px 7px;border-bottom:1px solid #eef2f7;font-size:8.5px;color:#334155;vertical-align:middle;}
+  .A .badge { font-size:7px;font-weight:800;padding:2px 6px;border-radius:20px;text-transform:uppercase;}
+  .A .b-grave{background:#fee2e2;color:#dc2626;}
+  .A .photos{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+  .A .ph{border:1px solid #e2e8f0;border-radius:7px;overflow:hidden;background:#fff;}
+  .A .ph .img{height:48px;background:linear-gradient(135deg,#e2e8f0,#cbd5e1);display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .A .ph .cap{padding:4px 5px;font-size:6.5px;}
+  .A .ph .cap b{color:#0f172a;text-transform:uppercase;display:block;}
+  .A .ph .cap span{color:#94a3b8;}
+  .A .sign{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px;}
+  .A .sline{border-top:1px solid #cbd5e1;margin-top:24px;padding-top:4px;text-align:center;font-size:6.5px;color:#94a3b8;text-transform:uppercase;font-weight:700;letter-spacing:.04em;}
+  .A .foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:16px;padding-top:10px;border-top:1px solid #e2e8f0;}
+  .A .hash{font-size:6.5px;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;font-weight:800;}
+  .A code{font-family:'IBM Plex Mono';font-size:6.5px;background:#f1f5f9;color:#475569;padding:2px 5px;border-radius:4px;display:inline-block;margin-top:3px;}
+
+  /* ===================== MODELO B — EDITORIAL ===================== */
+  .B { font-family:'Lora', Georgia, serif; color:#26201a; }
+  .B .pad{padding:22px 24px;}
+  .B .hdr{text-align:center;border-bottom:2px solid #26201a;padding-bottom:12px;margin-bottom:4px;}
+  .B .crest{width:30px;height:30px;border:2px solid #b08642;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;color:#b08642;font-size:13px;}
+  .B .htitle{font-size:15px;font-weight:700;letter-spacing:.02em;}
+  .B .hsub{font-family:'IBM Plex Sans';font-size:7px;letter-spacing:.28em;text-transform:uppercase;color:#9a8a72;margin-top:3px;font-weight:600;}
+  .B .meta{display:flex;justify-content:space-between;font-family:'IBM Plex Sans';font-size:7.5px;color:#8a7a62;margin-top:8px;text-transform:uppercase;letter-spacing:.05em;}
+  .B .section{font-family:'IBM Plex Sans';font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#b08642;border-bottom:1px solid #e7ddcd;padding-bottom:4px;margin:16px 0 8px;}
+  .B .kv{display:grid;grid-template-columns:1fr 1fr;gap:7px 18px;}
+  .B .kv .k{font-family:'IBM Plex Sans';font-size:6.5px;color:#a8987e;text-transform:uppercase;letter-spacing:.08em;display:block;}
+  .B .kv .v{font-size:10px;font-weight:600;}
+  .B table{margin-top:2px;}
+  .B th{font-family:'IBM Plex Sans';font-size:6.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9a8a72;border-bottom:1.5px solid #26201a;padding:5px 6px;text-align:left;}
+  .B td{padding:6px;border-bottom:1px solid #ece3d4;font-size:9px;vertical-align:middle;}
+  .B .grau{font-family:'IBM Plex Sans';font-weight:700;color:#a3341f;font-size:8px;text-transform:uppercase;}
+  .B .photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .B .ph{text-align:center;}
+  .B .ph .img{height:50px;border:1px solid #d8cdb8;background:#f3ede0;display:flex;align-items:center;justify-content:center;font-size:16px;}
+  .B .ph .cap{font-family:'IBM Plex Sans';font-size:6.5px;color:#8a7a62;margin-top:3px;font-style:italic;}
+  .B .sign{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:18px;}
+  .B .sline{border-top:1px solid #26201a;margin-top:26px;padding-top:4px;text-align:center;font-family:'IBM Plex Sans';font-size:6.5px;color:#8a7a62;text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
+  .B .foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:18px;padding-top:10px;border-top:1px solid #e7ddcd;font-family:'IBM Plex Sans';}
+  .B .hash{font-size:6px;color:#a8987e;letter-spacing:.12em;text-transform:uppercase;font-weight:700;}
+  .B code{font-family:'IBM Plex Mono';font-size:6.5px;color:#5a4f40;}
+
+  /* ===================== MODELO C — TÉCNICO / FORENSE ===================== */
+  .C{font-family:'IBM Plex Sans';color:#0b1220;}
+  .C .pad{padding:0;}
+  .C .hdr{background:#0b1220;color:#dbe6f2;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;}
+  .C .htitle{font-family:'IBM Plex Mono';font-weight:700;font-size:12px;letter-spacing:.02em;}
+  .C .hsub{font-family:'IBM Plex Mono';font-size:6.5px;color:#6f8198;letter-spacing:.18em;text-transform:uppercase;margin-top:2px;}
+  .C .stamp{border:1.5px solid #2dd4bf;color:#2dd4bf;font-family:'IBM Plex Mono';font-size:7px;font-weight:700;padding:3px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.08em;}
+  .C .body{padding:14px 18px;}
+  .C .section{font-family:'IBM Plex Mono';font-size:7px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#0b1220;background:#e8eef5;border-left:3px solid #0b1220;padding:4px 8px;margin:14px 0 8px;}
+  .C .kv{display:grid;grid-template-columns:1fr 1fr;border:1px solid #cbd5e1;}
+  .C .kv > div{padding:6px 9px;border-bottom:1px solid #e2e8f0;}
+  .C .kv > div:nth-child(odd){border-right:1px solid #e2e8f0;}
+  .C .kv .k{font-family:'IBM Plex Mono';font-size:6.5px;color:#64748b;text-transform:uppercase;letter-spacing:.04em;display:block;}
+  .C .kv .v{font-size:9.5px;font-weight:700;color:#0b1220;}
+  .C th{background:#1e293b;color:#cbd5e1;font-family:'IBM Plex Mono';font-size:6.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:5px 7px;text-align:left;}
+  .C td{padding:5px 7px;border-bottom:1px solid #e2e8f0;font-size:8.5px;color:#1e293b;vertical-align:middle;}
+  .C tr:nth-child(even) td{background:#f8fafc;}
+  .C .badge{font-family:'IBM Plex Mono';font-size:6.5px;font-weight:700;padding:2px 5px;border-radius:3px;text-transform:uppercase;}
+  .C .b-grave{background:#0b1220;color:#fca5a5;}
+  .C .photos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .C .ph{border:1px solid #cbd5e1;}
+  .C .ph .img{height:46px;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:15px;position:relative;}
+  .C .ph .img::after{content:'EVID-0'attr(data-n);position:absolute;bottom:2px;left:3px;font-family:'IBM Plex Mono';font-size:5px;color:#475569;}
+  .C .ph .cap{padding:3px 5px;font-family:'IBM Plex Mono';font-size:6px;color:#475569;border-top:1px solid #e2e8f0;}
+  .C .sign{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px;}
+  .C .sline{border-top:1px solid #94a3b8;margin-top:22px;padding-top:4px;text-align:center;font-family:'IBM Plex Mono';font-size:6px;color:#64748b;text-transform:uppercase;letter-spacing:.04em;}
+  .C .foot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px;padding:10px 18px;background:#0b1220;color:#6f8198;}
+  .C .hash{font-family:'IBM Plex Mono';font-size:6px;letter-spacing:.08em;text-transform:uppercase;}
+  .C .foot code{font-family:'IBM Plex Mono';font-size:6.5px;color:#9fb2c8;display:block;margin-top:2px;}
+</style>
+</head>
+<body>
+  <div class="head">
+    <h1>Modelos de Layout — Laudo de Avarias Aparentes (PDF)</h1>
+    <p>Três direções de design para o documento oficial gerado. Escolha um número (ou misture elementos) e eu aplico no <code style="font-family:'IBM Plex Mono';background:#1e293b;padding:2px 5px;border-radius:4px;color:#9fb2c8;">src/lib/pdf.ts</code>.</p>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+<script>
+  // ---- conteúdo simulado (mesmo do app) ----
+  const REPORT = {
+    empresa: 'Sua Empresa / Concessionária',
+    os: '2026-0042',
+    owner: 'Carlos Henrique Silva',
+    brand: 'Porsche 911 Carrera S',
+    plate: 'DAN-2026',
+    color: 'Cinza Quartz',
+    cidade: 'São Paulo / SP',
+    perfil: 'Perito',
+    damage: { peca: 'Porta Diant. Esquerda', tipo: 'Risco / Arranhão', grau: 'Grave', obs: 'Risco profundo contínuo' },
+    hash: '8F3C7E9A4B1D0E3F5C7A9E2B0D4F6A8C',
+  };
+
+  // ---- carro lateral simplificado ----
+  function carSVG(stroke, body, accent) {
+    return `<svg class="cardiag" viewBox="0 0 320 120" width="100%">
+      <ellipse cx="160" cy="104" rx="135" ry="6" fill="#000" opacity=".08"/>
+      <path d="M30,78 C30,60 55,40 95,40 L150,30 L205,32 C235,34 270,52 290,78 L290,86 C290,90 288,92 284,92 L40,92 C34,92 30,88 30,82 Z" fill="${body}" stroke="${stroke}" stroke-width="2"/>
+      <path d="M105,42 L150,34 L150,58 L98,58 Z" fill="#cfe0f0" opacity=".85"/>
+      <path d="M156,34 L200,36 L228,58 L156,58 Z" fill="#cfe0f0" opacity=".85"/>
+      <circle cx="95" cy="92" r="20" fill="#0f172a"/><circle cx="95" cy="92" r="9" fill="#94a3b8"/>
+      <circle cx="245" cy="92" r="20" fill="#0f172a"/><circle cx="245" cy="92" r="9" fill="#94a3b8"/>
+      <!-- marcador de avaria -->
+      <circle cx="118" cy="70" r="11" fill="none" stroke="${accent}" stroke-width="2.5"/>
+      <circle cx="118" cy="70" r="3" fill="${accent}"/>
+      <text x="118" y="73" font-family="IBM Plex Mono" font-size="8" fill="${accent}" text-anchor="middle" font-weight="700" dy="-14">1</text>
+    </svg>`;
+  }
+
+  // ---- QR simulado ----
+  function qrSVG(fg='#0f172a', size=42) {
+    const N=21; let r='';
+    function finder(r0,c0){let s='';for(let y=0;y<7;y++)for(let x=0;x<7;x++){const e=y==0||y==6||x==0||x==6,i=y>=2&&y<=4&&x>=2&&x<=4;if(e||i)s+=`<rect x="${c0+x}" y="${r0+y}" width="1" height="1"/>`;}return s;}
+    function reserved(y,x){return (y<8&&x<8)||(y<8&&x>=N-8)||(y>=N-8&&x<8);}
+    r+=finder(0,0)+finder(0,N-7)+finder(N-7,0);
+    for(let y=0;y<N;y++)for(let x=0;x<N;x++){if(reserved(y,x))continue;const v=(y*73856093)^(x*19349663)^((x+y)*83492791);if(Math.abs(v)%100>52)r+=`<rect x="${x}" y="${y}" width="1" height="1"/>`;}
+    return `<svg viewBox="0 0 ${N} ${N}" width="${size}" height="${size}" shape-rendering="crispEdges"><rect width="${N}" height="${N}" fill="#fff"/><g fill="${fg}">${r}</g></svg>`;
+  }
+
+  const R = REPORT;
+
+  // ===================== MODELO A — MODERNO =====================
+  const A = `
+  <div class="page A">
+    <div class="topbar"></div>
+    <div class="hdr">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="logo">DA</div>
+        <div><div class="htitle">Danos Aparentes</div><div class="hsub">${R.empresa}</div></div>
+      </div>
+      <div class="os"><span class="pill">Laudo Validado</span><div style="font-size:7px;color:#64748b;margin-top:3px;font-weight:700;">OS #${R.os}</div></div>
+    </div>
+    <div class="pad" style="padding-top:6px;">
+      <div class="section">Identificação do Veículo</div>
+      <div class="card kv">
+        <div><span class="k">Proprietário / Cliente</span><span class="v">${R.owner}</span></div>
+        <div><span class="k">Marca / Modelo</span><span class="v">${R.brand}</span></div>
+        <div><span class="k">Placa</span><span class="v">${R.plate}</span></div>
+        <div><span class="k">Cor</span><span class="v">${R.color}</span></div>
+        <div><span class="k">Perfil do Laudo</span><span class="v">${R.perfil}</span></div>
+        <div><span class="k">Local</span><span class="v">${R.cidade}</span></div>
+      </div>
+
+      <div class="section">Diagrama de Danos</div>
+      <div class="card" style="padding:6px 10px;">${carSVG('#1e293b','#3b82f6','#ef4444')}</div>
+
+      <div class="section">Detalhamento Técnico das Avarias</div>
+      <table style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
+        <thead><tr><th style="width:18px;text-align:center;">#</th><th>Peça</th><th>Tipo de Dano</th><th style="text-align:center;">Grau</th></tr></thead>
+        <tbody><tr><td style="text-align:center;font-weight:700;color:#94a3b8;">1</td><td style="font-weight:700;text-transform:uppercase;color:#0f172a;">${R.damage.peca}</td><td>✏️ ${R.damage.tipo}</td><td style="text-align:center;"><span class="badge b-grave">${R.damage.grau}</span></td></tr></tbody>
+      </table>
+
+      <div class="section">Galeria Fotográfica — 3 fotos</div>
+      <div class="photos">
+        ${[1,2,3].map(n=>`<div class="ph"><div class="img">📷</div><div class="cap"><b>Porta Diant. Esq.</b><span>Risco na pintura</span></div></div>`).join('')}
+      </div>
+
+      <div class="sign">
+        <div><div class="sline">Assinatura do Vistoriador</div></div>
+        <div><div class="sline">Assinatura do Cliente</div></div>
+      </div>
+      <div class="foot">
+        <div><div class="hash">Hash de Validação SHA-256</div><code>${R.hash}</code></div>
+        ${qrSVG('#0f172a',42)}
+      </div>
+    </div>
+  </div>`;
+
+  // ===================== MODELO B — EDITORIAL =====================
+  const B = `
+  <div class="page B">
+    <div class="pad">
+      <div class="hdr">
+        <div class="crest">✦</div>
+        <div class="htitle">Laudo de Avarias Aparentes</div>
+        <div class="hsub">Vistoria Técnica Veicular</div>
+        <div class="meta"><span>${R.empresa}</span><span>OS Nº ${R.os}</span></div>
+      </div>
+
+      <div class="section">Identificação</div>
+      <div class="kv">
+        <div><span class="k">Proprietário</span><span class="v">${R.owner}</span></div>
+        <div><span class="k">Marca / Modelo</span><span class="v">${R.brand}</span></div>
+        <div><span class="k">Placa</span><span class="v">${R.plate}</span></div>
+        <div><span class="k">Cor</span><span class="v">${R.color}</span></div>
+      </div>
+
+      <div class="section">Diagrama de Danos</div>
+      ${carSVG('#5a4f40','#cdbfa6','#a3341f')}
+
+      <div class="section">Detalhamento das Avarias</div>
+      <table>
+        <thead><tr><th style="width:16px;">#</th><th>Peça / Componente</th><th>Tipo de Dano</th><th style="text-align:right;">Grau</th></tr></thead>
+        <tbody><tr><td>1</td><td style="font-weight:600;">${R.damage.peca}</td><td><i>${R.damage.tipo}</i></td><td style="text-align:right;"><span class="grau">${R.damage.grau}</span></td></tr></tbody>
+      </table>
+
+      <div class="section">Registro Fotográfico</div>
+      <div class="photos">
+        ${[1,2,3].map(n=>`<div class="ph"><div class="img">📷</div><div class="cap">Fig. ${n} — Porta Diant. Esq.</div></div>`).join('')}
+      </div>
+
+      <div class="sign">
+        <div><div class="sline">Vistoriador Responsável</div></div>
+        <div><div class="sline">Proprietário / Responsável</div></div>
+      </div>
+      <div class="foot">
+        <div><div class="hash">Autenticação SHA-256</div><code>${R.hash}</code></div>
+        ${qrSVG('#26201a',40)}
+      </div>
+    </div>
+  </div>`;
+
+  // ===================== MODELO C — TÉCNICO / FORENSE =====================
+  const C = `
+  <div class="page C">
+    <div class="hdr">
+      <div><div class="htitle">LAUDO_AVARIAS</div><div class="hsub">Inspeção Técnica · Danos Aparentes</div></div>
+      <div class="stamp">VALIDADO</div>
+    </div>
+    <div class="body">
+      <div class="section">// Identificação do Veículo</div>
+      <div class="kv">
+        <div><span class="k">Proprietário</span><span class="v">${R.owner}</span></div>
+        <div><span class="k">OS / Ref</span><span class="v">#${R.os}</span></div>
+        <div><span class="k">Marca / Modelo</span><span class="v">${R.brand}</span></div>
+        <div><span class="k">Placa</span><span class="v">${R.plate}</span></div>
+        <div><span class="k">Cor</span><span class="v">${R.color}</span></div>
+        <div><span class="k">Local</span><span class="v">${R.cidade}</span></div>
+      </div>
+
+      <div class="section">// Mapa de Danos</div>
+      <div style="border:1px solid #cbd5e1;padding:4px 8px;">${carSVG('#1e293b','#64748b','#ef4444')}</div>
+
+      <div class="section">// Detalhamento Técnico</div>
+      <table style="border:1px solid #cbd5e1;">
+        <thead><tr><th style="width:16px;">#</th><th>PEÇA</th><th>TIPO_DANO</th><th style="text-align:center;">GRAU</th></tr></thead>
+        <tbody><tr><td>01</td><td style="font-weight:700;text-transform:uppercase;">${R.damage.peca}</td><td>${R.damage.tipo}</td><td style="text-align:center;"><span class="badge b-grave">${R.damage.grau}</span></td></tr></tbody>
+      </table>
+
+      <div class="section">// Evidências Fotográficas</div>
+      <div class="photos">
+        ${[1,2,3].map(n=>`<div class="ph"><div class="img" data-n="${n}">📷</div><div class="cap">PORTA_DE · t=risco</div></div>`).join('')}
+      </div>
+
+      <div class="sign">
+        <div><div class="sline">VISTORIADOR</div></div>
+        <div><div class="sline">CLIENTE</div></div>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="hash">SHA-256<code>${R.hash}</code></div>
+      ${qrSVG('#0b1220',40)}
+    </div>
+  </div>`;
+
+  const cols = [
+    { name:'1 · Moderno', tag:'Azul · Cards', tagBg:'#1d4ed8', dot:'#3b82f6', html:A,
+      desc:'Limpo e corporativo. Faixa de cor no topo, blocos arredondados, cabeçalho com logo. (≈ tema "modern" atual, refinado.)' },
+    { name:'2 · Editorial', tag:'Serifa · Formal', tagBg:'#b08642', dot:'#b08642', html:B,
+      desc:'Documento clássico/cartorial. Título centralizado, tipografia serifada (Lora), filetes finos, muito respiro.' },
+    { name:'3 · Técnico / Forense', tag:'Mono · Denso', tagBg:'#0f766e', dot:'#2dd4bf', html:C,
+      desc:'Aspecto pericial. Cabeçalho escuro, rótulos monoespaçados, grade fechada, alta densidade de informação.' },
+  ];
+
+  document.getElementById('grid').innerHTML = cols.map(c=>`
+    <div class="col">
+      <div class="label"><span class="dot" style="background:${c.dot}"></span>${c.name}
+        <span class="tag" style="background:${c.tagBg}22;color:${c.dot};border:1px solid ${c.tagBg}55;">${c.tag}</span>
+      </div>
+      ${c.html}
+      <p style="font-size:11px;color:#8aa0b6;margin-top:12px;line-height:1.5;">${c.desc}</p>
+    </div>
+  `).join('');
+</script>
+</body>
+</html>

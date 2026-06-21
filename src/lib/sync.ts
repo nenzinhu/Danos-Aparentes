@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { SavedReport } from '../types'
-import { db } from './db'
+import { db, SyncQueueItem } from './db'
 import { supabase, supabaseEnabled } from './supabase'
 
 function inspectionRow(r: SavedReport, userId: string) {
@@ -12,6 +12,11 @@ function inspectionRow(r: SavedReport, userId: string) {
     owner: v.owner, phone: v.phone, brand: v.brand, plate: v.plate,
     general_notes: v.generalNotes, profile: v.profile, ref: v.ref, color: v.color,
     vehicle_type_desc: v.vehicleTypeDesc, city: v.city, state: v.state,
+    cpf: v.cpf || '',
+    cnh: v.cnh || '',
+    cnh_category: v.cnhCategory || '',
+    inspector_signature: v.inspectorSignature || '',
+    client_signature: v.clientSignature || '',
     updated_at: r.savedAt,
   }
 }
@@ -45,9 +50,33 @@ async function deleteRemoteReport(id: string) {
   if (error) throw error
 }
 
+const MAX_RETRIES = 5
+
+async function logSyncError(userId: string, item: SyncQueueItem, error: any) {
+  if (!supabase) return
+  await supabase.from('sync_errors').insert({
+    user_id: userId,
+    type: item.type,
+    report_id: item.reportId,
+    error: error.message || String(error),
+    retry_count: item.retry_count,
+    timestamp: Date.now()
+  })
+}
+
 export async function flushQueue(userId: string): Promise<boolean> {
   const queue = await db.getSyncQueue()
+  let hasErrors = false
+
   for (const item of queue.sort((a, b) => a.timestamp - b.timestamp)) {
+    const delay = Math.pow(2, item.retry_count) * 1000
+    const now = Date.now()
+
+    if (item.retry_count > 0 && now - item.timestamp < delay) {
+      hasErrors = true
+      continue
+    }
+
     try {
       if (item.type === 'upsert' && item.report) {
         await pushReport(item.report, userId)
@@ -55,11 +84,25 @@ export async function flushQueue(userId: string): Promise<boolean> {
         await deleteRemoteReport(item.reportId)
       }
       await db.removeFromSyncQueue(item.qid)
-    } catch {
-      return false
+    } catch (err: any) {
+      hasErrors = true
+      const newRetryCount = item.retry_count + 1
+      const lastError = err.message || String(err)
+
+      if (newRetryCount >= MAX_RETRIES) {
+        await logSyncError(userId, item, err)
+        await db.removeFromSyncQueue(item.qid)
+      } else {
+        await db.updateSyncQueueItem({
+          ...item,
+          retry_count: newRetryCount,
+          last_error: lastError,
+          timestamp: now
+        })
+      }
     }
   }
-  return true
+  return !hasErrors
 }
 
 export async function pullRemote(userId: string): Promise<SavedReport[]> {
@@ -81,6 +124,11 @@ export async function pullRemote(userId: string): Promise<SavedReport[]> {
       owner: insp.owner, phone: insp.phone, brand: insp.brand, plate: insp.plate,
       generalNotes: insp.general_notes, profile: insp.profile, ref: insp.ref,
       color: insp.color, vehicleTypeDesc: insp.vehicle_type_desc, city: insp.city, state: insp.state,
+      cpf: insp.cpf || '',
+      cnh: insp.cnh || '',
+      cnhCategory: insp.cnh_category || '',
+      inspectorSignature: insp.inspector_signature || '',
+      clientSignature: insp.client_signature || '',
     },
     damages: (damages ?? [])
       .filter((d: any) => d.inspection_id === insp.id)
@@ -92,7 +140,7 @@ export async function pullRemote(userId: string): Promise<SavedReport[]> {
   }))
 }
 
-export type SyncStatus = 'synced' | 'pending' | 'offline'
+export type SyncStatus = 'synced' | 'pending' | 'offline' | 'error'
 
 export function useSyncStatus(userId: string | undefined) {
   const [status, setStatus] = useState<SyncStatus>('synced')
@@ -114,7 +162,15 @@ export function useSyncStatus(userId: string | undefined) {
     const ok = await flushQueue(userId)
     flushing.current = false
     const remaining = await db.getSyncQueue()
-    setStatus(remaining.length === 0 ? 'synced' : (navigator.onLine ? 'pending' : 'offline'))
+    if (remaining.length === 0) {
+      setStatus('synced')
+    } else if (!navigator.onLine) {
+      setStatus('offline')
+    } else if (!ok || remaining.some(i => i.retry_count > 0)) {
+      setStatus('error')
+    } else {
+      setStatus('pending')
+    }
     return ok
   }, [userId])
 

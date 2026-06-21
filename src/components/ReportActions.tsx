@@ -1,25 +1,74 @@
+'use client';
 import { useState, createElement } from 'react'
 import { Damage, VehicleInfo, VehicleType, ViewType } from '../types'
 import { generatePdf, generatePdfBlob, SvgPdfData } from '../lib/pdf'
 import { copyReport, downloadTxt, sendWhatsApp } from '../lib/report'
+import { staticVehicleRegistry } from './vehicles/staticRegistry'
+import VehicleDefs from './vehicles/VehicleDefs'
 
 interface Props {
   vehicleType: VehicleType
   vehicleInfo: VehicleInfo
   damages: Damage[]
   onToast?: (msg: string) => void
+  hasAccess?: boolean
 }
 
 const ALL_VIEWS: ViewType[] = ['lateral-left', 'lateral-right', 'frontal', 'traseira']
 
-async function captureSvgs(vehicleType: VehicleType, damages: Damage[]): Promise<SvgPdfData> {
-  try {
-    const { renderToStaticMarkup } = await import('react-dom/server')
-    const { vehicleRegistry } = await import('./vehicles/registry')
-    const { default: VehicleDefs } = await import('./vehicles/VehicleDefs')
+function elementToHtml(el: any): string {
+  if (el == null) return ''
+  if (typeof el === 'string' || typeof el === 'number') {
+    return String(el)
+  }
+  if (Array.isArray(el)) {
+    return el.map(elementToHtml).join('')
+  }
+  let type = el.type
+  if (!type) return ''
+  if (typeof type === 'symbol' || (type.toString && type.toString().includes('Symbol'))) {
+    return elementToHtml(el.props?.children)
+  }
+  if (typeof type === 'function') {
+    try {
+      const renderType = (type as any).type || type
+      const rendered = renderType(el.props)
+      return elementToHtml(rendered)
+    } catch (e) {
+      console.error(e)
+      return ''
+    }
+  }
+  if (typeof type === 'string') {
+    const props = el.props || {}
+    let attrs = ''
+    for (const [key, value] of Object.entries(props)) {
+      if (key === 'children' || key.startsWith('on') || value == null) continue
+      if (key === 'className') {
+        attrs += ` class="${value}"`
+      } else if (key === 'style' && typeof value === 'object') {
+        const styleStr = Object.entries(value)
+          .map(([k, v]) => `${k.replace(/[A-Z]/g, m => '-' + m.toLowerCase())}:${v}`)
+          .join(';')
+        attrs += ` style="${styleStr}"`
+      } else {
+        attrs += ` ${key}="${value}"`
+      }
+    }
+    const childrenHtml = elementToHtml(props.children)
+    const selfClosing = ['circle', 'path', 'ellipse', 'rect', 'line', 'image', 'stop', 'use']
+    if (selfClosing.includes(type) && !childrenHtml) {
+      return `<${type}${attrs} />`
+    }
+    return `<${type}${attrs}>${childrenHtml}</${type}>`
+  }
+  return ''
+}
 
+export async function captureSvgs(vehicleType: VehicleType, damages: Damage[]): Promise<SvgPdfData> {
+  try {
     // Extract the <defs>...</defs> content to inject into each SVG
-    const defsHtml = renderToStaticMarkup(createElement(VehicleDefs))
+    const defsHtml = elementToHtml(createElement(VehicleDefs))
     const startIdx = defsHtml.indexOf('<defs>')
     const endIdx = defsHtml.lastIndexOf('</defs>') + '</defs>'.length
     const defsInner = startIdx >= 0 ? defsHtml.slice(startIdx, endIdx) : ''
@@ -29,8 +78,8 @@ async function captureSvgs(vehicleType: VehicleType, damages: Damage[]): Promise
     for (const view of ALL_VIEWS) {
       const viewDamages = damages.filter(d => d.view === view)
       // Captura todas as vistas — neutras quando sem avarias
-      const Comp = vehicleRegistry[vehicleType][view]
-      const rawSvg = renderToStaticMarkup(
+      const Comp = staticVehicleRegistry[vehicleType][view]
+      const rawSvg = elementToHtml(
         createElement(Comp, {
           damages: viewDamages,
           selectedPartId: null,
@@ -42,7 +91,8 @@ async function captureSvgs(vehicleType: VehicleType, damages: Damage[]): Promise
     }
 
     return { svgCaptures }
-  } catch {
+  } catch (e) {
+    console.error("captureSvgs failed:", e)
     return { svgCaptures: {} }
   }
 }
@@ -99,8 +149,21 @@ function IconDamageList() {
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
-export default function ReportActions({ vehicleType, vehicleInfo, damages, onToast }: Props) {
+export default function ReportActions({ vehicleType, vehicleInfo, damages, onToast, hasAccess }: Props) {
   const [loading, setLoading] = useState<string | null>(null)
+  const [pdfTheme, setPdfTheme] = useState<'modern' | 'editorial' | 'tecnico'>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('vistoria_pdf_theme') as 'modern' | 'editorial' | 'tecnico') || 'modern'
+    }
+    return 'modern'
+  })
+
+  const handleThemeChange = (theme: 'modern' | 'editorial' | 'tecnico') => {
+    setPdfTheme(theme)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('vistoria_pdf_theme', theme)
+    }
+  }
 
   async function handle(key: string, fn: () => Promise<void>, successMsg?: string) {
     setLoading(key)
@@ -117,12 +180,16 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
 
   async function handlePdf() {
     const svgData = await captureSvgs(vehicleType, damages)
-    await generatePdf(vehicleInfo, damages, svgData)
+    const companyName = hasAccess ? (localStorage.getItem('company_name') || '') : ''
+    const companyLogo = hasAccess ? (localStorage.getItem('company_logo') || '') : ''
+    await generatePdf(vehicleInfo, damages, svgData, { companyName, companyLogo, pdfTheme })
   }
 
   async function whatsappPdf() {
     const svgData = await captureSvgs(vehicleType, damages)
-    const blob = await generatePdfBlob(vehicleInfo, damages, svgData)
+    const companyName = hasAccess ? (localStorage.getItem('company_name') || '') : ''
+    const companyLogo = hasAccess ? (localStorage.getItem('company_logo') || '') : ''
+    const blob = await generatePdfBlob(vehicleInfo, damages, svgData, { companyName, companyLogo, pdfTheme })
     const file = new File([blob], `vistoria-${vehicleInfo.plate || 'sem-placa'}.pdf`, { type: 'application/pdf' })
     if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({ files: [file], title: 'Relatório de Vistoria' })
@@ -132,69 +199,77 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
     }
   }
 
-  const btnBase: React.CSSProperties = {
-    background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)',
-    borderRadius: 10, padding: '10px 14px', cursor: 'pointer', color: 'var(--text-main)',
-    fontFamily: 'Outfit,sans-serif', fontSize: '0.85rem', fontWeight: 700,
-    display: 'flex', alignItems: 'center', gap: 8, transition: 'all 0.2s',
-    width: '100%', justifyContent: 'flex-start',
-  }
+  const btnBase = "w-full flex items-center justify-start gap-2 px-3.5 py-2.5 rounded-xl font-outfit text-[0.85rem] font-bold transition-all duration-200"
 
   return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, paddingBottom: 10, borderBottom: '1px solid rgba(0,170,255,0.1)', fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-main)' }}>
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-sky-400/10 font-bold text-[0.95rem] text-[var(--text-main)]">
         <IconDamageList />
         <span>Exportar Relatório</span>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div className="flex flex-col gap-1.5 mb-1 bg-sky-950/15 border border-sky-500/10 rounded-xl p-2.5">
+        <label htmlFor="pdf-theme-select" className="text-[0.7rem] font-bold text-[var(--text-muted)] uppercase tracking-wider">Modelo de Layout PDF</label>
+        <select
+          id="pdf-theme-select"
+          value={pdfTheme}
+          onChange={(e) => handleThemeChange(e.target.value as 'modern' | 'editorial' | 'tecnico')}
+          className="w-full bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] px-3 py-2 rounded-lg font-outfit text-[0.82rem] font-medium outline-none focus:border-sky-500/40 transition-all cursor-pointer"
+        >
+          <option value="modern" className="bg-[#0f172a] text-white">🎨 Modelo Moderno (Padrão)</option>
+          <option value="editorial" className="bg-[#0f172a] text-white">📖 Modelo Editorial (Poppins & Lora)</option>
+          <option value="tecnico" className="bg-[#0f172a] text-white">🔬 Modelo Técnico / Forense (Mono)</option>
+        </select>
+      </div>
+
+      <div className="flex flex-col gap-2">
         <button
           onClick={() => handle('wp', async () => sendWhatsApp(vehicleInfo, damages))}
           disabled={loading !== null}
-          style={{ ...btnBase, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', color: '#22c55e', opacity: loading !== null ? 0.6 : 1 }}
+          className={`${btnBase} bg-green-500/10 border border-green-500/30 text-green-500 hover:bg-green-500/20 disabled:opacity-60`}
         >
-          {loading === 'wp' ? <span>⏳</span> : <IconWhatsApp />}
+          {loading === 'wp' ? <span className="animate-pulse">⏳</span> : <IconWhatsApp />}
           Enviar via WhatsApp
         </button>
 
         <button
           onClick={() => handle('wp-pdf', whatsappPdf)}
           disabled={loading !== null}
-          style={{ ...btnBase, background: 'rgba(34,197,94,0.08)', border: '1px solid rgba(34,197,94,0.2)', color: '#22c55e', opacity: loading !== null ? 0.6 : 1 }}
+          className={`${btnBase} bg-green-500/5 border border-green-500/20 text-green-500 hover:bg-green-500/15 disabled:opacity-60`}
         >
-          {loading === 'wp-pdf' ? <span>⏳</span> : <IconWhatsAppFull />}
+          {loading === 'wp-pdf' ? <span className="animate-pulse">⏳</span> : <IconWhatsAppFull />}
           WhatsApp (PDF)
         </button>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 6 }}>
+        <div className="grid grid-cols-3 gap-2">
           <button
             onClick={() => handle('pdf', handlePdf, '📄 PDF gerado!')}
             disabled={loading !== null}
             title="Gerar PDF Profissional com Mapa de Avarias"
-            style={{ ...btnBase, background: 'linear-gradient(135deg,rgba(16,185,129,0.15),rgba(5,150,105,0.1))', border: '1px solid rgba(16,185,129,0.35)', color: '#10b981', justifyContent: 'center', flexDirection: 'column', gap: 5, padding: '10px 6px', opacity: loading !== null ? 0.6 : 1 }}
+            className={`${btnBase} flex-col justify-center gap-1 bg-gradient-to-br from-emerald-500/15 to-emerald-600/10 border border-emerald-500/35 text-emerald-500 p-2.5 hover:from-emerald-500/20 hover:to-emerald-600/15 disabled:opacity-60`}
           >
-            {loading === 'pdf' ? <span style={{ fontSize: '1.2rem' }}>⏳</span> : <IconPdf />}
-            <span style={{ fontSize: '0.72rem' }}>PDF</span>
+            {loading === 'pdf' ? <span className="text-xl animate-pulse">⏳</span> : <IconPdf />}
+            <span className="text-[0.72rem]">PDF</span>
           </button>
 
           <button
             onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, '📋 Copiado!')}
             disabled={loading !== null}
             title="Copiar Relatório"
-            style={{ ...btnBase, justifyContent: 'center', flexDirection: 'column', gap: 5, padding: '10px 6px', opacity: loading !== null ? 0.6 : 1 }}
+            className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
           >
-            {loading === 'copy' ? <span style={{ fontSize: '1.2rem' }}>⏳</span> : <IconCopy />}
-            <span style={{ fontSize: '0.72rem' }}>Copiar</span>
+            {loading === 'copy' ? <span className="text-xl animate-pulse">⏳</span> : <IconCopy />}
+            <span className="text-[0.72rem]">Copiar</span>
           </button>
 
           <button
             onClick={() => handle('txt', async () => downloadTxt(vehicleInfo, damages), '📝 TXT baixado!')}
             disabled={loading !== null}
             title="Bloco de Notas (TXT)"
-            style={{ ...btnBase, justifyContent: 'center', flexDirection: 'column', gap: 5, padding: '10px 6px', opacity: loading !== null ? 0.6 : 1 }}
+            className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
           >
-            {loading === 'txt' ? <span style={{ fontSize: '1.2rem' }}>⏳</span> : <IconTxt />}
-            <span style={{ fontSize: '0.72rem' }}>TXT</span>
+            {loading === 'txt' ? <span className="text-xl animate-pulse">⏳</span> : <IconTxt />}
+            <span className="text-[0.72rem]">TXT</span>
           </button>
         </div>
       </div>

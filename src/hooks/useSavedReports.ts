@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react'
 import { SavedReport, VehicleInfo, Damage } from '../types'
 import { db } from '../lib/db'

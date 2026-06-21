@@ -1,6 +1,8 @@
+'use client';
 import { useState } from 'react'
-import { Damage, Severity } from '../types'
+import { Damage, Severity, ViewType } from '../types'
 import { compressImage, fileToDataUrl } from '../lib/imageUtils'
+import SpeechButton from './SpeechButton'
 
 interface Props {
   damages: Damage[]
@@ -8,25 +10,29 @@ interface Props {
   onUpdate: (id: string, patch: Partial<Damage>) => void
 }
 
-const SEV_LABEL: Record<Severity, string> = { low: 'Leve', medium: 'Média', high: 'Grave' }
-const SEV_COLOR: Record<Severity, string> = { low: '#f59e0b', medium: '#f97316', high: '#ef4444' }
-const VIEW_LABEL: Record<string, string> = {
+const SEV_LABEL = { low: 'Leve', medium: 'Média', high: 'Grave' } satisfies Record<Severity, string>
+const SEV_COLOR = { low: '#f59e0b', medium: '#f97316', high: '#ef4444' } satisfies Record<Severity, string>
+const VIEW_LABEL = {
   'lateral-left': 'Lat. Esq.', 'lateral-right': 'Lat. Dir.', frontal: 'Frontal', traseira: 'Traseira'
-}
+} satisfies Record<ViewType, string>
 
 export default function DamageList({ damages, onRemove, onUpdate }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [photoViewer, setPhotoViewer] = useState<string | null>(null)
 
   async function handlePhoto(id: string, file: File) {
-    const raw = await fileToDataUrl(file)
-    const compressed = await compressImage(raw)
-    const dmg = damages.find(d => d.id === id)
-    if (!dmg) return
-    onUpdate(id, {
-      photos: [...dmg.photos, compressed],
-      photoNotes: [...(dmg.photoNotes ?? []), ''],
-    })
+    try {
+      const compressedBlob = await compressImage(file, 1200, 0.8)
+      const compressedDataUrl = await fileToDataUrl(compressedBlob)
+      const dmg = damages.find(d => d.id === id)
+      if (!dmg) return
+      onUpdate(id, {
+        photos: [...dmg.photos, compressedDataUrl],
+        photoNotes: [...(dmg.photoNotes ?? []), ''],
+      })
+    } catch (error) {
+      console.error('Error compressing image:', error)
+    }
   }
 
   function updatePhotoNote(dmgId: string, photoIdx: number, note: string) {
@@ -48,57 +54,71 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
 
   if (damages.length === 0) {
     return (
-      <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '32px 0', fontSize: '0.9rem' }}>
+      <div className="text-center text-[var(--text-muted)] py-8 text-[0.9rem]">
         Nenhuma avaria registrada.<br />
-        <span style={{ fontSize: '0.8rem' }}>Clique em uma peça no SVG para começar.</span>
+        <span className="text-[0.8rem]">Clique em uma peça no SVG para começar.</span>
       </div>
     )
   }
 
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <div className="flex flex-col gap-2">
         {damages.map(d => {
           const photoNotes = d.photoNotes ?? d.photos.map(() => '')
+          const sevColor = SEV_COLOR[d.severity]
+          
           return (
-            <div key={d.id} style={{
-              background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.06)',
-              borderRadius: 12, overflow: 'hidden',
-              borderLeft: `3px solid ${SEV_COLOR[d.severity]}`
-            }}>
+            <div 
+              key={d.id} 
+              className="bg-black/20 border border-white/5 rounded-xl overflow-hidden"
+              style={{ borderLeft: `3px solid ${sevColor}` }}
+            >
               {/* Header row */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', cursor: 'pointer' }}
-                onClick={() => setExpandedId(expandedId === d.id ? null : d.id)}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: SEV_COLOR[d.severity], flexShrink: 0 }} />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{d.partName}</div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                    {d.typeName} • <span style={{ color: SEV_COLOR[d.severity], fontWeight: 700 }}>{SEV_LABEL[d.severity]}</span> • {VIEW_LABEL[d.view] || d.view}
+              <div 
+                className="flex items-center gap-2.5 p-2.5 cursor-pointer select-none"
+                onClick={() => setExpandedId(expandedId === d.id ? null : d.id)}
+              >
+                <span 
+                  className="w-2 h-2 rounded-full shrink-0" 
+                  style={{ background: sevColor }} 
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-[0.85rem] text-[var(--text-main)] truncate">{d.partName}</div>
+                  <div className="text-[0.72rem] text-[var(--text-muted)]">
+                    {d.typeName} • <span style={{ color: sevColor }} className="font-bold">{SEV_LABEL[d.severity]}</span> • {VIEW_LABEL[d.view] || d.view}
                   </div>
                 </div>
                 {d.photos.length > 0 && (
-                  <span style={{ fontSize: '0.72rem', color: 'var(--primary)', background: 'rgba(0,170,255,0.1)', padding: '2px 6px', borderRadius: 6 }}>📷 {d.photos.length}</span>
+                  <span className="text-[0.72rem] text-[var(--primary)] bg-sky-500/10 px-1.5 py-0.5 rounded-md font-medium">📷 {d.photos.length}</span>
                 )}
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{expandedId === d.id ? '▲' : '▼'}</span>
-                <button onClick={e => { e.stopPropagation(); onRemove(d.id) }}
-                  style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', fontSize: '0.85rem', padding: '2px 6px', flexShrink: 0 }}>✕</button>
+                <span className="text-[0.7rem] text-[var(--text-muted)]">{expandedId === d.id ? '▲' : '▼'}</span>
+                <button 
+                  onClick={e => { e.stopPropagation(); onRemove(d.id) }}
+                  className="text-red-500 hover:text-red-400 cursor-pointer text-[0.85rem] px-1.5 shrink-0 transition-colors"
+                >✕</button>
               </div>
 
               {/* Expanded */}
               {expandedId === d.id && (
-                <div style={{ padding: '0 12px 12px', borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+                <div className="px-3 pb-3 border-t border-white/[0.04] space-y-3 pt-2.5">
                   {/* Severity selector */}
-                  <div style={{ marginTop: 10, marginBottom: 8 }}>
-                    <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 6 }}>Grau de Dano</div>
-                    <div style={{ display: 'flex', gap: 6 }}>
+                  <div>
+                    <div className="text-[0.68rem] font-bold text-[var(--text-muted)] uppercase mb-1.5">Grau de Dano</div>
+                    <div className="flex gap-1.5">
                       {(['low', 'medium', 'high'] as Severity[]).map(sev => (
-                        <button key={sev} onClick={() => onUpdate(d.id, { severity: sev })} style={{
-                          flex: 1, padding: '6px 4px', borderRadius: 8, cursor: 'pointer',
-                          fontFamily: 'Outfit,sans-serif', fontSize: '0.78rem', fontWeight: 800,
-                          border: `1px solid ${d.severity === sev ? SEV_COLOR[sev] : 'rgba(255,255,255,0.08)'}`,
-                          background: d.severity === sev ? `${SEV_COLOR[sev]}22` : 'rgba(255,255,255,0.02)',
-                          color: d.severity === sev ? SEV_COLOR[sev] : 'var(--text-muted)',
-                        }}>
+                        <button 
+                          key={sev} 
+                          onClick={() => onUpdate(d.id, { severity: sev })} 
+                          className={`flex-1 py-1.5 rounded-lg font-outfit text-[0.78rem] font-extrabold border transition-all ${
+                            d.severity === sev 
+                              ? 'bg-[var(--severity-color)]/10 text-[var(--severity-color)] border-[var(--severity-color)]' 
+                              : 'bg-white/[0.02] text-[var(--text-muted)] border-white/[0.08] hover:border-white/20'
+                          }`}
+                          style={{ 
+                            '--severity-color': SEV_COLOR[sev]
+                          } as any}
+                        >
                           {SEV_LABEL[sev]}
                         </button>
                       ))}
@@ -106,61 +126,66 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
                   </div>
 
                   {/* Notes */}
-                  <textarea value={d.notes} onChange={e => onUpdate(d.id, { notes: e.target.value })}
-                    placeholder="Observação sobre este dano..."
-                    style={{
-                      width: '100%', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-                      borderRadius: 8, padding: '8px 10px', color: 'var(--text-main)', fontFamily: 'Outfit,sans-serif',
-                      fontSize: '0.82rem', resize: 'vertical', minHeight: 52, outline: 'none', boxSizing: 'border-box'
-                    }} />
+                  <div>
+                    <div className="flex justify-between items-center mb-1.5">
+                      <div className="text-[0.68rem] font-bold text-[var(--text-muted)] uppercase">Observação sobre este dano</div>
+                      <SpeechButton
+                        onTranscript={(text) => {
+                          const current = d.notes || ''
+                          const space = current ? (current.endsWith(' ') ? '' : ' ') : ''
+                          onUpdate(d.id, { notes: current + space + text })
+                        }}
+                      />
+                    </div>
+                    <textarea 
+                      value={d.notes} 
+                      onChange={e => onUpdate(d.id, { notes: e.target.value })}
+                      placeholder="Observação sobre este dano..."
+                      className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg p-2.5 text-[var(--input-color)] font-outfit text-[0.82rem] resize-none min-height-[52px] outline-none focus:border-sky-500/50 transition-colors"
+                    />
+                  </div>
 
                   {/* Photos */}
-                  <div style={{ marginTop: 8 }}>
-                    <div style={{ fontSize: '0.68rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 6 }}>
+                  <div className="space-y-2">
+                    <div className="text-[0.68rem] font-bold text-[var(--text-muted)] uppercase">
                       Fotos ({d.photos.length})
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <div className="flex flex-col gap-2">
                       {d.photos.map((p, i) => (
-                        <div key={i} style={{ background: 'rgba(0,0,0,0.18)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: 8, display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                        <div key={i} className="bg-black/20 border border-white/5 rounded-xl p-2 flex gap-2.5 items-start">
                           {/* Thumbnail */}
-                          <div style={{ position: 'relative', flexShrink: 0 }}>
-                            <img src={p} alt="" onClick={() => setPhotoViewer(p)}
-                              style={{ width: 72, height: 72, objectFit: 'cover', borderRadius: 8, cursor: 'pointer', border: '1px solid rgba(255,255,255,0.1)', display: 'block' }} />
-                            <button onClick={() => removePhoto(d.id, i)}
-                              style={{ position: 'absolute', top: 2, right: 2, background: 'rgba(0,0,0,0.85)', border: 'none', borderRadius: '50%', color: '#fff', cursor: 'pointer', width: 20, height: 20, fontSize: '0.65rem', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, fontWeight: 900 }}>✕</button>
+                          <div className="relative shrink-0 group">
+                            <img 
+                              src={p} 
+                              alt="" 
+                              onClick={() => setPhotoViewer(p)}
+                              className="w-[72px] h-[72px] object-cover rounded-lg cursor-zoom-in border border-white/10 block hover:opacity-80 transition-opacity" 
+                            />
+                            <button 
+                              onClick={() => removePhoto(d.id, i)}
+                              className="absolute -top-1.5 -right-1.5 bg-black/80 hover:bg-red-600 rounded-full text-white w-5 h-5 text-[0.65rem] flex items-center justify-center font-black transition-colors shadow-lg"
+                            >✕</button>
                           </div>
                           {/* Caption/Tag */}
-                          <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                            <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                          <div className="flex-1 min-w-0 flex flex-col gap-1">
+                            <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider">
                               🏷️ Tag / Descrição da Foto
                             </div>
                             <textarea
                               value={photoNotes[i] ?? ''}
                               onChange={e => updatePhotoNote(d.id, i, e.target.value)}
-                              placeholder={`Ex.: Amassado na porta traseira esquerda, próximo à maçaneta`}
+                              placeholder="Ex.: Amassado na porta..."
                               rows={2}
-                              style={{
-                                width: '100%', background: 'rgba(255,255,255,0.05)',
-                                border: '1px solid rgba(0,170,255,0.18)', borderRadius: 6,
-                                padding: '6px 8px', color: 'var(--text-main)',
-                                fontFamily: 'Outfit,sans-serif', fontSize: '0.78rem',
-                                resize: 'vertical', outline: 'none', boxSizing: 'border-box',
-                              }}
+                              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg p-1.5 text-[var(--input-color)] font-outfit text-[0.78rem] resize-none outline-none focus:border-sky-500/40 transition-colors"
                             />
                           </div>
                         </div>
                       ))}
 
                       {/* Add photo button */}
-                      <label style={{
-                        height: 44, borderRadius: 8,
-                        border: '1px dashed rgba(0,170,255,0.3)', display: 'flex',
-                        alignItems: 'center', justifyContent: 'center', cursor: 'pointer',
-                        color: '#00aaff', fontSize: '0.8rem', gap: 6,
-                        background: 'rgba(0,170,255,0.04)', fontWeight: 700, fontFamily: 'Outfit,sans-serif'
-                      }}>
+                      <label className="h-11 rounded-lg border border-dashed border-sky-500/30 flex items-center justify-center cursor-pointer text-sky-500 text-[0.8rem] gap-1.5 bg-sky-500/5 font-bold font-outfit hover:bg-sky-500/10 transition-colors">
                         📷 Anexar Foto
-                        <input type="file" accept="image/*" capture="environment" style={{ display: 'none' }}
+                        <input type="file" accept="image/*" capture="environment" className="hidden"
                           onChange={e => { if (e.target.files?.[0]) handlePhoto(d.id, e.target.files[0]) }} />
                       </label>
                     </div>
@@ -174,16 +199,15 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
 
       {/* Photo viewer modal */}
       {photoViewer && (
-        <div onClick={() => setPhotoViewer(null)} style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', zIndex: 99999,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'zoom-out'
-        }}>
-          <img src={photoViewer} alt="" style={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: 12, objectFit: 'contain' }} />
-          <button onClick={() => setPhotoViewer(null)} style={{
-            position: 'fixed', top: 16, right: 16, background: 'rgba(0,0,0,0.8)', border: '1px solid rgba(255,255,255,0.2)',
-            borderRadius: '50%', width: 44, height: 44, color: '#fff', cursor: 'pointer', fontSize: '1.2rem',
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
-          }}>✕</button>
+        <div 
+          onClick={() => setPhotoViewer(null)} 
+          className="fixed inset-0 bg-black/95 z-[99999] flex items-center justify-center cursor-zoom-out p-4"
+        >
+          <img src={photoViewer} alt="" className="max-w-full max-h-full rounded-xl object-contain shadow-2xl" />
+          <button 
+            onClick={() => setPhotoViewer(null)} 
+            className="fixed top-4 right-4 bg-black/80 border border-white/20 rounded-full w-11 h-11 text-white text-xl flex items-center justify-center hover:bg-white/10 transition-colors"
+          >✕</button>
         </div>
       )}
     </>

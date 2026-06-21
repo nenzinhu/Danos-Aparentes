@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect, useCallback } from 'react'
 import { VehicleType, ViewType, VehicleInfo, Damage, DamageType } from './types'
 import { useDamages } from './hooks/useDamages'
@@ -17,7 +18,8 @@ import VehicleInfoForm from './components/VehicleInfoForm'
 import TtsSettings from './components/TtsSettings'
 import ReportActions from './components/ReportActions'
 import SavedReportsModal from './components/SavedReportsModal'
-import Login from './pages/Login'
+import Login from './views/Login'
+import TermsModal from './components/TermsModal'
 
 function ClearAllIcon({ size = 14 }: { size?: number }) {
   return (
@@ -34,7 +36,10 @@ function ClearAllIcon({ size = 14 }: { size?: number }) {
 
 const EMPTY_INFO: VehicleInfo = {
   owner: '', phone: '', brand: '', plate: '', generalNotes: '',
-  profile: '', ref: '', color: '', vehicleTypeDesc: '', city: '', state: '', customFields: []
+  profile: '', ref: '', color: '', vehicleTypeDesc: '', city: '', state: '',
+  cpf: '', cnh: '', cnhCategory: '',
+  inspectorSignature: '', clientSignature: '',
+  customFields: []
 }
 
 function Toast({ msg, onDone }: { msg: string; onDone: () => void }) {
@@ -84,6 +89,8 @@ export default function App() {
   const [savedModal, setSavedModal] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const [formCollapsed, setFormCollapsed] = useState(false)
+  const [termsOpen, setTermsOpen] = useState(false)
+  const [termsTab, setTermsTab] = useState<'terms' | 'privacy'>('terms')
 
   const { damages, addDamage, removeDamage, updateDamage, clearDamages } = useDamages()
   const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts()
@@ -153,7 +160,7 @@ export default function App() {
   }
 
   const VEHICLE_NAME: Record<VehicleType, string> = {
-    car: 'Automóvel', moto: 'Moto', truck: 'Caminhão', van: 'Utilitário', bus: 'Ônibus', custom: 'Genérico'
+    car: 'Automóvel', car2d: 'Carro (2 Portas)', moto: 'Moto', truck: 'Caminhão', van: 'Utilitário', bus: 'Ônibus', microbus: 'Micro-ônibus', custom: 'Genérico'
   }
   const VIEW_NAME: Record<ViewType, string> = {
     'lateral-left': 'Lateral Esquerda', 'lateral-right': 'Lateral Direita',
@@ -198,6 +205,7 @@ export default function App() {
         darkMode={darkMode}
         onToggleDark={() => setDarkMode(d => !d)}
         onOpenSaved={() => setSavedModal(true)}
+        onOpenSettings={() => setSavedModal(false) /* placeholder — CompanySettingsModal wired via Header */}
         onSignOut={supabaseEnabled ? signOut : undefined}
         syncStatus={supabaseEnabled ? syncStatus : undefined}
         subscription={supabaseEnabled && subscription ? { status: subscription.status, trialDaysLeft: subscription.trialDaysLeft } : undefined}
@@ -329,6 +337,79 @@ export default function App() {
         onSave={handleSave}
         onLoad={handleLoad}
         onDelete={deleteReport}
+      />
+
+      {/* ── FOOTER com badges de status ── */}
+      <footer className="w-full max-w-7xl mx-auto px-4 pt-6 pb-8 mt-12 border-t border-slate-800/60 font-outfit select-none shrink-0">
+        {/* Status badges */}
+        <div className="flex flex-wrap gap-2 justify-center items-center mb-5">
+          {[
+            { label: '🛡️ Offline', desc: 'PWA' },
+            { label: '💾 IndexedDB', desc: 'Local' },
+            { label: '📄 PDF', desc: 'Profissional' },
+            { label: '🗣️ TTS', desc: 'Antoni PT-BR' },
+          ].map(b => (
+            <div key={b.label} className="flex items-center gap-1.5 bg-white/[0.03] border border-white/[0.07] rounded-lg px-3 py-1 text-[0.72rem] font-semibold text-slate-400">
+              {b.label} <span className="opacity-50 font-normal">{b.desc}</span>
+            </div>
+          ))}
+
+          {supabaseEnabled && syncStatus === 'synced' && (
+            <div className="flex items-center gap-1.5 bg-green-500/[0.06] border border-green-500/20 rounded-lg px-3 py-1 text-[0.72rem] font-semibold text-green-600/70">
+              ✔️ Sincronizado
+            </div>
+          )}
+          {supabaseEnabled && syncStatus === 'pending' && (
+            <div className="flex items-center gap-1.5 bg-yellow-500/[0.06] border border-yellow-500/20 rounded-lg px-3 py-1 text-[0.72rem] font-semibold text-yellow-600/70">
+              🔄 Pendente sincronização
+            </div>
+          )}
+          {supabaseEnabled && syncStatus === 'offline' && (
+            <div className="flex items-center gap-1.5 bg-red-500/[0.06] border border-red-500/20 rounded-lg px-3 py-1 text-[0.72rem] font-semibold text-red-500/70">
+              📡 Offline
+            </div>
+          )}
+          {supabaseEnabled && subscription?.status === 'trialing' && (
+            <div className="flex items-center gap-1.5 bg-yellow-500/[0.08] border border-yellow-500/20 rounded-lg px-3 py-1 text-[0.72rem] font-semibold text-yellow-500/80">
+              🎁 Teste grátis: {subscription.trialDaysLeft} dia{subscription.trialDaysLeft !== 1 ? 's' : ''} restante{subscription.trialDaysLeft !== 1 ? 's' : ''}
+            </div>
+          )}
+          {supabaseEnabled && subscription?.status === 'active' && (
+            <button
+              type="button"
+              onClick={handleManageSubscription}
+              className="flex items-center gap-1.5 bg-green-500/[0.07] border border-green-500/20 rounded-lg px-3 py-1 text-[0.72rem] font-semibold text-green-500/80 hover:bg-green-500/15 transition-colors cursor-pointer"
+            >
+              ✓ PRO Ativo — Gerenciar
+            </button>
+          )}
+        </div>
+
+        {/* Copyright + legal */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[0.68rem] text-slate-400">
+          <div>© 2026 DANOS APARENTES</div>
+          <div className="flex gap-4">
+            <button
+              onClick={() => { setTermsTab('terms'); setTermsOpen(true) }}
+              className="text-slate-400 hover:text-slate-200 transition-colors bg-transparent border-0 cursor-pointer p-0 text-[0.68rem] font-bold"
+            >
+              Termos de Uso
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => { setTermsTab('privacy'); setTermsOpen(true) }}
+              className="text-slate-400 hover:text-slate-200 transition-colors bg-transparent border-0 cursor-pointer p-0 text-[0.68rem] font-bold"
+            >
+              Política de Privacidade
+            </button>
+          </div>
+        </div>
+      </footer>
+
+      <TermsModal
+        isOpen={termsOpen}
+        onClose={() => setTermsOpen(false)}
+        defaultTab={termsTab}
       />
 
       {toast && <Toast msg={toast} onDone={() => setToast(null)} />}

@@ -1,5 +1,5 @@
 const DB_NAME = 'avarias-pwa'
-const DB_VERSION = 2
+const DB_VERSION = 3
 
 export interface SyncQueueItem {
   qid: number
@@ -7,6 +7,8 @@ export interface SyncQueueItem {
   reportId: string
   report?: import('../types').SavedReport
   timestamp: number
+  retry_count: number
+  last_error?: string
 }
 
 function openDB(): Promise<IDBDatabase> {
@@ -74,10 +76,13 @@ export const db = {
   async getSyncQueue(): Promise<SyncQueueItem[]> {
     return tx<SyncQueueItem[]>('sync_queue', 'readonly', s => s.getAll())
   },
-  async addToSyncQueue(item: Omit<SyncQueueItem, 'qid'>) {
-    return tx('sync_queue', 'readwrite', s => s.add(item))
+  async addToSyncQueue(item: Omit<SyncQueueItem, 'qid' | 'retry_count'>) {
+    return tx('sync_queue', 'readwrite', s => s.add({ ...item, retry_count: 0 }))
   },
   async removeFromSyncQueue(qid: number) {
     return tx('sync_queue', 'readwrite', s => s.delete(qid))
+  },
+  async updateSyncQueueItem(item: SyncQueueItem) {
+    return tx('sync_queue', 'readwrite', s => s.put(item))
   },
 }

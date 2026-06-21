@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase, supabaseEnabled } from '../lib/supabase'

@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState } from 'react'
 
 const GLOW_DURATION_MS = 1400
@@ -42,11 +43,12 @@ export default function IntroAnimation() {
       }}
     >
       <img
-        src="/brand/logo-full.png"
+        src="/logo.svg"
         alt=""
         width={220}
         height={220}
-        style={{ animation: `intro-glow-reveal ${GLOW_DURATION_MS}ms ease-out both` }}
+        style={{ animation: `intro-glow-reveal ${GLOW_DURATION_MS}ms ease-out both`, objectFit: 'contain' }}
+        fetchPriority="high"
       />
     </div>
   )

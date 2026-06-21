@@ -1,15 +1,42 @@
+'use client';
 import { useRef, useState, useEffect, RefObject } from 'react'
 
-export function useZoomPan(containerRef: RefObject<HTMLDivElement>) {
+export function useZoomPan(
+  containerRef: RefObject<HTMLDivElement | null>,
+  targetRef: RefObject<HTMLDivElement | null>
+) {
   const [scale, setScale] = useState(1)
-  const [offset, setOffset] = useState({ x: 0, y: 0 })
+  const offsetRef = useRef({ x: 0, y: 0 })
+  const scaleRef = useRef(1)
   const dragging = useRef(false)
   const last = useRef({ x: 0, y: 0 })
   const pinchDist = useRef<number | null>(null)
 
-  function reset() { setScale(1); setOffset({ x: 0, y: 0 }) }
-  function zoomIn() { setScale(s => Math.min(4, s + 0.2)) }
-  function zoomOut() { setScale(s => Math.max(0.5, s - 0.2)) }
+  // Keep scaleRef in sync with state and apply transform
+  useEffect(() => {
+    scaleRef.current = scale
+    applyTransform()
+  }, [scale])
+
+  function applyTransform() {
+    const target = targetRef.current
+    if (target) {
+      target.style.transform = `translate3d(${offsetRef.current.x}px, ${offsetRef.current.y}px, 0) scale(${scaleRef.current})`
+    }
+  }
+
+  function reset() {
+    offsetRef.current = { x: 0, y: 0 }
+    setScale(1)
+  }
+
+  function zoomIn() {
+    setScale(s => Math.min(4, s + 0.2))
+  }
+
+  function zoomOut() {
+    setScale(s => Math.max(0.5, s - 0.2))
+  }
 
   useEffect(() => {
     const el = containerRef.current
@@ -21,19 +48,26 @@ export function useZoomPan(containerRef: RefObject<HTMLDivElement>) {
     }
 
     function onMouseDown(e: MouseEvent) {
+      // Prevent drag initiation on controls or buttons
+      if ((e.target as HTMLElement).closest('button')) return
       dragging.current = true
       last.current = { x: e.clientX, y: e.clientY }
     }
 
     function onMouseMove(e: MouseEvent) {
       if (!dragging.current) return
-      setOffset(o => ({ x: o.x + e.clientX - last.current.x, y: o.y + e.clientY - last.current.y }))
+      offsetRef.current = {
+        x: offsetRef.current.x + e.clientX - last.current.x,
+        y: offsetRef.current.y + e.clientY - last.current.y
+      }
       last.current = { x: e.clientX, y: e.clientY }
+      applyTransform()
     }
 
     function onMouseUp() { dragging.current = false }
 
     function onTouchStart(e: TouchEvent) {
+      if ((e.target as HTMLElement).closest('button')) return
       if (e.touches.length === 2) {
         pinchDist.current = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
@@ -55,11 +89,12 @@ export function useZoomPan(containerRef: RefObject<HTMLDivElement>) {
         setScale(s => Math.min(4, Math.max(0.5, s * (dist / pinchDist.current!))))
         pinchDist.current = dist
       } else if (e.touches.length === 1 && dragging.current) {
-        setOffset(o => ({
-          x: o.x + e.touches[0].clientX - last.current.x,
-          y: o.y + e.touches[0].clientY - last.current.y
-        }))
+        offsetRef.current = {
+          x: offsetRef.current.x + e.touches[0].clientX - last.current.x,
+          y: offsetRef.current.y + e.touches[0].clientY - last.current.y
+        }
         last.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+        applyTransform()
       }
     }
 
@@ -84,5 +119,5 @@ export function useZoomPan(containerRef: RefObject<HTMLDivElement>) {
     }
   }, [containerRef])
 
-  return { scale, offset, reset, zoomIn, zoomOut }
+  return { scale, reset, zoomIn, zoomOut }
 }

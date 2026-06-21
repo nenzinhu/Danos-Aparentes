@@ -1,3 +1,4 @@
+'use client';
 import { useState, useEffect } from 'react'
 import { Damage } from '../types'
 import { db } from '../lib/db'
@@ -20,12 +21,12 @@ export function useDamages() {
   }
 
   async function updateDamage(id: string, patch: Partial<Damage>) {
-    setDamages(prev => {
-      const updated = prev.map(d => d.id === id ? { ...d, ...patch } : d)
-      const target = updated.find(d => d.id === id)
-      if (target) db.putDamage(target)
-      return updated
-    })
+    const prev = damages
+    const target = prev.find(d => d.id === id)
+    if (!target) return
+    const updatedTarget = { ...target, ...patch }
+    await db.putDamage(updatedTarget)
+    setDamages(prevList => prevList.map(d => d.id === id ? updatedTarget : d))
   }
 
   async function clearDamages() {

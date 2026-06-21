@@ -1,3 +1,4 @@
+'use client';
 import { VehicleProps } from '../../types'
 
 export default function MotoLateralLeft({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {

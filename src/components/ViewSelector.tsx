@@ -1,3 +1,5 @@
+﻿'use client';
+import React, { memo } from 'react'
 import { ViewType } from '../types'
 
 const VIEWS: { id: ViewType; label: string }[] = [
@@ -12,21 +14,31 @@ interface Props {
   onChange: (v: ViewType) => void
 }
 
-export default function ViewSelector({ current, onChange }: Props) {
+function ViewSelectorComponent({ current, onChange }: Props) {
   return (
-    <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
-      {VIEWS.map(v => (
-        <button key={v.id} onClick={() => onChange(v.id)} style={{
-          background: current === v.id ? 'rgba(0,170,255,0.15)' : 'transparent',
-          border: `1px solid ${current === v.id ? 'var(--primary)' : 'rgba(255,255,255,0.08)'}`,
-          borderRadius: 8, padding: '6px 14px', cursor: 'pointer',
-          color: current === v.id ? 'var(--primary)' : 'var(--text-muted)',
-          fontFamily: 'Outfit,sans-serif', fontSize: '0.78rem', fontWeight: 700,
-          transition: 'all 0.2s',
-        }}>
-          {v.label}
-        </button>
-      ))}
+    <div className='flex flex-wrap gap-1.5 justify-center items-center font-outfit'>
+      {VIEWS.map(v => {
+        const isActive = current === v.id
+        return (
+          <button 
+            key={v.id}
+            onClick={() => onChange(v.id)}
+            className={`
+              px-3.5 py-1.5 rounded-lg cursor-pointer text-[0.78rem] font-bold transition-all duration-200 border
+              ${isActive
+                ? 'bg-sky-500/15 border-sky-500 text-sky-400 shadow-[0_0_12px_rgba(14,165,233,0.2)]'
+                : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)] hover:border-[var(--btn-secondary-border)]'
+              }
+              backdrop-blur-sm
+            `}
+          >
+            {v.label}
+          </button>
+        )
+      })}
     </div>
   )
 }
+
+export default memo(ViewSelectorComponent)
+

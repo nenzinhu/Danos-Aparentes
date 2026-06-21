@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
+  <defs>
+    <!-- Neon cyan/blue gradient -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="100%" stop-color="#4facfe" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00dcff" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#00dcff" stop-opacity="0" />
+    </linearGradient>
+    <!-- Soft Drop Shadow -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Outer Protective Shield -->
+  <path d="M 50,5 C 72,5 88,12 88,32 C 88,60 50,92 50,92 C 50,92 12,60 12,32 C 12,12 28,5 50,5 Z" 
+        fill="url(#glowGrad)" 
+        stroke="url(#shieldGrad)" 
+        stroke-width="4.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        filter="url(#shadow)" />
+
+  <!-- Stylized Car Silhouette -->
+  <path d="M 30,50 C 30,48 32,46 35,45 L 42,40 C 45,38 48,38 50,38 L 58,38 C 60,38 63,38 66,40 L 73,45 C 76,46 78,48 78,50 L 80,55 C 81,57 80,59 78,59 L 30,59 C 28,59 27,57 28,55 Z" 
+        fill="none" 
+        stroke="#ffffff" 
+        stroke-width="3.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+
+  <!-- Car windshield detail -->
+  <path d="M 43,43 L 49,40 C 50,40 51,40 52,40 L 57,40 L 61,43" 
+        fill="none" 
+        stroke="#ffffff" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        opacity="0.8" />
+
+  <!-- Car wheels -->
+  <circle cx="39" cy="59" r="4.5" fill="#0b132b" stroke="url(#shieldGrad)" stroke-width="2.5" />
+  <circle cx="69" cy="59" r="4.5" fill="#0b132b" stroke="url(#shieldGrad)" stroke-width="2.5" />
+
+  <!-- Inspection Checkmark -->
+  <path d="M 38,74 L 47,81 L 67,61" 
+        fill="none" 
+        stroke="#00f2fe" 
+        stroke-width="5.5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+</svg>

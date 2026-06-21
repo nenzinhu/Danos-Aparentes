@@ -1,8 +1,12 @@
+import tailwindAnimate from "tailwindcss-animate";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/App.tsx",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/views/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -13,9 +17,9 @@ export default {
           high: '#ef4444',
         },
         primary: {
-          DEFAULT: '#3b82f6',
-          hover: '#1d4ed8',
-          glow: 'rgba(59, 130, 246, 0.35)',
+          DEFAULT: 'var(--primary)',
+          hover: 'var(--primary-hover)',
+          glow: 'var(--primary-glow)',
         }
       },
       fontFamily: {
@@ -23,5 +27,7 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    tailwindAnimate,
+  ],
 }

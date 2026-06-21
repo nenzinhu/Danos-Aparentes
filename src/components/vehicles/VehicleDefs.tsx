@@ -1,3 +1,4 @@
+'use client';
 export default function VehicleDefs() {
   return (
     <svg width="0" height="0" style={{ position: 'absolute' }}>

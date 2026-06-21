@@ -1,3 +1,4 @@
+'use client';
 import { VehicleProps } from '../../types'
 
 export default function BusLateralRight({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {

@@ -1,22 +1,17 @@
-@echo off
-setlocal
-cd /d "%~dp0"
-
-echo ============================================
-echo  Vistoria+ - Iniciando
-echo ============================================
+﻿@echo off
+TITLE Danos Aparentes - Iniciar Projeto
+echo.
+echo ======================================================
+echo    INICIANDO PROJETO (DANOS APARENTES)
+echo ======================================================
 echo.
 
+REM Verifica se a pasta node_modules existe na raiz
 if not exist node_modules (
-  echo Instalando dependencias do projeto...
-  call npm install
-  echo.
+    echo [INFO] node_modules nao encontrada. Instalando dependencias...
+    npm install
 )
 
-echo Iniciando servidor de desenvolvimento...
-echo (deixe esta janela aberta enquanto usa o app)
-echo.
-
-start "" "http://localhost:5173/app.html"
-call npm run dev
-pause
+echo [INFO] Iniciando servidor Next.js...
+start "" "http://localhost:3000"
+npm run dev

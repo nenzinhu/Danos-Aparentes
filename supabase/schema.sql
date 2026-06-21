@@ -16,6 +16,11 @@ create table if not exists vehicle_inspections (
   vehicle_type_desc text default '',
   city text default '',
   state text default '',
+  cpf text default '',
+  cnh text default '',
+  cnh_category text default '',
+  inspector_signature text default '',
+  client_signature text default '',
   updated_at bigint not null,
   created_at timestamptz not null default now()
 );
@@ -46,15 +51,42 @@ create index if not exists idx_damages_user on damages(user_id);
 alter table vehicle_inspections enable row level security;
 alter table damages enable row level security;
 
+-- Helper para verificar se o usuário possui assinatura ativa ou trial válido
+create or replace function public.user_has_active_subscription(p_user_id uuid)
+returns boolean as $$
+declare
+  v_status text;
+  v_trial_ends_at timestamptz;
+begin
+  select status, trial_ends_at into v_status, v_trial_ends_at
+  from public.subscriptions
+  where user_id = p_user_id;
+
+  if not found then
+    return false;
+  end if;
+
+  if v_status = 'active' then
+    return true;
+  end if;
+
+  if v_status = 'trialing' and v_trial_ends_at > now() then
+    return true;
+  end if;
+
+  return false;
+end;
+$$ language plpgsql security definer set search_path = public, pg_temp;
+
 drop policy if exists "select_own_inspections" on vehicle_inspections;
 create policy "select_own_inspections" on vehicle_inspections
   for select using (auth.uid() = user_id);
 drop policy if exists "insert_own_inspections" on vehicle_inspections;
 create policy "insert_own_inspections" on vehicle_inspections
-  for insert with check (auth.uid() = user_id);
+  for insert with check (auth.uid() = user_id and public.user_has_active_subscription(auth.uid()));
 drop policy if exists "update_own_inspections" on vehicle_inspections;
 create policy "update_own_inspections" on vehicle_inspections
-  for update using (auth.uid() = user_id);
+  for update using (auth.uid() = user_id and public.user_has_active_subscription(auth.uid()));
 drop policy if exists "delete_own_inspections" on vehicle_inspections;
 create policy "delete_own_inspections" on vehicle_inspections
   for delete using (auth.uid() = user_id);
@@ -64,10 +96,10 @@ create policy "select_own_damages" on damages
   for select using (auth.uid() = user_id);
 drop policy if exists "insert_own_damages" on damages;
 create policy "insert_own_damages" on damages
-  for insert with check (auth.uid() = user_id);
+  for insert with check (auth.uid() = user_id and public.user_has_active_subscription(auth.uid()));
 drop policy if exists "update_own_damages" on damages;
 create policy "update_own_damages" on damages
-  for update using (auth.uid() = user_id);
+  for update using (auth.uid() = user_id and public.user_has_active_subscription(auth.uid()));
 drop policy if exists "delete_own_damages" on damages;
 create policy "delete_own_damages" on damages
   for delete using (auth.uid() = user_id);
