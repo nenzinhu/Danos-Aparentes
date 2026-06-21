@@ -370,10 +370,10 @@ export default function LandingPage() {
           </span>
         </div>
         <nav className="flex items-center gap-4 sm:gap-6 flex-wrap">
-          <a href="#pricing" onClick={scrollToPricing} className="text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
+          <a href="#pricing" onClick={scrollToPricing} className="hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             Planos
           </a>
-          <a href="#faq" onClick={scrollToFaq} className="text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
+          <a href="#faq" onClick={scrollToFaq} className="hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             FAQ
           </a>
           <Link href="/app" transitionTypes={['nav-forward']} className="text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
@@ -416,9 +416,6 @@ export default function LandingPage() {
               >
                 Criar Conta Grátis
                 <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </Link>
-              <Link href="/demo" transitionTypes={['nav-forward']} className="px-8 py-4 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] font-bold rounded-2xl backdrop-blur-sm transition-all hover:bg-[var(--btn-secondary-hover)] focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none">
-                Ver Demo Interativa
               </Link>
             </div>
 
