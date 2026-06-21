@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { staticVehicleRegistry } from './vehicles/staticRegistry'
 import { VehicleType } from '../types'
 
 const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamages: any[] }[] = [
@@ -198,20 +197,15 @@ export default function VehicleShowcaseSection() {
               Vista Lateral Esquerda
             </div>
 
-            {/* Componente SVG Dinâmico */}
+            {/* Imagem estática do veículo (leve, sem hidratação de SVG) */}
             <div className="py-8">
-              {(() => {
-                const selectedOpt = vehicleOptions.find(o => o.type === activeVehicle) || vehicleOptions[0];
-                const ActiveVehicleComponent = staticVehicleRegistry[activeVehicle]['lateral-left'];
-                return (
-                  <ActiveVehicleComponent
-                    damages={selectedOpt.mockDamages}
-                    selectedPartId={null}
-                    onPartClick={() => {}}
-                    onPartHover={() => {}}
-                  />
-                );
-              })()}
+              <img
+                src={`/vehicles-img/${activeVehicle}.png`}
+                alt={`Diagrama lateral do veículo: ${vehicleOptions.find(o => o.type === activeVehicle)?.name || ''}`}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-auto"
+              />
             </div>
 
             {/* Nota simulada explicando a avaria */}

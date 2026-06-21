@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import CarLateralLeft from './vehicles/CarLateralLeft'
 
 // QR Code simulado (mockup do laudo) — três marcadores de canto + módulos determinísticos
 function QrCodeMock({ className = '' }: { className?: string }) {
@@ -139,25 +138,12 @@ export default function PdfPreviewSection() {
             <div className="mt-4 border border-slate-200 rounded-lg p-3 bg-white flex flex-col items-center">
               <span className="text-[8px] font-extrabold uppercase tracking-widest block align-self-start mb-1 w-full text-left" style={{ color: PDF_THEMES[pdfPreview].accent }}>Diagrama de Danos</span>
               <div className="w-full max-w-[280px] py-1 opacity-90 filter brightness-95">
-                <CarLateralLeft
-                  damages={[
-                    {
-                      id: 'pdf-mock-dmg' as any,
-                      vehicle: 'car',
-                      view: 'lateral-left',
-                      partId: 'car-ll-door-front',
-                      partName: 'Porta Dianteira Esquerda',
-                      type: 'scratch',
-                      typeName: 'Risco',
-                      severity: 'high',
-                      notes: 'Risco profundo',
-                      photos: [],
-                      photoNotes: []
-                    }
-                  ]}
-                  selectedPartId={null}
-                  onPartClick={() => {}}
-                  onPartHover={() => {}}
+                <img
+                  src="/vehicles-img/car.png"
+                  alt="Diagrama de danos do veículo"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-auto"
                 />
               </div>
             </div>
