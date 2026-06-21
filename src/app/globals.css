@@ -469,4 +469,13 @@ html.light .glass-card .text-orange-400 {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
+
+  /* Desativar view transitions no mobile para navegação instantânea e sem lag */
+  ::view-transition,
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+    animation-duration: 0s !important;
+  }
 }

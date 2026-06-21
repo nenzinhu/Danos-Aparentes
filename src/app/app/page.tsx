@@ -23,7 +23,9 @@ import DashboardView from '@/src/components/DashboardView'
 import Login from '@/src/views/Login'
 import CompanySettingsModal from '@/src/components/CompanySettingsModal'
 import CompanyLogoButton from '@/src/components/CompanyLogoButton'
+import PwaInstallButton from '@/src/components/PwaInstallButton'
 import TermsModal from '@/src/components/TermsModal'
+import FeaturesSlidesModal from '@/src/components/FeaturesSlidesModal'
 
 function ClearAllIcon({ size = 14 }: { size?: number }) {
   return (
@@ -76,6 +78,16 @@ export default function AppMainPage() {
   const [activeTab, setActiveTab] = useState<'inspect' | 'dashboard'>('inspect')
   const [termsOpen, setTermsOpen] = useState(false)
   const [termsTab, setTermsTab] = useState<'terms' | 'privacy'>('terms')
+  const [tutorialOpen, setTutorialOpen] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const tourSeen = localStorage.getItem('app_tour_seen') === 'true'
+      if (!tourSeen) {
+        setTutorialOpen(true)
+      }
+    }
+  }, [])
 
   const { damages, addDamage, removeDamage, updateDamage, clearDamages } = useDamages()
   const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts()
@@ -242,6 +254,14 @@ export default function AppMainPage() {
             📊 Estatísticas
           </button>
           <CompanyLogoButton onClick={() => setSettingsModal(true)} />
+          <PwaInstallButton />
+          <button
+            onClick={() => setTutorialOpen(true)}
+            className="px-3 py-2.5 rounded-lg text-xs font-bold font-outfit text-slate-400 hover:text-sky-400 transition-all cursor-pointer border border-transparent flex items-center gap-1.5 focus:outline-none"
+            title="Como funciona o aplicativo"
+          >
+            💡 Tutorial
+          </button>
         </div>
       </div>
 
@@ -388,6 +408,10 @@ export default function AppMainPage() {
         isOpen={termsOpen}
         onClose={() => setTermsOpen(false)}
         defaultTab={termsTab}
+      />
+      <FeaturesSlidesModal
+        isOpen={tutorialOpen}
+        onClose={() => setTutorialOpen(false)}
       />
       {toast && <Toast msg={toast} onDone={() => setToast(null)} />}
     </div>

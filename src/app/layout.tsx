@@ -18,7 +18,7 @@
 import { Outfit } from 'next/font/google'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap' })
 
@@ -26,6 +26,12 @@ export const metadata: Metadata = {
   title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
   description: 'Documente avarias veiculares com precisão pericial: mapa 3D do veículo, fotos por avaria, laudo em PDF com QR Code de verificação.',
   metadataBase: new URL('https://danosaparentes.vercel.app'),
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Danos Aparentes',
+  },
 
   // ── Autoria e Copyright ─────────────────────────────────────
   authors: [{ name: 'Danos Aparentes', url: 'https://danosaparentes.vercel.app' }],
@@ -66,7 +72,12 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.png',
     shortcut: '/favicon.png',
+    apple: '/apple-touch-icon.png',
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: '#020617',
 }
 
 export default function RootLayout({
