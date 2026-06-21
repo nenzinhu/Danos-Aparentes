@@ -204,6 +204,12 @@ html.light [style*="var(--primary-btn-gradient)"] {
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Resposta de toque imediata no mobile: remove delay de gesto e flash cinza */
+a, button, [role="button"], input, select, textarea, label {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   background: var(--bg-gradient);
   color: var(--text-main);
