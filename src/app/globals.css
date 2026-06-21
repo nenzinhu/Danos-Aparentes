@@ -7,6 +7,7 @@
   --bg-main: #020617;
   --bg-gradient: radial-gradient(ellipse 120% 80% at 50% -10%, #0d1f3c 0%, #060d1a 50%, #020408 100%);
   --card-bg: rgba(10, 20, 40, 0.72);
+  --card-bg-solid: rgba(12, 22, 42, 0.96);
   --card-border: rgba(0, 190, 255, 0.12);
   --glass-shadow: 0 8px 40px 0 rgba(0,0,0,0.6), 0 0 0 1px rgba(0,190,255,0.06);
   --text-main: #e8f4ff;
@@ -157,6 +158,7 @@ html.light {
   --bg-main: #faf9f5;
   --bg-gradient: radial-gradient(ellipse 120% 80% at 50% -10%, #faf9f5 0%, #e8e6dc 70%, #d8d6cc 100%);
   --card-bg: rgba(232, 230, 220, 0.85);
+  --card-bg-solid: rgba(238, 236, 227, 0.97);
   --card-border: rgba(176, 174, 165, 0.35);
   --glass-shadow: 0 8px 40px 0 rgba(20, 20, 19, 0.06), 0 0 0 1px rgba(176, 174, 165, 0.15);
   --text-main: #141413;
@@ -435,4 +437,24 @@ html.light .glass-card .text-orange-400 {
   0% { opacity: 0; filter: drop-shadow(0 0 0px #00aaff); transform: scale(0.9); }
   40% { opacity: 1; filter: drop-shadow(0 0 40px #00aaff); }
   100% { opacity: 1; filter: drop-shadow(0 0 12px rgba(0,170,255,0.4)); transform: scale(1); }
+}
+
+/* ── Mobile performance: trocar efeitos caros por equivalentes baratos ── */
+@media (max-width: 900px) {
+  /* Vidro embaçado -> fundo sólido (backdrop-filter repinta a cada frame no scroll) */
+  .glass-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--card-bg-solid);
+  }
+
+  /* Grid de fundo fixo força repaint da tela inteira ao rolar */
+  body::before {
+    display: none;
+  }
+
+  /* Sombra de chão com blur custa pintura; remover só na landing */
+  .landing-container .shadow-ground {
+    filter: none;
+  }
 }

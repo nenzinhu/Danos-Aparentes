@@ -245,6 +245,10 @@ export default function Landing() {
 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
+        @media (prefers-reduced-motion: reduce) {
+          .ui-top, .ui-bottom { animation: none; }
+        }
+
         /* Footer */
         .landing-footer {
           padding: 1.5rem 2.5rem;
@@ -271,6 +275,16 @@ export default function Landing() {
           .hero-actions { flex-direction: column; width: 100%; max-width: 300px; }
           .features-mini { justify-content: center; flex-wrap: wrap; gap: 1rem; }
           .footer-content { flex-direction: column; gap: 1rem; text-align: center; }
+          /* Perf mobile: matar animação infinita sobre vidro (pior caso de repaint) */
+          .ui-top, .ui-bottom { animation: none; }
+          /* Balões: vidro embaçado -> fundo sólido */
+          .floating-ui {
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            background: var(--card-bg-solid);
+          }
+          /* Glow radial menor (menos área de pintura) */
+          .visualizer-bg-glow { width: 90%; height: 90%; }
         }
 
         @media (max-height: 700px) and (min-width: 901px) {
