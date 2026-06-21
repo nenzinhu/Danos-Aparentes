@@ -6,7 +6,6 @@ import IntroVideo from '../components/IntroVideo'
 import CarLateralLeft from '../components/vehicles/CarLateralLeft'
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
 const PricingSection = dynamic(() => import('../components/PricingSection'), { ssr: false });
@@ -60,28 +59,14 @@ function TextCarousel() {
 
   return (
     <div className="relative text-center">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={index}
-          variants={{
-            initial: { opacity: 0, y: 20, filter: 'blur(8px)' },
-            animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
-            exit: { opacity: 0, y: -20, filter: 'blur(8px)' },
-          }}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          transition={{ duration: 0.6 }}
-          className="space-y-8"
-        >
-          <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tighter leading-[1.05] text-[var(--text-main)] text-wrap:balance">
-            {slides[index].title}
-          </h1>
-          <p className="text-lg text-[var(--text-muted)] max-w-lg mx-auto leading-relaxed">
-            {slides[index].description}
-          </p>
-        </motion.div>
-      </AnimatePresence>
+      <div key={index} className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 motion-reduce:animate-none">
+        <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tighter leading-[1.05] text-[var(--text-main)] text-wrap:balance">
+          {slides[index].title}
+        </h1>
+        <p className="text-lg text-[var(--text-muted)] max-w-lg mx-auto leading-relaxed">
+          {slides[index].description}
+        </p>
+      </div>
       {/* Navigation arrows */}
       <button
         onClick={prev}
