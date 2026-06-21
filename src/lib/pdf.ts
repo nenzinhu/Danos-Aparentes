@@ -379,7 +379,6 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
   const plate  = info.plate || '—'
   const osRef  = info.ref   || `OS-${ts.toString().slice(-6)}`
   const pdfTheme = settings?.pdfTheme || 'modern'
-  console.log("PDF Generator - Tema ativo:", pdfTheme)
 
   const isEditorial = pdfTheme === 'editorial'
   const THEMES = {

@@ -247,17 +247,17 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess, onSub
                         <rect x="7.5" y="8" width="3" height="3" rx="0.5" fill="#00dcff" opacity="0.7" />
                       </g>
 
-                      {/* Main text: SEU LOGO */}
+                      {/* Main text: LOGO */}
                       <text
                         x="37" y="17"
                         fontFamily="Outfit, sans-serif"
                         fontWeight="800"
-                        fontSize="11"
+                        fontSize="9.5"
                         fill="#00dcff"
-                        letterSpacing="1.5"
+                        letterSpacing="1.2"
                         filter="url(#modal-neon-text)"
                       >
-                        SEU LOGO
+                        LOGO
                       </text>
 
                       {/* Sub text */}
