@@ -365,7 +365,7 @@ export default function LandingPage() {
       <header className="w-full px-8 py-6 flex justify-between items-center z-50 shrink-0">
         <div className="flex items-center gap-3">
           <Image src="/logo.svg" alt="Logo" width={48} height={48} className="object-contain" priority />
-          <span className="text-lg font-extrabold tracking-tight uppercase bg-clip-text text-transparent" style={{ backgroundImage: 'var(--header-title-gradient)' }}>
+          <span className="text-base sm:text-lg font-extrabold tracking-tight uppercase bg-clip-text text-transparent whitespace-nowrap" style={{ backgroundImage: 'var(--header-title-gradient)' }}>
             Danos Aparentes
           </span>
         </div>
@@ -376,7 +376,7 @@ export default function LandingPage() {
           <a href="#faq" onClick={scrollToFaq} className="hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             FAQ
           </a>
-          <Link href="/app" transitionTypes={['nav-forward']} className="text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
+          <Link href="/app" transitionTypes={['nav-forward']} className="hidden sm:inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
             Entrar
           </Link>
           <button
