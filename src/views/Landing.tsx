@@ -21,8 +21,8 @@ export default function Landing() {
       <header className="landing-header">
         <div className="logo-placeholder"></div>
         <nav className="header-nav">
-          <a href="/app.html" className="nav-link">Entrar</a>
-          <a href="/app.html" className="btn-primary-sm">Começar Agora</a>
+          <a href="/app" className="nav-link">Entrar</a>
+          <a href="/app" className="btn-primary-sm">Começar Agora</a>
         </nav>
       </header>
 
@@ -41,11 +41,11 @@ export default function Landing() {
             </p>
             
             <div className="hero-actions">
-              <a href="/app.html" className="btn-primary">
+              <a href="/app" className="btn-primary">
                 Criar Conta Grátis
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
-              <a href="/demo.html" className="btn-secondary">Demo Interativa</a>
+              <a href="/demo" className="btn-secondary">Demo Interativa</a>
             </div>
 
             <div className="features-mini">

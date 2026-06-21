@@ -71,7 +71,7 @@ async function computeHash(info: VehicleInfo, damages: Damage[], ts: number): Pr
   } catch { return 'N/D' }
 }
 
-// ─── Registra o hash no Supabase para a página /verify.html conferir depois ──
+// ─── Registra o hash no Supabase para a página /verify conferir depois ──
 async function registerHash(hash: string, info: VehicleInfo, damages: Damage[], date: string) {
   if (!supabaseEnabled || !supabase || hash === 'N/D') return
   try {
@@ -413,7 +413,7 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
   const hash = await computeHash(info, damages, ts)
   await registerHash(hash, info, damages, date)
 
-  const verifyUrl = `${window.location.origin}/verify.html?hash=${encodeURIComponent(hash)}`
+  const verifyUrl = `${window.location.origin}/verify?hash=${encodeURIComponent(hash)}`
   const qrDataUrl = await generateQrDataUrl(verifyUrl)
   const qrImg     = qrDataUrl
     ? `<img src="${qrDataUrl}" width="50" height="50" style="display:block;border:1px solid ${theme.borderColor};border-radius:4px;" />`
