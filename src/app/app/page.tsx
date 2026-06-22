@@ -26,6 +26,7 @@ import CompanyLogoButton from '@/src/components/CompanyLogoButton'
 import PwaInstallButton from '@/src/components/PwaInstallButton'
 import TermsModal from '@/src/components/TermsModal'
 import FeaturesSlidesModal from '@/src/components/FeaturesSlidesModal'
+import { LEGAL_CONTACT_EMAIL } from '@/src/components/LegalContent'
 
 function ClearAllIcon({ size = 14 }: { size?: number }) {
   return (
@@ -75,6 +76,7 @@ export default function AppMainPage() {
   const [settingsModal, setSettingsModal] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const [formCollapsed, setFormCollapsed] = useState(false)
+  const [formResetToken, setFormResetToken] = useState(0)
   const [activeTab, setActiveTab] = useState<'inspect' | 'dashboard'>('inspect')
   const [termsOpen, setTermsOpen] = useState(false)
   const [termsTab, setTermsTab] = useState<'terms' | 'privacy'>('terms')
@@ -93,7 +95,7 @@ export default function AppMainPage() {
   const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts()
   const { saved, saveReport, deleteReport } = useSavedReports(session?.user.id)
   const { status: syncStatus } = useSyncStatus(session?.user.id)
-  const { info: subscription, loading: subLoading, startCheckout, openPortal } = useSubscription(session?.user.id, session?.access_token)
+  const { info: subscription, loading: subLoading, openPortal } = useSubscription(session?.user.id, session?.access_token)
 
   useEffect(() => {
     if (darkMode) {
@@ -134,14 +136,14 @@ export default function AppMainPage() {
 
   const handleSave = useCallback(async () => {
     await saveReport(vehicleInfo, damages)
-    showToast('âœ… Vistoria Salva!')
+    showToast('✅ Vistoria Salva!')
   }, [vehicleInfo, damages, saveReport, showToast])
 
   const handleManageSubscription = useCallback(async () => {
     try {
       await openPortal()
     } catch (err) {
-      showToast(err instanceof Error ? `âŒ ${err.message}` : 'âŒ Falha ao Abrir Portal de Gerenciamento')
+      showToast(err instanceof Error ? `❌ ${err.message}` : '❌ Falha ao Abrir Portal de Gerenciamento')
     }
   }, [openPortal, showToast])
 
@@ -156,6 +158,7 @@ export default function AppMainPage() {
   const handleClearAll = useCallback(() => {
     setVehicleInfo(EMPTY_INFO)
     clearDamages()
+    setFormResetToken(t => t + 1)
     showToast('🧽 Dados Limpos!')
   }, [clearDamages, showToast])
 
@@ -210,7 +213,7 @@ export default function AppMainPage() {
   }
 
   if (supabaseEnabled && session && subscription && !subscription.hasAccess) {
-    return <Paywall status={subscription.status} onSubscribe={startCheckout} onSignOut={signOut} />
+    return <Paywall status={subscription.status} onSignOut={signOut} />
   }
 
   return (
@@ -226,7 +229,6 @@ export default function AppMainPage() {
           syncStatus={supabaseEnabled ? syncStatus : undefined}
           subscription={headerSubscription}
           onManageSubscription={handleManageSubscription}
-          onSubscribe={startCheckout}
         />
       </ViewTransition>
 
@@ -278,6 +280,8 @@ export default function AppMainPage() {
                 collapsed={formCollapsed}
                 onToggleCollapse={() => setFormCollapsed(c => !c)}
                 onVehicleTypeDetected={(type) => setVehicleType(type)}
+                resetToken={formResetToken}
+                onWizardComplete={() => showToast('✅ Dados da vistoria prontos')}
               />
               {!formCollapsed && (
                 <div className="flex gap-4 mt-6 pt-4 border-t border-[var(--panel-border)] justify-between items-center flex-wrap">
@@ -381,26 +385,40 @@ export default function AppMainPage() {
         isOpen={settingsModal}
         onClose={() => setSettingsModal(false)}
         hasAccess={subscription?.hasAccess ?? false}
-        onSubscribe={startCheckout}
       />
 
       {/* Footer */}
-      <footer className="w-full max-w-7xl mx-auto px-4 py-8 mt-12 border-t border-[var(--panel-border)]/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.7rem] text-slate-400 font-outfit select-none shrink-0">
-        <div>© 2026 DANOS APARENTES</div>
-        <div className="flex gap-4">
-          <button 
-            onClick={() => { setTermsTab('terms'); setTermsOpen(true) }} 
-            className="text-slate-400 hover:text-slate-200 transition-colors bg-transparent border-0 cursor-pointer p-0 text-[0.7rem] font-bold"
-          >
-            Termos de Uso
-          </button>
-          <span>•</span>
-          <button 
-            onClick={() => { setTermsTab('privacy'); setTermsOpen(true) }} 
-            className="text-slate-400 hover:text-slate-200 transition-colors bg-transparent border-0 cursor-pointer p-0 text-[0.7rem] font-bold"
-          >
-            Política de Privacidade
-          </button>
+      <footer className="w-full max-w-7xl mx-auto px-4 py-8 mt-12 border-t border-[var(--panel-border)]/60 flex flex-col gap-6 text-[0.7rem] text-slate-400 font-outfit select-none shrink-0">
+        {/* Legal Info & Disclaimer */}
+        <div className="w-full flex flex-col gap-1.5 text-center sm:text-left text-[0.65rem] opacity-75 leading-relaxed border-b border-[var(--panel-border)]/40 pb-6">
+          <p>
+            <strong>Responsável Legal:</strong> Jeferson da Silva | <strong>CPF:</strong> 057.408.599-80 | Florianópolis - SC | <strong>Contato:</strong>{' '}
+            <a href={`mailto:${LEGAL_CONTACT_EMAIL}`} className="text-sky-400 hover:underline">{LEGAL_CONTACT_EMAIL}</a>
+            {' · '}
+            <a href="mailto:treejeferson@gmail.com" className="text-sky-400 hover:underline">treejeferson@gmail.com</a>
+          </p>
+          <p className="opacity-70">
+            <strong>Aviso de Isenção:</strong> A consulta de dados de placas é realizada via API privada para fins cadastrais de vistoria e não possui qualquer vínculo, representação ou convênio com o DETRAN, Denatran ou órgãos governamentais.
+          </p>
+        </div>
+
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>© 2026 DANOS APARENTES</div>
+          <div className="flex gap-4">
+            <button 
+              onClick={() => { setTermsTab('terms'); setTermsOpen(true) }} 
+              className="text-slate-400 hover:text-slate-200 transition-colors bg-transparent border-0 cursor-pointer p-0 text-[0.7rem] font-bold"
+            >
+              Termos de Uso
+            </button>
+            <span>•</span>
+            <button 
+              onClick={() => { setTermsTab('privacy'); setTermsOpen(true) }} 
+              className="text-slate-400 hover:text-slate-200 transition-colors bg-transparent border-0 cursor-pointer p-0 text-[0.7rem] font-bold"
+            >
+              Política de Privacidade
+            </button>
+          </div>
         </div>
       </footer>
 

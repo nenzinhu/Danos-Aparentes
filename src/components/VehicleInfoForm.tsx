@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef, memo, useCallback, useMemo } from '
 import { VehicleInfo, CustomField } from '../types'
 import SignaturePad from './SignaturePad'
 import SpeechButton from './SpeechButton'
+import WizardStepper from './WizardStepper'
+import type { WizardStep } from './wizardTypes'
 
 function TrashIcon({ size = 13 }: { size?: number }) {
   return (
@@ -29,6 +31,8 @@ interface Props {
   collapsed?: boolean
   onToggleCollapse?: () => void
   onVehicleTypeDetected?: (type: 'car' | 'moto' | 'truck' | 'van' | 'bus') => void
+  resetToken?: number
+  onWizardComplete?: () => void
 }
 
 const UF_LIST = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']
@@ -121,47 +125,25 @@ function saveCustomFieldDefs(defs: CustomFieldDef[]) {
   localStorage.setItem('vistoria_custom_field_defs', JSON.stringify(defs))
 }
 
-// Seções reordenáveis do formulário (mover ↑/↓ para a parte que quiser)
-const SECTION_DEFS: { id: string; label: string }[] = [
-  { id: 'perfil',         label: 'Perfil / Nº da OS' },
-  { id: 'cliente',        label: 'Proprietário / Telefone' },
-  { id: 'documentos',     label: 'Documentos (CPF / CNH)' },
-  { id: 'veiculo',        label: 'Veículo (Marca / Cor / Tipo)' },
-  { id: 'local',          label: 'Cidade / UF' },
-  { id: 'personalizados', label: 'Campos Personalizados' },
-  { id: 'observacoes',    label: 'Observações Gerais' },
-  { id: 'assinaturas',    label: 'Assinaturas' },
-]
-const DEFAULT_SECTION_ORDER = SECTION_DEFS.map(s => s.id)
-
-function loadSectionOrder(): string[] {
-  try {
-    const saved = localStorage.getItem('vistoria_section_order')
-    if (saved) {
-      const arr = (JSON.parse(saved) as string[]).filter(id => DEFAULT_SECTION_ORDER.includes(id))
-      const missing = DEFAULT_SECTION_ORDER.filter(id => !arr.includes(id))
-      return [...arr, ...missing]
-    }
-  } catch {}
-  return DEFAULT_SECTION_ORDER
-}
-function saveSectionOrder(order: string[]) {
-  localStorage.setItem('vistoria_section_order', JSON.stringify(order))
-}
-
 const inputClasses = "w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-2.5 py-2 text-[var(--input-color)] font-outfit text-[0.85rem] outline-none focus:border-sky-500/50 transition-colors placeholder:text-slate-500";
 const labelClasses = "block text-[0.68rem] font-bold text-slate-500 uppercase tracking-wider mb-1";
 
-function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse, onVehicleTypeDetected }: Props) {
+function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse, onVehicleTypeDetected, resetToken, onWizardComplete }: Props) {
   const [visibleFields, setVisibleFields] = useState<Record<string, boolean>>(loadFieldFilter)
   const [filterOpen, setFilterOpen] = useState(false)
   const [plateStatus, setPlateStatus] = useState<'idle' | 'loading' | 'found' | 'error'>('idle')
   const [foundData, setFoundData] = useState<FoundData | null>(null)
   const [customFieldDefs, setCustomFieldDefs] = useState<CustomFieldDef[]>(loadCustomFieldDefs)
   const [newFieldName, setNewFieldName] = useState('')
-  const [sectionOrder, setSectionOrder] = useState<string[]>(loadSectionOrder)
+  const [wizardStep, setWizardStep] = useState<WizardStep>(1)
+  const [maxVisited, setMaxVisited] = useState<WizardStep>(1)
   const filterRef = useRef<HTMLDivElement>(null)
   const lookupTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    setWizardStep(1)
+    setMaxVisited(1)
+  }, [resetToken])
 
   const anyHidden = Object.values(visibleFields).some(v => !v)
 
@@ -226,22 +208,23 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
   const show = useCallback((key: string) => visibleFields[key] !== false, [visibleFields])
 
-  const orderIndex = useCallback((id: string) => {
-    const i = sectionOrder.indexOf(id)
-    return i < 0 ? 99 : i
-  }, [sectionOrder])
-
-  const moveSection = useCallback((id: string, dir: -1 | 1) => {
-    setSectionOrder(prev => {
-      const idx = prev.indexOf(id)
-      const j = idx + dir
-      if (idx < 0 || j < 0 || j >= prev.length) return prev
-      const next = [...prev]
-      const tmp = next[idx]; next[idx] = next[j]; next[j] = tmp
-      saveSectionOrder(next)
-      return next
-    })
+  const goToStep = useCallback((step: WizardStep) => {
+    setWizardStep(step)
+    setMaxVisited(prev => (step > prev ? step : prev))
   }, [])
+
+  const goNext = useCallback(() => {
+    if (wizardStep < 3) goToStep((wizardStep + 1) as WizardStep)
+  }, [wizardStep, goToStep])
+
+  const goBack = useCallback(() => {
+    if (wizardStep > 1) setWizardStep((wizardStep - 1) as WizardStep)
+  }, [wizardStep])
+
+  const handleComplete = useCallback(() => {
+    onWizardComplete?.()
+    onToggleCollapse?.()
+  }, [onWizardComplete, onToggleCollapse])
 
   const lookupPlate = useCallback(async (plate: string) => {
     setPlateStatus('loading')
@@ -375,28 +358,6 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
                 <div className="mt-4 pt-3 border-t border-sky-500/10">
                   <div className="text-[0.72rem] font-black text-sky-500 tracking-widest uppercase mb-3">
-                    ↕️ Ordem das Seções
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    {sectionOrder.map((id, i) => {
-                      const def = SECTION_DEFS.find(s => s.id === id)
-                      if (!def) return null
-                      return (
-                        <div key={id} className="flex items-center gap-1.5">
-                          <span className="w-4 text-[0.7rem] text-slate-500 font-bold text-center">{i + 1}</span>
-                          <span className="flex-1 text-[0.78rem] text-slate-300 font-semibold truncate">{def.label}</span>
-                          <button type="button" disabled={i === 0} onClick={() => moveSection(id, -1)} title="Subir"
-                            className="bg-sky-500/10 border border-sky-500/25 rounded-md w-6 h-6 flex items-center justify-center text-sky-400 cursor-pointer hover:bg-sky-500/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">↑</button>
-                          <button type="button" disabled={i === sectionOrder.length - 1} onClick={() => moveSection(id, 1)} title="Descer"
-                            className="bg-sky-500/10 border border-sky-500/25 rounded-md w-6 h-6 flex items-center justify-center text-sky-400 cursor-pointer hover:bg-sky-500/20 transition-colors disabled:opacity-30 disabled:cursor-not-allowed">↓</button>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-sky-500/10">
-                  <div className="text-[0.72rem] font-black text-sky-500 tracking-widest uppercase mb-3">
                     ➕ Campos Personalizados
                   </div>
                   {customFieldDefs.length > 0 && (
@@ -451,6 +412,14 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
         </div>
       </div>
 
+      <p className="text-[0.72rem] font-bold text-slate-500 mb-1">
+        Passo {wizardStep} de 3
+      </p>
+      <WizardStepper current={wizardStep} maxVisited={maxVisited} onStepClick={goToStep} />
+
+      <div key={wizardStep} className="pb-20 animate-in fade-in slide-in-from-right-2 duration-200 motion-reduce:animate-none">
+      {wizardStep === 1 && (
+      <>
       <div className="bg-gradient-to-br from-sky-700/15 to-blue-900/10 border border-sky-500/30 rounded-2xl p-5 mb-5 shadow-2xl relative overflow-hidden group">
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-sky-400 to-transparent opacity-60 pointer-events-none" />
 
@@ -527,9 +496,58 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
         </div>
       </div>
 
-      <div className="flex flex-col">
+      {(show('brand') || show('color') || show('vehicleTypeDesc')) && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+          {show('brand') && (
+            <div className="sm:col-span-1">
+              <label htmlFor="brand-input" className={labelClasses}>Marca / Modelo / Ano</label>
+              <input id="brand-input" className={inputClasses} value={info.brand} onChange={e => set('brand', e.target.value)} placeholder="Ex: Toyota Corolla 2023" />
+            </div>
+          )}
+          {show('color') && (
+            <div className="sm:col-span-1">
+              <label htmlFor="color-input" className={labelClasses}>Cor do Veículo</label>
+              <input id="color-input" className={inputClasses} value={info.color} onChange={e => set('color', e.target.value)} placeholder="Ex: Prata, Preto" />
+            </div>
+          )}
+          {show('vehicleTypeDesc') && (
+            <div className="sm:col-span-1">
+              <label htmlFor="vehicle-type-select" className={labelClasses}>Tipo / Espécie</label>
+              <select id="vehicle-type-select" className={inputClasses} value={info.vehicleTypeDesc} onChange={e => set('vehicleTypeDesc', e.target.value)}>
+                <option value="">— Selecione —</option>
+                {VEHICLE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+          )}
+        </div>
+      )}
+
+      {(show('city') || show('state')) && (
+        <div className="grid grid-cols-3 gap-3 mb-3">
+          {show('city') && (
+            <div className="col-span-2">
+              <label htmlFor="city-input" className={labelClasses}>Cidade de Emplacamento</label>
+              <input id="city-input" className={inputClasses} value={info.city} onChange={e => set('city', e.target.value)} placeholder="Ex: São Paulo" />
+            </div>
+          )}
+          {show('state') && (
+            <div className="col-span-1">
+              <label htmlFor="state-select" className={labelClasses}>Estado (UF)</label>
+              <select id="state-select" className={inputClasses} value={info.state} onChange={e => set('state', e.target.value)}>
+                <option value="">— UF —</option>
+                {UF_LIST.map(uf => <option key={uf} value={uf}>{uf}</option>)}
+              </select>
+            </div>
+          )}
+        </div>
+      )}
+      </>
+      )}
+
+      {wizardStep === 2 && (
+      <>
       {(show('profile') || show('ref')) && (
-        <div style={{ order: orderIndex('perfil') }} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
           {show('profile') && (
             <div>
               <label htmlFor="profile-select" className={labelClasses}>Perfil do Relatório</label>
@@ -551,7 +569,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       )}
 
       {(show('owner') || show('phone')) && (
-        <div style={{ order: orderIndex('cliente') }} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
           {show('owner') && (
             <div>
               <label htmlFor="owner-input" className={labelClasses}>Proprietário / Cliente</label>
@@ -604,7 +622,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       )}
 
       {(show('cpf') || show('cnh') || show('cnhCategory')) && (
-        <div style={{ order: orderIndex('documentos') }} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
           {show('cpf') && (
             <div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
@@ -691,55 +709,31 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
           )}
         </div>
       )}
-
-      {(show('brand') || show('color') || show('vehicleTypeDesc')) && (
-        <div style={{ order: orderIndex('veiculo') }} className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-          {show('brand') && (
-            <div className="sm:col-span-1">
-              <label htmlFor="brand-input" className={labelClasses}>Marca / Modelo / Ano</label>
-              <input id="brand-input" className={inputClasses} value={info.brand} onChange={e => set('brand', e.target.value)} placeholder="Ex: Toyota Corolla 2023" />
-            </div>
-          )}
-          {show('color') && (
-            <div className="sm:col-span-1">
-              <label htmlFor="color-input" className={labelClasses}>Cor do Veículo</label>
-              <input id="color-input" className={inputClasses} value={info.color} onChange={e => set('color', e.target.value)} placeholder="Ex: Prata, Preto" />     
-            </div>
-          )}
-          {show('vehicleTypeDesc') && (
-            <div className="sm:col-span-1">
-              <label htmlFor="vehicle-type-select" className={labelClasses}>Tipo / Espécie</label>
-              <select id="vehicle-type-select" className={inputClasses} value={info.vehicleTypeDesc} onChange={e => set('vehicleTypeDesc', e.target.value)}>
-                <option value="">— Selecione —</option>
-                {VEHICLE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-          )}
-        </div>
+      </>
       )}
 
-      {(show('city') || show('state')) && (
-        <div style={{ order: orderIndex('local') }} className="grid grid-cols-3 gap-3 mb-3">
-          {show('city') && (
-            <div className="col-span-2">
-              <label htmlFor="city-input" className={labelClasses}>Cidade de Emplacamento</label>
-              <input id="city-input" className={inputClasses} value={info.city} onChange={e => set('city', e.target.value)} placeholder="Ex: São Paulo" />
-            </div>
-          )}
-          {show('state') && (
-            <div className="col-span-1">
-              <label htmlFor="state-select" className={labelClasses}>Estado (UF)</label>
-              <select id="state-select" className={inputClasses} value={info.state} onChange={e => set('state', e.target.value)}>
-                <option value="">— UF —</option>
-                {UF_LIST.map(uf => <option key={uf} value={uf}>{uf}</option>)}
-              </select>
-            </div>
-          )}
+      {wizardStep === 3 && (
+      <>
+      <div>
+        <div className="flex justify-between items-center mb-1.5">
+          <label htmlFor="general-notes-textarea" className={labelClasses} style={{ marginBottom: 0 }}>📝 Observações Gerais</label>
+          <SpeechButton
+            onTranscript={(text) => {
+              const current = info.generalNotes || ''
+              const space = current ? (current.endsWith(' ') ? '' : ' ') : ''
+              set('generalNotes', current + space + text)
+            }}
+          />
         </div>
-      )}
+        <textarea
+          id="general-notes-textarea"
+          className={`${inputClasses} min-h-[52px] resize-vertical`}
+          value={info.generalNotes} onChange={e => set('generalNotes', e.target.value)}
+          placeholder="Observações adicionais sobre o veículo..." />
+      </div>
 
       {customFieldDefs.length > 0 && (
-        <div style={{ order: orderIndex('personalizados') }} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 mt-3">
           {customFieldDefs.map(d => (
             <div key={d.id}>
               <label htmlFor={`custom-${d.id}`} className={`${labelClasses} flex items-center justify-between gap-2`}>
@@ -765,26 +759,8 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
         </div>
       )}
 
-      <div style={{ order: orderIndex('observacoes') }}>
-        <div className="flex justify-between items-center mb-1.5">
-          <label htmlFor="general-notes-textarea" className={labelClasses} style={{ marginBottom: 0 }}>📝 Observações Gerais</label>
-          <SpeechButton
-            onTranscript={(text) => {
-              const current = info.generalNotes || ''
-              const space = current ? (current.endsWith(' ') ? '' : ' ') : ''
-              set('generalNotes', current + space + text)
-            }}
-          />
-        </div>
-        <textarea
-          id="general-notes-textarea"
-          className={`${inputClasses} min-h-[52px] resize-vertical`}
-          value={info.generalNotes} onChange={e => set('generalNotes', e.target.value)}
-          placeholder="Observações adicionais sobre o veículo..." />
-      </div>
-
       {(show('inspectorSignature') || show('clientSignature')) && (
-        <div style={{ order: orderIndex('assinaturas') }} className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/5">
           {show('inspectorSignature') && (
             <SignaturePad
               label="Assinatura do Vistoriador"
@@ -801,6 +777,29 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
           )}
         </div>
       )}
+      </>
+      )}
+
+      </div>
+
+      <div className="sticky bottom-0 z-10 mt-4 pt-3 pb-1 bg-[var(--card-bg)]/95 border-t border-white/5 flex gap-2">
+        {wizardStep > 1 && (
+          <button type="button" onClick={goBack}
+            className="flex-1 py-3 rounded-xl text-sm font-bold border border-white/10 text-slate-300 hover:bg-white/5">
+            ← Voltar
+          </button>
+        )}
+        {wizardStep < 3 ? (
+          <button type="button" onClick={goNext}
+            className="flex-1 py-3 rounded-xl text-sm font-black bg-sky-600 hover:bg-sky-500 text-white">
+            Continuar →
+          </button>
+        ) : (
+          <button type="button" onClick={handleComplete}
+            className="flex-1 py-3 rounded-xl text-sm font-black bg-green-600 hover:bg-green-500 text-white">
+            Concluir dados
+          </button>
+        )}
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import SupportForm from '@/src/components/SupportForm'
+import GoogleAdsAppealBlock from '@/src/components/GoogleAdsAppealBlock'
 
 export const metadata: Metadata = {
   title: 'Suporte | Danos Aparentes',
@@ -24,8 +25,9 @@ export default function SuportePage() {
           Precisa de ajuda? Escolha o assunto e fale com a nossa equipe.
         </p>
 
-        <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+        <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
           <SupportForm />
+          <GoogleAdsAppealBlock />
         </div>
       </div>
     </main>

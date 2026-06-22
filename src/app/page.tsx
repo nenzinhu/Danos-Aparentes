@@ -6,6 +6,7 @@ import IntroVideo from '../components/IntroVideo'
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { LEGAL_CONTACT_EMAIL } from '../components/LegalContent';
 
 const PricingSection = dynamic(() => import('../components/PricingSection'), { ssr: false });
 const FAQSection = dynamic(() => import('../components/FAQSection'), { ssr: false });
@@ -211,13 +212,9 @@ export default function LandingPage() {
               </Link>
             </div>
 
-            <Link href="/app?intent=subscribe" transitionTypes={['nav-forward']} className="inline-block text-sm font-bold text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors outline-none">
-              Não quer testar? Assinar direto →
-            </Link>
-
             <div className="flex items-center gap-2 text-xs text-[var(--text-muted)] font-semibold pl-1">
               <svg className="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.249-8.25-3.286z"/></svg>
-              Teste Grátis por 7 dias — Sem compromisso e Sem Cartão de Crédito
+              7 dias grátis
             </div>
 
             <div className="flex gap-10 pt-8 border-t border-[var(--card-border)]/40">
@@ -314,15 +311,31 @@ export default function LandingPage() {
       <FAQSection items={faqItems} />
 
       {/* Footer */}
-      <footer className="w-full px-8 py-6 flex justify-between items-center text-[10px] font-black tracking-widest text-[var(--text-muted)] uppercase shrink-0 z-50 border-t border-[var(--card-border)]/20 bg-[var(--panel-bg)]">
-        <div className="flex gap-8">
-          <span>© 2026 Danos Aparentes</span>
-          <span className="hidden md:inline">Vistoria Digital de Alta Fidelidade</span>
+      <footer className="w-full px-8 py-8 flex flex-col gap-6 text-[10px] font-black tracking-widest text-[var(--text-muted)] uppercase shrink-0 z-50 border-t border-[var(--card-border)]/20 bg-[var(--panel-bg)]">
+        {/* Legal Info & Disclaimer */}
+        <div className="w-full flex flex-col gap-2 text-center md:text-left text-[9px] font-semibold tracking-normal normal-case border-b border-[var(--card-border)]/10 pb-6 opacity-75">
+          <p>
+            <strong>Responsável Legal:</strong> Jeferson da Silva | <strong>CPF:</strong> 057.408.599-80 | Florianópolis - SC | <strong>Contato:</strong>{' '}
+            <a href={`mailto:${LEGAL_CONTACT_EMAIL}`} className="text-primary hover:underline">{LEGAL_CONTACT_EMAIL}</a>
+            {' · '}
+            <a href="mailto:treejeferson@gmail.com" className="text-primary hover:underline">treejeferson@gmail.com</a>
+          </p>
+          <p className="text-[8px] opacity-70 leading-relaxed">
+            <strong>Aviso de Isenção:</strong> A consulta de dados cadastrais de veículos por meio da placa é realizada de forma estritamente privada por meio de APIs parceiras para fins de preenchimento automatizado de checklist, não possuindo qualquer vínculo, representação ou convênio com o DETRAN, Denatran, órgãos governamentais ou entidades públicas.
+          </p>
         </div>
-        <div className="flex gap-8">
-          <a href="/privacidade" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Privacidade</a>
-          <a href="/termos" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Termos de Uso</a>
-          <a href="/suporte" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Suporte</a>
+        
+        {/* Bottom row */}
+        <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="flex gap-8">
+            <span>© 2026 Danos Aparentes</span>
+            <span className="hidden md:inline">Vistoria Digital de Alta Fidelidade</span>
+          </div>
+          <div className="flex gap-8">
+            <a href="/privacidade" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Privacidade</a>
+            <a href="/termos" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Termos de Uso</a>
+            <a href="/suporte" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Suporte</a>
+          </div>
         </div>
       </footer>
     </div>

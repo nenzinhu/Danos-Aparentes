@@ -11,7 +11,6 @@ interface Props {
   syncStatus?: 'synced' | 'pending' | 'offline' | 'error'
   subscription?: { status: SubscriptionStatus; trialDaysLeft: number }
   onManageSubscription?: () => void
-  onSubscribe?: () => void | Promise<void>
 }
 
 const SYNC_LABEL: Record<'synced' | 'pending' | 'offline' | 'error', { icon: string; text: string; color: string; bgColor: string; borderColor: string }> = {
@@ -36,11 +35,9 @@ const PRO_BENEFITS = [
 function ProBenefitsButton({
   subscription,
   onManageSubscription,
-  onSubscribe,
 }: {
   subscription?: { status: SubscriptionStatus; trialDaysLeft: number }
   onManageSubscription?: () => void
-  onSubscribe?: () => void | Promise<void>
 }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -177,37 +174,8 @@ function ProBenefitsButton({
                 Gerenciar Assinatura →
               </button>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                <div style={{ textAlign: 'center', fontSize: '0.75rem', color: '#94a3b8', fontFamily: 'Outfit, sans-serif' }}>
-                  A partir de <strong style={{ color: '#38bdf8' }}>R$ 49,90/mês</strong> · Cancele quando quiser
-                </div>
-                {onSubscribe ? (
-                  <button
-                    onClick={() => { onSubscribe(); setOpen(false) }}
-                    style={{
-                      width: '100%', textAlign: 'center', padding: '9px',
-                      borderRadius: 10, background: 'linear-gradient(135deg, #0088cc, #0066aa)',
-                      color: '#fff', fontWeight: 800, fontSize: '0.8rem', border: 'none',
-                      cursor: 'pointer', fontFamily: 'Outfit, sans-serif',
-                      boxShadow: '0 0 20px rgba(0,170,255,0.2)',
-                    }}
-                  >
-                    Assinar agora →
-                  </button>
-                ) : (
-                  <a
-                    href="/app"
-                    style={{
-                      display: 'block', textAlign: 'center', padding: '9px',
-                      borderRadius: 10, background: 'linear-gradient(135deg, #0088cc, #0066aa)',
-                      color: '#fff', fontWeight: 800, fontSize: '0.8rem',
-                      textDecoration: 'none', fontFamily: 'Outfit, sans-serif',
-                      boxShadow: '0 0 20px rgba(0,170,255,0.2)',
-                    }}
-                  >
-                    Começar Teste Grátis →
-                  </a>
-                )}
+              <div style={{ textAlign: 'center', fontSize: '0.75rem', color: '#94a3b8', fontFamily: 'Outfit, sans-serif' }}>
+                A partir de <strong style={{ color: '#38bdf8' }}>R$ 49,90/mês</strong> · Cancele quando quiser
               </div>
             )}
           </div>
@@ -219,7 +187,7 @@ function ProBenefitsButton({
 
 
 
-function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, onSignOut, syncStatus, subscription, onManageSubscription, onSubscribe }: Props) {
+function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, onSignOut, syncStatus, subscription, onManageSubscription }: Props) {
   return (
     <header className='relative w-full max-w-[1250px] mx-auto text-center px-5 pt-20 sm:pt-12 pb-7 font-outfit'>
 
@@ -242,7 +210,6 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
       <ProBenefitsButton
         subscription={subscription}
         onManageSubscription={onManageSubscription}
-        onSubscribe={onSubscribe}
       />
 
       {/* Floating Action Buttons */}

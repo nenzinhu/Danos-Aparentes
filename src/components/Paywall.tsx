@@ -1,18 +1,17 @@
 'use client';
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
+import Link from 'next/link'
 import type { SubscriptionStatus } from '../hooks/useSubscription'
+import { LEGAL_CONTACT_EMAIL } from './LegalContent'
 
 interface Props {
   status: SubscriptionStatus
-  onSubscribe: () => Promise<void>
   onSignOut?: () => void
 }
 
 const PRICE_LABEL = 'R$ 49,90/mês'
 
-export default function Paywall({ status, onSubscribe, onSignOut }: Props) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+export default function Paywall({ status, onSignOut }: Props) {
   const cardRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -24,20 +23,8 @@ export default function Paywall({ status, onSubscribe, onSignOut }: Props) {
     : 'Seu teste grátis de 7 dias acabou'
 
   const description = status === 'past_due'
-    ? 'Não conseguimos confirmar o pagamento da sua assinatura. Atualize seu cartão para continuar usando o Danos Aparentes.'
-    : 'Assine o Danos Aparentes para continuar registrando vistorias, gerando laudos em PDF e usando a sincronização em nuvem.'
-
-  async function handleClick() {
-    if (loading) return
-    setLoading(true)
-    setError(null)
-    try {
-      await onSubscribe()
-    } catch {
-      setError('Não foi possível iniciar o pagamento. Tente novamente em alguns instantes.')
-      setLoading(false)
-    }
-  }
+    ? `Não conseguimos confirmar o pagamento da sua assinatura. Entre em contato pelo suporte (${LEGAL_CONTACT_EMAIL}) para regularizar o acesso ao Danos Aparentes.`
+    : `Para continuar registrando vistorias, gerando laudos em PDF e usando a sincronização em nuvem, é necessário o plano PRO. Fale conosco em ${LEGAL_CONTACT_EMAIL}.`
 
   return (
     <div
@@ -59,17 +46,17 @@ export default function Paywall({ status, onSubscribe, onSignOut }: Props) {
         <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#00aaff', marginBottom: 4 }}>{PRICE_LABEL}</div>
         <div style={{ color: 'var(--text-muted)', fontSize: '0.78rem', marginBottom: 26 }}>Cancele quando quiser</div>
 
-        {error && (
-          <div role="alert" style={{ color: '#ef4444', fontSize: '0.82rem', marginBottom: 14 }}>{error}</div>
-        )}
-
-        <button type="button" onClick={handleClick} disabled={loading} style={{
-          background: '#00aaff', color: '#02101e', fontWeight: 800, fontSize: '0.95rem',
-          padding: '14px 28px', borderRadius: 10, border: 'none', cursor: loading ? 'default' : 'pointer',
-          fontFamily: 'Outfit,sans-serif', width: '100%', opacity: loading ? 0.7 : 1,
-        }}>
-          {loading ? 'Abrindo pagamento...' : 'Assinar agora'}
-        </button>
+        <Link
+          href={`mailto:${LEGAL_CONTACT_EMAIL}?subject=${encodeURIComponent('[Suporte] Assinatura / Plano PRO')}`}
+          style={{
+            display: 'block',
+            background: '#00aaff', color: '#02101e', fontWeight: 800, fontSize: '0.95rem',
+            padding: '14px 28px', borderRadius: 10, textDecoration: 'none',
+            fontFamily: 'Outfit,sans-serif', width: '100%', boxSizing: 'border-box',
+          }}
+        >
+          Falar com o suporte
+        </Link>
 
         {onSignOut && (
           <button type="button" onClick={onSignOut} style={{

@@ -1,14 +1,14 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react'
+import { compressImage } from '../lib/imageUtils'
 
 interface Props {
   isOpen: boolean
   onClose: () => void
   hasAccess: boolean
-  onSubscribe: () => void
 }
 
-export default function CompanySettingsModal({ isOpen, onClose, hasAccess, onSubscribe }: Props) {
+export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Props) {
   const [companyName, setCompanyName] = useState('')
   const [companyLogo, setCompanyLogo] = useState('')
   const [logoError, setLogoError] = useState<string | null>(null)
@@ -24,15 +24,9 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess, onSub
 
   if (!isOpen) return null
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-
-    // Limit size to 1MB to avoid localStorage overflow
-    if (file.size > 1024 * 1024) {
-      setLogoError('O logotipo deve ter menos de 1MB.')
-      return
-    }
 
     if (!file.type.startsWith('image/')) {
       setLogoError('Por favor, envie um arquivo de imagem (PNG, JPG, SVG).')
@@ -40,16 +34,42 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess, onSub
     }
 
     setLogoError(null)
-    const reader = new FileReader()
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setCompanyLogo(reader.result)
+
+    try {
+      if (file.type === 'image/svg+xml') {
+        // SVGs are tiny vector texts; skip canvas compression but enforce 1MB budget limit
+        if (file.size > 1024 * 1024) {
+          setLogoError('O logotipo deve ter menos de 1MB.')
+          return
+        }
+        const reader = new FileReader()
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            setCompanyLogo(reader.result)
+          }
+        }
+        reader.onerror = () => {
+          setLogoError('Erro ao carregar imagem.')
+        }
+        reader.readAsDataURL(file)
+      } else {
+        // Compress PNG/JPG to maximum 500px width (optimal for PDFs and fits localStorage easily)
+        const compressedBlob = await compressImage(file, 500, 0.8)
+        const reader = new FileReader()
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            setCompanyLogo(reader.result)
+          }
+        }
+        reader.onerror = () => {
+          setLogoError('Erro ao carregar imagem.')
+        }
+        reader.readAsDataURL(compressedBlob)
       }
+    } catch (err) {
+      console.error('Erro ao otimizar imagem:', err)
+      setLogoError('Erro ao otimizar ou carregar a imagem.')
     }
-    reader.onerror = () => {
-      setLogoError('Erro ao carregar imagem.')
-    }
-    reader.readAsDataURL(file)
   }
 
   const handleRemoveLogo = () => {
@@ -94,14 +114,8 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess, onSub
                 <div>
                   <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#facc15', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Recurso Premium (Vistoria PRO)</div>
                   <p style={{ fontSize: '0.78rem', color: '#e2e8f0', marginTop: 4, lineHeight: 1.4 }}>
-                    Você pode configurar sua marca localmente para testar, mas a aplicação do nome e do logotipo nos relatórios PDF gerados requer uma assinatura ativa.
+                    Você pode configurar sua marca localmente para testar, mas a aplicação do nome e do logotipo nos relatórios PDF gerados requer uma assinatura ativa. Entre em contato pelo suporte se precisar de ajuda.
                   </p>
-                  <button 
-                    onClick={onSubscribe} 
-                    style={{ background: '#facc15', border: 'none', color: '#0f172a', fontWeight: 800, fontSize: '0.75rem', padding: '5px 12px', borderRadius: 6, marginTop: 10, cursor: 'pointer', fontFamily: 'Outfit, sans-serif', transition: 'all 0.2s' }}
-                  >
-                    Ativar Assinatura PRO
-                  </button>
                 </div>
               </div>
             </div>

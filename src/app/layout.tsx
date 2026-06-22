@@ -19,13 +19,16 @@ import { Outfit } from 'next/font/google'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap' })
+
+const SITE_URL = 'https://danosaparentes.com.br'
 
 export const metadata: Metadata = {
   title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
   description: 'Documente avarias veiculares com precisão pericial: mapa 3D do veículo, fotos por avaria, laudo em PDF com QR Code de verificação.',
-  metadataBase: new URL('https://danosaparentes.vercel.app'),
+  metadataBase: new URL(SITE_URL),
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
@@ -34,7 +37,7 @@ export const metadata: Metadata = {
   },
 
   // ── Autoria e Copyright ─────────────────────────────────────
-  authors: [{ name: 'Danos Aparentes', url: 'https://danosaparentes.vercel.app' }],
+  authors: [{ name: 'Danos Aparentes', url: SITE_URL }],
   creator: 'Danos Aparentes',
   publisher: 'Danos Aparentes',
   keywords: [
@@ -46,7 +49,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
     description: 'Documente avarias veiculares com precisão pericial: mapa 3D do veículo, fotos por avaria, laudo em PDF com QR Code de verificação.',
-    url: 'https://danosaparentes.vercel.app',
+    url: SITE_URL,
     siteName: 'Danos Aparentes',
     images: [
       {
@@ -127,6 +130,19 @@ export default function RootLayout({
       <body className={`${outfit.className} min-h-screen selection:bg-primary selection:text-white`}>
         {children}
         <SpeedInsights />
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18259031185"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'AW-18259031185');
+          `}
+        </Script>
       </body>
     </html>
   )

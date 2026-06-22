@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react'
+import { LEGAL_CONTACT_EMAIL } from './LegalContent'
 
-const SUPPORT_EMAIL = 'suporte@danosaparentes.com.br'
 const MAX_CHARS = 600
 
 const TABS = [
@@ -26,7 +26,7 @@ export default function SupportForm() {
 
   async function copyEmail() {
     try {
-      await navigator.clipboard.writeText(SUPPORT_EMAIL)
+      await navigator.clipboard.writeText(LEGAL_CONTACT_EMAIL)
       setCopied(true)
       setTimeout(() => setCopied(false), 1800)
     } catch {
@@ -36,7 +36,7 @@ export default function SupportForm() {
 
   function send() {
     if (!canSend) return
-    const mailto = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(
+    const mailto = `mailto:${LEGAL_CONTACT_EMAIL}?subject=${encodeURIComponent(
       `[Suporte] ${subject}`
     )}&body=${encodeURIComponent(message)}`
     window.location.href = mailto
@@ -51,10 +51,10 @@ export default function SupportForm() {
             Email de suporte
           </p>
           <a
-            href={`mailto:${SUPPORT_EMAIL}`}
+            href={`mailto:${LEGAL_CONTACT_EMAIL}`}
             className="text-sm font-bold text-[var(--text-main)] hover:text-sky-400 transition-colors break-all"
           >
-            {SUPPORT_EMAIL}
+            {LEGAL_CONTACT_EMAIL}
           </a>
         </div>
         <button

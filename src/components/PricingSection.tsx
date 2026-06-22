@@ -56,9 +56,6 @@ export default function PricingSection() {
             <Link href="/app" className="block w-full py-3.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--bg-main)] font-black text-center rounded-xl shadow-xl shadow-primary/10 transition-all active:scale-[0.99] outline-none">
               Começar Teste Grátis
             </Link>
-            <Link href="/app?intent=subscribe" className="block w-full mt-3 text-center text-xs font-bold text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors outline-none">
-              Prefere assinar direto? Assinar agora →
-            </Link>
           </div>
         </div>
 

@@ -36,8 +36,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       customer: sub?.stripe_customer_id || undefined,
       customer_email: sub?.stripe_customer_id ? undefined : user.email,
       client_reference_id: user.id,
-      success_url: `${origin}/app.html?checkout=success`,
-      cancel_url: `${origin}/app.html?checkout=canceled`,
+      success_url: `${origin}/app?checkout=success`,
+      cancel_url: `${origin}/app?checkout=canceled`,
     })
 
     res.status(200).json({ url: session.url })
