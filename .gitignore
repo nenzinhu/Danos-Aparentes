@@ -27,5 +27,13 @@ Thumbs.db
 .vercel
 .env*
 
+# Cursor / geradores locais
+.cursor/
+
+# VideoForge (artefatos gerados — scripts ficam versionados)
+videoforge/out/
+videoforge/cache/
+videoforge/remotion/node_modules/
+
 # Template de ambiente deve ser versionado
 !.env.example

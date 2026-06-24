@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Logo from './Logo';
 
 type Phase = 'show' | 'fading' | 'done';
 
@@ -42,14 +43,7 @@ export default function IntroVideo() {
         pointerEvents: 'none',
       }}
     >
-      <img
-        src="/logo.svg"
-        alt=""
-        width={160}
-        height={160}
-        fetchPriority="high"
-        style={{ objectFit: 'contain', filter: 'drop-shadow(0 0 28px rgba(0,170,255,0.4))' }}
-      />
+      <Logo size={160} variant="full" className="drop-shadow-[0_0_36px_rgba(31,182,255,0.45)]" />
     </div>
   );
 }

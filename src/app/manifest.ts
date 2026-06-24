@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 
 // Manifest do PWA — permite instalar o app na tela inicial (Android/Desktop/iOS).
-// Os ícones são gerados a partir de /logo.svg (mesmo logo da entrada do app).
+// Os ícones são gerados a partir de /logo.png (mesmo logo da entrada do app).
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Danos Aparentes — Vistoria Veicular',

@@ -1,8 +1,10 @@
 'use client';
 import { useState, createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
 import { Damage, VehicleInfo, VehicleType, ViewType } from '../types'
 import { generatePdf, generatePdfBlob, SvgPdfData } from '../lib/pdf'
 import { copyReport, downloadTxt, sendWhatsApp } from '../lib/report'
+import { resolveDamagePhotos } from '../lib/photoStore'
 import { staticVehicleRegistry } from './vehicles/staticRegistry'
 import VehicleDefs from './vehicles/VehicleDefs'
 
@@ -16,83 +18,35 @@ interface Props {
 
 const ALL_VIEWS: ViewType[] = ['lateral-left', 'lateral-right', 'frontal', 'traseira']
 
-function elementToHtml(el: any): string {
-  if (el == null) return ''
-  if (typeof el === 'string' || typeof el === 'number') {
-    return String(el)
-  }
-  if (Array.isArray(el)) {
-    return el.map(elementToHtml).join('')
-  }
-  let type = el.type
-  if (!type) return ''
-  if (typeof type === 'symbol' || (type.toString && type.toString().includes('Symbol'))) {
-    return elementToHtml(el.props?.children)
-  }
-  if (typeof type === 'function') {
-    try {
-      const renderType = (type as any).type || type
-      const rendered = renderType(el.props)
-      return elementToHtml(rendered)
-    } catch (e) {
-      console.error(e)
-      return ''
-    }
-  }
-  if (typeof type === 'string') {
-    const props = el.props || {}
-    let attrs = ''
-    for (const [key, value] of Object.entries(props)) {
-      if (key === 'children' || key.startsWith('on') || value == null) continue
-      if (key === 'className') {
-        attrs += ` class="${value}"`
-      } else if (key === 'style' && typeof value === 'object') {
-        const styleStr = Object.entries(value)
-          .map(([k, v]) => `${k.replace(/[A-Z]/g, m => '-' + m.toLowerCase())}:${v}`)
-          .join(';')
-        attrs += ` style="${styleStr}"`
-      } else {
-        attrs += ` ${key}="${value}"`
-      }
-    }
-    const childrenHtml = elementToHtml(props.children)
-    const selfClosing = ['circle', 'path', 'ellipse', 'rect', 'line', 'image', 'stop', 'use']
-    if (selfClosing.includes(type) && !childrenHtml) {
-      return `<${type}${attrs} />`
-    }
-    return `<${type}${attrs}>${childrenHtml}</${type}>`
-  }
-  return ''
-}
-
 export async function captureSvgs(vehicleType: VehicleType, damages: Damage[]): Promise<SvgPdfData> {
   try {
-    // Extract the <defs>...</defs> content to inject into each SVG
-    const defsHtml = elementToHtml(createElement(VehicleDefs))
+    const defsHtml = renderToStaticMarkup(createElement(VehicleDefs))
     const startIdx = defsHtml.indexOf('<defs>')
     const endIdx = defsHtml.lastIndexOf('</defs>') + '</defs>'.length
     const defsInner = startIdx >= 0 ? defsHtml.slice(startIdx, endIdx) : ''
 
     const svgCaptures: Record<string, string> = {}
+    const vehicleDamages = damages.filter(d => d.vehicle === vehicleType)
 
     for (const view of ALL_VIEWS) {
-      const viewDamages = damages.filter(d => d.view === view)
-      // Captura todas as vistas — neutras quando sem avarias
-      const Comp = staticVehicleRegistry[vehicleType][view]
-      const rawSvg = elementToHtml(
+      const viewDamages = vehicleDamages.filter(d => d.view === view)
+      const Comp = staticVehicleRegistry[vehicleType]?.[view]
+      if (!Comp) continue
+
+      const rawSvg = renderToStaticMarkup(
         createElement(Comp, {
           damages: viewDamages,
           selectedPartId: null,
           onPartClick: () => {},
           onPartHover: () => {},
-        })
+        }),
       )
       svgCaptures[view] = rawSvg.replace(/(<svg[^>]*>)/, `$1${defsInner}`)
     }
 
     return { svgCaptures }
   } catch (e) {
-    console.error("captureSvgs failed:", e)
+    console.error('captureSvgs failed:', e)
     return { svgCaptures: {} }
   }
 }
@@ -180,16 +134,18 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
 
   async function handlePdf() {
     const svgData = await captureSvgs(vehicleType, damages)
+    const resolvedDamages = await resolveDamagePhotos(damages)
     const companyName = hasAccess ? (localStorage.getItem('company_name') || '') : ''
     const companyLogo = hasAccess ? (localStorage.getItem('company_logo') || '') : ''
-    await generatePdf(vehicleInfo, damages, svgData, { companyName, companyLogo, pdfTheme })
+    await generatePdf(vehicleInfo, resolvedDamages, svgData, { companyName, companyLogo, pdfTheme })
   }
 
   async function whatsappPdf() {
     const svgData = await captureSvgs(vehicleType, damages)
+    const resolvedDamages = await resolveDamagePhotos(damages)
     const companyName = hasAccess ? (localStorage.getItem('company_name') || '') : ''
     const companyLogo = hasAccess ? (localStorage.getItem('company_logo') || '') : ''
-    const blob = await generatePdfBlob(vehicleInfo, damages, svgData, { companyName, companyLogo, pdfTheme })
+    const blob = await generatePdfBlob(vehicleInfo, resolvedDamages, svgData, { companyName, companyLogo, pdfTheme })
     const file = new File([blob], `vistoria-${vehicleInfo.plate || 'sem-placa'}.pdf`, { type: 'application/pdf' })
     if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({ files: [file], title: 'Relatório de Vistoria' })

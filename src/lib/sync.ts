@@ -1,14 +1,16 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { SavedReport } from '../types'
+import { SavedReport, VehicleType } from '../types'
 import { db, SyncQueueItem } from './db'
 import { supabase, supabaseEnabled } from './supabase'
+import { uploadDamagePhotosForSync, normalizeDamagePhotos, prefetchReportPhotoCache } from './photoStore'
+import { deleteInspectionPhotos } from './photoStorage'
 
 function inspectionRow(r: SavedReport, userId: string) {
   const v = r.vehicleInfo
   return {
     id: r.id,
     user_id: userId,
-    vehicle_type: r.damages[0]?.vehicle ?? 'car',
+    vehicle_type: r.vehicleType ?? r.damages[0]?.vehicle ?? 'car',
     owner: v.owner, phone: v.phone, brand: v.brand, plate: v.plate,
     general_notes: v.generalNotes, profile: v.profile, ref: v.ref, color: v.color,
     vehicle_type_desc: v.vehicleTypeDesc, city: v.city, state: v.state,
@@ -33,32 +35,50 @@ function damageRows(r: SavedReport, userId: string) {
   }))
 }
 
+async function persistSyncedReport(reportId: string, damages: SavedReport['damages']) {
+  const all = await db.getAllSaved()
+  const report = all.find(r => r.id === reportId)
+  if (!report) return
+  await db.putSaved({ ...report, damages, syncedAt: Date.now() })
+}
+
 async function pushReport(report: SavedReport, userId: string) {
   if (!supabase) throw new Error('Supabase não configurado')
-  const { error: e1 } = await supabase.from('vehicle_inspections').upsert(inspectionRow(report, userId))
+
+  const { remoteDamages, localDamages } = await uploadDamagePhotosForSync(
+    report.damages,
+    userId,
+    report.id,
+  )
+  const reportForSync: SavedReport = { ...report, damages: remoteDamages }
+
+  const { error: e1 } = await supabase.from('vehicle_inspections').upsert(inspectionRow(reportForSync, userId))
   if (e1) throw e1
-  const rows = damageRows(report, userId)
+  const rows = damageRows(reportForSync, userId)
   if (rows.length > 0) {
     const { error: e2 } = await supabase.from('damages').upsert(rows)
     if (e2) throw e2
   }
+  await persistSyncedReport(report.id, localDamages)
 }
 
-async function deleteRemoteReport(id: string) {
+async function deleteRemoteReport(id: string, userId: string) {
   if (!supabase) throw new Error('Supabase não configurado')
+  await deleteInspectionPhotos(userId, id)
   const { error } = await supabase.from('vehicle_inspections').delete().eq('id', id)
   if (error) throw error
 }
 
 const MAX_RETRIES = 5
 
-async function logSyncError(userId: string, item: SyncQueueItem, error: any) {
+async function logSyncError(userId: string, item: SyncQueueItem, error: unknown) {
   if (!supabase) return
+  const message = error instanceof Error ? error.message : String(error)
   await supabase.from('sync_errors').insert({
     user_id: userId,
     type: item.type,
     report_id: item.reportId,
-    error: error.message || String(error),
+    error: message,
     retry_count: item.retry_count,
     timestamp: Date.now()
   })
@@ -81,13 +101,13 @@ export async function flushQueue(userId: string): Promise<boolean> {
       if (item.type === 'upsert' && item.report) {
         await pushReport(item.report, userId)
       } else if (item.type === 'delete') {
-        await deleteRemoteReport(item.reportId)
+        await deleteRemoteReport(item.reportId, userId)
       }
       await db.removeFromSyncQueue(item.qid)
-    } catch (err: any) {
+    } catch (err: unknown) {
       hasErrors = true
       const newRetryCount = item.retry_count + 1
-      const lastError = err.message || String(err)
+      const lastError = err instanceof Error ? err.message : String(err)
 
       if (newRetryCount >= MAX_RETRIES) {
         await logSyncError(userId, item, err)
@@ -105,6 +125,48 @@ export async function flushQueue(userId: string): Promise<boolean> {
   return !hasErrors
 }
 
+function mapRemoteInspection(insp: Record<string, unknown>, damages: Record<string, unknown>[]): SavedReport {
+  return {
+    id: insp.id as SavedReport['id'],
+    savedAt: insp.updated_at as number,
+    syncedAt: insp.updated_at as number,
+    vehicleType: (insp.vehicle_type as VehicleType | undefined) ?? undefined,
+    vehicleInfo: {
+      owner: insp.owner as string,
+      phone: insp.phone as string,
+      brand: insp.brand as string,
+      plate: insp.plate as SavedReport['vehicleInfo']['plate'],
+      generalNotes: insp.general_notes as string,
+      profile: insp.profile as SavedReport['vehicleInfo']['profile'],
+      ref: insp.ref as string,
+      color: insp.color as string,
+      vehicleTypeDesc: insp.vehicle_type_desc as string,
+      city: insp.city as string,
+      state: insp.state as string,
+      cpf: (insp.cpf as string) || '',
+      cnh: (insp.cnh as string) || '',
+      cnhCategory: (insp.cnh_category as string) || '',
+      inspectorSignature: (insp.inspector_signature as string) || '',
+      clientSignature: (insp.client_signature as string) || '',
+    },
+    damages: damages
+      .filter(d => d.inspection_id === insp.id)
+      .map(d => ({
+        id: d.id as SavedReport['damages'][number]['id'],
+        vehicle: d.vehicle as SavedReport['damages'][number]['vehicle'],
+        view: d.view as SavedReport['damages'][number]['view'],
+        partId: d.part_id as string,
+        partName: d.part_name as string,
+        type: d.type as SavedReport['damages'][number]['type'],
+        typeName: d.type_name as string,
+        severity: d.severity as SavedReport['damages'][number]['severity'],
+        notes: d.notes as string,
+        photos: normalizeDamagePhotos((d.photos as string[] | null) ?? []),
+        photoNotes: (d.photo_notes as string[] | null) ?? [],
+      })),
+  }
+}
+
 export async function pullRemote(userId: string): Promise<SavedReport[]> {
   if (!supabase) return []
   const { data: inspections, error } = await supabase
@@ -117,27 +179,84 @@ export async function pullRemote(userId: string): Promise<SavedReport[]> {
     .select('*')
     .eq('user_id', userId)
 
-  return inspections.map((insp: any): SavedReport => ({
-    id: insp.id,
-    savedAt: insp.updated_at,
-    vehicleInfo: {
-      owner: insp.owner, phone: insp.phone, brand: insp.brand, plate: insp.plate,
-      generalNotes: insp.general_notes, profile: insp.profile, ref: insp.ref,
-      color: insp.color, vehicleTypeDesc: insp.vehicle_type_desc, city: insp.city, state: insp.state,
-      cpf: insp.cpf || '',
-      cnh: insp.cnh || '',
-      cnhCategory: insp.cnh_category || '',
-      inspectorSignature: insp.inspector_signature || '',
-      clientSignature: insp.client_signature || '',
-    },
-    damages: (damages ?? [])
-      .filter((d: any) => d.inspection_id === insp.id)
-      .map((d: any) => ({
-        id: d.id, vehicle: d.vehicle, view: d.view, partId: d.part_id, partName: d.part_name,
-        type: d.type, typeName: d.type_name, severity: d.severity, notes: d.notes,
-        photos: d.photos ?? [], photoNotes: d.photo_notes ?? [],
-      })),
-  }))
+  const damageRows = (damages ?? []) as Record<string, unknown>[]
+  return inspections.map((insp) => mapRemoteInspection(insp as Record<string, unknown>, damageRows))
+}
+
+/** Merge local + remoto: last-write-wins por savedAt; remove laudos deletados na nuvem. */
+export async function mergeRemoteReports(userId: string): Promise<SavedReport[]> {
+  const [remote, local, queue] = await Promise.all([
+    pullRemote(userId),
+    db.getAllSaved(),
+    db.getSyncQueue(),
+  ])
+
+  const remoteById = new Map(remote.map(r => [r.id, r]))
+  const localById = new Map(local.map(r => [r.id, r]))
+  const pendingUpsertIds = new Set(
+    queue.filter(q => q.type === 'upsert').map(q => q.reportId),
+  )
+
+  const merged: SavedReport[] = []
+
+  for (const localR of local) {
+    const remoteR = remoteById.get(localR.id)
+
+    if (!remoteR) {
+      if (localR.syncedAt && !pendingUpsertIds.has(localR.id)) {
+        await db.deleteSaved(localR.id)
+        continue
+      }
+      merged.push(localR)
+      continue
+    }
+
+    if (remoteR.savedAt > localR.savedAt) {
+      const winner = {
+        ...remoteR,
+        damages: remoteR.damages.map(d => ({
+          ...d,
+          photos: normalizeDamagePhotos(d.photos),
+        })),
+        syncedAt: remoteR.savedAt,
+      }
+      await db.putSaved(winner)
+      merged.push(winner)
+      void prefetchReportPhotoCache(winner.damages)
+    } else if (localR.savedAt > remoteR.savedAt) {
+      merged.push(localR)
+      if (!pendingUpsertIds.has(localR.id)) {
+        await db.addToSyncQueue({
+          type: 'upsert',
+          reportId: localR.id,
+          report: localR,
+          timestamp: Date.now(),
+        })
+      }
+    } else {
+      merged.push(localR)
+    }
+  }
+
+  for (const remoteR of remote) {
+    if (!localById.has(remoteR.id)) {
+      const incoming = {
+        ...remoteR,
+        damages: remoteR.damages.map(d => ({
+          ...d,
+          photos: normalizeDamagePhotos(d.photos),
+        })),
+        syncedAt: remoteR.savedAt,
+      }
+      await db.putSaved(incoming)
+      merged.push(incoming)
+      void prefetchReportPhotoCache(incoming.damages)
+    }
+  }
+
+  return merged
+    .filter((r, i, arr) => arr.findIndex(x => x.id === r.id) === i)
+    .sort((a, b) => b.savedAt - a.savedAt)
 }
 
 export type SyncStatus = 'synced' | 'pending' | 'offline' | 'error'

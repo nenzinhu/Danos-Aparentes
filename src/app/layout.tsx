@@ -20,6 +20,8 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
+import CookieConsentBanner from '@/src/components/CookieConsentBanner'
+import AnalyticsScripts from '@/src/components/AnalyticsScripts'
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap' })
 
@@ -91,7 +93,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" style={{ colorScheme: 'dark' }}>
       <head>
-        <link rel="preload" href="/logo.svg" as="image" type="image/svg+xml" fetchPriority="high" />
+        <link rel="preload" href="/logo.png" as="image" type="image/png" fetchPriority="high" />
         <style dangerouslySetInnerHTML={{ __html: `
           body {
             background: #020617;
@@ -129,6 +131,8 @@ export default function RootLayout({
       </head>
       <body className={`${outfit.className} min-h-screen selection:bg-primary selection:text-white`}>
         {children}
+        <CookieConsentBanner />
+        <AnalyticsScripts />
         <SpeedInsights />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-18259031185"

@@ -3,9 +3,14 @@
 // Linguagem propositalmente simples, sem jargão técnico.
 
 export interface ManualHighlight {
-  icon: string   // emoji do tópico
-  label: string  // título curto em negrito
-  text: string   // explicação para leigo
+  icon: string
+  label: string
+  text: string
+}
+
+export interface ManualStepImage {
+  src: string
+  alt: string
 }
 
 export interface ManualStep {
@@ -14,6 +19,11 @@ export interface ManualStep {
   subtitle: string
   desc: string
   highlights: ManualHighlight[]
+  /** Imagem principal do passo (assets em /public) */
+  image?: string
+  imageAlt?: string
+  /** Várias imagens (ex.: ícones de tipo de dano) */
+  images?: ManualStepImage[]
 }
 
 export const MANUAL_STEPS: ManualStep[] = [
@@ -22,11 +32,13 @@ export const MANUAL_STEPS: ManualStep[] = [
     title: 'Conhecendo a tela',
     subtitle: 'As 4 áreas principais do app',
     desc: 'A tela foi pensada para você trabalhar rápido no celular. Ela tem quatro partes:',
+    image: '/brand/logo-full.png',
+    imageAlt: 'Danos Aparentes — app de inspeção veicular',
     highlights: [
-      { icon: '🏢', label: 'Topo', text: 'A logo da sua empresa, um aviso de internet e o botão para deixar a tela clara ou escura.' },
-      { icon: '📋', label: 'Dados do veículo', text: 'Onde você digita a placa e os dados do dono e do carro (marca, modelo, cor).' },
-      { icon: '🚗', label: 'Desenho do veículo', text: 'O desenho do carro no centro, em 4 lados, onde você toca para marcar os danos.' },
-      { icon: '📝', label: 'Lista de danos', text: 'A lista do que você marcou, com os botões para assinar e gerar o laudo em PDF.' },
+      { icon: '🏢', label: 'Topo', text: 'Logo da sua empresa, status de internet e botão para tela clara ou escura.' },
+      { icon: '📋', label: 'Dados da vistoria', text: 'Formulário em 3 passos: Veículo → Cliente → Finalizar. Pode minimizar quando terminar.' },
+      { icon: '🚗', label: 'Desenho do veículo', text: 'O desenho no centro, em 4 lados, onde você toca para marcar os danos.' },
+      { icon: '📝', label: 'Lista de danos', text: 'Tudo que você marcou, com botões para assinar e gerar o laudo em PDF.' },
     ],
   },
   {
@@ -34,6 +46,8 @@ export const MANUAL_STEPS: ManualStep[] = [
     title: 'Digite a placa e pronto',
     subtitle: 'O app preenche os dados sozinho',
     desc: 'Em vez de digitar tudo na mão, é só informar a placa do veículo:',
+    image: '/og-image.jpg',
+    imageAlt: 'Consulta de placa e preenchimento automático',
     highlights: [
       { icon: '🔍', label: 'Busca automática', text: 'Digite a placa (Mercosul ou a antiga) e o app procura os dados do veículo sozinho.' },
       { icon: '⚡', label: 'Preenche na hora', text: 'Marca, modelo, ano, cor, cidade e estado aparecem automaticamente.' },
@@ -45,6 +59,8 @@ export const MANUAL_STEPS: ManualStep[] = [
     title: 'Toque no desenho para marcar',
     subtitle: 'Sem papel — direto no veículo digital',
     desc: 'Marque cada dano tocando direto no desenho do veículo:',
+    image: '/vehicles-img/car.png',
+    imageAlt: 'Desenho do veículo com peça danificada em destaque',
     highlights: [
       { icon: '🚐', label: 'Vários veículos', text: 'Escolha carro, moto, caminhão, van, ônibus ou micro-ônibus — o desenho muda para cada um.' },
       { icon: '🔄', label: 'Os 4 lados', text: 'Veja o veículo pela lateral esquerda, lateral direita, frente e traseira.' },
@@ -56,6 +72,11 @@ export const MANUAL_STEPS: ManualStep[] = [
     title: 'Detalhe o dano e tire a foto',
     subtitle: 'Provas que ninguém contesta',
     desc: 'Para cada dano, registre o que aconteceu com clareza:',
+    images: [
+      { src: '/scratch.png', alt: 'Ícone de risco e abrasão' },
+      { src: '/dent.png', alt: 'Ícone de amassado e deformação' },
+      { src: '/broken.png', alt: 'Ícone de peça quebrada ou fratura' },
+    ],
     highlights: [
       { icon: '🏷️', label: 'Tipo do dano', text: 'Escolha: risco, amassado, quebrado, trincado ou peça faltando.' },
       { icon: '⚠️', label: 'Gravidade', text: 'Marque se é leve (verde), média (amarela) ou grave (vermelha) — fácil de bater o olho depois.' },
@@ -67,6 +88,8 @@ export const MANUAL_STEPS: ManualStep[] = [
     title: 'Escolha o visual do laudo',
     subtitle: '3 modelos de PDF + a sua logo',
     desc: 'O laudo em PDF sai pronto em segundos. Você escolhe o estilo:',
+    image: '/logo-stamp.png',
+    imageAlt: 'Área para logo da empresa no laudo PDF',
     highlights: [
       { icon: '🎨', label: 'Moderno (padrão)', text: 'Visual atual, com cores fortes e destaque — bom para a maioria dos casos.' },
       { icon: '📑', label: 'Técnico', text: 'Mais tabelas e detalhes, para quem quer tudo bem completo.' },
@@ -79,6 +102,8 @@ export const MANUAL_STEPS: ManualStep[] = [
     title: 'Assine e proteja o laudo',
     subtitle: 'Assinatura no dedo + selo de segurança',
     desc: 'O laudo sai com validade e proteção contra fraude:',
+    image: '/brand/logo-icon.png',
+    imageAlt: 'Selo de verificação e segurança do laudo',
     highlights: [
       { icon: '✍️', label: 'Assinatura na tela', text: 'Você e o cliente assinam com o dedo, direto na tela do celular.' },
       { icon: '🔒', label: 'Selo de segurança', text: 'Cada PDF ganha um código único. Se alguém mexer no arquivo, o código muda e a fraude fica evidente.' },
@@ -90,6 +115,8 @@ export const MANUAL_STEPS: ManualStep[] = [
     title: 'Funciona sem internet',
     subtitle: 'Salva no aparelho e envia depois',
     desc: 'Ficar sem sinal não atrapalha o seu trabalho:',
+    image: '/icon-512.png',
+    imageAlt: 'Ícone do app instalável no celular',
     highlights: [
       { icon: '💾', label: 'Salva no aparelho', text: 'Tudo (vistorias, danos, fotos, assinaturas) fica guardado no próprio celular na hora.' },
       { icon: '📡', label: 'Não cai nem trava', text: 'Mesmo sem internet numa garagem no subsolo, o app continua funcionando normalmente.' },

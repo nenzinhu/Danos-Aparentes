@@ -7,44 +7,46 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { LEGAL_CONTACT_EMAIL } from '../components/LegalContent';
+import LandingCtaLink from '../components/LandingCtaLink';
 
 const PricingSection = dynamic(() => import('../components/PricingSection'), { ssr: false });
 const FAQSection = dynamic(() => import('../components/FAQSection'), { ssr: false });
 const VehicleShowcaseSection = dynamic(() => import('../components/VehicleShowcaseSection'), { ssr: false });
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'), { ssr: false });
 const CarLateralLeft = dynamic(() => import('../components/vehicles/CarLateralLeft'), { ssr: false });
+const MobileStickyCta = dynamic(() => import('../components/MobileStickyCta'), { ssr: false });
 
 function TextCarousel() {
   const slides = [
     {
       title: (
         <>
-          Vistoria digital de avarias <br />
-          <span className="text-primary italic">em menos de 1 minuto.</span>
+          Pare de perder tempo com <br />
+          <span className="text-primary italic">laudos manuais no pátio.</span>
         </>
       ),
       description:
-        'Marque danos em carros, motos, caminhões, ônibus ou vans utilitárias em segundos. Clique no local exato do modelo digital e exporte o laudo.',
+        'Para vistoriadores e oficinas: marque a avaria no modelo digital, anexe fotos HD e envie o PDF pelo WhatsApp — tudo em menos de 1 minuto, sem redigitar dados.',
     },
     {
       title: (
         <>
-          Laudos 100% invioláveis com <br />
-          <span className="text-primary italic">criptografia e hash digital.</span>
+          Laudos que o cliente <br />
+          <span className="text-primary italic">não consegue contestar.</span>
         </>
       ),
       description:
-        'Gere relatórios PDF profissionais auditáveis. Cada laudo possui assinatura eletrônica digital e código SHA-256 rastreável com QR Code.',
+        'Cada PDF sai com hash SHA-256, QR Code de verificação e assinatura digital na tela. Prova técnica clara, pronta para negociação ou perícia.',
     },
     {
       title: (
         <>
-          Digite a placa e o resto <br />
-          <span className="text-primary italic">preenche sozinho.</span>
+          Digite a placa — <br />
+          <span className="text-primary italic">marca, modelo e cor na hora.</span>
         </>
       ),
       description:
-        'Ao informar a placa do veículo, o sistema preenche automaticamente marca, modelo, ano de fabricação, cor e município — sem digitação manual.',
+        'Economize minutos em cada vistoria: o sistema preenche os dados do veículo automaticamente e você foca só em registrar os danos aparentes.',
     },
   ];
 
@@ -179,9 +181,9 @@ export default function LandingPage() {
           >
             {darkMode ? '☀️' : '🌙'}
           </button>
-          <Link href="/app" transitionTypes={['nav-forward']} className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-xl shadow-[var(--primary)]/15 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none">
-            Começar Agora
-          </Link>
+          <LandingCtaLink transitionTypes={['nav-forward']} className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-xl shadow-[var(--primary)]/15 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none">
+            Criar conta grátis
+          </LandingCtaLink>
         </nav>
       </header>
 
@@ -193,7 +195,7 @@ export default function LandingPage() {
           <div className="space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000 motion-reduce:animate-none">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-black tracking-widest text-[var(--primary-badge-text)] uppercase">
               <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-[var(--primary-badge-text)] animate-pulse" />
-              Sistema Profissional de Vistoria
+              Para vistoriadores e oficinas
             </div>
 
             <TextCarousel />
@@ -201,27 +203,33 @@ export default function LandingPage() {
 
 
             <div className="flex flex-wrap gap-4 pt-4">
-              <Link
-                href="/app"
+              <LandingCtaLink
+                id="hero-primary-cta"
                 transitionTypes={['nav-forward']}
                 className="px-8 py-4 text-white font-black rounded-2xl shadow-2xl shadow-[var(--primary)]/20 flex items-center gap-3 transition-all motion-safe:hover:scale-[1.02] hover:shadow-[var(--primary)]/35 active:scale-100 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
                 style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
               >
-                Criar Conta Grátis
+                Testar 7 dias grátis
                 <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </Link>
+              </LandingCtaLink>
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-[var(--text-muted)] font-semibold pl-1">
-              <svg className="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.249-8.25-3.286z"/></svg>
-              7 dias grátis
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--text-muted)] font-semibold pl-1">
+              <span className="inline-flex items-center gap-1.5">
+                <svg className="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.249-8.25-3.286z"/></svg>
+                Sem cartão de crédito
+              </span>
+              <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
+              <span>7 dias grátis no plano Pro</span>
+              <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
+              <span>Cancele quando quiser</span>
             </div>
 
             <div className="flex gap-10 pt-8 border-t border-[var(--card-border)]/40">
               {[
-                { label: 'Laudos PDF', icon: '📄' },
-                { label: 'Fotos HD', icon: '📷' },
-                { label: 'Modo Offline', icon: '📡' }
+                { label: 'Laudo em 1 clique', icon: '📄' },
+                { label: 'Fotos como prova', icon: '📷' },
+                { label: 'Funciona offline', icon: '📡' }
               ].map(item => (
                 <div key={item.label} className="flex items-center gap-3 text-sm font-semibold text-[var(--text-muted)]">
                   <span aria-hidden="true" className="text-xl grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all">{item.icon}</span>
@@ -264,10 +272,10 @@ export default function LandingPage() {
             Fluxo de Trabalho
           </div>
           <h2 className="text-3xl lg:text-4xl font-extrabold tracking-tight bg-gradient-to-b from-[var(--text-main)] to-[var(--text-muted)] bg-clip-text text-transparent">
-            Como Funciona em 3 Passos Simples
+            Da placa ao laudo assinado em 3 passos
           </h2>
           <p className="text-sm text-[var(--text-muted)] mt-2">
-            Vistoria rápida, profissional e segura direto no seu celular.
+            O que no papel leva 20 minutos, você faz no pátio em poucos toques — com prova fotográfica e PDF pronto para enviar.
           </p>
         </div>
 
@@ -310,15 +318,15 @@ export default function LandingPage() {
 
       <FAQSection items={faqItems} />
 
+      <MobileStickyCta heroCtaId="hero-primary-cta" />
+
       {/* Footer */}
       <footer className="w-full px-8 py-8 flex flex-col gap-6 text-[10px] font-black tracking-widest text-[var(--text-muted)] uppercase shrink-0 z-50 border-t border-[var(--card-border)]/20 bg-[var(--panel-bg)]">
         {/* Legal Info & Disclaimer */}
         <div className="w-full flex flex-col gap-2 text-center md:text-left text-[9px] font-semibold tracking-normal normal-case border-b border-[var(--card-border)]/10 pb-6 opacity-75">
           <p>
-            <strong>Responsável Legal:</strong> Jeferson da Silva | <strong>CPF:</strong> 057.408.599-80 | Florianópolis - SC | <strong>Contato:</strong>{' '}
+            <strong>Responsável Legal:</strong> Jeferson da Silva | Florianópolis - SC | <strong>Contato:</strong>{' '}
             <a href={`mailto:${LEGAL_CONTACT_EMAIL}`} className="text-primary hover:underline">{LEGAL_CONTACT_EMAIL}</a>
-            {' · '}
-            <a href="mailto:treejeferson@gmail.com" className="text-primary hover:underline">treejeferson@gmail.com</a>
           </p>
           <p className="text-[8px] opacity-70 leading-relaxed">
             <strong>Aviso de Isenção:</strong> A consulta de dados cadastrais de veículos por meio da placa é realizada de forma estritamente privada por meio de APIs parceiras para fins de preenchimento automatizado de checklist, não possuindo qualquer vínculo, representação ou convênio com o DETRAN, Denatran, órgãos governamentais ou entidades públicas.

@@ -1,23 +1,11 @@
 'use client';
 import { VehicleProps } from '../../types'
+import { usePartProps } from './usePartProps'
+import { FrontalWheelGraphic } from './WheelRim'
 
 export default function MotoFrontal({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {
-  function partProps(id: string) {
-    const dmg = damages.find(d => d.partId === id)
-    const cls = ['part', dmg ? `damage-${dmg.severity}` : '', selectedPartId === id ? 'selected' : ''].filter(Boolean).join(' ')
-    return {
-      className: cls,
-      onClick: (e: React.MouseEvent<SVGElement>) => {
-        e.stopPropagation()
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartClick(id, name)
-      },
-      onMouseEnter: (e: React.MouseEvent<SVGElement>) => {
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartHover(id, name)
-      },
-    }
-  }
+  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
+
 
   return (
     <svg viewBox="0 0 300 300" width="100%">
@@ -97,17 +85,7 @@ export default function MotoFrontal({ damages, selectedPartId, onPartClick, onPa
       </g>
 
       {/* Pneu Dianteiro Largo e Sulcos de Banda de Rodagem */}
-      <g pointerEvents="none">
-        {/* Base do pneu */}
-        <rect x="135" y="210" width="30" height="65" rx="15" fill="url(#radial-wheel)" />
-        <rect x="138" y="210" width="24" height="65" rx="12" fill="none" stroke="#1e293b" strokeWidth="1" />
-        {/* Sulcos verticais e em V do pneu */}
-        <path d="M150,215 L150,270" stroke="#000" strokeWidth="2.5" strokeDasharray="8,6" opacity="0.8" />
-        <path d="M142,225 L148,230 M158,225 L152,230 M142,245 L148,250 M158,245 L152,250" stroke="#000" strokeWidth="2" opacity="0.8" />
-        {/* Cubo da roda */}
-        <circle cx="150" cy="255" r="10" fill="#cbd5e1" stroke="#475569" strokeWidth="1" />
-        <circle cx="150" cy="255" r="4" fill="#0f172a" />
-      </g>
+      <FrontalWheelGraphic x={135} y={210} width={30} height={65} />
       <rect {...partProps('moto-ff-wheel')} data-name="Roda Dianteira" x="135" y="210" width="30" height="65" rx="15" />
     </svg>
   )

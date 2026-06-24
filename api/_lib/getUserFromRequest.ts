@@ -1,13 +1,12 @@
 import type { VercelRequest } from '@vercel/node'
 import { createClient } from '@supabase/supabase-js'
-
-const url = process.env.VITE_SUPABASE_URL
-const anonKey = process.env.VITE_SUPABASE_ANON_KEY
+import { requireSupabaseUrl, requireSupabaseAnonKey } from './supabaseEnv.js'
 
 // Valida o JWT enviado pelo client (header Authorization: Bearer <token>) e
 // devolve o usuário autenticado, ou null se o token for inválido/ausente.
 export async function getUserFromRequest(req: VercelRequest) {
-  if (!url || !anonKey) throw new Error('VITE_SUPABASE_URL ou VITE_SUPABASE_ANON_KEY não configuradas')
+  const url = requireSupabaseUrl()
+  const anonKey = requireSupabaseAnonKey()
 
   const authHeader = req.headers.authorization
   if (!authHeader?.startsWith('Bearer ')) return null

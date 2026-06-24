@@ -1,10 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
+import { requireSupabaseUrl } from './supabaseEnv.js'
 
-const url = process.env.VITE_SUPABASE_URL
+const url = requireSupabaseUrl()
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-if (!url || !serviceRoleKey) {
-  throw new Error('VITE_SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY não configuradas')
+if (!serviceRoleKey) {
+  throw new Error('SUPABASE_SERVICE_ROLE_KEY não configurada')
 }
 
 // Cliente com a service role key: ignora RLS, só deve ser usado no backend

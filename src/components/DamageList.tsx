@@ -1,7 +1,14 @@
 'use client';
 import { useState } from 'react'
 import { Damage, Severity, ViewType } from '../types'
-import { compressImage, fileToDataUrl } from '../lib/imageUtils'
+import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '../lib/imageUtils'
+import { storePhoto, deletePhotoRef } from '../lib/photoStore'
+import {
+  finishPhotoUploadProgress,
+  startPhotoUploadProgress,
+  updatePhotoUploadProgress,
+} from '../lib/photoUploadProgress'
+import { ResolvedPhoto } from './ResolvedPhoto'
 import SpeechButton from './SpeechButton'
 
 interface Props {
@@ -11,7 +18,7 @@ interface Props {
 }
 
 const SEV_LABEL = { low: 'Leve', medium: 'Média', high: 'Grave' } satisfies Record<Severity, string>
-const SEV_COLOR = { low: '#f59e0b', medium: '#f97316', high: '#ef4444' } satisfies Record<Severity, string>
+const SEV_COLOR = { low: '#94a3b8', medium: '#f97316', high: '#ef4444' } satisfies Record<Severity, string>
 const VIEW_LABEL = {
   'lateral-left': 'Lat. Esq.', 'lateral-right': 'Lat. Dir.', frontal: 'Frontal', traseira: 'Traseira'
 } satisfies Record<ViewType, string>
@@ -19,19 +26,35 @@ const VIEW_LABEL = {
 export default function DamageList({ damages, onRemove, onUpdate }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [photoViewer, setPhotoViewer] = useState<string | null>(null)
+  const [compressingId, setCompressingId] = useState<string | null>(null)
 
   async function handlePhoto(id: string, file: File) {
+    setCompressingId(id)
+    startPhotoUploadProgress(1, 'Preparando foto da avaria…')
     try {
-      const compressedBlob = await compressImage(file, 1200, 0.8)
-      const compressedDataUrl = await fileToDataUrl(compressedBlob)
+      updatePhotoUploadProgress({
+        phase: 'compressing',
+        label: 'Comprimindo imagem…',
+      })
+      const compressedBlob = await compressImage(file, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY)
+      updatePhotoUploadProgress({
+        phase: 'uploading',
+        current: 0,
+        label: 'Salvando foto localmente…',
+      })
+      const photoRef = await storePhoto(compressedBlob)
+      updatePhotoUploadProgress({ current: 1 })
       const dmg = damages.find(d => d.id === id)
       if (!dmg) return
       onUpdate(id, {
-        photos: [...dmg.photos, compressedDataUrl],
+        photos: [...dmg.photos, photoRef],
         photoNotes: [...(dmg.photoNotes ?? []), ''],
       })
     } catch (error) {
       console.error('Error compressing image:', error)
+    } finally {
+      finishPhotoUploadProgress()
+      setCompressingId(null)
     }
   }
 
@@ -46,6 +69,8 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
   function removePhoto(dmgId: string, photoIdx: number) {
     const dmg = damages.find(d => d.id === dmgId)
     if (!dmg) return
+    const removed = dmg.photos[photoIdx]
+    if (removed) void deletePhotoRef(removed)
     onUpdate(dmgId, {
       photos: dmg.photos.filter((_, i) => i !== photoIdx),
       photoNotes: (dmg.photoNotes ?? []).filter((_, i) => i !== photoIdx),
@@ -153,13 +178,12 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
                     <div className="flex flex-col gap-2">
                       {d.photos.map((p, i) => (
                         <div key={i} className="bg-black/20 border border-white/5 rounded-xl p-2 flex gap-2.5 items-start">
-                          {/* Thumbnail */}
                           <div className="relative shrink-0 group">
-                            <img 
-                              src={p} 
-                              alt="" 
+                            <ResolvedPhoto
+                              refOrDataUrl={p}
+                              alt=""
                               onClick={() => setPhotoViewer(p)}
-                              className="w-[72px] h-[72px] object-cover rounded-lg cursor-zoom-in border border-white/10 block hover:opacity-80 transition-opacity" 
+                              className="w-[72px] h-[72px] object-cover rounded-lg cursor-zoom-in border border-white/10 block hover:opacity-80 transition-opacity"
                             />
                             <button 
                               onClick={() => removePhoto(d.id, i)}
@@ -183,9 +207,14 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
                       ))}
 
                       {/* Add photo button */}
-                      <label className="h-11 rounded-lg border border-dashed border-sky-500/30 flex items-center justify-center cursor-pointer text-sky-500 text-[0.8rem] gap-1.5 bg-sky-500/5 font-bold font-outfit hover:bg-sky-500/10 transition-colors">
-                        📷 Anexar Foto
+                      <label className={`h-11 rounded-lg border border-dashed flex items-center justify-center text-[0.8rem] gap-1.5 font-bold font-outfit transition-colors ${
+                        compressingId === d.id
+                          ? 'border-sky-500/40 bg-sky-500/10 text-sky-400 cursor-wait'
+                          : 'border-sky-500/30 bg-sky-500/5 text-sky-500 hover:bg-sky-500/10 cursor-pointer'
+                      }`}>
+                        {compressingId === d.id ? '⏳ Comprimindo…' : '📷 Anexar Foto'}
                         <input type="file" accept="image/*" capture="environment" className="hidden"
+                          disabled={compressingId === d.id}
                           onChange={e => { if (e.target.files?.[0]) handlePhoto(d.id, e.target.files[0]) }} />
                       </label>
                     </div>
@@ -203,7 +232,11 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
           onClick={() => setPhotoViewer(null)} 
           className="fixed inset-0 bg-black/95 z-[99999] flex items-center justify-center cursor-zoom-out p-4"
         >
-          <img src={photoViewer} alt="" className="max-w-full max-h-full rounded-xl object-contain shadow-2xl" />
+          <ResolvedPhoto
+            refOrDataUrl={photoViewer}
+            alt=""
+            className="max-w-full max-h-full rounded-xl object-contain shadow-2xl"
+          />
           <button 
             onClick={() => setPhotoViewer(null)} 
             className="fixed top-4 right-4 bg-black/80 border border-white/20 rounded-full w-11 h-11 text-white text-xl flex items-center justify-center hover:bg-white/10 transition-colors"

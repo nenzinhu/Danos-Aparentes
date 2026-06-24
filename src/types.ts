@@ -19,7 +19,7 @@ export interface Damage {
   typeName: string
   severity: Severity
   notes: string
-  photos: string[]
+  photos: string[]  // blob:{id} | storage:{path} | data:... (legado)
   photoNotes: string[]  // parallel array: caption/tag for each photo
 }
 
@@ -55,6 +55,9 @@ export interface SavedReport {
   savedAt: number
   vehicleInfo: VehicleInfo
   damages: Damage[]
+  vehicleType?: VehicleType
+  /** Timestamp da última sync bem-sucedida com a nuvem (para detectar deletes remotos). */
+  syncedAt?: number
 }
 
 export interface TtsConfig {

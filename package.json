@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:push": "node scripts/push-schema.mjs",
-    "email:config": "node scripts/configure-email.mjs"
+    "email:config": "node scripts/configure-email.mjs",
+    "logos": "node scripts/prepare-logos.mjs"
   },
   "dependencies": {
     "@rive-app/react-canvas": "^4.29.1",

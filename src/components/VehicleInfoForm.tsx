@@ -426,7 +426,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
         <div className="flex items-center gap-2 mb-3">
           <div className="inline-flex items-center gap-1.5 bg-sky-500/15 border border-sky-500/30 rounded-full px-3 py-1 text-[0.7rem] font-black text-sky-400 tracking-wider uppercase backdrop-blur-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_6px_#38bdf8] inline-block" />
-            Consulta de Placa — API Automática
+            Consulta de Placa
           </div>
         </div>
 

@@ -21,12 +21,12 @@ function loadEnv(path) {
 
 const env = { ...loadEnv(envPath), ...process.env }
 
-const projectUrl = env.VITE_SUPABASE_URL
+const projectUrl = env.NEXT_PUBLIC_SUPABASE_URL || env.VITE_SUPABASE_URL
 const accessToken = env.SUPABASE_ACCESS_TOKEN
 const siteUrl = env.SUPABASE_SITE_URL || 'http://localhost:5173/app.html'
 
 if (!projectUrl) {
-  console.error('VITE_SUPABASE_URL nao encontrado no .env.')
+  console.error('NEXT_PUBLIC_SUPABASE_URL nao encontrado no .env.')
   process.exitCode = 1
 } else if (!accessToken) {
   console.error('SUPABASE_ACCESS_TOKEN nao encontrado no .env.')

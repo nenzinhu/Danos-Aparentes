@@ -1,23 +1,10 @@
 'use client';
 import { VehicleProps } from '../../types'
+import { usePartProps } from './usePartProps'
 
 export default function VanTraseira({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {
-  function partProps(id: string) {
-    const dmg = damages.find(d => d.partId === id)
-    const cls = ['part', dmg ? `damage-${dmg.severity}` : '', selectedPartId === id ? 'selected' : ''].filter(Boolean).join(' ')
-    return {
-      className: cls,
-      onClick: (e: React.MouseEvent<SVGElement>) => {
-        e.stopPropagation()
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartClick(id, name)
-      },
-      onMouseEnter: (e: React.MouseEvent<SVGElement>) => {
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartHover(id, name)
-      },
-    }
-  }
+  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
+
 
   return (
     <svg viewBox="0 0 400 300" width="100%">
@@ -28,15 +15,15 @@ export default function VanTraseira({ damages, selectedPartId, onPartClick, onPa
         <rect x="62" y="242" width="34" height="15" fill="#0f172a" opacity="0.9" />
         <rect x="304" y="242" width="34" height="15" fill="#0f172a" opacity="0.9" />
       </g>
-      <g {...partProps('van-r-body')} data-name="Portas Traseiras / Lataria">
-        <rect x="50" y="40" width="300" height="205" rx="14" fill="url(#metal-car-blue)" stroke="#090d16" strokeWidth="1.8" />
+      <g data-name="Portas Traseiras / Lataria">
+        <rect {...partProps('van-r-body')} data-name="Portas Traseiras / Lataria" x="50" y="40" width="300" height="205" rx="14" fill="url(#metal-car-blue)" stroke="#090d16" strokeWidth="1.8" />
         <rect x="44" y="65" width="8" height="14" rx="1.5" fill="#0f172a" pointerEvents="none" />
         <rect x="44" y="195" width="8" height="14" rx="1.5" fill="#0f172a" pointerEvents="none" />
         <rect x="348" y="65" width="8" height="14" rx="1.5" fill="#0f172a" pointerEvents="none" />
         <rect x="348" y="195" width="8" height="14" rx="1.5" fill="#0f172a" pointerEvents="none" />
       </g>
-      <g {...partProps('van-r-window-left')} data-name="Vidro Traseiro Esquerdo">
-        <rect x="65" y="55" width="125" height="65" rx="5" fill="url(#metal-glass)" stroke="#0f172a" strokeWidth="1.5" opacity="0.85" />
+      <g data-name="Vidro Traseiro Esquerdo">
+        <rect {...partProps('van-r-window-left')} data-name="Vidro Traseiro Esquerdo" x="65" y="55" width="125" height="65" rx="5" fill="url(#metal-glass)" stroke="#0f172a" strokeWidth="1.5" opacity="0.85" />
         <g pointerEvents="none" opacity="0.3">
           <line x1="70" y1="68" x2="185" y2="68" stroke="#f97316" strokeWidth="0.8" />
           <line x1="70" y1="78" x2="185" y2="78" stroke="#f97316" strokeWidth="0.8" />
@@ -45,8 +32,8 @@ export default function VanTraseira({ damages, selectedPartId, onPartClick, onPa
           <line x1="70" y1="108" x2="185" y2="108" stroke="#f97316" strokeWidth="0.8" />
         </g>
       </g>
-      <g {...partProps('van-r-window-right')} data-name="Vidro Traseiro Direito">
-        <rect x="210" y="55" width="125" height="65" rx="5" fill="url(#metal-glass)" stroke="#0f172a" strokeWidth="1.5" opacity="0.85" />
+      <g data-name="Vidro Traseiro Direito">
+        <rect {...partProps('van-r-window-right')} data-name="Vidro Traseiro Direito" x="210" y="55" width="125" height="65" rx="5" fill="url(#metal-glass)" stroke="#0f172a" strokeWidth="1.5" opacity="0.85" />
         <g pointerEvents="none" opacity="0.3">
           <line x1="215" y1="68" x2="330" y2="68" stroke="#f97316" strokeWidth="0.8" />
           <line x1="215" y1="78" x2="330" y2="78" stroke="#f97316" strokeWidth="0.8" />
@@ -60,20 +47,21 @@ export default function VanTraseira({ damages, selectedPartId, onPartClick, onPa
         <rect x="188" y="145" width="10" height="20" rx="2" fill="#0f172a" stroke="#cbd5e1" strokeWidth="0.5" />
         <circle cx="193" cy="150" r="1.5" fill="#94a3b8" />
       </g>
-      <g {...partProps('van-r-light-left')} data-name="Lanterna Traseira Esquerda">
-        <rect x="53" y="130" width="12" height="75" rx="2.5" fill="#121824" stroke="#334155" strokeWidth="1" />
+      <g data-name="Lanterna Traseira Esquerda">
+        <rect {...partProps('van-r-light-left')} data-name="Lanterna Traseira Esquerda" x="53" y="130" width="12" height="75" rx="2.5" fill="#121824" stroke="#334155" strokeWidth="1" />
         <rect x="55" y="132" width="8" height="38" rx="1.5" fill="#ef4444" opacity="0.9" pointerEvents="none" />
         <rect x="55" y="172" width="8" height="18" rx="1.5" fill="#f97316" opacity="0.9" pointerEvents="none" />
         <rect x="55" y="192" width="8" height="11" rx="1.5" fill="#f8fafc" opacity="0.9" pointerEvents="none" />
       </g>
-      <g {...partProps('van-r-light-right')} data-name="Lanterna Traseira Direita">
-        <rect x="335" y="130" width="12" height="75" rx="2.5" fill="#121824" stroke="#334155" strokeWidth="1" />
+      <g data-name="Lanterna Traseira Direita">
+        <rect {...partProps('van-r-light-right')} data-name="Lanterna Traseira Direita" x="335" y="130" width="12" height="75" rx="2.5" fill="#121824" stroke="#334155" strokeWidth="1" />
         <rect x="337" y="132" width="8" height="38" rx="1.5" fill="#ef4444" opacity="0.9" pointerEvents="none" />
         <rect x="337" y="172" width="8" height="18" rx="1.5" fill="#f97316" opacity="0.9" pointerEvents="none" />
         <rect x="337" y="192" width="8" height="11" rx="1.5" fill="#f8fafc" opacity="0.9" pointerEvents="none" />
       </g>
-      <g {...partProps('van-r-bumper')} data-name="Para-choque Traseiro">
-        <path d="M40,240 L360,240 C360,240 355,268 340,268 L60,268 C45,268 40,240 40,240 Z" fill="#1e293b" stroke="#0f172a" strokeWidth="1.8" />
+      <g data-name="Para-choque Traseiro">
+        <path {...partProps('van-r-bumper')} data-name="Para-choque Traseiro"
+          d="M40,240 L360,240 C360,240 355,268 340,268 L60,268 C45,268 40,240 40,240 Z" fill="#1e293b" stroke="#0f172a" strokeWidth="1.8" />
         <rect x="120" y="240" width="160" height="10" fill="#0f172a" pointerEvents="none" />
         <line x1="130" y1="245" x2="270" y2="245" stroke="#334155" strokeWidth="1.5" strokeDasharray="4,4" pointerEvents="none" />
         <g pointerEvents="none">

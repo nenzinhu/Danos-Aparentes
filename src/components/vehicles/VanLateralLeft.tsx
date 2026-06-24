@@ -1,23 +1,10 @@
 'use client';
 import { VehicleProps } from '../../types'
+import { usePartProps } from './usePartProps'
 
 export default function VanLateralLeft({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {
-  function partProps(id: string) {
-    const dmg = damages.find(d => d.partId === id)
-    const cls = ['part', dmg ? `damage-${dmg.severity}` : '', selectedPartId === id ? 'selected' : ''].filter(Boolean).join(' ')
-    return {
-      className: cls,
-      onClick: (e: React.MouseEvent<SVGElement>) => {
-        e.stopPropagation()
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartClick(id, name)
-      },
-      onMouseEnter: (e: React.MouseEvent<SVGElement>) => {
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartHover(id, name)
-      },
-    }
-  }
+  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
+
 
   return (
     <svg viewBox="0 0 520 220" width="100%">
@@ -38,8 +25,9 @@ export default function VanLateralLeft({ damages, selectedPartId, onPartClick, o
           fill="url(#metal-car-blue)" stroke="#1e293b" strokeWidth="0.6" />
 
         {/* Painel lateral de carga (sólido, com vincos em relevo) */}
-        <g {...partProps('van-ll-panel-side')} data-name="Painel Lateral de Carga">
-          <path d="M40,64 L330,64 L330,158 L159,158 A39,39 0 0,0 81,158 L40,158 Z"
+        <g data-name="Painel Lateral de Carga">
+          <path {...partProps('van-ll-panel-side')} data-name="Painel Lateral de Carga"
+            d="M40,64 L330,64 L330,158 L159,158 A39,39 0 0,0 81,158 L40,158 Z"
             fill="url(#metal-car-blue)" stroke="#1e293b" strokeWidth="1.4" />
           <g pointerEvents="none">
             <line x1="46" y1="126" x2="324" y2="126" stroke="#1e293b" strokeWidth="2" opacity="0.45" />
@@ -59,8 +47,9 @@ export default function VanLateralLeft({ damages, selectedPartId, onPartClick, o
           fill="#1e293b" stroke="#1e293b" strokeWidth="1" />
 
         {/* Porta da cabine */}
-        <g {...partProps('van-ll-door-front')} data-name="Porta Dianteira Esquerda">
-          <path d="M330,92 L400,92 L400,119 A39,39 0 0,0 361,158 L330,158 Z"
+        <g data-name="Porta Dianteira Esquerda">
+          <path {...partProps('van-ll-door-front')} data-name="Porta Dianteira Esquerda"
+            d="M330,92 L400,92 L400,119 A39,39 0 0,0 361,158 L330,158 Z"
             fill="url(#metal-car-blue)" stroke="#1e293b" strokeWidth="1.4" />
           <rect x="340" y="110" width="15" height="5" rx="1.5" fill="#0b1120" stroke="#cbd5e1" strokeWidth="0.5" pointerEvents="none" />
         </g>
@@ -96,14 +85,16 @@ export default function VanLateralLeft({ damages, selectedPartId, onPartClick, o
         <circle {...partProps('van-ll-wheel-rear')} data-name="Roda Traseira Esquerda" cx="120" cy="158" r="32" />
 
         {/* Vidro da porta (cabine) */}
-        <g {...partProps('van-ll-glass-side')} data-name="Vidro da Porta">
-          <path d="M334,90 L334,66 Q334,62 339,62 L390,62 L392,90 Z" fill="url(#metal-glass)" opacity="0.85" stroke="#1e293b" strokeWidth="1.2" />
+        <g data-name="Vidro da Porta">
+          <path {...partProps('van-ll-glass-side')} data-name="Vidro da Porta"
+            d="M334,90 L334,66 Q334,62 339,62 L390,62 L392,90 Z" fill="url(#metal-glass)" opacity="0.85" stroke="#1e293b" strokeWidth="1.2" />
           <path d="M380,64 L360,64 L356,82 L376,82 Z" fill="#fff" opacity="0.2" pointerEvents="none" />
         </g>
 
         {/* Para-brisa */}
-        <g {...partProps('van-ll-glass-front')} data-name="Vidro Dianteiro">
-          <path d="M404,90 L402,64 Q402,62 407,62 L442,62 Q452,62 458,70 L470,90 Z" fill="url(#metal-glass)" opacity="0.8" stroke="#1e293b" strokeWidth="1.2" />
+        <g data-name="Vidro Dianteiro">
+          <path {...partProps('van-ll-glass-front')} data-name="Vidro Dianteiro"
+            d="M404,90 L402,64 Q402,62 407,62 L442,62 Q452,62 458,70 L470,90 Z" fill="url(#metal-glass)" opacity="0.8" stroke="#1e293b" strokeWidth="1.2" />
           <path d="M440,66 L418,66 L424,86 L448,86 Z" fill="#fff" opacity="0.22" pointerEvents="none" />
         </g>
 
@@ -111,8 +102,8 @@ export default function VanLateralLeft({ damages, selectedPartId, onPartClick, o
         <line x1="397" y1="62" x2="400" y2="90" stroke="#1e293b" strokeWidth="3.5" pointerEvents="none" />
 
         {/* Retrovisor */}
-        <g {...partProps('van-ll-mirror')} data-name="Retrovisor Esquerdo">
-          <path d="M400,86 L412,88 L412,82 Z" fill="#0f172a" />
+        <g data-name="Retrovisor Esquerdo">
+          <path {...partProps('van-ll-mirror')} data-name="Retrovisor Esquerdo" d="M400,86 L412,88 L412,82 Z" fill="#0f172a" />
           <rect x="410" y="70" width="9" height="18" rx="2.5" fill="#1e293b" stroke="#1e293b" strokeWidth="1" />
           <rect x="411.5" y="71.5" width="6" height="15" rx="1.5" fill="url(#metal-glass)" opacity="0.75" pointerEvents="none" />
         </g>

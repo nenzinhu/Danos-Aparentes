@@ -1,23 +1,11 @@
 'use client';
 import { VehicleProps } from '../../types'
+import { usePartProps } from './usePartProps'
+import { FrontalWheelGraphic } from './WheelRim'
 
 export default function CarFrontal({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {
-  function partProps(id: string) {
-    const dmg = damages.find(d => d.partId === id)
-    const cls = ['part', dmg ? `damage-${dmg.severity}` : '', selectedPartId === id ? 'selected' : ''].filter(Boolean).join(' ')
-    return {
-      className: cls,
-      onClick: (e: React.MouseEvent<SVGElement>) => {
-        e.stopPropagation()
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartClick(id, name)
-      },
-      onMouseEnter: (e: React.MouseEvent<SVGElement>) => {
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartHover(id, name)
-      },
-    }
-  }
+  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
+
 
   return (
     <svg viewBox="0 0 400 300" width="100%">
@@ -25,12 +13,8 @@ export default function CarFrontal({ damages, selectedPartId, onPartClick, onPar
       <ellipse cx="200" cy="275" rx="160" ry="12" fill="#000" opacity="0.35" filter="url(#shadow-filter)" />
 
       {/* Pneus dianteiros visíveis */}
-      <g pointerEvents="none">
-        <rect x="42" y="210" width="26" height="60" fill="url(#radial-wheel)" rx="5" />
-        <rect x="42" y="220" width="4" height="40" fill="#020617" />
-        <rect x="332" y="210" width="26" height="60" fill="url(#radial-wheel)" rx="5" />
-        <rect x="354" y="220" width="4" height="40" fill="#020617" />
-      </g>
+      <FrontalWheelGraphic x={42} y={210} width={26} height={60} />
+      <FrontalWheelGraphic x={332} y={210} width={26} height={60} />
 
       {/* Teto (Visualização Frontal) */}
       <path d="M120,60 L280,60 C280,60 250,30 200,30 C150,30 120,60 120,60 Z" fill="url(#metal-car-blue)" opacity="0.95" stroke="#1e293b" />

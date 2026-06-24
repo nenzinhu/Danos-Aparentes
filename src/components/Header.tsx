@@ -1,6 +1,7 @@
 'use client';
 import React, { memo, useState, useEffect, useRef } from 'react'
 import type { SubscriptionStatus } from '../hooks/useSubscription'
+import Logo from '@/src/components/Logo'
 
 interface Props {
   darkMode: boolean
@@ -194,13 +195,10 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
       {/* Decorative gradient background */}
       <div className='absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[600px] h-[300px] bg-[radial-gradient(ellipse_at_center_top,rgba(0,170,255,0.15)_0%,transparent_70%)] pointer-events-none' />
 
-      {/* Main Title */}
-      <h1
-        className='text-[clamp(2rem,5vw,3.5rem)] font-extrabold leading-[1.1] tracking-tighter mb-3 bg-clip-text text-transparent'
-        style={{ backgroundImage: 'var(--header-title-gradient)' }}
-      >
-        Danos Aparentes
-      </h1>
+      {/* Brand */}
+      <div className="relative z-10 flex flex-col items-center mb-3">
+        <Logo size={88} variant="full" className="mb-2 drop-shadow-[0_0_28px_rgba(31,182,255,0.3)]" />
+      </div>
 
       <p className='text-slate-400 text-base max-w-[500px] mx-auto mb-6'>
         Inspeção veicular interativa — registre danos com precisão

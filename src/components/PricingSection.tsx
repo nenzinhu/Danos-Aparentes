@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import Link from 'next/link';
+import LandingCtaLink from './LandingCtaLink';
 
 export default function PricingSection() {
   return (
@@ -13,7 +13,7 @@ export default function PricingSection() {
           Escolha o Plano Ideal
         </h2>
         <p className="text-sm text-[var(--text-muted)] mt-2">
-          Comece com 7 dias de teste grátis. Cancele quando quiser.
+          7 dias grátis, sem cartão. Depois, menos de R$ 1,70 por dia no plano Pro.
         </p>
       </div>
       
@@ -32,6 +32,9 @@ export default function PricingSection() {
             <div className="my-6">
               <span className="text-4xl font-black text-[var(--primary)] tracking-tight">R$ 49,90</span>
               <span className="text-sm text-[var(--text-muted)] ml-1">/ mês</span>
+              <p className="text-[11px] text-[var(--text-muted)] mt-2 font-semibold">
+                ≈ R$ 1,66/dia · custo de um único laudo terceirizado
+              </p>
             </div>
             
             <ul className="space-y-3 border-t border-[var(--card-border)]/40 pt-6">
@@ -53,9 +56,9 @@ export default function PricingSection() {
           </div>
           
           <div className="mt-8">
-            <Link href="/app" className="block w-full py-3.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--bg-main)] font-black text-center rounded-xl shadow-xl shadow-primary/10 transition-all active:scale-[0.99] outline-none">
-              Começar Teste Grátis
-            </Link>
+            <LandingCtaLink className="block w-full py-3.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--bg-main)] font-black text-center rounded-xl shadow-xl shadow-primary/10 transition-all active:scale-[0.99] outline-none">
+              Testar 7 dias grátis
+            </LandingCtaLink>
           </div>
         </div>
 

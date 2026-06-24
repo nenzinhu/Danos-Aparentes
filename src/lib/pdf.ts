@@ -445,7 +445,7 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
   .nobreak { page-break-inside:avoid; break-inside:avoid; display:block; }
   .pagebreak { page-break-before:always; break-before:page; }
   .part { fill:#bcd4e8 !important; stroke:#4a6080; stroke-width:1; }
-  .part.damage-low    { fill:#fbbf24 !important; }
+  .part.damage-low    { fill:#94a3b8 !important; }
   .part.damage-medium { fill:#f97316 !important; }
   .part.damage-high   { fill:#ef4444 !important; }
 </style>

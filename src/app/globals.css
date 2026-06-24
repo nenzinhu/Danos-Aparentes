@@ -17,7 +17,7 @@
   --primary-glow: rgba(31, 182, 255, 0.4);
   --color-clean: #1e3a5a;
   --color-hover: #2a4f7a;
-  --severity-low: #f59e0b;
+  --severity-low: #94a3b8;
   --severity-medium: #f97316;
   --severity-high: #ef4444;
   --whatsapp-color: #22c55e;
@@ -30,7 +30,7 @@
   --tooltip-bg: rgba(5,15,35,0.92);
   --tooltip-border: rgba(0,170,255,0.25);
   --tooltip-color: #e8f4ff;
-  --part-stroke: #050c1a;
+  --part-stroke: rgba(56, 189, 248, 0.28);
   --btn-secondary-bg: rgba(0,170,255,0.07);
   --btn-secondary-border: rgba(0,170,255,0.18);
   --btn-secondary-hover: rgba(0,170,255,0.14);
@@ -242,26 +242,202 @@ body > * { position: relative; z-index: 1; }
   -webkit-backdrop-filter: blur(18px);
 }
 
+@keyframes pulse-neon-stroke {
+  0% { stroke-width: 2; stroke: #22d3ee; filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.5)) brightness(1.05); }
+  50% { stroke-width: 3; stroke: #67e8f9; filter: drop-shadow(0 0 14px rgba(103, 232, 249, 0.85)) brightness(1.18); }
+  100% { stroke-width: 2; stroke: #22d3ee; filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.5)) brightness(1.05); }
+}
+
 .part {
   cursor: pointer;
-  transition: fill 0.2s, filter 0.2s;
-  fill: var(--color-clean);
+  transition:
+    fill 0.28s ease,
+    stroke 0.28s ease,
+    stroke-width 0.28s ease,
+    filter 0.28s ease,
+    transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   stroke: var(--part-stroke);
-  stroke-width: 1;
+  stroke-width: 1.2;
+  transform-origin: center;
+  transform-box: fill-box;
 }
-.part:hover { fill: var(--color-hover) !important; filter: var(--neon-glow-sm); }
 
-.part.damage-low   { fill: var(--severity-low)    !important; filter: drop-shadow(0 0 5px rgba(234,179,8,0.6)); }
-.part.damage-medium{ fill: var(--severity-medium) !important; filter: drop-shadow(0 0 5px rgba(249,115,22,0.6)); }
-.part.damage-high  { fill: var(--severity-high)   !important; filter: drop-shadow(0 0 5px rgba(239,68,68,0.6)); }
-.part.selected     { fill: var(--primary)         !important; filter: var(--neon-glow-sm); }
+.part.wheel-part {
+  fill: transparent !important;
+  stroke: transparent;
+  stroke-width: 0;
+}
+
+.part.wheel-part:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) {
+  fill: rgba(56, 189, 248, 0.14) !important;
+  stroke: #38bdf8;
+  stroke-width: 2;
+}
+
+.part.wheel-part.selected {
+  fill: rgba(34, 211, 238, 0.22) !important;
+}
+
+.part.wheel-part.damage-low {
+  fill: rgba(148, 163, 184, 0.42) !important;
+  stroke: #94a3b8;
+  stroke-width: 2;
+  opacity: 1;
+}
+
+.part.wheel-part.damage-medium {
+  fill: rgba(249, 115, 22, 0.45) !important;
+  stroke: #fb923c;
+  stroke-width: 2;
+  opacity: 1;
+}
+
+.part.wheel-part.damage-high {
+  fill: rgba(239, 68, 68, 0.48) !important;
+  stroke: #f87171;
+  stroke-width: 2.2;
+  opacity: 1;
+}
+
+.part.wheel-part.damage-low,
+.part.wheel-part.damage-medium,
+.part.wheel-part.damage-high {
+  opacity: 1;
+}
+
+.part:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.wheel-part) {
+  fill: url(#metal-hover) !important;
+  filter: brightness(1.12) drop-shadow(0 0 10px rgba(31, 182, 255, 0.5)) saturate(1.12) !important;
+  stroke: #38bdf8;
+  stroke-width: 2;
+}
+
+.part:hover.damage-low,
+.part:hover.damage-medium,
+.part:hover.damage-high {
+  filter: brightness(1.15) drop-shadow(0 0 12px rgba(31, 182, 255, 0.45)) saturate(1.1) !important;
+  stroke: #67e8f9;
+  stroke-width: 2.2;
+}
+
+.part:active {
+  transform: scale(0.97);
+  filter: brightness(0.92) !important;
+}
+
+.part.damage-low {
+  fill: url(#metal-damage-low) !important;
+  filter: drop-shadow(0 0 6px rgba(148, 163, 184, 0.4)) saturate(0.95);
+  stroke: #94a3b8;
+  stroke-width: 1.6;
+  opacity: 1 !important;
+}
+
+.part.damage-medium {
+  fill: url(#metal-damage-medium) !important;
+  filter: drop-shadow(0 0 9px rgba(249, 115, 22, 0.6)) saturate(1.1);
+  stroke: #fb923c;
+  stroke-width: 1.8;
+  opacity: 1 !important;
+}
+
+.part.damage-high {
+  fill: url(#metal-damage-high) !important;
+  filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.7)) saturate(1.12);
+  stroke: #f87171;
+  stroke-width: 2;
+  opacity: 1 !important;
+}
+
+.part.selected {
+  fill: url(#metal-selected) !important;
+  stroke: #67e8f9;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 16px rgba(34, 211, 238, 0.75)) brightness(1.12) !important;
+  animation: pulse-neon-stroke 1.8s ease-in-out infinite;
+}
+
+/* Peças em <g>: estados visuais nos shapes filhos (van, ônibus, etc.) */
+.part.damage-low > :is(path, rect, circle, ellipse, polygon):not([pointer-events="none"]) {
+  fill: url(#metal-damage-low) !important;
+  stroke: #94a3b8;
+  stroke-width: 1.6;
+}
+
+.part.damage-medium > :is(path, rect, circle, ellipse, polygon):not([pointer-events="none"]) {
+  fill: url(#metal-damage-medium) !important;
+  stroke: #fb923c;
+  stroke-width: 1.8;
+}
+
+.part.damage-high > :is(path, rect, circle, ellipse, polygon):not([pointer-events="none"]) {
+  fill: url(#metal-damage-high) !important;
+  stroke: #f87171;
+  stroke-width: 2;
+}
+
+.part.selected > :is(path, rect, circle, ellipse, polygon):not([pointer-events="none"]) {
+  fill: url(#metal-selected) !important;
+  stroke: #67e8f9;
+  stroke-width: 2.5;
+}
+
+.part:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.wheel-part) > :is(path, rect, circle, ellipse, polygon):not([pointer-events="none"]) {
+  fill: url(#metal-hover) !important;
+  stroke: #38bdf8;
+  stroke-width: 2;
+}
+
+.part[data-name*="Vidro"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="vidro"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="Parabrisa"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="parabrisa"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="Glass"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="glass"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]) {
+  fill: url(#metal-glass) !important;
+  opacity: 0.88;
+}
+
+.part[data-name*="Vidro"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="vidro"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="Parabrisa"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="parabrisa"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="Glass"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="glass"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]) {
+  fill: url(#metal-glass) !important;
+  opacity: 1;
+}
 
 [id^="container-car-"]    .part,
 [id^="container-car2d-"]  .part { --color-clean: url(#metal-car-blue); }
 [id^="container-moto-"]   .part { --color-clean: url(#metal-moto-dark); }
 [id^="container-truck-"]  .part { --color-clean: url(#metal-truck-gradient); }
-[id^="container-bus-"]    .part { --color-clean: url(#metal-bus-gradient); }
+[id^="container-bus-"]    .part,
+[id^="container-microbus-"] .part { --color-clean: url(#grad-metal); }
 [id^="container-van-"]    .part { --color-clean: url(#metal-van-gradient); }
+[id^="container-custom-"] .part { --color-clean: url(#metal-car-blue); }
+
+/* Vidros clicáveis: mantém gradiente de vidro no estado normal */
+.part[data-name*="Vidro"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="vidro"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="Parabrisa"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="parabrisa"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="Glass"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="glass"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) {
+  fill: url(#metal-glass) !important;
+  opacity: 0.88;
+}
+
+.part[data-name*="Vidro"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="vidro"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="Parabrisa"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="parabrisa"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="Glass"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="glass"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) {
+  fill: url(#metal-glass) !important;
+  opacity: 1;
+  filter: brightness(1.25) drop-shadow(0 0 10px rgba(34, 211, 238, 0.55)) !important;
+}
 
 .wheel-pneu  { fill: #121824; stroke: #020617; stroke-width: 2.5; pointer-events: none; }
 .glass-light { fill: #fef08a; opacity: 0.85; stroke: #eab308; stroke-width: 1.5; pointer-events: none; }

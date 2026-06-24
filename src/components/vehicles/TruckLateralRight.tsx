@@ -1,23 +1,10 @@
 'use client';
 import { VehicleProps } from '../../types'
+import { usePartProps } from './usePartProps'
 
 export default function TruckLateralRight({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {
-  function partProps(id: string) {
-    const dmg = damages.find(d => d.partId === id)
-    const cls = ['part', dmg ? `damage-${dmg.severity}` : '', selectedPartId === id ? 'selected' : ''].filter(Boolean).join(' ')
-    return {
-      className: cls,
-      onClick: (e: React.MouseEvent<SVGElement>) => {
-        e.stopPropagation()
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartClick(id, name)
-      },
-      onMouseEnter: (e: React.MouseEvent<SVGElement>) => {
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartHover(id, name)
-      },
-    }
-  }
+  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
+
 
   return (
     <svg viewBox="0 0 600 250" width="100%">

@@ -1,0 +1,94 @@
+{
+  "id": "video-15s.pt",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationInFrames": 450,
+  "durationSec": 15,
+  "brand": {
+    "name": "Danos Aparentes",
+    "tagline": "Vistoria digital de alta fidelidade",
+    "palette": {
+      "bg": "#020617",
+      "bgGradient": "#0d1f3c",
+      "card": "rgba(10, 20, 40, 0.72)",
+      "primary": "#1FB6FF",
+      "primaryHover": "#72C5EE",
+      "text": "#e8f4ff",
+      "textMuted": "#7a9bbf",
+      "accent": "#22c55e",
+      "danger": "#ef4444"
+    },
+    "fonts": {
+      "headline": "Outfit",
+      "body": "Outfit",
+      "mono": "ui-monospace"
+    },
+    "logo": {
+      "icon": "../public/logo.svg",
+      "full": "../public/brand/logo-full.svg"
+    },
+    "cta": {
+      "primary": "Testar 7 dias grátis",
+      "secondary": "Sem cartão de crédito",
+      "url": "https://danosaparentes.vercel.app/app?mode=signup&utm_source=video&utm_medium=paid_social"
+    }
+  },
+  "shots": [
+    {
+      "id": "01",
+      "title": "Hook (problema)",
+      "durationSec": 4,
+      "frames": 120,
+      "slot": "CUT",
+      "vo": "Laudo manual no pátio? Pare de perder tempo. |",
+      "onscreen": {
+        "kind": "headline",
+        "text": "Laudo manual no pátio?"
+      },
+      "flags": [
+        "broll"
+      ],
+      "fromFrame": 0,
+      "toFrame": 119,
+      "voFile": "vo/video-15s.pt/shot-01.mp3"
+    },
+    {
+      "id": "02",
+      "title": "Solução (app)",
+      "durationSec": 6,
+      "frames": 180,
+      "slot": "CUT",
+      "vo": "Marque a avaria no celular, anexe fotos e gere o PDF em segundos. |",
+      "onscreen": {
+        "kind": "bullet",
+        "text": "Marque · Fotografe · PDF"
+      },
+      "flags": [
+        "brand"
+      ],
+      "fromFrame": 120,
+      "toFrame": 299,
+      "voFile": "vo/video-15s.pt/shot-02.mp3"
+    },
+    {
+      "id": "03",
+      "title": "CTA",
+      "durationSec": 5,
+      "frames": 150,
+      "slot": "FREEZE",
+      "vo": "Sete dias grátis. Comece agora — Danos Aparentes. |",
+      "onscreen": {
+        "kind": "cta",
+        "text": "7 dias grátis · Sem cartão"
+      },
+      "flags": [
+        "brand",
+        "logo"
+      ],
+      "fromFrame": 300,
+      "toFrame": 449,
+      "voFile": "vo/video-15s.pt/shot-03.mp3"
+    }
+  ]
+}

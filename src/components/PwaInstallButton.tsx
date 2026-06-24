@@ -1,5 +1,6 @@
 'use client'
 import React, { useEffect, useState, useCallback } from 'react'
+import Logo from './Logo'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
@@ -21,7 +22,7 @@ function isIos(): boolean {
 }
 
 /**
- * Botão "Instalar App" (PWA). Usa o mesmo logo da entrada do app (/logo.svg).
+ * Botão "Instalar App" (PWA). Usa o mesmo logo da entrada do app (/logo.png).
  * - Android/Desktop: dispara o prompt nativo de instalação.
  * - iOS Safari: abre instruções (Safari não suporta o prompt automático).
  * - Some quando o app já está instalado/aberto em modo standalone.
@@ -82,7 +83,7 @@ export default function PwaInstallButton() {
         title="Instalar o app na tela inicial"
         className="px-4 py-2.5 rounded-lg text-xs font-bold font-outfit transition-all cursor-pointer text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 inline-flex items-center gap-2 shadow-md"
       >
-        <img src="/logo.svg" alt="" aria-hidden="true" width={16} height={16} className="object-contain" />
+        <Logo size={16} />
         Instalar App
       </button>
 
@@ -97,7 +98,7 @@ export default function PwaInstallButton() {
             className="max-w-sm w-full bg-slate-900 border border-emerald-500/30 rounded-2xl p-6 text-center shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <img src="/logo.svg" alt="Danos Aparentes" width={48} height={48} className="object-contain mx-auto mb-3" />
+            <Logo size={48} className="mx-auto mb-3" />
             <h3 className="font-bold text-lg text-slate-100 mb-2">Instalar no iPhone</h3>
             <p className="text-sm text-slate-300 leading-relaxed">
               1. Toque no botão <strong>Compartilhar</strong> <span aria-hidden>⬆️</span> do Safari.<br />

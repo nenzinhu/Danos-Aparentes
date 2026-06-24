@@ -145,6 +145,10 @@ drop policy if exists "delete_own_photos" on storage.objects;
 create policy "delete_own_photos" on storage.objects
   for delete using (bucket_id = 'damage-photos' and auth.uid()::text = (storage.foldername(name))[1]);
 
+drop policy if exists "update_own_photos" on storage.objects;
+create policy "update_own_photos" on storage.objects
+  for update using (bucket_id = 'damage-photos' and auth.uid()::text = (storage.foldername(name))[1]);
+
 -- ─── Assinaturas (trial de 7 dias + Stripe) ───────────────────────────────────
 create table if not exists subscriptions (
   user_id uuid primary key references auth.users(id) on delete cascade,

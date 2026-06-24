@@ -1,23 +1,11 @@
 'use client';
 import { VehicleProps } from '../../types'
+import { usePartProps } from './usePartProps'
+import { FrontalWheelGraphic } from './WheelRim'
 
 export default function MotoTraseira({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {
-  function partProps(id: string) {
-    const dmg = damages.find(d => d.partId === id)
-    const cls = ['part', dmg ? `damage-${dmg.severity}` : '', selectedPartId === id ? 'selected' : ''].filter(Boolean).join(' ')
-    return {
-      className: cls,
-      onClick: (e: React.MouseEvent<SVGElement>) => {
-        e.stopPropagation()
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartClick(id, name)
-      },
-      onMouseEnter: (e: React.MouseEvent<SVGElement>) => {
-        const name = (e.currentTarget as SVGElement).getAttribute('data-name') || id
-        onPartHover(id, name)
-      },
-    }
-  }
+  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
+
 
   return (
     <svg viewBox="0 0 300 300" width="100%">
@@ -72,12 +60,8 @@ export default function MotoTraseira({ damages, selectedPartId, onPartClick, onP
       </g>
 
       {/* Pneu Traseiro Super Largo visto por trás */}
+      <FrontalWheelGraphic x={132} y={210} width={36} height={60} />
       <g pointerEvents="none">
-        <rect x="132" y="210" width="36" height="60" rx="12" fill="url(#radial-wheel)" />
-        <rect x="135" y="210" width="30" height="60" rx="10" fill="none" stroke="#1e293b" strokeWidth="1" />
-        {/* Sulcos em V invertidos do pneu */}
-        <path d="M150,215 L150,265" stroke="#000" strokeWidth="3" strokeDasharray="8,6" opacity="0.8" />
-        <path d="M138,225 L148,230 M162,225 L152,230 M138,245 L148,250 M162,245 L152,250" stroke="#000" strokeWidth="2" opacity="0.8" />
         {/* Detalhe do Escapamento (Saída de escapamento visível na lateral) */}
         <ellipse cx="182" cy="235" rx="10" ry="14" fill="#111827" stroke="#334155" strokeWidth="1" transform="rotate(15, 182, 235)" />
         <circle cx="182" cy="235" r="5" fill="#000" />

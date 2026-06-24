@@ -1,6 +1,8 @@
 'use client';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Logo from '../components/Logo'
+import { trackCompleteRegistration } from '@/src/lib/analytics/pixels'
 
 interface Props {
   onSignIn: (email: string, password: string) => Promise<void>
@@ -11,12 +13,17 @@ interface Props {
 type Mode = 'login' | 'signup' | 'reset'
 
 export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
+  const searchParams = useSearchParams()
   const [mode, setMode] = useState<Mode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [info, setInfo] = useState('')
   const [busy, setBusy] = useState(false)
+
+  useEffect(() => {
+    if (searchParams.get('mode') === 'signup') setMode('signup')
+  }, [searchParams])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -28,7 +35,8 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
         await onSignIn(email, password)
       } else if (mode === 'signup') {
         await onSignUp(email, password)
-        setInfo('Conta criada! Verifique seu email para confirmar (se exigido) e faça login.')
+        trackCompleteRegistration()
+        setInfo('Conta criada! Seu teste de 7 dias começou. Verifique seu email se necessário.')
         setMode('login')
       } else {
         await onResetPassword(email)

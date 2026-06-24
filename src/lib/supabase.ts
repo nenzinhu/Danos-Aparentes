@@ -1,7 +1,8 @@
+import { getSupabaseUrl, getSupabaseAnonKey } from '@/lib/supabaseEnv'
 import { createClient } from '@supabase/supabase-js'
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL as string | undefined
-const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string | undefined
+const url = getSupabaseUrl()
+const anonKey = getSupabaseAnonKey()
 
 export const supabaseEnabled = Boolean(url && anonKey)
 

@@ -186,7 +186,7 @@ export default function DashboardView({ saved }: Props) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {/* Stacked bar */}
               <div style={{ display: 'flex', width: '100%', height: 20, borderRadius: 10, overflow: 'hidden', background: 'rgba(255,255,255,0.05)' }}>
-                {lowPct > 0 && <div style={{ width: `${lowPct}%`, background: '#f59e0b', transition: 'width 0.5s ease-out' }} title={`Leve: ${stats.severity.low}`} />}
+                {lowPct > 0 && <div style={{ width: `${lowPct}%`, background: '#94a3b8', transition: 'width 0.5s ease-out' }} title={`Leve: ${stats.severity.low}`} />}
                 {medPct > 0 && <div style={{ width: `${medPct}%`, background: '#f97316', transition: 'width 0.5s ease-out' }} title={`Média: ${stats.severity.medium}`} />}
                 {highPct > 0 && <div style={{ width: `${highPct}%`, background: '#ef4444', transition: 'width 0.5s ease-out' }} title={`Grave: ${stats.severity.high}`} />}
               </div>
@@ -196,7 +196,7 @@ export default function DashboardView({ saved }: Props) {
                 {/* Low */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.82rem' }}>
-                    <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#f59e0b' }} />
+                    <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#94a3b8' }} />
                     <span style={{ fontWeight: 600 }}>Leve</span>
                   </div>
                   <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#e2e8f0' }}>{stats.severity.low} <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 500 }}>({Math.round(lowPct)}%)</span></div>
@@ -418,7 +418,7 @@ export default function DashboardView({ saved }: Props) {
                 <span style={{ fontWeight: 800, color: '#10b981' }}>LCP Delay: 539ms ➔ 24ms</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: 'var(--text-muted)' }}>Preload de Logotipo (/logo.svg):</span>
+                <span style={{ color: 'var(--text-muted)' }}>Preload de Logotipo (/logo.png):</span>
                 <span style={{ fontWeight: 800, color: '#10b981' }}>Pre-fetching prioritário</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>

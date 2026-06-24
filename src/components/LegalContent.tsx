@@ -208,6 +208,11 @@ const PRIVACY: Section[] = [
         html:
           'Nós <strong>não comercializamos nem compartilhamos</strong> dados de veículos, dados cadastrais de clientes ou fotos de avarias com empresas de anúncios, seguradoras terceiras ou bases de histórico veicular. Os dados pertencem ao vistoriador responsável. Eventuais operadores (ex.: provedores de hospedagem e nuvem) tratam dados apenas para viabilizar o serviço, sob obrigação de confidencialidade.',
       },
+      {
+        kind: 'p',
+        html:
+          'Utilizamos pixels de conversão da Meta (Facebook/Instagram) e TikTok para medir cadastros originados de campanhas publicitárias, somente após seu consentimento.',
+      },
     ],
   },
   {

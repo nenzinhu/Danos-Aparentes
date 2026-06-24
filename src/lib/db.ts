@@ -1,5 +1,5 @@
 const DB_NAME = 'avarias-pwa'
-const DB_VERSION = 3
+const DB_VERSION = 5
 
 export interface SyncQueueItem {
   qid: number
@@ -9,6 +9,14 @@ export interface SyncQueueItem {
   timestamp: number
   retry_count: number
   last_error?: string
+}
+
+export interface PhotoRecord {
+  id: string
+  blob: Blob
+  mimeType: string
+  createdAt: number
+  storagePath?: string
 }
 
 function openDB(): Promise<IDBDatabase> {
@@ -24,6 +32,16 @@ function openDB(): Promise<IDBDatabase> {
         db.createObjectStore('saved_reports', { keyPath: 'id' })
       if (!db.objectStoreNames.contains('sync_queue'))
         db.createObjectStore('sync_queue', { keyPath: 'qid', autoIncrement: true })
+
+      let photoStore: IDBObjectStore
+      if (!db.objectStoreNames.contains('damage_photos')) {
+        photoStore = db.createObjectStore('damage_photos', { keyPath: 'id' })
+      } else {
+        photoStore = req.transaction!.objectStore('damage_photos')
+      }
+      if (!photoStore.indexNames.contains('storagePath')) {
+        photoStore.createIndex('storagePath', 'storagePath', { unique: false })
+      }
     }
     req.onsuccess = () => resolve(req.result)
     req.onerror = () => reject(req.error)
@@ -84,5 +102,24 @@ export const db = {
   },
   async updateSyncQueueItem(item: SyncQueueItem) {
     return tx('sync_queue', 'readwrite', s => s.put(item))
+  },
+  async putPhoto(photo: PhotoRecord) {
+    return tx('damage_photos', 'readwrite', s => s.put(photo))
+  },
+  async getPhoto(id: string): Promise<PhotoRecord | undefined> {
+    return tx<PhotoRecord | undefined>('damage_photos', 'readonly', s => s.get(id))
+  },
+  async getPhotoByStoragePath(path: string): Promise<PhotoRecord | undefined> {
+    const db = await openDB()
+    return new Promise((resolve, reject) => {
+      const t = db.transaction('damage_photos', 'readonly')
+      const idx = t.objectStore('damage_photos').index('storagePath')
+      const req = idx.get(path)
+      req.onsuccess = () => resolve(req.result as PhotoRecord | undefined)
+      req.onerror = () => reject(req.error)
+    })
+  },
+  async deletePhoto(id: string) {
+    return tx('damage_photos', 'readwrite', s => s.delete(id))
   },
 }

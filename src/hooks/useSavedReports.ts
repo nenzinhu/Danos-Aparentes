@@ -1,9 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react'
-import { SavedReport, VehicleInfo, Damage } from '../types'
+import { SavedReport, VehicleInfo, Damage, VehicleType } from '../types'
 import { db } from '../lib/db'
-import { pullRemote } from '../lib/sync'
+import { mergeRemoteReports } from '../lib/sync'
 import { supabaseEnabled } from '../lib/supabase'
+import { createId } from '../lib/id'
 
 export function useSavedReports(userId?: string) {
   const [saved, setSaved] = useState<SavedReport[]>([])
@@ -14,21 +15,16 @@ export function useSavedReports(userId?: string) {
 
   useEffect(() => {
     if (!supabaseEnabled || !userId) return
-    pullRemote(userId).then(async remote => {
-      const local = await db.getAllSaved()
-      const localIds = new Set(local.map(r => r.id))
-      const missing = remote.filter(r => !localIds.has(r.id))
-      for (const r of missing) await db.putSaved(r)
-      if (missing.length > 0) setSaved(prev => [...missing, ...prev])
-    })
+    mergeRemoteReports(userId).then(setSaved)
   }, [userId])
 
-  async function saveReport(vehicleInfo: VehicleInfo, damages: Damage[]) {
+  async function saveReport(vehicleInfo: VehicleInfo, damages: Damage[], vehicleType: VehicleType) {
     const report: SavedReport = {
-      id: Date.now().toString(),
+      id: createId() as SavedReport['id'],
       savedAt: Date.now(),
       vehicleInfo,
       damages,
+      vehicleType,
     }
     await db.putSaved(report)
     setSaved(prev => [report, ...prev])

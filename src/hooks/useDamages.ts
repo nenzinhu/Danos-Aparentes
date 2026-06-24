@@ -21,12 +21,12 @@ export function useDamages() {
   }
 
   async function updateDamage(id: string, patch: Partial<Damage>) {
-    const prev = damages
-    const target = prev.find(d => d.id === id)
+    const all = await db.getAllDamages()
+    const target = all.find(d => d.id === id)
     if (!target) return
     const updatedTarget = { ...target, ...patch }
     await db.putDamage(updatedTarget)
-    setDamages(prevList => prevList.map(d => d.id === id ? updatedTarget : d))
+    setDamages(prev => prev.map(d => d.id === id ? updatedTarget : d))
   }
 
   async function clearDamages() {
