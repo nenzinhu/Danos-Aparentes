@@ -1,46 +1,30 @@
 'use client';
 import { VehicleProps } from '../../types'
 import { usePartProps } from './usePartProps'
+import { LateralWheelGraphic } from './WheelRim'
 
-export default function CarLateralRight({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {
+export default function CarLateralRight({
+  damages,
+  selectedPartId,
+  onPartClick,
+  onPartHover,
+  hideWheels = false,
+}: VehicleProps) {
   const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
-
 
   return (
     <svg viewBox="0 0 520 220" width="100%">
       <ellipse cx="260" cy="188" rx="230" ry="14" fill="#000" opacity="0.35" filter="url(#shadow-filter)" />
       <path d="M445,160 A45,45 0 0,1 355,160 Z" fill="#0f172a" />
       <path d="M165,160 A45,45 0 0,1 75,160 Z" fill="#0f172a" />
-      <g pointerEvents="none">
-        <circle cx="120" cy="160" r="38" fill="url(#radial-wheel)" />
-        <circle cx="120" cy="160" r="34" fill="none" stroke="#1e293b" strokeWidth="1" />
-        <circle cx="120" cy="160" r="36" fill="none" stroke="#000" strokeWidth="2" strokeDasharray="4,6" opacity="0.8" />
-        <circle cx="120" cy="160" r="25" fill="#94a3b8" />
-        <circle cx="120" cy="160" r="23" fill="none" stroke="#64748b" strokeWidth="1" strokeDasharray="2,3" />
-        <path d="M104,144 A25,25 0 0,1 98,160 L92,160 A31,31 0 0,0 100,140 Z" fill="#ef4444" />
-        <circle cx="120" cy="160" r="26" fill="none" stroke="#cbd5e1" strokeWidth="2.5" />
-        <circle cx="120" cy="160" r="22" fill="url(#radial-calota)" />
-        <path d="M120,160 L120,138 M120,160 L99,153 M120,160 L107,178 M120,160 L133,178 M120,160 L141,153" stroke="#cbd5e1" strokeWidth="3" strokeLinecap="round" />
-        <path d="M120,160 L120,138 M120,160 L99,153 M120,160 L107,178 M120,160 L133,178 M120,160 L141,153" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" />
-        <circle cx="120" cy="160" r="5" fill="#475569" />
-        <circle cx="120" cy="160" r="2" fill="#e2e8f0" />
-      </g>
-      <circle {...partProps('car-rr-wheel-rear')} data-name="Roda Traseira Direita" cx="120" cy="160" r="38" />
-      <g pointerEvents="none">
-        <circle cx="400" cy="160" r="38" fill="url(#radial-wheel)" />
-        <circle cx="400" cy="160" r="34" fill="none" stroke="#1e293b" strokeWidth="1" />
-        <circle cx="400" cy="160" r="36" fill="none" stroke="#000" strokeWidth="2" strokeDasharray="4,6" opacity="0.8" />
-        <circle cx="400" cy="160" r="25" fill="#94a3b8" />
-        <circle cx="400" cy="160" r="23" fill="none" stroke="#64748b" strokeWidth="1" strokeDasharray="2,3" />
-        <path d="M384,144 A25,25 0 0,1 378,160 L372,160 A31,31 0 0,0 380,140 Z" fill="#ef4444" />
-        <circle cx="400" cy="160" r="26" fill="none" stroke="#cbd5e1" strokeWidth="2.5" />
-        <circle cx="400" cy="160" r="22" fill="url(#radial-calota)" />
-        <path d="M400,160 L400,138 M400,160 L379,153 M400,160 L387,178 M400,160 L413,178 M400,160 L421,153" stroke="#cbd5e1" strokeWidth="3" strokeLinecap="round" />
-        <path d="M400,160 L400,138 M400,160 L379,153 M400,160 L387,178 M400,160 L413,178 M400,160 L421,153" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" />
-        <circle cx="400" cy="160" r="5" fill="#475569" />
-        <circle cx="400" cy="160" r="2" fill="#e2e8f0" />
-      </g>
-      <circle {...partProps('car-rr-wheel-front')} data-name="Roda Dianteira Direita" cx="400" cy="160" r="38" />
+      {!hideWheels && (
+        <>
+          <LateralWheelGraphic cx={120} cy={160} r={38} caliperSide="right" />
+          <circle {...partProps('car-rr-wheel-rear')} data-name="Roda Traseira Direita" cx="120" cy="160" r="38" />
+          <LateralWheelGraphic cx={400} cy={160} r={38} caliperSide="right" />
+          <circle {...partProps('car-rr-wheel-front')} data-name="Roda Dianteira Direita" cx="400" cy="160" r="38" />
+        </>
+      )}
       <path {...partProps('car-lr-glass-front')} data-name="Vidro Dianteiro Direito" d="M330,80 L272,42 L202,42 L202,80 Z" fill="url(#metal-glass)" opacity="0.85" stroke="#0f172a" strokeWidth="1" />
       <path {...partProps('car-lr-glass-rear')} data-name="Vidro Traseiro Direito" d="M198,42 L142,42 L102,80 L198,80 Z" fill="url(#metal-glass)" opacity="0.85" stroke="#0f172a" strokeWidth="1" />
       <rect x="198" y="42" width="4" height="38" fill="#0f172a" pointerEvents="none" />

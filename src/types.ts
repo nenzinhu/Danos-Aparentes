@@ -76,6 +76,8 @@ export interface VehicleProps {
   selectedPartId: string | null
   onPartClick: (id: string, name: string) => void
   onPartHover: (id: string, name: string) => void
+  /** Landing / preview: só vãos de roda, sem pneu interativo */
+  hideWheels?: boolean
 }
 
 /**

@@ -246,7 +246,7 @@ export default function LandingPage() {
               {/* Note: I'm using the SVG component here for now, but the idea is to replace with Rive */}
               <ViewTransition name="car-visualizer" share="morph" default="none">
                 <div className="filter drop-shadow-[0_35px_60px_rgba(0,0,0,0.8)]">
-                  <CarLateralLeft damages={[]} selectedPartId={null} onPartClick={()=>{}} onPartHover={()=>{}} />
+                  <CarLateralLeft damages={[]} selectedPartId={null} onPartClick={()=>{}} onPartHover={()=>{}} hideWheels />
                 </div>
               </ViewTransition>
             </div>
