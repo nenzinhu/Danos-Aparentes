@@ -5,7 +5,7 @@ import FaqAccordion from '@/src/components/FaqAccordion'
 export const metadata: Metadata = {
   title: 'Perguntas Frequentes | Danos Aparentes',
   description:
-    'Central de ajuda do Danos Aparentes: vistoria 3D, GPS, laudo em PDF, assinaturas, conta, dados e uso offline (PWA). Tire suas dúvidas.',
+    'Central de ajuda do Danos Aparentes: vistoria, GPS, laudo em PDF, assinaturas, conta, dados e uso offline (PWA). Tire suas dúvidas.',
 }
 
 export default function FaqPage() {

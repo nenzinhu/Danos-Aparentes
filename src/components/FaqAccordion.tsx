@@ -23,13 +23,12 @@ const CATEGORY_LABEL: Record<CategoryId, string> = Object.fromEntries(
 const FAQS: FaqEntry[] = [
   {
     category: 'vistoria',
-    q: 'Como registro uma avaria no veículo 3D?',
+    q: 'Como registro uma avaria na vistoria?',
     a: (
       <>
         <p>
           Na aba <strong>Vistoria</strong>, escolha o tipo de veículo e a vista (lateral, frontal,
-          traseira). Clique sobre a peça no modelo e selecione o tipo de avaria — ela aparece na lista
-          lateral.
+          traseira). Clique sobre a peça e selecione o tipo de avaria — ela aparece na lista lateral.
         </p>
         <p>Cada avaria aceita gravidade (baixa/média/alta), notas e fotos antes de gerar o laudo.</p>
       </>
@@ -136,7 +135,7 @@ const FAQS: FaqEntry[] = [
     q: 'Existe período de teste gratuito?',
     a: (
       <p>
-        Sim. Você começa com um período de avaliação para testar a vistoria 3D, o laudo em PDF e a
+        Sim. Você começa com um período de avaliação para testar a vistoria, o laudo em PDF e a
         sincronização antes de assinar. O tempo restante aparece no topo do app.
       </p>
     ),
