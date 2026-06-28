@@ -85,7 +85,7 @@ export default function InspectTab({
         />
         {!formCollapsed && (
           <div className="flex gap-4 mt-6 pt-4 border-t border-[var(--panel-border)] justify-between items-center flex-wrap">
-            <button onClick={onOpenSaved} className="text-xs px-4 py-2 rounded-lg font-bold border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-all">
+            <button onClick={onOpenSaved} className="text-xs px-4 py-2 rounded-lg font-bold border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-all">
               📦 Vistorias Salvas
             </button>
             <button onClick={onClearAll} className="text-xs px-4 py-2 rounded-lg font-bold border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 inline-flex items-center gap-2 transition-all">

@@ -809,20 +809,15 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
               <p className="text-[0.78rem] text-slate-400 leading-relaxed mb-3">
                 Registre o ponto GPS exato de onde a vistoria está sendo feita. A coordenada entra no laudo junto do hash e do QR Code.
               </p>
-              <button
+              <Button
                 type="button"
+                variant="primary"
                 onClick={captureGeo}
-                disabled={geoStatus === 'loading'}
-                className={`w-full py-2.5 rounded-xl text-sm font-black inline-flex items-center justify-center gap-2 transition-[transform,background-color] duration-200 ease-out active:scale-[0.98] motion-reduce:transition-none ${
-                  geoStatus === 'loading'
-                    ? 'bg-sky-500/10 border border-sky-500/30 text-sky-300 cursor-wait'
-                    : 'bg-sky-600 hover:bg-sky-500 hover:scale-[1.01] text-white'
-                }`}
+                loading={geoStatus === 'loading'}
+                className="w-full"
               >
-                {geoStatus === 'loading'
-                  ? <><span className="animate-spin inline-block">⏳</span> Obtendo localização…</>
-                  : <>📡 Capturar localização atual</>}
-              </button>
+                {geoStatus === 'loading' ? 'Obtendo localização…' : '📡 Capturar localização atual'}
+              </Button>
               {geoStatus === 'error' && (
                 <p className="text-[0.75rem] text-red-400 font-semibold mt-2">{geoError}</p>
               )}
