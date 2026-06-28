@@ -126,6 +126,133 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 ]
 
+BLOG_POSTS.push(
+  {
+    slug: 'checklist-vistoria-devolucao-locadora',
+    title: 'Checklist de vistoria de devolução de veículo para locadoras',
+    excerpt:
+      'O roteiro completo para receber um carro de volta sem prejuízo: o que conferir, como fotografar e como provar quais danos são novos.',
+    category: 'Locadora',
+    tags: ['locadora', 'frota', 'devolução', 'checklist', 'vistoria'],
+    date: '2026-06-27',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#155e2f 0%,#0f766e 45%,#22c55e 100%)', emoji: '🚐', image: '/vehicles-img/van.png' },
+    toc: [
+      { id: 'por-que', label: 'Por que a devolução é crítica' },
+      { id: 'antes', label: 'Antes de começar' },
+      { id: 'checklist', label: 'O checklist, peça por peça' },
+      { id: 'disputas', label: 'Como evitar disputas' },
+    ],
+    content: (
+      <>
+        <p>
+          Na locação, o dinheiro escapa <strong>na devolução</strong>. É o momento em que um dano novo
+          precisa ser identificado, comprovado e cobrado — e onde a maioria dos prejuízos acontece, por
+          falta de um registro comparável com o da entrega.
+        </p>
+
+        <h2 id="por-que">Por que a devolução é crítica</h2>
+        <p>
+          Sem uma vistoria de devolução padronizada, todo dano vira discussão: o cliente diz que já
+          estava lá, e você não tem como provar o contrário. A solução é ter o mesmo método (e o mesmo
+          documento) na entrega e na devolução, para comparar lado a lado.
+        </p>
+
+        <h2 id="antes">Antes de começar</h2>
+        <ul>
+          <li><strong>Lave o veículo</strong> ou avalie sob boa luz — sujeira esconde riscos e amassados.</li>
+          <li><strong>Recupere a vistoria de entrega</strong> para comparar peça por peça.</li>
+          <li><strong>Confira a quilometragem e o nível de combustível</strong> contra o contrato.</li>
+        </ul>
+
+        <h2 id="checklist">O checklist, peça por peça</h2>
+        <ul>
+          <li><strong>Exterior (em ordem fixa):</strong> frente, lateral esquerda, traseira, lateral direita e teto — para-choques, faróis, retrovisores, vidros e rodas.</li>
+          <li><strong>Pneus:</strong> desgaste, bolhas e o estepe.</li>
+          <li><strong>Interior:</strong> bancos, forração, painel, multimídia e manchas ou rasgos.</li>
+          <li><strong>Itens e documentos:</strong> chave reserva, manual, triângulo, macaco e documento do veículo.</li>
+          <li><strong>Fotos:</strong> uma aberta e uma de detalhe por avaria, com data, hora e GPS.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="disputas">Como evitar disputas</h2>
+        <p>
+          A regra de ouro: <strong>o dano só é cobrável se você consegue provar que é novo</strong>.
+          Isso exige fotos datadas e geolocalizadas e um laudo que não possa ser alterado depois. Com um
+          laudo digital de entrega e outro de devolução — ambos com hash e QR de validação — a
+          comparação fica objetiva e a cobrança, indiscutível.
+        </p>
+        <p>
+          Veja como é um <a href="/#laudo">Relatório de Vistoria Veicular</a> pronto, ou{' '}
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">aprenda o passo a passo do laudo</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'laudo-cautelar-vs-laudo-de-avarias',
+    title: 'Laudo cautelar x laudo de avarias: qual você precisa?',
+    excerpt:
+      'Dois documentos com nomes parecidos e finalidades bem diferentes. Entenda o que cada um cobre para não pedir (nem pagar) o errado.',
+    category: 'Laudo',
+    tags: ['laudo cautelar', 'laudo de avarias', 'vistoria', 'documentação'],
+    date: '2026-06-26',
+    readingMinutes: 5,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#3b1d6e 0%,#5b21b6 45%,#a855f7 100%)', emoji: '⚖️', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'cautelar', label: 'O que é o laudo cautelar' },
+      { id: 'avarias', label: 'O que é o laudo de avarias' },
+      { id: 'diferencas', label: 'As diferenças na prática' },
+      { id: 'qual', label: 'Qual você precisa' },
+    ],
+    content: (
+      <>
+        <p>
+          &ldquo;Laudo cautelar&rdquo; e &ldquo;laudo de avarias&rdquo; são confundidos o tempo todo —
+          mas respondem a perguntas diferentes. Pedir o errado custa tempo e dinheiro.
+        </p>
+
+        <h2 id="cautelar">O que é o laudo cautelar</h2>
+        <p>
+          O laudo cautelar (ou vistoria cautelar) investiga a <strong>procedência e a integridade
+          estrutural</strong> do veículo: numeração de chassi e motor, sinais de adulteração, batidas
+          estruturais, e cruzamento com bases de sinistro/leilão. É típico exigido em{' '}
+          <strong>transferência de propriedade</strong> e na compra de usados.
+        </p>
+
+        <h2 id="avarias">O que é o laudo de avarias</h2>
+        <p>
+          O laudo de avarias aparentes documenta o <strong>estado visível</strong> do veículo num
+          momento: riscos, amassados e fraturas por peça, com fotos e assinaturas. Serve para{' '}
+          <strong>entrega/devolução, sinistro e responsabilização por danos</strong> — não avalia
+          chassi nem procedência.
+        </p>
+
+        <h2 id="diferencas">As diferenças na prática</h2>
+        <ul>
+          <li><strong>Pergunta que responde:</strong> cautelar = &ldquo;esse carro é confiável e legal?&rdquo;; avarias = &ldquo;em que estado ele está agora?&rdquo;.</li>
+          <li><strong>Quem costuma exigir:</strong> cautelar = comprador, despachante, financeira; avarias = locadora, seguradora, pátio.</li>
+          <li><strong>O que olha:</strong> cautelar = estrutura e procedência; avarias = danos aparentes na lataria, vidros e acabamentos.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="qual">Qual você precisa</h2>
+        <p>
+          Vai <strong>transferir ou comprar</strong> um usado e quer segurança sobre o histórico? É o{' '}
+          <strong>cautelar</strong>. Precisa <strong>registrar o estado</strong> numa entrega,
+          devolução ou sinistro para responsabilizar por danos? É o <strong>laudo de avarias</strong> —
+          e é exatamente esse que você gera no Danos Aparentes, com diagrama, fotos com GPS e validação
+          por hash/QR. <a href="/blog/como-fazer-laudo-de-vistoria-veicular">Veja como fazer um</a>.
+        </p>
+      </>
+    ),
+  },
+)
+
 export function getPost(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find(p => p.slug === slug)
 }

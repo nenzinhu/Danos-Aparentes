@@ -18,6 +18,26 @@ const HERO_DAMAGES: Damage[] = [
   { id: 'hero-2' as Damage['id'], vehicle: 'car', view: 'lateral-left', partId: 'car-ll-door-rear', partName: 'Porta Traseira Esquerda', type: 'scratch', typeName: 'Risco', severity: 'low', notes: '', photos: [], photoNotes: [] },
 ];
 
+// Schema de marca/produto para rich results e Knowledge Graph.
+const LANDING_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Danos Aparentes',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Web, Android, iOS (PWA)',
+  url: 'https://danosaparentes.com.br',
+  description:
+    'Aplicativo de vistoria veicular: marque avarias em diagramas do veículo, anexe fotos com GPS e gere laudos em PDF com hash de validação e QR Code.',
+  inLanguage: 'pt-BR',
+  offers: { '@type': 'Offer', category: 'subscription' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Danos Aparentes',
+    url: 'https://danosaparentes.com.br',
+    logo: 'https://danosaparentes.com.br/logo-full.png',
+  },
+};
+
 const PricingSection = dynamic(() => import('../components/PricingSection'), { ssr: false });
 const FAQSection = dynamic(() => import('../components/FAQSection'), { ssr: false });
 const VehicleShowcaseSection = dynamic(() => import('../components/VehicleShowcaseSection'), { ssr: false });
@@ -158,6 +178,7 @@ export default function LandingPage() {
   return (
     <DirectionalTransition>
       <div className="min-h-screen w-full bg-[var(--bg-main)] text-[var(--text-main)] transition-colors duration-300 font-outfit overflow-y-auto flex flex-col relative selection:bg-primary selection:text-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(LANDING_JSONLD) }} />
       <IntroVideo />
 
       {/* Hide native browser details arrows */}
