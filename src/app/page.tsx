@@ -9,12 +9,21 @@ import dynamic from 'next/dynamic';
 import { LEGAL_CONTACT_EMAIL } from '../components/LegalContent';
 import LandingCtaLink from '../components/LandingCtaLink';
 import Reveal from '../components/Reveal';
+import type { Damage } from '../types';
+
+// Avarias reais do laudo (2 riscos leves nas portas esquerdas) para o
+// hero renderizar o modelo realista com as peças marcadas/selecionadas.
+const HERO_DAMAGES: Damage[] = [
+  { id: 'hero-1' as Damage['id'], vehicle: 'car', view: 'lateral-left', partId: 'car-ll-door-front', partName: 'Porta Dianteira Esquerda', type: 'scratch', typeName: 'Risco', severity: 'low', notes: '', photos: [], photoNotes: [] },
+  { id: 'hero-2' as Damage['id'], vehicle: 'car', view: 'lateral-left', partId: 'car-ll-door-rear', partName: 'Porta Traseira Esquerda', type: 'scratch', typeName: 'Risco', severity: 'low', notes: '', photos: [], photoNotes: [] },
+];
 
 const PricingSection = dynamic(() => import('../components/PricingSection'), { ssr: false });
 const FAQSection = dynamic(() => import('../components/FAQSection'), { ssr: false });
 const VehicleShowcaseSection = dynamic(() => import('../components/VehicleShowcaseSection'), { ssr: false });
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'), { ssr: false });
 const CarLateralLeft = dynamic(() => import('../components/vehicles/CarLateralLeft'), { ssr: false });
+const VehicleDefs = dynamic(() => import('../components/vehicles/VehicleDefs'), { ssr: false });
 const MobileStickyCta = dynamic(() => import('../components/MobileStickyCta'), { ssr: false });
 
 function TextCarousel() {
@@ -272,9 +281,10 @@ export default function LandingPage() {
                 <div aria-hidden="true" className="absolute inset-x-6 bottom-8 h-px bg-[var(--sheet-line)] opacity-60" />
                 <div aria-hidden="true" className="absolute left-1/2 bottom-6 -translate-x-1/2 font-mono-data text-[9px] text-[var(--text-muted)] tracking-[0.3em] uppercase">eixo de referência</div>
 
+                <VehicleDefs />
                 <ViewTransition name="car-visualizer" share="morph" default="none">
                   <div className="relative w-full max-w-md drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
-                    <CarLateralLeft damages={[]} selectedPartId={null} onPartClick={()=>{}} onPartHover={()=>{}} hideWheels />
+                    <CarLateralLeft damages={HERO_DAMAGES} selectedPartId="car-ll-door-front" onPartClick={()=>{}} onPartHover={()=>{}} />
                   </div>
                 </ViewTransition>
 
