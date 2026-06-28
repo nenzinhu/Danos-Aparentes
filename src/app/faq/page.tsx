@@ -1,16 +1,48 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import FaqAccordion from '@/src/components/FaqAccordion'
+import { FAQ_PLAIN } from '@/src/components/faqData'
+
+const FAQ_DESCRIPTION =
+  'Central de ajuda do Danos Aparentes: vistoria, GPS, laudo em PDF, assinaturas, conta, dados e uso offline (PWA). Tire suas dúvidas.'
 
 export const metadata: Metadata = {
   title: 'Perguntas Frequentes | Danos Aparentes',
-  description:
-    'Central de ajuda do Danos Aparentes: vistoria, GPS, laudo em PDF, assinaturas, conta, dados e uso offline (PWA). Tire suas dúvidas.',
+  description: FAQ_DESCRIPTION,
+  alternates: { canonical: '/faq' },
+  openGraph: {
+    title: 'Perguntas Frequentes | Danos Aparentes',
+    description: FAQ_DESCRIPTION,
+    url: '/faq',
+    type: 'website',
+    images: ['/og-image.jpg'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Perguntas Frequentes | Danos Aparentes',
+    description: FAQ_DESCRIPTION,
+    images: ['/og-image.jpg'],
+  },
+}
+
+// Rich result do Google (FAQPage) — derivado do mesmo conteúdo do acordeão.
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ_PLAIN.map(f => ({
+    '@type': 'Question',
+    name: f.question,
+    acceptedAnswer: { '@type': 'Answer', text: f.answer },
+  })),
 }
 
 export default function FaqPage() {
   return (
     <main className="min-h-screen w-full flex flex-col items-center px-4 py-12 font-outfit text-[var(--text-main)]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="w-full max-w-2xl">
         <Link
           href="/"
