@@ -1,4 +1,5 @@
 import React from 'react'
+import { LaudoSheet } from '@/src/components/LaudoSheet'
 
 export interface BlogPost {
   slug: string
@@ -117,9 +118,17 @@ export const BLOG_POSTS: BlogPost[] = [
         <p>
           Em vez de montar um do zero, parta de um modelo que já tem todos os blocos certos:
           identificação, diagrama de danos, detalhamento técnico por peça, galeria fotográfica,
-          assinaturas e validação por hash/QR. Veja um{' '}
-          <a href="/#laudo">modelo real de Relatório de Vistoria Veicular</a> e use-o como referência —
-          ou gere o seu direto no aplicativo, em poucos toques.
+          assinaturas e validação por hash/QR. Veja abaixo como sai o PDF gerado pelo aplicativo:
+        </p>
+
+        <LaudoSheet />
+
+        <p>
+          Repare no cabeçalho: o laudo sai com a <strong>logo e o nome da sua empresa</strong> —
+          concessionária, locadora ou despachante. É um documento <em>white-label</em>, que você
+          personaliza uma vez nas configurações e passa a usar em todas as vistorias. Veja também o{' '}
+          <a href="/#laudo">modelo completo na página inicial</a> ou gere o seu direto no aplicativo, em
+          poucos toques.
         </p>
       </>
     ),
@@ -184,8 +193,12 @@ BLOG_POSTS.push(
           laudo digital de entrega e outro de devolução — ambos com hash e QR de validação — a
           comparação fica objetiva e a cobrança, indiscutível.
         </p>
+        <LaudoSheet />
+
         <p>
-          Veja como é um <a href="/#laudo">Relatório de Vistoria Veicular</a> pronto, ou{' '}
+          E o documento sai com a <strong>logo e o nome da sua locadora</strong> no cabeçalho, reforçando
+          a sua marca a cada entrega e devolução. Veja como é um{' '}
+          <a href="/#laudo">Relatório de Vistoria Veicular</a> pronto, ou{' '}
           <a href="/blog/como-fazer-laudo-de-vistoria-veicular">aprenda o passo a passo do laudo</a>.
         </p>
       </>
