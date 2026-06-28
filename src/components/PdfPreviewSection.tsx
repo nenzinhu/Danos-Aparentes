@@ -63,7 +63,7 @@ const MODEL = {
 
 export default function PdfPreviewSection() {
   return (
-    <section className="w-full max-w-6xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 text-left">
+    <section id="laudo" className="w-full max-w-6xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 text-left scroll-mt-24">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Coluna Esquerda: Mockup Visual do PDF */}
         <div className="lg:col-span-7 flex flex-col items-center gap-4 order-2 lg:order-1">

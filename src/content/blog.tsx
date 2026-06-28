@@ -1,0 +1,139 @@
+import React from 'react'
+
+export interface BlogPost {
+  slug: string
+  title: string
+  excerpt: string
+  category: string
+  tags: string[]
+  /** ISO date (YYYY-MM-DD) */
+  date: string
+  readingMinutes: number
+  author: { name: string; role: string }
+  cover: { gradient: string; emoji: string }
+  /** Sumário navegável — cada id deve existir como <h2 id> no conteúdo. */
+  toc: { id: string; label: string }[]
+  content: React.ReactNode
+}
+
+function Cta() {
+  return (
+    <aside className="not-prose my-10 rounded-2xl border border-[var(--card-border)] bg-gradient-to-br from-sky-500/[0.08] to-blue-900/10 p-6 backdrop-blur-md">
+      <p className="text-[0.7rem] font-extrabold uppercase tracking-widest text-[var(--signal-bright)] mb-2">
+        Faça na prática
+      </p>
+      <h3 className="font-display text-xl font-bold text-[var(--text-main)] mb-2">
+        Gere um laudo de vistoria em minutos
+      </h3>
+      <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-4">
+        Marque as avarias num diagrama do veículo, anexe fotos com GPS e exporte um PDF com hash de
+        validação e QR Code. Sem papel, sem retrabalho.
+      </p>
+      <a
+        href="/app"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 transition-[transform,background-color] motion-safe:hover:-translate-y-0.5"
+      >
+        Abrir o app →
+      </a>
+    </aside>
+  )
+}
+
+export const BLOG_POSTS: BlogPost[] = [
+  {
+    slug: 'como-fazer-laudo-de-vistoria-veicular',
+    title: 'Como fazer um laudo de vistoria veicular: o guia completo',
+    excerpt:
+      'O que é, quando é exigido e o passo a passo para produzir um laudo de avarias claro, fotográfico e à prova de contestação — com modelo real para você seguir.',
+    category: 'Vistoria',
+    tags: ['laudo de vistoria', 'avarias', 'checklist', 'locadora', 'seguradora'],
+    date: '2026-06-28',
+    readingMinutes: 7,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '📋' },
+    toc: [
+      { id: 'o-que-e', label: 'O que é um laudo de vistoria' },
+      { id: 'quando-exigido', label: 'Quando ele é exigido' },
+      { id: 'passo-a-passo', label: 'Passo a passo' },
+      { id: 'erros-comuns', label: 'Erros que invalidam o laudo' },
+      { id: 'modelo', label: 'Modelo pronto para seguir' },
+    ],
+    content: (
+      <>
+        <p>
+          Um laudo de vistoria veicular bem feito é a diferença entre <strong>fechar uma entrega sem
+          discussão</strong> e ficar preso num bate-boca sobre &ldquo;esse risco já estava aí&rdquo;. Seja na
+          devolução de um carro de locadora, na entrada de um sinistro ou na venda de um usado, o laudo
+          é a prova documental do estado do veículo num momento exato.
+        </p>
+        <p>
+          Neste guia você vê o que o laudo precisa conter, quando ele é exigido, o passo a passo para
+          produzi-lo e os erros que o tornam frágil numa contestação.
+        </p>
+
+        <h2 id="o-que-e">O que é um laudo de vistoria</h2>
+        <p>
+          É o registro estruturado do estado aparente de um veículo: identificação (placa, marca,
+          modelo, cor), a lista de avarias por peça e gravidade, fotos das ocorrências e a
+          identificação de quem vistoriou. Não confunda com o <em>laudo cautelar</em> (que avalia
+          adulteração de chassi/motor para transferência): aqui falamos do <strong>laudo de avarias
+          aparentes</strong>, focado em danos visíveis na lataria, vidros e acabamentos.
+        </p>
+
+        <h2 id="quando-exigido">Quando ele é exigido</h2>
+        <ul>
+          <li><strong>Locadoras e frotas:</strong> na entrega e na devolução, para imputar danos novos.</li>
+          <li><strong>Seguradoras:</strong> na vistoria prévia e na abertura de sinistro.</li>
+          <li><strong>Compra e venda de usados:</strong> para registrar o estado no ato da negociação.</li>
+          <li><strong>Transportadoras e pátios:</strong> na entrada e saída de veículos sob guarda.</li>
+        </ul>
+
+        <h2 id="passo-a-passo">Passo a passo de uma vistoria à prova de contestação</h2>
+        <p>O método é sempre o mesmo, independentemente do tipo de veículo:</p>
+        <ul>
+          <li><strong>1. Identifique o veículo</strong> — placa, marca/modelo, cor e quilometragem. Erros aqui derrubam o documento inteiro.</li>
+          <li><strong>2. Percorra o veículo em ordem fixa</strong> — frente, lateral esquerda, traseira, lateral direita e teto. Uma ordem fixa evita esquecer áreas.</li>
+          <li><strong>3. Registre cada avaria por peça e gravidade</strong> — risco/abrasão, deformação ou fratura, e classifique em leve, média ou grave.</li>
+          <li><strong>4. Fotografe com contexto</strong> — uma foto aberta (onde está) e uma fechada (o detalhe), com data, hora e localização.</li>
+          <li><strong>5. Colha as assinaturas</strong> — vistoriador e proprietário/responsável, fechando o aceite das partes.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="erros-comuns">Erros que invalidam (ou enfraquecem) o laudo</h2>
+        <ul>
+          <li><strong>Foto sem data nem local:</strong> uma imagem solta não prova <em>quando</em> o dano existia.</li>
+          <li><strong>Descrição vaga:</strong> &ldquo;arranhado&rdquo; não diz nada; &ldquo;risco leve de 8&nbsp;cm na porta dianteira esquerda&rdquo; diz tudo.</li>
+          <li><strong>Documento editável:</strong> um PDF que qualquer um altera depois perde força probatória.</li>
+          <li><strong>Sem assinatura do responsável:</strong> sem o aceite, vira a sua palavra contra a dele.</li>
+        </ul>
+        <p>
+          É exatamente por isso que um laudo digital com <strong>hash de validação</strong> e{' '}
+          <strong>QR Code</strong> tem mais peso: o hash prova que o arquivo não foi adulterado e o QR
+          permite conferir o original online a qualquer momento.
+        </p>
+
+        <h2 id="modelo">Modelo pronto para seguir</h2>
+        <p>
+          Em vez de montar um do zero, parta de um modelo que já tem todos os blocos certos:
+          identificação, diagrama de danos, detalhamento técnico por peça, galeria fotográfica,
+          assinaturas e validação por hash/QR. Veja um{' '}
+          <a href="/#laudo">modelo real de Relatório de Vistoria Veicular</a> e use-o como referência —
+          ou gere o seu direto no aplicativo, em poucos toques.
+        </p>
+      </>
+    ),
+  },
+]
+
+export function getPost(slug: string): BlogPost | undefined {
+  return BLOG_POSTS.find(p => p.slug === slug)
+}
+
+export function formatDate(iso: string): string {
+  return new Date(`${iso}T12:00:00`).toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  })
+}
