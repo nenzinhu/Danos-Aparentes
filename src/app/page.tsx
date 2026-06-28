@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { LEGAL_CONTACT_EMAIL } from '../components/LegalContent';
 import LandingCtaLink from '../components/LandingCtaLink';
+import Reveal from '../components/Reveal';
 
 const PricingSection = dynamic(() => import('../components/PricingSection'), { ssr: false });
 const FAQSection = dynamic(() => import('../components/FAQSection'), { ssr: false });
@@ -21,32 +22,32 @@ function TextCarousel() {
     {
       title: (
         <>
-          Pare de perder tempo com <br />
-          <span className="text-primary italic">laudos manuais no pátio.</span>
+          O jeito mais fácil de registrar <br />
+          <span className="text-[var(--signal-bright)] italic">riscos e amassados no carro.</span>
         </>
       ),
       description:
-        'Para vistoriadores e oficinas: marque a avaria no modelo digital, anexe fotos HD e envie o PDF pelo WhatsApp — tudo em menos de 1 minuto, sem redigitar dados.',
+        'Diga adeus ao papel: toque no desenho do veículo para marcar onde está a avaria, tire fotos com o celular e gere um laudo profissional em menos de 1 minuto.',
     },
     {
       title: (
         <>
-          Laudos que o cliente <br />
-          <span className="text-primary italic">não consegue contestar.</span>
+          Laudos no WhatsApp que <br />
+          <span className="text-[var(--signal-bright)] italic">o cliente entende na hora.</span>
         </>
       ),
       description:
-        'Cada PDF sai com hash SHA-256, QR Code de verificação e assinatura digital na tela. Prova técnica clara, pronta para negociação ou perícia.',
+        'Envie o laudo em PDF direto no celular do cliente com todas as avarias marcadas visualmente, fotos reais do dano e assinatura com o dedo na tela.',
     },
     {
       title: (
         <>
-          Digite a placa — <br />
-          <span className="text-primary italic">marca, modelo e cor na hora.</span>
+          Basta digitar a placa para <br />
+          <span className="text-[var(--signal-bright)] italic">preencher os dados sozinho.</span>
         </>
       ),
       description:
-        'Economize minutos em cada vistoria: o sistema preenche os dados do veículo automaticamente e você foca só em registrar os danos aparentes.',
+        'Digite a placa e o aplicativo preenche automaticamente a marca, modelo, cor e ano do veículo. Rápido, prático e sem erros de digitação no pátio.',
     },
   ];
 
@@ -61,30 +62,39 @@ function TextCarousel() {
   }, []);
 
   return (
-    <div className="relative text-center">
-      <div key={index} className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 motion-reduce:animate-none">
-        <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tighter leading-[1.05] text-[var(--text-main)] text-wrap:balance">
+    <div className="relative">
+      <div key={index} className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 motion-reduce:animate-none">
+        <h1 className="font-display text-5xl lg:text-[5.25rem] font-bold uppercase leading-[0.92] tracking-[-0.015em] text-[var(--text-main)] [text-wrap:balance]">
           {slides[index].title}
         </h1>
-        <p className="text-lg text-[var(--text-muted)] max-w-lg mx-auto leading-relaxed">
+        <p className="text-base lg:text-lg text-[var(--text-muted)] max-w-xl leading-relaxed">
           {slides[index].description}
         </p>
       </div>
-      {/* Navigation arrows */}
-      <button
-        onClick={prev}
-        className="absolute left-0 top-1/2 -translate-y-1/2 p-2 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-primary hover:bg-[var(--btn-secondary-hover)] rounded-full transition-all focus:outline-none"
-        aria-label="Previous slide"
-      >
-        ◀
-      </button>
-      <button
-        onClick={next}
-        className="absolute right-0 top-1/2 -translate-y-1/2 p-2 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-primary hover:bg-[var(--btn-secondary-hover)] rounded-full transition-all focus:outline-none"
-        aria-label="Next slide"
-      >
-        ▶
-      </button>
+
+      {/* Indicador em índice de laudo: 01 — 03 com navegação */}
+      <div className="flex items-center gap-4 pt-7">
+        <button
+          onClick={prev}
+          className="grid place-items-center w-9 h-9 border border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--signal-bright)] hover:border-[var(--sheet-line)] transition-colors focus-visible:ring-2 ring-[var(--signal)] outline-none"
+          aria-label="Mensagem anterior"
+        >
+          ←
+        </button>
+        <button
+          onClick={next}
+          className="grid place-items-center w-9 h-9 border border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--signal-bright)] hover:border-[var(--sheet-line)] transition-colors focus-visible:ring-2 ring-[var(--signal)] outline-none"
+          aria-label="Próxima mensagem"
+        >
+          →
+        </button>
+        <span aria-hidden="true" className="font-mono-data text-xs text-[var(--text-muted)] tracking-widest tabular-nums">
+          <span className="text-[var(--signal-bright)]">{String(index + 1).padStart(2, '0')}</span>
+          {' / '}
+          {String(slides.length).padStart(2, '0')}
+        </span>
+        <span aria-hidden="true" className="h-px flex-1 bg-[var(--card-border)]" />
+      </div>
     </div>
   );
 }
@@ -187,79 +197,111 @@ export default function LandingPage() {
         </nav>
       </header>
 
-      {/* Main Content */}
-      <main className="flex-1 flex items-center justify-center px-8 z-10 relative">
-        <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {/* Main Content — Prancha de Vistoria */}
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-8 py-6 z-10 relative">
+        <div className="sheet-frame max-w-7xl w-full animate-in fade-in duration-700 motion-reduce:animate-none">
+          <span aria-hidden="true" className="crop-tr" />
+          <span aria-hidden="true" className="crop-br" />
 
-          {/* Left: Content */}
-          <div className="space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000 motion-reduce:animate-none">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-black tracking-widest text-[var(--primary-badge-text)] uppercase">
-              <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-[var(--primary-badge-text)] animate-pulse" />
-              Para vistoriadores e oficinas
-            </div>
-
-            <TextCarousel />
-{/* Rotating banner with extra info */}
-
-
-            <div className="flex flex-wrap gap-4 pt-4">
-              <LandingCtaLink
-                id="hero-primary-cta"
-                transitionTypes={['nav-forward']}
-                className="px-8 py-4 text-white font-black rounded-2xl shadow-2xl shadow-[var(--primary)]/20 flex items-center gap-3 transition-all motion-safe:hover:scale-[1.02] hover:shadow-[var(--primary)]/35 active:scale-100 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
-                style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
-              >
-                Testar 7 dias grátis
-                <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-              </LandingCtaLink>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[var(--text-muted)] font-semibold pl-1">
-              <span className="inline-flex items-center gap-1.5">
-                <svg className="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.751h-.152c-3.196 0-6.1-1.249-8.25-3.286z"/></svg>
-                Sem cartão de crédito
-              </span>
-              <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
-              <span>7 dias grátis no plano Pro</span>
-              <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
-              <span>Cancele quando quiser</span>
-            </div>
-
-            <div className="flex gap-10 pt-8 border-t border-[var(--card-border)]/40">
-              {[
-                { label: 'Laudo em 1 clique', icon: '📄' },
-                { label: 'Fotos como prova', icon: '📷' },
-                { label: 'Funciona offline', icon: '📡' }
-              ].map(item => (
-                <div key={item.label} className="flex items-center gap-3 text-sm font-semibold text-[var(--text-muted)]">
-                  <span aria-hidden="true" className="text-xl grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all">{item.icon}</span>
-                  {item.label}
-                </div>
-              ))}
-            </div>
+          {/* Faixa-cabeçalho do laudo */}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-5 sm:px-8 py-3 border-b border-[var(--card-border)] font-mono-data text-[11px] tracking-wider text-[var(--text-muted)] uppercase">
+            <span className="text-[var(--signal-bright)] font-semibold">Relatório de Vistoria</span>
+            <span aria-hidden="true" className="text-[var(--card-border)]">/</span>
+            <span>OS <span className="text-[var(--text-main)]">2026-0628</span></span>
+            <span aria-hidden="true" className="hidden sm:inline text-[var(--card-border)]">/</span>
+            <span className="hidden sm:inline-flex items-center gap-2">
+              Placa
+              <span className="px-2 py-0.5 border border-[var(--sheet-line)] text-[var(--text-main)] font-semibold tracking-[0.2em]">MKT4322</span>
+            </span>
+            <span className="ml-auto inline-flex items-center gap-2">
+              <span aria-hidden="true" className="signal-dot w-1.5 h-1.5 rounded-full bg-[var(--signal-bright)] shadow-[0_0_8px_var(--signal-glow)]" />
+              <span className="text-[var(--signal-bright)] font-semibold">Grau leve · 2 avarias</span>
+            </span>
           </div>
 
-          {/* Right: Visualizer / Rive */}
-          <div className="relative group perspective-1000 hidden lg:block animate-in fade-in slide-in-from-right-12 duration-1000 delay-200 motion-reduce:animate-none">
-            <div aria-hidden="true" className="absolute inset-0 rounded-full transition-all duration-700" style={{ background: 'radial-gradient(circle, rgba(0,170,255,0.12) 0%, transparent 70%)' }} />
-            <div className="relative transform-gpu rotate-y-[-12deg] group-hover:rotate-y-[-5deg] transition-all duration-1000 ease-out">
-              {/* Note: I'm using the SVG component here for now, but the idea is to replace with Rive */}
-              <ViewTransition name="car-visualizer" share="morph" default="none">
-                <div className="filter drop-shadow-[0_35px_60px_rgba(0,0,0,0.8)]">
-                  <CarLateralLeft damages={[]} selectedPartId={null} onPartClick={()=>{}} onPartHover={()=>{}} hideWheels />
+          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
+            {/* Coluna esquerda: tese + ação */}
+            <div className="px-5 sm:px-8 py-10 lg:py-12 lg:border-r border-[var(--card-border)] animate-in fade-in slide-in-from-left-6 duration-1000 motion-reduce:animate-none">
+              <TextCarousel />
+
+              <div className="flex flex-wrap gap-4 pt-9">
+                <LandingCtaLink
+                  id="hero-primary-cta"
+                  transitionTypes={['nav-forward']}
+                  className="group/cta px-8 py-4 text-white font-black rounded-xl shadow-2xl shadow-[var(--primary)]/20 inline-flex items-center gap-3 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
+                  style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
+                >
+                  Abrir primeira vistoria
+                  <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </LandingCtaLink>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 font-mono-data text-[11px] text-[var(--text-muted)] uppercase tracking-wider">
+                <span className="text-[var(--signal-bright)]">✓</span>
+                <span>Sem cartão</span>
+                <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
+                <span>7 dias liberados</span>
+                <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
+                <span>Cancele online</span>
+              </div>
+
+              {/* Especificações — encodadas como ficha técnica */}
+              <dl className="grid grid-cols-3 gap-px mt-10 bg-[var(--card-border)] border border-[var(--card-border)]">
+                {[
+                  { k: 'Saída', v: 'Laudo PDF', sub: 'hash 0DF20434…' },
+                  { k: 'Prova', v: 'Fotos HD', sub: 'galeria + QR' },
+                  { k: 'Rede', v: 'Offline', sub: '100% no pátio' },
+                ].map(item => (
+                  <div key={item.k} className="bg-[var(--bg-main)] px-3 py-3">
+                    <dt className="font-mono-data text-[9px] uppercase tracking-widest text-[var(--text-muted)]">{item.k}</dt>
+                    <dd className="font-display text-lg font-semibold uppercase text-[var(--text-main)] leading-tight mt-0.5">{item.v}</dd>
+                    <dd className="font-mono-data text-[9px] text-[var(--signal-bright)] tracking-wide">{item.sub}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+
+            {/* Coluna direita: prancha do veículo */}
+            <div className="relative px-5 sm:px-8 py-10 flex flex-col animate-in fade-in slide-in-from-right-8 duration-1000 delay-150 motion-reduce:animate-none">
+              <div className="flex items-center justify-between font-mono-data text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-4">
+                <span>Vista · Lateral Esq.</span>
+                <span>2 avarias</span>
+              </div>
+
+              <div className="relative flex-1 grid place-items-center min-h-[260px]">
+                <div aria-hidden="true" className="absolute inset-x-6 bottom-8 h-px bg-[var(--sheet-line)] opacity-60" />
+                <div aria-hidden="true" className="absolute left-1/2 bottom-6 -translate-x-1/2 font-mono-data text-[9px] text-[var(--text-muted)] tracking-[0.3em] uppercase">eixo de referência</div>
+
+                <ViewTransition name="car-visualizer" share="morph" default="none">
+                  <div className="relative w-full max-w-md drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+                    <CarLateralLeft damages={[]} selectedPartId={null} onPartClick={()=>{}} onPartHover={()=>{}} hideWheels />
+                  </div>
+                </ViewTransition>
+
+                {/* Marcadores de avaria — dados reais do laudo (2 riscos leves) */}
+                <div className="absolute top-[20%] right-[5%] flex items-center gap-2">
+                  <span className="damage-tag px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)]">Porta diant. esq. · risco</span>
+                  <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)]" />
                 </div>
-              </ViewTransition>
-            </div>
+                <div className="absolute bottom-[32%] left-[3%] flex items-center gap-2">
+                  <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)]" />
+                  <span className="damage-tag px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)]">Porta tras. esq. · risco</span>
+                </div>
+              </div>
 
-            {/* Floating UI Elements */}
-            <div role="status" aria-live="polite" className="absolute top-1/4 -right-4 px-4 py-2 bg-[var(--card-bg)] border border-[var(--card-border)] backdrop-blur-md rounded-xl shadow-2xl flex items-center gap-3 animate-bounce-slow motion-reduce:animate-none">
-              <span aria-hidden="true" className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_12px_#ef4444]" />
-              <span className="text-xs font-bold text-[var(--text-main)] tracking-wide">Avaria: Porta Dianteira</span>
-            </div>
-
-            <div role="status" aria-live="polite" className="absolute bottom-1/4 -left-8 px-4 py-2 bg-[var(--card-bg)] border border-[var(--card-border)] backdrop-blur-md rounded-xl shadow-2xl flex items-center gap-3 animate-bounce-slow-reverse motion-reduce:animate-none">
-              <span aria-hidden="true" className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_12px_#22c55e]" />
-              <span className="text-xs font-bold text-[var(--text-main)] tracking-wide">Laudo Gerado: 100% OK</span>
+              {/* Legenda de severidade */}
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-5 mt-2 border-t border-[var(--card-border)] font-mono-data text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
+                {[
+                  { c: 'var(--severity-low)', l: 'Leve' },
+                  { c: 'var(--severity-medium)', l: 'Média' },
+                  { c: 'var(--severity-high)', l: 'Grave' },
+                ].map(s => (
+                  <span key={s.l} className="inline-flex items-center gap-1.5">
+                    <span aria-hidden="true" className="w-2 h-2 rounded-full" style={{ background: s.c }} />
+                    {s.l}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -267,17 +309,19 @@ export default function LandingPage() {
 
       {/* Seção Como Funciona */}
       <section className="w-full max-w-6xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-16 text-left">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-black tracking-widest text-primary uppercase mb-3">
+        <Reveal className="text-center mb-12 flex flex-col items-center">
+          <div className="inline-flex items-center gap-2 font-mono-data text-[11px] tracking-[0.2em] text-[var(--signal-bright)] uppercase mb-4">
+            <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
             Fluxo de Trabalho
+            <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
           </div>
-          <h2 className="text-3xl lg:text-4xl font-extrabold tracking-tight bg-gradient-to-b from-[var(--text-main)] to-[var(--text-muted)] bg-clip-text text-transparent">
-            Da placa ao laudo assinado em 3 passos
+          <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
+            Da placa ao laudo assinado <span className="text-[var(--signal-bright)]">em 3 passos</span>
           </h2>
-          <p className="text-sm text-[var(--text-muted)] mt-2">
-            O que no papel leva 20 minutos, você faz no pátio em poucos toques — com prova fotográfica e PDF pronto para enviar.
+          <p className="text-sm text-[var(--text-muted)] mt-3 max-w-xl">
+            O que no papel leva 20 minutos, você faz no pátio em poucos toques, com prova fotográfica e PDF pronto para enviar.
           </p>
-        </div>
+        </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
@@ -297,13 +341,13 @@ export default function LandingPage() {
               desc: 'Vistoriador e cliente assinam digitalmente na tela do celular. O laudo em PDF inviolável com hash SHA-256 é gerado e enviado por WhatsApp.'
             }
           ].map((item, idx) => (
-            <div key={idx} className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-primary/30 transition-all duration-300 relative group">
-              <div className="text-4xl font-black text-primary/20 group-hover:text-primary/45 transition-colors absolute top-4 right-6 font-mono">
+            <Reveal key={idx} delay={idx * 90} className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-all duration-300 relative group">
+              <div className="font-mono-data text-4xl font-bold text-[var(--signal)]/25 group-hover:text-[var(--signal-bright)]/60 transition-colors absolute top-4 right-6">
                 {item.step}
               </div>
-              <h3 className="text-lg font-bold text-[var(--text-main)] mt-4 mb-2">{item.title}</h3>
+              <h3 className="font-display text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mt-4 mb-2">{item.title}</h3>
               <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>

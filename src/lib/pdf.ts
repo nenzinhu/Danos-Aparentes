@@ -64,7 +64,8 @@ async function generateQrDataUrl(text: string): Promise<string> {
 // ─── Hash de integridade (SHA-256, primeiros 32 hex) ─────────────────────────
 async function computeHash(info: VehicleInfo, damages: Damage[], ts: number): Promise<string> {
   try {
-    const payload = JSON.stringify({ plate: info.plate, ref: info.ref, count: damages.length, ts })
+    const geo = info.geo ? { lat: info.geo.lat, lng: info.geo.lng } : null
+    const payload = JSON.stringify({ plate: info.plate, ref: info.ref, count: damages.length, ts, geo })
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(payload))
     const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
     return hex.slice(0, 32).toUpperCase()
@@ -80,15 +81,19 @@ async function registerHash(hash: string, info: VehicleInfo, damages: Damage[], 
     await supabase.from('report_hashes').insert({
       hash, user_id: session.user.id, plate: info.plate || '',
       ref: info.ref || '', issued_at: date, damages_count: damages.length,
+      geo_lat: info.geo?.lat ?? null,
+      geo_lng: info.geo?.lng ?? null,
+      geo_accuracy: info.geo?.accuracy ?? null,
+      geo_address: info.geo?.address ?? null,
     })
   } catch { /* best-effort — não bloqueia a geração do PDF */ }
 }
 
 // ─── Section title ────────────────────────────────────────────────────────────
 function sectionTitle(text: string, theme: any): string {
-  return `<div style="margin-top:10px; margin-bottom:8px; display:flex; align-items:center;">
-    <div class="sec-title-bar" style="width:3px; height:12px; background:${theme.accentColor}; border-radius:1px; margin-right:8px;"></div>
-    <span class="sec-title-text" style="font-size:9.5px; font-weight:800; color:${theme.textMain}; text-transform:uppercase; letter-spacing:0.08em; font-family:${theme.fontTitle};">${text}</span>
+  return `<div style="margin-top:6px; margin-bottom:5px; display:flex; align-items:center;">
+    <div class="sec-title-bar" style="width:3px; height:11px; background:${theme.accentColor}; border-radius:1px; margin-right:7px;"></div>
+    <span class="sec-title-text" style="font-size:9px; font-weight:800; color:${theme.textMain}; text-transform:uppercase; letter-spacing:0.08em; font-family:${theme.fontTitle};">${text}</span>
   </div>`
 }
 
@@ -150,7 +155,7 @@ function buildInfoTable(info: VehicleInfo, theme: any): string {
         <td style="padding:6px 8px;border-bottom:1px solid ${theme.borderLight};font-size:9.5px;color:#b45309;font-weight:500;line-height:1.4;font-family:${theme.fontMain};" colspan="3">${info.generalNotes}</td>
        </tr>`
     : ''
-  return `<div class="card-wrapper" style="background:${theme.cardBg};border:1px solid ${theme.borderColor};border-radius:8px;padding:2px 6px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,0.01);">
+  return `<div class="card-wrapper" style="background:${theme.cardBg};border:1px solid ${theme.borderColor};border-radius:8px;padding:2px 6px;margin-bottom:5px;box-shadow:0 1px 3px rgba(0,0,0,0.01);">
     <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;">${tableRows}${customRows}${notesRow}</table>
   </div>`
 }
@@ -163,9 +168,9 @@ function buildSummary(damages: Damage[], theme: any): string {
 
   function box(bg: string, border: string, num: number, numColor: string, label: string, severityClass: string): string {
     return `<td>
-      <div class="stat-box ${severityClass}" style="background:${bg};border:1px solid ${border};border-radius:6px;padding:5px 12px;text-align:center;min-width:75px;box-shadow:0 1px 2px rgba(0,0,0,0.01);">
-        <p style="font-size:18px;font-weight:800;color:${numColor};line-height:1;margin:0;font-family:${theme.fontTitle};">${num}</p>
-        <p style="font-size:8px;font-weight:700;color:${numColor};text-transform:uppercase;margin:2px 0 0;letter-spacing:0.06em;font-family:${theme.fontTitle};opacity:0.85;">${label}</p>
+      <div class="stat-box ${severityClass}" style="background:${bg};border:1px solid ${border};border-radius:6px;padding:3px 10px;text-align:center;min-width:72px;box-shadow:0 1px 2px rgba(0,0,0,0.01);">
+        <p style="font-size:15px;font-weight:800;color:${numColor};line-height:1;margin:0;font-family:${theme.fontTitle};">${num}</p>
+        <p style="font-size:7.5px;font-weight:700;color:${numColor};text-transform:uppercase;margin:1px 0 0;letter-spacing:0.06em;font-family:${theme.fontTitle};opacity:0.85;">${label}</p>
       </div>
     </td>`
   }
@@ -174,7 +179,7 @@ function buildSummary(damages: Damage[], theme: any): string {
   const totalBg = theme.accentColor === '#d97757' ? 'rgba(217,119,87,0.06)' : 'rgba(37,99,235,0.06)'
   const totalBorder = theme.accentColor === '#d97757' ? 'rgba(217,119,87,0.15)' : 'rgba(37,99,235,0.15)'
 
-  return `<table cellpadding="0" cellspacing="0" style="margin-bottom:8px;"><tr>
+  return `<table cellpadding="0" cellspacing="0" style="margin-bottom:5px;"><tr>
     ${box('rgba(217,119,6,0.06)', 'rgba(217,119,6,0.15)', c.low, '#d97706', 'Leve', 'low')}
     <td width="8"></td>
     ${box('rgba(234,88,12,0.06)', 'rgba(234,88,12,0.15)', c.medium, '#ea580c', 'Média', 'medium')}
@@ -223,7 +228,7 @@ function buildSvgMaps(damages: Damage[], svgData: SvgPdfData | undefined, theme:
             <td style="padding:6px 10px;text-align:right;font-size:8px;font-weight:800;color:${countClr};white-space:nowrap;text-transform:uppercase;font-family:${theme.fontTitle};">${countTxt}</td>
           </tr>
         </table>
-        <div class="${bgAreaClass}" style="${bgArea} padding:6px; text-align:center; min-height:95px; display:flex; align-items:center; justify-content:center;">
+        <div class="${bgAreaClass}" style="${bgArea} padding:5px; text-align:center; min-height:76px; display:flex; align-items:center; justify-content:center;">
           <div style="width:100%; max-width:180px; margin:0 auto;">${svgHtml || `<p style="font-size:8px;color:#cbd5e1;text-align:center;padding:16px;font-family:${theme.fontMain};">Visualização indisponível</p>`}</div>
         </div>
         <div style="padding:6px;background:${theme.cardBg};min-height:30px;border-top:1px solid ${theme.borderLight};line-height:1.4;display:block;">${badges}</div>
@@ -244,7 +249,7 @@ function buildSvgMaps(damages: Damage[], svgData: SvgPdfData | undefined, theme:
             <tr>${viewCell(activeViews[2], 'width:50%;')}${viewCell(activeViews[3], 'width:50%;')}</tr>`
   }
 
-  return `<div style="margin-bottom:8px;">
+  return `<div style="margin-bottom:5px;">
     ${sectionTitle('DIAGNÓSTICO VISUAL — VISTAS COM AVARIAS', theme)}
     <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;">${rows}</table>
   </div>`
@@ -253,7 +258,7 @@ function buildSvgMaps(damages: Damage[], svgData: SvgPdfData | undefined, theme:
 // ─── Tabela de detalhamento ───────────────────────────────────────────────────
 function buildDamageTable(damages: Damage[], svgData: SvgPdfData | undefined, theme: any): string {
   if (damages.length === 0) {
-    return `<div style="margin-bottom:8px;text-align:center;padding:16px;border:1px dashed ${theme.borderColor};border-radius:8px;background:${theme.cardBg};">
+    return `<div style="margin-bottom:5px;text-align:center;padding:16px;border:1px dashed ${theme.borderColor};border-radius:8px;background:${theme.cardBg};">
       <p style="font-size:10px;color:${theme.textMuted};font-style:italic;font-family:${theme.fontMain};">Nenhuma avaria registrada neste veículo.</p>
     </div>`
   }
@@ -275,7 +280,7 @@ function buildDamageTable(damages: Damage[], svgData: SvgPdfData | undefined, th
     </tr>`
   }).join('')
 
-  return `<div style="margin-bottom:8px;">
+  return `<div style="margin-bottom:5px;">
     ${sectionTitle('DETALHAMENTO TÉCNICO DAS AVARIAS', theme)}
     <table class="damage-table" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;border:1px solid ${theme.borderColor};border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.01);">
       <thead>
@@ -313,7 +318,7 @@ function buildPhotoSection(damages: Damage[], theme: any): string {
       
       return `<td style="padding:4px;vertical-align:top;width:33.3%;">
         <div style="border:1px solid ${theme.borderColor};border-radius:6px;overflow:hidden;background:${theme.cardBg};box-shadow:0 1px 3px rgba(0,0,0,0.02);">
-          <img src="${p.src}" style="display:block;width:100%;height:100px;object-fit:cover;" />
+          <img src="${p.src}" style="display:block;width:100%;height:84px;object-fit:cover;" />
           <div style="padding:6px 8px;background:${theme.cardBg};border-top:1px solid ${theme.borderLight};">
             <p style="font-size:8.5px;font-weight:700;color:${theme.textMain};text-transform:uppercase;font-family:${theme.fontTitle};line-height:1.5;padding-top:2px;padding-bottom:2px;margin:0 0 3px 0;word-break:break-word;display:block;">${p.part} — ${p.type}</p>
             <p style="margin-top:3px;margin-bottom:3px;display:block;">${badge}</p>
@@ -327,7 +332,7 @@ function buildPhotoSection(damages: Damage[], theme: any): string {
     rows.push(`<tr style="page-break-inside:avoid;break-inside:avoid;">${cells}${empty}</tr>`)
   }
 
-  return `<div style="margin-top:8px;margin-bottom:8px;">
+  return `<div style="margin-top:5px;margin-bottom:5px;">
     ${sectionTitle(`GALERIA FOTOGRÁFICA — ${photos.length} foto${photos.length !== 1 ? 's' : ''}`, theme)}
     <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;">${rows.join('')}</table>
   </div>`
@@ -336,15 +341,15 @@ function buildPhotoSection(damages: Damage[], theme: any): string {
 // ─── Assinaturas ──────────────────────────────────────────────────────────────
 function buildSignature(info: VehicleInfo, theme: any): string {
   const inspectorImg = info.inspectorSignature
-    ? `<div style="height:40px;text-align:center;margin-bottom:2px;"><img src="${info.inspectorSignature}" style="max-height:40px;max-width:180px;display:inline-block;vertical-align:bottom;" /></div>`
-    : '<div style="height:40px;"></div>'
+    ? `<div style="height:32px;text-align:center;margin-bottom:2px;"><img src="${info.inspectorSignature}" style="max-height:32px;max-width:180px;display:inline-block;vertical-align:bottom;" /></div>`
+    : '<div style="height:32px;"></div>'
 
   const clientImg = info.clientSignature
-    ? `<div style="height:40px;text-align:center;margin-bottom:2px;"><img src="${info.clientSignature}" style="max-height:40px;max-width:180px;display:inline-block;vertical-align:bottom;" /></div>`
-    : '<div style="height:40px;"></div>'
+    ? `<div style="height:32px;text-align:center;margin-bottom:2px;"><img src="${info.clientSignature}" style="max-height:32px;max-width:180px;display:inline-block;vertical-align:bottom;" /></div>`
+    : '<div style="height:32px;"></div>'
 
-  return `<div style="page-break-inside:avoid;break-inside:avoid;margin-top:8px;">
-    <div class="card-wrapper" style="background:${theme.cardBg};border:1px solid ${theme.borderColor};border-radius:8px;padding:10px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.01);">
+  return `<div style="page-break-inside:avoid;break-inside:avoid;margin-top:6px;">
+    <div class="card-wrapper" style="background:${theme.cardBg};border:1px solid ${theme.borderColor};border-radius:8px;padding:7px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.01);">
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
           <td style="width:40%;vertical-align:bottom;text-align:center;">
@@ -412,10 +417,22 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
   const hash = await computeHash(info, damages, ts)
   await registerHash(hash, info, damages, date)
 
-  const verifyUrl = `${window.location.origin}/verify?hash=${encodeURIComponent(hash)}`
+  const geo = info.geo
+  const geoQuery = geo ? `&lat=${geo.lat}&lng=${geo.lng}` : ''
+  const verifyUrl = `${window.location.origin}/verify?hash=${encodeURIComponent(hash)}${geoQuery}`
   const qrDataUrl = await generateQrDataUrl(verifyUrl)
   const qrImg     = qrDataUrl
     ? `<img src="${qrDataUrl}" width="50" height="50" style="display:block;border:1px solid ${theme.borderColor};border-radius:4px;" />`
+    : ''
+
+  const geoHtml = geo
+    ? `<div style="margin-top:5px;padding-top:5px;border-top:1px solid ${theme.borderLight};">
+        <p style="font-size:7.5px;color:${theme.textMuted};font-family:${theme.fontMain};line-height:1.4;">
+          <span style="font-weight:700;color:${theme.textMain};text-transform:uppercase;letter-spacing:0.04em;">Local da vistoria:</span>
+          <span style="font-family:monospace;font-weight:700;color:${theme.textMain};">${geo.lat.toFixed(6)}, ${geo.lng.toFixed(6)}</span>${typeof geo.accuracy === 'number' ? ` <span style="color:${theme.textMuted};">(± ${geo.accuracy} m)</span>` : ''}
+        </p>
+        ${geo.address ? `<p style="font-size:7px;color:${theme.textMuted};font-family:${theme.fontMain};line-height:1.35;margin-top:1px;">${geo.address}</p>` : ''}
+      </div>`
     : ''
 
   const companyName = settings?.companyName || ''
@@ -429,7 +446,7 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
         <div class="pdf-header-brand-line" style="height:2px;width:24px;background:${isEditorial ? '#d97757' : '#38bdf8'};margin-top:5px;border-radius:1px;"></div>
        </div>`
     : companyName
-      ? `<p class="poppins" style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:0.04em;font-family:${theme.fontTitle};text-transform:uppercase;margin-bottom:8px;line-height:1.2;">${companyName}</p>`
+      ? `<p class="poppins" style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:0.04em;font-family:${theme.fontTitle};text-transform:uppercase;margin-bottom:5px;line-height:1.2;">${companyName}</p>`
       : ''
 
   return `<!DOCTYPE html>
@@ -454,14 +471,14 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
 <div class="page-container theme-${pdfTheme}" style="width:794px;background:${theme.bgMain};color:${theme.textMain};font-family:${theme.fontMain};">
 
   <!-- ══ CABEÇALHO ══════════════════════════════════════════════════════ -->
-  <div class="pdf-header" style="background:${theme.headerBg};padding:18px 24px 14px;">
+  <div class="pdf-header" style="background:${theme.headerBg};padding:13px 24px 10px;">
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td style="vertical-align:top;">
           ${logoHtml}
           ${companyNameHtml}
-          <p class="pdf-header-title" style="font-size:22px;font-weight:900;color:${isEditorial ? '#faf9f5' : '#ffffff'};letter-spacing:-0.02em;line-height:1;margin-bottom:8px;font-family:${theme.fontTitle};">RELATÓRIO DE VISTORIA VEICULAR</p>
-          <div class="pdf-header-accent" style="height:3px;width:56px;background:${theme.colorStripe};border-radius:2px;margin-bottom:12px;"></div>
+          <p class="pdf-header-title" style="font-size:19px;font-weight:900;color:${isEditorial ? '#faf9f5' : '#ffffff'};letter-spacing:-0.02em;line-height:1;margin-bottom:6px;font-family:${theme.fontTitle};">RELATÓRIO DE VISTORIA VEICULAR</p>
+          <div class="pdf-header-accent" style="height:3px;width:56px;background:${theme.colorStripe};border-radius:2px;margin-bottom:9px;"></div>
           ${buildStatusBadge(damages, theme)}
         </td>
         <td style="vertical-align:top;text-align:right;padding-left:16px;white-space:nowrap;">
@@ -483,10 +500,10 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
   <div class="color-stripe" style="height:3px;background:${theme.colorStripe};"></div>
 
   <!-- ══ CORPO ══════════════════════════════════════════════════════════ -->
-  <div style="padding:12px 24px 16px;">
+  <div style="padding:9px 24px 10px;">
 
     <!-- 1. IDENTIFICAÇÃO -->
-    <div class="nobreak" style="margin-bottom:8px;">
+    <div class="nobreak" style="margin-bottom:5px;">
       ${sectionTitle('IDENTIFICAÇÃO DO VEÍCULO E PROPRIETÁRIO', theme)}
       ${buildInfoTable(info, theme)}
     </div>
@@ -495,7 +512,7 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
     ${buildSvgMaps(damages, svgData, theme)}
 
     <!-- 3. RESUMO ESTATÍSTICO -->
-    <div class="nobreak" style="margin-bottom:8px;">
+    <div class="nobreak" style="margin-bottom:5px;">
       ${sectionTitle('RESUMO ESTATÍSTICO DE AVARIAS', theme)}
       ${buildSummary(damages, theme)}
     </div>
@@ -512,7 +529,7 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
   </div>
 
   <!-- ══ RODAPÉ ═════════════════════════════════════════════════════════ -->
-  <div style="background:${isEditorial ? '#e8e6dc' : '#f8fafc'};border-top:1px solid ${theme.borderColor};padding:8px 24px;">
+  <div style="background:${isEditorial ? '#e8e6dc' : '#f8fafc'};border-top:1px solid ${theme.borderColor};padding:6px 24px;">
     <table width="100%" cellpadding="0" cellspacing="0">
       <tr>
         <td style="vertical-align:middle;padding-right:14px;white-space:nowrap;">
@@ -524,10 +541,12 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
               <p style="font-size:8px;font-weight:700;color:${theme.textMain};text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;font-family:${theme.fontTitle};">Verificação Digital</p>
               <p style="font-size:7.5px;color:${theme.textMuted};font-family:${theme.fontMain};margin-bottom:1px;">HASH: <span style="font-family:monospace;font-weight:700;color:${theme.textMain};">${hash}</span></p>
               <p style="font-size:7px;color:${theme.textMuted};font-family:${theme.fontMain};">Escaneie o QR Code para atestar a autenticidade online deste laudo.</p>
+              ${geoHtml}
             </td>
           </tr></table>` : `<div>
             <p style="font-size:8.5px;font-weight:700;color:${theme.textMain};text-transform:uppercase;margin-bottom:2px;font-family:${theme.fontTitle};">Integridade do Documento</p>
             <p style="font-size:7.5px;color:${theme.textMuted};font-family:${theme.fontMain};">HASH: <span style="font-family:monospace;font-weight:700;color:${theme.textMain};">${hash}</span></p>
+            ${geoHtml}
           </div>`}
         </td>
         <td style="text-align:right;vertical-align:middle;">
@@ -564,24 +583,50 @@ const PDF_OPTS = {
   pagebreak:  { mode: ['css', 'legacy'], before: ['.pagebreak'], avoid: ['.nobreak', 'tr', 'img'] },
 }
 
+// Renderiza o HTML em um único canvas e o encaixa em UMA página A4.
+// Se o conteúdo passar da altura útil, reduz proporcionalmente (em vez de
+// criar uma segunda página quase vazia).
+async function renderSinglePage(html: string, filename: string) {
+  const html2pdf = await getHtml2Pdf()
+  const worker = html2pdf()
+    .set({ ...PDF_OPTS, margin: [0, 0, 0, 0], filename })
+    .from(html)
+    .toContainer()
+    .toCanvas()
+  const canvas: HTMLCanvasElement = await worker.get('canvas')
+
+  const { jsPDF } = await import('jspdf')
+  const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' })
+  const pageW = pdf.internal.pageSize.getWidth()
+  const pageH = pdf.internal.pageSize.getHeight()
+
+  let w = pageW
+  let h = (canvas.height * w) / canvas.width
+  if (h > pageH) {
+    h = pageH
+    w = (canvas.width * h) / canvas.height
+  }
+  const x = (pageW - w) / 2
+  pdf.addImage(canvas.toDataURL('image/jpeg', 0.98), 'JPEG', x, 0, w, h)
+  return pdf
+}
+
 export async function generatePdf(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings) {
   if (typeof window !== 'undefined' && (window as any).document?.fonts?.ready) {
     await (window as any).document.fonts.ready;
   }
-  const [html2pdf, html] = await Promise.all([getHtml2Pdf(), buildFullHtml(info, damages, svgData, settings)])
-  await html2pdf()
-    .set({ ...PDF_OPTS, margin: [0, 0, 0, 0], filename: `vistoria-${info.plate || 'sem-placa'}.pdf` })
-    .from(html)
-    .save()
+  const filename = `vistoria-${info.plate || 'sem-placa'}.pdf`
+  const html = await buildFullHtml(info, damages, svgData, settings)
+  const pdf = await renderSinglePage(html, filename)
+  pdf.save(filename)
 }
 
 export async function generatePdfBlob(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings): Promise<Blob> {
   if (typeof window !== 'undefined' && (window as any).document?.fonts?.ready) {
     await (window as any).document.fonts.ready;
   }
-  const [html2pdf, html] = await Promise.all([getHtml2Pdf(), buildFullHtml(info, damages, svgData, settings)])
-  return await html2pdf()
-    .set({ ...PDF_OPTS, margin: [0, 0, 0, 0], filename: `vistoria-${info.plate || 'sem-placa'}.pdf` })
-    .from(html)
-    .outputPdf('blob')
+  const filename = `vistoria-${info.plate || 'sem-placa'}.pdf`
+  const html = await buildFullHtml(info, damages, svgData, settings)
+  const pdf = await renderSinglePage(html, filename)
+  return pdf.output('blob')
 }

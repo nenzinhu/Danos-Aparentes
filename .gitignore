@@ -37,3 +37,8 @@ videoforge/remotion/node_modules/
 
 # Template de ambiente deve ser versionado
 !.env.example
+
+# Pastas de skills/monorepos auxiliares (não fazem parte do build)
+open-design-main/
+laudo-3d-mockup.html
+public/laudo-3d-mockup.html

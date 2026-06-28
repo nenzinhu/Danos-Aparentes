@@ -15,7 +15,7 @@
  *  Lei 9.279/96, Lei 9.610/98 e Código Penal Brasileiro.
  * ============================================================
  */
-import { Outfit } from 'next/font/google'
+import { Outfit, Saira_Condensed, IBM_Plex_Mono } from 'next/font/google'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
@@ -23,13 +23,25 @@ import Script from 'next/script'
 import CookieConsentBanner from '@/src/components/CookieConsentBanner'
 import AnalyticsScripts from '@/src/components/AnalyticsScripts'
 
-const outfit = Outfit({ subsets: ['latin'], display: 'swap' })
+const outfit = Outfit({ subsets: ['latin'], display: 'swap', variable: '--font-outfit' })
+const sairaCondensed = Saira_Condensed({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  display: 'swap',
+  variable: '--font-display',
+})
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+  variable: '--font-mono-data',
+})
 
 const SITE_URL = 'https://danosaparentes.com.br'
 
 export const metadata: Metadata = {
   title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
-  description: 'Documente avarias veiculares com precisão pericial: mapa 3D do veículo, fotos por avaria, laudo em PDF com QR Code de verificação.',
+  description: 'Documente avarias veiculares com precisão pericial: marque os danos no desenho do veículo, anexe fotos por avaria e gere o laudo em PDF com QR Code de verificação.',
   metadataBase: new URL(SITE_URL),
   manifest: '/manifest.webmanifest',
   appleWebApp: {
@@ -50,7 +62,7 @@ export const metadata: Metadata = {
   // ── Open Graph ──────────────────────────────────────────────
   openGraph: {
     title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
-    description: 'Documente avarias veiculares com precisão pericial: mapa 3D do veículo, fotos por avaria, laudo em PDF com QR Code de verificação.',
+    description: 'Documente avarias veiculares com precisão pericial: marque os danos no desenho do veículo, anexe fotos por avaria e gere o laudo em PDF com QR Code de verificação.',
     url: SITE_URL,
     siteName: 'Danos Aparentes',
     images: [
@@ -129,7 +141,7 @@ export default function RootLayout({
         <meta name="dc.language" content="pt-BR" />
         <meta name="dc.type" content="Software / Web Application" />
       </head>
-      <body className={`${outfit.className} min-h-screen selection:bg-primary selection:text-white`}>
+      <body className={`${outfit.variable} ${outfit.className} ${sairaCondensed.variable} ${plexMono.variable} min-h-screen selection:bg-primary selection:text-white`}>
         {children}
         <CookieConsentBanner />
         <AnalyticsScripts />

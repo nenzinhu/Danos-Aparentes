@@ -42,6 +42,19 @@ export interface VehicleInfo {
   inspectorSignature?: string
   clientSignature?: string
   customFields?: CustomField[]
+  /** Localização GPS capturada no momento/local da vistoria. */
+  geo?: GeoLocation
+}
+
+export interface GeoLocation {
+  lat: number
+  lng: number
+  /** Precisão horizontal em metros, conforme o dispositivo. */
+  accuracy?: number
+  /** Endereço aproximado (reverse geocoding best-effort, pode faltar offline). */
+  address?: string
+  /** Epoch ms de quando a posição foi obtida. */
+  capturedAt: number
 }
 
 export interface CustomField {

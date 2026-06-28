@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { getMarketingConsent, setMarketingConsent } from '@/src/lib/analytics/consent'
+import Button from './ui/Button'
 
 export default function CookieConsentBanner() {
   const [visible, setVisible] = useState(false)
@@ -34,20 +35,12 @@ export default function CookieConsentBanner() {
           <Link href="/privacidade" className="text-sky-400 underline">Política de Privacidade</Link>
         </p>
         <div className="flex gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={reject}
-            className="px-4 py-2 text-xs font-bold rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition-colors"
-          >
+          <Button variant="secondary" size="sm" onClick={reject}>
             Recusar
-          </button>
-          <button
-            type="button"
-            onClick={accept}
-            className="px-4 py-2 text-xs font-bold rounded-lg bg-sky-500 text-slate-950 hover:bg-sky-400 transition-colors"
-          >
+          </Button>
+          <Button variant="primary" size="sm" onClick={accept}>
             Aceitar
-          </button>
+          </Button>
         </div>
       </div>
     </div>

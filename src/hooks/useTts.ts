@@ -1,46 +1,55 @@
 'use client';
 import { useState, useEffect, useRef } from 'react'
 import { TtsConfig } from '../types'
+import { DEFAULT_GOOGLE_VOICE_ID, getGoogleVoice, GOOGLE_TTS_VOICES } from '../lib/googleTtsVoices'
 
 const DEFAULT_CONFIG: TtsConfig = {
   active: true,
   hoverActive: false,
-  engine: 'elevenlabs',
+  engine: 'google-tts',
   gender: 'male',
   rate: 0.9,
   pitch: 0.75,
   volume: 1,
-  voiceId: 'ErXwobaYiN019PkySvjV', // Antoni - melhor voz PT-BR
+  voiceId: DEFAULT_GOOGLE_VOICE_ID,
 }
 
-const VALID_VOICES = [
-  'ErXwobaYiN019PkySvjV', // Antoni (melhor PT-BR)
-]
+function normalizeConfig(parsed: Partial<TtsConfig>): TtsConfig {
+  const merged = { ...DEFAULT_CONFIG, ...parsed }
+
+  if (merged.engine === 'google-tts' || !merged.engine || merged.engine === 'native') {
+    merged.engine = 'google-tts'
+    if (!merged.voiceId || !GOOGLE_TTS_VOICES.some((v) => v.id === merged.voiceId)) {
+      merged.voiceId =
+        merged.gender === 'female'
+          ? GOOGLE_TTS_VOICES.find((v) => v.gender === 'female')!.id
+          : DEFAULT_GOOGLE_VOICE_ID
+    }
+    const voice = getGoogleVoice(merged.voiceId)
+    merged.gender = voice.gender
+  }
+
+  return merged
+}
 
 export function useTts() {
   const [config, setConfig] = useState<TtsConfig>(() => {
     try {
       const saved = localStorage.getItem('tts-config')
-      if (saved) {
-        const parsed = JSON.parse(saved)
-        // Sempre força ElevenLabs + Antoni em todos os veículos,
-        // ignorando configuração antiga que possa ter engine nativo salvo
-        parsed.engine = 'elevenlabs'
-        parsed.voiceId = 'ErXwobaYiN019PkySvjV' // Antoni
-        return { ...DEFAULT_CONFIG, ...parsed }
-      }
+      if (saved) return normalizeConfig(JSON.parse(saved))
       return DEFAULT_CONFIG
-    } catch { return DEFAULT_CONFIG }
+    } catch {
+      return DEFAULT_CONFIG
+    }
   })
 
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
-  const utterRef = useRef<SpeechSynthesisUtterance | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   useEffect(() => {
     const load = () => {
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        setVoices(speechSynthesis.getVoices().filter(v => v.lang.startsWith('pt')))
+        setVoices(speechSynthesis.getVoices().filter((v) => v.lang.startsWith('pt')))
       }
     }
     load()
@@ -57,7 +66,6 @@ export function useTts() {
   async function speak(text: string) {
     if (!config.active) return
 
-    // Parar áudios anteriores
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       speechSynthesis.cancel()
     }
@@ -66,25 +74,24 @@ export function useTts() {
       audioRef.current.src = ''
     }
 
-    if (config.engine === 'elevenlabs') {
+    if (config.engine === 'google-tts' || config.engine === 'elevenlabs') {
       try {
-        const voiceId = config.voiceId || 'ErXwobaYiN019PkySvjV'
-
         const response = await fetch('/api/tts', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ 
-            text, 
-            voiceId,
-            rate: config.rate 
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text,
+            engine: config.engine,
+            voiceId: config.voiceId,
+            rate: config.rate,
+            pitch: config.pitch,
+            volume: config.volume,
           }),
         })
 
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}))
-          throw new Error(errData.error || 'Falha ao obter áudio da ElevenLabs')
+          throw new Error(errData.error || 'Falha ao obter áudio')
         }
 
         const blob = await response.blob()
@@ -92,9 +99,10 @@ export function useTts() {
         const audio = new Audio(url)
         audio.volume = config.volume
         audioRef.current = audio
-        audio.play().catch(err => console.error('Erro ao reproduzir áudio:', err))
+        audio.onended = () => URL.revokeObjectURL(url)
+        await audio.play()
       } catch (err) {
-        console.error('Erro no ElevenLabs TTS, usando fallback nativo:', err)
+        console.error('Erro no TTS em nuvem, usando fallback nativo:', err)
         speakNativeFallback(text)
       }
     } else {
@@ -109,14 +117,13 @@ export function useTts() {
     u.rate = config.rate
     u.pitch = config.pitch
     u.volume = config.volume
-    const ptVoices = voices.filter(v => v.lang.startsWith('pt'))
+    const ptVoices = voices.filter((v) => v.lang.startsWith('pt'))
     if (ptVoices.length > 0) {
-      const gendered = ptVoices.find(v =>
-        config.gender === 'female' ? /female|f\b/i.test(v.name) : !/female|f\b/i.test(v.name)
+      const gendered = ptVoices.find((v) =>
+        config.gender === 'female' ? /female|f\b/i.test(v.name) : !/female|f\b/i.test(v.name),
       )
       u.voice = gendered || ptVoices[0]
     }
-    utterRef.current = u
     speechSynthesis.speak(u)
   }
 

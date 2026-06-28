@@ -1,22 +1,21 @@
 'use client';
 import React from 'react';
 import LandingCtaLink from './LandingCtaLink';
+import Reveal from './Reveal';
+import { buttonVariants } from './ui/Button';
 
 export default function PricingSection() {
   return (
     <section id="pricing" className="w-full max-w-5xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-12">
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-black tracking-widest text-primary uppercase mb-3">
-          Planos e Preços
-        </div>
-        <h2 className="text-3xl lg:text-4xl font-extrabold tracking-tight bg-gradient-to-b from-[var(--text-main)] to-[var(--text-muted)] bg-clip-text text-transparent">
+      <Reveal className="text-center mb-12 flex flex-col items-center">
+        <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight text-[var(--text-main)]">
           Escolha o Plano Ideal
         </h2>
-        <p className="text-sm text-[var(--text-muted)] mt-2">
+        <p className="text-sm text-[var(--text-muted)] mt-3">
           7 dias grátis, sem cartão. Depois, menos de R$ 1,70 por dia no plano Pro.
         </p>
-      </div>
-      
+      </Reveal>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
         {/* Plano Pro */}
         <div className="glass-card flex flex-col justify-between p-8 relative overflow-hidden group border border-[var(--primary)]/20 hover:border-[var(--primary)]/40 transition-all duration-300 shadow-[0_0_30px_var(--primary-glow)]">
@@ -29,7 +28,7 @@ export default function PricingSection() {
             <h3 className="text-xl font-extrabold text-[var(--text-main)] tracking-wide">Plano Pro</h3>
             <p className="text-xs text-[var(--text-muted)] mt-1">Perfeito para vistoriadores autônomos e oficinas.</p>
             
-            <div className="my-6">
+            <div className="my-6 min-h-[92px]">
               <span className="text-4xl font-black text-[var(--primary)] tracking-tight">R$ 49,90</span>
               <span className="text-sm text-[var(--text-muted)] ml-1">/ mês</span>
               <p className="text-[11px] text-[var(--text-muted)] mt-2 font-semibold">
@@ -48,7 +47,7 @@ export default function PricingSection() {
                 'Acesso ao painel de estatísticas e dashboard'
               ].map((feat) => (
                 <li key={feat} className="flex items-start gap-3 text-xs text-[var(--text-main)]">
-                  <span className="text-[var(--primary)] mt-0.5">✓</span>
+                  <span className="text-[var(--signal-bright)] mt-0.5">✓</span>
                   <span>{feat}</span>
                 </li>
               ))}
@@ -56,7 +55,7 @@ export default function PricingSection() {
           </div>
           
           <div className="mt-8">
-            <LandingCtaLink className="block w-full py-3.5 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-[var(--bg-main)] font-black text-center rounded-xl shadow-xl shadow-primary/10 transition-all active:scale-[0.99] outline-none">
+            <LandingCtaLink className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}>
               Testar 7 dias grátis
             </LandingCtaLink>
           </div>
@@ -68,7 +67,7 @@ export default function PricingSection() {
             <h3 className="text-xl font-extrabold text-[var(--text-main)] tracking-wide">Corporativo</h3>
             <p className="text-xs text-[var(--text-muted)] mt-1">Para grandes frotistas, locadoras e concessionárias.</p>
             
-            <div className="my-6">
+            <div className="my-6 min-h-[92px] flex flex-col justify-center">
               <span className="text-3xl font-black text-[var(--text-main)] tracking-tight">Consulte Conosco</span>
               <span className="text-sm text-[var(--text-muted)] block mt-1">Planos personalizados por volume</span>
             </div>
@@ -84,7 +83,7 @@ export default function PricingSection() {
                 'Suporte prioritário 24/7 com gerente de conta'
               ].map((feat) => (
                 <li key={feat} className="flex items-start gap-3 text-xs text-[var(--text-main)]">
-                  <span className="text-[var(--primary)] mt-0.5">✓</span>
+                  <span className="text-[var(--signal-bright)] mt-0.5">✓</span>
                   <span>{feat}</span>
                 </li>
               ))}
@@ -96,7 +95,7 @@ export default function PricingSection() {
               href="https://wa.me/5551999999999?text=Olá! Gostaria de saber mais sobre o plano Corporativo (Empresas) do app Danos Aparentes."
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full py-3.5 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-main)] font-bold text-center rounded-xl transition-all active:scale-[0.99] outline-none"
+              className={buttonVariants({ variant: 'secondary', size: 'md', className: 'w-full' })}
             >
               Consulte Conosco
             </a>

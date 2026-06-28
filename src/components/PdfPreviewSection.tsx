@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Reveal from './Reveal';
 
 // QR Code simulado (mockup do laudo) — três marcadores de canto + módulos determinísticos
 function QrCodeMock({ className = '' }: { className?: string }) {
@@ -40,11 +41,12 @@ function QrCodeMock({ className = '' }: { className?: string }) {
   )
 }
 
-// Temas de preview do laudo PDF (slider na landing)
+// Temas reais do laudo PDF gerado pelo app (slider na landing).
+// Cada um corresponde a um PDF de exemplo em /public/exemplos.
 const PDF_THEMES = [
-  { id: 'modern',    name: 'Moderno',   icon: '🎨', font: 'system-ui, sans-serif',                 bg: '#ffffff', text: '#0f172a', border: '#e2e8f0', bar: 'linear-gradient(90deg,#1d4ed8,#06b6d4,#3b82f6)', accent: '#2563eb', headerBg: '#f8fafc', headerText: '#0f172a', headerSub: '#64748b' },
-  { id: 'editorial', name: 'Editorial', icon: '📖', font: 'Georgia, "Times New Roman", serif',     bg: '#faf9f5', text: '#26201a', border: '#e7ddcd', bar: 'linear-gradient(90deg,#d97757,#6a9bcc,#788c5d)', accent: '#b08642', headerBg: '#efe6d4', headerText: '#3a2f22', headerSub: '#8a7a62' },
-  { id: 'tecnico',   name: 'Técnico',   icon: '🔬', font: 'ui-monospace, "Courier New", monospace', bg: '#ffffff', text: '#0b1220', border: '#cbd5e1', bar: 'linear-gradient(90deg,#0f766e,#2dd4bf,#0ea5e9)', accent: '#0f766e', headerBg: '#0b1220', headerText: '#e8eef5', headerSub: '#7f93ab' },
+  { id: 'azul',     name: 'Azul',     icon: '🟦', font: 'system-ui, sans-serif',                 bg: '#ffffff', text: '#0f172a', border: '#e2e8f0', bar: 'linear-gradient(90deg,#1d4ed8,#06b6d4,#3b82f6)', accent: '#2563eb', headerBg: '#0b1f3c', headerText: '#e8f4ff', headerSub: '#93b4d4', hash: '65D251E675333FF1AC0FF62AD689ADA4', file: '/exemplos/laudo-tema-azul.pdf' },
+  { id: 'classico', name: 'Clássico', icon: '📜', font: 'Georgia, "Times New Roman", serif',     bg: '#faf9f5', text: '#26201a', border: '#e7ddcd', bar: 'linear-gradient(90deg,#1d4ed8,#788c5d,#d97757,#dc2626)', accent: '#b08642', headerBg: '#1a1a18', headerText: '#f4f1ea', headerSub: '#b8ad97', hash: '5D0F6A48B27061EF0014BA604F2072F9', file: '/exemplos/laudo-tema-classico.pdf' },
+  { id: 'mono',     name: 'Mono',     icon: '⌨️', font: 'ui-monospace, "Courier New", monospace', bg: '#ffffff', text: '#0b1220', border: '#cbd5e1', bar: 'linear-gradient(90deg,#0f766e,#2dd4bf,#0ea5e9)', accent: '#0f766e', headerBg: '#0b1220', headerText: '#e8eef5', headerSub: '#7f93ab', hash: 'A117D8889B1AB79CEB191CF5746F87D9', file: '/exemplos/laudo-tema-mono.pdf' },
 ]
 
 export default function PdfPreviewSection() {
@@ -97,18 +99,18 @@ export default function PdfPreviewSection() {
                 </div>
               </div>
               <div className="text-right">
-                <span className="text-[7px] font-bold px-1.5 py-0.5 rounded border" style={{ color: PDF_THEMES[pdfPreview].accent, background: `${PDF_THEMES[pdfPreview].accent}1a`, borderColor: `${PDF_THEMES[pdfPreview].accent}40` }}>PDF COMPROVADO</span>
-                <p className="text-[8px] font-bold mt-1" style={{ color: PDF_THEMES[pdfPreview].headerSub }}>OS: #2026-0042</p>
+                <span className="text-[7px] font-bold px-1.5 py-0.5 rounded border" style={{ color: PDF_THEMES[pdfPreview].headerText, borderColor: `${PDF_THEMES[pdfPreview].headerSub}80` }}>MKT4322</span>
+                <p className="text-[8px] font-bold mt-1" style={{ color: PDF_THEMES[pdfPreview].headerSub }}>OS: 2026-xxx</p>
               </div>
             </div>
 
             {/* Status Badge */}
-            <div className="mt-4 bg-rose-50 border border-rose-200/50 rounded-lg p-2.5 flex items-center justify-between">
+            <div className="mt-4 bg-amber-50 border border-amber-200/60 rounded-lg p-2.5 flex items-center justify-between">
               <div>
-                <span className="text-[8px] font-extrabold text-rose-700 uppercase tracking-wider">AVARIAS DETECTADAS NO VEÍCULO</span>
-                <p className="text-[7px] text-rose-500 font-medium">1 ocorrência de grau grave registrada.</p>
+                <span className="text-[8px] font-extrabold text-amber-700 uppercase tracking-wider">Avarias de grau leve detectadas</span>
+                <p className="text-[7px] text-amber-600 font-medium">2 ocorrências registradas na lateral esquerda.</p>
               </div>
-              <span className="text-xs font-black text-rose-600">1x ⚠️</span>
+              <span className="text-xs font-black text-amber-600">2x</span>
             </div>
 
             {/* Tabela de Informações */}
@@ -117,19 +119,19 @@ export default function PdfPreviewSection() {
               <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-[9px]">
                 <div>
                   <span className="text-slate-400 text-[8px] block">Proprietário / Cliente</span>
-                  <strong className="text-slate-700 font-semibold">Carlos Henrique Silva</strong>
+                  <strong className="text-slate-700 font-semibold">Danos Aparentes</strong>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[8px] block">Marca / Modelo</span>
-                  <strong className="text-slate-700 font-semibold">Porsche 911 Carrera S</strong>
+                  <strong className="text-slate-700 font-semibold">VW Fox 1.6 GII 2013</strong>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[8px] block">Placa</span>
-                  <strong className="text-slate-700 font-semibold">DAN-2026</strong>
+                  <strong className="text-slate-700 font-semibold">MKT4322</strong>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[8px] block">Cor</span>
-                  <strong className="text-slate-700 font-semibold">Cinza Quartz</strong>
+                  <strong className="text-slate-700 font-semibold">Branca</strong>
                 </div>
               </div>
             </div>
@@ -165,9 +167,16 @@ export default function PdfPreviewSection() {
                   <tr className="border-t border-slate-100 bg-white">
                     <td className="px-2 py-1.5 font-bold uppercase">Porta Diant. Esquerda</td>
                     <td className="px-2 py-1.5">
-                      <span className="inline-flex items-center gap-1">✏️ Risco / Arranhão</span>
+                      <span className="inline-flex items-center gap-1">✏️ Riscos / Abrasão</span>
                     </td>
-                    <td className="px-2 py-1.5 text-center"><span className="text-rose-600 font-black uppercase">Grave</span></td>
+                    <td className="px-2 py-1.5 text-center"><span className="text-amber-600 font-black uppercase">Leve</span></td>
+                  </tr>
+                  <tr className="border-t border-slate-100 bg-white">
+                    <td className="px-2 py-1.5 font-bold uppercase">Porta Tras. Esquerda</td>
+                    <td className="px-2 py-1.5">
+                      <span className="inline-flex items-center gap-1">✏️ Riscos / Abrasão</span>
+                    </td>
+                    <td className="px-2 py-1.5 text-center"><span className="text-amber-600 font-black uppercase">Leve</span></td>
                   </tr>
                 </tbody>
               </table>
@@ -221,10 +230,10 @@ export default function PdfPreviewSection() {
               </div>
               <div className="text-center">
                 <div className="h-8 flex items-center justify-center">
-                  <span className="font-serif italic text-xs text-blue-800 opacity-80 select-none">Carlos H. Silva</span>
+                  <span className="font-serif italic text-xs text-blue-800 opacity-80 select-none">Cliente Assinado</span>
                 </div>
                 <div className="border-t border-slate-300 mx-4 mt-1"></div>
-                <span className="text-[7px] text-slate-400 uppercase font-bold mt-1 block">Assinatura do Cliente</span>
+                <span className="text-[7px] text-slate-400 uppercase font-bold mt-1 block">Assinatura do Responsável</span>
               </div>
             </div>
 
@@ -232,8 +241,8 @@ export default function PdfPreviewSection() {
             <div className="mt-6 pt-3 border-t border-slate-200 flex justify-between items-center text-slate-400">
               <div className="space-y-1">
                 <span className="text-[7px] font-black uppercase text-slate-400 block tracking-widest">Hash de Validação SHA-256</span>
-                <code className="text-[7px] font-mono text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded block">
-                  8F3C7E9A4B1D0E3F5C7A9E2B0D4F6A8C
+                <code className="text-[7px] font-mono text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded block break-all max-w-[140px]">
+                  {PDF_THEMES[pdfPreview].hash}
                 </code>
               </div>
               <div className="w-10 h-10 border border-slate-200 p-0.5 rounded bg-white">
@@ -254,19 +263,29 @@ export default function PdfPreviewSection() {
               />
             ))}
           </div>
+
+          {/* Abrir o PDF real do tema selecionado */}
+          <a
+            href={PDF_THEMES[pdfPreview].file}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full border border-[var(--card-border)] text-[var(--text-main)] hover:border-primary/50 hover:text-primary transition-colors focus-visible:ring-2 ring-[var(--primary)] outline-none"
+          >
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+            Abrir laudo de exemplo · tema {PDF_THEMES[pdfPreview].name}
+          </a>
         </div>
 
         {/* Coluna Direita: Informações explicativas */}
         <div className="lg:col-span-5 space-y-6 order-1 lg:order-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-black tracking-widest text-primary uppercase">
-            Laudos Automatizados
-          </div>
-          <h2 className="text-3xl lg:text-4xl font-extrabold tracking-tight bg-gradient-to-b from-[var(--text-main)] to-[var(--text-muted)] bg-clip-text text-transparent leading-tight">
-            Gere Relatórios PDF Invioláveis Prontos para Enviar
+          <Reveal className="space-y-6">
+          <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
+            Laudos PDF invioláveis, prontos para enviar
           </h2>
           <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-            Ao concluir a vistoria, o sistema gera instantaneamente um arquivo PDF formatado para impressão. Ele inclui todos os dados de identificação, fotos anexadas, observações, diagramas de danos e as assinaturas colhidas na tela.
+            Ao concluir a vistoria, o sistema gera instantaneamente um PDF pronto para enviar, com identificação do veículo, fotos anexadas, diagrama de danos, hash de validação e as assinaturas colhidas na tela. Escolha entre três temas (Azul, Clássico e Mono) e abra os exemplos reais ao lado.
           </p>
+          </Reveal>
 
           <ul className="space-y-3.5">
             {[
@@ -276,7 +295,7 @@ export default function PdfPreviewSection() {
               { title: 'Assinatura Eletrônica na Tela', desc: 'Elimina totalmente a necessidade de papéis físicos e canetas. Coleta rápida pelo celular de forma legal e simples.' }
             ].map((feat, idx) => (
               <li key={idx} className="flex items-start gap-3">
-                <span className="text-primary text-base mt-0.5">✓</span>
+                <span className="text-[var(--signal-bright)] text-base mt-0.5">✓</span>
                 <div>
                   <h4 className="text-xs font-bold text-[var(--text-main)]">{feat.title}</h4>
                   <p className="text-[11px] text-[var(--text-muted)] mt-0.5 leading-relaxed">{feat.desc}</p>

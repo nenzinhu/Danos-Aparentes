@@ -13,9 +13,11 @@
     "logos": "node scripts/prepare-logos.mjs"
   },
   "dependencies": {
+    "@react-three/fiber": "^9.6.1",
     "@rive-app/react-canvas": "^4.29.1",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
+    "@types/three": "^0.185.0",
     "@vercel/speed-insights": "^2.0.0",
     "framer-motion": "^11.2.10",
     "html2pdf.js": "^0.14.0",
@@ -24,7 +26,8 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "stripe": "^22.2.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.185.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",

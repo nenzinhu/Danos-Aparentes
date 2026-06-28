@@ -9,6 +9,10 @@ interface HashRecord {
   issued_at: string
   damages_count: number
   created_at: string
+  geo_lat?: number | null
+  geo_lng?: number | null
+  geo_accuracy?: number | null
+  geo_address?: string | null
 }
 
 type Status = 'loading' | 'valid' | 'not_found' | 'no_hash' | 'offline' | 'error'
@@ -17,11 +21,16 @@ export default function Verify() {
   const [status, setStatus] = useState<Status>('loading')
   const [record, setRecord] = useState<HashRecord | null>(null)
   const [hash, setHash] = useState('')
+  const [geo, setGeo] = useState<{ lat: string; lng: string } | null>(null)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const h = (params.get('hash') || '').trim()
     setHash(h)
+
+    const lat = (params.get('lat') || '').trim()
+    const lng = (params.get('lng') || '').trim()
+    if (lat && lng) setGeo({ lat, lng })
 
     if (!h) { setStatus('no_hash'); return }
     if (!supabaseEnabled || !supabase) { setStatus('offline'); return }
@@ -106,6 +115,42 @@ export default function Verify() {
               </div>
             </div>
           )}
+
+          {/* Localização da vistoria — prioriza o registro autenticado do banco;
+              cai para os parâmetros do QR Code apenas como exibição. */}
+          {(() => {
+            const fromDb = !!record && record.geo_lat != null && record.geo_lng != null
+            const lat = fromDb ? String(record!.geo_lat) : geo?.lat
+            const lng = fromDb ? String(record!.geo_lng) : geo?.lng
+            if (!lat || !lng) return null
+            const accuracy = fromDb ? record!.geo_accuracy : null
+            const address = fromDb ? record!.geo_address : null
+            return (
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2 flex items-center justify-between">
+                  <span>Local da Vistoria</span>
+                  {fromDb
+                    ? <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 border border-emerald-200 rounded px-2 py-0.5">✓ AUTENTICADO</span>
+                    : <span className="text-[9px] font-black text-amber-600 bg-amber-50 border border-amber-200 rounded px-2 py-0.5">NÃO CONFIRMADO</span>}
+                </h3>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <span className="font-mono text-sm font-bold text-slate-800">{lat}, {lng}</span>
+                    {typeof accuracy === 'number' && <span className="text-xs text-slate-400 ml-2">± {accuracy} m</span>}
+                  </div>
+                  <a
+                    href={`https://www.google.com/maps?q=${encodeURIComponent(lat)},${encodeURIComponent(lng)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                  >
+                    🗺️ Abrir no Google Maps
+                  </a>
+                </div>
+                {address && <p className="text-xs text-slate-500 leading-relaxed">{address}</p>}
+              </div>
+            )
+          })()}
 
           {/* Footer Info */}
           <div className="pt-8 border-t border-dashed border-slate-200">

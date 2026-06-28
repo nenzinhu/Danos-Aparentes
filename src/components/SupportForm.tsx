@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react'
 import { LEGAL_CONTACT_EMAIL } from './LegalContent'
+import Button from './ui/Button'
 
 const MAX_CHARS = 600
 
@@ -105,13 +106,9 @@ export default function SupportForm() {
           >
             {message.length} / {MAX_CHARS}
           </span>
-          <button
-            onClick={send}
-            disabled={!canSend}
-            className="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-sky-600 hover:bg-sky-500 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
-          >
+          <Button variant="primary" size="sm" onClick={send} disabled={!canSend}>
             Enviar
-          </button>
+          </Button>
         </div>
       </div>
     </div>

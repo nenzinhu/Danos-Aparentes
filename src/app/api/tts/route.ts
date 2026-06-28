@@ -1,61 +1,129 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { DEFAULT_GOOGLE_VOICE_ID, getGoogleVoice, isGoogleVoiceId } from '@/src/lib/googleTtsVoices';
+
+async function synthesizeGoogle(
+  text: string,
+  voiceName: string,
+  rate: number,
+  pitch: number,
+  volume: number,
+  apiKey: string,
+): Promise<ArrayBuffer> {
+  const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      input: { text },
+      voice: { languageCode: 'pt-BR', name: voiceName },
+      audioConfig: {
+        audioEncoding: 'MP3',
+        speakingRate: rate,
+        pitch: (pitch - 1) * 10,
+        volumeGainDb: volume >= 1 ? 0 : 20 * Math.log10(Math.max(volume, 0.01)),
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Google TTS: ${errText}`);
+  }
+
+  const data = (await response.json()) as { audioContent?: string };
+  if (!data.audioContent) {
+    throw new Error('Google TTS: resposta sem áudio');
+  }
+
+  const binary = Buffer.from(data.audioContent, 'base64');
+  return binary.buffer.slice(binary.byteOffset, binary.byteOffset + binary.byteLength);
+}
+
+async function synthesizeElevenLabs(
+  text: string,
+  voiceId: string,
+  rate: number,
+  apiKey: string,
+): Promise<ArrayBuffer> {
+  const safeRate = Math.max(0.7, Math.min(1.2, rate || 1.0));
+
+  const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'xi-api-key': apiKey,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_flash_v2_5',
+      language_code: 'pt',
+      voice_settings: {
+        stability: 0.5,
+        similarity_boost: 0.8,
+        style: 0.0,
+        use_speaker_boost: true,
+        speed: safeRate,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`ElevenLabs: ${errText}`);
+  }
+
+  return response.arrayBuffer();
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const { text, voiceId, rate } = await req.json();
+    const { text, voiceId, rate, pitch, volume, engine } = await req.json();
 
     if (!text) {
       return NextResponse.json({ error: 'O texto é obrigatório' }, { status: 400 });
     }
 
-    const apiKey = process.env.ELEVENLABS_API_KEY;
-    if (!apiKey) {
-      console.error('ELEVENLABS_API_KEY não encontrada no ambiente');
+    const safeRate = Math.max(0.7, Math.min(1.2, rate ?? 0.9));
+    const safePitch = typeof pitch === 'number' ? pitch : 0.75;
+    const safeVolume = Math.max(0, Math.min(1, volume ?? 1));
+
+    const useGoogle =
+      engine === 'google-tts' ||
+      (engine !== 'elevenlabs' && (isGoogleVoiceId(voiceId) || !voiceId));
+
+    if (useGoogle) {
+      const googleKey = process.env.GOOGLE_TTS_API_KEY;
+      if (!googleKey) {
+        return NextResponse.json({ error: 'Chave GOOGLE_TTS_API_KEY não configurada' }, { status: 500 });
+      }
+
+      const voice = getGoogleVoice(voiceId || DEFAULT_GOOGLE_VOICE_ID);
+      const audioBuffer = await synthesizeGoogle(text, voice.name, safeRate, safePitch, safeVolume, googleKey);
+
+      return new NextResponse(audioBuffer, {
+        status: 200,
+        headers: { 'Content-Type': 'audio/mpeg' },
+      });
+    }
+
+    const elevenKey = process.env.ELEVENLABS_API_KEY;
+    if (!elevenKey) {
       return NextResponse.json({ error: 'Chave ELEVENLABS_API_KEY não configurada' }, { status: 500 });
     }
 
-    // Antoni - melhor voz PT-BR
-    const selectedVoiceId = voiceId || 'ErXwobaYiN019PkySvjV';
-
-    // ElevenLabs aceita velocidade entre 0.7 e 1.2
-    const safeRate = Math.max(0.7, Math.min(1.2, rate || 1.0));
-
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}`, {
-      method: 'POST',
-      headers: {
-        'xi-api-key': apiKey,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text,
-        model_id: 'eleven_flash_v2_5',   // modelo mais rápido e melhor para PT-BR
-        language_code: 'pt',              // força pronúncia em português do Brasil
-        voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.8,
-          style: 0.0,
-          use_speaker_boost: true,
-          speed: safeRate
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error('Erro ElevenLabs:', errText);
-      return NextResponse.json({ error: `Erro na API da ElevenLabs: ${errText}` }, { status: response.status });
-    }
-
-    const audioBuffer = await response.arrayBuffer();
+    const audioBuffer = await synthesizeElevenLabs(
+      text,
+      voiceId || 'ErXwobaYiN019PkySvjV',
+      safeRate,
+      elevenKey,
+    );
 
     return new NextResponse(audioBuffer, {
       status: 200,
-      headers: {
-        'Content-Type': 'audio/mpeg',
-      },
+      headers: { 'Content-Type': 'audio/mpeg' },
     });
   } catch (err) {
     console.error('Erro ao processar TTS:', err);
-    return NextResponse.json({ error: 'Erro ao gerar áudio com ElevenLabs.' }, { status: 500 });
+    const message = err instanceof Error ? err.message : 'Erro ao gerar áudio';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

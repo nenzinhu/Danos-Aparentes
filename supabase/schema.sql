@@ -114,8 +114,18 @@ create table if not exists report_hashes (
   ref text default '',
   issued_at text default '',
   damages_count int default 0,
+  geo_lat double precision,
+  geo_lng double precision,
+  geo_accuracy int,
+  geo_address text,
   created_at timestamptz not null default now()
 );
+
+-- Localização da vistoria (adicionada após a criação original da tabela).
+alter table report_hashes add column if not exists geo_lat double precision;
+alter table report_hashes add column if not exists geo_lng double precision;
+alter table report_hashes add column if not exists geo_accuracy int;
+alter table report_hashes add column if not exists geo_address text;
 
 alter table report_hashes enable row level security;
 

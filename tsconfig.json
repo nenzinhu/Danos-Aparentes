@@ -44,6 +44,7 @@
     "src/pdfme-main",
     "src/awesome-claude-skills-master",
     "src/nextjs-developer",
-    "lighthouse-main"
+    "lighthouse-main",
+    "open-design-main"
   ]
 }

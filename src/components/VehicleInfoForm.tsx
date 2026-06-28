@@ -1,8 +1,9 @@
 'use client';
 import React, { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react'
-import { VehicleInfo, CustomField } from '../types'
+import { VehicleInfo, CustomField, GeoLocation } from '../types'
 import SignaturePad from './SignaturePad'
 import SpeechButton from './SpeechButton'
+import Button from './ui/Button'
 import WizardStepper from './WizardStepper'
 import type { WizardStep } from './wizardTypes'
 
@@ -64,6 +65,7 @@ const FIELD_LABELS: Record<string, string> = {
   vehicleTypeDesc: 'Tipo do Veículo',
   city: 'Cidade de Emplacamento',
   state: 'Estado (UF)',
+  geo: 'Localização da Vistoria (GPS)',
   inspectorSignature: 'Assinatura do Vistoriador',
   clientSignature: 'Assinatura do Cliente',
 }
@@ -137,6 +139,8 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   const [newFieldName, setNewFieldName] = useState('')
   const [wizardStep, setWizardStep] = useState<WizardStep>(1)
   const [maxVisited, setMaxVisited] = useState<WizardStep>(1)
+  const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
+  const [geoError, setGeoError] = useState('')
   const filterRef = useRef<HTMLDivElement>(null)
   const lookupTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -191,6 +195,57 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
   const set = useCallback((field: keyof VehicleInfo, value: string) => {
     onChange({ ...info, [field]: value })
+  }, [info, onChange])
+
+  const captureGeo = useCallback(() => {
+    if (typeof navigator === 'undefined' || !navigator.geolocation) {
+      setGeoStatus('error')
+      setGeoError('Este dispositivo não suporta geolocalização.')
+      return
+    }
+    setGeoStatus('loading')
+    setGeoError('')
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const geo: GeoLocation = {
+          lat: +pos.coords.latitude.toFixed(6),
+          lng: +pos.coords.longitude.toFixed(6),
+          accuracy: pos.coords.accuracy ? Math.round(pos.coords.accuracy) : undefined,
+          capturedAt: Date.now(),
+        }
+        // Reverse geocoding best-effort — não bloqueia se estiver offline.
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${geo.lat}&lon=${geo.lng}&accept-language=pt-BR`,
+            { headers: { 'Accept': 'application/json' } }
+          )
+          if (res.ok) {
+            const data = await res.json()
+            if (data?.display_name) geo.address = String(data.display_name)
+          }
+        } catch { /* offline: mantém só as coordenadas */ }
+        onChange({ ...info, geo })
+        setGeoStatus('done')
+      },
+      (err) => {
+        setGeoStatus('error')
+        setGeoError(
+          err.code === err.PERMISSION_DENIED
+            ? 'Permissão de localização negada. Libere o GPS para este site.'
+            : err.code === err.TIMEOUT
+              ? 'Tempo esgotado ao obter a localização. Tente novamente.'
+              : 'Não foi possível obter a localização.'
+        )
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    )
+  }, [info, onChange])
+
+  const clearGeo = useCallback(() => {
+    const { geo, ...rest } = info
+    onChange(rest as VehicleInfo)
+    setGeoStatus('idle')
+    setGeoError('')
   }, [info, onChange])
 
   const toggleField = useCallback((key: string) => {
@@ -732,6 +787,86 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
           placeholder="Observações adicionais sobre o veículo..." />
       </div>
 
+      {show('geo') && (
+        <div className="mt-4 rounded-2xl border border-sky-500/25 bg-gradient-to-br from-sky-700/10 to-blue-900/5 p-4">
+          <div className="flex items-center justify-between gap-2 mb-2.5">
+            <div className="inline-flex items-center gap-1.5 text-[0.7rem] font-black text-sky-400 tracking-wider uppercase">
+              📍 Localização da Vistoria
+            </div>
+            {info.geo && (
+              <button
+                type="button"
+                onClick={clearGeo}
+                className="text-[0.7rem] font-bold text-red-400 hover:text-red-300 transition-colors"
+              >
+                Remover
+              </button>
+            )}
+          </div>
+
+          {!info.geo ? (
+            <>
+              <p className="text-[0.78rem] text-slate-400 leading-relaxed mb-3">
+                Registre o ponto GPS exato de onde a vistoria está sendo feita. A coordenada entra no laudo junto do hash e do QR Code.
+              </p>
+              <button
+                type="button"
+                onClick={captureGeo}
+                disabled={geoStatus === 'loading'}
+                className={`w-full py-2.5 rounded-xl text-sm font-black inline-flex items-center justify-center gap-2 transition-[transform,background-color] duration-200 ease-out active:scale-[0.98] motion-reduce:transition-none ${
+                  geoStatus === 'loading'
+                    ? 'bg-sky-500/10 border border-sky-500/30 text-sky-300 cursor-wait'
+                    : 'bg-sky-600 hover:bg-sky-500 hover:scale-[1.01] text-white'
+                }`}
+              >
+                {geoStatus === 'loading'
+                  ? <><span className="animate-spin inline-block">⏳</span> Obtendo localização…</>
+                  : <>📡 Capturar localização atual</>}
+              </button>
+              {geoStatus === 'error' && (
+                <p className="text-[0.75rem] text-red-400 font-semibold mt-2">{geoError}</p>
+              )}
+            </>
+          ) : (
+            <div className="animate-in fade-in slide-in-from-bottom-1 duration-300 ease-out motion-reduce:animate-none">
+              <div className="flex flex-wrap items-center gap-1.5 mb-2">
+                <span className="inline-flex items-center gap-1 bg-green-500/15 border border-green-500/30 text-green-400 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold animate-in zoom-in-75 duration-200 motion-reduce:animate-none">
+                  ✓ Localização registrada
+                </span>
+                {typeof info.geo.accuracy === 'number' && (
+                  <span className="inline-flex items-center gap-1 bg-sky-500/15 border border-sky-500/30 text-sky-400 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold">
+                    ± {info.geo.accuracy} m
+                  </span>
+                )}
+              </div>
+              <p className="font-mono text-[0.8rem] text-[var(--text-main)] font-bold">
+                {info.geo.lat.toFixed(6)}, {info.geo.lng.toFixed(6)}
+              </p>
+              {info.geo.address && (
+                <p className="text-[0.75rem] text-slate-400 mt-1 leading-relaxed">{info.geo.address}</p>
+              )}
+              <div className="flex flex-wrap gap-3 mt-2.5">
+                <a
+                  href={`https://www.google.com/maps?q=${info.geo.lat},${info.geo.lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[0.75rem] font-bold text-sky-400 hover:text-sky-300 transition-colors"
+                >
+                  🗺️ Ver no mapa
+                </a>
+                <button
+                  type="button"
+                  onClick={captureGeo}
+                  className="text-[0.75rem] font-bold text-slate-400 hover:text-slate-200 transition-colors"
+                >
+                  ↻ Atualizar
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {customFieldDefs.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 mt-3">
           {customFieldDefs.map(d => (
@@ -784,21 +919,18 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
       <div className="sticky bottom-0 z-10 mt-4 pt-3 pb-1 bg-[var(--card-bg)]/95 border-t border-white/5 flex gap-2">
         {wizardStep > 1 && (
-          <button type="button" onClick={goBack}
-            className="flex-1 py-3 rounded-xl text-sm font-bold border border-white/10 text-slate-300 hover:bg-white/5">
+          <Button variant="secondary" onClick={goBack} className="flex-1">
             ← Voltar
-          </button>
+          </Button>
         )}
         {wizardStep < 3 ? (
-          <button type="button" onClick={goNext}
-            className="flex-1 py-3 rounded-xl text-sm font-black bg-sky-600 hover:bg-sky-500 text-white">
+          <Button variant="primary" onClick={goNext} className="flex-1">
             Continuar →
-          </button>
+          </Button>
         ) : (
-          <button type="button" onClick={handleComplete}
-            className="flex-1 py-3 rounded-xl text-sm font-black bg-green-600 hover:bg-green-500 text-white">
+          <Button variant="success" onClick={handleComplete} className="flex-1">
             Concluir dados
-          </button>
+          </Button>
         )}
       </div>
     </div>

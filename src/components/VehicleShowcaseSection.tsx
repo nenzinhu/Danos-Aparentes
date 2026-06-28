@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { VehicleType } from '../types'
+import Reveal from './Reveal'
 
 const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamages: any[] }[] = [
   {
@@ -153,15 +154,14 @@ export default function VehicleShowcaseSection() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Coluna Esquerda: Seletor de veículos */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-xs font-black tracking-widest text-primary uppercase">
-            Modelos SVG Clicáveis
-          </div>
-          <h2 className="text-3xl lg:text-4xl font-extrabold tracking-tight bg-gradient-to-b from-[var(--text-main)] to-[var(--text-muted)] bg-clip-text text-transparent leading-tight">
-            Suporte Completo a Todo Tipo de Veículo
+          <Reveal className="space-y-6">
+          <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
+            Suporte a todo tipo de veículo
           </h2>
           <p className="text-sm text-[var(--text-muted)] leading-relaxed">
             O aplicativo oferece diagramas interativos de alta fidelidade desenhados especificamente para cada tipo de veículo. Toque em qualquer parte para abrir as opções de marcação.
           </p>
+          </Reveal>
 
           {/* Botões do Seletor */}
           <div className="flex flex-col gap-2.5 pt-2">
@@ -189,12 +189,12 @@ export default function VehicleShowcaseSection() {
 
         {/* Coluna Direita: Renderizador interativo de SVG */}
         <div className="lg:col-span-7 flex flex-col justify-center items-center relative group min-h-[350px]">
-          <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,170,255,0.06) 0%, transparent 70%)' }} />
-          <div className="w-full max-w-[480px] filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] bg-[var(--card-bg)] border border-[var(--card-border)] p-8 rounded-3xl relative backdrop-blur-md">
+          <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, var(--signal-glow) 0%, transparent 70%)', opacity: 0.5 }} />
+          <div className="w-full max-w-[480px] filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] bg-[var(--card-bg)] border border-[var(--card-border)] p-8 rounded-2xl relative backdrop-blur-md">
 
             {/* Etiqueta indicando vista */}
-            <div className="absolute top-4 left-4 bg-primary/10 border border-primary/20 text-[9px] font-black tracking-widest text-primary uppercase px-2.5 py-1 rounded-lg">
-              Vista Lateral Esquerda
+            <div className="absolute top-4 left-4 font-mono-data text-[9px] tracking-[0.18em] text-[var(--signal-bright)] uppercase border border-[var(--sheet-line)] px-2.5 py-1 rounded">
+              Vista · Lateral Esq.
             </div>
 
             {/* Imagem estática do veículo (leve, sem hidratação de SVG) */}

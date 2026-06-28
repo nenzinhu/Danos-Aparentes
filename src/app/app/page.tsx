@@ -23,6 +23,7 @@ import AppFooter from '@/src/components/app/AppFooter'
 import AppTabBar from '@/src/components/app/AppTabBar'
 import InspectTab from '@/src/components/app/InspectTab'
 import PhotoUploadProgressBar from '@/src/components/PhotoUploadProgressBar'
+import TorchButton from '@/src/components/TorchButton'
 import { EMPTY_INFO } from '@/src/components/app/constants'
 
 export default function AppMainPage() {
@@ -255,6 +256,7 @@ export default function AppMainPage() {
 
         <TermsModal isOpen={termsOpen} onClose={() => setTermsOpen(false)} defaultTab={termsTab} />
         <FeaturesSlidesModal isOpen={tutorialOpen} onClose={() => setTutorialOpen(false)} />
+        <TorchButton onToast={showToast} />
         {toast && <AppToast msg={toast} onDone={() => setToast(null)} />}
       </div>
     </DirectionalTransition>
