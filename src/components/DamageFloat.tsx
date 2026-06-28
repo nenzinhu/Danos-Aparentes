@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { DamageType } from '../types'
 
 interface Props {
@@ -13,6 +13,15 @@ interface Props {
 
 export default function DamageFloat({ partName, position, currentType, onChoose, onClear, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)')
+    const update = () => setIsMobile(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) { if (e.key === 'Escape') onClose() }
@@ -32,7 +41,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       type: 'scratch', 
       label: 'Riscos / Abrasão', 
       icon: (
-        <img src="/scratch.png" alt="Riscos / Abrasão" className="h-8 w-auto object-contain" />
+        <img src="/scratch.png" alt="Riscos / Abrasão" className="h-10 sm:h-8 w-auto object-contain" />
       ), 
       color: 'text-amber-500', 
       bg: 'bg-amber-500/10', 
@@ -42,7 +51,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       type: 'dent',    
       label: 'Deformação',  
       icon: (
-        <img src="/dent.png" alt="Deformação" className="h-8 w-auto object-contain" />
+        <img src="/dent.png" alt="Deformação" className="h-10 sm:h-8 w-auto object-contain" />
       ), 
       color: 'text-orange-500', 
       bg: 'bg-orange-500/10', 
@@ -52,7 +61,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       type: 'broken',  
       label: 'Dano / Fratura',  
       icon: (
-        <img src="/broken.png" alt="Dano / Fratura" className="h-8 w-auto object-contain" />
+        <img src="/broken.png" alt="Dano / Fratura" className="h-10 sm:h-8 w-auto object-contain" />
       ), 
       color: 'text-red-500', 
       bg: 'bg-red-500/10', 
@@ -63,17 +72,23 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
   const left = Math.max(8, Math.min(position.x, window.innerWidth - 208))
   const top = Math.max(8, Math.min(position.y, window.innerHeight - 210))
 
+  // No mobile o popup vira um painel fixo no fundo (bottom sheet), em vez de
+  // tentar caber ao lado do veículo num ecrã estreito.
+  const containerClass = isMobile
+    ? 'fixed z-[10000] left-0 right-0 bottom-0 w-full p-4 pb-[max(1rem,env(safe-area-inset-bottom))] rounded-t-2xl border-t backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300'
+    : 'fixed z-[10000] w-[200px] p-3 rounded-2xl border backdrop-blur-xl transition-all duration-300 shadow-2xl animate-in fade-in zoom-in-95'
+
+  const containerStyle = isMobile
+    ? { background: 'var(--card-bg)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
+    : { left, top, background: 'var(--card-bg)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
+
   return (
-    <div
-      ref={ref}
-      className="fixed z-[10000] w-[200px] p-3 rounded-2xl border backdrop-blur-xl transition-all duration-300 shadow-2xl animate-in fade-in zoom-in-95"
-      style={{
-        left, top,
-        background: 'var(--card-bg)',
-        borderColor: 'var(--card-border)',
-        boxShadow: 'var(--glass-shadow)',
-      }}
-    >
+    <div ref={ref} className={containerClass} style={containerStyle}>
+      {/* Pega do bottom sheet (mobile) */}
+      {isMobile && (
+        <div aria-hidden="true" className="mx-auto mb-2.5 h-1 w-10 rounded-full bg-[var(--text-muted)]/40" />
+      )}
+
       {/* Título */}
       <div className="flex justify-between items-center mb-2.5">
         <span className="font-outfit font-extrabold text-sm text-[var(--text-main)] flex items-center gap-1.5">
@@ -109,10 +124,10 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
                   : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] hover:scale-[1.02]'
               }`}
             >
-              <div className={`h-8 flex items-center justify-center transition-transform duration-200 ${isActive ? 'scale-110' : 'hover:scale-110'}`}>
+              <div className={`h-10 sm:h-8 flex items-center justify-center transition-transform duration-200 ${isActive ? 'scale-110' : 'hover:scale-110'}`}>
                 {t.icon}
               </div>
-              <span className="text-[0.6rem] tracking-tight leading-tight text-center">{t.label}</span>
+              <span className="text-[0.7rem] sm:text-[0.6rem] tracking-tight leading-tight text-center">{t.label}</span>
               {isActive && (
                 <span className="text-[0.55rem] uppercase font-black tracking-widest text-[var(--primary)] mt-0.5 animate-bounce">
                   Ativo
