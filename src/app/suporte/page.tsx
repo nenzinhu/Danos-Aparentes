@@ -20,8 +20,15 @@ export default function SuportePage() {
         </Link>
 
         <h1 className="text-2xl font-extrabold mb-1">Suporte</h1>
-        <p className="text-sm text-[var(--text-muted)] mb-8">
+        <p className="text-sm text-[var(--text-muted)] mb-4">
           Precisa de ajuda? Escolha o assunto e fale com a nossa equipe.
+        </p>
+        <p className="text-sm text-[var(--text-muted)] mb-8">
+          Dica: muitas respostas estão nas{' '}
+          <Link href="/faq" className="font-bold text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors">
+            perguntas frequentes
+          </Link>
+          .
         </p>
 
         <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
