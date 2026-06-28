@@ -32,7 +32,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       type: 'scratch', 
       label: 'Riscos / Abrasão', 
       icon: (
-        <img src="/scratch.png" alt="Riscos / Abrasão" className="h-10 w-auto object-contain" />
+        <img src="/scratch.png" alt="Riscos / Abrasão" className="h-8 w-auto object-contain" />
       ), 
       color: 'text-amber-500', 
       bg: 'bg-amber-500/10', 
@@ -42,7 +42,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       type: 'dent',    
       label: 'Deformação',  
       icon: (
-        <img src="/dent.png" alt="Deformação" className="h-10 w-auto object-contain" />
+        <img src="/dent.png" alt="Deformação" className="h-8 w-auto object-contain" />
       ), 
       color: 'text-orange-500', 
       bg: 'bg-orange-500/10', 
@@ -52,7 +52,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       type: 'broken',  
       label: 'Dano / Fratura',  
       icon: (
-        <img src="/broken.png" alt="Dano / Fratura" className="h-10 w-auto object-contain" />
+        <img src="/broken.png" alt="Dano / Fratura" className="h-8 w-auto object-contain" />
       ), 
       color: 'text-red-500', 
       bg: 'bg-red-500/10', 
@@ -60,13 +60,13 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
     },
   ]
 
-  const left = Math.min(position.x, window.innerWidth - 270)
-  const top = Math.min(position.y, window.innerHeight - 240)
+  const left = Math.max(8, Math.min(position.x, window.innerWidth - 208))
+  const top = Math.max(8, Math.min(position.y, window.innerHeight - 210))
 
   return (
-    <div 
-      ref={ref} 
-      className="fixed z-[10000] min-w-[250px] p-4 rounded-2xl border backdrop-blur-xl transition-all duration-300 shadow-2xl animate-in fade-in zoom-in-95"
+    <div
+      ref={ref}
+      className="fixed z-[10000] w-[200px] p-3 rounded-2xl border backdrop-blur-xl transition-all duration-300 shadow-2xl animate-in fade-in zoom-in-95"
       style={{
         left, top,
         background: 'var(--card-bg)',
@@ -75,7 +75,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       }}
     >
       {/* Título */}
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex justify-between items-center mb-2.5">
         <span className="font-outfit font-extrabold text-sm text-[var(--text-main)] flex items-center gap-1.5">
           <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 83.62 122.88" className="h-[18px] w-auto fill-red-500 animate-pulse shrink-0" aria-hidden="true">
             <title>click</title>
@@ -96,23 +96,23 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       </div>
 
       {/* Opções */}
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-1.5">
         {types.map(t => {
           const isActive = currentType === t.type
           return (
-            <button 
-              key={t.type} 
-              onClick={() => onChoose(t.type, t.label)} 
-              className={`flex flex-col items-center gap-2 p-2.5 rounded-xl border font-outfit text-xs font-bold transition-all duration-200 cursor-pointer ${
-                isActive 
-                  ? `${t.bg} ${t.border} ${t.color} scale-[1.05] ring-2 ring-[var(--primary)]` 
+            <button
+              key={t.type}
+              onClick={() => onChoose(t.type, t.label)}
+              className={`flex flex-col items-center gap-1 p-1.5 rounded-xl border font-outfit text-xs font-bold transition-all duration-200 cursor-pointer ${
+                isActive
+                  ? `${t.bg} ${t.border} ${t.color} scale-[1.05] ring-2 ring-[var(--primary)]`
                   : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] hover:scale-[1.02]'
               }`}
             >
-              <div className={`h-11 flex items-center justify-center transition-transform duration-200 ${isActive ? 'scale-110' : 'hover:scale-110'}`}>
+              <div className={`h-8 flex items-center justify-center transition-transform duration-200 ${isActive ? 'scale-110' : 'hover:scale-110'}`}>
                 {t.icon}
               </div>
-              <span className="text-[0.7rem] tracking-tight leading-tight text-center">{t.label}</span>
+              <span className="text-[0.6rem] tracking-tight leading-tight text-center">{t.label}</span>
               {isActive && (
                 <span className="text-[0.55rem] uppercase font-black tracking-widest text-[var(--primary)] mt-0.5 animate-bounce">
                   Ativo
@@ -125,8 +125,8 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
 
       {/* Sem avaria */}
       <button 
-        onClick={onClear} 
-        className="mt-3.5 w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border font-outfit text-xs font-black transition-all duration-200 cursor-pointer bg-red-500/10 hover:bg-red-500/15 border-red-500/35 hover:border-red-500/50 text-red-500"
+        onClick={onClear}
+        className="mt-2.5 w-full flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl border font-outfit text-[0.7rem] font-black transition-all duration-200 cursor-pointer bg-red-500/10 hover:bg-red-500/15 border-red-500/35 hover:border-red-500/50 text-red-500"
       >
         <span>🧽</span> Sem avaria / Limpar
       </button>

@@ -133,9 +133,22 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
     speak(name)
     const el = document.getElementById(id)
     const rect = el?.getBoundingClientRect()
-    const pos = rect ? { x: Math.min(rect.right + 8, window.innerWidth - 240), y: rect.top } : { x: 200, y: 200 }
-    setSelectedPart({ id, name, pos })
-  }, [speak, setSelectedPart])
+    // Posiciona o popup FORA dos limites do veículo (à direita do visualizador,
+    // ou à esquerda se não houver espaço), nunca em cima da peça clicada.
+    const POPUP_W = 200
+    const GAP = 12
+    const cont = containerRef.current?.getBoundingClientRect()
+    let x: number
+    if (cont) {
+      if (cont.right + GAP + POPUP_W <= window.innerWidth) x = cont.right + GAP
+      else if (cont.left - GAP - POPUP_W >= 0) x = cont.left - GAP - POPUP_W
+      else x = window.innerWidth - POPUP_W - GAP
+    } else {
+      x = rect ? rect.right + GAP : 200
+    }
+    const y = rect ? rect.top : (cont ? cont.top : 200)
+    setSelectedPart({ id, name, pos: { x, y } })
+  }, [speak, setSelectedPart, containerRef])
 
   return (
     <div
