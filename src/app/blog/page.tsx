@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { BLOG_POSTS, formatDate } from '@/src/content/blog'
+import { BlogCover } from '@/src/components/BlogCover'
 
 const TITLE = 'Blog | Danos Aparentes'
 const DESCRIPTION =
@@ -47,15 +48,14 @@ export default function BlogIndexPage() {
             href={`/blog/${featured.slug}`}
             className="group block glass-card overflow-hidden mb-8 transition-all hover:border-sky-500/40 focus-visible:ring-2 ring-[var(--primary)] outline-none"
           >
-            <div className="relative h-44 sm:h-52 flex items-center justify-center" style={{ background: featured.cover.gradient }}>
-              <span className="text-6xl drop-shadow-lg select-none" aria-hidden="true">{featured.cover.emoji}</span>
+            <BlogCover cover={featured.cover} className="h-44 sm:h-52">
               <span className="absolute top-4 left-4 text-[0.62rem] font-extrabold uppercase tracking-widest bg-black/30 text-white px-2.5 py-1 rounded-full backdrop-blur-sm">
                 {featured.category}
               </span>
               <span className="absolute top-4 right-4 text-[0.6rem] font-bold uppercase tracking-wider bg-[var(--signal-bright)] text-black px-2.5 py-1 rounded-full">
                 Destaque
               </span>
-            </div>
+            </BlogCover>
             <div className="p-6">
               <h2 className="font-display text-2xl font-bold leading-tight group-hover:text-[var(--primary-hover)] transition-colors">
                 {featured.title}
@@ -79,9 +79,7 @@ export default function BlogIndexPage() {
                 href={`/blog/${post.slug}`}
                 className="group block glass-card overflow-hidden transition-all hover:border-sky-500/40 focus-visible:ring-2 ring-[var(--primary)] outline-none"
               >
-                <div className="relative h-28 flex items-center justify-center" style={{ background: post.cover.gradient }}>
-                  <span className="text-4xl select-none" aria-hidden="true">{post.cover.emoji}</span>
-                </div>
+                <BlogCover cover={post.cover} className="h-28" emojiClass="text-4xl" />
                 <div className="p-5">
                   <span className="text-[0.6rem] font-extrabold uppercase tracking-widest text-[var(--signal-bright)]">{post.category}</span>
                   <h3 className="font-display text-lg font-bold leading-tight mt-1 group-hover:text-[var(--primary-hover)] transition-colors">{post.title}</h3>

@@ -10,7 +10,7 @@ export interface BlogPost {
   date: string
   readingMinutes: number
   author: { name: string; role: string }
-  cover: { gradient: string; emoji: string }
+  cover: { gradient: string; emoji: string; image?: string }
   /** Sumário navegável — cada id deve existir como <h2 id> no conteúdo. */
   toc: { id: string; label: string }[]
   content: React.ReactNode
@@ -50,7 +50,7 @@ export const BLOG_POSTS: BlogPost[] = [
     date: '2026-06-28',
     readingMinutes: 7,
     author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '📋' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '📋', image: '/vehicles-img/car.png' },
     toc: [
       { id: 'o-que-e', label: 'O que é um laudo de vistoria' },
       { id: 'quando-exigido', label: 'Quando ele é exigido' },

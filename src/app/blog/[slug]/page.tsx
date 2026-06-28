@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { BLOG_POSTS, getPost, formatDate } from '@/src/content/blog'
+import { BlogCover } from '@/src/components/BlogCover'
 
 const SITE_URL = 'https://danosaparentes.com.br'
 
@@ -70,12 +71,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </nav>
 
         {/* Capa */}
-        <div className="relative h-40 sm:h-56 rounded-2xl overflow-hidden flex items-center justify-center mb-7" style={{ background: post.cover.gradient }}>
-          <span className="text-7xl drop-shadow-lg select-none" aria-hidden="true">{post.cover.emoji}</span>
+        <BlogCover cover={post.cover} className="h-40 sm:h-56 rounded-2xl mb-7" emojiClass="text-7xl">
           <span className="absolute top-4 left-4 text-[0.62rem] font-extrabold uppercase tracking-widest bg-black/30 text-white px-2.5 py-1 rounded-full backdrop-blur-sm">
             {post.category}
           </span>
-        </div>
+        </BlogCover>
 
         {/* Cabeçalho do artigo */}
         <header className="mb-8">
