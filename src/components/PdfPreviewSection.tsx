@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import Reveal from './Reveal';
 
 // QR Code simulado (mockup do laudo) — três marcadores de canto + módulos determinísticos
@@ -41,52 +40,44 @@ function QrCodeMock({ className = '' }: { className?: string }) {
   )
 }
 
-// Temas reais do laudo PDF gerado pelo app (slider na landing).
-// Cada um corresponde a um PDF de exemplo em /public/exemplos.
-const PDF_THEMES = [
-  { id: 'azul',     name: 'Azul',     icon: '🟦', font: 'system-ui, sans-serif',                 bg: '#ffffff', text: '#0f172a', border: '#e2e8f0', bar: 'linear-gradient(90deg,#1d4ed8,#06b6d4,#3b82f6)', accent: '#2563eb', headerBg: '#0b1f3c', headerText: '#e8f4ff', headerSub: '#93b4d4', hash: '65D251E675333FF1AC0FF62AD689ADA4', file: '/exemplos/laudo-tema-azul.pdf' },
-  { id: 'classico', name: 'Clássico', icon: '📜', font: 'Georgia, "Times New Roman", serif',     bg: '#faf9f5', text: '#26201a', border: '#e7ddcd', bar: 'linear-gradient(90deg,#1d4ed8,#788c5d,#d97757,#dc2626)', accent: '#b08642', headerBg: '#1a1a18', headerText: '#f4f1ea', headerSub: '#b8ad97', hash: '5D0F6A48B27061EF0014BA604F2072F9', file: '/exemplos/laudo-tema-classico.pdf' },
-  { id: 'mono',     name: 'Mono',     icon: '⌨️', font: 'ui-monospace, "Courier New", monospace', bg: '#ffffff', text: '#0b1220', border: '#cbd5e1', bar: 'linear-gradient(90deg,#0f766e,#2dd4bf,#0ea5e9)', accent: '#0f766e', headerBg: '#0b1220', headerText: '#e8eef5', headerSub: '#7f93ab', hash: 'A117D8889B1AB79CEB191CF5746F87D9', file: '/exemplos/laudo-tema-mono.pdf' },
-]
+// Modelo oficial — corresponde ao PDF real gerado pelo app.
+// Arquivo em /public/exemplos/modelo-relatorio-vistoria-veicular.pdf
+const MODEL = {
+  font: 'system-ui, sans-serif',
+  bg: '#ffffff',
+  text: '#0f172a',
+  border: '#e2e8f0',
+  bar: 'linear-gradient(90deg,#1d4ed8,#06b6d4,#3b82f6)',
+  accent: '#2563eb',
+  headerBg: '#0b1f3c',
+  headerText: '#e8f4ff',
+  headerSub: '#93b4d4',
+  placa: 'RDT3333',
+  os: '2312321',
+  veiculo: 'Fiat Toro Freedom AT6 2020',
+  cor: 'Branca',
+  proprietario: 'São José / SC',
+  hash: 'EEA9011EA43BCD2177DBB4F6CA639B87',
+  file: '/exemplos/modelo-relatorio-vistoria-veicular.pdf',
+}
 
 export default function PdfPreviewSection() {
-  const [pdfPreview, setPdfPreview] = useState(0);
-
   return (
     <section className="w-full max-w-6xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 text-left">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Coluna Esquerda: Mockup Visual do PDF */}
         <div className="lg:col-span-7 flex flex-col items-center gap-4 order-2 lg:order-1">
-          {/* Abas de tema do laudo */}
-          <div className="flex items-center gap-1.5 flex-wrap justify-center">
-            {PDF_THEMES.map((th, i) => (
-              <button
-                key={th.id}
-                onClick={() => setPdfPreview(i)}
-                className={`text-[11px] font-bold px-3 py-1.5 rounded-full border transition-all ${pdfPreview === i ? 'text-white shadow-md' : 'text-[var(--text-muted)] border-[var(--card-border)] hover:border-primary/40'}`}
-                style={pdfPreview === i ? { background: th.accent, borderColor: th.accent } : undefined}
-              >{th.icon} {th.name}</button>
-            ))}
-          </div>
+          <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--signal-bright)]">
+            Modelo · Relatório de Vistoria Veicular
+          </span>
 
-          <div className="relative w-full max-w-[480px]">
-            <button
-              onClick={() => setPdfPreview((pdfPreview + PDF_THEMES.length - 1) % PDF_THEMES.length)}
-              aria-label="Tema anterior"
-              className="absolute -left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-[var(--panel-bg)] border border-[var(--card-border)] text-[var(--text-main)] flex items-center justify-center shadow-lg hover:scale-110 transition-transform text-lg leading-none"
-            >‹</button>
-            <button
-              onClick={() => setPdfPreview((pdfPreview + 1) % PDF_THEMES.length)}
-              aria-label="Próximo tema"
-              className="absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-[var(--panel-bg)] border border-[var(--card-border)] text-[var(--text-main)] flex items-center justify-center shadow-lg hover:scale-110 transition-transform text-lg leading-none"
-            >›</button>
-          <div className="w-full max-w-[480px] rounded-2xl shadow-2xl p-6 border relative overflow-hidden text-left transition-colors duration-300" style={{ minHeight: '580px', fontFamily: PDF_THEMES[pdfPreview].font, background: PDF_THEMES[pdfPreview].bg, color: PDF_THEMES[pdfPreview].text, borderColor: PDF_THEMES[pdfPreview].border }}>
+          <div className="w-full max-w-[480px] rounded-2xl shadow-2xl p-6 border relative overflow-hidden text-left" style={{ minHeight: '580px', fontFamily: MODEL.font, background: MODEL.bg, color: MODEL.text, borderColor: MODEL.border }}>
 
             {/* Detalhe Superior colorido */}
-            <div className="absolute top-0 left-0 right-0 h-1" style={{ background: PDF_THEMES[pdfPreview].bar }} />
+            <div className="absolute top-0 left-0 right-0 h-1" style={{ background: MODEL.bar }} />
 
             {/* Cabeçalho */}
-            <div className="flex justify-between items-start -mx-6 -mt-6 px-6 pt-7 pb-4 mb-1" style={{ background: PDF_THEMES[pdfPreview].headerBg, color: PDF_THEMES[pdfPreview].headerText }}>
+            <div className="flex justify-between items-start -mx-6 -mt-6 px-6 pt-7 pb-4 mb-1" style={{ background: MODEL.headerBg, color: MODEL.headerText }}>
               <div className="flex items-center gap-3">
                 {/* Personalização de Logo */}
                 <div className="w-12 h-12 rounded-lg border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 bg-slate-50 p-1 text-center select-none shrink-0 leading-none">
@@ -94,13 +85,13 @@ export default function PdfPreviewSection() {
                   <span className="text-[6px] text-slate-400 mt-0.5 font-bold">Aqui</span>
                 </div>
                 <div>
-                  <h4 className="text-xs font-black tracking-tight uppercase" style={{ color: PDF_THEMES[pdfPreview].headerText }}>Danos Aparentes</h4>
-                  <p className="text-[7px] font-semibold tracking-wider" style={{ color: PDF_THEMES[pdfPreview].headerSub }}>Nome da sua Empresa / Concessionária</p>
+                  <h4 className="text-xs font-black tracking-tight uppercase" style={{ color: MODEL.headerText }}>Danos Aparentes</h4>
+                  <p className="text-[7px] font-semibold tracking-wider" style={{ color: MODEL.headerSub }}>Nome da sua Empresa / Concessionária</p>
                 </div>
               </div>
               <div className="text-right">
-                <span className="text-[7px] font-bold px-1.5 py-0.5 rounded border" style={{ color: PDF_THEMES[pdfPreview].headerText, borderColor: `${PDF_THEMES[pdfPreview].headerSub}80` }}>MKT4322</span>
-                <p className="text-[8px] font-bold mt-1" style={{ color: PDF_THEMES[pdfPreview].headerSub }}>OS: 2026-xxx</p>
+                <span className="text-[7px] font-bold px-1.5 py-0.5 rounded border" style={{ color: MODEL.headerText, borderColor: `${MODEL.headerSub}80` }}>{MODEL.placa}</span>
+                <p className="text-[8px] font-bold mt-1" style={{ color: MODEL.headerSub }}>OS: {MODEL.os}</p>
               </div>
             </div>
 
@@ -115,30 +106,30 @@ export default function PdfPreviewSection() {
 
             {/* Tabela de Informações */}
             <div className="mt-4 border border-slate-200 rounded-lg p-2.5 bg-slate-50">
-              <span className="text-[8px] font-extrabold uppercase tracking-widest block mb-2" style={{ color: PDF_THEMES[pdfPreview].accent }}>Identificação do Veículo</span>
+              <span className="text-[8px] font-extrabold uppercase tracking-widest block mb-2" style={{ color: MODEL.accent }}>Identificação do Veículo</span>
               <div className="grid grid-cols-2 gap-y-2 gap-x-4 text-[9px]">
                 <div>
                   <span className="text-slate-400 text-[8px] block">Proprietário / Cliente</span>
-                  <strong className="text-slate-700 font-semibold">Danos Aparentes</strong>
+                  <strong className="text-slate-700 font-semibold">{MODEL.proprietario}</strong>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[8px] block">Marca / Modelo</span>
-                  <strong className="text-slate-700 font-semibold">VW Fox 1.6 GII 2013</strong>
+                  <strong className="text-slate-700 font-semibold">{MODEL.veiculo}</strong>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[8px] block">Placa</span>
-                  <strong className="text-slate-700 font-semibold">MKT4322</strong>
+                  <strong className="text-slate-700 font-semibold">{MODEL.placa}</strong>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[8px] block">Cor</span>
-                  <strong className="text-slate-700 font-semibold">Branca</strong>
+                  <strong className="text-slate-700 font-semibold">{MODEL.cor}</strong>
                 </div>
               </div>
             </div>
 
             {/* Desenho do Veículo com a avaria */}
             <div className="mt-4 border border-slate-200 rounded-lg p-3 bg-white flex flex-col items-center">
-              <span className="text-[8px] font-extrabold uppercase tracking-widest block align-self-start mb-1 w-full text-left" style={{ color: PDF_THEMES[pdfPreview].accent }}>Diagrama de Danos</span>
+              <span className="text-[8px] font-extrabold uppercase tracking-widest block align-self-start mb-1 w-full text-left" style={{ color: MODEL.accent }}>Diagrama de Danos</span>
               <div className="w-full max-w-[280px] py-1 opacity-90 filter brightness-95">
                 <img
                   src="/vehicles-img/car.png"
@@ -152,7 +143,7 @@ export default function PdfPreviewSection() {
 
             {/* Detalhamento Técnico das Avarias (igual ao documento oficial gerado) */}
             <div className="mt-4 border border-slate-200 rounded-lg overflow-hidden">
-              <div className="px-2.5 py-1.5" style={{ background: PDF_THEMES[pdfPreview].accent }}>
+              <div className="px-2.5 py-1.5" style={{ background: MODEL.accent }}>
                 <span className="text-[7px] font-extrabold text-white uppercase tracking-widest">Detalhamento Técnico das Avarias</span>
               </div>
               <table className="w-full text-left border-collapse">
@@ -190,7 +181,7 @@ export default function PdfPreviewSection() {
 
             {/* Seção de Fotos Anexadas no Mockup do PDF */}
             <div className="mt-4 border border-slate-200 rounded-lg p-2.5 bg-slate-50 text-left">
-              <span className="text-[8px] font-extrabold uppercase tracking-widest block mb-2" style={{ color: PDF_THEMES[pdfPreview].accent }}>Fotos das Avarias Anexadas</span>
+              <span className="text-[8px] font-extrabold uppercase tracking-widest block mb-2" style={{ color: MODEL.accent }}>Fotos das Avarias Anexadas</span>
               <div className="flex gap-2">
                 <div className="w-1/3 border border-slate-200 rounded overflow-hidden bg-white">
                   {/* Imagem simulada */}
@@ -242,7 +233,7 @@ export default function PdfPreviewSection() {
               <div className="space-y-1">
                 <span className="text-[7px] font-black uppercase text-slate-400 block tracking-widest">Hash de Validação SHA-256</span>
                 <code className="text-[7px] font-mono text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded block break-all max-w-[140px]">
-                  {PDF_THEMES[pdfPreview].hash}
+                  {MODEL.hash}
                 </code>
               </div>
               <div className="w-10 h-10 border border-slate-200 p-0.5 rounded bg-white">
@@ -250,29 +241,16 @@ export default function PdfPreviewSection() {
               </div>
             </div>
           </div>
-          </div>
-          {/* Indicadores do slider */}
-          <div className="flex items-center gap-1.5">
-            {PDF_THEMES.map((th, i) => (
-              <button
-                key={th.id}
-                onClick={() => setPdfPreview(i)}
-                aria-label={`Ver tema ${th.name}`}
-                className="h-2 rounded-full transition-all cursor-pointer border-0 p-0"
-                style={{ width: pdfPreview === i ? 22 : 8, background: pdfPreview === i ? th.accent : 'var(--card-border)' }}
-              />
-            ))}
-          </div>
 
-          {/* Abrir o PDF real do tema selecionado */}
+          {/* Abrir o PDF real do modelo */}
           <a
-            href={PDF_THEMES[pdfPreview].file}
+            href={MODEL.file}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full border border-[var(--card-border)] text-[var(--text-main)] hover:border-primary/50 hover:text-primary transition-colors focus-visible:ring-2 ring-[var(--primary)] outline-none"
           >
             <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
-            Abrir laudo de exemplo · tema {PDF_THEMES[pdfPreview].name}
+            Abrir modelo · Relatório de Vistoria Veicular
           </a>
         </div>
 
@@ -283,7 +261,7 @@ export default function PdfPreviewSection() {
             Laudos PDF invioláveis, prontos para enviar
           </h2>
           <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-            Ao concluir a vistoria, o sistema gera instantaneamente um PDF pronto para enviar, com identificação do veículo, fotos anexadas, diagrama de danos, hash de validação e as assinaturas colhidas na tela. Escolha entre três temas (Azul, Clássico e Mono) e abra os exemplos reais ao lado.
+            Ao concluir a vistoria, o sistema gera instantaneamente um PDF pronto para enviar, com identificação do veículo, fotos anexadas, diagrama de danos, hash de validação e as assinaturas colhidas na tela. Veja ao lado um modelo real de Relatório de Vistoria Veicular gerado pelo app.
           </p>
           </Reveal>
 
