@@ -40,6 +40,42 @@ function Cta() {
   )
 }
 
+// Bloco reutilizável: recursos do laudo (perfil/campos, logo, QR/hash) +
+// imagem real do PDF. Usado nos artigos por tipo de veículo.
+function RecursosLaudo() {
+  return (
+    <>
+      <h2 id="perfil">Perfil e campos: o laudo se adapta a você</h2>
+      <p>
+        No <strong>perfil da vistoria</strong> você define o nome do vistoriador e da empresa e decide
+        exatamente o que entra no documento. Dá para <strong>adicionar campos próprios</strong> (apólice,
+        contrato, nº do box, KM, centro de custo), <strong>remover</strong> os que não usa e até{' '}
+        <strong>reordenar</strong> as seções — perfil, cliente, documentos, veículo, local e assinaturas
+        — para o laudo ficar com a cara da sua operação.
+      </p>
+
+      <h2 id="logo">Sua logo e o nome da empresa no PDF</h2>
+      <p>
+        O laudo sai com a <strong>logo e o nome da sua empresa</strong> no cabeçalho — concessionária,
+        locadora ou despachante. É um documento <em>white-label</em>: você configura uma vez e passa a
+        usar em todas as vistorias. Veja como fica:
+      </p>
+
+      <LaudoSheet />
+
+      <h2 id="validacao">Assinatura, QR Code e hash de validação</h2>
+      <p>
+        Ao concluir, o vistoriador e o proprietário/responsável <strong>assinam na própria tela</strong>
+        {' '}(dedo ou caneta). O PDF é então selado com um <strong>hash SHA-256</strong> — que prova que o
+        arquivo não foi adulterado — e um <strong>QR Code</strong> que permite conferir o laudo original
+        online a qualquer momento. É o que dá força ao documento numa contestação.
+      </p>
+
+      <Cta />
+    </>
+  )
+}
+
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'como-fazer-laudo-de-vistoria-veicular',
@@ -260,6 +296,138 @@ BLOG_POSTS.push(
           devolução ou sinistro para responsabilizar por danos? É o <strong>laudo de avarias</strong> —
           e é exatamente esse que você gera no Danos Aparentes, com diagrama, fotos com GPS e validação
           por hash/QR. <a href="/blog/como-fazer-laudo-de-vistoria-veicular">Veja como fazer um</a>.
+        </p>
+      </>
+    ),
+  },
+)
+
+BLOG_POSTS.push(
+  {
+    slug: 'vistoria-de-moto',
+    title: 'Vistoria de moto: o que muda na inspeção de avarias',
+    excerpt:
+      'Motos têm pontos de avaria próprios. Veja o que conferir, como registrar e como gerar um laudo com sua logo, campos personalizados e validação por QR Code.',
+    category: 'Vistoria',
+    tags: ['vistoria de moto', 'motocicleta', 'laudo', 'avarias'],
+    date: '2026-06-25',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#7f1d1d 0%,#b91c1c 45%,#f87171 100%)', emoji: '🏍️', image: '/vehicles-img/moto.png' },
+    toc: [
+      { id: 'pontos', label: 'Pontos críticos da moto' },
+      { id: 'perfil', label: 'Perfil e campos' },
+      { id: 'logo', label: 'Logo no PDF' },
+      { id: 'validacao', label: 'QR Code e hash' },
+    ],
+    content: (
+      <>
+        <p>
+          A moto é mais exposta que o carro — qualquer queda deixa marca. Por isso a vistoria precisa de
+          um olhar específico para os pontos que mais sofrem, registrados peça a peça com foto.
+        </p>
+
+        <h2 id="pontos">Pontos críticos da moto</h2>
+        <ul>
+          <li><strong>Carenagens e tanque:</strong> riscos, amassados e trincas — onde a queda mais marca.</li>
+          <li><strong>Guidão, manetes e retrovisores:</strong> empenamento e quebras.</li>
+          <li><strong>Escapamento:</strong> amassados, oxidação e pontos de impacto.</li>
+          <li><strong>Rodas e pneus:</strong> empenos, desgaste e o estado da relação/corrente.</li>
+          <li><strong>Banco, farol e lanternas:</strong> rasgos, trincas e funcionamento.</li>
+        </ul>
+        <p>O método é o mesmo do carro: registre cada avaria por peça, classifique a gravidade e anexe foto com data e GPS.</p>
+
+        <RecursosLaudo />
+
+        <p>
+          Quer o passo a passo geral? Leia o{' '}
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'vistoria-de-caminhao',
+    title: 'Vistoria de caminhão: roteiro completo de avarias',
+    excerpt:
+      'Cabine, baú, chassi e múltiplos eixos: o que inspecionar num caminhão e como emitir um laudo personalizado, com sua marca e validação por hash e QR Code.',
+    category: 'Vistoria',
+    tags: ['vistoria de caminhão', 'frota', 'laudo', 'avarias'],
+    date: '2026-06-24',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0e7490 45%,#22d3ee 100%)', emoji: '🚚', image: '/vehicles-img/truck.png' },
+    toc: [
+      { id: 'pontos', label: 'O que inspecionar' },
+      { id: 'perfil', label: 'Perfil e campos' },
+      { id: 'logo', label: 'Logo no PDF' },
+      { id: 'validacao', label: 'QR Code e hash' },
+    ],
+    content: (
+      <>
+        <p>
+          No caminhão, a vistoria é maior e tem áreas que o carro não tem. Uma ordem fixa e um registro
+          peça a peça evitam que algo passe — e protegem você na entrega e na devolução.
+        </p>
+
+        <h2 id="pontos">O que inspecionar num caminhão</h2>
+        <ul>
+          <li><strong>Cabine:</strong> para-choques, faróis, para-brisa, retrovisores e portas.</li>
+          <li><strong>Baú / carroceria:</strong> chapas, lonas, longarinas e portas traseiras.</li>
+          <li><strong>Chassi e quinta roda:</strong> trincas, oxidação e pontos de impacto.</li>
+          <li><strong>Rodas e pneus (todos os eixos):</strong> desgaste, avarias e estepes.</li>
+          <li><strong>Tanque e tampas:</strong> amassados e vazamentos aparentes.</li>
+        </ul>
+        <p>Com vários eixos e grandes superfícies, vale fotografar cada lado por completo, além do detalhe de cada avaria.</p>
+
+        <RecursosLaudo />
+
+        <p>
+          Trabalha com frota? Veja também o{' '}
+          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'vistoria-de-onibus',
+    title: 'Vistoria de ônibus: como inspecionar e laudar avarias',
+    excerpt:
+      'Carroceria longa, muitas janelas e interior: o roteiro para vistoriar um ônibus e gerar um laudo com sua logo, campos sob medida e selo de QR Code e hash.',
+    category: 'Vistoria',
+    tags: ['vistoria de ônibus', 'frota', 'laudo', 'avarias'],
+    date: '2026-06-23',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#155e2f 0%,#047857 45%,#34d399 100%)', emoji: '🚌', image: '/vehicles-img/bus.png' },
+    toc: [
+      { id: 'pontos', label: 'O que inspecionar' },
+      { id: 'perfil', label: 'Perfil e campos' },
+      { id: 'logo', label: 'Logo no PDF' },
+      { id: 'validacao', label: 'QR Code e hash' },
+    ],
+    content: (
+      <>
+        <p>
+          O ônibus tem uma carroceria longa e muitas superfícies — laterais, janelas, portas e interior.
+          Vistoriar em ordem e registrar por seção é o que garante um laudo completo e sem brechas.
+        </p>
+
+        <h2 id="pontos">O que inspecionar num ônibus</h2>
+        <ul>
+          <li><strong>Carroceria lateral:</strong> riscos, amassados e a pintura ao longo de toda a extensão.</li>
+          <li><strong>Janelas e para-brisas:</strong> trincas e vedação.</li>
+          <li><strong>Portas e bagageiros:</strong> funcionamento, alinhamento e avarias.</li>
+          <li><strong>Frente e traseira:</strong> para-choques, faróis e lanternas.</li>
+          <li><strong>Interior:</strong> bancos, forração, piso e saídas de emergência.</li>
+        </ul>
+        <p>Pela extensão, fotografe a lateral inteira e depois o detalhe de cada ocorrência, sempre com data e GPS.</p>
+
+        <RecursosLaudo />
+
+        <p>
+          Veja também o{' '}
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a>.
         </p>
       </>
     ),
