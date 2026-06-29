@@ -92,7 +92,7 @@ export default function PricingSection() {
           
           <div className="mt-8">
             <a
-              href="https://wa.me/5551999999999?text=Olá! Gostaria de saber mais sobre o plano Corporativo (Empresas) do app Danos Aparentes."
+              href="https://wa.me/5548991838234?text=Olá! Gostaria de saber mais sobre o plano Corporativo (Empresas) do app Danos Aparentes."
               target="_blank"
               rel="noopener noreferrer"
               className={buttonVariants({ variant: 'secondary', size: 'md', className: 'w-full' })}
