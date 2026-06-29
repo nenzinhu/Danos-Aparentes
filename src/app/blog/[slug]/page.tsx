@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { BLOG_POSTS, getPost, formatDate } from '@/src/content/blog'
 import { BlogCover } from '@/src/components/BlogCover'
+import ShareBar from '@/src/components/ShareBar'
 
 const SITE_URL = 'https://danosaparentes.com.br'
 
@@ -124,8 +125,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </aside>
         </div>
 
-        {/* Tags + rodapé */}
+        {/* Partilha + contato */}
         <div className="mt-12 pt-6 border-t border-[var(--card-border)]">
+          <ShareBar title={post.title} />
+        </div>
+
+        {/* Tags + rodapé */}
+        <div className="mt-10 pt-6 border-t border-[var(--card-border)]">
           <div className="flex flex-wrap gap-2 mb-6">
             {post.tags.map(tag => (
               <span key={tag} className="text-[0.68rem] font-bold text-[var(--text-muted)] bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] rounded-full px-3 py-1">
