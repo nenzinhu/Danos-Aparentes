@@ -44,6 +44,7 @@ const VehicleShowcaseSection = dynamic(() => import('../components/VehicleShowca
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'), { ssr: false });
 const CarLateralLeft = dynamic(() => import('../components/vehicles/CarLateralLeft'), { ssr: false });
 const VehicleDefs = dynamic(() => import('../components/vehicles/VehicleDefs'), { ssr: false });
+const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'), { ssr: false });
 const MobileStickyCta = dynamic(() => import('../components/MobileStickyCta'), { ssr: false });
 
 function TextCarousel() {
@@ -388,6 +389,9 @@ export default function LandingPage() {
 
       {/* Seção Modelo de Laudo PDF (lazy) */}
       <PdfPreviewSection />
+
+      {/* Seção Do Blog (lazy) */}
+      <BlogTeaserSection />
 
       <PricingSection />
 
