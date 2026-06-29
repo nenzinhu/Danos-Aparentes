@@ -434,6 +434,172 @@ BLOG_POSTS.push(
   },
 )
 
+BLOG_POSTS.push(
+  {
+    slug: 'como-fotografar-avarias',
+    title: 'Como fotografar avarias à prova de contestação',
+    excerpt:
+      'A foto certa é o que segura a cobrança. Veja enquadramento, luz, escala e os metadados (data, hora, GPS) que tornam o registro indiscutível.',
+    category: 'Boas práticas',
+    tags: ['fotografia', 'avarias', 'vistoria', 'prova'],
+    date: '2026-06-22',
+    readingMinutes: 5,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#4338ca 45%,#818cf8 100%)', emoji: '📷', image: '/vehicles-img/car2d.png' },
+    toc: [
+      { id: 'porque', label: 'Por que a foto decide' },
+      { id: 'enquadramento', label: 'Enquadramento' },
+      { id: 'luz', label: 'Luz e ângulo' },
+      { id: 'metadados', label: 'Data, hora e GPS' },
+      { id: 'erros', label: 'Erros comuns' },
+    ],
+    content: (
+      <>
+        <p>
+          Numa contestação, vence quem tem a prova melhor. E a prova é a foto. Uma imagem mal tirada
+          enfraquece um laudo correto; uma bem tirada encerra a discussão.
+        </p>
+
+        <h2 id="porque">Por que a foto decide</h2>
+        <p>
+          O laudo aponta a avaria; a foto comprova que ela existe, onde está e quando foi registrada. Sem
+          isso, é a sua palavra contra a do cliente.
+        </p>
+
+        <h2 id="enquadramento">Enquadramento: sempre duas fotos</h2>
+        <ul>
+          <li><strong>Foto aberta:</strong> mostra a peça inteira e a localização da avaria no veículo.</li>
+          <li><strong>Foto de detalhe:</strong> aproxima o dano para revelar profundidade e extensão.</li>
+          <li><strong>Referência de escala:</strong> aproxime de forma que dê para perceber o tamanho real.</li>
+        </ul>
+
+        <h2 id="luz">Luz e ângulo</h2>
+        <ul>
+          <li>Prefira <strong>luz natural difusa</strong>; evite sol estourando a imagem.</li>
+          <li>Fotografe a <strong>45°</strong> para riscos e amassados aparecerem — de frente, eles somem.</li>
+          <li>Limpe a área: poeira e reflexo escondem o dano.</li>
+        </ul>
+
+        <h2 id="metadados">Data, hora e GPS: o que torna indiscutível</h2>
+        <p>
+          Uma foto sem contexto pode ser de qualquer dia. Com <strong>data, hora e localização (GPS)</strong>
+          {' '}embutidos, ela prova <em>quando</em> e <em>onde</em> a avaria foi registrada — exatamente o que
+          o app faz automaticamente em cada foto do laudo, junto ao hash de validação.
+        </p>
+
+        <Cta />
+
+        <h2 id="erros">Erros comuns que invalidam a prova</h2>
+        <ul>
+          <li>Só a foto de detalhe, sem a aberta (não dá para saber onde é).</li>
+          <li>Foto tremida ou escura.</li>
+          <li>Registrar dias depois — a data não bate com a entrega/devolução.</li>
+        </ul>
+        <p>
+          Veja como tudo se junta no{' '}
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'vistoria-de-frota-padronizar-equipe',
+    title: 'Vistoria de frota: como padronizar a equipe',
+    excerpt:
+      'Quando cada um vistoria de um jeito, a cobrança falha. Veja como definir um padrão único — ordem, campos e laudo — e treinar a equipe para registros consistentes.',
+    category: 'Frota',
+    tags: ['frota', 'padronização', 'equipe', 'vistoria'],
+    date: '2026-06-21',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)', emoji: '🚐', image: '/vehicles-img/microbus.png' },
+    toc: [
+      { id: 'porque', label: 'Por que padronizar' },
+      { id: 'padrao', label: 'Defina um padrão único' },
+      { id: 'perfil', label: 'Perfil e campos' },
+      { id: 'logo', label: 'Logo no PDF' },
+      { id: 'validacao', label: 'QR Code e hash' },
+    ],
+    content: (
+      <>
+        <p>
+          Em frota, o problema raramente é falta de vistoria — é cada vistoriador fazer do seu jeito. Aí os
+          laudos não se comparam, e a cobrança de um dano novo desanda na primeira contestação.
+        </p>
+
+        <h2 id="porque">Por que padronizar</h2>
+        <p>
+          Um padrão único garante que entrega e devolução são <strong>comparáveis peça a peça</strong>,
+          independentemente de quem vistoriou. É isso que transforma o laudo em prova confiável.
+        </p>
+
+        <h2 id="padrao">Defina um padrão único</h2>
+        <ul>
+          <li><strong>Ordem fixa:</strong> sempre a mesma sequência (frente, lateral esquerda, traseira, lateral direita, teto, interior).</li>
+          <li><strong>Mesmos campos:</strong> todos preenchem as mesmas informações — sem improviso.</li>
+          <li><strong>Mesmo padrão de foto:</strong> aberta + detalhe, com data, hora e GPS.</li>
+          <li><strong>Mesmo documento:</strong> o laudo sai igual para toda a equipe.</li>
+        </ul>
+
+        <RecursosLaudo />
+
+        <p>
+          Trabalha com locação? Veja também o{' '}
+          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'laudo-de-avarias-para-sinistro',
+    title: 'Laudo de avarias para sinistro: como documentar para o seguro',
+    excerpt:
+      'Um sinistro mal documentado vira dor de cabeça com a seguradora. Veja o que registrar, como fotografar e como emitir um laudo com validação por hash e QR Code.',
+    category: 'Seguro',
+    tags: ['sinistro', 'seguro', 'laudo de avarias', 'documentação'],
+    date: '2026-06-20',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0f3d3e 0%,#0d9488 45%,#5eead4 100%)', emoji: '🛡️', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'espera', label: 'O que a seguradora espera' },
+      { id: 'documentar', label: 'Como documentar' },
+      { id: 'perfil', label: 'Perfil e campos' },
+      { id: 'logo', label: 'Logo no PDF' },
+      { id: 'validacao', label: 'QR Code e hash' },
+    ],
+    content: (
+      <>
+        <p>
+          No sinistro, a diferença entre um processo rápido e uma novela é a documentação. Um laudo de
+          avarias claro e validável acelera a análise e evita questionamentos.
+        </p>
+
+        <h2 id="espera">O que a seguradora espera</h2>
+        <ul>
+          <li><strong>Estado do veículo</strong> registrado por peça, com gravidade.</li>
+          <li><strong>Fotos</strong> abertas e de detalhe, com data, hora e local.</li>
+          <li><strong>Documento íntegro</strong>, que não possa ser alterado depois.</li>
+        </ul>
+
+        <h2 id="documentar">Como documentar bem</h2>
+        <ul>
+          <li>Registre <strong>todas</strong> as avarias aparentes, mesmo as pequenas.</li>
+          <li>Não edite as fotos — a seguradora valoriza o registro original.</li>
+          <li>Feche o laudo com assinaturas e selo de validação no mesmo dia da ocorrência.</li>
+        </ul>
+
+        <RecursosLaudo />
+
+        <p>
+          Não confunda com a vistoria de procedência: veja a diferença entre{' '}
+          <a href="/blog/laudo-cautelar-vs-laudo-de-avarias">laudo cautelar e laudo de avarias</a>.
+        </p>
+      </>
+    ),
+  },
+)
+
 export function getPost(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find(p => p.slug === slug)
 }
