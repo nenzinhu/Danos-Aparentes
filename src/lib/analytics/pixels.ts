@@ -10,11 +10,36 @@ declare global {
       page: () => void
       track: (event: string, payload?: Record<string, unknown>) => void
     }
+    dataLayer?: unknown[]
+    gtag?: (...args: unknown[]) => void
   }
 }
 
 const META_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID
 const TIKTOK_ID = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID
+const GOOGLE_ADS_ID = 'AW-18259031185'
+
+// Antes esse gtag.js era injetado incondicionalmente em layout.tsx (afterInteractive
+// em toda página, antes mesmo do usuário decidir sobre cookies). Centralizamos aqui
+// para respeitar o mesmo consentimento de marketing que já vale para Meta/TikTok,
+// e para não custar ~150KB + ~360ms de script logo no carregamento inicial.
+export function initGoogleAds(): void {
+  if (typeof window === 'undefined') return
+  if (!hasMarketingConsent()) return
+  if (window.gtag) return
+
+  window.dataLayer = window.dataLayer || []
+  window.gtag = function gtag(...args: unknown[]) {
+    window.dataLayer!.push(args)
+  }
+  window.gtag('js', new Date())
+  window.gtag('config', GOOGLE_ADS_ID)
+
+  const script = document.createElement('script')
+  script.async = true
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GOOGLE_ADS_ID}`
+  document.head.appendChild(script)
+}
 
 export function analyticsEnabled(): boolean {
   if (typeof window === 'undefined') return false

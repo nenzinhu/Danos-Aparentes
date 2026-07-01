@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DEFAULT_GOOGLE_VOICE_ID, getGoogleVoice, isGoogleVoiceId } from '@/src/lib/googleTtsVoices';
+import { getUserFromRequest, userHasActiveSubscription, getClientIp } from '@/src/lib/server/auth';
+import { checkRateLimit } from '@/src/lib/server/rateLimit';
+
+const MAX_TEXT_LENGTH_AUTH = 2000;
+const MAX_TEXT_LENGTH_ANON = 400;
 
 async function synthesizeGoogle(
   text: string,
@@ -76,10 +81,42 @@ async function synthesizeElevenLabs(
 
 export async function POST(req: NextRequest) {
   try {
+    // Narração TTS é usada tanto no app autenticado (assinantes) quanto na
+    // página pública /demo. Por isso a autenticação aqui é opcional: usuários
+    // com assinatura ativa ganham um limite mais alto; o restante (anônimo,
+    // ou logado sem assinatura) cai no limite restrito por IP, e o texto
+    // aceito é mais curto para conter o custo de abuso.
+    const user = await getUserFromRequest(req);
+    const hasAccess = user ? await userHasActiveSubscription(user.id) : false;
+
+    if (hasAccess && user) {
+      const { allowed, retryAfterSec } = checkRateLimit(`tts:${user.id}`, 60, 10 * 60 * 1000);
+      if (!allowed) {
+        return NextResponse.json(
+          { error: 'Muitas requisições. Tente novamente em instantes.' },
+          { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
+        );
+      }
+    } else {
+      const ip = getClientIp(req);
+      const { allowed, retryAfterSec } = checkRateLimit(`tts-ip:${ip}`, 8, 10 * 60 * 1000);
+      if (!allowed) {
+        return NextResponse.json(
+          { error: 'Muitas requisições. Tente novamente em instantes.' },
+          { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
+        );
+      }
+    }
+
     const { text, voiceId, rate, pitch, volume, engine } = await req.json();
 
-    if (!text) {
+    if (!text || typeof text !== 'string') {
       return NextResponse.json({ error: 'O texto é obrigatório' }, { status: 400 });
+    }
+
+    const maxLength = hasAccess ? MAX_TEXT_LENGTH_AUTH : MAX_TEXT_LENGTH_ANON;
+    if (text.length > maxLength) {
+      return NextResponse.json({ error: `Texto excede o limite de ${maxLength} caracteres` }, { status: 400 });
     }
 
     const safeRate = Math.max(0.7, Math.min(1.2, rate ?? 0.9));

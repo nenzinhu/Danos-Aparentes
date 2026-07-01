@@ -169,6 +169,27 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
     onChange({ ...info, customFields: fields })
   }, [customFieldDefs, info, onChange])
 
+  // Reordena um campo personalizado (dir = -1 sobe, +1 desce). Aplica a nova
+  // ordem tanto na definição salva quanto nos valores da vistoria atual, para
+  // que formulário e PDF sigam exatamente a mesma sequência.
+  const moveCustomField = useCallback((id: string, dir: -1 | 1) => {
+    const idx = customFieldDefs.findIndex(d => d.id === id)
+    if (idx < 0) return
+    const target = idx + dir
+    if (target < 0 || target >= customFieldDefs.length) return
+    const next = [...customFieldDefs]
+    ;[next[idx], next[target]] = [next[target], next[idx]]
+    setCustomFieldDefs(next); saveCustomFieldDefs(next)
+    const existing = info.customFields || []
+    if (existing.length) {
+      const ordered = next
+        .map(d => existing.find(f => f.id === d.id))
+        .filter((f): f is CustomField => Boolean(f))
+      const orphans = existing.filter(f => !next.some(d => d.id === f.id))
+      onChange({ ...info, customFields: [...ordered, ...orphans] })
+    }
+  }, [customFieldDefs, info, onChange])
+
   const setCustomFieldValue = useCallback((id: string, label: string, value: string) => {
     const existing = info.customFields || []
     const has = existing.some(f => f.id === id)
@@ -416,15 +437,46 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
                     ➕ Campos Personalizados
                   </div>
                   {customFieldDefs.length > 0 && (
-                    <div className="flex flex-col gap-1.5 mb-2.5">
-                      {customFieldDefs.map(d => (
-                        <div key={d.id} className="flex items-center gap-2">
-                          <span className="flex-1 text-[0.78rem] text-slate-300 font-semibold truncate">{d.label}</span>
+                    <div className="flex flex-col gap-1 mb-2.5">
+                      {customFieldDefs.length > 1 && (
+                        <div className="text-[0.62rem] text-slate-500 font-semibold mb-1 select-none">
+                          Use as setas ↑ ↓ para ordenar os campos
+                        </div>
+                      )}
+                      {customFieldDefs.map((d, i) => (
+                        <div key={d.id} className="flex items-center gap-2 bg-white/[0.03] border border-white/5 rounded-lg pl-2 pr-1.5 py-1">
+                          <span className="text-[0.66rem] font-mono tabular-nums text-slate-500 w-3.5 text-center select-none">{i + 1}</span>
+                          <span className="flex-1 text-[0.78rem] text-slate-200 font-semibold truncate">{d.label}</span>
+                          {/* Reordenar — controle segmentado agrupado */}
+                          <div className="inline-flex rounded-md border border-sky-500/25 overflow-hidden divide-x divide-sky-500/20">
+                            <button
+                              type="button"
+                              onClick={() => moveCustomField(d.id, -1)}
+                              disabled={i === 0}
+                              title="Mover para cima"
+                              aria-label={`Mover ${d.label} para cima`}
+                              className="bg-sky-500/10 text-sky-300 w-7 h-7 flex items-center justify-center text-xs leading-none cursor-pointer hover:bg-sky-500/25 active:bg-sky-500/30 transition-colors disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:bg-sky-500/10"
+                            >
+                              ↑
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => moveCustomField(d.id, 1)}
+                              disabled={i === customFieldDefs.length - 1}
+                              title="Mover para baixo"
+                              aria-label={`Mover ${d.label} para baixo`}
+                              className="bg-sky-500/10 text-sky-300 w-7 h-7 flex items-center justify-center text-xs leading-none cursor-pointer hover:bg-sky-500/25 active:bg-sky-500/30 transition-colors disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:bg-sky-500/10"
+                            >
+                              ↓
+                            </button>
+                          </div>
+                          {/* Excluir — separado e discreto até hover (ação destrutiva) */}
                           <button
                             type="button"
                             onClick={() => { if (window.confirm(`Excluir o campo "${d.label}"? Ele será removido de todas as vistorias.`)) removeCustomField(d.id) }}
                             title="Excluir campo"
-                            className="bg-red-500/10 border border-red-500/30 rounded-md p-1 text-red-500 cursor-pointer flex items-center hover:bg-red-500/20 transition-colors"
+                            aria-label={`Excluir ${d.label}`}
+                            className="ml-0.5 w-7 h-7 flex items-center justify-center rounded-md text-red-400/70 cursor-pointer hover:bg-red-500/15 hover:text-red-400 transition-colors"
                           >
                             <TrashIcon />
                           </button>

@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Termos de Uso | Danos Aparentes',
   description:
     'Termos de Uso do aplicativo Danos Aparentes — vistoria digital de avarias veiculares.',
+  alternates: { canonical: '/termos' },
 }
 
 export default function TermosPage() {

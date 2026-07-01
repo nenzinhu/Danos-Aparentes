@@ -19,7 +19,6 @@ import { Outfit, Saira_Condensed, IBM_Plex_Mono } from 'next/font/google'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
-import Script from 'next/script'
 import CookieConsentBanner from '@/src/components/CookieConsentBanner'
 import AnalyticsScripts from '@/src/components/AnalyticsScripts'
 
@@ -43,6 +42,9 @@ export const metadata: Metadata = {
   title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
   description: 'Documente avarias veiculares com precisão pericial: marque os danos no desenho do veículo, anexe fotos por avaria e gere o laudo em PDF com QR Code de verificação.',
   metadataBase: new URL(SITE_URL),
+  // Canonical da home. Páginas internas definem o seu próprio em
+  // `alternates.canonical` — sempre adicione um ao criar rota nova.
+  alternates: { canonical: '/' },
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
@@ -140,25 +142,28 @@ export default function RootLayout({
         <meta name="dc.rights" content="Copyright 2026, Danos Aparentes. Lei 9.610/98 - Brasil." />
         <meta name="dc.language" content="pt-BR" />
         <meta name="dc.type" content="Software / Web Application" />
+
+        {/* ── Organization (Knowledge Graph) — presente em todas as páginas ── */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'Danos Aparentes',
+              url: SITE_URL,
+              logo: `${SITE_URL}/logo-full.png`,
+              description:
+                'Plataforma de vistoria digital de avarias veiculares: marque os danos no diagrama do veículo, anexe fotos e gere laudos em PDF com QR Code de verificação.',
+            }),
+          }}
+        />
       </head>
       <body className={`${outfit.variable} ${outfit.className} ${sairaCondensed.variable} ${plexMono.variable} min-h-screen selection:bg-primary selection:text-white`}>
         {children}
         <CookieConsentBanner />
         <AnalyticsScripts />
         <SpeedInsights />
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=AW-18259031185"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'AW-18259031185');
-          `}
-        </Script>
       </body>
     </html>
   )

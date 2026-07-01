@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Suporte | Danos Aparentes',
   description:
     'Fale com o suporte do Danos Aparentes. Tire dúvidas, relate problemas técnicos, envie sugestões ou trate de assuntos financeiros e de assinatura.',
+  alternates: { canonical: '/suporte' },
 }
 
 export default function SuportePage() {

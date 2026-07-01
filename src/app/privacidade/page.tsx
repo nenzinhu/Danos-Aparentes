@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: 'Política de Privacidade | Danos Aparentes',
   description:
     'Política de Privacidade do Danos Aparentes — como tratamos seus dados conforme a LGPD (Lei nº 13.709/2018).',
+  alternates: { canonical: '/privacidade' },
 }
 
 export default function PrivacidadePage() {

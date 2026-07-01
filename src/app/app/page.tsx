@@ -22,6 +22,7 @@ import AppToast from '@/src/components/app/AppToast'
 import AppFooter from '@/src/components/app/AppFooter'
 import AppTabBar from '@/src/components/app/AppTabBar'
 import InspectTab from '@/src/components/app/InspectTab'
+import IaTab from '@/src/components/app/IaTab'
 import PhotoUploadProgressBar from '@/src/components/PhotoUploadProgressBar'
 import TorchButton from '@/src/components/TorchButton'
 import { EMPTY_INFO } from '@/src/components/app/constants'
@@ -42,7 +43,7 @@ export default function AppMainPage() {
   const [toast, setToast] = useState<string | null>(null)
   const [formCollapsed, setFormCollapsed] = useState(false)
   const [formResetToken, setFormResetToken] = useState(0)
-  const [activeTab, setActiveTab] = useState<'inspect' | 'dashboard'>('inspect')
+  const [activeTab, setActiveTab] = useState<'inspect' | 'dashboard' | 'ia'>('inspect')
   const [termsOpen, setTermsOpen] = useState(false)
   const [termsTab, setTermsTab] = useState<'terms' | 'privacy'>('terms')
   const [tutorialOpen, setTutorialOpen] = useState(false)
@@ -54,7 +55,7 @@ export default function AppMainPage() {
   }, [])
 
   const { damages, addDamage, removeDamage, updateDamage, clearDamages } = useDamages()
-  const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts()
+  const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts(session?.access_token)
   const { saved, saveReport, deleteReport } = useSavedReports(session?.user.id)
   const { status: syncStatus } = useSyncStatus(session?.user.id)
   const { info: subscription, loading: subLoading, openPortal } = useSubscription(session?.user.id, session?.access_token)
@@ -200,6 +201,14 @@ export default function AppMainPage() {
         <main className="w-full max-w-7xl px-4 flex flex-col gap-6 mt-4">
           {activeTab === 'dashboard' ? (
             <DashboardView saved={saved} />
+          ) : activeTab === 'ia' ? (
+            <IaTab
+              vehicleInfo={vehicleInfo}
+              damages={damages}
+              vehicleType={vehicleType}
+              onToast={showToast}
+              accessToken={session?.access_token}
+            />
           ) : (
             <InspectTab
               vehicleType={vehicleType}

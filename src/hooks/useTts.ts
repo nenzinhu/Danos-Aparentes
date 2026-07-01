@@ -32,7 +32,7 @@ function normalizeConfig(parsed: Partial<TtsConfig>): TtsConfig {
   return merged
 }
 
-export function useTts() {
+export function useTts(accessToken?: string) {
   const [config, setConfig] = useState<TtsConfig>(() => {
     try {
       const saved = localStorage.getItem('tts-config')
@@ -78,7 +78,10 @@ export function useTts() {
       try {
         const response = await fetch('/api/tts', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+          },
           body: JSON.stringify({
             text,
             engine: config.engine,
