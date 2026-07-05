@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { BLOG_POSTS } from '@/src/content/blog'
+import { BLOG_POSTS, getCategories } from '@/src/content/blog'
 
 const SITE_URL = 'https://danosaparentes.com.br'
 
@@ -30,5 +30,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly',
     priority: 0.7,
   }))
-  return [...staticEntries, ...blogEntries]
+  const categoryEntries: MetadataRoute.Sitemap = getCategories().map(c => ({
+    url: `${SITE_URL}/blog/categoria/${c.slug}`,
+    lastModified,
+    changeFrequency: 'weekly',
+    priority: 0.6,
+  }))
+  return [...staticEntries, ...blogEntries, ...categoryEntries]
 }
