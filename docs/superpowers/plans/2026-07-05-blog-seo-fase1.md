@@ -455,7 +455,7 @@ for (const c of categories) console.log(c, '->', slugify(c))
 "
 ```
 
-Expected: one line per distinct category (10 categories), each with a lowercase hyphenated slug and no accented characters (e.g. `Boas práticas -> boas-praticas`, `Validade -> validade`). This confirms the slugify logic before it's wired into routing in Task 5.
+Expected: one line per distinct category (11 categories), each with a lowercase hyphenated slug and no accented characters (e.g. `Boas práticas -> boas-praticas`, `Validade -> validade`). This confirms the slugify logic before it's wired into routing in Task 5.
 
 - [ ] **Step 4: Commit**
 
@@ -712,7 +712,7 @@ Expected: no errors.
 - [ ] **Step 3: Full build (final verification for the whole plan)**
 
 Run: `npm run build`
-Expected: build succeeds; output lists the new `/blog/categoria/[categoria]` route with one static page per category (10 categories) among the generated routes.
+Expected: build succeeds; output lists the new `/blog/categoria/[categoria]` route with one static page per category (11 categories) among the generated routes.
 
 - [ ] **Step 4: Manual check**
 
