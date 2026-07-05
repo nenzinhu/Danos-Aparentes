@@ -2,7 +2,7 @@
 import { useState, createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { Damage, VehicleInfo, VehicleType, ViewType } from '../types'
-import { generatePdf, generatePdfBlob, SvgPdfData } from '../lib/pdf'
+import { generatePdf, generatePdfBlob, buildBadgeSnippet, SvgPdfData } from '../lib/pdf'
 import { copyReport, downloadTxt, sendWhatsApp } from '../lib/report'
 import { resolveDamagePhotos } from '../lib/photoStore'
 import { staticVehicleRegistry } from './vehicles/staticRegistry'
@@ -94,6 +94,15 @@ function IconTxt() {
   )
 }
 
+function IconSeal() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" style={{ flexShrink: 0 }}>
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="2"/>
+      <path d="M8.5 12.5l2.2 2.2 4.8-5.4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
 function IconDamageList() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 95.9 122.88" width="18" height="18" style={{ flexShrink: 0, fill: 'currentColor' }}>
@@ -105,6 +114,8 @@ function IconDamageList() {
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function ReportActions({ vehicleType, vehicleInfo, damages, onToast, hasAccess }: Props) {
   const [loading, setLoading] = useState<string | null>(null)
+  const [reportHash, setReportHash] = useState<string | null>(null)
+  const [showBadgePanel, setShowBadgePanel] = useState(false)
   const [pdfTheme, setPdfTheme] = useState<'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante'>(() => {
     if (typeof window !== 'undefined') {
       return (localStorage.getItem('vistoria_pdf_theme') as 'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante') || 'modern'
@@ -137,7 +148,8 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
     const resolvedDamages = await resolveDamagePhotos(damages)
     const companyName = hasAccess ? (localStorage.getItem('company_name') || '') : ''
     const companyLogo = hasAccess ? (localStorage.getItem('company_logo') || '') : ''
-    await generatePdf(vehicleInfo, resolvedDamages, svgData, { companyName, companyLogo, pdfTheme })
+    const hash = await generatePdf(vehicleInfo, resolvedDamages, svgData, { companyName, companyLogo, pdfTheme })
+    if (hash && hash !== 'N/D') setReportHash(hash)
   }
 
   async function whatsappPdf() {
@@ -231,6 +243,45 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
             <span className="text-[0.72rem]">TXT</span>
           </button>
         </div>
+
+        <button
+          onClick={() => setShowBadgePanel(v => !v)}
+          disabled={!reportHash}
+          title={reportHash ? 'Selo embutível do laudo' : 'Gere o PDF primeiro para liberar o selo'}
+          className={`${btnBase} bg-sky-500/10 border border-sky-500/30 text-sky-500 hover:bg-sky-500/20 disabled:opacity-40`}
+        >
+          <IconSeal />
+          Selo do laudo
+        </button>
+
+        {showBadgePanel && reportHash && (
+          <div className="flex flex-col gap-2 bg-sky-950/15 border border-sky-500/10 rounded-xl p-2.5">
+            <div className="flex items-center gap-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/selo-laudo-verificado.svg" alt="Laudo Verificado" width={56} height={56} />
+              <p className="text-[0.72rem] text-[var(--text-muted)] leading-snug">
+                Cole este código no site ou anúncio do veículo para exibir o selo de autenticidade.
+              </p>
+            </div>
+            <textarea
+              readOnly
+              value={buildBadgeSnippet(reportHash)}
+              onFocus={(e) => e.currentTarget.select()}
+              rows={3}
+              className="w-full bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] px-3 py-2 rounded-lg font-mono text-[0.7rem] outline-none resize-none"
+            />
+            <button
+              onClick={() => handle('badge-copy', async () => {
+                await navigator.clipboard.writeText(buildBadgeSnippet(reportHash))
+              }, '📋 Código copiado!')}
+              disabled={loading !== null}
+              className={`${btnBase} justify-center bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
+            >
+              {loading === 'badge-copy' ? <span className="animate-pulse">⏳</span> : <IconCopy />}
+              Copiar código
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )

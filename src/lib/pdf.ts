@@ -92,7 +92,7 @@ async function computeHash(info: VehicleInfo, damages: Damage[], ts: number): Pr
 }
 
 // ─── Registra o hash no Supabase para a página /verify conferir depois ──
-async function registerHash(hash: string, info: VehicleInfo, damages: Damage[], date: string) {
+async function registerHash(hash: string, info: VehicleInfo, damages: Damage[], date: string, companyName?: string) {
   if (!supabaseEnabled || !supabase || hash === 'N/D') return
   try {
     const { data: { session } } = await supabase.auth.getSession()
@@ -104,6 +104,7 @@ async function registerHash(hash: string, info: VehicleInfo, damages: Damage[], 
       geo_lng: info.geo?.lng ?? null,
       geo_accuracy: info.geo?.accuracy ?? null,
       geo_address: info.geo?.address ?? null,
+      company_name: companyName || '',
     })
   } catch { /* best-effort — não bloqueia a geração do PDF */ }
 }
@@ -397,7 +398,7 @@ export interface PdfSettings {
   pdfTheme?: 'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante'
 }
 
-async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings): Promise<string> {
+async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings): Promise<{ html: string; hash: string }> {
   const ts   = Date.now()
   const date = new Date(ts).toLocaleString('pt-BR', { dateStyle: 'long', timeStyle: 'short' })
   const signatureDate = new Date(ts).toLocaleDateString('pt-BR')
@@ -459,7 +460,7 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
   const theme = THEMES[pdfTheme] ?? THEMES.modern
 
   const hash = await computeHash(info, damages, ts)
-  await registerHash(hash, info, damages, date)
+  await registerHash(hash, info, damages, date, settings?.companyName)
 
   const geo = info.geo
   const geoQuery = geo ? `&lat=${geo.lat}&lng=${geo.lng}` : ''
@@ -493,7 +494,7 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
       ? `<p class="poppins" style="font-size:10px;font-weight:700;color:#94a3b8;letter-spacing:0.04em;font-family:${theme.fontTitle};text-transform:uppercase;margin-bottom:5px;line-height:1.2;">${companyName}</p>`
       : ''
 
-  return `<!DOCTYPE html>
+  const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
@@ -605,6 +606,7 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
 </div>
 </body>
 </html>`
+  return { html, hash }
 }
 
 // ─── html2pdf loader ──────────────────────────────────────────────────────────
@@ -655,14 +657,15 @@ async function renderSinglePage(html: string, filename: string) {
   return pdf
 }
 
-export async function generatePdf(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings) {
+export async function generatePdf(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings): Promise<string> {
   if (typeof window !== 'undefined' && (window as any).document?.fonts?.ready) {
     await (window as any).document.fonts.ready;
   }
   const filename = `vistoria-${info.plate || 'sem-placa'}.pdf`
-  const html = await buildFullHtml(info, damages, svgData, settings)
+  const { html, hash } = await buildFullHtml(info, damages, svgData, settings)
   const pdf = await renderSinglePage(html, filename)
   pdf.save(filename)
+  return hash
 }
 
 export async function generatePdfBlob(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings): Promise<Blob> {
@@ -670,7 +673,17 @@ export async function generatePdfBlob(info: VehicleInfo, damages: Damage[], svgD
     await (window as any).document.fonts.ready;
   }
   const filename = `vistoria-${info.plate || 'sem-placa'}.pdf`
-  const html = await buildFullHtml(info, damages, svgData, settings)
+  const { html } = await buildFullHtml(info, damages, svgData, settings)
   const pdf = await renderSinglePage(html, filename)
   return pdf.output('blob')
+}
+
+// ─── Snippet do selo embutível ("Laudo Verificado") ──────────────────────────
+// Gera o HTML pronto pra locadora colar no próprio site/anúncio, linkando
+// para a verificação pública daquele laudo específico.
+export function buildBadgeSnippet(hash: string): string {
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
+  const verifyUrl = `${origin}/verify?hash=${encodeURIComponent(hash)}`
+  const badgeUrl = `${origin}/selo-laudo-verificado.svg`
+  return `<a href="${verifyUrl}" target="_blank" rel="noopener noreferrer"><img src="${badgeUrl}" alt="Laudo Verificado" width="120" height="120" /></a>`
 }

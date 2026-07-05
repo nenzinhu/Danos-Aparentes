@@ -127,6 +127,10 @@ alter table report_hashes add column if not exists geo_lng double precision;
 alter table report_hashes add column if not exists geo_accuracy int;
 alter table report_hashes add column if not exists geo_address text;
 
+-- Nome da locadora/empresa emissora, exibido na página /verify e no selo
+-- embutível para reforçar de quem é o laudo (adicionada após a criação original).
+alter table report_hashes add column if not exists company_name text default '';
+
 alter table report_hashes enable row level security;
 
 -- Qualquer pessoa pode consultar um hash específico (é assim que a verificação

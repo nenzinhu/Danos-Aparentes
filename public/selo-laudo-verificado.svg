@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <circle cx="60" cy="60" r="56" fill="#ffffff" stroke="#0f172a" stroke-width="4"/>
+  <text x="60" y="52" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="13" fill="#0f172a" letter-spacing="0.5">LAUDO</text>
+  <text x="60" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-weight="900" font-size="13" fill="#0f172a" letter-spacing="0.5">VERIFICADO</text>
+  <text x="60" y="86" text-anchor="middle" font-family="Arial, sans-serif" font-weight="700" font-size="7" fill="#64748b" letter-spacing="1.5">DANOS APARENTES</text>
+</svg>

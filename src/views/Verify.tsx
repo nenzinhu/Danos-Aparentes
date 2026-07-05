@@ -13,6 +13,7 @@ interface HashRecord {
   geo_lng?: number | null
   geo_accuracy?: number | null
   geo_address?: string | null
+  company_name?: string | null
 }
 
 type Status = 'loading' | 'valid' | 'not_found' | 'no_hash' | 'offline' | 'error'
@@ -99,6 +100,9 @@ export default function Verify() {
             <div className="text-5xl shrink-0">{view.icon}</div>
             <div>
               <h2 className={`text-lg font-black uppercase tracking-tight ${view.text} mb-1`}>{view.title}</h2>
+              {status === 'valid' && record?.company_name && (
+                <p className="text-xs font-bold uppercase tracking-wider opacity-70 mb-1">Emitido por {record.company_name}</p>
+              )}
               <p className="text-sm leading-relaxed opacity-80">{view.desc}</p>
             </div>
           </div>
@@ -112,6 +116,7 @@ export default function Verify() {
                 <Row label="Referência / OS" value={record.ref || 'NÃO INFORMADA'} />
                 <Row label="Danos Registrados" value={String(record.damages_count)} />
                 <Row label="Data de Emissão" value={record.issued_at || 'NÃO INFORMADA'} />
+                {record.company_name && <Row label="Empresa Emissora" value={record.company_name} />}
               </div>
             </div>
           )}
