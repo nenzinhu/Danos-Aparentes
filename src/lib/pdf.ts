@@ -62,10 +62,29 @@ async function generateQrDataUrl(text: string): Promise<string> {
 }
 
 // ─── Hash de integridade (SHA-256, primeiros 32 hex) ─────────────────────────
+// Cobre todo o conteúdo do laudo (dados do veículo/proprietário, avarias,
+// fotos e assinaturas), não só placa/OS/contagem — qualquer alteração no
+// conteúdo depois de emitido muda o hash e derruba a verificação no /verify.
 async function computeHash(info: VehicleInfo, damages: Damage[], ts: number): Promise<string> {
   try {
     const geo = info.geo ? { lat: info.geo.lat, lng: info.geo.lng } : null
-    const payload = JSON.stringify({ plate: info.plate, ref: info.ref, count: damages.length, ts, geo })
+    const payload = JSON.stringify({
+      ts,
+      geo,
+      info: {
+        owner: info.owner, phone: info.phone, brand: info.brand, plate: info.plate,
+        generalNotes: info.generalNotes, profile: info.profile, ref: info.ref,
+        color: info.color, vehicleTypeDesc: info.vehicleTypeDesc, city: info.city, state: info.state,
+        cpf: info.cpf, cnh: info.cnh, cnhCategory: info.cnhCategory,
+        inspectorSignature: info.inspectorSignature, clientSignature: info.clientSignature,
+        customFields: info.customFields,
+      },
+      damages: damages.map(d => ({
+        vehicle: d.vehicle, view: d.view, partId: d.partId, partName: d.partName,
+        type: d.type, typeName: d.typeName, severity: d.severity, notes: d.notes,
+        photos: d.photos, photoNotes: d.photoNotes,
+      })),
+    })
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(payload))
     const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
     return hex.slice(0, 32).toUpperCase()
@@ -339,7 +358,7 @@ function buildPhotoSection(damages: Damage[], theme: any): string {
 }
 
 // ─── Assinaturas ──────────────────────────────────────────────────────────────
-function buildSignature(info: VehicleInfo, theme: any): string {
+function buildSignature(info: VehicleInfo, theme: any, dateStr: string): string {
   const inspectorImg = info.inspectorSignature
     ? `<div style="height:32px;text-align:center;margin-bottom:2px;"><img src="${info.inspectorSignature}" style="max-height:32px;max-width:180px;display:inline-block;vertical-align:bottom;" /></div>`
     : '<div style="height:32px;"></div>'
@@ -358,7 +377,7 @@ function buildSignature(info: VehicleInfo, theme: any): string {
             <p style="font-size:8px;font-weight:700;color:${theme.textMuted};text-transform:uppercase;letter-spacing:0.04em;text-align:center;margin-top:6px;font-family:${theme.fontTitle};">Assinatura do Vistoriador</p>
           </td>
           <td style="width:20%;text-align:center;vertical-align:bottom;padding-bottom:2px;">
-            <p style="font-size:8px;font-weight:600;color:${theme.textMuted};font-family:${theme.fontMain};">Data: ____/____/________</p>
+            <p style="font-size:8px;font-weight:600;color:${theme.textMuted};font-family:${theme.fontMain};">Data: ${dateStr}</p>
           </td>
           <td style="width:40%;vertical-align:bottom;text-align:center;">
             ${clientImg}
@@ -375,12 +394,13 @@ function buildSignature(info: VehicleInfo, theme: any): string {
 export interface PdfSettings {
   companyName?: string
   companyLogo?: string
-  pdfTheme?: 'modern' | 'editorial' | 'tecnico'
+  pdfTheme?: 'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante'
 }
 
 async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings): Promise<string> {
   const ts   = Date.now()
   const date = new Date(ts).toLocaleString('pt-BR', { dateStyle: 'long', timeStyle: 'short' })
+  const signatureDate = new Date(ts).toLocaleDateString('pt-BR')
   const plate  = info.plate || '—'
   const osRef  = info.ref   || `OS-${ts.toString().slice(-6)}`
   const pdfTheme = settings?.pdfTheme || 'modern'
@@ -410,6 +430,30 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
       accentColor: '#0f766e', borderColor: '#cbd5e1', borderLight: '#eef2f7', cardBg: '#f8fafc',
       headerBg: 'linear-gradient(135deg, #0b1220 0%, #1e293b 100%)',
       colorStripe: 'linear-gradient(90deg, #0f766e 0%, #2dd4bf 50%, #0ea5e9 100%)',
+    },
+    corporativo: {
+      fontMain: "'Outfit', -apple-system, sans-serif",
+      fontTitle: "'Poppins', sans-serif",
+      bgMain: '#ffffff', textMain: '#0f172a', textMuted: '#64748b',
+      accentColor: '#1e3a8a', borderColor: '#cbd5e1', borderLight: '#eef2f7', cardBg: '#ffffff',
+      headerBg: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)',
+      colorStripe: 'linear-gradient(90deg, #1e3a8a 0%, #b45309 50%, #1e3a8a 100%)',
+    },
+    minimalista: {
+      fontMain: "'Outfit', -apple-system, sans-serif",
+      fontTitle: "'Outfit', -apple-system, sans-serif",
+      bgMain: '#ffffff', textMain: '#18181b', textMuted: '#71717a',
+      accentColor: '#18181b', borderColor: '#e4e4e7', borderLight: '#f4f4f5', cardBg: '#fafafa',
+      headerBg: 'linear-gradient(135deg, #18181b 0%, #3f3f46 100%)',
+      colorStripe: 'linear-gradient(90deg, #18181b 0%, #71717a 50%, #18181b 100%)',
+    },
+    vibrante: {
+      fontMain: "'Outfit', -apple-system, sans-serif",
+      fontTitle: "'Poppins', sans-serif",
+      bgMain: '#ffffff', textMain: '#1e1b2e', textMuted: '#6b7280',
+      accentColor: '#7c3aed', borderColor: '#e9d5ff', borderLight: '#f5f3ff', cardBg: '#fdfcff',
+      headerBg: 'linear-gradient(135deg, #4c1d95 0%, #7c3aed 60%, #db2777 100%)',
+      colorStripe: 'linear-gradient(90deg, #7c3aed 0%, #db2777 50%, #f59e0b 100%)',
     },
   } as const
   const theme = THEMES[pdfTheme] ?? THEMES.modern
@@ -524,7 +568,7 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
     ${buildPhotoSection(damages, theme)}
 
     <!-- 6. ASSINATURAS -->
-    ${buildSignature(info, theme)}
+    ${buildSignature(info, theme, signatureDate)}
 
   </div>
 

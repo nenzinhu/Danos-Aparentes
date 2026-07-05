@@ -48,6 +48,15 @@ function mapStripeStatus(status: Stripe.Subscription.Status): 'active' | 'past_d
   return 'canceled'
 }
 
+// Deriva o plan_tier a partir do Price ID realmente comprado, em vez de
+// confiar em metadata enviada pelo client — funciona tanto para checkout
+// self-serve quanto para Payment Links criados manualmente pra vendas
+// Corporativo (fechadas via WhatsApp/consultivo, fora do fluxo de app).
+function resolvePlanTier(priceId: string | undefined): 'pro' | 'corporativo' {
+  if (priceId && priceId === process.env.STRIPE_PRICE_ID_CORPORATE) return 'corporativo'
+  return 'pro'
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Método não permitido' })
@@ -76,8 +85,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const session = event.data.object as Stripe.Checkout.Session
       const userId = session.client_reference_id
       if (userId && session.customer && session.subscription) {
+        const subscription = await stripe.subscriptions.retrieve(session.subscription as string)
+        const planTier = resolvePlanTier(subscription.items.data[0]?.price.id)
+
         const { data, error } = await supabaseAdmin.from('subscriptions').update({
           status: 'active',
+          plan_tier: planTier,
           stripe_customer_id: session.customer as string,
           stripe_subscription_id: session.subscription as string,
           updated_at: new Date().toISOString(),
@@ -97,9 +110,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ? 'canceled'
         : mapStripeStatus(subscription.status)
       const periodEndUnix = getCurrentPeriodEnd(subscription)
+      const planTier = resolvePlanTier(subscription.items.data[0]?.price.id)
 
       const { data, error } = await supabaseAdmin.from('subscriptions').update({
         status,
+        plan_tier: planTier,
         current_period_end: periodEndUnix ? new Date(periodEndUnix * 1000).toISOString() : null,
         updated_at: new Date().toISOString(),
       }).eq('stripe_subscription_id', subscription.id).select('user_id')

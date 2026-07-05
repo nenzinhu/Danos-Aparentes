@@ -20,6 +20,7 @@ interface InspectTabProps {
   formResetToken: number
   viewDamages: Damage[]
   allVehicleDamages: Damage[]
+  visitedViews?: ViewType[]
   ttsConfig: TtsConfig
   voices: SpeechSynthesisVoice[]
   hasAccess: boolean
@@ -31,7 +32,7 @@ interface InspectTabProps {
   onOpenSaved: () => void
   onClearAll: () => void
   onClearDamages: () => void
-  onAddDamage: (partId: string, partName: string, type: DamageType, typeName: string) => void
+  onAddDamage: (partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => void
   onRemoveDamageFromPart: (partId: string) => void
   onRemoveDamage: (id: string) => void
   onUpdateDamage: (id: string, patch: Partial<Damage>) => void
@@ -50,6 +51,7 @@ export default function InspectTab({
   formResetToken,
   viewDamages,
   allVehicleDamages,
+  visitedViews,
   ttsConfig,
   voices,
   hasAccess,
@@ -99,7 +101,7 @@ export default function InspectTab({
         <div className="w-full">
           <VehicleSelector current={vehicleType} onChange={onVehicleTypeChange} />
         </div>
-        <ViewSelector current={viewType} onChange={onViewTypeChange} />
+        <ViewSelector current={viewType} onChange={onViewTypeChange} visited={visitedViews} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.45fr_1fr] gap-6 items-start">

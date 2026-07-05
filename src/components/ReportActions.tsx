@@ -105,14 +105,14 @@ function IconDamageList() {
 // ── Component ─────────────────────────────────────────────────────────────────
 export default function ReportActions({ vehicleType, vehicleInfo, damages, onToast, hasAccess }: Props) {
   const [loading, setLoading] = useState<string | null>(null)
-  const [pdfTheme, setPdfTheme] = useState<'modern' | 'editorial' | 'tecnico'>(() => {
+  const [pdfTheme, setPdfTheme] = useState<'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante'>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('vistoria_pdf_theme') as 'modern' | 'editorial' | 'tecnico') || 'modern'
+      return (localStorage.getItem('vistoria_pdf_theme') as 'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante') || 'modern'
     }
     return 'modern'
   })
 
-  const handleThemeChange = (theme: 'modern' | 'editorial' | 'tecnico') => {
+  const handleThemeChange = (theme: 'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante') => {
     setPdfTheme(theme)
     if (typeof window !== 'undefined') {
       localStorage.setItem('vistoria_pdf_theme', theme)
@@ -169,12 +169,15 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
         <select
           id="pdf-theme-select"
           value={pdfTheme}
-          onChange={(e) => handleThemeChange(e.target.value as 'modern' | 'editorial' | 'tecnico')}
+          onChange={(e) => handleThemeChange(e.target.value as 'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante')}
           className="w-full bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] px-3 py-2 rounded-lg font-outfit text-[0.82rem] font-medium outline-none focus:border-sky-500/40 transition-all cursor-pointer"
         >
           <option value="modern" className="bg-[#0f172a] text-white">🎨 Modelo Moderno (Padrão)</option>
           <option value="editorial" className="bg-[#0f172a] text-white">📖 Modelo Editorial (Poppins & Lora)</option>
           <option value="tecnico" className="bg-[#0f172a] text-white">🔬 Modelo Técnico / Forense (Mono)</option>
+          <option value="corporativo" className="bg-[#0f172a] text-white">🏛️ Modelo Corporativo (Azul & Dourado)</option>
+          <option value="minimalista" className="bg-[#0f172a] text-white">⚪ Modelo Minimalista (Preto & Branco)</option>
+          <option value="vibrante" className="bg-[#0f172a] text-white">🌈 Modelo Vibrante (Roxo & Rosa)</option>
         </select>
       </div>
 

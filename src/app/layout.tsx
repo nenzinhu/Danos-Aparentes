@@ -120,7 +120,8 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
             try {
-              var isDark = localStorage.getItem('darkMode') !== 'false';
+              var saved = localStorage.getItem('darkMode');
+              var isDark = saved !== null ? saved !== 'false' : window.matchMedia('(prefers-color-scheme: dark)').matches;
               if (!isDark) {
                 document.documentElement.classList.add('light');
               } else {

@@ -190,7 +190,7 @@ function ProBenefitsButton({
 
 function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, onSignOut, syncStatus, subscription, onManageSubscription }: Props) {
   return (
-    <header className='relative w-full max-w-[1250px] mx-auto text-center px-5 pt-20 sm:pt-12 pb-7 font-outfit'>
+    <header className='relative w-full max-w-[1250px] mx-auto text-center px-5 pt-8 sm:pt-12 pb-7 font-outfit'>
 
       {/* Decorative gradient background */}
       <div className='absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[600px] h-[300px] bg-[radial-gradient(ellipse_at_center_top,rgba(0,170,255,0.15)_0%,transparent_70%)] pointer-events-none' />
@@ -211,7 +211,7 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
       />
 
       {/* Floating Action Buttons */}
-      <div className='absolute top-4 right-4 flex items-center gap-2 scale-[0.8] origin-top-right sm:scale-100 sm:top-10 sm:right-10'>
+      <div className='flex items-center justify-center gap-2 mt-5 sm:mt-0 sm:absolute sm:top-10 sm:right-10 z-20'>
 
         {/* Logo da empresa movido para a barra de abas (ver CompanyLogoButton em app/page.tsx) */}
 

@@ -113,6 +113,24 @@ function saveFieldFilter(state: Record<string, boolean>) {
   localStorage.setItem('vistoria_field_filter', JSON.stringify(state))
 }
 
+function loadFieldOrder(): string[] {
+  const keys = Object.keys(FIELD_LABELS)
+  try {
+    const saved = localStorage.getItem('vistoria_field_order')
+    if (saved) {
+      const parsed: string[] = JSON.parse(saved)
+      const valid = parsed.filter(k => keys.includes(k))
+      const missing = keys.filter(k => !valid.includes(k))
+      return [...valid, ...missing]
+    }
+  } catch {}
+  return keys
+}
+
+function saveFieldOrder(order: string[]) {
+  localStorage.setItem('vistoria_field_order', JSON.stringify(order))
+}
+
 interface CustomFieldDef { id: string; label: string }
 
 function loadCustomFieldDefs(): CustomFieldDef[] {
@@ -132,6 +150,7 @@ const labelClasses = "block text-[0.68rem] font-bold text-slate-500 uppercase tr
 
 function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse, onVehicleTypeDetected, resetToken, onWizardComplete }: Props) {
   const [visibleFields, setVisibleFields] = useState<Record<string, boolean>>(loadFieldFilter)
+  const [fieldOrder, setFieldOrder] = useState<string[]>(loadFieldOrder)
   const [filterOpen, setFilterOpen] = useState(false)
   const [plateStatus, setPlateStatus] = useState<'idle' | 'loading' | 'found' | 'error'>('idle')
   const [foundData, setFoundData] = useState<FoundData | null>(null)
@@ -284,6 +303,22 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
   const show = useCallback((key: string) => visibleFields[key] !== false, [visibleFields])
 
+  // Reordena os campos padrão do formulário (dir = -1 sobe, +1 desce), permitindo
+  // que o cliente organize a ordem de exibição do jeito que preferir.
+  const moveField = useCallback((key: string, dir: -1 | 1) => {
+    setFieldOrder(prev => {
+      const idx = prev.indexOf(key)
+      const target = idx + dir
+      if (idx < 0 || target < 0 || target >= prev.length) return prev
+      const next = [...prev]
+      ;[next[idx], next[target]] = [next[target], next[idx]]
+      saveFieldOrder(next)
+      return next
+    })
+  }, [])
+
+  const orderedKeysIn = useCallback((keys: string[]) => fieldOrder.filter(k => keys.includes(k)), [fieldOrder])
+
   const goToStep = useCallback((step: WizardStep) => {
     setWizardStep(step)
     setMaxVisited(prev => (step > prev ? step : prev))
@@ -415,16 +450,43 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
             </button>
             {filterOpen && (
               <div className="absolute top-[calc(100%+8px)] right-0 z-[500] bg-slate-950/95 border border-sky-500/25 rounded-2xl p-4 min-w-[230px] shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in duration-200">
-                <div className="text-[0.72rem] font-black text-sky-500 tracking-widest uppercase mb-3">
+                <div className="text-[0.72rem] font-black text-sky-500 tracking-widest uppercase mb-1">
                   ⚙️ Campos Visíveis
                 </div>
-                <div className="flex flex-col gap-2">
-                  {Object.entries(FIELD_LABELS).map(([key, label]) => (
-                    <label key={key} className="flex items-center gap-2 cursor-pointer text-[0.78rem] text-slate-300 font-semibold select-none">    
-                      <input type="checkbox" checked={visibleFields[key] !== false} onChange={() => toggleField(key)}
-                        className="accent-sky-500 w-3.5 h-3.5 cursor-pointer" />
-                      {label}
-                    </label>
+                <div className="text-[0.62rem] text-slate-500 font-semibold mb-2 select-none">
+                  Use as setas ↑ ↓ para ordenar os campos
+                </div>
+                <div className="flex flex-col gap-1">
+                  {fieldOrder.map((key, i) => (
+                    <div key={key} className="flex items-center gap-2">
+                      <label className="flex items-center gap-2 cursor-pointer text-[0.78rem] text-slate-300 font-semibold select-none flex-1 min-w-0">
+                        <input type="checkbox" checked={visibleFields[key] !== false} onChange={() => toggleField(key)}
+                          className="accent-sky-500 w-3.5 h-3.5 cursor-pointer shrink-0" />
+                        <span className="truncate">{FIELD_LABELS[key]}</span>
+                      </label>
+                      <div className="inline-flex rounded-md border border-sky-500/25 overflow-hidden divide-x divide-sky-500/20 shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => moveField(key, -1)}
+                          disabled={i === 0}
+                          title="Mover para cima"
+                          aria-label={`Mover ${FIELD_LABELS[key]} para cima`}
+                          className="bg-sky-500/10 text-sky-300 w-6 h-6 flex items-center justify-center text-[0.65rem] leading-none cursor-pointer hover:bg-sky-500/25 active:bg-sky-500/30 transition-colors disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:bg-sky-500/10"
+                        >
+                          ↑
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => moveField(key, 1)}
+                          disabled={i === fieldOrder.length - 1}
+                          title="Mover para baixo"
+                          aria-label={`Mover ${FIELD_LABELS[key]} para baixo`}
+                          className="bg-sky-500/10 text-sky-300 w-6 h-6 flex items-center justify-center text-[0.65rem] leading-none cursor-pointer hover:bg-sky-500/25 active:bg-sky-500/30 transition-colors disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:bg-sky-500/10"
+                        >
+                          ↓
+                        </button>
+                      </div>
+                    </div>
                   ))}
                 </div>
                 <div className="flex gap-1.5 mt-3 pt-2.5 border-t border-sky-500/10">
@@ -604,48 +666,56 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       </div>
 
       {(show('brand') || show('color') || show('vehicleTypeDesc')) && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-          {show('brand') && (
-            <div className="sm:col-span-1">
-              <label htmlFor="brand-input" className={labelClasses}>Marca / Modelo / Ano</label>
-              <input id="brand-input" className={inputClasses} value={info.brand} onChange={e => set('brand', e.target.value)} placeholder="Ex: Toyota Corolla 2023" />
+        <div className="flex flex-wrap gap-3 mb-3">
+          {orderedKeysIn(['brand', 'color', 'vehicleTypeDesc']).filter(show).map(key => (
+            <div key={key} className="flex-1 min-w-[160px]">
+              {key === 'brand' && (
+                <>
+                  <label htmlFor="brand-input" className={labelClasses}>Marca / Modelo / Ano</label>
+                  <input id="brand-input" className={inputClasses} value={info.brand} onChange={e => set('brand', e.target.value)} placeholder="Ex: Toyota Corolla 2023" />
+                </>
+              )}
+              {key === 'color' && (
+                <>
+                  <label htmlFor="color-input" className={labelClasses}>Cor do Veículo</label>
+                  <input id="color-input" className={inputClasses} value={info.color} onChange={e => set('color', e.target.value)} placeholder="Ex: Prata, Preto" />
+                </>
+              )}
+              {key === 'vehicleTypeDesc' && (
+                <>
+                  <label htmlFor="vehicle-type-select" className={labelClasses}>Tipo / Espécie</label>
+                  <select id="vehicle-type-select" className={inputClasses} value={info.vehicleTypeDesc} onChange={e => set('vehicleTypeDesc', e.target.value)}>
+                    <option value="">— Selecione —</option>
+                    {VEHICLE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                </>
+              )}
             </div>
-          )}
-          {show('color') && (
-            <div className="sm:col-span-1">
-              <label htmlFor="color-input" className={labelClasses}>Cor do Veículo</label>
-              <input id="color-input" className={inputClasses} value={info.color} onChange={e => set('color', e.target.value)} placeholder="Ex: Prata, Preto" />
-            </div>
-          )}
-          {show('vehicleTypeDesc') && (
-            <div className="sm:col-span-1">
-              <label htmlFor="vehicle-type-select" className={labelClasses}>Tipo / Espécie</label>
-              <select id="vehicle-type-select" className={inputClasses} value={info.vehicleTypeDesc} onChange={e => set('vehicleTypeDesc', e.target.value)}>
-                <option value="">— Selecione —</option>
-                {VEHICLE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-          )}
+          ))}
         </div>
       )}
 
       {(show('city') || show('state')) && (
-        <div className="grid grid-cols-3 gap-3 mb-3">
-          {show('city') && (
-            <div className="col-span-2">
-              <label htmlFor="city-input" className={labelClasses}>Cidade de Emplacamento</label>
-              <input id="city-input" className={inputClasses} value={info.city} onChange={e => set('city', e.target.value)} placeholder="Ex: São Paulo" />
+        <div className="flex flex-wrap gap-3 mb-3">
+          {orderedKeysIn(['city', 'state']).filter(show).map(key => (
+            <div key={key} className={key === 'city' ? 'flex-[2] min-w-[200px]' : 'flex-1 min-w-[100px]'}>
+              {key === 'city' && (
+                <>
+                  <label htmlFor="city-input" className={labelClasses}>Cidade de Emplacamento</label>
+                  <input id="city-input" className={inputClasses} value={info.city} onChange={e => set('city', e.target.value)} placeholder="Ex: São Paulo" />
+                </>
+              )}
+              {key === 'state' && (
+                <>
+                  <label htmlFor="state-select" className={labelClasses}>Estado (UF)</label>
+                  <select id="state-select" className={inputClasses} value={info.state} onChange={e => set('state', e.target.value)}>
+                    <option value="">— UF —</option>
+                    {UF_LIST.map(uf => <option key={uf} value={uf}>{uf}</option>)}
+                  </select>
+                </>
+              )}
             </div>
-          )}
-          {show('state') && (
-            <div className="col-span-1">
-              <label htmlFor="state-select" className={labelClasses}>Estado (UF)</label>
-              <select id="state-select" className={inputClasses} value={info.state} onChange={e => set('state', e.target.value)}>
-                <option value="">— UF —</option>
-                {UF_LIST.map(uf => <option key={uf} value={uf}>{uf}</option>)}
-              </select>
-            </div>
-          )}
+          ))}
         </div>
       )}
       </>
@@ -654,166 +724,178 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       {wizardStep === 2 && (
       <>
       {(show('profile') || show('ref')) && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-          {show('profile') && (
-            <div>
-              <label htmlFor="profile-select" className={labelClasses}>Perfil do Relatório</label>
-              <select id="profile-select" className={inputClasses} value={info.profile} onChange={e => set('profile', e.target.value)}>
-                <option value="">— Selecione —</option>
-                <option value="oficina">Oficina</option>
-                <option value="perito">Perito</option>
-                <option value="seguradora">Seguradora</option>
-              </select>
+        <div className="flex flex-wrap gap-3 mb-3">
+          {orderedKeysIn(['profile', 'ref']).filter(show).map(key => (
+            <div key={key} className="flex-1 min-w-[160px]">
+              {key === 'profile' && (
+                <>
+                  <label htmlFor="profile-select" className={labelClasses}>Perfil do Relatório</label>
+                  <select id="profile-select" className={inputClasses} value={info.profile} onChange={e => set('profile', e.target.value)}>
+                    <option value="">— Selecione —</option>
+                    <option value="oficina">Oficina</option>
+                    <option value="perito">Perito</option>
+                    <option value="seguradora">Seguradora</option>
+                  </select>
+                </>
+              )}
+              {key === 'ref' && (
+                <>
+                  <label htmlFor="ref-input" className={labelClasses}>Nº da OS / Referência</label>
+                  <input id="ref-input" className={inputClasses} value={info.ref} onChange={e => set('ref', e.target.value)} placeholder="Ex: 2026-00123" />
+                </>
+              )}
             </div>
-          )}
-          {show('ref') && (
-            <div>
-              <label htmlFor="ref-input" className={labelClasses}>Nº da OS / Referência</label>
-              <input id="ref-input" className={inputClasses} value={info.ref} onChange={e => set('ref', e.target.value)} placeholder="Ex: 2026-00123" />
-            </div>
-          )}
+          ))}
         </div>
       )}
 
       {(show('owner') || show('phone')) && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-          {show('owner') && (
-            <div>
-              <label htmlFor="owner-input" className={labelClasses}>Proprietário / Cliente</label>
-              <input id="owner-input" className={inputClasses} value={info.owner} onChange={e => set('owner', e.target.value)} placeholder="Ex: João Silva" />      
-            </div>
-          )}
-          {show('phone') && (
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-                <label htmlFor="phone-input" className={labelClasses}>Telefone (com DDD)</label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)', userSelect: 'none' }}>
-                  <input
-                    type="checkbox"
-                    checked={info.phone?.startsWith('+') || false}
-                    onChange={e => {
-                      if (e.target.checked) {
-                        set('phone', '+')
-                      } else {
-                        set('phone', '')
-                      }
-                    }}
-                    style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
-                  />
-                  🌍 Estrangeiro
-                </label>
-              </div>
-              {info.phone?.startsWith('+') ? (
-                <input
-                  id="phone-input"
-                  className={inputClasses}
-                  value={info.phone}
-                  onChange={e => set('phone', '+' + e.target.value.replace(/[^0-9\s\-().]/g, '').replace(/^\+*/, ''))}
-                  placeholder="+1 555 000-0000"
-                  type="tel"
-                />
-              ) : (
-                <input
-                  id="phone-input"
-                  className={inputClasses}
-                  value={info.phone}
-                  onChange={e => set('phone', formatPhone(e.target.value))}
-                  placeholder="(11) 99999-9999"
-                  type="tel"
-                  maxLength={15}
-                />
+        <div className="flex flex-wrap gap-3 mb-3">
+          {orderedKeysIn(['owner', 'phone']).filter(show).map(key => (
+            <div key={key} className="flex-1 min-w-[200px]">
+              {key === 'owner' && (
+                <>
+                  <label htmlFor="owner-input" className={labelClasses}>Proprietário / Cliente</label>
+                  <input id="owner-input" className={inputClasses} value={info.owner} onChange={e => set('owner', e.target.value)} placeholder="Ex: João Silva" />
+                </>
+              )}
+              {key === 'phone' && (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
+                    <label htmlFor="phone-input" className={labelClasses}>Telefone (com DDD)</label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)', userSelect: 'none' }}>
+                      <input
+                        type="checkbox"
+                        checked={info.phone?.startsWith('+') || false}
+                        onChange={e => {
+                          if (e.target.checked) {
+                            set('phone', '+')
+                          } else {
+                            set('phone', '')
+                          }
+                        }}
+                        style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
+                      />
+                      🌍 Estrangeiro
+                    </label>
+                  </div>
+                  {info.phone?.startsWith('+') ? (
+                    <input
+                      id="phone-input"
+                      className={inputClasses}
+                      value={info.phone}
+                      onChange={e => set('phone', '+' + e.target.value.replace(/[^0-9\s\-().]/g, '').replace(/^\+*/, ''))}
+                      placeholder="+1 555 000-0000"
+                      type="tel"
+                    />
+                  ) : (
+                    <input
+                      id="phone-input"
+                      className={inputClasses}
+                      value={info.phone}
+                      onChange={e => set('phone', formatPhone(e.target.value))}
+                      placeholder="(11) 99999-9999"
+                      type="tel"
+                      maxLength={15}
+                    />
+                  )}
+                </>
               )}
             </div>
-          )}
+          ))}
         </div>
       )}
 
       {(show('cpf') || show('cnh') || show('cnhCategory')) && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-          {show('cpf') && (
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-                <label htmlFor="cpf-input" className={labelClasses}>CPF</label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)', userSelect: 'none' }}>
-                  <input
-                    type="checkbox"
-                    checked={info.cpf?.startsWith('EX-') || false}
-                    onChange={e => set('cpf', e.target.checked ? 'EX-' : '')}
-                    style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
-                  />
-                  🌍 Estrangeiro
-                </label>
-              </div>
-              {info.cpf?.startsWith('EX-') ? (
-                <input
-                  id="cpf-input"
-                  className={inputClasses}
-                  value={info.cpf.slice(3)}
-                  onChange={e => set('cpf', 'EX-' + e.target.value)}
-                  placeholder="Nº do documento estrangeiro"
-                />
-              ) : (
-                <input
-                  id="cpf-input"
-                  className={inputClasses}
-                  value={info.cpf || ''}
-                  onChange={e => set('cpf', formatCPF(e.target.value))}
-                  placeholder="000.000.000-00"
-                  maxLength={14}
-                />
+        <div className="flex flex-wrap gap-3 mb-3">
+          {orderedKeysIn(['cpf', 'cnh', 'cnhCategory']).filter(show).map(key => (
+            <div key={key} className="flex-1 min-w-[160px]">
+              {key === 'cpf' && (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
+                    <label htmlFor="cpf-input" className={labelClasses}>CPF</label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)', userSelect: 'none' }}>
+                      <input
+                        type="checkbox"
+                        checked={info.cpf?.startsWith('EX-') || false}
+                        onChange={e => set('cpf', e.target.checked ? 'EX-' : '')}
+                        style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
+                      />
+                      🌍 Estrangeiro
+                    </label>
+                  </div>
+                  {info.cpf?.startsWith('EX-') ? (
+                    <input
+                      id="cpf-input"
+                      className={inputClasses}
+                      value={info.cpf.slice(3)}
+                      onChange={e => set('cpf', 'EX-' + e.target.value)}
+                      placeholder="Nº do documento estrangeiro"
+                    />
+                  ) : (
+                    <input
+                      id="cpf-input"
+                      className={inputClasses}
+                      value={info.cpf || ''}
+                      onChange={e => set('cpf', formatCPF(e.target.value))}
+                      placeholder="000.000.000-00"
+                      maxLength={14}
+                    />
+                  )}
+                </>
+              )}
+              {key === 'cnh' && (
+                <>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
+                    <label htmlFor="cnh-input" className={labelClasses}>Nº da Habilitação (CNH)</label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)', userSelect: 'none' }}>
+                      <input
+                        type="checkbox"
+                        checked={info.cnh?.startsWith('EX-') || false}
+                        onChange={e => set('cnh', e.target.checked ? 'EX-' : '')}
+                        style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
+                      />
+                      🌍 Estrangeiro
+                    </label>
+                  </div>
+                  {info.cnh?.startsWith('EX-') ? (
+                    <input
+                      id="cnh-input"
+                      className={inputClasses}
+                      value={info.cnh.slice(3)}
+                      onChange={e => set('cnh', 'EX-' + e.target.value)}
+                      placeholder="Nº da carteira estrangeira"
+                    />
+                  ) : (
+                    <input
+                      id="cnh-input"
+                      className={inputClasses}
+                      value={info.cnh || ''}
+                      onChange={e => set('cnh', formatCNH(e.target.value))}
+                      placeholder="Ex: 12345678900"
+                      maxLength={11}
+                    />
+                  )}
+                </>
+              )}
+              {key === 'cnhCategory' && (
+                <>
+                  <label htmlFor="cnh-category-select" className={labelClasses}>Categoria CNH</label>
+                  <select
+                    id="cnh-category-select"
+                    className={inputClasses}
+                    value={info.cnhCategory || ''}
+                    onChange={e => set('cnhCategory', e.target.value)}
+                  >
+                    <option value="">— Categoria —</option>
+                    {['A', 'B', 'C', 'D', 'E', 'AB', 'AC', 'AD', 'AE'].map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </>
               )}
             </div>
-          )}
-          {show('cnh') && (
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-                <label htmlFor="cnh-input" className={labelClasses}>Nº da Habilitação (CNH)</label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)', userSelect: 'none' }}>
-                  <input
-                    type="checkbox"
-                    checked={info.cnh?.startsWith('EX-') || false}
-                    onChange={e => set('cnh', e.target.checked ? 'EX-' : '')}
-                    style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
-                  />
-                  🌍 Estrangeiro
-                </label>
-              </div>
-              {info.cnh?.startsWith('EX-') ? (
-                <input
-                  id="cnh-input"
-                  className={inputClasses}
-                  value={info.cnh.slice(3)}
-                  onChange={e => set('cnh', 'EX-' + e.target.value)}
-                  placeholder="Nº da carteira estrangeira"
-                />
-              ) : (
-                <input
-                  id="cnh-input"
-                  className={inputClasses}
-                  value={info.cnh || ''}
-                  onChange={e => set('cnh', formatCNH(e.target.value))}
-                  placeholder="Ex: 12345678900"
-                  maxLength={11}
-                />
-              )}
-            </div>
-          )}
-          {show('cnhCategory') && (
-            <div>
-              <label htmlFor="cnh-category-select" className={labelClasses}>Categoria CNH</label>
-              <select
-                id="cnh-category-select"
-                className={inputClasses}
-                value={info.cnhCategory || ''}
-                onChange={e => set('cnhCategory', e.target.value)}
-              >
-                <option value="">— Categoria —</option>
-                {['A', 'B', 'C', 'D', 'E', 'AB', 'AC', 'AD', 'AE'].map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-          )}
+          ))}
         </div>
       )}
       </>
@@ -942,21 +1024,25 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       )}
 
       {(show('inspectorSignature') || show('clientSignature')) && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-white/5">
-          {show('inspectorSignature') && (
-            <SignaturePad
-              label="Assinatura do Vistoriador"
-              value={info.inspectorSignature}
-              onChange={val => set('inspectorSignature', val)}
-            />
-          )}
-          {show('clientSignature') && (
-            <SignaturePad
-              label="Assinatura do Proprietário / Responsável"
-              value={info.clientSignature}
-              onChange={val => set('clientSignature', val)}
-            />
-          )}
+        <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-white/5">
+          {orderedKeysIn(['inspectorSignature', 'clientSignature']).filter(show).map(key => (
+            <div key={key} className="flex-1 min-w-[220px]">
+              {key === 'inspectorSignature' && (
+                <SignaturePad
+                  label="Assinatura do Vistoriador"
+                  value={info.inspectorSignature}
+                  onChange={val => set('inspectorSignature', val)}
+                />
+              )}
+              {key === 'clientSignature' && (
+                <SignaturePad
+                  label="Assinatura do Proprietário / Responsável"
+                  value={info.clientSignature}
+                  onChange={val => set('clientSignature', val)}
+                />
+              )}
+            </div>
+          ))}
         </div>
       )}
       </>

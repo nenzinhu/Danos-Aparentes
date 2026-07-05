@@ -600,6 +600,1183 @@ BLOG_POSTS.push(
   },
 )
 
+const RAIN_POSTS: BlogPost[] = [
+  {
+    slug: 'vistoria-na-chuva-sem-retrabalho',
+    title: 'Vistoria na chuva: como evitar papel molhado, erro e retrabalho',
+    excerpt:
+      'Chuva, papel e celular pessoal formam uma combinação ruim para a vistoria. Veja como o Danos Aparentes ajuda a evitar perda de informação, fotos soltas e redigitação quando o pátio vira um caos.',
+    category: 'Operação',
+    tags: ['vistoria na chuva', 'retrabalho', 'prancheta', 'laudo digital', 'frota'],
+    date: '2026-07-04',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#334155 45%,#64748b 100%)', emoji: '🌧️', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'caos', label: 'Por que a chuva bagunça a vistoria' },
+      { id: 'problema', label: 'O que se perde no fluxo manual' },
+      { id: 'organizar', label: 'Como vistoriar sem retrabalho' },
+      { id: 'resultado', label: 'O resultado para a operação' },
+    ],
+    content: (
+      <>
+        <p>
+          Em dia seco, o papel já atrasa. Debaixo de chuva, ele vira problema operacional. Ficha molhada,
+          anotação ilegível, foto tirada às pressas e correria para terminar logo transformam a vistoria em
+          uma coleta de dados frágil, sujeita a erro e retrabalho.
+        </p>
+        <p>
+          Quando o pátio está corrido e o clima aperta, a operação precisa de um fluxo que organize a
+          vistoria no momento em que ela acontece, e não horas depois no escritório. Com o{' '}
+          <strong>Danos Aparentes</strong>, esse registro já nasce mais claro, visual e pronto para virar
+          laudo.
+        </p>
+
+        <div className="my-8 overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black/10">
+          <img
+            src="/blog/vistoria-na-chuva-pos-chuva-smartphone.png"
+            alt="Comparação entre vistoria confusa em papel pós-chuva e vistoria clara com smartphone"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto object-cover"
+          />
+          <p className="px-4 py-3 text-xs leading-relaxed text-[var(--text-muted)]">
+            Depois da chuva, a diferença entre improviso e processo continua evidente: de um lado, papel
+            confuso e retrabalho; do outro, vistoria clara, organizada e pronta no smartphone.
+          </p>
+        </div>
+
+        <h2 id="caos">Por que a chuva bagunça a vistoria</h2>
+        <ul>
+          <li><strong>O papel perde legibilidade</strong>, especialmente quando o preenchimento é feito às pressas.</li>
+          <li><strong>O celular vira galeria solta</strong>, com fotos sem contexto e sem vínculo com a ficha.</li>
+          <li><strong>O vistoriador acelera demais</strong>, porque quer sair do tempo ruim o quanto antes.</li>
+          <li><strong>O escritório herda a desordem</strong>, tendo que reconstruir depois o que faltou no pátio.</li>
+        </ul>
+
+        <h2 id="problema">O que se perde no fluxo manual</h2>
+        <p>
+          O maior prejuízo da vistoria na chuva não é só a lentidão. É a perda de qualidade da prova. Uma
+          anotação confusa, uma foto sem contexto ou uma informação esquecida enfraquecem o laudo na hora de
+          comparar entrega e devolução.
+        </p>
+        <ul>
+          <li><strong>Descrição incompleta</strong> da avaria.</li>
+          <li><strong>Foto sem associação clara</strong> à peça vistoriada.</li>
+          <li><strong>Campo faltando</strong>, que exige redigitação ou contato posterior com a equipe.</li>
+          <li><strong>Mais tempo de escritório</strong>, justamente quando a operação precisa girar rápido.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="organizar">Como vistoriar sem retrabalho mesmo com chuva</h2>
+        <ul>
+          <li><strong>Registrar a avaria diretamente no celular</strong>, em vez de anotar primeiro no papel.</li>
+          <li><strong>Vincular a foto ao dano na hora</strong>, sem depender de memória depois.</li>
+          <li><strong>Fechar a vistoria no próprio pátio</strong>, com assinatura e laudo pronto.</li>
+          <li><strong>Eliminar a reconstrução no escritório</strong>, que é onde o retrabalho cresce.</li>
+        </ul>
+        <p>
+          Se a operação precisa continuar mesmo com tempo ruim, o processo tem que ser resiliente à chuva. É
+          isso que reduz erro e protege a qualidade do laudo.
+        </p>
+
+        <h2 id="resultado">O resultado para a operação</h2>
+        <p>
+          Com um fluxo digital, a chuva deixa de ser gatilho para confusão. A equipe ganha consistência, o
+          laudo sai mais rápido e a prova fica mais forte. Para complementar, veja também{' '}
+          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a>,{' '}
+          <a href="/blog/vistoria-sem-papel">como sair da prancheta para o laudo digital</a> e{' '}
+          <a href="/blog/antes-e-depois-da-vistoria-digital">o antes e depois da vistoria digital</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'antes-e-depois-da-vistoria-digital',
+    title: 'Antes e depois da vistoria digital: o que muda na prática',
+    excerpt:
+      'Do papel molhado ao laudo pronto no celular: veja a diferença prática entre uma vistoria manual e o fluxo digital do Danos Aparentes, com marcação visual, fotos organizadas e PDF imediato.',
+    category: 'Comparativo',
+    tags: ['antes e depois', 'vistoria digital', 'prancheta', 'laudo veicular', 'produtividade'],
+    date: '2026-07-04',
+    readingMinutes: 5,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0f766e 45%,#22c55e 100%)', emoji: '📱', image: '/vehicles-img/car2d.png' },
+    toc: [
+      { id: 'antes', label: 'Como funciona o antes' },
+      { id: 'depois', label: 'Como funciona o depois' },
+      { id: 'comparacao', label: 'O que muda na operação' },
+      { id: 'cliente', label: 'O impacto para o cliente' },
+    ],
+    content: (
+      <>
+        <p>
+          A comparação entre vistoria manual e vistoria digital não é estética. É operacional. No modelo
+          antigo, a equipe anota, fotografa, redigita e revisa. No modelo digital, ela registra uma vez só
+          e o laudo já nasce pronto para envio. No <strong>Danos Aparentes</strong>, essa virada fica visível
+          já na rotina do pátio.
+        </p>
+
+        <h2 id="antes">Como funciona o antes</h2>
+        <ul>
+          <li><strong>Prancheta ou folha carbonada</strong> para anotar os danos.</li>
+          <li><strong>Fotos no celular pessoal</strong>, sem ligação direta com a ficha.</li>
+          <li><strong>Redigitação no escritório</strong>, consumindo mais tempo por veículo.</li>
+          <li><strong>Maior risco de erro</strong> na transcrição e na organização das imagens.</li>
+        </ul>
+
+        <h2 id="depois">Como funciona o depois</h2>
+        <ul>
+          <li><strong>Marcação direta no diagrama do veículo</strong>, com localização visual da avaria.</li>
+          <li><strong>Foto anexada no mesmo fluxo</strong>, já associada ao dano certo.</li>
+          <li><strong>Assinatura na hora</strong>, sem etapa pendente posterior.</li>
+          <li><strong>PDF pronto no final</strong>, com aparência profissional e histórico organizado.</li>
+        </ul>
+
+        <h2 id="comparacao">O que muda na operação</h2>
+        <p>
+          O maior ganho não é só parecer moderno. É reduzir retrabalho, acelerar a rotina e melhorar a
+          comparabilidade entre as vistorias. A equipe deixa de gastar energia reconstruindo informação e
+          passa a se concentrar no que importa: registrar bem o estado do veículo.
+        </p>
+        <ul>
+          <li><strong>Menos tempo por vistoria</strong>.</li>
+          <li><strong>Menos erro de transcrição</strong>.</li>
+          <li><strong>Mais previsibilidade</strong> no padrão dos laudos.</li>
+          <li><strong>Mais facilidade</strong> para provar o que mudou entre entrega e devolução.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="cliente">O impacto para o cliente</h2>
+        <p>
+          O cliente entende melhor um laudo visual, organizado e enviado rápido. Isso reduz ruído na
+          devolução e melhora a percepção de profissionalismo da sua operação. Se quiser aprofundar esse
+          contraste, leia também{' '}
+          <a href="/blog/vistoria-na-chuva-sem-retrabalho">como vistoriar na chuva sem retrabalho</a>,{' '}
+          <a href="/blog/erros-de-transcricao-na-vistoria">como evitar erros de transcrição</a> e{' '}
+          <a href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</a>.
+        </p>
+      </>
+    ),
+  },
+]
+
+BLOG_POSTS.unshift(
+  {
+    slug: 'como-eliminar-redigitacao-na-vistoria-veicular',
+    title: 'Como eliminar a redigitação na vistoria veicular',
+    excerpt:
+      'Se a vistoria começa no papel e termina no escritório, sua operação perde tempo duas vezes. Veja como o Danos Aparentes ajuda a eliminar a redigitação e transformar o laudo em um fluxo único, do pátio ao PDF.',
+    category: 'Operação',
+    tags: ['redigitação', 'vistoria veicular', 'laudo digital', 'produtividade', 'frota'],
+    date: '2026-07-04',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#1e293b 0%,#2563eb 45%,#93c5fd 100%)', emoji: '⌨️', image: '/vehicles-img/car2d.png' },
+    toc: [
+      { id: 'tempo', label: 'Onde o tempo é perdido' },
+      { id: 'fluxo', label: 'Como eliminar a redigitação' },
+      { id: 'campo', label: 'O que precisa ser registrado no campo' },
+      { id: 'ganho', label: 'O ganho operacional na prática' },
+    ],
+    content: (
+      <>
+        <p>
+          Redigitar laudo é pagar duas vezes pelo mesmo trabalho. Primeiro, o vistoriador anota no papel,
+          tira foto no celular e segue para o próximo veículo. Depois, alguém precisa sentar no computador,
+          reorganizar fotos, reler a ficha e preencher tudo de novo.
+        </p>
+        <p>
+          Esse vai e volta consome tempo, cria atraso e abre espaço para erro. A solução não é digitar mais
+          rápido. É fazer a vistoria nascer digital. Com o <strong>Danos Aparentes</strong>, a informação entra
+          uma vez só e já segue para o laudo final.
+        </p>
+
+        <h2 id="tempo">Onde o tempo é perdido</h2>
+        <ul>
+          <li><strong>No preenchimento duplicado:</strong> o mesmo dado é escrito no pátio e reescrito no escritório.</li>
+          <li><strong>Na organização das fotos:</strong> imagens ficam soltas na galeria e depois precisam ser associadas ao dano certo.</li>
+          <li><strong>Na conferência manual:</strong> placa, quilometragem e observações precisam ser revisadas antes do PDF.</li>
+          <li><strong>No retrabalho da equipe:</strong> qualquer campo faltando exige voltar ao vistoriador.</li>
+        </ul>
+
+        <h2 id="fluxo">Como eliminar a redigitação</h2>
+        <p>
+          O caminho mais eficiente é simples: registrar tudo no momento da vistoria, já dentro do fluxo que
+          gera o laudo final. Isso significa que a equipe deve marcar a avaria, anexar a foto, preencher os
+          dados do veículo e colher a assinatura na mesma sessão.
+        </p>
+        <ul>
+          <li><strong>Um único registro:</strong> o dado entra uma vez e já segue para o PDF.</li>
+          <li><strong>Foto vinculada à avaria:</strong> a imagem não fica perdida nem separada do dano.</li>
+          <li><strong>Documento fechado:</strong> o laudo já sai pronto para envio, sem etapa extra de escritório.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="campo">O que precisa ser registrado no campo</h2>
+        <ul>
+          <li><strong>Identificação do veículo</strong> com placa, modelo, cor e quilometragem.</li>
+          <li><strong>Avaria por peça</strong>, com tipo e gravidade.</li>
+          <li><strong>Fotos abertas e de detalhe</strong>, já ligadas ao item certo do laudo.</li>
+          <li><strong>Assinaturas</strong> do vistoriador e do responsável.</li>
+        </ul>
+        <p>
+          Quando tudo isso é feito no pátio, a fase de escritório deixa de ser produção e vira apenas
+          conferência pontual.
+        </p>
+
+        <h2 id="ganho">O ganho operacional na prática</h2>
+        <p>
+          Eliminar a redigitação reduz o tempo por veículo, diminui falhas de transcrição e libera a equipe
+          para vistoriar mais. Também melhora a percepção do cliente, porque o documento sai mais rápido e
+          com aparência profissional. Se quiser complementar esse tema, veja também o artigo sobre{' '}
+          <a href="/blog/vistoria-sem-papel">vistoria sem papel</a> e o guia de{' '}
+          <a href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'erros-de-transcricao-na-vistoria',
+    title: 'Erros de transcrição na vistoria: como evitar no laudo',
+    excerpt:
+      'Placa errada, foto trocada, observação incompleta. Veja por que a transcrição manual enfraquece o laudo e como o Danos Aparentes ajuda a reduzir falhas antes que virem contestação ou retrabalho.',
+    category: 'Boas práticas',
+    tags: ['erros de transcrição', 'laudo de vistoria', 'retrabalho', 'vistoria digital', 'laudo'],
+    date: '2026-07-04',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#7f1d1d 0%,#dc2626 45%,#fca5a5 100%)', emoji: '⚠️', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'porque', label: 'Por que os erros acontecem' },
+      { id: 'tipos', label: 'Erros mais comuns no laudo' },
+      { id: 'prevenir', label: 'Como prevenir na operação' },
+      { id: 'impacto', label: 'O impacto na cobrança e no cliente' },
+    ],
+    content: (
+      <>
+        <p>
+          Nem todo problema no laudo vem de uma vistoria ruim. Muitas vezes, a inspeção no pátio foi correta,
+          mas a transcrição para o computador introduziu falhas que enfraquecem a prova.
+        </p>
+        <p>
+          Um número trocado, uma foto associada à peça errada ou uma observação resumida demais já bastam
+          para criar dúvida na devolução, no sinistro ou na auditoria interna. Com o{' '}
+          <strong>Danos Aparentes</strong>, o dado nasce com mais contexto e menos espaço para erro.
+        </p>
+
+        <h2 id="porque">Por que os erros acontecem</h2>
+        <ul>
+          <li><strong>O processo é quebrado em etapas:</strong> uma pessoa registra e outra reconstrói o laudo depois.</li>
+          <li><strong>As fotos ficam fora do contexto:</strong> a equipe precisa lembrar a que dano cada imagem pertence.</li>
+          <li><strong>O tempo pressiona:</strong> quem redigita quer terminar rápido e acaba resumindo demais.</li>
+          <li><strong>Não existe validação na origem:</strong> o dado só é percebido como errado quando o PDF já saiu.</li>
+        </ul>
+
+        <h2 id="tipos">Erros mais comuns no laudo</h2>
+        <ul>
+          <li><strong>Placa ou quilometragem incorretas</strong>, comprometendo a identificação do veículo.</li>
+          <li><strong>Foto vinculada à peça errada</strong>, o que enfraquece a comprovação do dano.</li>
+          <li><strong>Descrição vaga</strong>, como &ldquo;arranhado lateral&rdquo;, sem localização exata.</li>
+          <li><strong>Campo faltando</strong>, exigindo contato extra com a equipe do pátio.</li>
+        </ul>
+
+        <h2 id="prevenir">Como prevenir na operação</h2>
+        <p>
+          O melhor jeito de reduzir erro de transcrição é fazer com que a transcrição deixe de existir. O
+          dado precisa nascer no sistema já com contexto: avaria, foto, horário, local e assinatura. Além
+          disso, vale padronizar a nomenclatura dos danos e a sequência da vistoria.
+        </p>
+        <ul>
+          <li><strong>Preencha uma vez só</strong>, no momento da vistoria.</li>
+          <li><strong>Padronize descrições</strong> para risco, amassado, trinca e quebra.</li>
+          <li><strong>Associe foto e avaria no mesmo fluxo</strong>, sem depender de memória.</li>
+          <li><strong>Revise antes de concluir</strong>, não horas depois no escritório.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="impacto">O impacto na cobrança e no cliente</h2>
+        <p>
+          Erro de transcrição custa tempo, credibilidade e dinheiro. Um laudo inconsistente é mais fácil de
+          contestar e mais difícil de defender. Para aprofundar a origem desse retrabalho, veja também{' '}
+          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
+          <a href="/blog/avarias-preexistentes-como-provar">como provar avarias preexistentes</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'vistoria-sem-papel',
+    title: 'Vistoria sem papel: como sair da prancheta para o laudo digital',
+    excerpt:
+      'Prancheta, folha carbonada e planilha já não dão conta da vistoria moderna. Veja como migrar com o Danos Aparentes para um processo sem papel, com fotos, assinatura e PDF no mesmo fluxo.',
+    category: 'Operação',
+    tags: ['vistoria sem papel', 'prancheta', 'laudo digital', 'checklist digital', 'frota'],
+    date: '2026-07-03',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#3f3f46 0%,#0f766e 45%,#5eead4 100%)', emoji: '📋', image: '/vehicles-img/van.png' },
+    toc: [
+      { id: 'papel', label: 'Por que o papel atrasa' },
+      { id: 'digital', label: 'O que muda no fluxo digital' },
+      { id: 'migracao', label: 'Como fazer a migração' },
+      { id: 'resultado', label: 'O resultado para a operação' },
+    ],
+    content: (
+      <>
+        <p>
+          O papel parece simples porque é conhecido. Mas, na vistoria, ele quase sempre é o começo de uma
+          cadeia de retrabalho: ficha física, foto separada, planilha depois, revisão manual e atraso para
+          enviar o documento ao cliente.
+        </p>
+        <p>
+          Sair da prancheta não é apenas trocar suporte. É trocar um processo fragmentado por um fluxo único.
+          No <strong>Danos Aparentes</strong>, isso acontece com marcação visual, fotos e PDF no mesmo caminho.
+        </p>
+
+        <h2 id="papel">Por que o papel atrasa</h2>
+        <ul>
+          <li><strong>Não integra foto e dano</strong>, então alguém precisa montar a relação depois.</li>
+          <li><strong>Não valida o preenchimento</strong>, deixando campos em branco passarem despercebidos.</li>
+          <li><strong>Exige guarda física</strong>, difícil de consultar em comparação futura.</li>
+          <li><strong>Depende de redigitação</strong>, o que aumenta tempo e erro.</li>
+        </ul>
+
+        <h2 id="digital">O que muda no fluxo digital</h2>
+        <p>
+          Na vistoria sem papel, a equipe registra a avaria diretamente no diagrama do veículo, anexa fotos,
+          coleta assinatura e fecha o laudo na mesma sessão. O resultado é um PDF pronto para envio, sem
+          passar por uma segunda produção no escritório.
+        </p>
+        <ul>
+          <li><strong>Registro por peça</strong>, com localização clara do dano.</li>
+          <li><strong>Fotos com contexto</strong>, associadas ao item correto.</li>
+          <li><strong>Assinatura na hora</strong>, fechando o aceite do responsável.</li>
+          <li><strong>Histórico consultável</strong>, útil para entrega, devolução e sinistro.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="migracao">Como fazer a migração</h2>
+        <ul>
+          <li><strong>Defina uma sequência padrão</strong> de vistoria antes de digitalizar.</li>
+          <li><strong>Treine a equipe no celular</strong>, não só no escritório.</li>
+          <li><strong>Escolha um modelo de laudo único</strong> para toda a operação.</li>
+          <li><strong>Comece por entrega e devolução</strong>, onde o ganho costuma ser mais visível.</li>
+        </ul>
+
+        <h2 id="resultado">O resultado para a operação</h2>
+        <p>
+          A vistoria sem papel reduz tempo, organiza melhor a prova e melhora a experiência do cliente. Se
+          você quiser aprofundar o lado operacional, leia também{' '}
+          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
+          <a href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'como-padronizar-equipe-de-vistoria-e-acabar-com-o-retrabalho',
+    title: 'Como padronizar a equipe de vistoria e acabar com o retrabalho',
+    excerpt:
+      'Quando cada vistoriador registra de um jeito, a operação perde consistência e velocidade. Veja como o Danos Aparentes ajuda a padronizar a equipe para reduzir retrabalho e produzir laudos comparáveis.',
+    category: 'Frota',
+    tags: ['padronizar equipe de vistoria', 'retrabalho', 'frota', 'processo operacional', 'laudo'],
+    date: '2026-07-03',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fdba74 100%)', emoji: '👥', image: '/vehicles-img/microbus.png' },
+    toc: [
+      { id: 'cada-um', label: 'O custo do cada um faz de um jeito' },
+      { id: 'padrao', label: 'O que precisa estar padronizado' },
+      { id: 'treinamento', label: 'Como treinar sem travar a operação' },
+      { id: 'comparavel', label: 'Por que isso melhora a comparação' },
+    ],
+    content: (
+      <>
+        <p>
+          O retrabalho na vistoria nem sempre vem do volume. Muitas vezes ele vem da falta de padrão. Um
+          vistoriador descreve &ldquo;risco lateral&rdquo;, outro escreve &ldquo;arranhado porta esquerda&rdquo;, e um terceiro
+          tira só uma foto de detalhe. Depois ninguém consegue comparar os laudos com segurança. Com o{' '}
+          <strong>Danos Aparentes</strong>, o padrão fica mais fácil de repetir em toda a equipe.
+        </p>
+
+        <h2 id="cada-um">O custo do cada um faz de um jeito</h2>
+        <ul>
+          <li><strong>Laudos não comparáveis</strong>, o que dificulta provar dano novo.</li>
+          <li><strong>Mais revisão interna</strong>, porque alguém precisa corrigir inconsistências.</li>
+          <li><strong>Treinamento informal</strong>, baseado em hábito, não em processo.</li>
+          <li><strong>Cliente confuso</strong>, ao receber documentos com padrões diferentes.</li>
+        </ul>
+
+        <h2 id="padrao">O que precisa estar padronizado</h2>
+        <ul>
+          <li><strong>Sequência de inspeção</strong>, sempre na mesma ordem.</li>
+          <li><strong>Nomenclatura dos danos</strong>, para evitar descrições ambíguas.</li>
+          <li><strong>Padrão de foto</strong>, com imagem aberta e detalhe.</li>
+          <li><strong>Estrutura do laudo</strong>, com os mesmos campos para toda a equipe.</li>
+        </ul>
+        <p>
+          Padronização não é engessar a operação. É evitar que a qualidade do laudo dependa da memória ou do
+          estilo pessoal de quem vistoriou.
+        </p>
+
+        <h2 id="treinamento">Como treinar sem travar a operação</h2>
+        <ul>
+          <li><strong>Treine com casos reais</strong>, não só com instrução teórica.</li>
+          <li><strong>Use exemplos de bom e mau preenchimento</strong> para acelerar o aprendizado.</li>
+          <li><strong>Revise os primeiros laudos</strong> até o padrão ficar natural.</li>
+          <li><strong>Centralize o processo em um único fluxo</strong>, para reduzir improviso.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="comparavel">Por que isso melhora a comparação</h2>
+        <p>
+          Quando a equipe segue o mesmo método, entrega e devolução passam a conversar entre si. Isso reduz
+          retrabalho, encurta discussão e fortalece a cobrança. Para complementar, veja também o artigo{' '}
+          <a href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</a> e
+          o guia sobre <a href="/blog/erros-de-transcricao-na-vistoria">erros de transcrição na vistoria</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'como-fazer-mais-vistorias-por-dia',
+    title: 'Como fazer mais vistorias por dia sem aumentar a equipe',
+    excerpt:
+      'O gargalo da vistoria nem sempre está no pátio. Muitas vezes está no retrabalho depois. Veja como ganhar escala com o Danos Aparentes, menos redigitação e mais padrão operacional.',
+    category: 'Produtividade',
+    tags: ['mais vistorias por dia', 'produtividade', 'equipe de vistoria', 'frota', 'operação'],
+    date: '2026-07-02',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#15803d 45%,#86efac 100%)', emoji: '⏱️', image: '/vehicles-img/truck.png' },
+    toc: [
+      { id: 'gargalo', label: 'Onde está o gargalo' },
+      { id: 'ganhos', label: 'Ganhos rápidos de produtividade' },
+      { id: 'processo', label: 'Como escalar sem perder qualidade' },
+      { id: 'metricas', label: 'Métricas para acompanhar' },
+    ],
+    content: (
+      <>
+        <p>
+          Quando a operação quer fazer mais vistorias por dia, a reação comum é pensar em contratar mais
+          gente. Mas, antes disso, vale olhar para o processo: quantos minutos sua equipe perde com papel,
+          redigitação, busca de foto e correção de laudo?
+        </p>
+        <p>
+          Em muitas empresas, o gargalo não é a inspeção em si. É tudo o que acontece depois dela.
+          Com o <strong>Danos Aparentes</strong>, a equipe reduz etapas paralelas e aproveita melhor o tempo
+          de cada vistoria.
+        </p>
+
+        <h2 id="gargalo">Onde está o gargalo</h2>
+        <ul>
+          <li><strong>No fluxo quebrado</strong>, quando o laudo precisa ser reconstruído no escritório.</li>
+          <li><strong>Na falta de padrão</strong>, que exige revisão frequente dos documentos.</li>
+          <li><strong>Na consulta de histórico</strong>, quando a vistoria anterior é difícil de recuperar.</li>
+          <li><strong>Na aprovação demorada</strong>, porque o responsável só assina depois.</li>
+        </ul>
+
+        <h2 id="ganhos">Ganhos rápidos de produtividade</h2>
+        <ul>
+          <li><strong>Registrar tudo no celular</strong>, já durante a vistoria.</li>
+          <li><strong>Eliminar a redigitação</strong>, transformando o PDF em saída automática.</li>
+          <li><strong>Padronizar o roteiro</strong>, para reduzir indecisão da equipe.</li>
+          <li><strong>Coletar assinatura na hora</strong>, sem etapa pendente depois.</li>
+        </ul>
+        <p>
+          Esses ajustes encurtam o ciclo por veículo e fazem o mesmo time produzir mais sem sacrificar a
+          qualidade do documento.
+        </p>
+
+        <h2 id="processo">Como escalar sem perder qualidade</h2>
+        <p>
+          Escalar vistoria com segurança exige fluxo simples e prova consistente. Não adianta ganhar
+          velocidade se o laudo fica frágil. O ideal é combinar rapidez com registro por peça, fotos com
+          contexto e validação do documento final.
+        </p>
+        <ul>
+          <li><strong>Mais velocidade</strong> sem abrir mão da evidência.</li>
+          <li><strong>Mais veículos</strong> sem crescer o retrabalho.</li>
+          <li><strong>Mais previsibilidade</strong> na rotina da equipe.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="metricas">Métricas para acompanhar</h2>
+        <ul>
+          <li><strong>Tempo médio por vistoria</strong>.</li>
+          <li><strong>Número de laudos concluídos por dia</strong>.</li>
+          <li><strong>Percentual de laudos com correção posterior</strong>.</li>
+          <li><strong>Tempo entre vistoria e envio do PDF</strong>.</li>
+        </ul>
+        <p>
+          Se quiser atuar na raiz do problema, siga com{' '}
+          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
+          <a href="/blog/vistoria-sem-papel">como sair da prancheta para o laudo digital</a>.
+        </p>
+      </>
+    ),
+  },
+)
+
+BLOG_POSTS.unshift(
+  {
+    slug: 'avarias-preexistentes-como-provar',
+    title: 'Avarias preexistentes: como provar que o dano já estava no veículo',
+    excerpt:
+      'Quando o cliente diz que o risco ou amassado já existia, só a prova encerra a discussão. Veja como o Danos Aparentes ajuda a registrar avarias preexistentes de forma clara, comparável e incontestável.',
+    category: 'Locadora',
+    tags: ['avarias preexistentes', 'vistoria veicular', 'locadora', 'frota', 'laudo de avarias'],
+    date: '2026-07-04',
+    readingMinutes: 7,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#ea580c 45%,#fb923c 100%)', emoji: '🧾', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'prejuizo', label: 'Por que a avaria preexistente vira prejuízo' },
+      { id: 'provar', label: 'O que realmente prova' },
+      { id: 'processo', label: 'Processo ideal de registro' },
+      { id: 'erros', label: 'Erros que enfraquecem a cobrança' },
+    ],
+    content: (
+      <>
+        <p>
+          O prejuízo invisível nasce quando o cliente devolve o veículo com um risco, amassado ou trinca
+          e diz: <strong>&ldquo;isso já estava aí&rdquo;</strong>. Se a sua empresa não tem um registro
+          comparável, datado e assinado da retirada, a discussão termina quase sempre do mesmo jeito: a
+          funilaria sai do seu caixa.
+        </p>
+        <p>
+          A boa notícia é que avaria preexistente não precisa ser tema de bate-boca. Com o processo certo,
+          você transforma opinião em prova e protege a margem da locadora, da frota ou do pátio. Com o{' '}
+          <strong>Danos Aparentes</strong>, esse registro fica mais visual, rastreável e fácil de comparar.
+        </p>
+
+        <h2 id="prejuizo">Por que a avaria preexistente vira prejuízo</h2>
+        <p>
+          O problema não é apenas o dano em si. O problema é a <strong>falta de comparação confiável</strong>
+          entre o estado do veículo na entrega e na devolução. Quando cada vistoria é feita de um jeito,
+          com fotos soltas e descrições vagas, fica impossível demonstrar se a avaria já existia ou se
+          surgiu depois.
+        </p>
+        <ul>
+          <li><strong>Sem foto de retirada:</strong> você não prova que a peça estava íntegra.</li>
+          <li><strong>Sem descrição por peça:</strong> um dano novo pode ser confundido com um antigo.</li>
+          <li><strong>Sem assinatura:</strong> falta aceite formal do responsável.</li>
+          <li><strong>Sem validação do documento:</strong> qualquer contestação coloca o laudo em dúvida.</li>
+        </ul>
+
+        <h2 id="provar">O que realmente prova que o dano já estava no veículo</h2>
+        <p>
+          Para uma avaria ser reconhecida como preexistente, o registro precisa mostrar{' '}
+          <strong>onde</strong> ela estava, <strong>quando</strong> foi capturada e{' '}
+          <strong>quem</strong> concordou com aquele estado. Na prática, isso exige:
+        </p>
+        <ul>
+          <li><strong>Laudo de retirada completo</strong>, com placa, modelo, quilometragem e data.</li>
+          <li><strong>Marcação da avaria por peça</strong>, para não depender de memória ou interpretação.</li>
+          <li><strong>Fotos abertas e de detalhe</strong>, para provar contexto e extensão.</li>
+          <li><strong>Metadados de data, hora e GPS</strong>, que amarram o registro a um momento real.</li>
+          <li><strong>Assinatura do responsável</strong>, confirmando o estado do veículo na saída.</li>
+        </ul>
+        <p>
+          E o que dá robustez final ao processo é um documento que não possa ser alterado depois, com{' '}
+          <strong>hash de validação e QR Code</strong>. Assim, se houver contestação dias depois, sua equipe
+          não precisa argumentar: basta apresentar a prova original.
+        </p>
+
+        <Cta />
+
+        <h2 id="processo">Processo ideal de registro para evitar disputa</h2>
+        <ul>
+          <li><strong>1. Faça a vistoria de entrega em ordem fixa</strong> para nunca pular uma área do veículo.</li>
+          <li><strong>2. Registre toda avaria existente na retirada</strong>, inclusive as pequenas.</li>
+          <li><strong>3. Colha as assinaturas no mesmo ato</strong>, sem deixar para depois.</li>
+          <li><strong>4. Repita o mesmo padrão na devolução</strong>, para comparar laudo com laudo.</li>
+          <li><strong>5. Cobre somente o que for dano novo e comprovável</strong>, com base objetiva.</li>
+        </ul>
+        <p>
+          Esse método é o que transforma a expressão <em>avaria preexistente</em> em algo verificável, não em
+          uma alegação. Se quiser aprofundar o fluxo completo, veja também o{' '}
+          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</a>.
+        </p>
+
+        <h2 id="erros">Erros que enfraquecem a cobrança</h2>
+        <ul>
+          <li>Usar fotos do WhatsApp sem contexto, sem data e sem vinculação ao laudo.</li>
+          <li>Registrar apenas danos grandes e ignorar riscos leves ou marcas discretas.</li>
+          <li>Escrever descrições genéricas como &ldquo;arranhado lateral&rdquo;.</li>
+          <li>Fazer vistoria na entrega e na devolução com formulários diferentes.</li>
+        </ul>
+        <p>
+          Se sua operação quer parar de absorver pequenos reparos que somam no fim do mês, a prioridade é
+          simples: registrar bem a retirada para cobrar com segurança na devolução. Comece pelo{' '}
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'vistoria-entrega-veiculo',
+    title: 'Vistoria de entrega de veículo: como evitar discussões na devolução',
+    excerpt:
+      'A devolução só é tranquila quando a entrega foi bem registrada. Veja como o Danos Aparentes ajuda a fazer uma vistoria de entrega comparável, assinada e pronta para sustentar cobranças de danos novos.',
+    category: 'Vistoria',
+    tags: ['vistoria de entrega', 'devolução de veículo', 'locadora', 'frota', 'laudo veicular'],
+    date: '2026-07-03',
+    readingMinutes: 6,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#1d4ed8 45%,#60a5fa 100%)', emoji: '🚗', image: '/vehicles-img/car2d.png' },
+    toc: [
+      { id: 'importancia', label: 'Por que a entrega define a devolução' },
+      { id: 'checklist', label: 'Checklist da vistoria de entrega' },
+      { id: 'comparacao', label: 'Como garantir comparação depois' },
+      { id: 'falhas', label: 'Falhas mais comuns' },
+    ],
+    content: (
+      <>
+        <p>
+          Muita empresa tenta resolver a discussão na devolução, mas o resultado da devolução é decidido na
+          entrega. Se o veículo sai sem um registro claro do estado inicial, qualquer dano novo vira tema de
+          negociação, desconto ou prejuízo absorvido.
+        </p>
+        <p>
+          A vistoria de entrega é o momento em que você cria a <strong>linha de base</strong> do veículo.
+          Quanto mais objetiva e padronizada ela for, mais fácil fica identificar o que realmente mudou no
+          retorno. Com o <strong>Danos Aparentes</strong>, essa base já fica organizada para comparação futura.
+        </p>
+
+        <h2 id="importancia">Por que a entrega define a devolução</h2>
+        <p>
+          Na prática, a devolução não começa quando o carro volta ao pátio. Ela começa quando o carro sai.
+          É nesse instante que sua equipe precisa registrar riscos, amassados, trincas, itens internos,
+          quilometragem e documentos. Sem esse marco inicial, não existe base confiável para cobrar nada.
+        </p>
+        <ul>
+          <li><strong>Entrega bem feita:</strong> devolução objetiva e comparável.</li>
+          <li><strong>Entrega mal feita:</strong> contestação, retrabalho e margem perdida.</li>
+        </ul>
+
+        <h2 id="checklist">Checklist da vistoria de entrega</h2>
+        <ul>
+          <li><strong>Identificação do veículo:</strong> placa, modelo, cor e quilometragem.</li>
+          <li><strong>Exterior em ordem fixa:</strong> frente, lateral esquerda, traseira, lateral direita e teto.</li>
+          <li><strong>Interior:</strong> bancos, painel, multimídia, tapetes e acabamentos.</li>
+          <li><strong>Itens e documentos:</strong> chave reserva, manual, estepe e acessórios entregues.</li>
+          <li><strong>Fotos padrão:</strong> uma aberta e uma de detalhe por avaria existente.</li>
+          <li><strong>Aceite formal:</strong> assinatura do vistoriador e do cliente/responsável.</li>
+        </ul>
+        <p>
+          Esse roteiro evita a vistoria superficial, em que todo mundo olha rápido para o carro, mas ninguém
+          produz uma prova realmente utilizável depois.
+        </p>
+
+        <h2 id="comparacao">Como garantir comparação sem achismo</h2>
+        <p>
+          O segredo não é apenas vistoriar bem. É vistoriar <strong>sempre do mesmo jeito</strong>. Entrega e
+          devolução precisam compartilhar o mesmo formulário, o mesmo padrão de fotos e a mesma lógica de
+          classificação. Quando isso acontece, a análise deixa de ser subjetiva.
+        </p>
+        <ul>
+          <li><strong>Mesmo fluxo</strong> para todas as unidades e vistoriadores.</li>
+          <li><strong>Mesmo padrão de nomenclatura</strong> para riscos, amassados e trincas.</li>
+          <li><strong>Mesmo tipo de laudo</strong>, com hash, QR Code e histórico consistente.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="falhas">Falhas mais comuns na vistoria de entrega</h2>
+        <ul>
+          <li>Fazer registro rápido demais e deixar pequenas avarias sem anotação.</li>
+          <li>Tirar poucas fotos ou sem contextualizar a peça afetada.</li>
+          <li>Preencher parte no pátio e parte depois, já fora do momento da entrega.</li>
+          <li>Usar planilha, papel ou mensagens dispersas em vez de um laudo fechado.</li>
+        </ul>
+        <p>
+          Se o seu objetivo é reduzir discussão na devolução, comece fortalecendo a entrega. Depois, complemente
+          com o{' '}
+          <a href="/blog/como-fotografar-avarias">guia de fotos de avarias à prova de contestação</a> e o{' '}
+          <a href="/blog/vistoria-de-frota-padronizar-equipe">artigo sobre padronização da equipe</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'como-reduzir-prejuizo-com-avarias-na-frota',
+    title: 'Como reduzir prejuízo com avarias na frota',
+    excerpt:
+      'Pequenos danos ignorados, registros inconsistentes e cobranças mal sustentadas corroem a margem da operação. Veja como o Danos Aparentes ajuda a reduzir prejuízo com processo, padrão e prova digital.',
+    category: 'Frota',
+    tags: ['avarias na frota', 'gestão de frota', 'prejuízo operacional', 'vistoria', 'controle de danos'],
+    date: '2026-07-02',
+    readingMinutes: 7,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#16a34a 45%,#86efac 100%)', emoji: '📉', image: '/vehicles-img/van.png' },
+    toc: [
+      { id: 'onde', label: 'Onde o prejuízo nasce' },
+      { id: 'controle', label: 'Controles que reduzem perda' },
+      { id: 'operacao', label: 'Como implantar na operação' },
+      { id: 'indicadores', label: 'Indicadores para acompanhar' },
+    ],
+    content: (
+      <>
+        <p>
+          O prejuízo com avarias na frota raramente vem de um único grande dano. Na maioria das vezes, ele
+          aparece na soma de pequenos reparos, cobranças não realizadas, retrabalho da equipe e tempo gasto
+          em discussão com cliente, motorista ou fornecedor.
+        </p>
+        <p>
+          Quando a operação não tem um processo padrão de vistoria, cada avaria mal registrada vira custo
+          invisível. E custo invisível é o tipo mais perigoso, porque ele cresce antes de chamar atenção. Com
+          o <strong>Danos Aparentes</strong>, a operação ganha mais consistência para enxergar e conter essas perdas.
+        </p>
+
+        <h2 id="onde">Onde o prejuízo nasce</h2>
+        <ul>
+          <li><strong>Na entrega sem registro completo</strong>, que impede comparar depois.</li>
+          <li><strong>Na devolução sem critério</strong>, que abre espaço para contestação.</li>
+          <li><strong>Na falta de padrão da equipe</strong>, quando cada vistoriador olha e escreve de um jeito.</li>
+          <li><strong>Na documentação fraca</strong>, sem foto, assinatura ou validação do arquivo.</li>
+        </ul>
+        <p>
+          O resultado é conhecido: danos novos não são cobrados, danos antigos são rediscutidos, e a empresa
+          paga reparos que poderiam ter sido imputados com tranquilidade.
+        </p>
+
+        <h2 id="controle">Controles que reduzem perda de verdade</h2>
+        <ul>
+          <li><strong>Padrão único de vistoria</strong> para entrega, movimentação interna e devolução.</li>
+          <li><strong>Registro por peça e gravidade</strong>, evitando descrições vagas.</li>
+          <li><strong>Fotos abertas e de detalhe</strong> com data, hora e GPS.</li>
+          <li><strong>Laudo fechado e validável</strong>, com hash e QR Code para consulta.</li>
+          <li><strong>Histórico centralizado</strong>, para recuperar rápido a vistoria anterior.</li>
+        </ul>
+        <p>
+          Nenhum desses controles depende de aumentar burocracia. O ganho real está em trocar improviso por
+          repetição bem desenhada.
+        </p>
+
+        <h2 id="operacao">Como implantar sem travar a operação</h2>
+        <ul>
+          <li><strong>Defina uma sequência única de inspeção</strong> para todos os veículos.</li>
+          <li><strong>Treine a equipe com exemplos reais</strong> de risco, amassado, trinca e quebra.</li>
+          <li><strong>Use o mesmo laudo em todas as etapas</strong>, do pátio à devolução.</li>
+          <li><strong>Revise a cobrança com base em comparação</strong>, não em memória do atendente.</li>
+        </ul>
+        <p>
+          Para muita empresa, a redução de prejuízo começa quando o processo deixa de depender do colaborador
+          mais experiente e passa a depender de um método consistente.
+        </p>
+
+        <Cta />
+
+        <h2 id="indicadores">Indicadores para acompanhar mês a mês</h2>
+        <ul>
+          <li><strong>Valor mensal de reparos absorvidos</strong> pela empresa.</li>
+          <li><strong>Percentual de avarias cobradas com sucesso</strong>.</li>
+          <li><strong>Tempo médio de vistoria</strong> por entrega ou devolução.</li>
+          <li><strong>Número de contestações</strong> por unidade ou por atendente.</li>
+        </ul>
+        <p>
+          Se esses números melhoram, sua operação está ficando mais protegida. Se continuam iguais, o problema
+          não é apenas o dano: é a forma de registrar. Vale seguir com o{' '}
+          <a href="/blog/avarias-preexistentes-como-provar">artigo sobre avarias preexistentes</a> e o{' '}
+          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</a> para fechar o processo.
+        </p>
+      </>
+    ),
+  },
+)
+
+BLOG_POSTS.unshift(...RAIN_POSTS)
+
+BLOG_POSTS.unshift(
+  {
+    slug: 'laudo-com-logo-da-empresa-no-pdf',
+    title: 'Laudo com logo da empresa no PDF: mais profissional com Danos Aparentes',
+    excerpt:
+      'Veja como personalizar o laudo com a logo e o nome da sua empresa no Danos Aparentes para entregar um PDF mais profissional, conceitual e alinhado à identidade da sua operação.',
+    category: 'Laudo',
+    tags: ['logo da empresa', 'pdf de vistoria', 'laudo profissional', 'white-label', 'danos aparentes'],
+    date: '2026-07-04',
+    readingMinutes: 5,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#111827 0%,#0c4a6e 45%,#38bdf8 100%)', emoji: '🏢', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'identidade', label: 'Por que colocar sua logo no laudo' },
+      { id: 'profissional', label: 'O que muda na percepção do cliente' },
+      { id: 'como-funciona', label: 'Como funciona no Danos Aparentes' },
+      { id: 'quando-usar', label: 'Quando isso faz mais diferença' },
+    ],
+    content: (
+      <>
+        <p>
+          Um laudo bem feito não precisa parecer genérico. Quando o PDF sai com a <strong>logo da empresa</strong>
+          {' '}e o <strong>nome no cabeçalho</strong>, a vistoria ganha outra presença: mais profissional,
+          mais organizada e mais alinhada à identidade da sua operação.
+        </p>
+        <p>
+          Para locadoras, concessionárias, frotas e despachantes, isso faz diferença prática. O cliente
+          recebe um documento com cara de processo oficial, não um arquivo improvisado ou sem assinatura de
+          marca. E, com o <strong>Danos Aparentes</strong>, essa apresentação profissional já sai pronta na rotina.
+        </p>
+
+        <h2 id="identidade">Por que colocar sua logo no laudo</h2>
+        <p>
+          O laudo de vistoria é uma extensão da sua operação. Se ele chega ao cliente com identidade visual,
+          ele transmite mais confiança e reforça o posicionamento da empresa em cada entrega, devolução ou
+          inspeção.
+        </p>
+        <ul>
+          <li><strong>Reforça a marca</strong> em um momento importante da jornada do cliente.</li>
+          <li><strong>Deixa o documento mais profissional</strong> do que um PDF genérico.</li>
+          <li><strong>Cria uma apresentação mais conceitual</strong>, com aparência consistente e institucional.</li>
+          <li><strong>Valoriza a operação</strong>, mesmo quando a vistoria precisa ser feita rápido.</li>
+        </ul>
+
+        <h2 id="profissional">O que muda na percepção do cliente</h2>
+        <p>
+          Na prática, o cliente entende melhor quando recebe um laudo visualmente organizado, com cabeçalho
+          padronizado e identidade clara. Isso ajuda a reduzir ruído, passa mais segurança e mostra que a
+          vistoria segue um método, não um improviso.
+        </p>
+        <ul>
+          <li><strong>Mais credibilidade</strong> para cobrança e aceite.</li>
+          <li><strong>Mais clareza</strong> sobre quem emitiu o documento.</li>
+          <li><strong>Mais percepção de cuidado</strong> com o processo e com a entrega.</li>
+        </ul>
+
+        <h2 id="como-funciona">Como funciona no Danos Aparentes</h2>
+        <p>
+          No <strong>Danos Aparentes</strong>, o laudo pode sair com a sua <strong>logo</strong> e o{' '}
+          <strong>nome da empresa</strong> no PDF. Isso transforma o relatório em um documento{' '}
+          <em>white-label</em>, com a cara da sua marca.
+        </p>
+
+        <LaudoSheet />
+
+        <p>
+          Além da identidade visual, o documento mantém o que importa na operação: marcação das avarias,
+          fotos, assinaturas, QR Code e hash de validação. Ou seja, não é só bonito: é profissional e útil
+          na rotina.
+        </p>
+
+        <Cta />
+
+        <h2 id="quando-usar">Quando isso faz mais diferença</h2>
+        <ul>
+          <li><strong>Locadoras</strong>, que entregam e recebem veículos todos os dias.</li>
+          <li><strong>Concessionárias</strong>, que querem elevar a apresentação da vistoria ao cliente.</li>
+          <li><strong>Frotas corporativas</strong>, que precisam de padronização entre equipes e unidades.</li>
+          <li><strong>Despachantes e prestadores</strong>, que usam o laudo como vitrine do próprio serviço.</li>
+        </ul>
+        <p>
+          Se você quer aprofundar esse lado do documento, vale ler também o{' '}
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a> e o
+          artigo sobre <a href="/blog/antes-e-depois-da-vistoria-digital">antes e depois da vistoria digital</a>.
+        </p>
+      </>
+    ),
+  },
+)
+
+BLOG_POSTS.unshift(
+  {
+    slug: 'laudo-de-vistoria-com-assinatura-digital',
+    title: 'Laudo de vistoria com assinatura digital: mais segurança com Danos Aparentes',
+    excerpt:
+      'Veja como o Danos Aparentes usa assinatura digital no laudo para deixar o aceite mais claro, profissional e difícil de contestar na rotina da vistoria.',
+    category: 'Validade',
+    tags: ['assinatura digital', 'laudo de vistoria', 'validade do laudo', 'danos aparentes', 'prova digital'],
+    date: '2026-07-04',
+    readingMinutes: 5,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0c4a6e 45%,#38bdf8 100%)', emoji: '✍️', image: '/vehicles-img/car2d.png' },
+    toc: [
+      { id: 'importancia', label: 'Por que a assinatura muda o laudo' },
+      { id: 'como-funciona', label: 'Como funciona no Danos Aparentes' },
+      { id: 'prova', label: 'O peso da assinatura na prova' },
+      { id: 'quando-usar', label: 'Quando isso faz mais diferença' },
+    ],
+    content: (
+      <>
+        <p>
+          Um laudo sem assinatura pode até registrar a avaria, mas deixa uma brecha justamente no momento mais
+          sensível: o aceite. Com o <strong>Danos Aparentes</strong>, a assinatura digital ajuda a fechar esse
+          ponto no próprio fluxo da vistoria, sem papel solto nem confirmação pendente para depois.
+        </p>
+        <p>
+          Isso torna o documento mais profissional, mais claro para o cliente e muito mais consistente para a
+          operação quando surge contestação.
+        </p>
+
+        <h2 id="importancia">Por que a assinatura muda o laudo</h2>
+        <p>
+          A assinatura não é um detalhe visual. Ela é o momento em que o responsável reconhece o estado do
+          veículo registrado naquele documento. Sem ela, o laudo pode parecer unilateral; com ela, o aceite
+          fica muito mais forte.
+        </p>
+        <ul>
+          <li><strong>Formaliza o aceite</strong> no ato da vistoria.</li>
+          <li><strong>Reduz ruído</strong> entre quem entrega e quem recebe.</li>
+          <li><strong>Fortalece a cobrança</strong> de danos novos ou divergências futuras.</li>
+          <li><strong>Passa mais confiança</strong> para cliente, locadora e gestor de frota.</li>
+        </ul>
+
+        <h2 id="como-funciona">Como funciona no Danos Aparentes</h2>
+        <p>
+          No <strong>Danos Aparentes</strong>, o vistoriador e o responsável assinam na própria tela, no mesmo
+          fluxo em que as avarias são marcadas, as fotos são anexadas e o PDF é gerado. Isso evita etapa
+          paralela, elimina retrabalho e mantém o aceite junto do restante da prova.
+        </p>
+        <ul>
+          <li><strong>Assinatura na hora</strong>, sem precisar imprimir ou escanear.</li>
+          <li><strong>Documento já fechado</strong> com identidade, avarias, fotos e aceite.</li>
+          <li><strong>Mais organização</strong> para envio, consulta e comparação futura.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="prova">O peso da assinatura na prova</h2>
+        <p>
+          Assinatura sozinha não resolve tudo, mas combinada com fotos, marcação visual, QR Code e hash, ela
+          aumenta muito a robustez do laudo. O documento deixa de ser apenas descritivo e passa a ter mais
+          força operacional como registro aceito pelas partes.
+        </p>
+        <p>
+          Para entender esse complemento, vale seguir com{' '}
+          <a href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash no laudo de avarias</a> e o guia
+          sobre <a href="/blog/avarias-preexistentes-como-provar">como provar avarias preexistentes</a>.
+        </p>
+
+        <h2 id="quando-usar">Quando isso faz mais diferença</h2>
+        <ul>
+          <li><strong>Entrega e devolução</strong> de veículos em locadoras.</li>
+          <li><strong>Recebimento de frota</strong> em pátio ou unidade operacional.</li>
+          <li><strong>Sinistros e inspeções</strong> em que o aceite precisa ficar claro.</li>
+          <li><strong>Atendimento ao cliente</strong> quando a apresentação profissional faz diferença.</li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    slug: 'qr-code-e-hash-no-laudo-de-avarias',
+    title: 'QR Code e hash no laudo de avarias: por que isso reforça a validade',
+    excerpt:
+      'Entenda como o Danos Aparentes usa QR Code e hash no laudo para reforçar autenticidade, consulta do original e mais segurança na comprovação das avarias.',
+    category: 'Validade',
+    tags: ['qr code', 'hash', 'validade do laudo', 'laudo de avarias', 'danos aparentes'],
+    date: '2026-07-04',
+    readingMinutes: 5,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#111827 0%,#1d4ed8 45%,#60a5fa 100%)', emoji: '🔐', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'o-que-fazem', label: 'O que QR Code e hash fazem' },
+      { id: 'original', label: 'Como ajudam a consultar o original' },
+      { id: 'danos-aparentes', label: 'Como isso funciona no Danos Aparentes' },
+      { id: 'valor', label: 'Por que isso agrega valor ao laudo' },
+    ],
+    content: (
+      <>
+        <p>
+          Um laudo bonito não basta. Ele também precisa ser confiável. Por isso, no <strong>Danos Aparentes</strong>,
+          o PDF pode sair com <strong>QR Code</strong> e <strong>hash de validação</strong>, dois elementos que
+          ajudam a reforçar a autenticidade do documento e a confiança na prova.
+        </p>
+
+        <h2 id="o-que-fazem">O que QR Code e hash fazem</h2>
+        <p>
+          O hash funciona como uma impressão digital do arquivo. Se o documento for alterado depois, essa
+          referência deixa de bater. Já o QR Code facilita a consulta do laudo original, conectando o PDF a
+          uma verificação simples e rápida.
+        </p>
+        <ul>
+          <li><strong>Hash:</strong> ajuda a mostrar que o arquivo não foi adulterado.</li>
+          <li><strong>QR Code:</strong> facilita a conferência do laudo original.</li>
+          <li><strong>Juntos:</strong> deixam o documento mais robusto e rastreável.</li>
+        </ul>
+
+        <h2 id="original">Como ajudam a consultar o original</h2>
+        <p>
+          Na rotina, isso é útil porque evita depender de versões soltas em WhatsApp, e-mail ou computador da
+          equipe. O cliente, o gestor ou a operação conseguem identificar o documento correto com mais clareza.
+        </p>
+        <ul>
+          <li><strong>Mais organização</strong> para consulta posterior.</li>
+          <li><strong>Mais segurança</strong> ao comparar arquivos enviados.</li>
+          <li><strong>Menos dúvida</strong> sobre qual é a versão válida do laudo.</li>
+        </ul>
+
+        <h2 id="danos-aparentes">Como isso funciona no Danos Aparentes</h2>
+        <p>
+          No <strong>Danos Aparentes</strong>, QR Code e hash entram no laudo junto com os demais elementos da
+          vistoria: marcação visual, fotos, assinaturas e identidade da empresa. Ou seja, não são extras
+          isolados; fazem parte de um documento mais profissional e consistente.
+        </p>
+
+        <Cta />
+
+        <h2 id="valor">Por que isso agrega valor ao laudo</h2>
+        <p>
+          Quando o documento combina apresentação profissional com mecanismos de validação, ele ganha peso
+          operacional. Para aprofundar, veja também{' '}
+          <a href="/blog/laudo-de-vistoria-com-assinatura-digital">laudo com assinatura digital</a> e{' '}
+          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">como colocar sua logo e nome no PDF</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'laudo-white-label-para-locadoras',
+    title: 'Laudo white-label para locadoras: mais marca e profissionalismo com Danos Aparentes',
+    excerpt:
+      'Entenda como o Danos Aparentes permite gerar um laudo white-label para locadoras, com logo, nome da empresa e apresentação mais profissional no PDF.',
+    category: 'Profissionalismo',
+    tags: ['white-label', 'locadoras', 'laudo profissional', 'logo da empresa', 'danos aparentes'],
+    date: '2026-07-04',
+    readingMinutes: 5,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#111827 0%,#0f766e 45%,#34d399 100%)', emoji: '🧩', image: '/vehicles-img/van.png' },
+    toc: [
+      { id: 'white-label', label: 'O que é um laudo white-label' },
+      { id: 'locadora', label: 'Por que isso importa para locadoras' },
+      { id: 'pdf', label: 'Como fica o PDF no Danos Aparentes' },
+      { id: 'percepcao', label: 'O impacto na percepção do cliente' },
+    ],
+    content: (
+      <>
+        <p>
+          Para uma locadora, o laudo não é apenas um registro técnico. Ele também representa a forma como a
+          empresa se apresenta ao cliente. Com o <strong>Danos Aparentes</strong>, esse documento pode sair em
+          formato <em>white-label</em>, com a identidade da própria operação no PDF.
+        </p>
+
+        <h2 id="white-label">O que é um laudo white-label</h2>
+        <p>
+          É um laudo que leva a <strong>logo da empresa</strong>, o <strong>nome da operação</strong> e uma
+          aparência alinhada à marca da locadora. Isso evita que o PDF pareça genérico ou improvisado e ajuda
+          a reforçar profissionalismo em cada entrega ou devolução.
+        </p>
+        <ul>
+          <li><strong>Mais identidade</strong> no documento.</li>
+          <li><strong>Mais padronização</strong> entre unidades e equipes.</li>
+          <li><strong>Mais valor percebido</strong> no atendimento ao cliente.</li>
+        </ul>
+
+        <h2 id="locadora">Por que isso importa para locadoras</h2>
+        <p>
+          Em locação, o cliente recebe laudos em momentos sensíveis: retirada, devolução, contestação e
+          cobrança. Quando o documento chega bem apresentado, com marca clara e estrutura profissional, a
+          confiança na operação cresce.
+        </p>
+        <ul>
+          <li><strong>Reforça a autoridade</strong> da locadora na comunicação.</li>
+          <li><strong>Reduz sensação de improviso</strong> em processos delicados.</li>
+          <li><strong>Ajuda a diferenciar a marca</strong> mesmo em operações de alta escala.</li>
+        </ul>
+
+        <h2 id="pdf">Como fica o PDF no Danos Aparentes</h2>
+        <p>
+          No <strong>Danos Aparentes</strong>, o PDF pode refletir a identidade da empresa sem abrir mão da
+          parte técnica da vistoria.
+        </p>
+
+        <LaudoSheet />
+
+        <p>
+          A locadora entrega um documento com marca, avarias, fotos, assinaturas e validação em um só fluxo,
+          com aparência mais séria e organizada.
+        </p>
+
+        <Cta />
+
+        <h2 id="percepcao">O impacto na percepção do cliente</h2>
+        <p>
+          O cliente tende a confiar mais quando o documento parece parte oficial da operação. Para seguir
+          nesse tema, veja também{' '}
+          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</a> e{' '}
+          <a href="/blog/como-entregar-um-pdf-de-vistoria-mais-profissional">como entregar um PDF de vistoria mais profissional</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'como-entregar-um-pdf-de-vistoria-mais-profissional',
+    title: 'Como entregar um PDF de vistoria mais profissional com Danos Aparentes',
+    excerpt:
+      'Veja como o Danos Aparentes ajuda sua operação a entregar um PDF de vistoria mais profissional, claro e conceitual, com melhor percepção para o cliente.',
+    category: 'Profissionalismo',
+    tags: ['pdf profissional', 'laudo de vistoria', 'danos aparentes', 'apresentação do laudo', 'white-label'],
+    date: '2026-07-04',
+    readingMinutes: 5,
+    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0369a1 45%,#7dd3fc 100%)', emoji: '📄', image: '/vehicles-img/microbus.png' },
+    toc: [
+      { id: 'aparencia', label: 'Por que a aparência do PDF importa' },
+      { id: 'elementos', label: 'O que deixa o laudo mais profissional' },
+      { id: 'danos-aparentes', label: 'Como o Danos Aparentes entrega isso' },
+      { id: 'confianca', label: 'Como isso aumenta a confiança' },
+    ],
+    content: (
+      <>
+        <p>
+          O conteúdo do laudo importa, mas a forma como ele é apresentado também pesa na percepção do cliente.
+          Com o <strong>Danos Aparentes</strong>, o PDF de vistoria pode sair com aparência mais profissional,
+          mais clara e mais alinhada à imagem da sua operação.
+        </p>
+
+        <h2 id="aparencia">Por que a aparência do PDF importa</h2>
+        <p>
+          Um documento bem apresentado transmite método, organização e segurança. Quando o laudo chega limpo,
+          visual e fácil de entender, ele reduz ruído e melhora a experiência de quem recebe.
+        </p>
+        <ul>
+          <li><strong>Facilita leitura</strong> de avarias, fotos e identificação do veículo.</li>
+          <li><strong>Transmite mais profissionalismo</strong> em cada entrega ou devolução.</li>
+          <li><strong>Valoriza a marca</strong> da empresa diante do cliente.</li>
+        </ul>
+
+        <h2 id="elementos">O que deixa o laudo mais profissional</h2>
+        <ul>
+          <li><strong>Logo e nome da empresa</strong> no cabeçalho.</li>
+          <li><strong>Marcação visual das avarias</strong>, em vez de descrição solta.</li>
+          <li><strong>Fotos organizadas</strong> e associadas ao dano certo.</li>
+          <li><strong>Assinaturas, QR Code e hash</strong> compondo um documento mais completo.</li>
+        </ul>
+
+        <h2 id="danos-aparentes">Como o Danos Aparentes entrega isso</h2>
+        <p>
+          No <strong>Danos Aparentes</strong>, a apresentação profissional não depende de montar o arquivo à
+          mão. O próprio fluxo de vistoria já organiza as informações e gera um PDF com aparência mais sólida,
+          conceitual e pronta para compartilhar.
+        </p>
+        <ul>
+          <li><strong>Menos improviso</strong> na montagem do documento.</li>
+          <li><strong>Mais consistência</strong> entre os laudos emitidos pela equipe.</li>
+          <li><strong>Mais rapidez</strong> para entregar algo com cara de operação madura.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="confianca">Como isso aumenta a confiança</h2>
+        <p>
+          Um PDF mais profissional ajuda o cliente a entender melhor o processo e confiar mais no registro.
+          Para aprofundar, vale seguir com{' '}
+          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</a>,{' '}
+          <a href="/blog/laudo-white-label-para-locadoras">laudo white-label para locadoras</a> e{' '}
+          <a href="/blog/laudo-de-vistoria-com-assinatura-digital">laudo com assinatura digital</a>.
+        </p>
+      </>
+    ),
+  },
+)
+
 export function getPost(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find(p => p.slug === slug)
 }

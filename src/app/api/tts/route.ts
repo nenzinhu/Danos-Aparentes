@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { GoogleAuth } from 'google-auth-library';
 import { DEFAULT_GOOGLE_VOICE_ID, getGoogleVoice, isGoogleVoiceId } from '@/src/lib/googleTtsVoices';
 import { getUserFromRequest, userHasActiveSubscription, getClientIp } from '@/src/lib/server/auth';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
@@ -6,24 +7,55 @@ import { checkRateLimit } from '@/src/lib/server/rateLimit';
 const MAX_TEXT_LENGTH_AUTH = 2000;
 const MAX_TEXT_LENGTH_ANON = 400;
 
+let googleAuthClient: GoogleAuth | null = null;
+
+function getGoogleAuth(): GoogleAuth | null {
+  const raw = process.env.GOOGLE_TTS_SERVICE_ACCOUNT_KEY;
+  if (!raw) return null;
+  if (!googleAuthClient) {
+    const credentials = JSON.parse(raw);
+    googleAuthClient = new GoogleAuth({
+      credentials,
+      scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+    });
+  }
+  return googleAuthClient;
+}
+
 async function synthesizeGoogle(
   text: string,
   voiceName: string,
   rate: number,
   pitch: number,
   volume: number,
-  apiKey: string,
+  apiKey?: string,
 ): Promise<ArrayBuffer> {
-  const response = await fetch(`https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`, {
+  const auth = getGoogleAuth();
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  let url = 'https://texttospeech.googleapis.com/v1/text:synthesize';
+
+  if (auth) {
+    const client = await auth.getClient();
+    const token = await client.getAccessToken();
+    headers.Authorization = `Bearer ${token.token}`;
+  } else if (apiKey) {
+    url += `?key=${apiKey}`;
+  } else {
+    throw new Error('Google TTS: nenhuma credencial configurada');
+  }
+
+  const supportsPitch = !voiceName.includes('Chirp3');
+
+  const response = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify({
       input: { text },
       voice: { languageCode: 'pt-BR', name: voiceName },
       audioConfig: {
         audioEncoding: 'MP3',
         speakingRate: rate,
-        pitch: (pitch - 1) * 10,
+        ...(supportsPitch ? { pitch: (pitch - 1) * 10 } : {}),
         volumeGainDb: volume >= 1 ? 0 : 20 * Math.log10(Math.max(volume, 0.01)),
       },
     }),
@@ -129,8 +161,9 @@ export async function POST(req: NextRequest) {
 
     if (useGoogle) {
       const googleKey = process.env.GOOGLE_TTS_API_KEY;
-      if (!googleKey) {
-        return NextResponse.json({ error: 'Chave GOOGLE_TTS_API_KEY não configurada' }, { status: 500 });
+      const hasServiceAccount = Boolean(process.env.GOOGLE_TTS_SERVICE_ACCOUNT_KEY);
+      if (!googleKey && !hasServiceAccount) {
+        return NextResponse.json({ error: 'Credencial do Google TTS não configurada' }, { status: 500 });
       }
 
       const voice = getGoogleVoice(voiceId || DEFAULT_GOOGLE_VOICE_ID);

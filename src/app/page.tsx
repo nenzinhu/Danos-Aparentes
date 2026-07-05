@@ -94,7 +94,7 @@ function TextCarousel() {
   return (
     <div className="relative">
       <div key={index} className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 motion-reduce:animate-none">
-        <h1 className="font-display text-5xl lg:text-[5.25rem] font-bold uppercase leading-[0.92] tracking-[-0.015em] text-[var(--text-main)] [text-wrap:balance]">
+        <h1 className="font-display text-4xl sm:text-5xl lg:text-[5.25rem] font-bold uppercase leading-[0.92] tracking-[-0.015em] text-[var(--text-main)] [text-wrap:balance]">
           {slides[index].title}
         </h1>
         <p className="text-base lg:text-lg text-[var(--text-muted)] max-w-xl leading-relaxed">
@@ -133,7 +133,8 @@ export default function LandingPage() {
   const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
-    const isDark = localStorage.getItem('darkMode') !== 'false';
+    const saved = localStorage.getItem('darkMode');
+    const isDark = saved !== null ? saved !== 'false' : window.matchMedia('(prefers-color-scheme: dark)').matches;
     setDarkMode(isDark);
   }, []);
 
@@ -212,7 +213,7 @@ export default function LandingPage() {
           <a href="#faq" onClick={scrollToFaq} className="hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             FAQ
           </a>
-          <Link href="/app" transitionTypes={['nav-forward']} className="hidden sm:inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
+          <Link href="/app" transitionTypes={['nav-forward']} className="inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
             Entrar
           </Link>
           <button
@@ -277,7 +278,7 @@ export default function LandingPage() {
               </div>
 
               {/* Especificações — encodadas como ficha técnica */}
-              <dl className="grid grid-cols-3 gap-px mt-10 bg-[var(--card-border)] border border-[var(--card-border)]">
+              <dl className="grid grid-cols-1 sm:grid-cols-3 gap-px mt-10 bg-[var(--card-border)] border border-[var(--card-border)]">
                 {[
                   { k: 'Saída', v: 'Laudo PDF', sub: 'hash 0DF20434…' },
                   { k: 'Prova', v: 'Fotos HD', sub: 'galeria + QR' },
@@ -307,18 +308,18 @@ export default function LandingPage() {
                 <ViewTransition name="car-visualizer" share="morph" default="none">
                   <div className="relative w-full max-w-md drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
                     <CarLateralLeft damages={HERO_DAMAGES} selectedPartId="car-ll-door-front" onPartClick={()=>{}} onPartHover={()=>{}} />
+                    
+                    {/* Marcadores de avaria — colocados dentro do mesmo container do SVG para manter alinhamento proporcional! */}
+                    <div className="absolute top-[45%] left-[28%] flex items-center gap-2 pointer-events-none">
+                      <span className="damage-tag hidden sm:inline-block px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)] rounded whitespace-nowrap shadow-lg">Porta diant. esq. · risco</span>
+                      <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)] shrink-0" />
+                    </div>
+                    <div className="absolute top-[45%] left-[58%] flex items-center gap-2 pointer-events-none">
+                      <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)] shrink-0" />
+                      <span className="damage-tag hidden sm:inline-block px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)] rounded whitespace-nowrap shadow-lg">Porta tras. esq. · risco</span>
+                    </div>
                   </div>
                 </ViewTransition>
-
-                {/* Marcadores de avaria — dados reais do laudo (2 riscos leves) */}
-                <div className="absolute top-[20%] right-[5%] flex items-center gap-2">
-                  <span className="damage-tag px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)]">Porta diant. esq. · risco</span>
-                  <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)]" />
-                </div>
-                <div className="absolute bottom-[32%] left-[3%] flex items-center gap-2">
-                  <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)]" />
-                  <span className="damage-tag px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)]">Porta tras. esq. · risco</span>
-                </div>
               </div>
 
               {/* Legenda de severidade */}

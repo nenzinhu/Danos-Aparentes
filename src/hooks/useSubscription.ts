@@ -3,12 +3,15 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase, supabaseEnabled } from '../lib/supabase'
 
 export type SubscriptionStatus = 'trialing' | 'active' | 'past_due' | 'canceled'
+export type PlanTier = 'pro' | 'corporativo'
 
 export interface SubscriptionInfo {
   status: SubscriptionStatus
   trialEndsAt: string
   hasAccess: boolean
   trialDaysLeft: number
+  planTier: PlanTier
+  isCorporate: boolean
 }
 
 async function readErrorMessage(res: Response, fallback: string): Promise<string> {
@@ -37,7 +40,7 @@ export function useSubscription(userId?: string, accessToken?: string) {
 
     const { data, error: queryError } = await supabase
       .from('subscriptions')
-      .select('status, trial_ends_at')
+      .select('status, trial_ends_at, plan_tier')
       .eq('user_id', userId)
       .maybeSingle()
 
@@ -53,7 +56,7 @@ export function useSubscription(userId?: string, accessToken?: string) {
 
     if (!data) {
       // Fail-closed: sem linha de assinatura (ex: trigger falhou), sem acesso.
-      setInfo({ status: 'canceled', trialEndsAt: '', hasAccess: false, trialDaysLeft: 0 })
+      setInfo({ status: 'canceled', trialEndsAt: '', hasAccess: false, trialDaysLeft: 0, planTier: 'pro', isCorporate: false })
       setError(null)
       setLoading(false)
       return
@@ -61,11 +64,12 @@ export function useSubscription(userId?: string, accessToken?: string) {
 
     const status = data.status as SubscriptionStatus
     const trialEndsAt = data.trial_ends_at as string
+    const planTier = (data.plan_tier as PlanTier) || 'pro'
     const trialActive = new Date(trialEndsAt).getTime() > Date.now()
     const hasAccess = status === 'active' || (status === 'trialing' && trialActive)
     const trialDaysLeft = Math.max(0, Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / 86_400_000))
 
-    setInfo({ status, trialEndsAt, hasAccess, trialDaysLeft })
+    setInfo({ status, trialEndsAt, hasAccess, trialDaysLeft, planTier, isCorporate: hasAccess && planTier === 'corporativo' })
     setError(null)
     setLoading(false)
   }, [userId])
