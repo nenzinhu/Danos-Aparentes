@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { BLOG_POSTS, formatDate } from '@/src/content/blog'
-import { BlogCover } from './BlogCover'
+import { BLOG_POSTS } from '@/src/content/blog'
+import { BlogPostCard } from './BlogPostCard'
 
 // Seção "Do blog" na landing: puxa visitantes para os artigos e cria
 // links internos (bom para SEO). Mostra os 3 posts mais recentes.
@@ -34,24 +34,7 @@ export default function BlogTeaserSection() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         {posts.map(post => (
-          <Link
-            key={post.slug}
-            href={`/blog/${post.slug}`}
-            className="group block glass-card overflow-hidden transition-all hover:border-sky-500/40 focus-visible:ring-2 ring-[var(--primary)] outline-none"
-          >
-            <BlogCover cover={post.cover} className="h-32" emojiClass="text-4xl" />
-            <div className="p-5">
-              <span className="text-[0.6rem] font-extrabold uppercase tracking-widest text-[var(--signal-bright)]">
-                {post.category}
-              </span>
-              <h3 className="font-display text-lg font-bold leading-tight mt-1 text-[var(--text-main)] group-hover:text-[var(--primary-hover)] transition-colors">
-                {post.title}
-              </h3>
-              <div className="mt-3 text-[0.68rem] font-mono-data uppercase tracking-wider text-[var(--text-muted)]">
-                {post.readingMinutes} min · {formatDate(post.date)}
-              </div>
-            </div>
-          </Link>
+          <BlogPostCard key={post.slug} post={post} coverHeightClass="h-32" />
         ))}
       </div>
     </section>
