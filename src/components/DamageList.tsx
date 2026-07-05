@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Damage, Severity, ViewType } from '../types'
 import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '../lib/imageUtils'
 import { storePhoto, deletePhotoRef } from '../lib/photoStore'
@@ -27,6 +28,7 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [photoViewer, setPhotoViewer] = useState<string | null>(null)
   const [compressingId, setCompressingId] = useState<string | null>(null)
+  const prefersReducedMotion = useReducedMotion()
 
   async function handlePhoto(id: string, file: File) {
     setCompressingId(id)
@@ -125,7 +127,16 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
               </div>
 
               {/* Expanded */}
-              {expandedId === d.id && (
+              <AnimatePresence initial={false}>
+                {expandedId === d.id && (
+                  <motion.div
+                    key="expanded"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
+                    style={{ overflow: 'hidden' }}
+                  >
                 <div className="px-3 pb-3 border-t border-white/[0.04] space-y-3 pt-2.5">
                   {/* Severity selector */}
                   <div>
@@ -220,7 +231,9 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
                     </div>
                   </div>
                 </div>
-              )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           )
         })}

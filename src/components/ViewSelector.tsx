@@ -28,7 +28,7 @@ function ViewSelectorComponent({ current, onChange, visited }: Props) {
               key={v.id}
               onClick={() => onChange(v.id)}
               className={`
-                relative px-3.5 py-1.5 rounded-lg cursor-pointer text-[0.78rem] font-bold transition-all duration-200 border
+                relative px-3.5 py-1.5 rounded-lg cursor-pointer text-[0.78rem] font-bold transition-all duration-200 active:scale-90 motion-reduce:active:scale-100 border
                 ${isActive
                   ? 'bg-sky-500/15 border-sky-500 text-sky-400 shadow-[0_0_12px_rgba(14,165,233,0.2)]'
                   : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)] hover:border-[var(--btn-secondary-border)]'

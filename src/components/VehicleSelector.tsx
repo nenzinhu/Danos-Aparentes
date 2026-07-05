@@ -84,7 +84,7 @@ function VehicleSelectorComponent({ current, onChange }: Props) {
           <button
             key={v.id}
             onClick={() => onChange(v.id)}
-            className={`relative z-10 bg-transparent border-none py-2 px-3 pb-[7px] rounded-[13px] cursor-pointer flex flex-col items-center gap-1.5 flex-1 transition-colors duration-200 min-w-0 ${
+            className={`relative z-10 bg-transparent border-none py-2 px-3 pb-[7px] rounded-[13px] cursor-pointer flex flex-col items-center gap-1.5 flex-1 transition-all duration-200 active:scale-90 motion-reduce:active:scale-100 min-w-0 ${
               isActive ? 'text-white' : 'text-slate-400'
             }`}
           >

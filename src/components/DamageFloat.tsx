@@ -11,10 +11,27 @@ interface Props {
   onClose: () => void
 }
 
+// Duração da saída — mais rápida que a entrada (300ms), como a maioria dos
+// overlays: considerada para aparecer, ágil para sair.
+const EXIT_DURATION_MS = 200
+
 export default function DamageFloat({ partName, position, currentType, onChoose, onClear, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(false)
   const [pendingChoice, setPendingChoice] = useState<{ type: DamageType; typeName: string } | null>(null)
+  const [isClosing, setIsClosing] = useState(false)
+
+  // Anima a saída antes de desmontar — o pai remove este componente sempre
+  // que onClose/onChoose/onClear é chamado, então adiamos a chamada real até
+  // a animação terminar (ou disparamos na hora se o usuário prefere menos movimento).
+  const closeThen = (action: () => void) => {
+    if (isClosing) return
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReducedMotion) { action(); return }
+    setIsClosing(true)
+    setTimeout(action, EXIT_DURATION_MS)
+  }
+  const handleClose = () => closeThen(onClose)
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)')
@@ -66,7 +83,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       ).filter(el => !el.hasAttribute('disabled'))
 
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') { onClose(); return }
+      if (e.key === 'Escape') { handleClose(); return }
       // Atalhos numéricos 1/2/3 para escolher o tipo de avaria rapidamente,
       // sem precisar clicar — agiliza quem faz muitas vistorias por dia.
       if (!pendingChoice && /^[1-3]$/.test(e.key)) {
@@ -87,7 +104,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       }
     }
     function onClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) onClose()
+      if (ref.current && !ref.current.contains(e.target as Node)) handleClose()
     }
 
     // Foco inicial no diálogo; restaura o foco anterior ao fechar.
@@ -109,8 +126,12 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
   // No mobile o popup vira um painel fixo no fundo (bottom sheet), em vez de
   // tentar caber ao lado do veículo num ecrã estreito.
   const containerClass = isMobile
-    ? 'fixed z-[10000] left-0 right-0 bottom-0 w-full p-4 pb-[max(1rem,env(safe-area-inset-bottom))] rounded-t-2xl border-t backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300'
-    : 'fixed z-[10000] w-[200px] p-3 rounded-2xl border backdrop-blur-xl transition-all duration-300 shadow-2xl animate-in fade-in zoom-in-95'
+    ? `fixed z-[10000] left-0 right-0 bottom-0 w-full p-4 pb-[max(1rem,env(safe-area-inset-bottom))] rounded-t-2xl border-t backdrop-blur-xl shadow-2xl motion-reduce:animate-none duration-300 ${
+        isClosing ? 'animate-out fade-out slide-out-to-bottom-4 duration-200' : 'animate-in fade-in slide-in-from-bottom-4'
+      }`
+    : `fixed z-[10000] w-[200px] p-3 rounded-2xl border backdrop-blur-xl shadow-2xl motion-reduce:animate-none duration-300 ${
+        isClosing ? 'animate-out fade-out zoom-out-95 duration-200' : 'animate-in fade-in zoom-in-95 transition-all'
+      }`
 
   const containerStyle = isMobile
     ? { background: 'var(--card-bg)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
@@ -140,7 +161,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
           </svg> {partName}
         </span>
         <button
-          onClick={onClose}
+          onClick={handleClose}
           aria-label="Fechar"
           className="bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] rounded-lg w-7 h-7 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer focus-visible:ring-2 ring-[var(--primary)] outline-none"
         >
@@ -167,12 +188,12 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
                 className="hidden"
                 onChange={e => {
                   const file = e.target.files?.[0]
-                  if (file) onChoose(pendingChoice.type, pendingChoice.typeName, file)
+                  if (file) closeThen(() => onChoose(pendingChoice.type, pendingChoice.typeName, file))
                 }}
               />
             </label>
             <button
-              onClick={() => onChoose(pendingChoice.type, pendingChoice.typeName)}
+              onClick={() => closeThen(() => onChoose(pendingChoice.type, pendingChoice.typeName))}
               className="w-full px-2.5 py-2 rounded-xl border font-outfit text-[0.75rem] font-bold transition-all duration-200 cursor-pointer bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)]"
             >
               Pular, sem foto
@@ -223,7 +244,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
 
           {/* Sem avaria */}
           <button
-            onClick={onClear}
+            onClick={() => closeThen(onClear)}
             className="mt-2.5 w-full flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl border font-outfit text-[0.7rem] font-black transition-all duration-200 cursor-pointer bg-red-500/10 hover:bg-red-500/15 border-red-500/35 hover:border-red-500/50 text-red-500"
           >
             <span>🧽</span> Sem avaria / Limpar
