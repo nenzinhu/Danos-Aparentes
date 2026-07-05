@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { BLOG_POSTS, getPost, formatDate } from '@/src/content/blog'
+import { BLOG_POSTS, getPost, getRelatedPosts, formatDate } from '@/src/content/blog'
 import { BlogCover } from '@/src/components/BlogCover'
+import { BlogPostCard } from '@/src/components/BlogPostCard'
 import ShareBar from '@/src/components/ShareBar'
 
 const SITE_URL = 'https://danosaparentes.com.br'
@@ -38,6 +39,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const { slug } = await params
   const post = getPost(slug)
   if (!post) notFound()
+  const relatedPosts = getRelatedPosts(post)
 
   const articleJsonLd = {
     '@context': 'https://schema.org',
@@ -129,6 +131,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </nav>
           </aside>
         </div>
+
+        {/* Relacionados */}
+        {relatedPosts.length > 0 && (
+          <div className="mt-12 pt-6 border-t border-[var(--card-border)]">
+            <p className="text-[0.62rem] font-extrabold uppercase tracking-widest text-[var(--text-muted)] mb-4">
+              Leia também
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+              {relatedPosts.map(related => (
+                <BlogPostCard key={related.slug} post={related} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Partilha + contato */}
         <div className="mt-12 pt-6 border-t border-[var(--card-border)]">

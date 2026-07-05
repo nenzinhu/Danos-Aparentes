@@ -1781,6 +1781,18 @@ export function getPost(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find(p => p.slug === slug)
 }
 
+export function getRelatedPosts(post: BlogPost, limit = 3): BlogPost[] {
+  const others = BLOG_POSTS.filter(p => p.slug !== post.slug)
+  const byDateDesc = (a: BlogPost, b: BlogPost) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)
+
+  const sameCategory = others.filter(p => p.category === post.category).sort(byDateDesc)
+  const sameTag = others
+    .filter(p => p.category !== post.category && p.tags.some(tag => post.tags.includes(tag)))
+    .sort(byDateDesc)
+
+  return [...sameCategory, ...sameTag].slice(0, limit)
+}
+
 export function formatDate(iso: string): string {
   return new Date(`${iso}T12:00:00`).toLocaleDateString('pt-BR', {
     day: '2-digit',
