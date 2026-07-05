@@ -86,7 +86,7 @@ export const BLOG_POSTS: BlogPost[] = [
     tags: ['laudo de vistoria', 'avarias', 'checklist', 'locadora', 'seguradora'],
     date: '2026-06-28',
     readingMinutes: 7,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '📋', image: '/vehicles-img/car.png' },
     toc: [
       { id: 'o-que-e', label: 'O que é um laudo de vistoria' },
@@ -181,7 +181,7 @@ BLOG_POSTS.push(
     tags: ['locadora', 'frota', 'devolução', 'checklist', 'vistoria'],
     date: '2026-06-27',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#155e2f 0%,#0f766e 45%,#22c55e 100%)', emoji: '🚐', image: '/vehicles-img/van.png' },
     toc: [
       { id: 'por-que', label: 'Por que a devolução é crítica' },
@@ -249,7 +249,7 @@ BLOG_POSTS.push(
     tags: ['laudo cautelar', 'laudo de avarias', 'vistoria', 'documentação'],
     date: '2026-06-26',
     readingMinutes: 5,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#3b1d6e 0%,#5b21b6 45%,#a855f7 100%)', emoji: '⚖️', image: '/vehicles-img/car.png' },
     toc: [
       { id: 'cautelar', label: 'O que é o laudo cautelar' },
@@ -312,7 +312,7 @@ BLOG_POSTS.push(
     tags: ['vistoria de moto', 'motocicleta', 'laudo', 'avarias'],
     date: '2026-06-25',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#7f1d1d 0%,#b91c1c 45%,#f87171 100%)', emoji: '🏍️', image: '/vehicles-img/moto.png' },
     toc: [
       { id: 'pontos', label: 'Pontos críticos da moto' },
@@ -355,7 +355,7 @@ BLOG_POSTS.push(
     tags: ['vistoria de caminhão', 'frota', 'laudo', 'avarias'],
     date: '2026-06-24',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0e7490 45%,#22d3ee 100%)', emoji: '🚚', image: '/vehicles-img/truck.png' },
     toc: [
       { id: 'pontos', label: 'O que inspecionar' },
@@ -398,7 +398,7 @@ BLOG_POSTS.push(
     tags: ['vistoria de ônibus', 'frota', 'laudo', 'avarias'],
     date: '2026-06-23',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#155e2f 0%,#047857 45%,#34d399 100%)', emoji: '🚌', image: '/vehicles-img/bus.png' },
     toc: [
       { id: 'pontos', label: 'O que inspecionar' },
@@ -444,7 +444,7 @@ BLOG_POSTS.push(
     tags: ['fotografia', 'avarias', 'vistoria', 'prova'],
     date: '2026-06-22',
     readingMinutes: 5,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#4338ca 45%,#818cf8 100%)', emoji: '📷', image: '/vehicles-img/car2d.png' },
     toc: [
       { id: 'porque', label: 'Por que a foto decide' },
@@ -511,7 +511,7 @@ BLOG_POSTS.push(
     tags: ['frota', 'padronização', 'equipe', 'vistoria'],
     date: '2026-06-21',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)', emoji: '🚐', image: '/vehicles-img/microbus.png' },
     toc: [
       { id: 'porque', label: 'Por que padronizar' },
@@ -559,7 +559,7 @@ BLOG_POSTS.push(
     tags: ['sinistro', 'seguro', 'laudo de avarias', 'documentação'],
     date: '2026-06-20',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0f3d3e 0%,#0d9488 45%,#5eead4 100%)', emoji: '🛡️', image: '/vehicles-img/car.png' },
     toc: [
       { id: 'espera', label: 'O que a seguradora espera' },
@@ -610,7 +610,7 @@ const RAIN_POSTS: BlogPost[] = [
     tags: ['vistoria na chuva', 'retrabalho', 'prancheta', 'laudo digital', 'frota'],
     date: '2026-07-04',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#334155 45%,#64748b 100%)', emoji: '🌧️', image: '/vehicles-img/car.png' },
     toc: [
       { id: 'caos', label: 'Por que a chuva bagunça a vistoria' },
@@ -701,7 +701,7 @@ const RAIN_POSTS: BlogPost[] = [
     tags: ['antes e depois', 'vistoria digital', 'prancheta', 'laudo veicular', 'produtividade'],
     date: '2026-07-04',
     readingMinutes: 5,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0f766e 45%,#22c55e 100%)', emoji: '📱', image: '/vehicles-img/car2d.png' },
     toc: [
       { id: 'antes', label: 'Como funciona o antes' },
@@ -773,7 +773,7 @@ BLOG_POSTS.unshift(
     tags: ['redigitação', 'vistoria veicular', 'laudo digital', 'produtividade', 'frota'],
     date: '2026-07-04',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#1e293b 0%,#2563eb 45%,#93c5fd 100%)', emoji: '⌨️', image: '/vehicles-img/car2d.png' },
     toc: [
       { id: 'tempo', label: 'Onde o tempo é perdido' },
@@ -848,7 +848,7 @@ BLOG_POSTS.unshift(
     tags: ['erros de transcrição', 'laudo de vistoria', 'retrabalho', 'vistoria digital', 'laudo'],
     date: '2026-07-04',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#7f1d1d 0%,#dc2626 45%,#fca5a5 100%)', emoji: '⚠️', image: '/vehicles-img/car.png' },
     toc: [
       { id: 'porque', label: 'Por que os erros acontecem' },
@@ -918,7 +918,7 @@ BLOG_POSTS.unshift(
     tags: ['vistoria sem papel', 'prancheta', 'laudo digital', 'checklist digital', 'frota'],
     date: '2026-07-03',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#3f3f46 0%,#0f766e 45%,#5eead4 100%)', emoji: '📋', image: '/vehicles-img/van.png' },
     toc: [
       { id: 'papel', label: 'Por que o papel atrasa' },
@@ -988,7 +988,7 @@ BLOG_POSTS.unshift(
     tags: ['padronizar equipe de vistoria', 'retrabalho', 'frota', 'processo operacional', 'laudo'],
     date: '2026-07-03',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fdba74 100%)', emoji: '👥', image: '/vehicles-img/microbus.png' },
     toc: [
       { id: 'cada-um', label: 'O custo do cada um faz de um jeito' },
@@ -1054,7 +1054,7 @@ BLOG_POSTS.unshift(
     tags: ['mais vistorias por dia', 'produtividade', 'equipe de vistoria', 'frota', 'operação'],
     date: '2026-07-02',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#15803d 45%,#86efac 100%)', emoji: '⏱️', image: '/vehicles-img/truck.png' },
     toc: [
       { id: 'gargalo', label: 'Onde está o gargalo' },
@@ -1136,7 +1136,7 @@ BLOG_POSTS.unshift(
     tags: ['avarias preexistentes', 'vistoria veicular', 'locadora', 'frota', 'laudo de avarias'],
     date: '2026-07-04',
     readingMinutes: 7,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#ea580c 45%,#fb923c 100%)', emoji: '🧾', image: '/vehicles-img/car.png' },
     toc: [
       { id: 'prejuizo', label: 'Por que a avaria preexistente vira prejuízo' },
@@ -1231,7 +1231,7 @@ BLOG_POSTS.unshift(
     tags: ['vistoria de entrega', 'devolução de veículo', 'locadora', 'frota', 'laudo veicular'],
     date: '2026-07-03',
     readingMinutes: 6,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#1d4ed8 45%,#60a5fa 100%)', emoji: '🚗', image: '/vehicles-img/car2d.png' },
     toc: [
       { id: 'importancia', label: 'Por que a entrega define a devolução' },
@@ -1316,7 +1316,7 @@ BLOG_POSTS.unshift(
     tags: ['avarias na frota', 'gestão de frota', 'prejuízo operacional', 'vistoria', 'controle de danos'],
     date: '2026-07-02',
     readingMinutes: 7,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#16a34a 45%,#86efac 100%)', emoji: '📉', image: '/vehicles-img/van.png' },
     toc: [
       { id: 'onde', label: 'Onde o prejuízo nasce' },
@@ -1406,7 +1406,7 @@ BLOG_POSTS.unshift(
     tags: ['logo da empresa', 'pdf de vistoria', 'laudo profissional', 'white-label', 'danos aparentes'],
     date: '2026-07-04',
     readingMinutes: 5,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#111827 0%,#0c4a6e 45%,#38bdf8 100%)', emoji: '🏢', image: '/vehicles-img/car.png' },
     toc: [
       { id: 'identidade', label: 'Por que colocar sua logo no laudo' },
@@ -1496,7 +1496,7 @@ BLOG_POSTS.unshift(
     tags: ['assinatura digital', 'laudo de vistoria', 'validade do laudo', 'danos aparentes', 'prova digital'],
     date: '2026-07-04',
     readingMinutes: 5,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0c4a6e 45%,#38bdf8 100%)', emoji: '✍️', image: '/vehicles-img/car2d.png' },
     toc: [
       { id: 'importancia', label: 'Por que a assinatura muda o laudo' },
@@ -1574,7 +1574,7 @@ BLOG_POSTS.unshift(
     tags: ['qr code', 'hash', 'validade do laudo', 'laudo de avarias', 'danos aparentes'],
     date: '2026-07-04',
     readingMinutes: 5,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#111827 0%,#1d4ed8 45%,#60a5fa 100%)', emoji: '🔐', image: '/vehicles-img/car.png' },
     toc: [
       { id: 'o-que-fazem', label: 'O que QR Code e hash fazem' },
@@ -1641,7 +1641,7 @@ BLOG_POSTS.unshift(
     tags: ['white-label', 'locadoras', 'laudo profissional', 'logo da empresa', 'danos aparentes'],
     date: '2026-07-04',
     readingMinutes: 5,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#111827 0%,#0f766e 45%,#34d399 100%)', emoji: '🧩', image: '/vehicles-img/van.png' },
     toc: [
       { id: 'white-label', label: 'O que é um laudo white-label' },
@@ -1715,7 +1715,7 @@ BLOG_POSTS.unshift(
     tags: ['pdf profissional', 'laudo de vistoria', 'danos aparentes', 'apresentação do laudo', 'white-label'],
     date: '2026-07-04',
     readingMinutes: 5,
-    author: { name: 'Equipe Danos Aparentes', role: 'Vistoria digital' },
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0369a1 45%,#7dd3fc 100%)', emoji: '📄', image: '/vehicles-img/microbus.png' },
     toc: [
       { id: 'aparencia', label: 'Por que a aparência do PDF importa' },

@@ -46,7 +46,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     description: post.excerpt,
     datePublished: post.date,
     dateModified: post.date,
-    author: { '@type': 'Organization', name: post.author.name },
+    author: {
+      '@type': 'Person',
+      name: post.author.name,
+      jobTitle: 'Proprietário',
+      worksFor: { '@type': 'Organization', name: 'Danos Aparentes' },
+    },
     publisher: { '@type': 'Organization', name: 'Danos Aparentes', url: SITE_URL },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
     keywords: post.tags.join(', '),
