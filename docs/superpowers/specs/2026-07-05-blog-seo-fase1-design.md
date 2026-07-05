@@ -52,7 +52,7 @@ Captura de e-mail exige decisões de produto adicionais (formato do material, fe
 | Relacionados (UI) | `src/app/blog/[slug]/page.tsx` | Nova seção "Leia também" antes do rodapé de tags, usando `getRelatedPosts` |
 | Categorias (util) | `src/content/blog.tsx` | Nova função `categorySlug(category: string)` (slugify sem acentos/espaços) e `getPostsByCategorySlug(slug)` |
 | Categorias (rota) | `src/app/blog/categoria/[categoria]/page.tsx` *(novo)* | Lista posts da categoria, `generateStaticParams` a partir das categorias distintas em `BLOG_POSTS`, metadata + canonical + `BreadcrumbList` |
-| Categorias (link) | `src/app/blog/page.tsx`, `src/app/blog/[slug]/page.tsx` | Badge de categoria passa a ser `<Link href="/blog/categoria/{slug}">` em vez de `<span>` |
+| Categorias (link) | `src/app/blog/[slug]/page.tsx` | Badge de categoria sobre a capa do artigo passa a ser `<Link href="/blog/categoria/{slug}">` em vez de `<span>` |
 | Card de post (refactor) | `src/components/BlogPostCard.tsx` *(novo)* | Extrai o card (capa + categoria + título + meta) hoje duplicado em `blog/page.tsx` e `BlogTeaserSection.tsx`, para não duplicar uma 3ª e 4ª vez nas seções de relacionados e categoria |
 | Sitemap | `src/app/sitemap.ts` | Adiciona uma entrada por categoria distinta (`priority: 0.6`, `changeFrequency: 'weekly'`) |
 
@@ -104,6 +104,8 @@ UI: seção "Leia também" com 3 `BlogPostCard`, inserida entre o conteúdo do a
 - `generateStaticParams`: itera as categorias distintas de `BLOG_POSTS`.
 - Página: título "Artigos sobre {category} | Blog Danos Aparentes", grid de `BlogPostCard`, `BreadcrumbList` JSON-LD (`Blog` → categoria).
 - Caso a categoria não exista (`notFound()`), mesmo padrão do `[slug]/page.tsx` atual.
+
+**Nota de correção:** nos cards de grid (`BlogPostCard`, usado no índice do blog, na seção "Do blog" da landing e nos relacionados), o card inteiro já é um `<Link>` para o post — por isso a categoria ali continua como texto simples (`<span>`), não um `<Link>` aninhado dentro de outro `<Link>` (HTML inválido, quebraria o clique). O link de categoria clicável fica só no badge sobre a capa em `src/app/blog/[slug]/page.tsx`, que não está dentro de nenhum Link.
 
 ---
 
