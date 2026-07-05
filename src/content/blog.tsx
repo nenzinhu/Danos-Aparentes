@@ -1793,6 +1793,27 @@ export function getRelatedPosts(post: BlogPost, limit = 3): BlogPost[] {
   return [...sameCategory, ...sameTag].slice(0, limit)
 }
 
+export function categorySlug(category: string): string {
+  return category
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+}
+
+export function getCategories(): { name: string; slug: string }[] {
+  const seen = new Map<string, string>()
+  for (const post of BLOG_POSTS) {
+    if (!seen.has(post.category)) seen.set(post.category, categorySlug(post.category))
+  }
+  return Array.from(seen, ([name, slug]) => ({ name, slug }))
+}
+
+export function getPostsByCategorySlug(slug: string): BlogPost[] {
+  return BLOG_POSTS.filter(p => categorySlug(p.category) === slug)
+}
+
 export function formatDate(iso: string): string {
   return new Date(`${iso}T12:00:00`).toLocaleDateString('pt-BR', {
     day: '2-digit',
