@@ -48,13 +48,18 @@ function mapStripeStatus(status: Stripe.Subscription.Status): 'active' | 'past_d
   return 'canceled'
 }
 
-// Deriva o plan_tier a partir do Price ID realmente comprado, em vez de
+// Deriva o plan_tier a partir dos Price IDs realmente comprados, em vez de
 // confiar em metadata enviada pelo client — funciona tanto para checkout
 // self-serve quanto para Payment Links criados manualmente pra vendas
 // Corporativo (fechadas via WhatsApp/consultivo, fora do fluxo de app).
-function resolvePlanTier(priceId: string | undefined): 'pro' | 'corporativo' {
-  if (priceId && priceId === process.env.STRIPE_PRICE_ID_CORPORATE) return 'corporativo'
-  return 'pro'
+// Corporativo tem um Price "base" obrigatório + Prices opcionais de inspetor
+// adicional na mesma assinatura, então checamos TODOS os itens, não só o
+// primeiro — a ordem dos line items não é uma garantia confiável.
+function resolvePlanTier(subscription: Stripe.Subscription): 'pro' | 'corporativo' {
+  const corporateBasePriceId = process.env.STRIPE_PRICE_ID_CORPORATE
+  if (!corporateBasePriceId) return 'pro'
+  const hasCorporateBase = subscription.items.data.some(item => item.price.id === corporateBasePriceId)
+  return hasCorporateBase ? 'corporativo' : 'pro'
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -86,7 +91,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const userId = session.client_reference_id
       if (userId && session.customer && session.subscription) {
         const subscription = await stripe.subscriptions.retrieve(session.subscription as string)
-        const planTier = resolvePlanTier(subscription.items.data[0]?.price.id)
+        const planTier = resolvePlanTier(subscription)
 
         const { data, error } = await supabaseAdmin.from('subscriptions').update({
           status: 'active',
@@ -110,7 +115,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         ? 'canceled'
         : mapStripeStatus(subscription.status)
       const periodEndUnix = getCurrentPeriodEnd(subscription)
-      const planTier = resolvePlanTier(subscription.items.data[0]?.price.id)
+      const planTier = resolvePlanTier(subscription)
 
       const { data, error } = await supabaseAdmin.from('subscriptions').update({
         status,
