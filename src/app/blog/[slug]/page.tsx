@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { BLOG_POSTS, getPost, getRelatedPosts, formatDate } from '@/src/content/blog'
+import { BLOG_POSTS, getPost, getRelatedPosts, categorySlug, formatDate } from '@/src/content/blog'
 import { BlogCover } from '@/src/components/BlogCover'
 import { BlogPostCard } from '@/src/components/BlogPostCard'
 import ShareBar from '@/src/components/ShareBar'
@@ -80,9 +80,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         {/* Capa */}
         <BlogCover cover={post.cover} className="h-40 sm:h-56 rounded-2xl mb-7" emojiClass="text-7xl">
-          <span className="absolute top-4 left-4 text-[0.62rem] font-extrabold uppercase tracking-widest bg-black/30 text-white px-2.5 py-1 rounded-full backdrop-blur-sm">
+          <Link
+            href={`/blog/categoria/${categorySlug(post.category)}`}
+            className="absolute top-4 left-4 text-[0.62rem] font-extrabold uppercase tracking-widest bg-black/30 text-white px-2.5 py-1 rounded-full backdrop-blur-sm hover:bg-black/50 transition-colors"
+          >
             {post.category}
-          </span>
+          </Link>
         </BlogCover>
 
         {/* Cabeçalho do artigo */}
