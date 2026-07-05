@@ -10,7 +10,7 @@ O blog (`src/content/blog.tsx`, 24 posts) já tem fundamentos técnicos de SEO (
 
 1. **Autoria genérica.** Todos os 24 posts assinam como "Equipe Danos Aparentes" (marca), e o JSON-LD declara `author` como `Organization`. O site já expõe o proprietário como pessoa real em outro ponto (`ShareBar.tsx`: "Sou o Jeferson, proprietário da Danos Aparentes"). Conteúdo com peso legal/segurador (laudos, contestação de sinistro) se beneficia de sinal de E-E-A-T ligado a uma pessoa identificável, não a uma marca genérica.
 2. **Zero link interno entre posts.** Cada artigo só linka de volta para `/blog` (índice). Não há sugestão de posts relacionados, então não existe distribuição de autoridade entre artigos do mesmo tema nem incentivo a navegação/tempo de permanência.
-3. **Sem páginas de categoria.** Cada post já tem um campo `category` (`Vistoria`, `Locadora`, `Frota`, `Seguro`, etc. — 10 valores distintos), mas não existe nenhuma rota que agregue posts por categoria. É buscas mais amplas ("vistoria de frota", "laudo para locadora") sem página dedicada para capturá-las, e o badge de categoria em cada post é hoje só um `<span>`, não um link.
+3. **Sem páginas de categoria.** Cada post já tem um campo `category` (`Vistoria`, `Locadora`, `Frota`, `Seguro`, etc. — 11 valores distintos), mas não existe nenhuma rota que agregue posts por categoria. É buscas mais amplas ("vistoria de frota", "laudo para locadora") sem página dedicada para capturá-las, e o badge de categoria em cada post é hoje só um `<span>`, não um link.
 
 *(Nota: um achado inicial de que "o blog não tem CTA de conversão" se mostrou incorreto após inspeção — o CTA existe e cobre os 24 posts via componente compartilhado. Por isso não faz parte desta spec.)*
 
