@@ -158,6 +158,12 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   const [newFieldName, setNewFieldName] = useState('')
   const [wizardStep, setWizardStep] = useState<WizardStep>(1)
   const [maxVisited, setMaxVisited] = useState<WizardStep>(1)
+  // Passo realmente renderizado — atrasa a troca de conteúdo até a saída
+  // do passo atual terminar de animar (o número/stepper já muda na hora).
+  const [renderedStep, setRenderedStep] = useState<WizardStep>(1)
+  const [stepDirection, setStepDirection] = useState<'forward' | 'backward'>('forward')
+  const [isStepLeaving, setIsStepLeaving] = useState(false)
+  const pendingStepRef = useRef<WizardStep>(1)
   const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [geoError, setGeoError] = useState('')
   const filterRef = useRef<HTMLDivElement>(null)
@@ -166,7 +172,26 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   useEffect(() => {
     setWizardStep(1)
     setMaxVisited(1)
+    setRenderedStep(1)
+    setIsStepLeaving(false)
   }, [resetToken])
+
+  // Duração da saída de um passo do wizard — mais rápida que a entrada
+  // (200ms), como o resto do app.
+  const STEP_EXIT_MS = 160
+
+  const transitionToStep = useCallback((next: WizardStep) => {
+    if (next === renderedStep || isStepLeaving) return
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    setStepDirection(next > renderedStep ? 'forward' : 'backward')
+    if (prefersReducedMotion) { setRenderedStep(next); return }
+    setIsStepLeaving(true)
+    pendingStepRef.current = next
+    setTimeout(() => {
+      setRenderedStep(pendingStepRef.current)
+      setIsStepLeaving(false)
+    }, STEP_EXIT_MS)
+  }, [renderedStep, isStepLeaving])
 
   const anyHidden = Object.values(visibleFields).some(v => !v)
 
@@ -322,15 +347,20 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   const goToStep = useCallback((step: WizardStep) => {
     setWizardStep(step)
     setMaxVisited(prev => (step > prev ? step : prev))
-  }, [])
+    transitionToStep(step)
+  }, [transitionToStep])
 
   const goNext = useCallback(() => {
     if (wizardStep < 3) goToStep((wizardStep + 1) as WizardStep)
   }, [wizardStep, goToStep])
 
   const goBack = useCallback(() => {
-    if (wizardStep > 1) setWizardStep((wizardStep - 1) as WizardStep)
-  }, [wizardStep])
+    if (wizardStep > 1) {
+      const prev = (wizardStep - 1) as WizardStep
+      setWizardStep(prev)
+      transitionToStep(prev)
+    }
+  }, [wizardStep, transitionToStep])
 
   const handleComplete = useCallback(() => {
     onWizardComplete?.()
@@ -586,8 +616,15 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       </p>
       <WizardStepper current={wizardStep} maxVisited={maxVisited} onStepClick={goToStep} />
 
-      <div key={wizardStep} className="pb-20 animate-in fade-in slide-in-from-right-2 duration-200 motion-reduce:animate-none">
-      {wizardStep === 1 && (
+      <div
+        key={renderedStep}
+        className={`pb-20 motion-reduce:animate-none ${
+          isStepLeaving
+            ? `animate-out fade-out duration-150 ${stepDirection === 'forward' ? 'slide-out-to-left-2' : 'slide-out-to-right-2'}`
+            : `animate-in fade-in duration-200 ${stepDirection === 'forward' ? 'slide-in-from-right-2' : 'slide-in-from-left-2'}`
+        }`}
+      >
+      {renderedStep === 1 && (
       <>
       <div className="bg-gradient-to-br from-sky-700/15 to-blue-900/10 border border-sky-500/30 rounded-2xl p-5 mb-5 shadow-2xl relative overflow-hidden group">
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-sky-400 to-transparent opacity-60 pointer-events-none" />
@@ -721,7 +758,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       </>
       )}
 
-      {wizardStep === 2 && (
+      {renderedStep === 2 && (
       <>
       {(show('profile') || show('ref')) && (
         <div className="flex flex-wrap gap-3 mb-3">
@@ -901,7 +938,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       </>
       )}
 
-      {wizardStep === 3 && (
+      {renderedStep === 3 && (
       <>
       <div>
         <div className="flex justify-between items-center mb-1.5">
