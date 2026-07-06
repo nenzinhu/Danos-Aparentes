@@ -46,6 +46,9 @@ export const metadata: Metadata = {
   // `alternates.canonical` — sempre adicione um ao criar rota nova.
   alternates: { canonical: '/' },
   manifest: '/manifest.webmanifest',
+  verification: {
+    other: { 'msvalidate.01': '1244E8D097B04D299E7DDB8CD4BFDEEB' },
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
