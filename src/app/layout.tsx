@@ -47,6 +47,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
   manifest: '/manifest.webmanifest',
   verification: {
+    yandex: '63c44acce9c82466',
     other: { 'msvalidate.01': '1244E8D097B04D299E7DDB8CD4BFDEEB' },
   },
   appleWebApp: {
