@@ -9,6 +9,8 @@ import dynamic from 'next/dynamic';
 import { LEGAL_CONTACT_EMAIL } from '../components/LegalContent';
 import LandingCtaLink from '../components/LandingCtaLink';
 import Reveal from '../components/Reveal';
+import { motion, useReducedMotion } from 'framer-motion';
+import HeroCarStage, { heroCarVariant, heroTagVariant, heroSpecCellVariant, heroSpecStage } from '../components/HeroCarStage';
 import type { Damage } from '../types';
 
 // Avarias reais do laudo (2 riscos leves nas portas esquerdas) para o
@@ -131,6 +133,7 @@ function TextCarousel() {
 
 export default function LandingPage() {
   const [darkMode, setDarkMode] = useState(true);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const saved = localStorage.getItem('darkMode');
@@ -278,19 +281,24 @@ export default function LandingPage() {
               </div>
 
               {/* Especificações — encodadas como ficha técnica */}
-              <dl className="grid grid-cols-1 sm:grid-cols-3 gap-px mt-10 bg-[var(--card-border)] border border-[var(--card-border)]">
+              <motion.dl
+                className="grid grid-cols-1 sm:grid-cols-3 gap-px mt-10 bg-[var(--card-border)] border border-[var(--card-border)]"
+                variants={reduceMotion ? undefined : heroSpecStage}
+                initial={reduceMotion ? undefined : 'hidden'}
+                animate={reduceMotion ? undefined : 'show'}
+              >
                 {[
                   { k: 'Saída', v: 'Laudo PDF', sub: 'hash 0DF20434…' },
                   { k: 'Prova', v: 'Fotos HD', sub: 'galeria + QR' },
                   { k: 'Rede', v: 'Offline', sub: '100% no pátio' },
                 ].map(item => (
-                  <div key={item.k} className="bg-[var(--bg-main)] px-3 py-3">
+                  <motion.div key={item.k} variants={reduceMotion ? undefined : heroSpecCellVariant} className="bg-[var(--bg-main)] px-3 py-3">
                     <dt className="font-mono-data text-[9px] uppercase tracking-widest text-[var(--text-muted)]">{item.k}</dt>
                     <dd className="font-display text-lg font-semibold uppercase text-[var(--text-main)] leading-tight mt-0.5">{item.v}</dd>
                     <dd className="font-mono-data text-[9px] text-[var(--signal-bright)] tracking-wide">{item.sub}</dd>
-                  </div>
+                  </motion.div>
                 ))}
-              </dl>
+              </motion.dl>
             </div>
 
             {/* Coluna direita: prancha do veículo */}
@@ -306,19 +314,21 @@ export default function LandingPage() {
 
                 <VehicleDefs />
                 <ViewTransition name="car-visualizer" share="morph" default="none">
-                  <div className="relative w-full max-w-md drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
-                    <CarLateralLeft damages={HERO_DAMAGES} selectedPartId="car-ll-door-front" onPartClick={()=>{}} onPartHover={()=>{}} />
-                    
-                    {/* Marcadores de avaria — colocados dentro do mesmo container do SVG para manter alinhamento proporcional! */}
-                    <div className="absolute top-[45%] left-[28%] flex items-center gap-2 pointer-events-none">
+                  <HeroCarStage className="relative w-full max-w-md drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+                    <motion.div variants={heroCarVariant}>
+                      <CarLateralLeft damages={HERO_DAMAGES} selectedPartId="car-ll-door-front" onPartClick={()=>{}} onPartHover={()=>{}} />
+                    </motion.div>
+
+                    {/* Marcadores de avaria — posicionados em relação ao mesmo container do SVG para manter alinhamento proporcional! */}
+                    <motion.div variants={heroTagVariant} className="absolute top-[45%] left-[28%] flex items-center gap-2 pointer-events-none">
                       <span className="damage-tag hidden sm:inline-block px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)] rounded whitespace-nowrap shadow-lg">Porta diant. esq. · risco</span>
                       <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)] shrink-0" />
-                    </div>
-                    <div className="absolute top-[45%] left-[58%] flex items-center gap-2 pointer-events-none">
+                    </motion.div>
+                    <motion.div variants={heroTagVariant} className="absolute top-[45%] left-[58%] flex items-center gap-2 pointer-events-none">
                       <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)] shrink-0" />
                       <span className="damage-tag hidden sm:inline-block px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)] rounded whitespace-nowrap shadow-lg">Porta tras. esq. · risco</span>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </HeroCarStage>
                 </ViewTransition>
               </div>
 
