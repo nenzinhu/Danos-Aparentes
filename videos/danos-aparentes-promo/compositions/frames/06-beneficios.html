@@ -1,0 +1,279 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Outfit";
+          font-style: normal;
+          font-weight: 100 900;
+          src: url("../../capture/assets/fonts/b2ea385cb5ae8625-s.1spbknb88wd48.woff2")
+            format("woff2");
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1080px;
+          height: 1920px;
+          overflow: hidden;
+          background: transparent;
+          font-family: "Outfit", sans-serif;
+          container-type: size;
+        }
+
+        .bg-clip {
+          position: absolute;
+          inset: 0;
+        }
+
+        .bg-ground {
+          position: absolute;
+          inset: 0;
+          background: #e8e6dc;
+        }
+
+        .content-clip {
+          position: absolute;
+          inset: 0;
+        }
+
+        .eyebrow {
+          position: absolute;
+          left: 8.5cqw;
+          top: 9cqw;
+          font-size: 3.4cqw;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #9e4428;
+          opacity: 0;
+        }
+
+        .headline {
+          position: absolute;
+          left: 8.5cqw;
+          top: 14.5cqw;
+          width: 83cqw;
+          font-size: 8.4cqw;
+          font-weight: 600;
+          line-height: 1.12;
+          letter-spacing: -0.02em;
+          color: #141413;
+          opacity: 0;
+        }
+
+        .cards-wrap {
+          position: absolute;
+          left: 8.5cqw;
+          top: 33cqw;
+          width: 83cqw;
+          display: flex;
+          flex-direction: column;
+          gap: 3.4cqw;
+        }
+
+        .card {
+          position: relative;
+          width: 100%;
+          box-sizing: border-box;
+          padding: 5.4cqw 6cqw;
+          background: rgba(158, 68, 40, 0.04);
+          border: 1.5px solid rgba(158, 68, 40, 0.2);
+          border-radius: 14px;
+          display: flex;
+          align-items: center;
+          gap: 5cqw;
+          opacity: 0;
+          transform: translateY(40px);
+        }
+
+        .card-icon {
+          flex: 0 0 auto;
+          width: 15cqw;
+          height: 15cqw;
+          border-radius: 12px;
+          background: rgba(158, 68, 40, 0.08);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .card-body {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+
+        .card-label {
+          font-size: 5.2cqw;
+          font-weight: 600;
+          color: #141413;
+          letter-spacing: -0.01em;
+          margin: 0 0 1.6cqw 0;
+        }
+
+        .card-desc {
+          font-size: 3.1cqw;
+          font-weight: 400;
+          color: #6b6b6b;
+          line-height: 1.4;
+          margin: 0;
+        }
+
+        /* -- card 1: modelos (6-swatch strip) -- */
+        .swatch-strip {
+          display: flex;
+          gap: 1.2cqw;
+        }
+        .swatch {
+          width: 3.6cqw;
+          height: 8cqw;
+          border-radius: 4px;
+          background: #9e4428;
+        }
+        .swatch:nth-child(1) { opacity: 1; }
+        .swatch:nth-child(2) { opacity: 0.85; }
+        .swatch:nth-child(3) { opacity: 0.7; }
+        .swatch:nth-child(4) { opacity: 0.55; }
+        .swatch:nth-child(5) { opacity: 0.4; }
+        .swatch:nth-child(6) { opacity: 0.25; }
+
+        /* -- card 2: offline (wifi-off glyph) -- */
+        .wifi-off-icon {
+          width: 8cqw;
+          height: 8cqw;
+        }
+
+        /* -- card 3: equipe (stacked avatars) -- */
+        .avatar-row {
+          display: flex;
+        }
+        .avatar {
+          width: 6.4cqw;
+          height: 6.4cqw;
+          border-radius: 50%;
+          background: rgba(158, 68, 40, 0.15);
+          border: 2px solid #e8e6dc;
+          margin-left: -1.8cqw;
+        }
+        .avatar:first-child {
+          margin-left: 0;
+        }
+      </style>
+
+      <div
+        id="root"
+        data-composition-id="06-beneficios"
+        data-width="1080"
+        data-height="1920"
+        data-duration="4.9"
+      >
+        <div class="bg-clip clip" data-start="0" data-duration="4.9" data-track-index="0">
+          <div class="bg-ground"></div>
+        </div>
+
+        <div class="content-clip clip" data-start="0" data-duration="4.9" data-track-index="1">
+          <div class="eyebrow" id="eyebrow">MAIS RECURSOS</div>
+          <div class="headline" id="headline">Feito pra escalar<br />com você.</div>
+
+          <div class="cards-wrap">
+            <div class="card" id="card-modelos">
+              <div class="card-icon">
+                <div class="swatch-strip">
+                  <div class="swatch"></div>
+                  <div class="swatch"></div>
+                  <div class="swatch"></div>
+                  <div class="swatch"></div>
+                  <div class="swatch"></div>
+                  <div class="swatch"></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="card-label">6 modelos de laudo</p>
+                <p class="card-desc">Escolha o layout certo pra cada tipo de vistoria.</p>
+              </div>
+            </div>
+
+            <div class="card" id="card-offline">
+              <div class="card-icon">
+                <svg class="wifi-off-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 3L21 21" stroke="#9E4428" stroke-width="2" stroke-linecap="round" />
+                  <path d="M5 12.5C6.5 11.2 8.3 10.3 10.2 9.9" stroke="#9E4428" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M13.8 9.9C15.1 10.2 16.4 10.7 17.5 11.4" stroke="#9E4428" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M2 8.5C4.9 6 8.4 4.5 12 4.5C15.6 4.5 19.1 6 22 8.5" stroke="#9E4428" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5" />
+                  <path d="M8 16C9.2 15 10.6 14.5 12 14.5C13.4 14.5 14.8 15 16 16" stroke="#9E4428" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  <circle cx="12" cy="19.5" r="1.4" fill="#9E4428" />
+                </svg>
+              </div>
+              <div class="card-body">
+                <p class="card-label">100% offline</p>
+                <p class="card-desc">Funciona sem sinal e sincroniza depois.</p>
+              </div>
+            </div>
+
+            <div class="card" id="card-equipe">
+              <div class="card-icon">
+                <div class="avatar-row">
+                  <div class="avatar"></div>
+                  <div class="avatar"></div>
+                  <div class="avatar"></div>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="card-label">Painel de equipe</p>
+                <p class="card-desc">Gerencie todos os vistoriadores num só lugar.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        var tl = gsap.timeline({ paused: true });
+
+        // Scene 1 (0.0-1.8s): eyebrow + headline settle, card 1 pops in
+        tl.fromTo(
+          "#eyebrow",
+          { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          0.1,
+        );
+        tl.fromTo(
+          "#headline",
+          { opacity: 0, y: 24 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          0.3,
+        );
+        tl.fromTo(
+          "#card-modelos",
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          0.9,
+        );
+
+        // Scene 2 (1.8-3.4s): card 2 pops in
+        tl.fromTo(
+          "#card-offline",
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          1.9,
+        );
+
+        // Scene 3 (3.4-4.9s): card 3 pops in, row completes, holds
+        tl.fromTo(
+          "#card-equipe",
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          3.5,
+        );
+
+        window.__timelines["06-beneficios"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

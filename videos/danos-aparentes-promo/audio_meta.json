@@ -1,0 +1,14 @@
+{
+  "bgm": null,
+  "voices": [
+    { "frame": 1, "path": "audio/01.wav", "duration_s": 5.0, "words": [] },
+    { "frame": 2, "path": "audio/02.wav", "duration_s": 4.8, "words": [] },
+    { "frame": 3, "path": "audio/03.wav", "duration_s": 4.0, "words": [] },
+    { "frame": 4, "path": "audio/04.wav", "duration_s": 3.7, "words": [] },
+    { "frame": 5, "path": "audio/05.wav", "duration_s": 5.1, "words": [] },
+    { "frame": 6, "path": "audio/06.wav", "duration_s": 4.9, "words": [] },
+    { "frame": 7, "path": "audio/07.wav", "duration_s": 3.2, "words": [] },
+    { "frame": 8, "path": "audio/08.wav", "duration_s": 3.5, "words": [] }
+  ],
+  "sfx": []
+}

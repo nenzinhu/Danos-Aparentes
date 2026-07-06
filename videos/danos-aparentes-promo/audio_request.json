@@ -1,0 +1,44 @@
+{
+  "provider": "auto",
+  "speed": 1,
+  "lines": [
+    {
+      "id": "01",
+      "text": "Vistoria no papel ainda leva vinte minutos. Fotos soltas. Risco discutido no balcão."
+    },
+    {
+      "id": "02",
+      "text": "Apresentando o Danos Aparentes — o laudo pronto antes do cliente sair do pátio."
+    },
+    {
+      "id": "03",
+      "text": "Digite a placa — marca, modelo, cor e cidade aparecem sozinhos."
+    },
+    {
+      "id": "04",
+      "text": "Toque na avaria no desenho do carro — e ouça a confirmação na hora."
+    },
+    {
+      "id": "05",
+      "text": "Assinatura na tela — e um PDF com hash e QR Code que provam que nada foi alterado."
+    },
+    {
+      "id": "06",
+      "text": "Seis modelos de laudo. Funciona sem internet. E um painel pra gerir toda a equipe."
+    },
+    {
+      "id": "07",
+      "text": "O laudo que o cliente entende — direto no WhatsApp."
+    },
+    {
+      "id": "08",
+      "text": "Danos Aparentes. Teste sete dias grátis, sem cartão."
+    }
+  ],
+  "bgm": {
+    "mode": "retrieve",
+    "query": "O laudo pronto antes do cliente sair do pátio.",
+    "blob": "O laudo pronto antes do cliente sair do pátio.",
+    "arc": "BAB — antes (papel) → ponte (produto) → passos (placa, toque+voz, assinatura/hash) → uau (6 modelos, offline, equipe) → prova social → CTA"
+  }
+}

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danos Aparentes — Visão Geral da Arquitetura</title>
+<style>
+  :root {
+    --data: #4299e1;
+    --processing: #ed8936;
+    --ai: #9f7aea;
+    --success: #48bb78;
+    --danger: #f56565;
+    --dark: #1a202c;
+    --muted: #718096;
+    --border: #e2e8f0;
+    --bg: #f7fafc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Outfit, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+    background: var(--bg);
+    color: var(--dark);
+    line-height: 1.5;
+  }
+  h1 {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    color: #fff;
+    padding: 36px 32px;
+    margin: 0 -20px 32px;
+    font-size: 1.9rem;
+  }
+  h1 span {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 400;
+    opacity: 0.8;
+    margin-top: 8px;
+  }
+  h2 {
+    font-size: 1.3rem;
+    border-left: 4px solid var(--processing);
+    padding-left: 12px;
+    margin-top: 0;
+  }
+  .section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 28px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  svg { max-width: 100%; height: auto; display: block; margin: 12px auto; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .card h3 { margin: 0 0 6px; font-size: 0.95rem; }
+  .card p { margin: 0; font-size: 0.85rem; color: var(--muted); }
+  .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-bottom: 6px;
+  }
+  .badge.data { background: rgba(66,153,225,0.15); color: var(--data); }
+  .badge.proc { background: rgba(237,137,54,0.15); color: var(--processing); }
+  .badge.ai { background: rgba(159,122,234,0.15); color: var(--ai); }
+  .badge.ok { background: rgba(72,187,120,0.15); color: var(--success); }
+  .layer {
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .layer .label { font-weight: 700; font-size: 0.8rem; min-width: 150px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .chip { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; font-size: 0.8rem; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .metrics { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
+  .metric { flex: 1; min-width: 140px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+  .metric .num { font-size: 1.4rem; font-weight: 800; color: #1e3a8a; }
+  .metric .lbl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<h1>Danos Aparentes
+  <span>Vistoria digital de avarias veiculares — visão geral de arquitetura (PWA, Next.js + Supabase + Vercel)</span>
+</h1>
+
+<!-- 1. CONTEXTO DE NEGÓCIO -->
+<div class="section">
+  <h2>1. Contexto de negócio</h2>
+  <p><strong>Objetivo:</strong> eliminar papel, redigitação e disputas na vistoria de veículos, gerando um laudo digital verificável (hash + QR Code) em minutos, direto do celular do inspetor — mesmo offline.</p>
+  <div class="grid">
+    <div class="card"><span class="badge data">Usuários</span><h3>Vistoriadores autônomos</h3><p>Peritos e oficinas que emitem laudos avulsos.</p></div>
+    <div class="card"><span class="badge data">Usuários</span><h3>Locadoras / frotas</h3><p>Checklist de entrada e devolução, plano Corporativo com múltiplos inspetores.</p></div>
+    <div class="card"><span class="badge data">Usuários</span><h3>Concessionárias</h3><p>Avaliação de seminovos na entrada para revenda.</p></div>
+    <div class="card"><span class="badge ok">Valor</span><h3>Prova de integridade</h3><p>Hash SHA-256 + QR Code tornam o laudo auditável e impossível de alterar sem detecção.</p></div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="num">6</div><div class="lbl">Modelos de PDF</div></div>
+    <div class="metric"><div class="num">8</div><div class="lbl">Vozes pt-BR (TTS)</div></div>
+    <div class="metric"><div class="num">6</div><div class="lbl">Tipos de veículo</div></div>
+    <div class="metric"><div class="num">100%</div><div class="lbl">Funciona offline</div></div>
+  </div>
+</div>
+
+<!-- 2. FLUXO DE DADOS -->
+<div class="section">
+  <h2>2. Fluxo de dados</h2>
+  <svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+
+    <!-- Fontes de dados -->
+    <rect x="20" y="30" width="150" height="60" rx="10" fill="#4299e1"/>
+    <text x="95" y="55" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">Placa / CNH</text>
+    <text x="95" y="72" fill="#e0f2fe" font-size="10" text-anchor="middle">Consulta automática</text>
+
+    <rect x="20" y="130" width="150" height="60" rx="10" fill="#4299e1"/>
+    <text x="95" y="155" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">Câmera</text>
+    <text x="95" y="172" fill="#e0f2fe" font-size="10" text-anchor="middle">Fotos de avaria / interior</text>
+
+    <rect x="20" y="230" width="150" height="60" rx="10" fill="#4299e1"/>
+    <text x="95" y="255" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">Toque no SVG</text>
+    <text x="95" y="272" fill="#e0f2fe" font-size="10" text-anchor="middle">Local + tipo da avaria</text>
+
+    <!-- Processamento -->
+    <rect x="270" y="100" width="170" height="120" rx="12" fill="#ed8936"/>
+    <text x="355" y="130" fill="#fff" font-size="13" font-weight="700" text-anchor="middle">App (offline-first)</text>
+    <text x="355" y="150" fill="#fffaf0" font-size="10" text-anchor="middle">Compressão de imagem</text>
+    <text x="355" y="166" fill="#fffaf0" font-size="10" text-anchor="middle">Confirmação por voz (TTS)</text>
+    <text x="355" y="182" fill="#fffaf0" font-size="10" text-anchor="middle">IndexedDB local</text>
+    <text x="355" y="198" fill="#fffaf0" font-size="10" text-anchor="middle">Fila de sync</text>
+
+    <!-- IA/serviços -->
+    <rect x="490" y="30" width="160" height="60" rx="10" fill="#9f7aea"/>
+    <text x="570" y="55" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">Google Cloud TTS</text>
+    <text x="570" y="72" fill="#f3e8ff" font-size="10" text-anchor="middle">Narração natural</text>
+
+    <rect x="490" y="230" width="160" height="60" rx="10" fill="#9f7aea"/>
+    <text x="570" y="255" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">Hash SHA-256 + QR</text>
+    <text x="570" y="272" fill="#f3e8ff" font-size="10" text-anchor="middle">Registro de integridade</text>
+
+    <!-- Backend -->
+    <rect x="490" y="120" width="160" height="80" rx="10" fill="#48bb78"/>
+    <text x="570" y="150" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">Supabase</text>
+    <text x="570" y="167" fill="#f0fff4" font-size="10" text-anchor="middle">Postgres + Storage + Auth</text>
+    <text x="570" y="183" fill="#f0fff4" font-size="10" text-anchor="middle">RLS por usuário/equipe</text>
+
+    <!-- Saídas -->
+    <rect x="730" y="60" width="150" height="60" rx="10" fill="#2563eb"/>
+    <text x="805" y="85" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">PDF do laudo</text>
+    <text x="805" y="102" fill="#dbeafe" font-size="10" text-anchor="middle">6 modelos visuais</text>
+
+    <rect x="730" y="160" width="150" height="60" rx="10" fill="#2563eb"/>
+    <text x="805" y="185" fill="#fff" font-size="12" font-weight="700" text-anchor="middle">WhatsApp / link</text>
+    <text x="805" y="202" fill="#dbeafe" font-size="10" text-anchor="middle">Compartilhamento</text>
+
+    <!-- Arrows -->
+    <path d="M170,60 L270,130" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+    <path d="M170,160 L270,160" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+    <path d="M170,260 L270,190" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+
+    <path d="M440,140 L490,60" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+    <path d="M440,160 L490,160" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+    <path d="M440,190 L490,260" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+
+    <path d="M650,150 L730,90" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+    <path d="M650,170 L730,190" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow)" fill="none"/>
+  </svg>
+</div>
+
+<!-- 3. PIPELINE DE PROCESSAMENTO -->
+<div class="section">
+  <h2>3. Pipeline da vistoria (passo a passo)</h2>
+  <svg viewBox="0 0 900 140" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#94a3b8"/>
+      </marker>
+    </defs>
+    <!-- 6 stages -->
+    <g font-family="inherit">
+      <rect x="10" y="30" width="130" height="70" rx="10" fill="#4299e1"/>
+      <text x="75" y="60" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">1. Placa/CNH</text>
+      <text x="75" y="76" fill="#e0f2fe" font-size="9" text-anchor="middle">Autofill dados</text>
+
+      <rect x="160" y="30" width="130" height="70" rx="10" fill="#ed8936"/>
+      <text x="225" y="60" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">2. Marcar avaria</text>
+      <text x="225" y="76" fill="#fffaf0" font-size="9" text-anchor="middle">Toque no SVG + voz</text>
+
+      <rect x="310" y="30" width="130" height="70" rx="10" fill="#ed8936"/>
+      <text x="375" y="60" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">3. Fotografar</text>
+      <text x="375" y="76" fill="#fffaf0" font-size="9" text-anchor="middle">Avaria + interior</text>
+
+      <rect x="460" y="30" width="130" height="70" rx="10" fill="#9f7aea"/>
+      <text x="525" y="60" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">4. Assinar</text>
+      <text x="525" y="76" fill="#f3e8ff" font-size="9" text-anchor="middle">Inspetor + cliente</text>
+
+      <rect x="610" y="30" width="130" height="70" rx="10" fill="#48bb78"/>
+      <text x="675" y="60" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">5. Selar</text>
+      <text x="675" y="76" fill="#f0fff4" font-size="9" text-anchor="middle">Hash + QR Code</text>
+
+      <rect x="760" y="30" width="130" height="70" rx="10" fill="#2563eb"/>
+      <text x="825" y="60" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">6. Entregar</text>
+      <text x="825" y="76" fill="#dbeafe" font-size="9" text-anchor="middle">PDF + sync nuvem</text>
+
+      <path d="M140,65 L160,65" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow2)"/>
+      <path d="M290,65 L310,65" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow2)"/>
+      <path d="M440,65 L460,65" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow2)"/>
+      <path d="M590,65 L610,65" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow2)"/>
+      <path d="M740,65 L760,65" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrow2)"/>
+    </g>
+  </svg>
+</div>
+
+<!-- 4. ARQUITETURA EM CAMADAS -->
+<div class="section">
+  <h2>4. Arquitetura em camadas</h2>
+
+  <div class="layer" style="background:rgba(66,153,225,0.08); border-color:#4299e1;">
+    <span class="label" style="color:#4299e1;">Cliente (PWA)</span>
+    <span class="chip">Next.js 16 + React 19</span>
+    <span class="chip">TypeScript</span>
+    <span class="chip">Tailwind CSS</span>
+    <span class="chip">Framer Motion</span>
+    <span class="chip">Service Worker (offline)</span>
+  </div>
+
+  <div class="layer" style="background:rgba(237,137,54,0.08); border-color:#ed8936;">
+    <span class="label" style="color:#ed8936;">Estado local</span>
+    <span class="chip">IndexedDB (db.ts)</span>
+    <span class="chip">Fila de sincronização</span>
+    <span class="chip">Cache de fotos</span>
+  </div>
+
+  <div class="layer" style="background:rgba(37,99,235,0.08); border-color:#2563eb;">
+    <span class="label" style="color:#2563eb;">Funções serverless (Vercel)</span>
+    <span class="chip">api/create-checkout-session</span>
+    <span class="chip">api/stripe-webhook</span>
+    <span class="chip">api/team-invite / team-accept-invite / team-reports</span>
+    <span class="chip">app/api/tts</span>
+  </div>
+
+  <div class="layer" style="background:rgba(72,187,120,0.08); border-color:#48bb78;">
+    <span class="label" style="color:#48bb78;">Backend (Supabase)</span>
+    <span class="chip">Postgres (vehicle_inspections, damages, companies, team_members, subscriptions)</span>
+    <span class="chip">Storage (damage-photos, document-photos)</span>
+    <span class="chip">Auth (email/senha)</span>
+    <span class="chip">Row Level Security</span>
+  </div>
+
+  <div class="layer" style="background:rgba(159,122,234,0.08); border-color:#9f7aea;">
+    <span class="label" style="color:#9f7aea;">Serviços externos</span>
+    <span class="chip">Stripe (Pro + Corporativo)</span>
+    <span class="chip">Google Cloud TTS / ElevenLabs</span>
+    <span class="chip">API de consulta de placa</span>
+    <span class="chip">ZXing (leitura de código de barras CNH, offline)</span>
+  </div>
+</div>
+
+<!-- 5. FUNCIONALIDADES -->
+<div class="section">
+  <h2>5. Funcionalidades principais</h2>
+  <div class="grid">
+    <div class="card"><span class="badge proc">Core</span><h3>Diagrama interativo do veículo</h3><p>6 tipos de veículo, 4 vistas externas por SVG clicável.</p></div>
+    <div class="card"><span class="badge proc">Core</span><h3>Interior do veículo</h3><p>Observações + fotos com legenda, sem exigir diagrama próprio.</p></div>
+    <div class="card"><span class="badge ai">IA/Voz</span><h3>Confirmação por voz</h3><p>8 vozes pt-BR (Google TTS Neural2/Chirp3-HD), confirma a peça clicada.</p></div>
+    <div class="card"><span class="badge data">Autofill</span><h3>Placa e CNH automáticas</h3><p>Consulta de placa + leitura offline do código de barras da CNH (nome, CPF, nº habilitação).</p></div>
+    <div class="card"><span class="badge ok">Integridade</span><h3>Hash + QR Code</h3><p>SHA-256 do laudo + página pública /verify para auditoria.</p></div>
+    <div class="card"><span class="badge ok">Corporativo</span><h3>Gestão de equipe</h3><p>Convite de inspetores, dashboard do gestor com laudos de toda a equipe (somente leitura).</p></div>
+    <div class="card"><span class="badge proc">Offline</span><h3>Funciona sem internet</h3><p>Vistoria completa offline, sincroniza sozinha quando a rede volta.</p></div>
+    <div class="card"><span class="badge proc">Assinatura</span><h3>Planos Pro e Corporativo</h3><p>Stripe: Pro fixo (R$49,90/mês) e Corporativo com preço por faixa de inspetores.</p></div>
+  </div>
+</div>
+
+<!-- 6. DEPLOY -->
+<div class="section">
+  <h2>6. Deploy e infraestrutura</h2>
+  <table>
+    <tr><th>Item</th><th>Detalhe</th></tr>
+    <tr><td>Hospedagem</td><td>Vercel (produção em <code>danosaparentes.com.br</code>)</td></tr>
+    <tr><td>Banco de dados</td><td>Supabase (Postgres gerenciado + Storage + Auth), migrations versionadas em <code>src/supabase/migrations/</code></td></tr>
+    <tr><td>Pagamentos</td><td>Stripe (checkout + webhook + portal do cliente)</td></tr>
+    <tr><td>PWA</td><td>Manifest + Service Worker, instalável em Android/iOS</td></tr>
+    <tr><td>SEO</td><td>Blog com 30+ artigos, sitemap, categorias, verificação Google/Bing/Yandex</td></tr>
+    <tr><td>Deploy</td><td>Vercel CLI (<code>vercel --prod</code>) — projeto sem integração automática com Git no momento</td></tr>
+  </table>
+</div>
+
+</body>
+</html>
