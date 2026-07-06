@@ -4,7 +4,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { Damage, VehicleInfo, VehicleType, ViewType } from '../types'
 import { generatePdf, generatePdfBlob, buildBadgeSnippet, SvgPdfData } from '../lib/pdf'
 import { copyReport, downloadTxt, sendWhatsApp } from '../lib/report'
-import { resolveDamagePhotos } from '../lib/photoStore'
+import { resolveDamagePhotos, resolvePhotos } from '../lib/photoStore'
 import { staticVehicleRegistry } from './vehicles/staticRegistry'
 import VehicleDefs from './vehicles/VehicleDefs'
 
@@ -146,18 +146,20 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
   async function handlePdf() {
     const svgData = await captureSvgs(vehicleType, damages)
     const resolvedDamages = await resolveDamagePhotos(damages)
+    const resolvedVehicleInfo = { ...vehicleInfo, interiorPhotos: await resolvePhotos(vehicleInfo.interiorPhotos) }
     const companyName = hasAccess ? (localStorage.getItem('company_name') || '') : ''
     const companyLogo = hasAccess ? (localStorage.getItem('company_logo') || '') : ''
-    const hash = await generatePdf(vehicleInfo, resolvedDamages, svgData, { companyName, companyLogo, pdfTheme })
+    const hash = await generatePdf(resolvedVehicleInfo, resolvedDamages, svgData, { companyName, companyLogo, pdfTheme })
     if (hash && hash !== 'N/D') setReportHash(hash)
   }
 
   async function whatsappPdf() {
     const svgData = await captureSvgs(vehicleType, damages)
     const resolvedDamages = await resolveDamagePhotos(damages)
+    const resolvedVehicleInfo = { ...vehicleInfo, interiorPhotos: await resolvePhotos(vehicleInfo.interiorPhotos) }
     const companyName = hasAccess ? (localStorage.getItem('company_name') || '') : ''
     const companyLogo = hasAccess ? (localStorage.getItem('company_logo') || '') : ''
-    const blob = await generatePdfBlob(vehicleInfo, resolvedDamages, svgData, { companyName, companyLogo, pdfTheme })
+    const blob = await generatePdfBlob(resolvedVehicleInfo, resolvedDamages, svgData, { companyName, companyLogo, pdfTheme })
     const file = new File([blob], `vistoria-${vehicleInfo.plate || 'sem-placa'}.pdf`, { type: 'application/pdf' })
     if (navigator.canShare?.({ files: [file] })) {
       await navigator.share({ files: [file], title: 'Relatório de Vistoria' })

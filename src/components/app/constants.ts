@@ -2,6 +2,7 @@ import { VehicleInfo, VehicleType, ViewType } from '@/src/types'
 
 export const EMPTY_INFO: VehicleInfo = {
   owner: '', phone: '', brand: '', plate: '', generalNotes: '',
+  interiorNotes: '', interiorPhotos: [], interiorPhotoNotes: [],
   profile: '', ref: '', color: '', vehicleTypeDesc: '', city: '', state: '',
   cpf: '', cnh: '', cnhCategory: '',
   inspectorSignature: '', clientSignature: '',

@@ -8,6 +8,14 @@ import { toTitleCase } from '../lib/cnhBarcode'
 import Button from './ui/Button'
 import WizardStepper from './WizardStepper'
 import type { WizardStep } from './wizardTypes'
+import { ResolvedPhoto } from './ResolvedPhoto'
+import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '../lib/imageUtils'
+import { storePhoto, deletePhotoRef } from '../lib/photoStore'
+import {
+  finishPhotoUploadProgress,
+  startPhotoUploadProgress,
+  updatePhotoUploadProgress,
+} from '../lib/photoUploadProgress'
 
 function TrashIcon({ size = 13 }: { size?: number }) {
   return (
@@ -169,6 +177,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [geoError, setGeoError] = useState('')
   const [showCnhScanner, setShowCnhScanner] = useState(false)
+  const [interiorCompressing, setInteriorCompressing] = useState(false)
   const filterRef = useRef<HTMLDivElement>(null)
   const lookupTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -263,6 +272,44 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
   const set = useCallback((field: keyof VehicleInfo, value: string) => {
     onChange({ ...info, [field]: value })
+  }, [info, onChange])
+
+  const handleInteriorPhoto = useCallback(async (file: File) => {
+    setInteriorCompressing(true)
+    startPhotoUploadProgress(1, 'Preparando foto do interior…')
+    try {
+      updatePhotoUploadProgress({ phase: 'compressing', label: 'Comprimindo imagem…' })
+      const compressedBlob = await compressImage(file, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY)
+      updatePhotoUploadProgress({ phase: 'uploading', current: 0, label: 'Salvando foto localmente…' })
+      const photoRef = await storePhoto(compressedBlob)
+      updatePhotoUploadProgress({ current: 1 })
+      onChange({
+        ...info,
+        interiorPhotos: [...info.interiorPhotos, photoRef],
+        interiorPhotoNotes: [...(info.interiorPhotoNotes ?? []), ''],
+      })
+    } catch (error) {
+      console.error('Error compressing interior photo:', error)
+    } finally {
+      finishPhotoUploadProgress()
+      setInteriorCompressing(false)
+    }
+  }, [info, onChange])
+
+  const updateInteriorPhotoNote = useCallback((idx: number, note: string) => {
+    const notes = [...(info.interiorPhotoNotes ?? info.interiorPhotos.map(() => ''))]
+    notes[idx] = note
+    onChange({ ...info, interiorPhotoNotes: notes })
+  }, [info, onChange])
+
+  const removeInteriorPhoto = useCallback((idx: number) => {
+    const removed = info.interiorPhotos[idx]
+    if (removed) void deletePhotoRef(removed)
+    onChange({
+      ...info,
+      interiorPhotos: info.interiorPhotos.filter((_, i) => i !== idx),
+      interiorPhotoNotes: (info.interiorPhotoNotes ?? []).filter((_, i) => i !== idx),
+    })
   }, [info, onChange])
 
   const captureGeo = useCallback(() => {
@@ -982,6 +1029,58 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
           className={`${inputClasses} min-h-[52px] resize-vertical`}
           value={info.generalNotes} onChange={e => set('generalNotes', e.target.value)}
           placeholder="Observações adicionais sobre o veículo..." />
+      </div>
+
+      <div className="mt-4">
+        <label htmlFor="interior-notes-textarea" className={labelClasses}>🪑 Interior do Veículo</label>
+        <textarea
+          id="interior-notes-textarea"
+          className={`${inputClasses} min-h-[52px] resize-vertical`}
+          value={info.interiorNotes}
+          onChange={e => onChange({ ...info, interiorNotes: e.target.value })}
+          placeholder="Observações sobre bancos, painel, forro, porta-malas..." />
+
+        <div className="flex flex-col gap-2 mt-2.5">
+          {info.interiorPhotos.map((p, i) => (
+            <div key={i} className="bg-black/20 border border-white/5 rounded-xl p-2 flex gap-2.5 items-start">
+              <div className="relative shrink-0">
+                <ResolvedPhoto
+                  refOrDataUrl={p}
+                  alt=""
+                  className="w-[72px] h-[72px] object-cover rounded-lg border border-white/10 block"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeInteriorPhoto(i)}
+                  className="absolute -top-1.5 -right-1.5 bg-black/80 hover:bg-red-600 rounded-full text-white w-5 h-5 text-[0.65rem] flex items-center justify-center font-black transition-colors shadow-lg"
+                >✕</button>
+              </div>
+              <div className="flex-1 min-w-0 flex flex-col gap-1">
+                <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                  🏷️ Legenda da foto
+                </div>
+                <textarea
+                  value={(info.interiorPhotoNotes ?? [])[i] ?? ''}
+                  onChange={e => updateInteriorPhotoNote(i, e.target.value)}
+                  placeholder="Ex.: Banco traseiro rasgado..."
+                  rows={2}
+                  className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg p-1.5 text-[var(--input-color)] font-outfit text-[0.78rem] resize-none outline-none focus:border-sky-500/40 transition-colors"
+                />
+              </div>
+            </div>
+          ))}
+
+          <label className={`h-11 rounded-lg border border-dashed flex items-center justify-center text-[0.8rem] gap-1.5 font-bold font-outfit transition-colors ${
+            interiorCompressing
+              ? 'border-sky-500/40 bg-sky-500/10 text-sky-400 cursor-wait'
+              : 'border-sky-500/30 bg-sky-500/5 text-sky-500 hover:bg-sky-500/10 cursor-pointer'
+          }`}>
+            {interiorCompressing ? '⏳ Comprimindo…' : '📷 Anexar Foto do Interior'}
+            <input type="file" accept="image/*" capture="environment" className="hidden"
+              disabled={interiorCompressing}
+              onChange={e => { if (e.target.files?.[0]) handleInteriorPhoto(e.target.files[0]) }} />
+          </label>
+        </div>
       </div>
 
       {show('geo') && (

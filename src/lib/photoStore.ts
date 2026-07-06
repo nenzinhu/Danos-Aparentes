@@ -219,6 +219,87 @@ export async function uploadDamagePhotosForSync(
   }
 }
 
+/** Mesma lógica de uploadDamagePhotosForSync, para o array plano de fotos do interior
+ *  (sem um "damageId" por foto — usa o literal 'interior' no lugar). */
+export async function uploadInteriorPhotosForSync(
+  photos: string[],
+  photoNotes: string[],
+  userId: string,
+  inspectionId: string,
+): Promise<{ remotePhotos: string[]; localPhotos: string[]; photoNotes: string[] }> {
+  const remotePhotos: string[] = []
+  const localPhotos: string[] = []
+  const uploadTotal = countPhotosNeedingUpload([{ photos }])
+  let uploadDone = 0
+
+  if (uploadTotal > 0) {
+    startPhotoUploadProgress(uploadTotal, 'Sincronizando fotos do interior…')
+  }
+
+  try {
+    for (const ref of photos) {
+      if (isStorageRef(ref)) {
+        const path = storagePathFromRef(ref)
+        remotePhotos.push(path)
+        localPhotos.push(ref)
+        continue
+      }
+
+      if (!isPhotoRef(ref) && !isInlinePhoto(ref) && ref.includes('/')) {
+        remotePhotos.push(ref)
+        localPhotos.push(toStorageRef(ref))
+        continue
+      }
+
+      if (!photoNeedsCloudUpload(ref)) {
+        remotePhotos.push(ref)
+        localPhotos.push(ref)
+        continue
+      }
+
+      const blob = await blobFromRef(ref)
+      if (!blob) {
+        remotePhotos.push(ref)
+        localPhotos.push(ref)
+        continue
+      }
+
+      updatePhotoUploadProgress({
+        phase: 'compressing',
+        current: uploadDone,
+        label: `Otimizando foto ${uploadDone + 1} de ${uploadTotal}`,
+      })
+
+      const compressed = await compressBlobForStorage(blob)
+      const photoId = createId()
+      const path = buildStoragePath(userId, inspectionId, 'interior', photoId)
+
+      updatePhotoUploadProgress({
+        phase: 'uploading',
+        label: `Enviando foto ${uploadDone + 1} de ${uploadTotal}`,
+      })
+
+      await uploadPhotoBlob(compressed, path)
+      uploadDone += 1
+      updatePhotoUploadProgress({ current: uploadDone })
+
+      if (isPhotoRef(ref)) {
+        const record = await db.getPhoto(ref.slice(PHOTO_REF_PREFIX.length))
+        if (record) {
+          await db.putPhoto({ ...record, storagePath: path })
+        }
+      }
+
+      remotePhotos.push(path)
+      localPhotos.push(toStorageRef(path))
+    }
+
+    return { remotePhotos, localPhotos, photoNotes }
+  } finally {
+    if (uploadTotal > 0) finishPhotoUploadProgress()
+  }
+}
+
 export async function resolvePhotosForSync(photos: string[]): Promise<string[]> {
   return Promise.all(photos.map(async (ref) => {
     if (isStorageRef(ref) || (!isInlinePhoto(ref) && !isPhotoRef(ref) && ref.includes('/'))) {
@@ -236,6 +317,11 @@ export async function resolveDamagePhotos<T extends { photos: string[] }>(damage
       photos: await Promise.all(d.photos.map(resolvePhotoUrl)),
     })),
   )
+}
+
+/** Resolve um array plano de refs (usado pelas fotos do interior, sem "damage" pai). */
+export async function resolvePhotos(photos: string[]): Promise<string[]> {
+  return Promise.all(photos.map(resolvePhotoUrl))
 }
 
 export async function prefetchReportPhotoCache(damages: Damage[]): Promise<void> {

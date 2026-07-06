@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { SavedReport } from '../types'
 import { db, SyncQueueItem } from './db'
 import { supabase, supabaseEnabled } from './supabase'
-import { uploadDamagePhotosForSync, normalizeDamagePhotos, prefetchReportPhotoCache } from './photoStore'
+import { uploadDamagePhotosForSync, uploadInteriorPhotosForSync, normalizeDamagePhotos, prefetchReportPhotoCache } from './photoStore'
 import { deleteInspectionPhotos } from './photoStorage'
 import { mapRemoteInspection } from './reportMapping'
 
@@ -14,6 +14,7 @@ function inspectionRow(r: SavedReport, userId: string) {
     vehicle_type: r.vehicleType ?? r.damages[0]?.vehicle ?? 'car',
     owner: v.owner, phone: v.phone, brand: v.brand, plate: v.plate,
     general_notes: v.generalNotes, profile: v.profile, ref: v.ref, color: v.color,
+    interior_notes: v.interiorNotes, interior_photos: v.interiorPhotos, interior_photo_notes: v.interiorPhotoNotes,
     vehicle_type_desc: v.vehicleTypeDesc, city: v.city, state: v.state,
     cpf: v.cpf || '',
     cnh: v.cnh || '',
@@ -36,11 +37,11 @@ function damageRows(r: SavedReport, userId: string) {
   }))
 }
 
-async function persistSyncedReport(reportId: string, damages: SavedReport['damages']) {
+async function persistSyncedReport(reportId: string, damages: SavedReport['damages'], vehicleInfo: SavedReport['vehicleInfo']) {
   const all = await db.getAllSaved()
   const report = all.find(r => r.id === reportId)
   if (!report) return
-  await db.putSaved({ ...report, damages, syncedAt: Date.now() })
+  await db.putSaved({ ...report, damages, vehicleInfo, syncedAt: Date.now() })
 }
 
 async function pushReport(report: SavedReport, userId: string) {
@@ -51,7 +52,22 @@ async function pushReport(report: SavedReport, userId: string) {
     userId,
     report.id,
   )
-  const reportForSync: SavedReport = { ...report, damages: remoteDamages }
+  const { remotePhotos: remoteInteriorPhotos, localPhotos: localInteriorPhotos } = await uploadInteriorPhotosForSync(
+    report.vehicleInfo.interiorPhotos,
+    report.vehicleInfo.interiorPhotoNotes,
+    userId,
+    report.id,
+  )
+  const reportForSync: SavedReport = {
+    ...report,
+    damages: remoteDamages,
+    vehicleInfo: { ...report.vehicleInfo, interiorPhotos: remoteInteriorPhotos },
+  }
+  const localReport: SavedReport = {
+    ...report,
+    damages: localDamages,
+    vehicleInfo: { ...report.vehicleInfo, interiorPhotos: localInteriorPhotos },
+  }
 
   const { error: e1 } = await supabase.from('vehicle_inspections').upsert(inspectionRow(reportForSync, userId))
   if (e1) throw e1
@@ -60,7 +76,7 @@ async function pushReport(report: SavedReport, userId: string) {
     const { error: e2 } = await supabase.from('damages').upsert(rows)
     if (e2) throw e2
   }
-  await persistSyncedReport(report.id, localDamages)
+  await persistSyncedReport(report.id, localDamages, localReport.vehicleInfo)
 }
 
 async function deleteRemoteReport(id: string, userId: string) {
@@ -177,6 +193,7 @@ export async function mergeRemoteReports(userId: string): Promise<SavedReport[]>
           ...d,
           photos: normalizeDamagePhotos(d.photos),
         })),
+        vehicleInfo: { ...remoteR.vehicleInfo, interiorPhotos: normalizeDamagePhotos(remoteR.vehicleInfo.interiorPhotos) },
         syncedAt: remoteR.savedAt,
       }
       await db.putSaved(winner)
@@ -205,6 +222,7 @@ export async function mergeRemoteReports(userId: string): Promise<SavedReport[]>
           ...d,
           photos: normalizeDamagePhotos(d.photos),
         })),
+        vehicleInfo: { ...remoteR.vehicleInfo, interiorPhotos: normalizeDamagePhotos(remoteR.vehicleInfo.interiorPhotos) },
         syncedAt: remoteR.savedAt,
       }
       await db.putSaved(incoming)

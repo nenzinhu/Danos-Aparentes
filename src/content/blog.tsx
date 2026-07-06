@@ -1775,6 +1775,495 @@ BLOG_POSTS.unshift(
       </>
     ),
   },
+  {
+    slug: 'scanner-de-cnh-autofill-nome-cpf',
+    title: 'Scanner de CNH: como o Danos Aparentes preenche nome e CPF sozinho',
+    excerpt:
+      'Escanear o código de barras da CNH já elimina a digitação do número de habilitação. Agora o Danos Aparentes vai além e preenche também o nome do cliente e o CPF, direto do documento, offline e sem custo extra.',
+    category: 'Produtividade',
+    tags: ['CNH', 'autofill', 'redigitação', 'produtividade', 'laudo digital'],
+    date: '2026-07-06',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0891b2 45%,#67e8f9 100%)', emoji: '🪪', image: '/vehicles-img/car2d.png' },
+    toc: [
+      { id: 'como-funciona', label: 'Como funciona o scanner' },
+      { id: 'o-que-e-lido', label: 'O que é lido automaticamente' },
+      { id: 'seguranca', label: 'Por que isso é seguro' },
+      { id: 'fluxo', label: 'O que muda no fluxo da vistoria' },
+    ],
+    content: (
+      <>
+        <p>
+          Nome do cliente e CPF são dois dos campos mais digitados — e mais errados — em qualquer vistoria.
+          Um dígito trocado no CPF ou um nome mal escrito compromete a identificação do documento. Com o{' '}
+          <strong>Danos Aparentes</strong>, esses dados agora saem direto do verso da CNH, sem digitação.
+        </p>
+
+        <h2 id="como-funciona">Como funciona o scanner</h2>
+        <p>
+          O aplicativo já lia o código de barras (PDF417) do verso da CNH para preencher o número de
+          habilitação. A leitura é feita pela câmera do celular, <strong>offline</strong>, sem enviar a foto
+          do documento para nenhum servidor externo — o processamento acontece no próprio aparelho.
+        </p>
+
+        <h2 id="o-que-e-lido">O que é lido automaticamente</h2>
+        <ul>
+          <li><strong>Nome completo</strong> do titular, já formatado (primeira letra maiúscula em cada palavra).</li>
+          <li><strong>CPF</strong>, validado pelo dígito verificador antes de preencher o campo.</li>
+          <li><strong>Número da CNH</strong>, como já acontecia antes.</li>
+        </ul>
+        <p>
+          Cada campo é preenchido de forma independente: se o código de barras estiver parcialmente
+          ilegível e o CPF não passar na validação, o nome e o número da CNH continuam sendo preenchidos
+          normalmente — nada trava a vistoria por causa de um único campo.
+        </p>
+
+        <h2 id="seguranca">Por que isso é seguro</h2>
+        <p>
+          Diferente de uma consulta de CPF por API paga de terceiros — que expõe dado pessoal a um serviço
+          externo e tem custo por consulta — aqui a informação vem do próprio documento que o cliente já
+          está apresentando ao vistoriador, no momento da vistoria. Não há chamada de rede, não há
+          intermediário e não há custo adicional.
+        </p>
+
+        <Cta />
+
+        <h2 id="fluxo">O que muda no fluxo da vistoria</h2>
+        <p>
+          Na prática, o vistoriador aponta a câmera para o código de barras uma única vez e três campos são
+          preenchidos de uma vez: nome, CPF e habilitação. Isso segue a mesma lógica de outras melhorias do
+          app — ver também{' '}
+          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
+          <a href="/blog/erros-de-transcricao-na-vistoria">erros de transcrição na vistoria</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'plano-corporativo-gestao-de-equipe-vistoriadores',
+    title: 'Plano Corporativo: como gerenciar uma equipe de vistoriadores em um só lugar',
+    excerpt:
+      'Frotas e locadoras com mais de um inspetor precisam enxergar o trabalho de toda a equipe, não só o próprio. Veja como o Plano Corporativo do Danos Aparentes centraliza os laudos de todos os vistoriadores.',
+    category: 'Frota',
+    tags: ['plano corporativo', 'gestão de equipe', 'frota', 'locadora', 'vistoriadores'],
+    date: '2026-07-06',
+    readingMinutes: 6,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#4f46e5 45%,#a5b4fc 100%)', emoji: '👥', image: '/vehicles-img/truck.png' },
+    toc: [
+      { id: 'problema', label: 'O problema de não ter visibilidade da equipe' },
+      { id: 'como-funciona', label: 'Como funciona o Plano Corporativo' },
+      { id: 'convite', label: 'Como convidar um inspetor' },
+      { id: 'gestor', label: 'O que o gestor enxerga' },
+    ],
+    content: (
+      <>
+        <p>
+          Quando a operação cresce e passa a ter mais de um vistoriador, um problema comum aparece: cada
+          inspetor só vê os próprios laudos. O gestor perde a visão consolidada da frota inteira. O{' '}
+          <strong>Plano Corporativo</strong> do Danos Aparentes resolve exatamente isso.
+        </p>
+
+        <h2 id="problema">O problema de não ter visibilidade da equipe</h2>
+        <ul>
+          <li><strong>Laudos espalhados</strong> entre os celulares de cada inspetor, sem consolidação.</li>
+          <li><strong>Dificuldade de auditoria</strong>: o gestor não sabe quantas vistorias foram feitas nem por quem.</li>
+          <li><strong>Retrabalho na cobrança</strong> de laudos pendentes, feita manualmente por WhatsApp ou planilha.</li>
+        </ul>
+
+        <h2 id="como-funciona">Como funciona o Plano Corporativo</h2>
+        <p>
+          No Plano Corporativo, a empresa tem um <strong>gestor</strong> que vê, em modo leitura, os laudos de
+          todos os inspetores vinculados à sua conta — com download de PDF incluso. Cada inspetor continua
+          trabalhando normalmente no próprio aplicativo, sem mudança na rotina de campo.
+        </p>
+
+        <h2 id="convite">Como convidar um inspetor</h2>
+        <ol>
+          <li>O gestor gera um <strong>link de convite</strong> a partir do e-mail do inspetor.</li>
+          <li>O inspetor abre o link, entra com a própria conta (ou cria uma) e aceita o convite.</li>
+          <li>A partir daí, os laudos desse inspetor aparecem automaticamente pro gestor.</li>
+        </ol>
+
+        <Cta />
+
+        <h2 id="gestor">O que o gestor enxerga</h2>
+        <p>
+          A visão do gestor mostra veículo, placa, quantidade de avarias e o e-mail do inspetor responsável
+          por cada laudo, com opção de baixar o PDF completo. É a mesma lógica de padronização de equipe já
+          discutida em{' '}
+          <a href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</a>
+          {' '}e em{' '}
+          <a href="/blog/como-padronizar-equipe-de-vistoria-e-acabar-com-o-retrabalho">
+            como padronizar a equipe e acabar com o retrabalho
+          </a>, agora com um painel dedicado a isso.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'vistoria-de-seminovos-para-concessionarias',
+    title: 'Vistoria de seminovos: como documentar a entrada de um carro pra revenda',
+    excerpt:
+      'Antes de colocar um seminovo à venda, a concessionária precisa registrar exatamente o estado em que o carro chegou. Veja como um laudo bem-feito protege a negociação com o antigo dono e evita disputa com o comprador.',
+    category: 'Vistoria',
+    tags: ['seminovos', 'concessionária', 'revenda', 'avaliação de carro usado', 'laudo'],
+    date: '2026-07-06',
+    readingMinutes: 6,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#052e16 0%,#16a34a 45%,#bbf7d0 100%)', emoji: '🚗', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'porque', label: 'Por que documentar a entrada do seminovo' },
+      { id: 'o-que-vistoriar', label: 'O que vistoriar na entrada' },
+      { id: 'negociacao', label: 'O impacto na negociação de compra' },
+      { id: 'pos-venda', label: 'Proteção depois da revenda' },
+    ],
+    content: (
+      <>
+        <p>
+          Toda concessionária que compra carros usados para revenda enfrenta o mesmo risco: o veículo entra
+          com um estado e, mais tarde, alguém alega que ele saiu com outro. Um laudo de entrada bem-feito
+          resolve essa dúvida antes que ela vire discussão.
+        </p>
+
+        <h2 id="porque">Por que documentar a entrada do seminovo</h2>
+        <ul>
+          <li><strong>Base para a negociação</strong> do valor de compra com o antigo proprietário.</li>
+          <li><strong>Registro de avarias preexistentes</strong>, antes de qualquer preparação para a loja.</li>
+          <li><strong>Prova em caso de reclamação</strong> futura de um comprador sobre um dano que já existia na entrada.</li>
+        </ul>
+
+        <h2 id="o-que-vistoriar">O que vistoriar na entrada</h2>
+        <ul>
+          <li><strong>Lataria e pintura</strong>, com foto de cada avaria e a peça correspondente.</li>
+          <li><strong>Pneus, rodas e vidros</strong>, itens que pesam bastante na revisão de preço.</li>
+          <li><strong>Interior e itens de série</strong>, para comparar o que consta no anúncio depois.</li>
+          <li><strong>Quilometragem e documentação</strong> apresentada no ato.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="negociacao">O impacto na negociação de compra</h2>
+        <p>
+          Com o laudo em mãos, a concessionária negocia o valor de compra com base em avarias documentadas
+          e fotografadas, não em uma inspeção visual rápida e sem registro. Isso reduz discussão com o
+          vendedor e evita comprar acima do valor justo.
+        </p>
+
+        <h2 id="pos-venda">Proteção depois da revenda</h2>
+        <p>
+          Se um comprador reclamar de um dano meses depois, o laudo de entrada mostra se aquela avaria já
+          existia antes da revenda. Para aprofundar esse tema, veja também{' '}
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">como fazer um laudo de vistoria veicular</a>
+          {' '}e{' '}
+          <a href="/blog/avarias-preexistentes-como-provar">avarias preexistentes: como provar</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'como-treinar-um-novo-vistoriador-rapidamente',
+    title: 'Como treinar um novo vistoriador rapidamente',
+    excerpt:
+      'Contratar é fácil. Treinar alguém pra fazer laudo no mesmo padrão da equipe, rápido, é o desafio. Veja o que ensinar primeiro e como o Danos Aparentes reduz o tempo de rampa de um vistoriador novo.',
+    category: 'Boas práticas',
+    tags: ['treinamento', 'onboarding', 'vistoriador', 'equipe', 'padronização'],
+    date: '2026-07-06',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#422006 0%,#ea580c 45%,#fed7aa 100%)', emoji: '🎓', image: '/vehicles-img/moto.png' },
+    toc: [
+      { id: 'desafio', label: 'O desafio de treinar rápido' },
+      { id: 'o-que-ensinar', label: 'O que ensinar primeiro' },
+      { id: 'ferramenta', label: 'Como a ferramenta ajuda no treino' },
+      { id: 'acompanhamento', label: 'Como acompanhar a evolução' },
+    ],
+    content: (
+      <>
+        <p>
+          Todo vistoriador novo passa por uma curva de aprendizado: entender a nomenclatura das avarias,
+          o padrão de foto esperado e o fluxo até a assinatura. Quanto mais rápido essa curva, mais cedo
+          essa pessoa vistoria sozinha com qualidade.
+        </p>
+
+        <h2 id="desafio">O desafio de treinar rápido</h2>
+        <ul>
+          <li><strong>Nomenclatura inconsistente</strong>: cada pessoa descreve a mesma avaria de um jeito diferente.</li>
+          <li><strong>Padrão de foto variável</strong>, dificultando comparar laudos entre inspetores.</li>
+          <li><strong>Dependência de acompanhar de perto</strong> as primeiras vistorias, o que consome tempo do gestor.</li>
+        </ul>
+
+        <h2 id="o-que-ensinar">O que ensinar primeiro</h2>
+        <ol>
+          <li><strong>Os tipos de avaria</strong> (risco, amassado, trinca, quebra) e como classificar a gravidade.</li>
+          <li><strong>Onde fotografar</strong>: foto aberta do veículo e foto de detalhe de cada avaria.</li>
+          <li><strong>O fluxo completo</strong>: dados do cliente, veículo, avarias e assinatura, nessa ordem.</li>
+        </ol>
+
+        <h2 id="ferramenta">Como a ferramenta ajuda no treino</h2>
+        <p>
+          O Danos Aparentes guia o vistoriador por um assistente passo a passo (dados, veículo, avarias,
+          assinatura), o que já padroniza a ordem do trabalho sem precisar de um manual à parte. Um novo
+          inspetor segue o mesmo fluxo do restante da equipe desde a primeira vistoria.
+        </p>
+
+        <Cta />
+
+        <h2 id="acompanhamento">Como acompanhar a evolução</h2>
+        <p>
+          Em equipes com <a href="/blog/plano-corporativo-gestao-de-equipe-vistoriadores">Plano Corporativo</a>,
+          o gestor consegue ver os laudos do novo inspetor assim que ele começa a vistoriar, sem precisar
+          pedir print ou PDF por WhatsApp. Para aprofundar a padronização da equipe, veja também{' '}
+          <a href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'vistoria-por-voz-nome-da-peca-ao-clicar',
+    title: 'Vistoria por voz: o app fala o nome da peça ao clicar, com 8 vozes à escolha',
+    excerpt:
+      'Ao abrir o diagrama do veículo, cada peça é anunciada em voz natural assim que o vistoriador clica ou passa o dedo. São 8 vozes em português (4 femininas e 4 masculinas) para escolher a que mais combina com a operação.',
+    category: 'Acessibilidade',
+    tags: ['voz', 'text-to-speech', 'acessibilidade', 'diagrama do veículo', 'produtividade'],
+    date: '2026-07-06',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#7c3aed 45%,#c4b5fd 100%)', emoji: '🔊', image: '/vehicles-img/car2d.png' },
+    toc: [
+      { id: 'como-funciona', label: 'Como funciona a leitura por voz' },
+      { id: 'vozes', label: 'As 8 vozes disponíveis' },
+      { id: 'porque', label: 'Por que isso ajuda na vistoria' },
+      { id: 'onde-configurar', label: 'Onde trocar a voz' },
+    ],
+    content: (
+      <>
+        <p>
+          Na parte aberta do diagrama do veículo, cada peça — porta, para-choque, capô, teto — é
+          identificada em voz alta assim que o vistoriador clica ou toca nela. O aplicativo confirma por
+          áudio exatamente onde a avaria está sendo marcada, sem precisar tirar os olhos da tela pra
+          conferir o nome no rótulo.
+        </p>
+
+        <h2 id="como-funciona">Como funciona a leitura por voz</h2>
+        <p>
+          Ao clicar numa peça do diagrama, o <strong>Danos Aparentes</strong> fala o nome dela em voz
+          natural, em português. O mesmo acontece ao passar o cursor sobre uma peça (hover), o que ajuda a
+          confirmar a seleção antes mesmo de clicar.
+        </p>
+
+        <h2 id="vozes">As 8 vozes disponíveis</h2>
+        <p>
+          São <strong>8 vozes em português brasileiro</strong>, sendo 4 femininas e 4 masculinas — todas
+          com entonação natural, geradas por tecnologia de voz neural:
+        </p>
+        <ul>
+          <li><strong>Femininas:</strong> Camila, Vitória, Aoede e Kore.</li>
+          <li><strong>Masculinas:</strong> Ricardo, Thiago, Puck e Orus.</li>
+        </ul>
+        <p>
+          A escolha é livre — o vistoriador seleciona a voz que preferir, e ela vale tanto para a leitura
+          das peças quanto para outras confirmações faladas do app.
+        </p>
+
+        <Cta />
+
+        <h2 id="porque">Por que isso ajuda na vistoria</h2>
+        <ul>
+          <li><strong>Confirmação sem tirar o olho do veículo</strong>: o vistoriador ouve o nome da peça enquanto continua observando o carro.</li>
+          <li><strong>Menos erro de peça errada</strong>: se o áudio anunciar algo diferente do esperado, dá pra corrigir antes de registrar a avaria.</li>
+          <li><strong>Acessibilidade</strong>: ajuda vistoriadores com dificuldade de leitura em telas pequenas ou sob luz forte de sol.</li>
+        </ul>
+
+        <h2 id="onde-configurar">Onde trocar a voz</h2>
+        <p>
+          A voz pode ser trocada nas configurações de leitura por voz do app, junto com velocidade e tom da
+          fala. Essa mesma engine de voz também é usada para ler outras informações da vistoria — veja mais
+          sobre como o app reduz digitação e retrabalho em{' '}
+          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
+          <a href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH: autofill de nome e CPF</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'consulta-automatica-de-placa',
+    title: 'Digite a placa e o resto se preenche sozinho',
+    excerpt:
+      'Marca, modelo, cor e cidade de emplacamento não precisam ser digitados um por um. No Danos Aparentes, basta digitar a placa e o sistema busca os dados do veículo automaticamente.',
+    category: 'Produtividade',
+    tags: ['consulta de placa', 'autofill', 'produtividade', 'checklist', 'vistoria digital'],
+    date: '2026-07-06',
+    readingMinutes: 4,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#052e2b 0%,#0d9488 45%,#5eead4 100%)', emoji: '🔎', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'problema', label: 'O problema de digitar tudo na mão' },
+      { id: 'como-funciona', label: 'Como funciona a busca por placa' },
+      { id: 'quando-nao-acha', label: 'Quando a placa não é encontrada' },
+      { id: 'tempo', label: 'O tempo que isso economiza' },
+    ],
+    content: (
+      <>
+        <p>
+          Marca, modelo, cor, tipo de veículo, cidade de emplacamento — são vários campos que, em qualquer
+          checklist tradicional, precisam ser preenchidos um por um. No Danos Aparentes, isso se resolve
+          com um único dado: a placa.
+        </p>
+
+        <h2 id="problema">O problema de digitar tudo na mão</h2>
+        <ul>
+          <li><strong>Tempo perdido</strong> preenchendo campos que já estão no documento do veículo.</li>
+          <li><strong>Erro de digitação</strong> em marca e modelo, sobretudo com nomes parecidos entre fabricantes.</li>
+          <li><strong>Vistoriador dependente do cliente</strong> pra confirmar cor e modelo exatos.</li>
+        </ul>
+
+        <h2 id="como-funciona">Como funciona a busca por placa</h2>
+        <p>
+          Ao digitar a placa completa no campo de <strong>Consulta de Placa</strong>, o aplicativo busca
+          automaticamente na base de dados e preenche marca, modelo, cor, tipo de veículo e cidade —
+          sem precisar digitar mais nada disso manualmente.
+        </p>
+
+        <Cta />
+
+        <h2 id="quando-nao-acha">Quando a placa não é encontrada</h2>
+        <p>
+          Se a placa não constar na base consultada, o app avisa e libera o preenchimento manual dos
+          campos normalmente — nada trava o andamento da vistoria por causa disso.
+        </p>
+
+        <h2 id="tempo">O tempo que isso economiza</h2>
+        <p>
+          Multiplicado por dezenas de vistorias no mês, esse único campo poupado por veículo representa
+          bastante tempo de equipe. Para seguir nesse tema de produtividade, veja também{' '}
+          <a href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH: autofill de nome e CPF</a> e{' '}
+          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: '6-modelos-de-pdf-para-o-laudo-de-vistoria',
+    title: '6 modelos de PDF para o laudo de vistoria: qual combina com sua operação',
+    excerpt:
+      'Moderno, editorial, técnico, corporativo, minimalista ou vibrante — o Danos Aparentes oferece 6 layouts de PDF diferentes, para o laudo ter a cara da sua empresa, não a cara de um sistema genérico.',
+    category: 'Profissionalismo',
+    tags: ['modelos de pdf', 'laudo de vistoria', 'personalização', 'branding', 'danos aparentes'],
+    date: '2026-07-06',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#312e81 0%,#6366f1 45%,#c7d2fe 100%)', emoji: '🎨', image: '/vehicles-img/car2d.png' },
+    toc: [
+      { id: 'porque-modelos', label: 'Por que ter mais de um modelo de PDF' },
+      { id: 'os-6-modelos', label: 'Os 6 modelos disponíveis' },
+      { id: 'como-escolher', label: 'Como escolher o ideal pra sua operação' },
+      { id: 'trocar', label: 'Como trocar de modelo' },
+    ],
+    content: (
+      <>
+        <p>
+          Um laudo de vistoria não precisa ter sempre a mesma cara. O Danos Aparentes oferece{' '}
+          <strong>6 modelos de layout de PDF</strong>, para que o documento combine com a identidade da
+          sua empresa — de uma locadora enxuta a uma seguradora mais formal.
+        </p>
+
+        <h2 id="porque-modelos">Por que ter mais de um modelo de PDF</h2>
+        <p>
+          Uma oficina, uma seguradora e uma locadora de luxo não têm o mesmo tom de comunicação. Um único
+          layout engessado obriga todo mundo a se adaptar ao sistema — no Danos Aparentes é o contrário: o
+          sistema se adapta ao seu negócio.
+        </p>
+
+        <h2 id="os-6-modelos">Os 6 modelos disponíveis</h2>
+        <ul>
+          <li><strong>Moderno</strong> — o padrão, limpo e neutro, serve bem pra qualquer operação.</li>
+          <li><strong>Editorial</strong> — tipografia mais elegante (Poppins e Lora), boa pra um tom mais sofisticado.</li>
+          <li><strong>Técnico / Forense</strong> — fonte monoespaçada, visual de laudo pericial, forte pra seguradoras.</li>
+          <li><strong>Corporativo</strong> — azul e dourado, cara de empresa grande e institucional.</li>
+          <li><strong>Minimalista</strong> — só preto e branco, direto ao ponto, sem distração visual.</li>
+          <li><strong>Vibrante</strong> — roxo e rosa, mais jovem e chamativo, combina com marcas descontraídas.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="como-escolher">Como escolher o ideal pra sua operação</h2>
+        <p>
+          Não existe modelo "certo" — existe o que combina com quem vai receber o laudo. Uma seguradora
+          tende a preferir o Técnico ou o Corporativo; uma locadora mais moderna pode preferir o Minimalista
+          ou o Vibrante. O importante é que o layout reforce a seriedade do documento, não o contrário.
+        </p>
+
+        <h2 id="trocar">Como trocar de modelo</h2>
+        <p>
+          A troca é feita direto na tela de exportação do relatório, antes de gerar o PDF — sem precisar
+          reconfigurar nada além disso. Pra completar a personalização, veja também{' '}
+          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</a> e{' '}
+          <a href="/blog/laudo-white-label-para-locadoras">laudo white-label para locadoras</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'checklist-de-avarias-sem-dor-de-cabeca',
+    title: 'Checklist de avarias sem dor de cabeça: do toque na tela ao laudo pronto',
+    excerpt:
+      'Marcar avaria não precisa ser complicado. Aponte no SVG do veículo, ouça a confirmação por voz, anexe a foto e pronto — sem formulário longo, sem discussão na entrega ou devolução.',
+    category: 'Locadora',
+    tags: ['checklist', 'svg interativo', 'confirmação por voz', 'entrada e devolução', 'sem dor de cabeça'],
+    date: '2026-07-06',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0284c7 45%,#7dd3fc 100%)', emoji: '✅', image: '/vehicles-img/car2d.png' },
+    toc: [
+      { id: 'dor-de-cabeca', label: 'A dor de cabeça do checklist tradicional' },
+      { id: 'fluxo', label: 'Como fica o fluxo no Danos Aparentes' },
+      { id: 'entrada-e-devolucao', label: 'Na entrada e na devolução' },
+      { id: 'resultado', label: 'O resultado prático' },
+    ],
+    content: (
+      <>
+        <p>
+          Checklist de veículo, na maioria das operações, ainda significa prancheta, formulário longo ou
+          fotos soltas na galeria do celular. O Danos Aparentes resolve isso com um fluxo direto: tocar,
+          ouvir a confirmação, fotografar.
+        </p>
+
+        <h2 id="dor-de-cabeca">A dor de cabeça do checklist tradicional</h2>
+        <ul>
+          <li><strong>Formulário longo</strong> pra descrever cada avaria por escrito.</li>
+          <li><strong>Dúvida na hora de marcar</strong> exatamente qual peça foi avariada.</li>
+          <li><strong>Discussão na devolução</strong> sobre se o dano já existia na entrada ou não.</li>
+        </ul>
+
+        <h2 id="fluxo">Como fica o fluxo no Danos Aparentes</h2>
+        <ol>
+          <li>O vistoriador toca no local exato da avaria no <strong>diagrama do veículo</strong>.</li>
+          <li>O app <strong>confirma por voz natural</strong> qual peça foi selecionada — sem depender só do olhar pra ter certeza.</li>
+          <li>Escolhe o tipo (risco, amassado ou trinca) e <strong>anexa a foto</strong> daquele ponto na hora.</li>
+        </ol>
+
+        <Cta />
+
+        <h2 id="entrada-e-devolucao">Na entrada e na devolução</h2>
+        <p>
+          O mesmo fluxo rápido se repete na entrada e na devolução do veículo. Com os dois laudos
+          registrados, comparar o que já existia e o que é novo vira uma conferência simples, não uma
+          discussão no balcão.
+        </p>
+
+        <h2 id="resultado">O resultado prático</h2>
+        <p>
+          Menos tempo por vistoria, menos dúvida sobre qual peça foi marcada e um histórico visual pronto
+          pra qualquer contestação. Para aprofundar esse fluxo, veja também{' '}
+          <a href="/blog/vistoria-por-voz-nome-da-peca-ao-clicar">vistoria por voz: o app fala o nome da peça ao clicar</a>
+          {' '}e{' '}
+          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de vistoria de devolução para locadoras</a>.
+        </p>
+      </>
+    ),
+  },
 )
 
 export function getPost(slug: string): BlogPost | undefined {

@@ -29,6 +29,9 @@ export interface VehicleInfo {
   brand: string
   plate: Plate
   generalNotes: string
+  interiorNotes: string
+  interiorPhotos: string[]  // mesmos formatos de ref que Damage.photos
+  interiorPhotoNotes: string[]  // array paralelo, legenda por foto
   // NEW fields:
   profile: 'oficina' | 'perito' | 'seguradora' | ''
   ref: string        // Nº da OS

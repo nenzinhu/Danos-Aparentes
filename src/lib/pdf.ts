@@ -73,7 +73,9 @@ async function computeHash(info: VehicleInfo, damages: Damage[], ts: number): Pr
       geo,
       info: {
         owner: info.owner, phone: info.phone, brand: info.brand, plate: info.plate,
-        generalNotes: info.generalNotes, profile: info.profile, ref: info.ref,
+        generalNotes: info.generalNotes,
+        interiorNotes: info.interiorNotes, interiorPhotos: info.interiorPhotos, interiorPhotoNotes: info.interiorPhotoNotes,
+        profile: info.profile, ref: info.ref,
         color: info.color, vehicleTypeDesc: info.vehicleTypeDesc, city: info.city, state: info.state,
         cpf: info.cpf, cnh: info.cnh, cnhCategory: info.cnhCategory,
         inspectorSignature: info.inspectorSignature, clientSignature: info.clientSignature,
@@ -358,6 +360,47 @@ function buildPhotoSection(damages: Damage[], theme: any): string {
   </div>`
 }
 
+// ─── Observações do interior ──────────────────────────────────────────────────
+function buildInteriorSection(info: VehicleInfo, theme: any): string {
+  const notes = info.interiorNotes || ''
+  const photos = info.interiorPhotos || []
+  if (!notes && photos.length === 0) return ''
+
+  const notesHtml = notes
+    ? `<p style="font-size:9.5px;color:${theme.textMain};line-height:1.5;font-family:${theme.fontMain};margin:0 0 6px 0;">${notes}</p>`
+    : ''
+
+  const rows: string[] = []
+  for (let i = 0; i < photos.length; i += 3) {
+    const slice = photos.slice(i, i + 3)
+    const cells = slice.map((src, j) => {
+      const caption = (info.interiorPhotoNotes ?? [])[i + j] ?? ''
+      return `<td style="padding:4px;vertical-align:top;width:33.3%;">
+        <div style="border:1px solid ${theme.borderColor};border-radius:6px;overflow:hidden;background:${theme.cardBg};box-shadow:0 1px 3px rgba(0,0,0,0.02);">
+          <img src="${src}" style="display:block;width:100%;height:84px;object-fit:cover;" />
+          ${caption ? `<div style="padding:6px 8px;background:${theme.cardBg};border-top:1px solid ${theme.borderLight};">
+            <p style="font-size:7.5px;color:${theme.textMuted};margin:0;font-style:italic;line-height:1.4;font-family:${theme.fontMain};">${caption}</p>
+          </div>` : ''}
+        </div>
+      </td>`
+    }).join('')
+    const pad = 3 - slice.length
+    const empty = Array(pad).fill('<td style="padding:4px;width:33.3%;"></td>').join('')
+    rows.push(`<tr style="page-break-inside:avoid;break-inside:avoid;">${cells}${empty}</tr>`)
+  }
+  const galleryHtml = photos.length > 0
+    ? `<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;margin-top:4px;">${rows.join('')}</table>`
+    : ''
+
+  return `<div style="margin-top:5px;margin-bottom:5px;">
+    ${sectionTitle('OBSERVAÇÕES DO INTERIOR', theme)}
+    <div class="card-wrapper" style="background:${theme.cardBg};border:1px solid ${theme.borderColor};border-radius:8px;padding:8px 10px;box-shadow:0 1px 3px rgba(0,0,0,0.01);">
+      ${notesHtml}
+      ${galleryHtml}
+    </div>
+  </div>`
+}
+
 // ─── Assinaturas ──────────────────────────────────────────────────────────────
 function buildSignature(info: VehicleInfo, theme: any, dateStr: string): string {
   const inspectorImg = info.inspectorSignature
@@ -567,6 +610,9 @@ async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: Svg
 
     <!-- 5. GALERIA DE FOTOS -->
     ${buildPhotoSection(damages, theme)}
+
+    <!-- 5.1 OBSERVAÇÕES DO INTERIOR -->
+    ${buildInteriorSection(info, theme)}
 
     <!-- 6. ASSINATURAS -->
     ${buildSignature(info, theme, signatureDate)}
