@@ -932,7 +932,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
                       onResult={(fields) => {
                         // Nome já vem em Title Case de extractCnhFieldsFromBarcode.
                         if (fields.nome) set('owner', fields.nome)
-                        if (fields.cpf) set('cpf', fields.cpf)
+                        if (fields.cpf) set('cpf', formatCPF(fields.cpf))
                         if (fields.cnhNumber) set('cnh', fields.cnhNumber)
                         setShowCnhScanner(false)
                       }}
