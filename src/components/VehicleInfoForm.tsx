@@ -4,6 +4,7 @@ import { VehicleInfo, CustomField, GeoLocation } from '../types'
 import SignaturePad from './SignaturePad'
 import SpeechButton from './SpeechButton'
 import CnhScanner from './CnhScanner'
+import { toTitleCase } from '../lib/cnhBarcode'
 import Button from './ui/Button'
 import WizardStepper from './WizardStepper'
 import type { WizardStep } from './wizardTypes'
@@ -795,7 +796,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
               {key === 'owner' && (
                 <>
                   <label htmlFor="owner-input" className={labelClasses}>Proprietário / Cliente</label>
-                  <input id="owner-input" className={inputClasses} value={info.owner} onChange={e => set('owner', e.target.value)} placeholder="Ex: João Silva" />
+                  <input id="owner-input" className={inputClasses} value={info.owner} onChange={e => set('owner', toTitleCase(e.target.value))} placeholder="Ex: João Silva" />
                 </>
               )}
               {key === 'phone' && (
@@ -928,7 +929,13 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
                   )}
                   {showCnhScanner && (
                     <CnhScanner
-                      onResult={(cnhNumber) => { set('cnh', cnhNumber); setShowCnhScanner(false) }}
+                      onResult={(fields) => {
+                        // Nome já vem em Title Case de extractCnhFieldsFromBarcode.
+                        if (fields.nome) set('owner', fields.nome)
+                        if (fields.cpf) set('cpf', fields.cpf)
+                        if (fields.cnhNumber) set('cnh', fields.cnhNumber)
+                        setShowCnhScanner(false)
+                      }}
                       onClose={() => setShowCnhScanner(false)}
                     />
                   )}
