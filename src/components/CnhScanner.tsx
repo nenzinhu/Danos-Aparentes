@@ -1,10 +1,10 @@
 'use client';
 import { useEffect, useRef, useState } from 'react'
-import { extractCnhNumberFromBarcode } from '../lib/cnhBarcode'
+import { extractCnhFieldsFromBarcode } from '../lib/cnhBarcode'
 import { uploadCnhPhoto } from '../lib/documentPhoto'
 
 interface Props {
-  onResult: (cnhNumber: string) => void
+  onResult: (fields: { nome: string | null; cpf: string | null; cnhNumber: string | null }) => void
   onClose: () => void
 }
 
@@ -30,8 +30,12 @@ export default function CnhScanner({ onResult, onClose }: Props) {
           videoRef.current,
           (result, _err, ctrl) => {
             if (cancelled || !result) return
-            const cnhNumber = extractCnhNumberFromBarcode(result.getText())
-            if (!cnhNumber) return
+            const fields = extractCnhFieldsFromBarcode(result.getText())
+            // Registro da CNH continua sendo o sinal de "leitura bem-sucedida":
+            // é o campo mais estável do barcode e já era usado assim antes
+            // desta mudança. Nome e CPF, quando também vierem válidos no
+            // mesmo frame, são repassados junto.
+            if (!fields.cnhNumber) return
 
             clearTimeout(timeoutId)
             ctrl.stop()
@@ -47,7 +51,7 @@ export default function CnhScanner({ onResult, onClose }: Props) {
               canvas.toBlob(blob => { if (blob) uploadCnhPhoto(blob) }, 'image/jpeg', 0.85)
             }
 
-            onResult(cnhNumber)
+            onResult(fields)
           },
         )
       } catch {
