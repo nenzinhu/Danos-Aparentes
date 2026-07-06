@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, memo, useCallback, useMemo } from '
 import { VehicleInfo, CustomField, GeoLocation } from '../types'
 import SignaturePad from './SignaturePad'
 import SpeechButton from './SpeechButton'
+import CnhScanner from './CnhScanner'
 import Button from './ui/Button'
 import WizardStepper from './WizardStepper'
 import type { WizardStep } from './wizardTypes'
@@ -166,6 +167,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   const pendingStepRef = useRef<WizardStep>(1)
   const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [geoError, setGeoError] = useState('')
+  const [showCnhScanner, setShowCnhScanner] = useState(false)
   const filterRef = useRef<HTMLDivElement>(null)
   const lookupTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -904,13 +906,30 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
                       placeholder="Nº da carteira estrangeira"
                     />
                   ) : (
-                    <input
-                      id="cnh-input"
-                      className={inputClasses}
-                      value={info.cnh || ''}
-                      onChange={e => set('cnh', formatCNH(e.target.value))}
-                      placeholder="Ex: 12345678900"
-                      maxLength={11}
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <input
+                        id="cnh-input"
+                        className={inputClasses}
+                        value={info.cnh || ''}
+                        onChange={e => set('cnh', formatCNH(e.target.value))}
+                        placeholder="Ex: 12345678900"
+                        maxLength={11}
+                        style={{ flex: 1 }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCnhScanner(true)}
+                        title="Escanear código de barras da CNH"
+                        style={{ flexShrink: 0, width: 40, borderRadius: 10, background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', color: 'var(--text-main)', fontSize: '1.1rem' }}
+                      >
+                        📷
+                      </button>
+                    </div>
+                  )}
+                  {showCnhScanner && (
+                    <CnhScanner
+                      onResult={(cnhNumber) => { set('cnh', cnhNumber); setShowCnhScanner(false) }}
+                      onClose={() => setShowCnhScanner(false)}
                     />
                   )}
                 </>
