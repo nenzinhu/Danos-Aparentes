@@ -10,7 +10,10 @@ BEGIN
   -- 1 Digit [0-9]
   -- 1 Letter or Digit [A-Z0-9] (Mercosul uses letter, old uses digit)
   -- 2 Digits [0-9]{2}
-  IF NEW.plate !~ '^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$' THEN
+  -- Só valida quando a placa já tem 7 caracteres: o formulário (VehicleInfoForm)
+  -- salva rascunhos com placa vazia/parcial enquanto o usuário ainda digita, e
+  -- esses rascunhos também sincronizam.
+  IF length(NEW.plate) = 7 AND NEW.plate !~ '^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$' THEN
     RAISE EXCEPTION 'Invalid Brazilian plate format. Expected AAA0A00 or AAA0000.';
   END IF;
   RETURN NEW;
@@ -28,7 +31,8 @@ FOR EACH ROW EXECUTE FUNCTION public.validate_plate();
 CREATE OR REPLACE FUNCTION public.validate_not_future_date()
 RETURNS TRIGGER AS $$
 BEGIN
-  IF NEW.updated_at > EXTRACT(EPOCH FROM NOW()) * 1000 THEN
+  -- Tolerância de 5min para desvio de relógio entre cliente e servidor.
+  IF NEW.updated_at > (EXTRACT(EPOCH FROM NOW()) * 1000 + 300000) THEN
     RAISE EXCEPTION 'Update date cannot be in the future.';
   END IF;
   RETURN NEW;
@@ -49,30 +53,30 @@ FOR EACH ROW EXECUTE FUNCTION public.validate_not_future_date();
 
 
 -- 2. Error Logging Table
+-- Schema alinhado ao que src/lib/sync.ts (logSyncError) realmente grava:
+-- type, report_id, error, retry_count, timestamp (ms).
 
 CREATE TABLE IF NOT EXISTS public.sync_errors (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  error_message TEXT NOT NULL,
-  context JSONB,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  type TEXT NOT NULL,
+  report_id TEXT,
+  error TEXT NOT NULL,
+  retry_count INT NOT NULL DEFAULT 0,
+  timestamp BIGINT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- Enable RLS
 ALTER TABLE public.sync_errors ENABLE ROW LEVEL SECURITY;
 
--- Policies using subqueries for auth.uid() as per Best Practices
-DROP POLICY IF EXISTS "Users can view their own sync errors" ON public.sync_errors;
-CREATE POLICY "Users can view their own sync errors"
-ON public.sync_errors
-FOR SELECT
-USING (user_id = (SELECT auth.uid()));
+DROP POLICY IF EXISTS "insert_own_sync_errors" ON public.sync_errors;
+CREATE POLICY "insert_own_sync_errors" ON public.sync_errors
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
 
-DROP POLICY IF EXISTS "Users can insert their own sync errors" ON public.sync_errors;
-CREATE POLICY "Users can insert their own sync errors"
-ON public.sync_errors
-FOR INSERT
-WITH CHECK (user_id = (SELECT auth.uid()));
+DROP POLICY IF EXISTS "select_own_sync_errors" ON public.sync_errors;
+CREATE POLICY "select_own_sync_errors" ON public.sync_errors
+  FOR SELECT USING (auth.uid() = user_id);
 
 
 -- 3. Storage Policy Audit
