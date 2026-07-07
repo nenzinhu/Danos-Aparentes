@@ -1,6 +1,6 @@
-import { readFileSync, existsSync } from 'node:fs'
+import { readFileSync, existsSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import { dirname, resolve } from 'node:path'
+import { dirname, resolve, join } from 'node:path'
 import { Client } from 'pg'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -29,14 +29,31 @@ if (!connStr || connStr.includes('SUA-SENHA') || connStr.includes('SEU-PROJETO')
   process.exit(1)
 }
 
-const schemaPath = resolve(__dirname, '..', 'supabase', 'schema.sql')
-const sql = readFileSync(schemaPath, 'utf8')
+// supabase/schema.sql é o schema-base (tabelas originais). As migrations reais
+// e mais recentes (companies, team_members, plan_tier, sync_errors, triggers de
+// validação etc.) vivem em src/supabase/migrations/ — raiz do projeto Supabase
+// CLI (tem config.toml). Aplicamos as duas em sequência para que db:push sempre
+// deixe o banco no estado atual real, e não só no schema original desatualizado.
+const migrationsDir = resolve(__dirname, '..', 'src', 'supabase', 'migrations')
+
+const steps = [
+  { label: 'supabase/schema.sql', sql: readFileSync(resolve(__dirname, '..', 'supabase', 'schema.sql'), 'utf8') },
+  ...(existsSync(migrationsDir)
+    ? readdirSync(migrationsDir)
+        .filter((f) => f.endsWith('.sql'))
+        .sort()
+        .map((f) => ({ label: `src/supabase/migrations/${f}`, sql: readFileSync(join(migrationsDir, f), 'utf8') }))
+    : []),
+]
 
 const client = new Client({ connectionString: connStr, ssl: { rejectUnauthorized: false } })
 
 try {
   await client.connect()
-  await client.query(sql)
+  for (const step of steps) {
+    await client.query(step.sql)
+    console.log(`Aplicado: ${step.label}`)
+  }
   console.log('Schema aplicado com sucesso no Supabase!')
 } catch (err) {
   console.error('Erro ao aplicar schema:', err.message)

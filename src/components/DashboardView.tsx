@@ -138,14 +138,14 @@ export default function DashboardView({ saved }: Props) {
         
         {/* Card 1 */}
         <div style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
-          <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', uppercase: 'true', tracking: '0.05em' } as any}>Total de Vistorias</div>
+          <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total de Vistorias</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.totalReports}</div>
           <div style={{ fontSize: '0.72rem', color: '#10b981' }}>📂 Armazenadas localmente</div>
         </div>
 
         {/* Card 2 */}
         <div style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
-          <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', uppercase: 'true', tracking: '0.05em' } as any}>Avarias Registradas</div>
+          <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Avarias Registradas</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.totalDamages}</div>
           <div style={{ fontSize: '0.72rem', color: stats.totalDamages > 0 ? '#ef4444' : 'var(--text-muted)' }}>
             ⚠️ {stats.totalDamages > 0 ? 'Danos aparentes encontrados' : 'Nenhuma avaria'}
@@ -154,14 +154,14 @@ export default function DashboardView({ saved }: Props) {
 
         {/* Card 3 */}
         <div style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
-          <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', uppercase: 'true', tracking: '0.05em' } as any}>Média Avarias/Laudo</div>
+          <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Média Avarias/Laudo</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.avgDamages}</div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Média aritmética geral</div>
         </div>
 
         {/* Card 4 */}
         <div style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
-          <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', uppercase: 'true', tracking: '0.05em' } as any}>Laudos Sem Avarias</div>
+          <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Laudos Sem Avarias</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.cleanReports}</div>
           <div style={{ fontSize: '0.72rem', color: '#10b981' }}>✨ {stats.cleanReportsPct}% das vistorias limpas</div>
         </div>
@@ -379,7 +379,7 @@ export default function DashboardView({ saved }: Props) {
         </div>
 
         {/* SLO and Diagnostics Details */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, pt: 8 } as any}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, paddingTop: 8 }}>
           {/* Uptime SLO & Health */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, background: 'rgba(0,0,0,0.08)', borderRadius: 12, padding: 16, border: '1px solid rgba(255,255,255,0.02)' }}>
             <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1' }}>📊 Indicadores de Observabilidade (SLO)</span>

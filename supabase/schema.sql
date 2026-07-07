@@ -1,5 +1,10 @@
--- Schema para o Vistoria+ (AvariasAPARENTES-PWA)
+-- Schema-base para o Vistoria+ (AvariasAPARENTES-PWA).
 -- Rode este script no SQL Editor do seu projeto Supabase (https://app.supabase.com).
+--
+-- Este arquivo é só o ponto de partida (tabelas originais). O estado atual do
+-- banco depende também das migrations em src/supabase/migrations/ (raiz do
+-- projeto Supabase CLI, com config.toml), que devem ser aplicadas em seguida,
+-- em ordem de nome de arquivo. `npm run db:push` já faz as duas coisas.
 
 create table if not exists vehicle_inspections (
   id text primary key,
