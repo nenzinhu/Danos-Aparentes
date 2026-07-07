@@ -2293,10 +2293,10 @@ BLOG_POSTS.unshift(
 
         <h2 id="as-4-vistas">As 4 vistas do veículo</h2>
         <p>
-          Em cada vista, você toca diretamente na peça avariada no diagrama — para-lama, porta,
+          No app, você toca diretamente na peça avariada no diagrama — para-lama, porta,
           para-choque, farol, lanterna — e registra o tipo de dano (risco, amassado ou quebrado) e a
-          severidade. Veja abaixo um exemplo real de cada uma das 4 vistas, cada uma com uma avaria
-          já registrada:
+          severidade. Abaixo, um exemplo (ilustrativo, não interativo) de cada uma das 4 vistas, já
+          com uma avaria registrada:
         </p>
 
         <VehicleViewsDemo />
