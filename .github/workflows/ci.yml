@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # Compara as colunas que src/lib/sync.ts grava no Supabase contra o
+      # schema real do banco de produção. Existe porque essa divergência
+      # (colunas usadas no código, nunca migradas) deixou a sincronização de
+      # vistorias quebrada silenciosamente por semanas — ver commits de
+      # 2026-07-07. Só roda quando os secrets estão configurados no repo,
+      # para não quebrar em forks/PRs externos sem acesso a eles.
+      - name: Verifica schema do Supabase (sync)
+        if: ${{ secrets.SUPABASE_ACCESS_TOKEN != '' }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+        run: npm run check:sync-schema

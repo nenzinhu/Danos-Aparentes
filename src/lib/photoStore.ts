@@ -23,6 +23,27 @@ import { supabaseEnabled } from './supabase'
 
 export const PHOTO_REF_PREFIX = 'blob:'
 
+/** Fotos processam em paralelo (compressão + upload/download), limitadas a N
+ *  por vez para não estourar memória/conexões simultâneas num mobile. */
+const PHOTO_CONCURRENCY = 4
+
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  limit: number,
+  fn: (item: T, index: number) => Promise<R>,
+): Promise<R[]> {
+  const results: R[] = new Array(items.length)
+  let cursor = 0
+  async function worker() {
+    while (cursor < items.length) {
+      const index = cursor++
+      results[index] = await fn(items[index], index)
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker))
+  return results
+}
+
 export { isStorageRef, toStorageRef, normalizeRemotePhotoRef, getStoragePublicUrl }
 
 export function isPhotoRef(ref: string): boolean {
@@ -138,8 +159,6 @@ export async function uploadDamagePhotosForSync(
   userId: string,
   inspectionId: string,
 ): Promise<{ remoteDamages: Damage[]; localDamages: Damage[] }> {
-  const remoteDamages: Damage[] = []
-  const localDamages: Damage[] = []
   const uploadTotal = countPhotosNeedingUpload(damages)
   let uploadDone = 0
 
@@ -147,72 +166,74 @@ export async function uploadDamagePhotosForSync(
     startPhotoUploadProgress(uploadTotal, 'Sincronizando fotos com a nuvem…')
   }
 
+  const remotePhotosByDamage: string[][] = damages.map(d => new Array(d.photos.length))
+  const localPhotosByDamage: string[][] = damages.map(d => new Array(d.photos.length))
+
+  const tasks: { damageIndex: number; photoIndex: number; ref: string }[] = []
+  damages.forEach((d, damageIndex) => {
+    d.photos.forEach((ref, photoIndex) => tasks.push({ damageIndex, photoIndex, ref }))
+  })
+
   try {
-    for (const d of damages) {
-      const remotePhotos: string[] = []
-      const localPhotos: string[] = []
-
-      for (const ref of d.photos) {
-        if (isStorageRef(ref)) {
-          const path = storagePathFromRef(ref)
-          remotePhotos.push(path)
-          localPhotos.push(ref)
-          continue
-        }
-
-        if (!isPhotoRef(ref) && !isInlinePhoto(ref) && ref.includes('/')) {
-          remotePhotos.push(ref)
-          localPhotos.push(toStorageRef(ref))
-          continue
-        }
-
-        if (!photoNeedsCloudUpload(ref)) {
-          remotePhotos.push(ref)
-          localPhotos.push(ref)
-          continue
-        }
-
-        const blob = await blobFromRef(ref)
-        if (!blob) {
-          remotePhotos.push(ref)
-          localPhotos.push(ref)
-          continue
-        }
-
-        updatePhotoUploadProgress({
-          phase: 'compressing',
-          current: uploadDone,
-          label: `Otimizando foto ${uploadDone + 1} de ${uploadTotal}`,
-        })
-
-        const compressed = await compressBlobForStorage(blob)
-        const photoId = createId()
-        const path = buildStoragePath(userId, inspectionId, d.id, photoId)
-
-        updatePhotoUploadProgress({
-          phase: 'uploading',
-          label: `Enviando foto ${uploadDone + 1} de ${uploadTotal}`,
-        })
-
-        await uploadPhotoBlob(compressed, path)
-        uploadDone += 1
-        updatePhotoUploadProgress({ current: uploadDone })
-
-        if (isPhotoRef(ref)) {
-          const record = await db.getPhoto(ref.slice(PHOTO_REF_PREFIX.length))
-          if (record) {
-            await db.putPhoto({ ...record, storagePath: path })
-          }
-        }
-
-        remotePhotos.push(path)
-        localPhotos.push(toStorageRef(path))
+    await mapWithConcurrency(tasks, PHOTO_CONCURRENCY, async ({ damageIndex, photoIndex, ref }) => {
+      if (isStorageRef(ref)) {
+        const path = storagePathFromRef(ref)
+        remotePhotosByDamage[damageIndex][photoIndex] = path
+        localPhotosByDamage[damageIndex][photoIndex] = ref
+        return
       }
 
-      remoteDamages.push({ ...d, photos: remotePhotos })
-      localDamages.push({ ...d, photos: localPhotos })
-    }
+      if (!isPhotoRef(ref) && !isInlinePhoto(ref) && ref.includes('/')) {
+        remotePhotosByDamage[damageIndex][photoIndex] = ref
+        localPhotosByDamage[damageIndex][photoIndex] = toStorageRef(ref)
+        return
+      }
 
+      if (!photoNeedsCloudUpload(ref)) {
+        remotePhotosByDamage[damageIndex][photoIndex] = ref
+        localPhotosByDamage[damageIndex][photoIndex] = ref
+        return
+      }
+
+      const blob = await blobFromRef(ref)
+      if (!blob) {
+        remotePhotosByDamage[damageIndex][photoIndex] = ref
+        localPhotosByDamage[damageIndex][photoIndex] = ref
+        return
+      }
+
+      updatePhotoUploadProgress({
+        phase: 'compressing',
+        current: uploadDone,
+        label: `Otimizando foto ${uploadDone + 1} de ${uploadTotal}`,
+      })
+
+      const compressed = await compressBlobForStorage(blob)
+      const photoId = createId()
+      const path = buildStoragePath(userId, inspectionId, damages[damageIndex].id, photoId)
+
+      updatePhotoUploadProgress({
+        phase: 'uploading',
+        label: `Enviando foto ${uploadDone + 1} de ${uploadTotal}`,
+      })
+
+      await uploadPhotoBlob(compressed, path)
+      uploadDone += 1
+      updatePhotoUploadProgress({ current: uploadDone })
+
+      if (isPhotoRef(ref)) {
+        const record = await db.getPhoto(ref.slice(PHOTO_REF_PREFIX.length))
+        if (record) {
+          await db.putPhoto({ ...record, storagePath: path })
+        }
+      }
+
+      remotePhotosByDamage[damageIndex][photoIndex] = path
+      localPhotosByDamage[damageIndex][photoIndex] = toStorageRef(path)
+    })
+
+    const remoteDamages = damages.map((d, i) => ({ ...d, photos: remotePhotosByDamage[i] }))
+    const localDamages = damages.map((d, i) => ({ ...d, photos: localPhotosByDamage[i] }))
     return { remoteDamages, localDamages }
   } finally {
     if (uploadTotal > 0) finishPhotoUploadProgress()
@@ -227,8 +248,6 @@ export async function uploadInteriorPhotosForSync(
   userId: string,
   inspectionId: string,
 ): Promise<{ remotePhotos: string[]; localPhotos: string[]; photoNotes: string[] }> {
-  const remotePhotos: string[] = []
-  const localPhotos: string[] = []
   const uploadTotal = countPhotosNeedingUpload([{ photos }])
   let uploadDone = 0
 
@@ -236,32 +255,35 @@ export async function uploadInteriorPhotosForSync(
     startPhotoUploadProgress(uploadTotal, 'Sincronizando fotos do interior…')
   }
 
+  const remotePhotos: string[] = new Array(photos.length)
+  const localPhotos: string[] = new Array(photos.length)
+
   try {
-    for (const ref of photos) {
+    await mapWithConcurrency(photos, PHOTO_CONCURRENCY, async (ref, index) => {
       if (isStorageRef(ref)) {
         const path = storagePathFromRef(ref)
-        remotePhotos.push(path)
-        localPhotos.push(ref)
-        continue
+        remotePhotos[index] = path
+        localPhotos[index] = ref
+        return
       }
 
       if (!isPhotoRef(ref) && !isInlinePhoto(ref) && ref.includes('/')) {
-        remotePhotos.push(ref)
-        localPhotos.push(toStorageRef(ref))
-        continue
+        remotePhotos[index] = ref
+        localPhotos[index] = toStorageRef(ref)
+        return
       }
 
       if (!photoNeedsCloudUpload(ref)) {
-        remotePhotos.push(ref)
-        localPhotos.push(ref)
-        continue
+        remotePhotos[index] = ref
+        localPhotos[index] = ref
+        return
       }
 
       const blob = await blobFromRef(ref)
       if (!blob) {
-        remotePhotos.push(ref)
-        localPhotos.push(ref)
-        continue
+        remotePhotos[index] = ref
+        localPhotos[index] = ref
+        return
       }
 
       updatePhotoUploadProgress({
@@ -290,9 +312,9 @@ export async function uploadInteriorPhotosForSync(
         }
       }
 
-      remotePhotos.push(path)
-      localPhotos.push(toStorageRef(path))
-    }
+      remotePhotos[index] = path
+      localPhotos[index] = toStorageRef(path)
+    })
 
     return { remotePhotos, localPhotos, photoNotes }
   } finally {
@@ -326,13 +348,10 @@ export async function resolvePhotos(photos: string[]): Promise<string[]> {
 
 export async function prefetchReportPhotoCache(damages: Damage[]): Promise<void> {
   if (!supabaseEnabled || !navigator.onLine) return
-  for (const d of damages) {
-    for (const ref of d.photos) {
-      if (isStorageRef(ref) || (!isInlinePhoto(ref) && !isPhotoRef(ref) && ref.includes('/'))) {
-        await cacheStoragePhoto(ref)
-      }
-    }
-  }
+  const refs = damages.flatMap(d => d.photos).filter(
+    ref => isStorageRef(ref) || (!isInlinePhoto(ref) && !isPhotoRef(ref) && ref.includes('/')),
+  )
+  await mapWithConcurrency(refs, PHOTO_CONCURRENCY, ref => cacheStoragePhoto(ref))
 }
 
 export function normalizeDamagePhotos(photos: string[]): string[] {

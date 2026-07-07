@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "db:push": "node scripts/push-schema.mjs",
+    "check:sync-schema": "node scripts/check-sync-schema.mjs",
     "indexnow": "node scripts/indexnow.mjs",
     "email:config": "node scripts/configure-email.mjs",
     "logos": "node scripts/prepare-logos.mjs"
