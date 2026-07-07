@@ -1,5 +1,6 @@
 import React from 'react'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
+import VehicleViewsDemo from '@/src/components/blog/VehicleViewsDemo'
 
 export interface BlogPost {
   slug: string
@@ -2261,6 +2262,54 @@ BLOG_POSTS.unshift(
           {' '}e{' '}
           <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de vistoria de devolução para locadoras</a>.
         </p>
+      </>
+    ),
+  },
+)
+
+BLOG_POSTS.unshift(
+  {
+    slug: 'vistoria-nas-4-vistas-do-veiculo',
+    title: 'Como a vistoria cobre as 4 vistas do veículo (com fotos por avaria)',
+    excerpt:
+      'Veja como o app guia a vistoria pelas 4 vistas do veículo — lateral esquerda, lateral direita, frontal e traseira — e como cada avaria pode levar suas próprias fotos.',
+    category: 'Vistoria',
+    tags: ['diagrama do veículo', 'avarias', 'fotos', 'vistoria'],
+    date: '2026-07-07',
+    readingMinutes: 4,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '🚗', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'as-4-vistas', label: 'As 4 vistas do veículo' },
+      { id: 'fotos-por-avaria', label: 'Uma foto por avaria' },
+    ],
+    content: (
+      <>
+        <p>
+          Uma vistoria completa não olha o carro só de um ângulo. O app guia você pelas{' '}
+          <strong>4 vistas do veículo</strong> — lateral esquerda, lateral direita, frontal e
+          traseira — para que nenhuma avaria fique de fora do laudo.
+        </p>
+
+        <h2 id="as-4-vistas">As 4 vistas do veículo</h2>
+        <p>
+          Em cada vista, você toca diretamente na peça avariada no diagrama — para-lama, porta,
+          para-choque, farol, lanterna — e registra o tipo de dano (risco, amassado ou quebrado) e a
+          severidade. Veja abaixo um exemplo real de cada uma das 4 vistas, cada uma com uma avaria
+          já registrada:
+        </p>
+
+        <VehicleViewsDemo />
+
+        <h2 id="fotos-por-avaria">Uma foto por avaria</h2>
+        <p>
+          Cada avaria registrada pode receber <strong>suas próprias fotos</strong> — não é uma galeria
+          genérica do veículo, é a foto anexada exatamente àquele risco ou amassado, na peça certa.
+          Isso elimina a dúvida clássica de laudo em papel: qual foto era de qual dano. Quando o
+          aparelho tem GPS disponível, a localização da vistoria também fica registrada.
+        </p>
+
+        <Cta />
       </>
     ),
   },
