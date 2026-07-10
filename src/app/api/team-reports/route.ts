@@ -1,23 +1,24 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { supabaseAdmin } from './_lib/supabaseAdmin.js'
-import { getUserFromRequest } from './_lib/getUserFromRequest.js'
+import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin';
+import { getUserFromRequest } from '@/src/lib/server/auth';
 
-const STORAGE_REF_PREFIX = 'storage:'
+const STORAGE_REF_PREFIX = 'storage:';
 
 function normalizeRemotePhotoRef(ref: string): string {
-  if (ref.startsWith('data:') || ref.startsWith(STORAGE_REF_PREFIX)) return ref
-  return `${STORAGE_REF_PREFIX}${ref}`
+  if (ref.startsWith('data:') || ref.startsWith(STORAGE_REF_PREFIX)) return ref;
+  return `${STORAGE_REF_PREFIX}${ref}`;
 }
 
 async function isCorporate(userId: string): Promise<boolean> {
+  if (!supabaseAdmin) return false;
   const { data } = await supabaseAdmin
     .from('subscriptions')
     .select('status, trial_ends_at, plan_tier')
     .eq('user_id', userId)
-    .maybeSingle()
-  if (!data || data.plan_tier !== 'corporativo') return false
-  const trialActive = new Date(data.trial_ends_at).getTime() > Date.now()
-  return data.status === 'active' || (data.status === 'trialing' && trialActive)
+    .maybeSingle();
+  if (!data || data.plan_tier !== 'corporativo') return false;
+  const trialActive = new Date(data.trial_ends_at).getTime() > Date.now();
+  return data.status === 'active' || (data.status === 'trialing' && trialActive);
 }
 
 function mapInspection(insp: Record<string, unknown>, damages: Record<string, unknown>[]) {
@@ -41,24 +42,21 @@ function mapInspection(insp: Record<string, unknown>, damages: Record<string, un
         photos: ((d.photos as string[] | null) ?? []).map(normalizeRemotePhotoRef),
         photoNotes: (d.photo_notes as string[] | null) ?? [],
       })),
-  }
+  };
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'GET') {
-    res.status(405).json({ error: 'Método não permitido' })
-    return
+export async function GET(req: NextRequest) {
+  const user = await getUserFromRequest(req);
+  if (!user) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
   }
 
-  const user = await getUserFromRequest(req)
-  if (!user) {
-    res.status(401).json({ error: 'Não autenticado' })
-    return
+  if (!supabaseAdmin) {
+    return NextResponse.json({ error: 'Supabase não configurado' }, { status: 500 });
   }
 
   if (!(await isCorporate(user.id))) {
-    res.status(403).json({ error: 'Recurso disponível apenas no plano Corporativo' })
-    return
+    return NextResponse.json({ error: 'Recurso disponível apenas no plano Corporativo' }, { status: 403 });
   }
 
   try {
@@ -66,49 +64,51 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       .from('companies')
       .select('id')
       .eq('owner_id', user.id)
-      .maybeSingle()
+      .maybeSingle();
 
     if (!company) {
-      res.status(200).json({ members: [], reports: [] })
-      return
+      return NextResponse.json({ members: [], reports: [] });
     }
 
     const { data: members, error: membersError } = await supabaseAdmin
       .from('team_members')
       .select('user_id, invited_email, status, invited_at, joined_at')
-      .eq('company_id', company.id)
-    if (membersError) throw membersError
+      .eq('company_id', company.id);
+    if (membersError) throw membersError;
 
     const acceptedUserIds = (members ?? [])
       .filter(m => m.status === 'accepted' && m.user_id)
-      .map(m => m.user_id as string)
+      .map(m => m.user_id as string);
 
-    const emailByUserId = new Map((members ?? []).map(m => [m.user_id, m.invited_email]))
+    const emailByUserId = new Map((members ?? []).map(m => [m.user_id, m.invited_email]));
 
-    let reports: { inspectorEmail: string; report: ReturnType<typeof mapInspection> }[] = []
+    let reports: { inspectorEmail: string; report: ReturnType<typeof mapInspection> }[] = [];
     if (acceptedUserIds.length > 0) {
       const { data: inspections, error: inspError } = await supabaseAdmin
         .from('vehicle_inspections')
         .select('*')
-        .in('user_id', acceptedUserIds)
-      if (inspError) throw inspError
+        .in('user_id', acceptedUserIds);
+      if (inspError) throw inspError;
 
       const { data: damages, error: dmgError } = await supabaseAdmin
         .from('damages')
         .select('*')
-        .in('user_id', acceptedUserIds)
-      if (dmgError) throw dmgError
+        .in('user_id', acceptedUserIds);
+      if (dmgError) throw dmgError;
 
-      const damageRows = (damages ?? []) as Record<string, unknown>[]
+      const damageRows = (damages ?? []) as Record<string, unknown>[];
       reports = (inspections ?? []).map((insp) => ({
         inspectorEmail: emailByUserId.get(insp.user_id as string) || '',
         report: mapInspection(insp as Record<string, unknown>, damageRows),
-      }))
+      }));
     }
 
-    res.status(200).json({ members: members ?? [], reports })
+    return NextResponse.json({ members: members ?? [], reports });
   } catch (err) {
-    console.error('Erro ao buscar laudos da equipe:', err)
-    res.status(500).json({ error: 'Erro ao buscar laudos da equipe. Tente novamente em alguns instantes.' })
+    console.error('Erro ao buscar laudos da equipe:', err);
+    return NextResponse.json(
+      { error: 'Erro ao buscar laudos da equipe. Tente novamente em alguns instantes.' },
+      { status: 500 },
+    );
   }
 }
