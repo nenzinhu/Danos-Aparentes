@@ -9,6 +9,8 @@ import dynamic from 'next/dynamic';
 import { LEGAL_CONTACT_EMAIL } from '../components/LegalContent';
 import LandingCtaLink from '../components/LandingCtaLink';
 import Reveal from '../components/Reveal';
+import TrustSection from '../components/TrustSection';
+import FinalCtaSection from '../components/FinalCtaSection';
 import { motion, useReducedMotion } from 'framer-motion';
 import HeroCarStage, { heroCarVariant, heroTagVariant, heroSpecCellVariant, heroSpecStage } from '../components/HeroCarStage';
 import type { Damage } from '../types';
@@ -38,6 +40,31 @@ const LANDING_JSONLD = {
     url: 'https://danosaparentes.com.br',
     logo: 'https://danosaparentes.com.br/logo-full.png',
   },
+};
+
+// Mesmas 3 perguntas exibidas na PricingSection (client, ssr:false) — replicadas
+// aqui em texto puro porque só um componente renderizado no servidor entra no
+// HTML inicial que o Google rastreia para rich results de FAQ.
+const PRICING_FAQ_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Preciso de cartão para testar o Danos Aparentes?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Não. Os 7 dias grátis começam sem cobrança nem dados de cartão.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'Posso cancelar a assinatura quando quiser?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Sim, direto pelo portal de assinatura, sem multa e sem falar com ninguém.' },
+    },
+    {
+      '@type': 'Question',
+      name: 'E se eu passar do plano Pro?',
+      acceptedAnswer: { '@type': 'Answer', text: 'Frotistas e equipes falam com a gente pelo plano Corporativo, sob medida.' },
+    },
+  ],
 };
 
 const PricingSection = dynamic(() => import('../components/PricingSection'), { ssr: false });
@@ -184,6 +211,7 @@ export default function LandingPage() {
     <DirectionalTransition>
       <div className="min-h-screen w-full bg-[var(--bg-main)] text-[var(--text-main)] transition-colors duration-300 font-outfit overflow-y-auto flex flex-col relative selection:bg-primary selection:text-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(LANDING_JSONLD) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PRICING_FAQ_JSONLD) }} />
       <IntroVideo />
 
       {/* Hide native browser details arrows */}
@@ -395,6 +423,9 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Segurança e transparência do laudo */}
+      <TrustSection />
+
       {/* Modelos de Veículos Suportados (lazy) */}
       <VehicleShowcaseSection />
 
@@ -407,6 +438,8 @@ export default function LandingPage() {
       <PricingSection />
 
       <FAQSection items={faqItems} />
+
+      <FinalCtaSection />
 
       <MobileStickyCta heroCtaId="hero-primary-cta" />
 
