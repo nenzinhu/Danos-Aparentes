@@ -82,12 +82,12 @@ function TextCarousel() {
     {
       title: (
         <>
-          O jeito mais fácil de registrar <br />
-          <span className="text-[var(--signal-bright)] italic">riscos e amassados no carro.</span>
+          Chega de discutir amassado <br />
+          <span className="text-[var(--signal-bright)] italic">que já existia no carro.</span>
         </>
       ),
       description:
-        'Diga adeus ao papel: toque no desenho do veículo para marcar onde está a avaria, tire fotos com o celular e gere um laudo profissional em menos de 1 minuto.',
+        'Prove com foto, GPS e assinatura antes de sair do pátio. Vistoria completa em minutos, laudo em PDF com hash de segurança e QR Code, pronto pra mandar no WhatsApp.',
     },
     {
       title: (
