@@ -3,6 +3,7 @@ import React from 'react';
 import LandingCtaLink from './LandingCtaLink';
 import Reveal from './Reveal';
 import { buttonVariants } from './ui/Button';
+import { whatsappLink } from '../lib/whatsapp';
 
 export default function PricingSection() {
   return (
@@ -58,6 +59,9 @@ export default function PricingSection() {
             <LandingCtaLink className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}>
               Testar 7 dias grátis
             </LandingCtaLink>
+            <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
+              Cancele quando quiser, sem multa e sem burocracia.
+            </p>
           </div>
         </div>
 
@@ -92,7 +96,7 @@ export default function PricingSection() {
           
           <div className="mt-8">
             <a
-              href="https://wa.me/5548991838234?text=Olá! Gostaria de saber mais sobre o plano Corporativo (Empresas) do app Danos Aparentes."
+              href={whatsappLink('Olá! Gostaria de saber mais sobre o plano Corporativo (Empresas) do app Danos Aparentes.')}
               target="_blank"
               rel="noopener noreferrer"
               className={buttonVariants({ variant: 'secondary', size: 'md', className: 'w-full' })}
@@ -102,6 +106,25 @@ export default function PricingSection() {
           </div>
         </div>
       </div>
+
+      <div className="max-w-3xl mx-auto mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+        {[
+          { q: 'Preciso de cartão para testar?', a: 'Não. Os 7 dias grátis começam sem cobrança nem dados de cartão.' },
+          { q: 'Posso cancelar quando quiser?', a: 'Sim, direto pelo portal de assinatura, sem multa e sem falar com ninguém.' },
+          { q: 'E se eu passar do plano Pro?', a: 'Frotistas e equipes falam com a gente pelo plano Corporativo, sob medida.' },
+        ].map(({ q, a }) => (
+          <div key={q}>
+            <p className="text-xs font-bold text-[var(--text-main)]">{q}</p>
+            <p className="text-[11px] text-[var(--text-muted)] mt-1.5">{a}</p>
+          </div>
+        ))}
+      </div>
+      <p className="text-center text-xs text-[var(--text-muted)] mt-8">
+        Mais dúvidas sobre a assinatura?{' '}
+        <a href="/faq" className="font-bold text-[var(--primary)] hover:underline">
+          Veja o FAQ completo
+        </a>
+      </p>
     </section>
   );
 }

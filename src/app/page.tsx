@@ -11,6 +11,7 @@ import LandingCtaLink from '../components/LandingCtaLink';
 import Reveal from '../components/Reveal';
 import TrustSection from '../components/TrustSection';
 import FinalCtaSection from '../components/FinalCtaSection';
+import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, useReducedMotion } from 'framer-motion';
 import HeroCarStage, { heroCarVariant, heroTagVariant, heroSpecCellVariant, heroSpecStage } from '../components/HeroCarStage';
 import type { Damage } from '../types';
@@ -442,6 +443,8 @@ export default function LandingPage() {
       <FinalCtaSection />
 
       <MobileStickyCta heroCtaId="hero-primary-cta" />
+
+      <FloatingWhatsAppButton />
 
       {/* Footer */}
       <footer className="w-full px-8 py-8 flex flex-col gap-6 text-[10px] font-black tracking-widest text-[var(--text-muted)] uppercase shrink-0 z-50 border-t border-[var(--card-border)]/20 bg-[var(--panel-bg)]">

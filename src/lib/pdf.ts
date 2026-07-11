@@ -24,8 +24,22 @@ export interface SvgPdfData {
   svgCaptures: Record<string, string>
 }
 
+interface PdfTheme {
+  fontMain: string
+  fontTitle: string
+  bgMain: string
+  textMain: string
+  textMuted: string
+  accentColor: string
+  borderColor: string
+  borderLight: string
+  cardBg: string
+  headerBg: string
+  colorStripe: string
+}
+
 // ─── Badge Genérica ───────────────────────────────────────────────────────────
-function pillBadge(label: string, color: string, bg: string, theme: any): string {
+function pillBadge(label: string, color: string, bg: string, theme: PdfTheme): string {
   return `<span style="display:inline-block;padding:2px 10px;background:${bg};border:1px solid ${color}20;color:${color};font-size:8px;font-weight:700;border-radius:20px;text-transform:uppercase;letter-spacing:0.04em;font-family:${theme.fontTitle};white-space:nowrap;">${label}</span>`
 }
 
@@ -112,7 +126,7 @@ async function registerHash(hash: string, info: VehicleInfo, damages: Damage[], 
 }
 
 // ─── Section title ────────────────────────────────────────────────────────────
-function sectionTitle(text: string, theme: any): string {
+function sectionTitle(text: string, theme: PdfTheme): string {
   return `<div style="margin-top:6px; margin-bottom:5px; display:flex; align-items:center;">
     <div class="sec-title-bar" style="width:3px; height:11px; background:${theme.accentColor}; border-radius:1px; margin-right:7px;"></div>
     <span class="sec-title-text" style="font-size:9px; font-weight:800; color:${theme.textMain}; text-transform:uppercase; letter-spacing:0.08em; font-family:${theme.fontTitle};">${text}</span>
@@ -120,7 +134,7 @@ function sectionTitle(text: string, theme: any): string {
 }
 
 // ─── Badge de status (topo do relatório) ─────────────────────────────────────
-function buildStatusBadge(damages: Damage[], theme: any): string {
+function buildStatusBadge(damages: Damage[], theme: PdfTheme): string {
   const hasHigh = damages.some(d => d.severity === 'high')
   const hasMed  = damages.some(d => d.severity === 'medium')
   let bg: string, color: string, label: string
@@ -144,7 +158,7 @@ function buildStatusBadge(damages: Damage[], theme: any): string {
 
 
 // ─── Tabela de identificação ──────────────────────────────────────────────────
-function buildInfoTable(info: VehicleInfo, theme: any): string {
+function buildInfoTable(info: VehicleInfo, theme: PdfTheme): string {
   function cell(label: string, val: string): string {
     if (!label && !val) {
       return `<td colspan="2" style="border:none;background:transparent;"></td>`
@@ -183,7 +197,7 @@ function buildInfoTable(info: VehicleInfo, theme: any): string {
 }
 
 // ─── Resumo estatístico ───────────────────────────────────────────────────────
-function buildSummary(damages: Damage[], theme: any): string {
+function buildSummary(damages: Damage[], theme: PdfTheme): string {
   const c = { low: 0, medium: 0, high: 0 }
   damages.forEach(d => { if (d.severity in c) c[d.severity as keyof typeof c]++ })
   const total = damages.length
@@ -213,7 +227,7 @@ function buildSummary(damages: Damage[], theme: any): string {
 }
 
 // ─── Silhueta com as vistas que possuem avarias ────────────────────────────────
-function buildSvgMaps(damages: Damage[], svgData: SvgPdfData | undefined, theme: any): string {
+function buildSvgMaps(damages: Damage[], svgData: SvgPdfData | undefined, theme: PdfTheme): string {
   const hasFocus = svgData && Object.keys(svgData.svgCaptures).length > 0
   if (!hasFocus) return ''
 
@@ -278,7 +292,7 @@ function buildSvgMaps(damages: Damage[], svgData: SvgPdfData | undefined, theme:
 }
 
 // ─── Tabela de detalhamento ───────────────────────────────────────────────────
-function buildDamageTable(damages: Damage[], svgData: SvgPdfData | undefined, theme: any): string {
+function buildDamageTable(damages: Damage[], svgData: SvgPdfData | undefined, theme: PdfTheme): string {
   if (damages.length === 0) {
     return `<div style="margin-bottom:5px;text-align:center;padding:16px;border:1px dashed ${theme.borderColor};border-radius:8px;background:${theme.cardBg};">
       <p style="font-size:10px;color:${theme.textMuted};font-style:italic;font-family:${theme.fontMain};">Nenhuma avaria registrada neste veículo.</p>
@@ -323,7 +337,7 @@ function buildDamageTable(damages: Damage[], svgData: SvgPdfData | undefined, th
 }
 
 // ─── Galeria fotográfica (3 colunas) ──────────────────────────────────────────
-function buildPhotoSection(damages: Damage[], theme: any): string {
+function buildPhotoSection(damages: Damage[], theme: PdfTheme): string {
   const photos: { src: string; caption: string; part: string; type: string; sev: Severity }[] = []
   damages.forEach(d => {
     d.photos.forEach((src, i) => {
@@ -361,7 +375,7 @@ function buildPhotoSection(damages: Damage[], theme: any): string {
 }
 
 // ─── Observações do interior ──────────────────────────────────────────────────
-function buildInteriorSection(info: VehicleInfo, theme: any): string {
+function buildInteriorSection(info: VehicleInfo, theme: PdfTheme): string {
   const notes = info.interiorNotes || ''
   const photos = info.interiorPhotos || []
   if (!notes && photos.length === 0) return ''
@@ -402,7 +416,7 @@ function buildInteriorSection(info: VehicleInfo, theme: any): string {
 }
 
 // ─── Assinaturas ──────────────────────────────────────────────────────────────
-function buildSignature(info: VehicleInfo, theme: any, dateStr: string): string {
+function buildSignature(info: VehicleInfo, theme: PdfTheme, dateStr: string): string {
   const inspectorImg = info.inspectorSignature
     ? `<div style="height:32px;text-align:center;margin-bottom:2px;"><img src="${info.inspectorSignature}" style="max-height:32px;max-width:180px;display:inline-block;vertical-align:bottom;" /></div>`
     : '<div style="height:32px;"></div>'

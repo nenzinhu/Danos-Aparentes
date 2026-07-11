@@ -2191,7 +2191,7 @@ BLOG_POSTS.unshift(
 
         <h2 id="como-escolher">Como escolher o ideal pra sua operação</h2>
         <p>
-          Não existe modelo "certo" — existe o que combina com quem vai receber o laudo. Uma seguradora
+          Não existe modelo &ldquo;certo&rdquo; — existe o que combina com quem vai receber o laudo. Uma seguradora
           tende a preferir o Técnico ou o Corporativo; uma locadora mais moderna pode preferir o Minimalista
           ou o Vibrante. O importante é que o layout reforce a seriedade do documento, não o contrário.
         </p>
