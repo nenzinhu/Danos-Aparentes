@@ -1,6 +1,7 @@
 import React from 'react'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import VehicleViewsDemo from '@/src/components/blog/VehicleViewsDemo'
+import { BlogVideo } from '@/src/components/blog/BlogVideo'
 import LandingCtaLink from '@/src/components/LandingCtaLink'
 
 export interface BlogPost {
@@ -92,6 +93,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'Vistoria',
     tags: ['laudo de vistoria', 'avarias', 'checklist', 'locadora', 'seguradora'],
     date: '2026-06-28',
+    updatedDate: '2026-07-12',
     readingMinutes: 7,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '📋', image: '/vehicles-img/car.png' },
@@ -143,6 +145,17 @@ export const BLOG_POSTS: BlogPost[] = [
         </ul>
 
         <h2 id="passo-a-passo">Passo a passo de uma vistoria à prova de contestação</h2>
+
+        <BlogVideo
+          src="/videos/vistoria-digital-tour.mp4"
+          poster="/videos/vistoria-digital-tour-poster.jpg"
+          title="Como funciona a vistoria digital do Danos Aparentes"
+          description="O fluxo completo em 60 segundos: consulta automática da placa, marcação de avarias por toque no diagrama, assinatura na tela e laudo em PDF com hash SHA-256 e QR Code de verificação."
+          duration="PT58S"
+          uploadDate="2026-07-12"
+          caption="O fluxo digital em 60 segundos: placa, toque no diagrama, assinatura e laudo verificável."
+        />
+
         <p>O método é sempre o mesmo, independentemente do tipo de veículo:</p>
         <ul>
           <li><strong>1. Identifique o veículo</strong> — placa, marca/modelo, cor e quilometragem. Erros aqui derrubam o documento inteiro.</li>
@@ -723,6 +736,7 @@ const RAIN_POSTS: BlogPost[] = [
     category: 'Comparativo',
     tags: ['antes e depois', 'vistoria digital', 'prancheta', 'laudo veicular', 'produtividade'],
     date: '2026-07-04',
+    updatedDate: '2026-07-12',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0f766e 45%,#22c55e 100%)', emoji: '📱', image: '/vehicles-img/car2d.png' },
@@ -740,6 +754,16 @@ const RAIN_POSTS: BlogPost[] = [
           e o laudo já nasce pronto para envio. No <strong>Danos Aparentes</strong>, essa virada fica visível
           já na rotina do pátio.
         </p>
+
+        <BlogVideo
+          src="/videos/vistoria-digital-promo.mp4"
+          poster="/videos/vistoria-digital-promo-poster.jpg"
+          title="Antes e depois da vistoria digital em 60 segundos"
+          description="De 20 minutos de burocracia com papel e prancheta para 3 toques na tela: laudo 100% digital, assinado na tela, com GPS, hora exata, hash SHA-256 e QR Code — funcionando até offline."
+          duration="PT58S"
+          uploadDate="2026-07-12"
+          caption="O antes e depois da vistoria em 60 segundos — de papel e prancheta para 3 toques na tela."
+        />
 
         <h2 id="antes">Como funciona o antes</h2>
         <ul>
