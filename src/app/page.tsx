@@ -23,6 +23,10 @@ const HERO_DAMAGES: Damage[] = [
   { id: 'hero-2' as Damage['id'], vehicle: 'car', view: 'lateral-left', partId: 'car-ll-door-rear', partName: 'Porta Traseira Esquerda', type: 'scratch', typeName: 'Risco', severity: 'low', notes: '', photos: [], photoNotes: [] },
 ];
 
+// Data da última revisão de conteúdo/copy da home. Atualize ao editar
+// headline, seções ou schema — reflete no dateModified do SoftwareApplication.
+const HOME_UPDATED_DATE = '2026-07-11'
+
 // Schema de marca/produto para rich results e Knowledge Graph.
 const LANDING_JSONLD = {
   '@context': 'https://schema.org',
@@ -34,6 +38,7 @@ const LANDING_JSONLD = {
   description:
     'Aplicativo de vistoria veicular: marque avarias em diagramas do veículo, anexe fotos com GPS e gere laudos em PDF com hash de validação e QR Code.',
   inLanguage: 'pt-BR',
+  dateModified: HOME_UPDATED_DATE,
   offers: { '@type': 'Offer', category: 'subscription' },
   publisher: {
     '@type': 'Organization',
@@ -43,35 +48,32 @@ const LANDING_JSONLD = {
   },
 };
 
-// Mesmas 3 perguntas exibidas na PricingSection (client, ssr:false) — replicadas
-// aqui em texto puro porque só um componente renderizado no servidor entra no
-// HTML inicial que o Google rastreia para rich results de FAQ.
+// Fonte única das perguntas do FAQ: usada tanto pelo FAQSection (visível)
+// quanto pelo JSON-LD abaixo (schema), para as duas nunca divergirem.
+const FAQ_ITEMS = [
+  { q: "Qual o valor da assinatura do aplicativo?", a: "O plano Profissional (Pro) custa R$ 49,90 por mês com vistorias ilimitadas, relatórios personalizados, consulta de placas e todas as funcionalidades liberadas. Para frotas e empresas com múltiplos vistoriadores, temos o plano Corporativo com preços sob medida – consulte-nos clicando em 'Consulte Conosco'." },
+  { q: "O que é o hash do PDF e a assinatura digital?", a: "O hash é um código de segurança único (SHA-256) gerado para cada PDF que comprova que o documento não foi alterado. Além disso, o laudo possui um sistema de assinatura digital na tela, onde o vistoriador e o cliente assinam diretamente no celular." },
+  { q: "Preciso de internet para fazer as vistorias?", a: "Não! O aplicativo foi desenvolvido para funcionar 100% offline. Você pode fazer a vistoria, marcar as avarias, tirar fotos e colher assinaturas em locais sem sinal. Os dados são salvos localmente e sincronizados na nuvem assim que houver internet." },
+  { q: "Como funciona a consulta de placas?", a: "Ao inserir a placa do veículo, o sistema realiza uma consulta automática e preenche de forma instantânea a marca, modelo, ano, cor e município do veículo, agilizando o processo de vistoria." },
+  { q: "Consigo personalizar o relatório com meu logotipo?", a: "Sim! Usuários do plano Vistoria PRO podem configurar o nome da empresa e carregar seu próprio logotipo, que aparecerá de forma elegante no cabeçalho de todos os laudos gerados." },
+  { q: "Quais são os tipos de veículos suportados?", a: "O aplicativo suporta a inspeção interativa em 6 categorias de veículos: Carro, Moto, Caminhão, Utilitário (Van), Ônibus e um modelo Genérico/Customizável, todos com 4 vistas em SVG clicáveis." },
+  { q: "Como posso enviar o laudo para o cliente?", a: "Você pode exportar o laudo como um arquivo PDF profissional, gerar um relatório em formato de texto para copiar/enviar por e-mail ou mandar o PDF diretamente pelo WhatsApp do cliente." },
+];
+
 const PRICING_FAQ_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: 'Preciso de cartão para testar o Danos Aparentes?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Não. Os 7 dias grátis começam sem cobrança nem dados de cartão.' },
-    },
-    {
-      '@type': 'Question',
-      name: 'Posso cancelar a assinatura quando quiser?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Sim, direto pelo portal de assinatura, sem multa e sem falar com ninguém.' },
-    },
-    {
-      '@type': 'Question',
-      name: 'E se eu passar do plano Pro?',
-      acceptedAnswer: { '@type': 'Answer', text: 'Frotistas e equipes falam com a gente pelo plano Corporativo, sob medida.' },
-    },
-  ],
+  mainEntity: FAQ_ITEMS.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
 };
 
-const PricingSection = dynamic(() => import('../components/PricingSection'), { ssr: false });
-const FAQSection = dynamic(() => import('../components/FAQSection'), { ssr: false });
-const VehicleShowcaseSection = dynamic(() => import('../components/VehicleShowcaseSection'), { ssr: false });
-const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'), { ssr: false });
+const PricingSection = dynamic(() => import('../components/PricingSection'));
+const FAQSection = dynamic(() => import('../components/FAQSection'));
+const VehicleShowcaseSection = dynamic(() => import('../components/VehicleShowcaseSection'));
+const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'));
 const CarLateralLeft = dynamic(() => import('../components/vehicles/CarLateralLeft'), { ssr: false });
 const VehicleDefs = dynamic(() => import('../components/vehicles/VehicleDefs'), { ssr: false });
 const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'), { ssr: false });
@@ -82,12 +84,12 @@ function TextCarousel() {
     {
       title: (
         <>
-          Chega de discutir amassado <br />
-          <span className="text-[var(--signal-bright)] italic">que já existia no carro.</span>
+          Vistoria veicular digital <br />
+          <span className="text-[var(--signal-bright)] italic">que prova a si mesma.</span>
         </>
       ),
       description:
-        'Prove com foto, GPS e assinatura antes de sair do pátio. Vistoria completa em minutos, laudo em PDF com hash de segurança e QR Code, pronto pra mandar no WhatsApp.',
+        'Chega de discutir amassado que já existia no carro. Marque avarias no diagrama, prove com foto, GPS e assinatura antes de sair do pátio. Laudo em PDF com hash de segurança e QR Code, pronto pra mandar no WhatsApp.',
     },
     {
       title: (
@@ -180,31 +182,12 @@ export default function LandingPage() {
     localStorage.setItem('darkMode', String(nextDark));
   };
 
-  const faqItems = [
-    { q: "Qual o valor da assinatura do aplicativo?", a: "O plano Profissional (Pro) custa R$ 49,90 por mês com vistorias ilimitadas, relatórios personalizados, consulta de placas e todas as funcionalidades liberadas. Para frotas e empresas com múltiplos vistoriadores, temos o plano Corporativo com preços sob medida – consulte-nos clicando em 'Consulte Conosco'." },
-    { q: "O que é o hash do PDF e a assinatura digital?", a: "O hash é um código de segurança único (SHA-256) gerado para cada PDF que comprova que o documento não foi alterado. Além disso, o laudo possui um sistema de assinatura digital na tela, onde o vistoriador e o cliente assinam diretamente no celular." },
-    { q: "Preciso de internet para fazer as vistorias?", a: "Não! O aplicativo foi desenvolvido para funcionar 100% offline. Você pode fazer a vistoria, marcar as avarias, tirar fotos e colher assinaturas em locais sem sinal. Os dados são salvos localmente e sincronizados na nuvem assim que houver internet." },
-    { q: "Como funciona a consulta de placas?", a: "Ao inserir a placa do veículo, o sistema realiza uma consulta automática e preenche de forma instantânea a marca, modelo, ano, cor e município do veículo, agilizando o processo de vistoria." },
-    { q: "Consigo personalizar o relatório com meu logotipo?", a: "Sim! Usuários do plano Vistoria PRO podem configurar o nome da empresa e carregar seu próprio logotipo, que aparecerá de forma elegante no cabeçalho de todos os laudos gerados." },
-    { q: "Quais são os tipos de veículos suportados?", a: "O aplicativo suporta a inspeção interativa em 6 categorias de veículos: Carro, Moto, Caminhão, Utilitário (Van), Ônibus e um modelo Genérico/Customizável, todos com 4 vistas em SVG clicáveis." },
-    { q: "Como posso enviar o laudo para o cliente?", a: "Você pode exportar o laudo como um arquivo PDF profissional, gerar um relatório em formato de texto para copiar/enviar por e-mail ou mandar o PDF diretamente pelo WhatsApp do cliente." }
-  ];
-
   // Helper for smooth scrolling to FAQ
   const scrollToFaq = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const faqElement = document.getElementById('faq');
     if (faqElement) {
       faqElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  // Helper for smooth scrolling to Pricing
-  const scrollToPricing = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const pricingElement = document.getElementById('pricing');
-    if (pricingElement) {
-      pricingElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -233,15 +216,15 @@ export default function LandingPage() {
       {/* Header */}
       <header className="w-full px-4 sm:px-8 py-6 flex justify-between items-center gap-3 z-50 shrink-0">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          <Image src="/logo.svg" alt="Logo" width={48} height={48} className="object-contain shrink-0" priority />
+          <Image src="/logo.svg" alt="Danos Aparentes" width={48} height={48} className="object-contain shrink-0" priority />
           <span className="hidden sm:inline text-base sm:text-lg font-extrabold tracking-tight uppercase bg-clip-text text-transparent whitespace-nowrap" style={{ backgroundImage: 'var(--header-title-gradient)' }}>
             Danos Aparentes
           </span>
         </div>
         <nav className="flex items-center gap-3 sm:gap-6 shrink-0">
-          <a href="#pricing" onClick={scrollToPricing} className="hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
+          <Link href="/planos" className="hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             Planos
-          </a>
+          </Link>
           <a href="#faq" onClick={scrollToFaq} className="hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             FAQ
           </a>
@@ -438,7 +421,7 @@ export default function LandingPage() {
 
       <PricingSection />
 
-      <FAQSection items={faqItems} />
+      <FAQSection items={FAQ_ITEMS} />
 
       <FinalCtaSection />
 
@@ -465,7 +448,10 @@ export default function LandingPage() {
             <span>© 2026 Danos Aparentes</span>
             <span className="hidden md:inline">Vistoria Digital de Alta Fidelidade</span>
           </div>
-          <div className="flex gap-8">
+          <div className="flex gap-8 flex-wrap justify-center">
+            <a href="/locadoras" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Locadoras</a>
+            <a href="/demo" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Demonstração</a>
+            <a href="/verify" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Verificar Laudo</a>
             <a href="/blog" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Blog</a>
             <a href="/faq" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">FAQ</a>
             <a href="/privacidade" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Privacidade</a>

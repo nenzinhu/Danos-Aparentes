@@ -204,6 +204,8 @@ export default function VehicleShowcaseSection() {
                 alt={`Diagrama lateral do veículo: ${vehicleOptions.find(o => o.type === activeVehicle)?.name || ''}`}
                 loading="lazy"
                 decoding="async"
+                width={828}
+                height={352}
                 className="w-full h-auto"
               />
             </div>

@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Link from 'next/link';
 import LandingCtaLink from './LandingCtaLink';
 import { buttonVariants } from './ui/Button';
 import { whatsappLink } from '../lib/whatsapp';
@@ -95,6 +96,11 @@ export default function PricingCards() {
           </a>
           <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
             Preço sob consulta porque varia por volume e integrações — resposta em minutos.
+          </p>
+          <p className="text-center text-[11px] mt-1.5">
+            <Link href="/locadoras" className="font-bold text-[var(--primary)] hover:underline">
+              Veja como funciona para locadoras e frotas →
+            </Link>
           </p>
         </div>
       </div>

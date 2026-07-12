@@ -1,6 +1,7 @@
 import React from 'react'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import VehicleViewsDemo from '@/src/components/blog/VehicleViewsDemo'
+import LandingCtaLink from '@/src/components/LandingCtaLink'
 
 export interface BlogPost {
   slug: string
@@ -10,15 +11,23 @@ export interface BlogPost {
   tags: string[]
   /** ISO date (YYYY-MM-DD) */
   date: string
+  /** ISO date (YYYY-MM-DD) da última revisão de conteúdo. Se ausente, usa `date`. */
+  updatedDate?: string
   readingMinutes: number
   author: { name: string; role: string }
   cover: { gradient: string; emoji: string; image?: string }
   /** Sumário navegável — cada id deve existir como <h2 id> no conteúdo. */
   toc: { id: string; label: string }[]
   content: React.ReactNode
+  /**
+   * Passos numerados visíveis no artigo (schema HowTo). Só preencher quando o
+   * post tem uma lista "1. 2. 3." real no conteúdo — o texto aqui deve
+   * espelhar exatamente o que aparece na página, sem parafrasear.
+   */
+  howTo?: { name: string; steps: { name: string; text: string }[] }
 }
 
-function Cta() {
+export function Cta() {
   return (
     <aside className="not-prose my-10 rounded-2xl border border-[var(--card-border)] bg-gradient-to-br from-sky-500/[0.08] to-blue-900/10 p-6 backdrop-blur-md">
       <p className="text-[0.7rem] font-extrabold uppercase tracking-widest text-[var(--signal-bright)] mb-2">
@@ -31,12 +40,9 @@ function Cta() {
         Marque as avarias num diagrama do veículo, anexe fotos com GPS e exporte um PDF com hash de
         validação e QR Code. Sem papel, sem retrabalho.
       </p>
-      <a
-        href="/app"
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 transition-[transform,background-color] motion-safe:hover:-translate-y-0.5"
-      >
-        Abrir o app →
-      </a>
+      <LandingCtaLink className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 transition-[transform,background-color] motion-safe:hover:-translate-y-0.5">
+        Testar 7 dias grátis →
+      </LandingCtaLink>
     </aside>
   )
 }
@@ -96,6 +102,16 @@ export const BLOG_POSTS: BlogPost[] = [
       { id: 'erros-comuns', label: 'Erros que invalidam o laudo' },
       { id: 'modelo', label: 'Modelo pronto para seguir' },
     ],
+    howTo: {
+      name: 'Passo a passo de uma vistoria à prova de contestação',
+      steps: [
+        { name: 'Identifique o veículo', text: 'Placa, marca/modelo, cor e quilometragem. Erros aqui derrubam o documento inteiro.' },
+        { name: 'Percorra o veículo em ordem fixa', text: 'Frente, lateral esquerda, traseira, lateral direita e teto. Uma ordem fixa evita esquecer áreas.' },
+        { name: 'Registre cada avaria por peça e gravidade', text: 'Risco/abrasão, deformação ou fratura, e classifique em leve, média ou grave.' },
+        { name: 'Fotografe com contexto', text: 'Uma foto aberta (onde está) e uma fechada (o detalhe), com data, hora e localização.' },
+        { name: 'Colha as assinaturas', text: 'Vistoriador e proprietário/responsável, fechando o aceite das partes.' },
+      ],
+    },
     content: (
       <>
         <p>
@@ -237,6 +253,10 @@ BLOG_POSTS.push(
           a sua marca a cada entrega e devolução. Veja como é um{' '}
           <a href="/#laudo">Relatório de Vistoria Veicular</a> pronto, ou{' '}
           <a href="/blog/como-fazer-laudo-de-vistoria-veicular">aprenda o passo a passo do laudo</a>.
+        </p>
+        <p>
+          Gerenciando vários vistoriadores e várias filiais? Veja{' '}
+          <a href="/locadoras">como padronizar a vistoria em toda a sua frota</a>.
         </p>
       </>
     ),
@@ -546,7 +566,9 @@ BLOG_POSTS.push(
 
         <p>
           Trabalha com locação? Veja também o{' '}
-          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</a>.
+          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</a>{' '}
+          e como o{' '}
+          <a href="/locadoras">sistema de vistoria para locadora e frota</a> resolve isso na prática.
         </p>
       </>
     ),
@@ -1145,6 +1167,16 @@ BLOG_POSTS.unshift(
       { id: 'processo', label: 'Processo ideal de registro' },
       { id: 'erros', label: 'Erros que enfraquecem a cobrança' },
     ],
+    howTo: {
+      name: 'Processo ideal de registro para evitar disputa',
+      steps: [
+        { name: 'Faça a vistoria de entrega em ordem fixa', text: 'Para nunca pular uma área do veículo.' },
+        { name: 'Registre toda avaria existente na retirada', text: 'Inclusive as pequenas.' },
+        { name: 'Colha as assinaturas no mesmo ato', text: 'Sem deixar para depois.' },
+        { name: 'Repita o mesmo padrão na devolução', text: 'Para comparar laudo com laudo.' },
+        { name: 'Cobre somente o que for dano novo e comprovável', text: 'Com base objetiva.' },
+      ],
+    },
     content: (
       <>
         <p>

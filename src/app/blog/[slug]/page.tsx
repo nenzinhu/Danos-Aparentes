@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { BLOG_POSTS, getPost, getRelatedPosts, categorySlug, formatDate } from '@/src/content/blog'
+import { BLOG_POSTS, getPost, getRelatedPosts, categorySlug, formatDate, Cta } from '@/src/content/blog'
 import { BlogCover } from '@/src/components/BlogCover'
 import { BlogPostCard } from '@/src/components/BlogPostCard'
 import ShareBar from '@/src/components/ShareBar'
@@ -47,7 +47,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     headline: post.title,
     description: post.excerpt,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updatedDate || post.date,
     author: {
       '@type': 'Person',
       name: post.author.name,
@@ -66,11 +66,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       { '@type': 'ListItem', position: 2, name: post.title, item: `${SITE_URL}/blog/${post.slug}` },
     ],
   }
+  const howToJsonLd = post.howTo && {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: post.howTo.name,
+    step: post.howTo.steps.map(s => ({ '@type': 'HowToStep', name: s.name, text: s.text })),
+  }
 
   return (
     <main className="min-h-screen w-full flex flex-col items-center px-4 py-12 font-outfit text-[var(--text-main)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      {howToJsonLd && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }} />
+      )}
 
       <div className="w-full max-w-4xl">
         {/* Breadcrumb */}
@@ -95,6 +104,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <span>{post.author.name}</span>
             <span aria-hidden="true">·</span>
             <span>{formatDate(post.date)}</span>
+            {post.updatedDate && post.updatedDate !== post.date && (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>Atualizado em {formatDate(post.updatedDate)}</span>
+              </>
+            )}
             <span aria-hidden="true">·</span>
             <span>{post.readingMinutes} min de leitura</span>
           </div>
@@ -134,6 +149,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </nav>
           </aside>
         </div>
+
+        {/* CTA de fechamento — reforço final antes de "Leia também" */}
+        <Cta />
 
         {/* Relacionados */}
         {relatedPosts.length > 0 && (

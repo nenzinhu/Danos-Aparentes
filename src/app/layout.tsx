@@ -40,7 +40,7 @@ const SITE_URL = 'https://danosaparentes.com.br'
 
 export const metadata: Metadata = {
   title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
-  description: 'Documente avarias veiculares com precisão pericial: marque os danos no desenho do veículo, anexe fotos por avaria e gere o laudo em PDF com QR Code de verificação.',
+  description: 'Vistoria veicular digital: marque avarias no diagrama do veículo, anexe fotos com GPS e gere o laudo em PDF com hash e QR Code. Teste grátis.',
   metadataBase: new URL(SITE_URL),
   // Canonical da home. Páginas internas definem o seu próprio em
   // `alternates.canonical` — sempre adicione um ao criar rota nova.
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
   // ── Open Graph ──────────────────────────────────────────────
   openGraph: {
     title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
-    description: 'Documente avarias veiculares com precisão pericial: marque os danos no desenho do veículo, anexe fotos por avaria e gere o laudo em PDF com QR Code de verificação.',
+    description: 'Vistoria veicular digital: marque avarias no diagrama do veículo, anexe fotos com GPS e gere o laudo em PDF com hash e QR Code. Teste grátis.',
     url: SITE_URL,
     siteName: 'Danos Aparentes',
     images: [
