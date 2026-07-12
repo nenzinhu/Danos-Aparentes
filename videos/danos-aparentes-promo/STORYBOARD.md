@@ -18,9 +18,9 @@ audience: Locadoras, frotistas/transportadoras, concessionárias e vistoriadores
 
 - scene: Frases de dor aparecem sozinhas numa tela quase vazia
 - voiceover: "Vistoria no papel ainda leva vinte minutos. Fotos soltas. Risco discutido no balcão."
-- duration: 5s
+- duration: 4.992s
 - transition_in: cut
-- status: outline
+- status: animated
 - src: compositions/frames/01-antes.html
 - type: hook
 - persuasion: Pain validation
@@ -42,9 +42,9 @@ Scene 3 (3.3–5.0s): both prior lines dim further; "Risco discutido no balcão.
 
 - scene: Nome do produto entra em Outfit bold sobre o fundo creme, com o accent-line terracota
 - voiceover: "Apresentando o Danos Aparentes — o laudo pronto antes do cliente sair do pátio."
-- duration: 4.8s
+- duration: 4.757s
 - transition_in: zoom-through
-- status: outline
+- status: animated
 - src: compositions/frames/02-intro.html
 - type: product_intro
 - persuasion: Negative contrast
@@ -66,9 +66,9 @@ Scene 3 (2.6–4.8s): as the VO reaches "o laudo pronto…", a muted body line (
 
 - scene: Um campo de placa é preenchido, e marca/modelo/cor/cidade aparecem em cascata num card
 - voiceover: "Digite a placa — marca, modelo, cor e cidade aparecem sozinhos."
-- duration: 4s
+- duration: 3.989s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/03-placa.html
 - type: feature_showcase
 - persuasion: Friction reduction
@@ -92,9 +92,9 @@ Scene 3 (2.6–4.0s): as the VO says "cor e cidade aparecem sozinhos", two more 
 
 - scene: Um diagrama do veículo em destaque; um toque marca a porta dianteira esquerda, e uma legenda de fala confirma o local
 - voiceover: "Toque na avaria no desenho do carro — e ouça a confirmação na hora."
-- duration: 3.7s
+- duration: 3.691s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/04-toque-voz.html
 - type: feature_showcase
 - persuasion: Show-don't-tell proof
@@ -116,9 +116,9 @@ Scene 3 (2.6–3.7s): as the VO says "ouça a confirmação", a small pill capti
 
 - scene: Uma assinatura é traçada na tela; em seguida um selo com hash e QR Code se monta ao lado
 - voiceover: "Assinatura na tela — e um PDF com hash e QR Code que provam que nada foi alterado."
-- duration: 5.1s
+- duration: 5.12s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/05-assinatura-hash.html
 - type: feature_showcase
 - persuasion: Statistical proof
@@ -142,9 +142,9 @@ Scene 3 (3.4–5.1s): both halves settle into a balanced split (signature muted 
 
 - scene: Três cartões se montam lado a lado: modelos de PDF, ícone de offline, e um mini-dashboard de equipe
 - voiceover: "Seis modelos de laudo. Funciona sem internet. E um painel pra gerir toda a equipe."
-- duration: 4.9s
+- duration: 4.949s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/06-beneficios.html
 - type: benefit_highlight
 - persuasion: Value stacking
@@ -166,9 +166,9 @@ Scene 3 (3.4–4.9s): as the VO says "painel pra gerir toda a equipe", the third
 
 - scene: Uma tela de WhatsApp recebendo o PDF, com uma legenda que se assenta por cima
 - voiceover: "O laudo que o cliente entende — direto no WhatsApp."
-- duration: 3.2s
+- duration: 3.157s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/07-whatsapp.html
 - type: social_proof
 - persuasion: Social proof
@@ -189,9 +189,9 @@ Scene 2 (1.4–3.2s): as the VO finishes "direto no WhatsApp", a clean two-line 
 
 - scene: O logotipo se monta no centro, com o botão de teste grátis logo abaixo
 - voiceover: "Danos Aparentes. Teste sete dias grátis, sem cartão."
-- duration: 3.5s
+- duration: 3.477s
 - transition_in: crossfade
-- status: outline
+- status: animated
 - src: compositions/frames/08-cta.html
 - type: cta
 - persuasion: Risk reversal
