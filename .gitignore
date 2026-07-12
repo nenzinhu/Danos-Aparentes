@@ -47,7 +47,7 @@ Claude-Skills-main/
 
 # HyperFrames (artefatos gerados por projeto de vídeo — composições e docs ficam versionados)
 videos/*/renders/
-videos/*/snapshots/
+videos/*/snapshots*/
 videos/*/.thumbnails/
 videos/*/.hyperframes/backup/
 

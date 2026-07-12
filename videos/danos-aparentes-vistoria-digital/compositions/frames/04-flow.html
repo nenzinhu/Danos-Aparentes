@@ -1,0 +1,317 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>04-flow (sub-composition source — head is discarded at render)</title>
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Outfit";
+          src: url("capture/assets/fonts/b2ea385cb5ae8625-s.1spbknb88wd48.woff2")
+            format("woff2");
+          font-weight: 100 900;
+          font-style: normal;
+          font-display: block;
+        }
+        @font-face {
+          font-family: "IBM Plex Mono";
+          src: url("capture/assets/fonts/e390973e931a41c5-s.0rgnxg2b64rzs.woff2")
+            format("woff2");
+          font-weight: 400;
+          font-style: normal;
+          font-display: block;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1920px;
+          height: 1080px;
+          overflow: hidden;
+          background: #e8e6dc;
+          container-type: size;
+          font-family: "Outfit", sans-serif;
+        }
+
+        .ground {
+          position: absolute;
+          inset: 0;
+          background-color: #e8e6dc;
+          background-image: linear-gradient(rgba(158, 68, 40, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(158, 68, 40, 0.1) 1px, transparent 1px);
+          background-size: 2cqw 2cqw;
+        }
+
+        .hairline {
+          position: absolute;
+          left: 4cqw;
+          right: 4cqw;
+          height: 0.12cqw;
+          background: #141413;
+        }
+        .hairline-top {
+          top: 3cqw;
+        }
+        .hairline-bottom {
+          bottom: 3cqw;
+        }
+
+        .page-chrome {
+          position: absolute;
+          bottom: 3.6cqw;
+          left: 4cqw;
+          right: 4cqw;
+          display: flex;
+          justify-content: space-between;
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 13px;
+          letter-spacing: 0.06em;
+          color: #141413;
+        }
+
+        .heading-stage {
+          position: absolute;
+          top: 7cqh;
+          left: 4cqw;
+          right: 4cqw;
+        }
+        .heading-kicker {
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 16px;
+          font-weight: 600;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #9e4428;
+          will-change: transform, opacity, filter;
+        }
+        .heading-title {
+          margin-top: 0.8cqh;
+          font-family: "Outfit", sans-serif;
+          font-weight: 400;
+          line-height: 1.05;
+          letter-spacing: -0.005em;
+          color: #141413;
+          font-size: 3.4cqw;
+          will-change: transform, opacity, filter;
+        }
+
+        .camera-stage {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+        }
+        .camera {
+          position: absolute;
+          inset: 0;
+          transform-origin: 50% 62%;
+          will-change: transform;
+        }
+
+        .row {
+          position: absolute;
+          top: 30cqh;
+          left: 4cqw;
+          right: 4cqw;
+          height: 42cqh;
+          display: flex;
+          gap: 2cqw;
+        }
+        .card {
+          position: relative;
+          flex: 1 1 0;
+          height: 100%;
+          background: #e8e6dc;
+          border: 0.06cqw solid #141413;
+          padding: 2cqh 1.6cqw;
+          display: flex;
+          flex-direction: column;
+          will-change: transform, opacity, filter;
+        }
+        .card-index {
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 15px;
+          letter-spacing: 0.08em;
+          color: #9e4428;
+        }
+        .card-label {
+          margin-top: 1cqh;
+          font-family: "Outfit", sans-serif;
+          font-weight: 400;
+          font-size: 2.3cqw;
+          letter-spacing: -0.004em;
+          line-height: 1.05;
+          color: #141413;
+          text-transform: uppercase;
+        }
+        .card-caption {
+          margin-top: 0.8cqh;
+          font-family: "Outfit", sans-serif;
+          font-weight: 400;
+          font-size: 0.95cqw;
+          line-height: 1.4;
+          color: #141413;
+        }
+        .card-art {
+          margin-top: auto;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          height: 16cqh;
+        }
+        .card-art img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+        .card-rule {
+          margin-top: 1.2cqh;
+          height: 0.06cqw;
+          background: rgba(158, 68, 40, 0.18);
+        }
+
+        .clip {
+          position: absolute;
+          inset: 0;
+        }
+      </style>
+
+      <div id="root" data-composition-id="04-flow" data-width="1920" data-height="1080">
+        <div class="clip ground-clip" data-start="0" data-duration="7.236" data-track-index="0">
+          <div class="ground"></div>
+          <div class="hairline hairline-top"></div>
+          <div class="hairline hairline-bottom"></div>
+          <div class="page-chrome">
+            <span>DANOS APARENTES — 04</span>
+            <span>FLUXO EM 3 PASSOS</span>
+          </div>
+        </div>
+
+        <div class="clip" data-start="0" data-duration="7.236" data-track-index="1">
+          <div class="heading-stage">
+            <div class="heading-kicker" id="kicker">DA PLACA AO LAUDO</div>
+            <div class="heading-title" id="title">Três toques, um laudo assinado.</div>
+          </div>
+        </div>
+
+        <div class="clip" data-start="0" data-duration="7.236" data-track-index="2">
+          <div class="camera-stage">
+            <div class="camera" id="camera">
+              <div class="row">
+                <div class="card" id="card1">
+                  <span class="card-index">01</span>
+                  <div class="card-label">Placa</div>
+                  <div class="card-caption">Consulta automática do veículo.</div>
+                  <div class="card-rule"></div>
+                </div>
+                <div class="card" id="card2">
+                  <span class="card-index">02</span>
+                  <div class="card-label">Diagrama</div>
+                  <div class="card-caption">Toque marca a avaria.</div>
+                  <div class="card-art">
+                    <img
+                      src="assets/diagrama-lateral-do-veculo-carro.png"
+                      alt="Diagrama lateral do veículo com avaria marcada"
+                    />
+                  </div>
+                </div>
+                <div class="card" id="card3">
+                  <span class="card-index">03</span>
+                  <div class="card-label">Assinatura</div>
+                  <div class="card-caption">Fecha o laudo na tela.</div>
+                  <div class="card-rule"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // ---- Heading (0.0s) ----
+        tl.fromTo(
+          "#kicker",
+          { opacity: 0, y: 14, filter: "blur(8px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.45, ease: "power3.out" },
+          0.0,
+        );
+        tl.fromTo(
+          "#title",
+          { opacity: 0, y: 18, filter: "blur(10px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.55, ease: "power3.out" },
+          0.12,
+        );
+
+        // ---- Scene 1 (0.0–2.0s): "Placa preenche sozinha" — card 1 slides into left slot ----
+        tl.fromTo(
+          "#card1",
+          { opacity: 0, y: 46, scale: 0.92, filter: "blur(10px)" },
+          { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" },
+          0.35,
+        );
+
+        // ---- Scene 2 (2.0–4.0s): "Toque marca a avaria no diagrama" — card 2 lands center slot ----
+        tl.fromTo(
+          "#card2",
+          { opacity: 0, y: 46, scale: 0.92, filter: "blur(10px)" },
+          { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" },
+          2.0,
+        );
+
+        // Gentle parallax/sine hold on the landed pair (card1+card2) while card3 is still absent.
+        // Amplitude/√2 per the concurrent-elements rule.
+        const pairPhase = { p: 0 };
+        tl.to(
+          pairPhase,
+          {
+            p: Math.PI * 2 * 1.3,
+            duration: 4.0 - 2.7,
+            ease: "none",
+            onUpdate: () => {
+              const amp = 3 / Math.sqrt(2);
+              const y1 = Math.sin(pairPhase.p) * amp;
+              const y2 = Math.sin(pairPhase.p + Math.PI / 2) * amp;
+              document.getElementById("card1").style.transform = `translateY(${y1}px)`;
+              document.getElementById("card2").style.transform = `translateY(${y2}px)`;
+            },
+          },
+          2.7,
+        );
+
+        // ---- Scene 3 (4.0–6.0s): "Assinatura fecha na tela" — card 3 lands right slot, row complete ----
+        tl.fromTo(
+          "#card3",
+          { opacity: 0, y: 46, scale: 0.92, filter: "blur(10px)" },
+          { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.6, ease: "power3.out" },
+          4.0,
+        );
+
+        // Clear the pair's manual sine transform right before the camera push takes over,
+        // so the two motions never fight on the same property.
+        tl.set(["#card1", "#card2"], { clearProps: "transform" }, 4.6);
+
+        // ---- Camera push-in (~4.6s → end): the completed row tightens ~5% and settles still ----
+        const cam = { scale: 1 };
+        tl.to(
+          cam,
+          {
+            scale: 1.05,
+            duration: 7.236 - 4.6,
+            ease: "power2.out",
+            onUpdate: () => {
+              document.getElementById("camera").style.transform = `scale(${cam.scale})`;
+            },
+          },
+          4.6,
+        );
+
+        window.__timelines["04-flow"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

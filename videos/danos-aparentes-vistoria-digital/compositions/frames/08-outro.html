@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>08-outro</title>
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Outfit";
+          font-weight: 100 900;
+          font-style: normal;
+          font-display: block;
+          src: url("capture/assets/fonts/b2ea385cb5ae8625-s.1spbknb88wd48.woff2") format("woff2");
+        }
+        @font-face {
+          font-family: "IBM Plex Mono";
+          font-weight: 400;
+          font-style: normal;
+          font-display: block;
+          src: url("capture/assets/fonts/e390973e931a41c5-s.0rgnxg2b64rzs.woff2") format("woff2");
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          container-type: size;
+        }
+
+        .ground {
+          position: absolute;
+          inset: 0;
+          background-color: #e8e6dc;
+          background-image: linear-gradient(rgba(158, 68, 40, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(158, 68, 40, 0.1) 1px, transparent 1px);
+          background-size: 2cqw 2cqw;
+        }
+
+        .hairline {
+          position: absolute;
+          left: 4cqw;
+          right: 4cqw;
+          height: 0.12cqw;
+          background: #141413;
+        }
+        .hairline-top {
+          top: 3cqw;
+        }
+        .hairline-bottom {
+          bottom: 3cqw;
+        }
+
+        .lockup {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 1.6cqw;
+        }
+        .mark-wrap {
+          position: relative;
+          width: 12cqw;
+          height: 12cqw;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .mark {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+        .wordmark {
+          font-family: "Outfit", sans-serif;
+          font-weight: 400;
+          font-size: 3cqw;
+          line-height: 1.05;
+          letter-spacing: -0.005em;
+          color: #141413;
+          text-align: center;
+        }
+
+        .ripple {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 12cqw;
+          height: 12cqw;
+          margin-left: -6cqw;
+          margin-top: -6cqw;
+          border-radius: 50%;
+          border: 0.12cqw solid #141413;
+          scale: 0;
+          opacity: 0;
+          pointer-events: none;
+        }
+        .ripple-layer {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .ripple-anchor {
+          position: absolute;
+          top: 39cqh;
+          left: 50%;
+        }
+
+        .url-layer {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          padding-top: 62cqh;
+        }
+        .url-terminal {
+          display: inline-flex;
+          align-items: baseline;
+          font-family: "IBM Plex Mono", monospace;
+          font-weight: 400;
+          font-size: 2cqw;
+          letter-spacing: 0.02em;
+          color: #141413;
+          white-space: pre;
+        }
+        .url-cursor {
+          display: inline-block;
+          width: 0.14cqw;
+          height: 1.8cqw;
+          background: #9e4428;
+          margin-left: 0.3cqw;
+          vertical-align: -0.25cqw;
+        }
+      </style>
+
+      <div id="root" data-composition-id="08-outro" data-width="1920" data-height="1080">
+        <div class="ground clip" data-start="0" data-duration="4.963" data-track-index="0"></div>
+
+        <div class="clip" data-start="0" data-duration="4.963" data-track-index="1">
+          <div class="hairline hairline-top"></div>
+          <div class="hairline hairline-bottom"></div>
+        </div>
+
+        <div class="clip" data-start="0" data-duration="4.963" data-track-index="2">
+          <div class="lockup">
+            <div class="mark-wrap" id="outro-mark-wrap">
+              <img class="mark" src="assets/logo-b5d5d7ba.svg" alt="" />
+            </div>
+            <div class="wordmark">Danos Aparentes</div>
+          </div>
+        </div>
+
+        <div class="ripple-layer clip" data-start="0" data-duration="4.963" data-track-index="3">
+          <div class="ripple-anchor">
+            <div class="ripple" id="outro-ripple-1"></div>
+            <div class="ripple" id="outro-ripple-2"></div>
+          </div>
+        </div>
+
+        <div class="url-layer clip" data-start="0" data-duration="4.963" data-track-index="4">
+          <div class="url-terminal">
+            <span id="outro-url-text"></span><span class="url-cursor" id="outro-url-cursor"></span>
+          </div>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+          var tl = gsap.timeline({ paused: true });
+
+          var TOTAL = 4.963;
+
+          // Scene 1 (0.0–1.0s) — entry flourish: two ripple rings bloom once from the
+          // mark's center (cursor-click-ripple, ripple-only variant — no cursor/click).
+          tl.set(["#outro-ripple-1", "#outro-ripple-2"], { opacity: 1 }, 0.1);
+          tl.to(
+            "#outro-ripple-1",
+            { scale: 3.2, opacity: 0, duration: 0.9, ease: "power2.out", immediateRender: false },
+            0.1,
+          );
+          tl.to(
+            "#outro-ripple-2",
+            { scale: 3.2, opacity: 0, duration: 0.9, ease: "power2.out", immediateRender: false },
+            0.28,
+          );
+
+          // Scene 2 (1.0–4.0s) — "danosaparentes.com.br" types on beneath the mark with
+          // a trailing caret (discrete-text-sequence smooth-slice + context-sensitive-cursor).
+          var URL_TEXT = "danosaparentes.com.br";
+          var TYPE_START = 1.0;
+          var TYPE_DUR = 2.9;
+          var textEl = document.getElementById("outro-url-text");
+          var cursorEl = document.getElementById("outro-url-cursor");
+
+          var len = { v: 0 };
+          tl.to(
+            len,
+            {
+              v: URL_TEXT.length,
+              duration: TYPE_DUR,
+              ease: "power1.inOut",
+              onUpdate: function () {
+                if (textEl) textEl.textContent = URL_TEXT.substring(0, Math.floor(len.v));
+              },
+            },
+            TYPE_START,
+          );
+
+          // Deterministic caret blink (sin-driven, not CSS animation).
+          var blink = { p: 0 };
+          tl.to(
+            blink,
+            {
+              p: Math.PI * 2 * 5,
+              duration: TOTAL - TYPE_START,
+              ease: "none",
+              onUpdate: function () {
+                if (cursorEl) cursorEl.style.opacity = Math.sin(blink.p) > 0 ? "1" : "0";
+              },
+            },
+            TYPE_START,
+          );
+
+          // Mark idle move — one small idle rotate once the ripple settles (sine-wave-loop,
+          // low amplitude, scoped to the mark only). The mark never leaves frame.
+          var markWrap = document.getElementById("outro-mark-wrap");
+          var phase = { p: 0 };
+          var IDLE_START = 1.1;
+          var IDLE_DUR = TOTAL - IDLE_START;
+          tl.to(
+            phase,
+            {
+              p: Math.PI * 2 * 1.5,
+              duration: IDLE_DUR,
+              ease: "none",
+              onUpdate: function () {
+                if (markWrap) markWrap.style.transform = "rotate(" + (Math.sin(phase.p) * 0.6) + "deg)";
+              },
+            },
+            IDLE_START,
+          );
+
+          window.__timelines["08-outro"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

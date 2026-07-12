@@ -1,0 +1,38 @@
+{
+  "category": "stat",
+  "duration_s": 4,
+  "fps": 30,
+  "canvas": { "w": 1080, "h": 1920, "aspect": "9:16" },
+  "style": "Dark navy tech-precision stat hit for Danos Aparentes (vehicle damage inspection app). The number IS the message: a huge '5' counts up from 0 in well under a second while a sky-blue accent ring sweeps in sync, landing on '5 MIN' with a soft amber flash on impact. Everything holds calm and readable for the back half so the claim registers. Register: heavy geometric-sans impact (Montserrat 900) for the hero digit against a precise monospace (IBM Plex Mono) for the supporting line — impact vs. instrumentation, matching a product that turns a slow paper process into a fast, exact one.",
+  "palette": ["#020617", "#e8f4ff", "#7a9bbf", "#1FB6FF", "#ffb938"],
+  "font": "Montserrat",
+  "beats": [1.05],
+  "export": "mp4",
+  "asset_needs": [],
+  "block": null,
+  "customize": {
+    "note": "Evaluated registry block `apple-money-count` (npx hyperframes add) as the reuse-first candidate — landscape 1920x1080, light background, $-formatted money-burst motif, no ring primitive. Brief needs portrait 9:16, dark navy brand palette, a plain integer count (no currency), and a synced ring/arc sweep. Structural mismatch on aspect + theme + motif is too large to retrofit, so hand-authored per stat/module.md's alternate path (proven proxy-tween count-up + tabular-nums + hold pattern), reusing only the *technique* (GSAP proxy-object `onUpdate` count-up), not the block file.",
+    "typography": {
+      "value": "Montserrat 900, tabular-nums, dominates the frame",
+      "unit_label": "Montserrat 700, smaller, beside/below the value",
+      "context_line": "IBM Plex Mono 400, muted color, smallest"
+    },
+    "colors": {
+      "background": "#020617",
+      "value_text": "#e8f4ff",
+      "unit_label": "#1FB6FF",
+      "context_line": "#7a9bbf",
+      "ring_track": "#7a9bbf22",
+      "ring_progress": "#1FB6FF",
+      "impact_flash": "#ffb938"
+    }
+  },
+  "content": {
+    "value": 5,
+    "prefix": "",
+    "suffix": "MIN",
+    "label": "por vistoria completa — do toque à assinatura",
+    "ring": true
+  },
+  "shot_brief": "Black-navy frame, dead center: a ring track waits, empty. The instant the clip starts, the digit rockets 0→5 in ~0.9s while the sky-blue ring sweeps closed in lockstep — same easing, same finish frame, so eye and number land together. On landing (~1.05s) the ring flashes amber for one beat and the digit settles with a tiny scale-pop, 'MIN' fading in beside it as the unit. ~0.2s later the muted context line ('por vistoria completa — do toque à assinatura') fades up beneath. Everything then holds dead still for the last ~2s — no residual motion — so the claim is legible before the clip ends. One dominant motif (count-up + ring sync); the amber flash is the single pattern-interrupt beat."
+}
