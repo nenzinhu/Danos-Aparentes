@@ -1,92 +1,85 @@
 <template>
-<div
-  id="root"
-  data-composition-id="05-assinatura-hash"
-  data-start="0"
-  data-duration="5.1"
-  data-width="1080"
-  data-height="1920"
->
+<div data-hf-id="hf-4rzk" id="root" data-composition-id="05-assinatura-hash" data-start="0" data-duration="5.62" data-width="1080" data-height="1920">
   <!-- full-bleed ground clip -->
-  <div class="clip" id="hash-ground" data-start="0" data-duration="5.1" data-track-index="0"></div>
+  <div data-hf-id="hf-qzaa" class="clip" id="hash-ground" data-start="0" data-duration="5.1" data-track-index="0"></div>
 
   <!-- eyebrow -->
-  <div class="clip hash-eyebrow" id="hash-eyebrow" data-start="0" data-duration="5.1" data-track-index="1">
+  <div data-hf-id="hf-oo8m" class="clip hash-eyebrow" id="hash-eyebrow" data-start="0" data-duration="5.1" data-track-index="1">
     PROVA DE INTEGRIDADE
   </div>
 
   <!-- Scene 1: signature stroke, centered -->
-  <div class="clip hash-sig-wrap" id="hash-sig-wrap" data-start="0" data-duration="5.1" data-track-index="2">
-    <svg class="hash-sig-svg" id="hash-sig-svg" viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
-      <path id="hash-sig-path-1" d="M 40 150 C 70 90, 95 90, 110 140 C 122 178, 132 178, 145 130 C 155 96, 165 96, 178 150 C 188 182, 196 182, 208 120" />
-      <path id="hash-sig-path-2" d="M 220 150 C 240 60, 270 60, 285 110 C 296 148, 310 148, 322 100 C 334 58, 352 58, 365 150" />
-      <path id="hash-sig-path-3" d="M 380 130 Q 420 70, 460 130 T 520 130" />
+  <div data-hf-id="hf-gpt6" class="clip hash-sig-wrap" id="hash-sig-wrap" data-start="0" data-duration="5.1" data-track-index="2">
+    <svg data-hf-id="hf-xsez" class="hash-sig-svg" id="hash-sig-svg" viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg">
+      <path data-hf-id="hf-1rof" id="hash-sig-path-1" d="M 40 150 C 70 90, 95 90, 110 140 C 122 178, 132 178, 145 130 C 155 96, 165 96, 178 150 C 188 182, 196 182, 208 120" />
+      <path data-hf-id="hf-kruq" id="hash-sig-path-2" d="M 220 150 C 240 60, 270 60, 285 110 C 296 148, 310 148, 322 100 C 334 58, 352 58, 365 150" />
+      <path data-hf-id="hf-2t55" id="hash-sig-path-3" d="M 380 130 Q 420 70, 460 130 T 520 130" />
     </svg>
-    <div class="hash-sig-line" id="hash-sig-line"></div>
-    <div class="hash-sig-label" id="hash-sig-label">Assinatura confirmada</div>
+    <div data-hf-id="hf-t3hk" class="hash-sig-line" id="hash-sig-line"></div>
+    <div data-hf-id="hf-ges7" class="hash-sig-label" id="hash-sig-label">Assinatura confirmada</div>
   </div>
 
   <!-- Scene 2/3: seal card assembling on the right -->
-  <div class="clip hash-seal-card" id="hash-seal-card" data-start="0" data-duration="5.1" data-track-index="3">
-    <div class="hash-seal-row">
-      <div class="hash-lock-badge" id="hash-lock-badge">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="5" y="11" width="14" height="9" rx="2" stroke="#E8E6DC" stroke-width="1.8"/>
-          <path d="M8 11V7.5A4 4 0 0 1 16 7.5V11" stroke="#E8E6DC" stroke-width="1.8" stroke-linecap="round"/>
+  <div data-hf-id="hf-blx5" class="clip hash-seal-card" id="hash-seal-card" data-start="0" data-duration="5.1" data-track-index="3">
+    <div data-hf-id="hf-hbi5" class="hash-seal-row">
+      <div data-hf-id="hf-qq0y" class="hash-lock-badge" id="hash-lock-badge">
+        <svg data-hf-id="hf-kv7i" viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect data-hf-id="hf-2rkw" x="5" y="11" width="14" height="9" rx="2" stroke="#E8E6DC" stroke-width="1.8" />
+          <path data-hf-id="hf-954g" d="M8 11V7.5A4 4 0 0 1 16 7.5V11" stroke="#E8E6DC" stroke-width="1.8" stroke-linecap="round" />
         </svg>
       </div>
-      <div class="hash-seal-title">Laudo assinado &amp; selado</div>
+      <div data-hf-id="hf-w3ne" class="hash-seal-title">Laudo assinado &amp; selado</div>
     </div>
 
-    <div class="hash-hash-block">
-      <div class="hash-hash-tag">HASH SHA-256</div>
-      <div class="hash-hash-value" id="hash-hash-value">3F9A0C1E2B7D4A6F...</div>
+    <div data-hf-id="hf-srtl" class="hash-hash-block">
+      <div data-hf-id="hf-e4dc" class="hash-hash-tag">HASH SHA-256</div>
+      <div data-hf-id="hf-wy1q" class="hash-hash-value" id="hash-hash-value">3F9A0C1E2B7D4A6F...</div>
     </div>
 
-    <div class="hash-qr-row">
-      <div class="hash-qr" id="hash-qr">
-        <svg viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <rect width="100" height="100" fill="none"/>
-          <g fill="#141413">
-            <rect x="6" y="6" width="22" height="22"/>
-            <rect x="12" y="12" width="10" height="10" fill="#E8E6DC"/>
-            <rect x="72" y="6" width="22" height="22"/>
-            <rect x="78" y="12" width="10" height="10" fill="#E8E6DC"/>
-            <rect x="6" y="72" width="22" height="22"/>
-            <rect x="12" y="78" width="10" height="10" fill="#E8E6DC"/>
-            <rect x="36" y="6" width="6" height="6"/>
-            <rect x="48" y="6" width="6" height="6"/>
-            <rect x="60" y="12" width="6" height="6"/>
-            <rect x="36" y="18" width="6" height="6"/>
-            <rect x="54" y="24" width="6" height="6"/>
-            <rect x="42" y="30" width="6" height="6"/>
-            <rect x="36" y="36" width="6" height="6"/>
-            <rect x="60" y="36" width="6" height="6"/>
-            <rect x="6" y="36" width="6" height="6"/>
-            <rect x="18" y="42" width="6" height="6"/>
-            <rect x="30" y="42" width="6" height="6"/>
-            <rect x="48" y="42" width="6" height="6"/>
-            <rect x="72" y="42" width="6" height="6"/>
-            <rect x="84" y="42" width="6" height="6"/>
-            <rect x="6" y="54" width="6" height="6"/>
-            <rect x="24" y="54" width="6" height="6"/>
-            <rect x="42" y="54" width="6" height="6"/>
-            <rect x="60" y="54" width="6" height="6"/>
-            <rect x="78" y="54" width="6" height="6"/>
-            <rect x="36" y="60" width="6" height="6"/>
-            <rect x="48" y="66" width="6" height="6"/>
-            <rect x="66" y="66" width="6" height="6"/>
-            <rect x="36" y="78" width="6" height="6"/>
-            <rect x="48" y="84" width="6" height="6"/>
-            <rect x="60" y="78" width="6" height="6"/>
-            <rect x="72" y="84" width="6" height="6"/>
-            <rect x="84" y="72" width="6" height="6"/>
-            <rect x="60" y="90" width="6" height="6"/>
-            <rect x="78" y="90" width="6" height="6"/>
+    <div data-hf-id="hf-f8of" class="hash-qr-row">
+      <div data-hf-id="hf-ysvu" class="hash-qr" id="hash-qr">
+        <svg data-hf-id="hf-25uu" viewBox="0 0 100 100" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <rect data-hf-id="hf-qf9x" width="100" height="100" fill="none" />
+          <g data-hf-id="hf-prtu" fill="#141413">
+            <rect data-hf-id="hf-xxsu" x="6" y="6" width="22" height="22" />
+            <rect data-hf-id="hf-sm0u" x="12" y="12" width="10" height="10" fill="#E8E6DC" />
+            <rect data-hf-id="hf-nddv" x="72" y="6" width="22" height="22" />
+            <rect data-hf-id="hf-c4ii" x="78" y="12" width="10" height="10" fill="#E8E6DC" />
+            <rect data-hf-id="hf-c953" x="6" y="72" width="22" height="22" />
+            <rect data-hf-id="hf-j73a" x="12" y="78" width="10" height="10" fill="#E8E6DC" />
+            <rect data-hf-id="hf-u54p" x="36" y="6" width="6" height="6" />
+            <rect data-hf-id="hf-9y7a" x="48" y="6" width="6" height="6" />
+            <rect data-hf-id="hf-p04z" x="60" y="12" width="6" height="6" />
+            <rect data-hf-id="hf-0yvm" x="36" y="18" width="6" height="6" />
+            <rect data-hf-id="hf-ngq7" x="54" y="24" width="6" height="6" />
+            <rect data-hf-id="hf-y5bz" x="42" y="30" width="6" height="6" />
+            <rect data-hf-id="hf-1kje" x="36" y="36" width="6" height="6" />
+            <rect data-hf-id="hf-mpy5" x="60" y="36" width="6" height="6" />
+            <rect data-hf-id="hf-3h6t" x="6" y="36" width="6" height="6" />
+            <rect data-hf-id="hf-aj9r" x="18" y="42" width="6" height="6" />
+            <rect data-hf-id="hf-zvf5" x="30" y="42" width="6" height="6" />
+            <rect data-hf-id="hf-vjye" x="48" y="42" width="6" height="6" />
+            <rect data-hf-id="hf-wnib" x="72" y="42" width="6" height="6" />
+            <rect data-hf-id="hf-9ap2" x="84" y="42" width="6" height="6" />
+            <rect data-hf-id="hf-ee0x" x="6" y="54" width="6" height="6" />
+            <rect data-hf-id="hf-i4yp" x="24" y="54" width="6" height="6" />
+            <rect data-hf-id="hf-2yz1" x="42" y="54" width="6" height="6" />
+            <rect data-hf-id="hf-xms9" x="60" y="54" width="6" height="6" />
+            <rect data-hf-id="hf-rff4" x="78" y="54" width="6" height="6" />
+            <rect data-hf-id="hf-46yb" x="36" y="60" width="6" height="6" />
+            <rect data-hf-id="hf-eyy4" x="48" y="66" width="6" height="6" />
+            <rect data-hf-id="hf-s79o" x="66" y="66" width="6" height="6" />
+            <rect data-hf-id="hf-qqo0" x="36" y="78" width="6" height="6" />
+            <rect data-hf-id="hf-hnuk" x="48" y="84" width="6" height="6" />
+            <rect data-hf-id="hf-nnfz" x="60" y="78" width="6" height="6" />
+            <rect data-hf-id="hf-15xd" x="72" y="84" width="6" height="6" />
+            <rect data-hf-id="hf-hmqn" x="84" y="72" width="6" height="6" />
+            <rect data-hf-id="hf-qo21" x="60" y="90" width="6" height="6" />
+            <rect data-hf-id="hf-ct68" x="78" y="90" width="6" height="6" />
           </g>
         </svg>
       </div>
-      <div class="hash-qr-caption">Verifique o laudo<br/>escaneando o código</div>
+      <div data-hf-id="hf-s3ew" class="hash-qr-caption">Verifique o laudo<br data-hf-id="hf-x5px">escaneando o código</div>
     </div>
   </div>
 </div>
@@ -103,7 +96,7 @@
 
   @font-face {
     font-family: "Outfit";
-    src: url("../../capture/assets/fonts/b2ea385cb5ae8625-s.1spbknb88wd48.woff2") format("woff2");
+    src: url("capture/assets/fonts/b2ea385cb5ae8625-s.1spbknb88wd48.woff2") format("woff2");
     font-weight: 100 900;
     font-style: normal;
     font-display: block;
@@ -299,9 +292,8 @@
 
     // Scene 2 (2.0-3.4s): signature shrinks left, seal card assembles right — VO "hash e QR Code"
     tl.to(root.querySelector("#hash-sig-wrap"), {
-      left: "18%",
+      x: "-22cqw",
       width: "34cqw",
-      marginLeft: "-17cqw",
       scale: 0.62,
       duration: 0.9,
       ease: "power3.inOut",

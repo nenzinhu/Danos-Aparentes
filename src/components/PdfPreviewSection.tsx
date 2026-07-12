@@ -136,6 +136,8 @@ export default function PdfPreviewSection() {
                   alt="Diagrama de danos do veículo"
                   loading="lazy"
                   decoding="async"
+                  width={828}
+                  height={352}
                   className="w-full h-auto"
                 />
               </div>

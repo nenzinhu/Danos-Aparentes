@@ -48,7 +48,6 @@ interface Props {
 
 const UF_LIST = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']
 const VEHICLE_TYPES = ['Passeio (Carro)', 'SUV / Crossover', 'Pickup / Caminhonete', 'Motocicleta', 'Caminhão', 'Van / Utilitário', 'Ônibus / Micro-ônibus', 'Outro']
-const TOKEN = '622283d1f02d343efd13800a14dd0ab8'
 
 interface FoundData {
   brand: string
@@ -420,7 +419,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   const lookupPlate = useCallback(async (plate: string) => {
     setPlateStatus('loading')
     try {
-      const res = await fetch(`https://wdapi2.com.br/consulta/${plate}/${TOKEN}`)
+      const res = await fetch(`/api/plate-lookup?plate=${encodeURIComponent(plate)}`)
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
       if (data.erro || data.error || data.message?.toLowerCase().includes('not found')) throw new Error('not found')

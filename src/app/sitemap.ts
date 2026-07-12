@@ -7,6 +7,8 @@ const SITE_URL = 'https://danosaparentes.com.br'
 // adicionar páginas novas para o sitemap acompanhar.
 const ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
   { path: '', priority: 1.0, changeFrequency: 'weekly' },
+  { path: '/planos', priority: 0.9, changeFrequency: 'weekly' },
+  { path: '/locadoras', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/faq', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/blog', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/demo', priority: 0.7, changeFrequency: 'monthly' },

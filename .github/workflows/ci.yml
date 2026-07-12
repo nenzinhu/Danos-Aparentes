@@ -21,8 +21,14 @@ jobs:
 
       - run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
       - name: Typecheck
         run: npm run typecheck
+
+      - name: Testes
+        run: npm run test
 
       # Compara as colunas que src/lib/sync.ts grava no Supabase contra o
       # schema real do banco de produção. Existe porque essa divergência

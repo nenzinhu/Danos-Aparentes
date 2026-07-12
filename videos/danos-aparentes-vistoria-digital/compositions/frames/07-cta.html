@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>07-cta (sub-composition source)</title>
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Outfit";
+          src: url("capture/assets/fonts/b2ea385cb5ae8625-s.1spbknb88wd48.woff2") format("woff2");
+          font-weight: 100 900;
+          font-style: normal;
+          font-display: block;
+        }
+        @font-face {
+          font-family: "IBM Plex Mono";
+          src: url("capture/assets/fonts/2fe89d53234c61d4-s.1u30mmyq6lnsd.woff2") format("woff2");
+          font-weight: 400;
+          font-style: normal;
+          font-display: block;
+        }
+        @font-face {
+          font-family: "IBM Plex Mono";
+          src: url("capture/assets/fonts/a7afbb44bec2bb18-s.1qc6dx89jd2qv.woff2") format("woff2");
+          font-weight: 500;
+          font-style: normal;
+          font-display: block;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1920px;
+          height: 1080px;
+          container-type: size;
+          overflow: hidden;
+          background: #e8e6dc;
+          font-family: "Outfit", sans-serif;
+        }
+
+        .clip {
+          position: absolute;
+          inset: 0;
+        }
+
+        /* ---- background / furniture clip ---- */
+        #cta-bg {
+          background-image: linear-gradient(rgba(158, 68, 40, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(158, 68, 40, 0.1) 1px, transparent 1px);
+          background-size: 2cqw 2cqw;
+          background-position: center;
+        }
+        .hairline {
+          position: absolute;
+          left: 4cqw;
+          right: 4cqw;
+          height: 0.12cqw;
+          background: #141413;
+        }
+        .hairline-top {
+          top: 3cqw;
+        }
+        .hairline-bottom {
+          top: 79.6cqh;
+        }
+        .chrome-meta {
+          position: absolute;
+          left: 4cqw;
+          top: 4.4cqw;
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 13px;
+          font-weight: 400;
+          letter-spacing: 0.06em;
+          color: #141413;
+          text-transform: uppercase;
+        }
+        .chrome-page {
+          position: absolute;
+          right: 4cqw;
+          top: 76.6cqh;
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 13px;
+          font-weight: 400;
+          letter-spacing: 0.06em;
+          color: #141413;
+        }
+
+        /* ---- headline clip ---- */
+        #cta-headline {
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          padding-top: 15cqh;
+        }
+        .headline-wrap {
+          display: inline-flex;
+          align-items: baseline;
+          min-width: 1px;
+          white-space: nowrap;
+        }
+        .headline-text {
+          font-family: "Outfit", sans-serif;
+          font-weight: 400;
+          font-size: 6.8cqw;
+          line-height: 1;
+          letter-spacing: -0.005em;
+          color: #141413;
+        }
+        .headline-cursor {
+          display: inline-block;
+          width: 0.35em;
+          margin-left: 0.06em;
+          font-family: "Outfit", sans-serif;
+          font-weight: 400;
+          font-size: 6.8cqw;
+          line-height: 1;
+          color: #9e4428;
+        }
+
+        /* ---- stage clip (logo <-> cta morph) ---- */
+        #cta-stage {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .stage-anchor {
+          position: relative;
+          width: 640px;
+          height: 320px;
+          display: grid;
+          place-items: center;
+        }
+        #logo-mark {
+          position: absolute;
+          width: 340px;
+          height: auto;
+          transform-origin: 50% 50%;
+          will-change: transform, opacity;
+        }
+        #cta-pill {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 34px 72px;
+          background: #141413;
+          border-radius: 0;
+          transform-origin: 50% 50%;
+          opacity: 0;
+          will-change: transform, opacity;
+        }
+        #cta-pill-label {
+          font-family: "Outfit", sans-serif;
+          font-weight: 500;
+          font-size: 32px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #e8e6dc;
+          white-space: nowrap;
+        }
+        .bloom-glow {
+          position: absolute;
+          inset: -220px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(20, 20, 19, 0.32) 0%, rgba(20, 20, 19, 0) 68%);
+          opacity: 0;
+          transform: scale(0.85);
+          transform-origin: 50% 50%;
+          pointer-events: none;
+          will-change: transform, opacity;
+        }
+
+        /* ---- cursor / interaction overlay clip ---- */
+        #cta-cursor-layer {
+          pointer-events: none;
+        }
+        #cursor {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 64px;
+          height: 64px;
+          transform-origin: 0 0;
+          pointer-events: none;
+          z-index: 10;
+          filter: drop-shadow(0 4px 6px rgba(20, 20, 19, 0.25));
+        }
+        .ripple {
+          position: absolute;
+          width: 140px;
+          height: 140px;
+          border-radius: 50%;
+          border: 2px solid #141413;
+          transform: translate(-50%, -50%) scale(0);
+          opacity: 0;
+          pointer-events: none;
+        }
+      </style>
+
+      <div id="root" data-composition-id="07-cta" data-width="1920" data-height="1080">
+        <!-- background furniture: grid + hairlines + chrome, full duration -->
+        <div id="cta-bg" class="clip" data-start="0" data-duration="5.512" data-track-index="0">
+          <div class="hairline hairline-top"></div>
+          <div class="hairline hairline-bottom"></div>
+          <div class="chrome-meta">Danos Aparentes &middot; 07</div>
+          <div class="chrome-page">07 / 08</div>
+        </div>
+
+        <!-- headline: types on as VO says "7 dias grátis." then holds (never removed = no exit) -->
+        <div id="cta-headline" class="clip" data-start="0" data-duration="5.512" data-track-index="1">
+          <div class="headline-wrap">
+            <span id="headline-text" class="headline-text"></span>
+            <span id="headline-cursor" class="headline-cursor">|</span>
+          </div>
+        </div>
+
+        <!-- stage: resting logo condenses into the CTA pill at the same center -->
+        <div id="cta-stage" class="clip" data-start="0" data-duration="5.512" data-track-index="2">
+          <div class="stage-anchor">
+            <div class="bloom-glow" id="bloom-glow"></div>
+            <img
+              id="logo-mark"
+              src="assets/logo-b5d5d7ba.svg"
+              alt=""
+              width="340"
+              height="340"
+            />
+            <div id="cta-pill">
+              <span id="cta-pill-label">Testar agora</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- cursor arrival + press + ripple, full duration so nothing is hidden abruptly -->
+        <div id="cta-cursor-layer" class="clip" data-start="0" data-duration="5.512" data-track-index="3">
+          <div class="ripple" id="ripple-1"></div>
+          <div class="ripple" id="ripple-2"></div>
+          <svg id="cursor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 2 L21 12 L12 13 L7 22 Z" fill="#141413" stroke="#e8e6dc" stroke-width="1.2" />
+          </svg>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        var tl = gsap.timeline({ paused: true });
+
+        // ---------- Scene 1 (0.0-1.4s): headline types on, logo rests with a faint breath ----------
+        var HEADLINE = "7 DIAS GRÁTIS.";
+        var headlineEl = document.getElementById("headline-text");
+        var headlineCursorEl = document.getElementById("headline-cursor");
+        var typeDriver = { v: 0 };
+        var TYPE_DUR = 1.05;
+        tl.to(
+          typeDriver,
+          {
+            v: HEADLINE.length,
+            duration: TYPE_DUR,
+            ease: "power1.inOut",
+            onUpdate: function () {
+              headlineEl.textContent = HEADLINE.substring(0, Math.floor(typeDriver.v));
+            },
+          },
+          0
+        );
+        // deterministic cursor blink across the whole composition
+        var blinkDriver = { p: 0 };
+        tl.to(
+          blinkDriver,
+          {
+            p: Math.PI * 2 * 7,
+            duration: 5.512,
+            ease: "none",
+            onUpdate: function () {
+              headlineCursorEl.style.opacity = Math.sin(blinkDriver.p) > 0 ? "1" : "0";
+            },
+          },
+          0
+        );
+
+        var logoEl = document.getElementById("logo-mark");
+        // logo entrance: settle in immediately (hero visible well before 0.5s)
+        tl.fromTo(
+          logoEl,
+          { opacity: 0, scale: 0.94 },
+          { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" },
+          0
+        );
+        // faint rotational breath, scoped to the mark only, low amplitude, bounded (sine-wave-loop)
+        var breathPhase = { p: 0 };
+        var IDLE_START = 0.4;
+        var IDLE_DUR = 1.4 - IDLE_START;
+        tl.to(
+          breathPhase,
+          {
+            p: Math.PI * 2 * 1,
+            duration: IDLE_DUR,
+            ease: "none",
+            onUpdate: function () {
+              var rot = Math.sin(breathPhase.p) * 0.6; // degrees, barely perceptible
+              // gsap.set (not raw style writes) so GSAP's transform cache stays in sync
+              // with the scale/opacity tweens that also target this element
+              gsap.set(logoEl, { rotation: rot });
+            },
+          },
+          IDLE_START
+        );
+
+        // ---------- Scene 2 (1.4-2.4s): scale-swap-transition — logo condenses into the CTA pill ----------
+        var TRIGGER = 1.4;
+        var EXIT_DUR = 0.4;
+        var ENTER_DUR = 0.55;
+        var OVERLAP = 0.15;
+        var EXIT_SCALE = 0.7;
+
+        gsap.set("#cta-pill", { scale: EXIT_SCALE, opacity: 0 });
+
+        tl.to(
+          logoEl,
+          { scale: EXIT_SCALE, opacity: 0, duration: EXIT_DUR, ease: "power2.in" },
+          TRIGGER
+        );
+        tl.to(
+          "#cta-pill",
+          { scale: 1.0, opacity: 1, duration: ENTER_DUR, ease: "back.out(1.6)" },
+          TRIGGER + EXIT_DUR - OVERLAP
+        );
+
+        // ---------- Scene 3 (2.4-3.4s): cursor arrives on a decelerating path, off-center landing ----------
+        var cursorEl = document.getElementById("cursor");
+        // stage-anchor is 640x320 centered in the 1920x1080 root -> anchor center = (960, 540)
+        // pill sits centered within the anchor -> same center (960, 540)
+        var PILL_CENTER_X = 960;
+        var PILL_CENTER_Y = 540;
+        var LAND_X = PILL_CENTER_X + 34; // a few px off geometric center = human aim
+        var LAND_Y = PILL_CENTER_Y + 18;
+        var CURSOR_START_X = 1660;
+        var CURSOR_START_Y = 840;
+
+        gsap.set(cursorEl, { x: CURSOR_START_X, y: CURSOR_START_Y, opacity: 0 });
+        tl.set(cursorEl, { opacity: 1 }, 2.4);
+        var APPROACH_START = 2.4;
+        var APPROACH_DUR = 1.0;
+        tl.to(
+          cursorEl,
+          { x: LAND_X, y: LAND_Y, duration: APPROACH_DUR, ease: "power2.out" },
+          APPROACH_START
+        );
+
+        // ---------- Scene 4 (3.4-5.0s+): physics press + release ripple/glow, holds on clicked state ----------
+        var PRESS_DOWN_AT = APPROACH_START + APPROACH_DUR; // 3.4 — cursor arrives exactly as press begins
+        var PRESS_DOWN_DUR = 0.14;
+        var RELEASE_AT = PRESS_DOWN_AT + PRESS_DOWN_DUR + 0.11; // brief contact hold
+        var RELEASE_DUR = 0.55;
+        var PRESS_INTENSITY = 0.1;
+        var BOUNCE_FACTOR = 1.8;
+
+        tl.to(
+          ["#cta-pill", cursorEl],
+          { scale: 1 - PRESS_INTENSITY, duration: PRESS_DOWN_DUR, ease: "power1.in" },
+          PRESS_DOWN_AT
+        );
+        tl.to(
+          ["#cta-pill", cursorEl],
+          { scale: 1, duration: RELEASE_DUR, ease: "back.out(" + BOUNCE_FACTOR + ")" },
+          RELEASE_AT
+        );
+
+        // click ripple rings from the press point
+        var RIPPLE_AT = RELEASE_AT - 0.02;
+        var ripples = ["#ripple-1", "#ripple-2"];
+        ripples.forEach(function (sel, i) {
+          gsap.set(sel, { x: LAND_X, y: LAND_Y });
+        });
+        tl.set(ripples, { opacity: 1, x: LAND_X, y: LAND_Y }, RIPPLE_AT);
+        tl.to(
+          ripples,
+          {
+            scale: 3.4,
+            opacity: 0,
+            duration: 0.7,
+            ease: "power2.out",
+            stagger: 0.08,
+            immediateRender: false,
+          },
+          RIPPLE_AT
+        );
+
+        // ambient glow bloom behind the pill, landing on the release settle, then a bounded breathe hold
+        var glowEl = document.getElementById("bloom-glow");
+        var BLOOM_START = RELEASE_AT;
+        var BLOOM_DUR = 0.6;
+        var GLOW_PEAK_OPACITY = 0.3;
+        tl.fromTo(
+          glowEl,
+          { opacity: 0, scale: 0.85 },
+          { opacity: GLOW_PEAK_OPACITY, scale: 1, duration: BLOOM_DUR, ease: "power2.out" },
+          BLOOM_START
+        );
+        var glowPhase = { p: 0 };
+        var BREATHE_START = BLOOM_START + BLOOM_DUR;
+        var BREATHE_DUR = Math.max(0.1, 5.512 - BREATHE_START);
+        tl.to(
+          glowPhase,
+          {
+            p: Math.PI * 2 * (BREATHE_DUR / 3),
+            duration: BREATHE_DUR,
+            ease: "none",
+            onUpdate: function () {
+              var s = Math.sin(glowPhase.p);
+              // gsap.set keeps opacity/scale writes inside GSAP's own transform cache,
+              // consistent with the fromTo tween above that also targets this element
+              gsap.set(glowEl, {
+                opacity: GLOW_PEAK_OPACITY + s * 0.03,
+                scale: 1 + s * 0.015,
+              });
+            },
+          },
+          BREATHE_START
+        );
+
+        window.__timelines["07-cta"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

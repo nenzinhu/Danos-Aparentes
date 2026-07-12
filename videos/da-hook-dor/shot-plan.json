@@ -1,0 +1,50 @@
+{
+  "category": "kinetic-type",
+  "duration_s": 4,
+  "fps": 30,
+  "canvas": { "w": 1080, "h": 1920, "aspect": "9:16" },
+  "style": "dark technical/automotive brand system — near-black navy stage, bold uppercase tight-tracking sans, sky-blue + amber accent duo, faint blueprint-grid texture; confident, direct, no-nonsense inspection-report energy",
+  "palette": [
+    "#020617",
+    "#e8f4ff",
+    "#7a9bbf",
+    "#1FB6FF",
+    "#ffb938",
+    "rgba(0, 190, 255, 0.16)"
+  ],
+  "font": "system-ui heavy (-apple-system, \"Segoe UI\", Roboto, sans-serif) — no external font load",
+  "beats": [0.05, 0.65, 1.35, 1.75],
+  "export": "mp4",
+
+  "asset_needs": [],
+
+  "block": null,
+  "customize": {
+    "note": "No caption-* catalog block matches this exact two-line hook+punch+underline-hold structure with brand hex values (checked caption-kinetic-slam / caption-editorial-emphasis / caption-weight-shift — all are single-word or per-word transcript-driven karaoke styles, not a fixed two-line settle-then-land composition). Hand-authored per builder.md gap allowance, following motion-vocabulary primitives (slide_bottom/fade_in, scale_punch, underline_sweep) and the caption block conventions (flex-centered .scene-content, palette CSS vars, autoAlpha seek-safe reveal)."
+  },
+
+  "content": {
+    "scenes": [
+      {
+        "id": "hook-line1",
+        "start": 0,
+        "end": 0.6,
+        "text": "Chega de discutir amassado",
+        "emphasis_words": ["amassado"],
+        "emotion": "confident, direct — stating the problem plainly",
+        "motion": "slide_bottom + fade_in, one-line settle (y:24px->0, opacity 0->1), power3.out, duration 0.5s starting at 0.05s",
+        "beats": [0.05]
+      },
+      {
+        "id": "punch-line2",
+        "start": 0.6,
+        "end": 4.0,
+        "text": "que já existia no carro.",
+        "emphasis_words": ["já existia"],
+        "emotion": "assertive resolve — the punchline that lands and holds",
+        "motion": "scale_punch land (scale 0.7->1, y:16->0, opacity 0->1, back.out(1.6), duration 0.7s starting at 0.65s) in amber #ffb938 accent, heaviest/largest weight in the frame; underline_sweep accent draws beneath (scaleX 0->1, transformOrigin left, power2.out, duration 0.4s starting at 1.35s); holds fully static from 1.75s to 4.0s (2.25s held resolve, no motion in final ~1s+)",
+        "beats": [0.65, 1.35, 1.75]
+      }
+    ]
+  }
+}

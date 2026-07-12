@@ -1,5 +1,8 @@
 import React from 'react'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
+import VehicleViewsDemo from '@/src/components/blog/VehicleViewsDemo'
+import { BlogVideo } from '@/src/components/blog/BlogVideo'
+import LandingCtaLink from '@/src/components/LandingCtaLink'
 
 export interface BlogPost {
   slug: string
@@ -9,15 +12,23 @@ export interface BlogPost {
   tags: string[]
   /** ISO date (YYYY-MM-DD) */
   date: string
+  /** ISO date (YYYY-MM-DD) da última revisão de conteúdo. Se ausente, usa `date`. */
+  updatedDate?: string
   readingMinutes: number
   author: { name: string; role: string }
   cover: { gradient: string; emoji: string; image?: string }
   /** Sumário navegável — cada id deve existir como <h2 id> no conteúdo. */
   toc: { id: string; label: string }[]
   content: React.ReactNode
+  /**
+   * Passos numerados visíveis no artigo (schema HowTo). Só preencher quando o
+   * post tem uma lista "1. 2. 3." real no conteúdo — o texto aqui deve
+   * espelhar exatamente o que aparece na página, sem parafrasear.
+   */
+  howTo?: { name: string; steps: { name: string; text: string }[] }
 }
 
-function Cta() {
+export function Cta() {
   return (
     <aside className="not-prose my-10 rounded-2xl border border-[var(--card-border)] bg-gradient-to-br from-sky-500/[0.08] to-blue-900/10 p-6 backdrop-blur-md">
       <p className="text-[0.7rem] font-extrabold uppercase tracking-widest text-[var(--signal-bright)] mb-2">
@@ -30,12 +41,9 @@ function Cta() {
         Marque as avarias num diagrama do veículo, anexe fotos com GPS e exporte um PDF com hash de
         validação e QR Code. Sem papel, sem retrabalho.
       </p>
-      <a
-        href="/app"
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 transition-[transform,background-color] motion-safe:hover:-translate-y-0.5"
-      >
-        Abrir o app →
-      </a>
+      <LandingCtaLink className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 transition-[transform,background-color] motion-safe:hover:-translate-y-0.5">
+        Testar 7 dias grátis →
+      </LandingCtaLink>
     </aside>
   )
 }
@@ -85,6 +93,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'Vistoria',
     tags: ['laudo de vistoria', 'avarias', 'checklist', 'locadora', 'seguradora'],
     date: '2026-06-28',
+    updatedDate: '2026-07-12',
     readingMinutes: 7,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '📋', image: '/vehicles-img/car.png' },
@@ -95,6 +104,16 @@ export const BLOG_POSTS: BlogPost[] = [
       { id: 'erros-comuns', label: 'Erros que invalidam o laudo' },
       { id: 'modelo', label: 'Modelo pronto para seguir' },
     ],
+    howTo: {
+      name: 'Passo a passo de uma vistoria à prova de contestação',
+      steps: [
+        { name: 'Identifique o veículo', text: 'Placa, marca/modelo, cor e quilometragem. Erros aqui derrubam o documento inteiro.' },
+        { name: 'Percorra o veículo em ordem fixa', text: 'Frente, lateral esquerda, traseira, lateral direita e teto. Uma ordem fixa evita esquecer áreas.' },
+        { name: 'Registre cada avaria por peça e gravidade', text: 'Risco/abrasão, deformação ou fratura, e classifique em leve, média ou grave.' },
+        { name: 'Fotografe com contexto', text: 'Uma foto aberta (onde está) e uma fechada (o detalhe), com data, hora e localização.' },
+        { name: 'Colha as assinaturas', text: 'Vistoriador e proprietário/responsável, fechando o aceite das partes.' },
+      ],
+    },
     content: (
       <>
         <p>
@@ -126,6 +145,17 @@ export const BLOG_POSTS: BlogPost[] = [
         </ul>
 
         <h2 id="passo-a-passo">Passo a passo de uma vistoria à prova de contestação</h2>
+
+        <BlogVideo
+          src="/videos/vistoria-digital-tour.mp4"
+          poster="/videos/vistoria-digital-tour-poster.jpg"
+          title="Como funciona a vistoria digital do Danos Aparentes"
+          description="O fluxo completo em 60 segundos: consulta automática da placa, marcação de avarias por toque no diagrama, assinatura na tela e laudo em PDF com hash SHA-256 e QR Code de verificação."
+          duration="PT58S"
+          uploadDate="2026-07-12"
+          caption="O fluxo digital em 60 segundos: placa, toque no diagrama, assinatura e laudo verificável."
+        />
+
         <p>O método é sempre o mesmo, independentemente do tipo de veículo:</p>
         <ul>
           <li><strong>1. Identifique o veículo</strong> — placa, marca/modelo, cor e quilometragem. Erros aqui derrubam o documento inteiro.</li>
@@ -236,6 +266,10 @@ BLOG_POSTS.push(
           a sua marca a cada entrega e devolução. Veja como é um{' '}
           <a href="/#laudo">Relatório de Vistoria Veicular</a> pronto, ou{' '}
           <a href="/blog/como-fazer-laudo-de-vistoria-veicular">aprenda o passo a passo do laudo</a>.
+        </p>
+        <p>
+          Gerenciando vários vistoriadores e várias filiais? Veja{' '}
+          <a href="/locadoras">como padronizar a vistoria em toda a sua frota</a>.
         </p>
       </>
     ),
@@ -545,7 +579,9 @@ BLOG_POSTS.push(
 
         <p>
           Trabalha com locação? Veja também o{' '}
-          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</a>.
+          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</a>{' '}
+          e como o{' '}
+          <a href="/locadoras">sistema de vistoria para locadora e frota</a> resolve isso na prática.
         </p>
       </>
     ),
@@ -700,6 +736,7 @@ const RAIN_POSTS: BlogPost[] = [
     category: 'Comparativo',
     tags: ['antes e depois', 'vistoria digital', 'prancheta', 'laudo veicular', 'produtividade'],
     date: '2026-07-04',
+    updatedDate: '2026-07-12',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0f766e 45%,#22c55e 100%)', emoji: '📱', image: '/vehicles-img/car2d.png' },
@@ -717,6 +754,16 @@ const RAIN_POSTS: BlogPost[] = [
           e o laudo já nasce pronto para envio. No <strong>Danos Aparentes</strong>, essa virada fica visível
           já na rotina do pátio.
         </p>
+
+        <BlogVideo
+          src="/videos/vistoria-digital-promo.mp4"
+          poster="/videos/vistoria-digital-promo-poster.jpg"
+          title="Antes e depois da vistoria digital em 60 segundos"
+          description="De 20 minutos de burocracia com papel e prancheta para 3 toques na tela: laudo 100% digital, assinado na tela, com GPS, hora exata, hash SHA-256 e QR Code — funcionando até offline."
+          duration="PT58S"
+          uploadDate="2026-07-12"
+          caption="O antes e depois da vistoria em 60 segundos — de papel e prancheta para 3 toques na tela."
+        />
 
         <h2 id="antes">Como funciona o antes</h2>
         <ul>
@@ -1144,6 +1191,16 @@ BLOG_POSTS.unshift(
       { id: 'processo', label: 'Processo ideal de registro' },
       { id: 'erros', label: 'Erros que enfraquecem a cobrança' },
     ],
+    howTo: {
+      name: 'Processo ideal de registro para evitar disputa',
+      steps: [
+        { name: 'Faça a vistoria de entrega em ordem fixa', text: 'Para nunca pular uma área do veículo.' },
+        { name: 'Registre toda avaria existente na retirada', text: 'Inclusive as pequenas.' },
+        { name: 'Colha as assinaturas no mesmo ato', text: 'Sem deixar para depois.' },
+        { name: 'Repita o mesmo padrão na devolução', text: 'Para comparar laudo com laudo.' },
+        { name: 'Cobre somente o que for dano novo e comprovável', text: 'Com base objetiva.' },
+      ],
+    },
     content: (
       <>
         <p>
@@ -2190,7 +2247,7 @@ BLOG_POSTS.unshift(
 
         <h2 id="como-escolher">Como escolher o ideal pra sua operação</h2>
         <p>
-          Não existe modelo "certo" — existe o que combina com quem vai receber o laudo. Uma seguradora
+          Não existe modelo &ldquo;certo&rdquo; — existe o que combina com quem vai receber o laudo. Uma seguradora
           tende a preferir o Técnico ou o Corporativo; uma locadora mais moderna pode preferir o Minimalista
           ou o Vibrante. O importante é que o layout reforce a seriedade do documento, não o contrário.
         </p>
@@ -2261,6 +2318,54 @@ BLOG_POSTS.unshift(
           {' '}e{' '}
           <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de vistoria de devolução para locadoras</a>.
         </p>
+      </>
+    ),
+  },
+)
+
+BLOG_POSTS.unshift(
+  {
+    slug: 'vistoria-nas-4-vistas-do-veiculo',
+    title: 'Como a vistoria cobre as 4 vistas do veículo (com fotos por avaria)',
+    excerpt:
+      'Veja como o app guia a vistoria pelas 4 vistas do veículo — lateral esquerda, lateral direita, frontal e traseira — e como cada avaria pode levar suas próprias fotos.',
+    category: 'Vistoria',
+    tags: ['diagrama do veículo', 'avarias', 'fotos', 'vistoria'],
+    date: '2026-07-07',
+    readingMinutes: 4,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '🚗', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'as-4-vistas', label: 'As 4 vistas do veículo' },
+      { id: 'fotos-por-avaria', label: 'Uma foto por avaria' },
+    ],
+    content: (
+      <>
+        <p>
+          Uma vistoria completa não olha o carro só de um ângulo. O app guia você pelas{' '}
+          <strong>4 vistas do veículo</strong> — lateral esquerda, lateral direita, frontal e
+          traseira — para que nenhuma avaria fique de fora do laudo.
+        </p>
+
+        <h2 id="as-4-vistas">As 4 vistas do veículo</h2>
+        <p>
+          No app, você toca diretamente na peça avariada no diagrama — para-lama, porta,
+          para-choque, farol, lanterna — e registra o tipo de dano (risco, amassado ou quebrado) e a
+          severidade. Abaixo, um exemplo (ilustrativo, não interativo) de cada uma das 4 vistas, já
+          com uma avaria registrada:
+        </p>
+
+        <VehicleViewsDemo />
+
+        <h2 id="fotos-por-avaria">Uma foto por avaria</h2>
+        <p>
+          Cada avaria registrada pode receber <strong>suas próprias fotos</strong> — não é uma galeria
+          genérica do veículo, é a foto anexada exatamente àquele risco ou amassado, na peça certa.
+          Isso elimina a dúvida clássica de laudo em papel: qual foto era de qual dano. Quando o
+          aparelho tem GPS disponível, a localização da vistoria também fica registrada.
+        </p>
+
+        <Cta />
       </>
     ),
   },
