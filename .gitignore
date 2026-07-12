@@ -44,3 +44,12 @@ laudo-3d-mockup.html
 public/laudo-3d-mockup.html
 Claude-Skills-main/
 .agents/skills/
+
+# HyperFrames (artefatos gerados por projeto de vídeo — composições e docs ficam versionados)
+videos/*/renders/
+videos/*/snapshots/
+videos/*/.thumbnails/
+videos/*/.hyperframes/backup/
+
+# Relatórios de auditoria pontuais (regeráveis, não são fonte)
+.lighthouse-reports/
