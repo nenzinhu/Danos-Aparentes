@@ -36,7 +36,7 @@
     <div
       id="root"
       data-composition-id="main"
-      data-start="0.000"
+      data-start="0"
       data-duration="58.436"
       data-width="1920"
       data-height="1080"
@@ -47,35 +47,7 @@
         data-composition-id="01-hook"
         data-composition-src="compositions/frames/01-hook.html"
         data-start="0.000"
-        data-duration="4.608"
-        data-track-index="1"
-      ></div>
-      <audio
-        id="el-voice-natural"
-        src="assets/voice_natural/narration.mp3"
-        data-start="0.000"
-        data-duration="58.436"
-        data-track-index="10"
-        data-volume="1"
-      ></audio>
-
-      <div
-        id="el-02-pain"
-        class="scene"
-        data-composition-id="02-pain"
-        data-composition-src="compositions/frames/02-pain.html"
-        data-start="4.608"
-        data-duration="10.365"
-        data-track-index="1"
-      ></div>
-
-      <div
-        id="el-03-product-intro"
-        class="scene"
-        data-composition-id="03-product-intro"
-        data-composition-src="compositions/frames/03-product-intro.html"
-        data-start="14.973"
-        data-duration="5.183"
+        data-duration="5.319"
         data-track-index="1"
       ></div>
 
@@ -84,18 +56,28 @@
         class="scene"
         data-composition-id="04-flow"
         data-composition-src="compositions/frames/04-flow.html"
-        data-start="20.156"
-        data-duration="10.468"
+        data-start="5.319"
+        data-duration="7.690"
         data-track-index="1"
       ></div>
 
       <div
-        id="el-05-security"
+        id="el-02-pain"
         class="scene"
-        data-composition-id="05-security"
-        data-composition-src="compositions/frames/05-security.html"
-        data-start="30.624"
-        data-duration="10.264"
+        data-composition-id="02-pain"
+        data-composition-src="compositions/frames/02-pain.html"
+        data-start="13.009"
+        data-duration="6.080"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-03-product-intro"
+        class="scene"
+        data-composition-id="03-product-intro"
+        data-composition-src="compositions/frames/03-product-intro.html"
+        data-start="19.089"
+        data-duration="7.050"
         data-track-index="1"
       ></div>
 
@@ -104,8 +86,18 @@
         class="scene"
         data-composition-id="06-offline"
         data-composition-src="compositions/frames/06-offline.html"
-        data-start="40.888"
-        data-duration="5.928"
+        data-start="26.139"
+        data-duration="9.380"
+        data-track-index="1"
+      ></div>
+
+      <div
+        id="el-05-security"
+        class="scene"
+        data-composition-id="05-security"
+        data-composition-src="compositions/frames/05-security.html"
+        data-start="35.519"
+        data-duration="11.610"
         data-track-index="1"
       ></div>
 
@@ -114,8 +106,8 @@
         class="scene"
         data-composition-id="07-cta"
         data-composition-src="compositions/frames/07-cta.html"
-        data-start="46.816"
-        data-duration="6.606"
+        data-start="47.130"
+        data-duration="7.410"
         data-track-index="1"
       ></div>
 
@@ -124,16 +116,26 @@
         class="scene"
         data-composition-id="08-outro"
         data-composition-src="compositions/frames/08-outro.html"
-        data-start="53.422"
-        data-duration="5.013"
+        data-start="54.540"
+        data-duration="3.896"
         data-track-index="1"
       ></div>
+
+      <!-- Narração contínua, transcrita palavra-a-palavra via ElevenLabs STT -->
+      <audio
+        id="el-voice-natural"
+        src="assets/voice_natural/narration.mp3"
+        data-start="0"
+        data-duration="58.436"
+        data-track-index="10"
+        data-volume="1"
+      ></audio>
 
       <!-- BGM -->
       <audio
         id="el-bgm"
         src="assets/bgm/track.mp3"
-        data-start="0.000"
+        data-start="0"
         data-duration="58.436"
         data-track-index="11"
         data-volume="0.12"
@@ -145,17 +147,17 @@
         class="scene"
         data-composition-id="captions"
         data-composition-src="compositions/captions.html"
-        data-start="0.000"
+        data-start="0"
         data-duration="58.436"
         data-track-index="2"
       ></div>
 
-      <!-- SFX -->
+      <!-- SFX — repositionadas para o início da cena visual correspondente na nova ordem -->
       <audio
         id="el-sfx-0"
         src="assets/sfx/impact-soft-on-amassado-hard-cut.mp3"
         data-start="0.000"
-        data-duration="3.465"
+        data-duration="2.672"
         data-track-index="20"
         data-volume="0.35"
       ></audio>
@@ -163,95 +165,95 @@
         id="el-sfx-1"
         src="assets/sfx/riser-leading-into-the-final-question.mp3"
         data-start="0.000"
-        data-duration="6.445"
+        data-duration="4.970"
         data-track-index="21"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-2"
         src="assets/sfx/soft-whoosh-per-line-entrance.mp3"
-        data-start="4.608"
-        data-duration="2.378"
+        data-start="13.009"
+        data-duration="1.834"
         data-track-index="22"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-3"
         src="assets/sfx/no-impact-agitation-reads-quieter-than-t.mp3"
-        data-start="4.608"
-        data-duration="3.465"
+        data-start="13.009"
+        data-duration="2.672"
         data-track-index="23"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-4"
         src="assets/sfx/soft-chime-on-the-mark-s-pop-in-low-rise.mp3"
-        data-start="14.973"
-        data-duration="0.965"
+        data-start="19.089"
+        data-duration="0.744"
         data-track-index="24"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-5"
         src="assets/sfx/three-soft-tick-clicks.mp3"
-        data-start="20.156"
-        data-duration="0.342"
+        data-start="5.319"
+        data-duration="0.264"
         data-track-index="25"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-6"
         src="assets/sfx/one-per-card-landing.mp3"
-        data-start="20.156"
-        data-duration="1.432"
+        data-start="5.319"
+        data-duration="1.104"
         data-track-index="26"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-7"
         src="assets/sfx/three-soft-tick-clicks-matching-frame-4-.mp3"
-        data-start="30.624"
-        data-duration="0.342"
+        data-start="35.519"
+        data-duration="0.264"
         data-track-index="27"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-8"
         src="assets/sfx/soft-glow-swell-on-the-final-card.mp3"
-        data-start="30.624"
-        data-duration="9.419"
+        data-start="35.519"
+        data-duration="7.263"
         data-track-index="28"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-9"
         src="assets/sfx/none-the-one-silent-beat-in-the-video-th.mp3"
-        data-start="40.888"
-        data-duration="0.903"
+        data-start="26.139"
+        data-duration="0.696"
         data-track-index="29"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-10"
         src="assets/sfx/soft-click-release-bloom-on-the-press.mp3"
-        data-start="46.816"
-        data-duration="0.342"
+        data-start="47.130"
+        data-duration="0.264"
         data-track-index="30"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-11"
         src="assets/sfx/none-quiet-close.mp3"
-        data-start="53.422"
-        data-duration="12.042"
+        data-start="54.540"
+        data-duration="3.896"
         data-track-index="31"
         data-volume="0.35"
       ></audio>
       <audio
         id="el-sfx-12"
         src="assets/sfx/echoes-frame-6-s-silence.mp3"
-        data-start="53.422"
-        data-duration="1.058"
+        data-start="54.540"
+        data-duration="0.816"
         data-track-index="32"
         data-volume="0.35"
       ></audio>
