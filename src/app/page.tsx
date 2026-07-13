@@ -11,6 +11,7 @@ import LandingCtaLink from '../components/LandingCtaLink';
 import Reveal from '../components/Reveal';
 import TrustSection from '../components/TrustSection';
 import FinalCtaSection from '../components/FinalCtaSection';
+import LandingPromoVideo from '../components/LandingPromoVideo';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, useReducedMotion } from 'framer-motion';
 import HeroCarStage, { heroCarVariant, heroTagVariant, heroSpecCellVariant, heroSpecStage } from '../components/HeroCarStage';
@@ -25,7 +26,7 @@ const HERO_DAMAGES: Damage[] = [
 
 // Data da última revisão de conteúdo/copy da home. Atualize ao editar
 // headline, seções ou schema — reflete no dateModified do SoftwareApplication.
-const HOME_UPDATED_DATE = '2026-07-11'
+const HOME_UPDATED_DATE = '2026-07-12'
 
 // Schema de marca/produto para rich results e Knowledge Graph.
 const LANDING_JSONLD = {
@@ -82,53 +83,51 @@ const MobileStickyCta = dynamic(() => import('../components/MobileStickyCta'), {
 function TextCarousel() {
   const slides = [
     {
-      title: (
-        <>
-          Vistoria veicular digital <br />
-          <span className="text-[var(--signal-bright)] italic">que prova a si mesma.</span>
-        </>
-      ),
+      kicker: 'Laudo que comprova a si mesmo',
       description:
         'Chega de discutir amassado que já existia no carro. Marque avarias no diagrama, prove com foto, GPS e assinatura antes de sair do pátio. Laudo em PDF com hash de segurança e QR Code, pronto pra mandar no WhatsApp.',
     },
     {
-      title: (
-        <>
-          Laudos no WhatsApp que <br />
-          <span className="text-[var(--signal-bright)] italic">o cliente entende na hora.</span>
-        </>
-      ),
+      kicker: 'Laudos no WhatsApp que o cliente entende',
       description:
         'Envie o laudo em PDF direto no celular do cliente com todas as avarias marcadas visualmente, fotos reais do dano e assinatura com o dedo na tela.',
     },
     {
-      title: (
-        <>
-          Basta digitar a placa para <br />
-          <span className="text-[var(--signal-bright)] italic">preencher os dados sozinho.</span>
-        </>
-      ),
+      kicker: 'Digite a placa e preencha os dados sozinho',
       description:
         'Digite a placa e o aplicativo preenche automaticamente a marca, modelo, cor e ano do veículo. Rápido, prático e sem erros de digitação no pátio.',
     },
   ];
 
   const [index, setIndex] = useState(0);
+  const reduceMotion = useReducedMotion();
   const next = () => setIndex((i) => (i + 1) % slides.length);
   const prev = () => setIndex((i) => (i - 1 + slides.length) % slides.length);
 
-  // Auto‑rotate every 8 seconds
+  // Auto-rotate supporting copy only — pause when the user prefers reduced motion.
   useEffect(() => {
+    if (reduceMotion) return;
     const timer = setInterval(next, 8000);
     return () => clearInterval(timer);
-  }, []);
+  }, [reduceMotion]);
 
   return (
     <div className="relative">
-      <div key={index} className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 motion-reduce:animate-none">
-        <h1 className="font-display text-4xl sm:text-5xl lg:text-[5.25rem] font-bold uppercase leading-[0.92] tracking-[-0.015em] text-[var(--text-main)] [text-wrap:balance]">
-          {slides[index].title}
-        </h1>
+      <h1 className="font-display text-4xl sm:text-5xl lg:text-[5.25rem] font-bold uppercase leading-[0.92] tracking-[-0.015em] text-[var(--text-main)] [text-wrap:balance]">
+        Danos Aparentes
+        <span className="block mt-2 text-[0.55em] sm:text-[0.48em] lg:text-[2.75rem] normal-case tracking-tight font-semibold text-[var(--signal-bright)]">
+          Vistoria digital que prova a si mesma.
+        </span>
+      </h1>
+
+      <div
+        key={index}
+        aria-live="polite"
+        className="space-y-3 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-700 motion-reduce:animate-none"
+      >
+        <p className="font-mono-data text-[11px] tracking-[0.18em] uppercase text-[var(--signal-bright)]">
+          {slides[index].kicker}
+        </p>
         <p className="text-base lg:text-lg text-[var(--text-muted)] max-w-xl leading-relaxed">
           {slides[index].description}
         </p>
@@ -238,8 +237,8 @@ export default function LandingPage() {
           >
             {darkMode ? '☀️' : '🌙'}
           </button>
-          <LandingCtaLink transitionTypes={['nav-forward']} className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-xl shadow-[var(--primary)]/15 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none">
-            Criar conta grátis
+          <LandingCtaLink className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-xl shadow-[var(--primary)]/15 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none">
+            Testar 7 dias grátis
           </LandingCtaLink>
         </nav>
       </header>
@@ -278,13 +277,13 @@ export default function LandingPage() {
                   className="group/cta px-8 py-4 text-white font-black rounded-xl shadow-2xl shadow-[var(--primary)]/20 inline-flex items-center gap-3 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
                   style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
                 >
-                  Abrir primeira vistoria
+                  Testar 7 dias grátis
                   <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </LandingCtaLink>
               </div>
 
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 font-mono-data text-[11px] text-[var(--text-muted)] uppercase tracking-wider">
-                <span className="text-[var(--signal-bright)]">✓</span>
+                <span aria-hidden="true" className="text-[var(--signal-bright)]">✓</span>
                 <span>Sem cartão</span>
                 <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
                 <span>7 dias liberados</span>
@@ -406,6 +405,9 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
+
+      {/* Vídeo promo — abaixo da dobra, sem autoplay */}
+      <LandingPromoVideo />
 
       {/* Segurança e transparência do laudo */}
       <TrustSection />

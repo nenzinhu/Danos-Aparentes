@@ -28,13 +28,13 @@ export default function FinalCtaSection() {
             className="group/cta px-10 py-5 text-white font-black text-base sm:text-lg rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-3 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
             style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
           >
-            Começar meus 7 dias grátis
+            Testar 7 dias grátis
             <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </LandingCtaLink>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 mt-5 font-mono-data text-[11px] text-[var(--text-muted)] uppercase tracking-wider">
-          <span className="text-[var(--signal-bright)]">✓</span>
+          <span aria-hidden="true" className="text-[var(--signal-bright)]">✓</span>
           <span>Sem cartão</span>
           <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
           <span>7 dias liberados</span>

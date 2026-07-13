@@ -87,9 +87,9 @@ function RecursosLaudo() {
 export const BLOG_POSTS: BlogPost[] = [
   {
     slug: 'como-fazer-laudo-de-vistoria-veicular',
-    title: 'Como fazer um laudo de vistoria veicular: o guia completo',
+    title: 'Como fazer laudo de vistoria veicular (passo a passo)',
     excerpt:
-      'O que é, quando é exigido e o passo a passo para produzir um laudo de avarias claro, fotográfico e à prova de contestação — com modelo real para você seguir.',
+      'Guia prático: o que precisa constar no laudo, fotos que sustentam cobrança e o passo a passo para emitir um PDF com prova, assinatura e validação — sem retrabalho.',
     category: 'Vistoria',
     tags: ['laudo de vistoria', 'avarias', 'checklist', 'locadora', 'seguradora'],
     date: '2026-06-28',
@@ -276,12 +276,13 @@ BLOG_POSTS.push(
   },
   {
     slug: 'laudo-cautelar-vs-laudo-de-avarias',
-    title: 'Laudo cautelar x laudo de avarias: qual você precisa?',
+    title: 'Laudo cautelar ou de avarias? Diferença e quando usar',
     excerpt:
-      'Dois documentos com nomes parecidos e finalidades bem diferentes. Entenda o que cada um cobre para não pedir (nem pagar) o errado.',
+      'Cautelar não é o mesmo que laudo de avarias. Veja a diferença em linguagem clara e escolha o documento certo — sem pagar o errado nem perder a prova na devolução.',
     category: 'Laudo',
     tags: ['laudo cautelar', 'laudo de avarias', 'vistoria', 'documentação'],
     date: '2026-06-26',
+    updatedDate: '2026-07-12',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#3b1d6e 0%,#5b21b6 45%,#a855f7 100%)', emoji: '⚖️', image: '/vehicles-img/car.png' },
@@ -339,16 +340,18 @@ BLOG_POSTS.push(
 BLOG_POSTS.push(
   {
     slug: 'vistoria-de-moto',
-    title: 'Vistoria de moto: o que muda na inspeção de avarias',
+    title: 'Vistoria de moto: tanque amassado passa? O que checar',
     excerpt:
-      'Motos têm pontos de avaria próprios. Veja o que conferir, como registrar e como gerar um laudo com sua logo, campos personalizados e validação por QR Code.',
+      'Tanque amassado, risco e peça torta: o que costuma passar ou travar na vistoria de moto, o checklist por área e como registrar no laudo sem discussão depois.',
     category: 'Vistoria',
-    tags: ['vistoria de moto', 'motocicleta', 'laudo', 'avarias'],
+    tags: ['vistoria de moto', 'motocicleta', 'tanque amassado', 'laudo', 'avarias'],
     date: '2026-06-25',
+    updatedDate: '2026-07-12',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#7f1d1d 0%,#b91c1c 45%,#f87171 100%)', emoji: '🏍️', image: '/vehicles-img/moto.png' },
     toc: [
+      { id: 'tanque', label: 'Tanque amassado passa?' },
       { id: 'pontos', label: 'Pontos críticos da moto' },
       { id: 'perfil', label: 'Perfil e campos' },
       { id: 'logo', label: 'Logo no PDF' },
@@ -359,6 +362,16 @@ BLOG_POSTS.push(
         <p>
           A moto é mais exposta que o carro — qualquer queda deixa marca. Por isso a vistoria precisa de
           um olhar específico para os pontos que mais sofrem, registrados peça a peça com foto.
+        </p>
+
+        <h2 id="tanque">Tanque amassado passa na vistoria de moto?</h2>
+        <p>
+          Depende do tipo de vistoria e do critério de quem analisa. Em laudo de <strong>avarias
+          (entrega/devolução)</strong>, tanque amassado quase sempre precisa ser registrado — não some
+          sozinho. Em avaliações de procedência/cautelar, o impacto na aprovação varia: amassado leve
+          pode ser anotado; deformação forte, solda aparente ou risco de vazamento elevam a gravidade.
+          A regra prática: <strong>fotografe aberto + detalhe</strong>, marque a peça e descreva tamanho
+          e gravidade. Sem isso, vira discussão — não prova.
         </p>
 
         <h2 id="pontos">Pontos críticos da moto</h2>
@@ -382,12 +395,13 @@ BLOG_POSTS.push(
   },
   {
     slug: 'vistoria-de-caminhao',
-    title: 'Vistoria de caminhão: roteiro completo de avarias',
+    title: 'Vistoria de caminhão: checklist de avarias que funciona',
     excerpt:
-      'Cabine, baú, chassi e múltiplos eixos: o que inspecionar num caminhão e como emitir um laudo personalizado, com sua marca e validação por hash e QR Code.',
+      'Cabine, baú, chassi e eixos: o roteiro para não esquecer peça no pátio e sair com laudo claro — pronto para frota, locadora ou sinistro.',
     category: 'Vistoria',
     tags: ['vistoria de caminhão', 'frota', 'laudo', 'avarias'],
     date: '2026-06-24',
+    updatedDate: '2026-07-12',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0e7490 45%,#22d3ee 100%)', emoji: '🚚', image: '/vehicles-img/truck.png' },
@@ -425,12 +439,13 @@ BLOG_POSTS.push(
   },
   {
     slug: 'vistoria-de-onibus',
-    title: 'Vistoria de ônibus: como inspecionar e laudar avarias',
+    title: 'Vistoria de ônibus: roteiro de avarias sem furar peça',
     excerpt:
-      'Carroceria longa, muitas janelas e interior: o roteiro para vistoriar um ônibus e gerar um laudo com sua logo, campos sob medida e selo de QR Code e hash.',
+      'Carroceria longa, janelas e interior: o que inspecionar num ônibus, como registrar cada dano e fechar um laudo comparável entre entrega e devolução.',
     category: 'Vistoria',
     tags: ['vistoria de ônibus', 'frota', 'laudo', 'avarias'],
     date: '2026-06-23',
+    updatedDate: '2026-07-12',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#155e2f 0%,#047857 45%,#34d399 100%)', emoji: '🚌', image: '/vehicles-img/bus.png' },
@@ -1961,12 +1976,13 @@ BLOG_POSTS.unshift(
   },
   {
     slug: 'vistoria-de-seminovos-para-concessionarias',
-    title: 'Vistoria de seminovos: como documentar a entrada de um carro pra revenda',
+    title: 'Inspeção de seminovos: laudo de entrada na concessionária',
     excerpt:
-      'Antes de colocar um seminovo à venda, a concessionária precisa registrar exatamente o estado em que o carro chegou. Veja como um laudo bem-feito protege a negociação com o antigo dono e evita disputa com o comprador.',
+      'Como funciona a inspeção de carros seminovos na concessionária: registre o estado na entrada, evite disputa na revenda e proteja a negociação com laudo fotográfico.',
     category: 'Vistoria',
-    tags: ['seminovos', 'concessionária', 'revenda', 'avaliação de carro usado', 'laudo'],
+    tags: ['seminovos', 'concessionária', 'revenda', 'avaliação de carro usado', 'laudo', 'inspeção'],
     date: '2026-07-06',
+    updatedDate: '2026-07-12',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
     cover: { gradient: 'linear-gradient(135deg,#052e16 0%,#16a34a 45%,#bbf7d0 100%)', emoji: '🚗', image: '/vehicles-img/car.png' },

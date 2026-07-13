@@ -31,7 +31,7 @@ export default function MobileStickyCta({ heroCtaId = 'hero-primary-cta' }: Prop
         className="block w-full py-3.5 text-center text-white font-black rounded-xl shadow-lg shadow-sky-500/20 text-sm"
         style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
       >
-        Criar conta grátis
+        Testar 7 dias grátis
       </LandingCtaLink>
     </div>
   )
