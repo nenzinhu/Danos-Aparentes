@@ -321,6 +321,7 @@ export default function AppMainPage() {
               speak={speak}
               speakHover={speakHover}
               onToast={showToast}
+              accessToken={session?.access_token}
             />
           )}
         </main>

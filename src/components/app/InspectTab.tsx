@@ -44,6 +44,7 @@ interface InspectTabProps {
   speak: (text: string) => void
   speakHover: (text: string) => void
   onToast: (msg: string) => void
+  accessToken?: string
 }
 
 export default function InspectTab({
@@ -77,6 +78,7 @@ export default function InspectTab({
   speak,
   speakHover,
   onToast,
+  accessToken,
 }: InspectTabProps) {
   return (
     <>
@@ -164,7 +166,7 @@ export default function InspectTab({
             )}
           </div>
 
-          <DamageList damages={allVehicleDamages} onRemove={onRemoveDamage} onUpdate={onUpdateDamage} previousReport={previousReport} />
+          <DamageList damages={allVehicleDamages} onRemove={onRemoveDamage} onUpdate={onUpdateDamage} previousReport={previousReport} accessToken={accessToken} />
 
           <div className="mt-6 pt-6 border-t border-[var(--panel-border)]">
             <ReportActions

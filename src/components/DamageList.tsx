@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Damage, Severity, ViewType } from '../types'
 import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '../lib/imageUtils'
-import { storePhoto, deletePhotoRef } from '../lib/photoStore'
+import { storePhoto, deletePhotoRef, resolvePhotoUrl } from '../lib/photoStore'
 import {
   finishPhotoUploadProgress,
   startPhotoUploadProgress,
@@ -19,6 +19,25 @@ interface Props {
   onUpdate: (id: string, patch: Partial<Damage>) => void
   /** Laudo anterior do mesmo veículo (por placa), usado para marcar avarias novas. */
   previousReport?: PreviousReportSummary | null
+  accessToken?: string
+}
+
+interface AiSuggestion {
+  severity: Severity
+  description: string
+}
+
+async function photoRefToDataUrl(ref: string): Promise<string> {
+  const resolved = await resolvePhotoUrl(ref)
+  if (resolved.startsWith('data:')) return resolved
+  const res = await fetch(resolved)
+  const blob = await res.blob()
+  return await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = reject
+    reader.readAsDataURL(blob)
+  })
 }
 
 const SEV_LABEL = { low: 'Leve', medium: 'Média', high: 'Grave' } satisfies Record<Severity, string>
@@ -27,11 +46,57 @@ const VIEW_LABEL = {
   'lateral-left': 'Lat. Esq.', 'lateral-right': 'Lat. Dir.', frontal: 'Frontal', traseira: 'Traseira'
 } satisfies Record<ViewType, string>
 
-export default function DamageList({ damages, onRemove, onUpdate, previousReport }: Props) {
+export default function DamageList({ damages, onRemove, onUpdate, previousReport, accessToken }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [photoViewer, setPhotoViewer] = useState<string | null>(null)
   const [compressingId, setCompressingId] = useState<string | null>(null)
+  const [analyzingId, setAnalyzingId] = useState<string | null>(null)
+  const [suggestions, setSuggestions] = useState<Record<string, AiSuggestion>>({})
   const prefersReducedMotion = useReducedMotion()
+
+  async function handleAnalyze(d: Damage) {
+    if (!d.photos[0] || !accessToken) return
+    setAnalyzingId(d.id)
+    try {
+      const photo = await photoRefToDataUrl(d.photos[0])
+      const res = await fetch('/api/damage-vision', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+        body: JSON.stringify({ photo, partName: d.partName }),
+      })
+      if (!res.ok) return
+      const data = await res.json()
+      setSuggestions(prev => ({ ...prev, [d.id]: { severity: data.severity, description: data.description } }))
+    } catch (e) {
+      console.error('Failed to analyze damage photo:', e)
+    } finally {
+      setAnalyzingId(null)
+    }
+  }
+
+  function applySuggestion(d: Damage) {
+    const suggestion = suggestions[d.id]
+    if (!suggestion) return
+    const currentNotes = d.notes || ''
+    const space = currentNotes ? (currentNotes.endsWith(' ') ? '' : ' ') : ''
+    onUpdate(d.id, {
+      severity: suggestion.severity,
+      notes: currentNotes + space + suggestion.description,
+    })
+    setSuggestions(prev => {
+      const next = { ...prev }
+      delete next[d.id]
+      return next
+    })
+  }
+
+  function discardSuggestion(id: string) {
+    setSuggestions(prev => {
+      const next = { ...prev }
+      delete next[id]
+      return next
+    })
+  }
 
   async function handlePhoto(id: string, file: File) {
     setCompressingId(id)
@@ -171,6 +236,45 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                       ))}
                     </div>
                   </div>
+
+                  {/* Análise por IA */}
+                  {d.photos.length > 0 && (
+                    <div>
+                      {suggestions[d.id] ? (
+                        <div className="bg-sky-500/5 border border-sky-500/20 rounded-lg p-2.5 space-y-2">
+                          <div className="text-[0.68rem] font-bold text-sky-400 uppercase">
+                            Sugestão da IA: {SEV_LABEL[suggestions[d.id].severity]}
+                          </div>
+                          <p className="text-[0.78rem] text-[var(--text-main)]">{suggestions[d.id].description}</p>
+                          <p className="text-[0.65rem] text-[var(--text-muted)] italic">
+                            Sugestão automática — não substitui a avaliação do vistoriador.
+                          </p>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => applySuggestion(d)}
+                              className="flex-1 py-1.5 rounded-lg text-[0.75rem] font-bold bg-sky-500/15 text-sky-400 hover:bg-sky-500/25 transition-colors"
+                            >
+                              Usar esta sugestão
+                            </button>
+                            <button
+                              onClick={() => discardSuggestion(d.id)}
+                              className="flex-1 py-1.5 rounded-lg text-[0.75rem] font-bold bg-white/[0.03] text-[var(--text-muted)] hover:bg-white/[0.06] transition-colors"
+                            >
+                              Descartar
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleAnalyze(d)}
+                          disabled={analyzingId !== null}
+                          className="w-full py-1.5 rounded-lg text-[0.75rem] font-bold border border-sky-500/25 bg-sky-500/5 text-sky-400 hover:bg-sky-500/10 transition-colors disabled:opacity-50"
+                        >
+                          {analyzingId === d.id ? '⏳ Analisando…' : '🤖 Analisar com IA'}
+                        </button>
+                      )}
+                    </div>
+                  )}
 
                   {/* Notes */}
                   <div>
