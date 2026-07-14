@@ -26,18 +26,23 @@ export interface BlogPost {
    * espelhar exatamente o que aparece na página, sem parafrasear.
    */
   howTo?: { name: string; steps: { name: string; text: string }[] }
+  /**
+   * Perguntas/respostas para featured snippet + schema FAQPage.
+   * Respostas devem ter ~40–60 palavras, diretas, com a keyword no começo.
+   */
+  faq?: { question: string; answer: string }[]
 }
 
 export function Cta() {
   return (
-    <aside className="not-prose my-10 rounded-2xl border border-[var(--card-border)] bg-gradient-to-br from-sky-500/[0.08] to-blue-900/10 p-6 backdrop-blur-md">
-      <p className="text-[0.7rem] font-extrabold uppercase tracking-widest text-[var(--signal-bright)] mb-2">
+    <aside className="blog-cta not-prose my-10 rounded-2xl border border-sky-400/25 bg-slate-950 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.35)]">
+      <p className="blog-cta-eyebrow text-[0.7rem] font-extrabold uppercase tracking-widest text-amber-400 mb-2">
         Faça na prática
       </p>
-      <h3 className="font-display text-xl font-bold text-[var(--text-main)] mb-2">
+      <h3 className="blog-cta-title font-display text-xl font-bold text-white mb-2">
         Gere um laudo de vistoria em minutos
       </h3>
-      <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-4">
+      <p className="blog-cta-body text-sm text-slate-300 leading-relaxed mb-4">
         Marque as avarias num diagrama do veículo, anexe fotos com GPS e exporte um PDF com hash de
         validação e QR Code. Sem papel, sem retrabalho.
       </p>
@@ -2382,6 +2387,903 @@ BLOG_POSTS.unshift(
         </p>
 
         <Cta />
+      </>
+    ),
+  },
+)
+
+BLOG_POSTS.unshift(
+  {
+    slug: 'cobranca-avaria-devolucao-locadora',
+    title: 'Como cobrar avaria na devolução da locadora sem perder a discussão',
+    excerpt:
+      'Cliente nega o dano, cada vistoriador faz de um jeito e a cobrança fica fraca. Veja como comparar retirada × devolução no mesmo padrão, com laudo assinável, QR/hash e PDF no WhatsApp — com a marca da locadora.',
+    category: 'Locadora',
+    tags: [
+      'cobrança de avaria',
+      'devolução locadora',
+      'retirada e devolução',
+      'vistoria locadora',
+      'laudo digital',
+    ],
+    date: '2026-07-13',
+    readingMinutes: 8,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)',
+      emoji: '🧾',
+      image: '/vehicles-img/car.png',
+    },
+    toc: [
+      { id: 'resposta-rapida', label: 'Resposta rápida' },
+      { id: 'dor', label: 'Por que a cobrança falha' },
+      { id: 'comparar', label: 'Retirada × devolução no mesmo padrão' },
+      { id: 'prova', label: 'Assinatura, QR e hash' },
+      { id: 'whatsapp', label: 'PDF no WhatsApp com sua marca' },
+      { id: 'custo', label: 'Custo vs laudo terceirizado' },
+      { id: 'passo-a-passo', label: 'Passo a passo no pátio' },
+      { id: 'faq', label: 'Perguntas frequentes' },
+    ],
+    faq: [
+      {
+        question: 'Como cobrar avaria na devolução da locadora?',
+        answer:
+          'Para cobrar avaria na devolução da locadora, compare o laudo de retirada com o de devolução no mesmo padrão: diagrama por peça, fotos, assinatura e PDF com QR/hash. Cobre apenas o dano novo e comprovável e envie o documento no WhatsApp no mesmo ato.',
+      },
+      {
+        question: 'O que fazer quando o cliente diz que a avaria já existia?',
+        answer:
+          'Apresente o laudo de retirada assinado, com a peça marcada e fotos daquele momento. Se o dano não estava registrado na saída e aparece na devolução com o mesmo método de vistoria, a cobrança fica objetiva — não depende de “achismo” no balcão.',
+      },
+      {
+        question: 'Por que padronizar vistoriadores na locadora?',
+        answer:
+          'Sem padrão único, cada vistoriador usa papel, foto solta ou planilha diferente e a comparação retirada × devolução falha. Um checklist digital igual para toda a equipe fortalece a cobrança e reduz prejuízo com avarias absorvidas.',
+      },
+    ],
+    howTo: {
+      name: 'Como cobrar avaria na devolução com prova comparável',
+      steps: [
+        {
+          name: 'Feche a retirada no mesmo checklist da devolução',
+          text: 'Mesma ordem de peças, mesmos tipos de dano e o mesmo laudo digital — sem prancheta diferente por vistoriador.',
+        },
+        {
+          name: 'Registre avarias no diagrama com foto',
+          text: 'Cada risco ou amassado fica na peça certa, com foto anexada no momento da vistoria.',
+        },
+        {
+          name: 'Colha assinaturas na hora',
+          text: 'Vistoriador e cliente/responsável assinam na tela antes de liberar o veículo.',
+        },
+        {
+          name: 'Na devolução, compare laudo com laudo',
+          text: 'Cobre só o que for dano novo e comprovável — com o mesmo padrão da retirada.',
+        },
+        {
+          name: 'Envie o PDF pelo WhatsApp',
+          text: 'O cliente recebe o laudo com a marca da locadora, hash e QR Code no mesmo ato.',
+        },
+      ],
+    },
+    content: (
+      <>
+        <h2 id="resposta-rapida">Como cobrar avaria na devolução da locadora?</h2>
+        <p>
+          Para cobrar avaria na devolução da locadora, compare o laudo de retirada com o de devolução no
+          mesmo padrão: diagrama por peça, fotos, assinatura e PDF com QR/hash. Cobre apenas o dano novo e
+          comprovável e envie o documento no WhatsApp no mesmo ato — com a marca da locadora.
+        </p>
+        <p>
+          Na locadora, a frase que mais custa caro é:{' '}
+          <strong>&ldquo;isso já estava assim&rdquo;</strong>. Quando a retirada foi feita de um jeito e a
+          devolução de outro — ou pior, sem laudo comparável — a cobrança perde força e o reparo sai do
+          caixa da frota.
+        </p>
+        <p>
+          O problema raramente é falta de vontade de cobrar. É falta de{' '}
+          <strong>padrão único entre vistoriadores</strong> e de um documento que o cliente não consiga
+          desmontar com facilidade. Com o <strong>Danos Aparentes</strong>, retirada e devolução usam o
+          mesmo fluxo: diagrama, fotos, assinatura e PDF verificável.
+        </p>
+
+        <BlogVideo
+          src="/videos/vistoria-locadoras.mp4"
+          poster="/videos/vistoria-locadoras-poster.jpg"
+          title="Vistoria digital para locadoras — Danos Aparentes"
+          description="No pátio da locadora: mesmo padrão na retirada e na devolução, diagrama com fotos, assinatura na tela e laudo PDF com hash e QR Code — pronto para cobrar o que é da frota."
+          duration="PT60S"
+          uploadDate="2026-07-13"
+          caption="No pátio: mesmo padrão na retirada e na devolução, laudo pronto para cobrar o que é da frota."
+        />
+
+        <h2 id="dor">Por que a cobrança de avaria falha na devolução</h2>
+        <ul>
+          <li>
+            <strong>Cliente nega o dano</strong> e você não tem um laudo de retirada com a mesma lógica
+            visual.
+          </li>
+          <li>
+            <strong>Cada vistoriador faz de um jeito</strong> — papel, foto no WhatsApp, planilha — e a
+            comparação vira achismo.
+          </li>
+          <li>
+            <strong>Cobrança fraca</strong>: sem assinatura, sem peça marcada e sem validação do arquivo, o
+            desconto vira o caminho mais curto.
+          </li>
+        </ul>
+
+        <h2 id="comparar">Compare retirada × devolução com o mesmo padrão</h2>
+        <p>
+          A regra é simples: o que não está no laudo de retirada, se aparecer na devolução com prova, é
+          candidato a cobrança. Para isso funcionar, os dois momentos precisam falar a mesma língua —
+          mesmas vistas, mesma marcação por peça, mesmas fotos vinculadas à avaria.
+        </p>
+        <p>
+          Assim você deixa de discutir opinião e passa a mostrar{' '}
+          <strong>dois laudos lado a lado</strong>: o estado na saída e o estado no retorno. Só o dano novo
+          entra na cobrança — o que protege a margem e também a relação com o cliente de boa-fé.
+        </p>
+
+        <h2 id="prova">Laudo com assinatura + QR/hash: menos “já estava assim”</h2>
+        <p>
+          Assinatura na tela fecha o aceite no momento da vistoria. O <strong>hash SHA-256</strong> e o{' '}
+          <strong>QR Code</strong> permitem conferir depois se o PDF ainda é o original. Isso não substitui
+          contrato ou jurídico, mas fortalece o registro documental quando a disputa aparece dias depois.
+        </p>
+        <LaudoSheet />
+
+        <Cta />
+
+        <h2 id="whatsapp">PDF no WhatsApp na hora, com a marca da locadora</h2>
+        <p>
+          Enviar o laudo no mesmo ato da devolução reduz “eu não recebi” e “não vi as fotos”. O PDF sai com
+          a <strong>logo e o nome da sua locadora</strong> — documento white-label, não um arquivo genérico.
+          Veja também o guia de{' '}
+          <a href="/blog/laudo-white-label-para-locadoras">laudo white-label para locadoras</a>.
+        </p>
+
+        <h2 id="custo">1 laudo terceirizado vs vistoria no fluxo diário</h2>
+        <p>
+          Um laudo avulso terceirizado já chega perto do valor de um mês do{' '}
+          <a href="/planos">Plano Pro</a>. Na operação de locadora, a vistoria precisa estar no fluxo
+          diário — retirada e devolução, todos os dias — não só em casos excepcionais. Quanto mais a
+          prova fica no processo, menos você depende de “fazer um laudo especial” depois da briga.
+        </p>
+
+        <h2 id="passo-a-passo">Passo a passo no pátio</h2>
+        <ol>
+          <li>
+            <strong>Feche a retirada no mesmo checklist da devolução</strong> — mesma ordem de peças,
+            mesmos tipos de dano e o mesmo laudo digital.
+          </li>
+          <li>
+            <strong>Registre avarias no diagrama com foto</strong> — cada risco ou amassado na peça certa.
+          </li>
+          <li>
+            <strong>Colha assinaturas na hora</strong> — vistoriador e cliente/responsável na tela.
+          </li>
+          <li>
+            <strong>Na devolução, compare laudo com laudo</strong> — cobre só o dano novo e comprovável.
+          </li>
+          <li>
+            <strong>Envie o PDF pelo WhatsApp</strong> — com a marca da locadora, hash e QR Code.
+          </li>
+        </ol>
+        <p>
+          Quer o fluxo completo da operação? Veja a página de{' '}
+          <a href="/locadoras">vistoria digital para locadoras</a> e o{' '}
+          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</a>. Para o caso
+          clássico do “já existia”, leia também{' '}
+          <a href="/blog/avarias-preexistentes-como-provar">como provar avarias preexistentes</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'vistoria-antes-do-orcamento-oficina',
+    title: 'Vistoria antes do orçamento: como a oficina evita briga na entrega',
+    excerpt:
+      'Orçamento contestado, foto solta no WhatsApp e cliente dizendo que “não era assim”. Veja como registrar o estado do carro com diagrama, foto e aceite na entrada — e entregar um laudo profissional.',
+    category: 'Oficina',
+    tags: [
+      'oficina mecânica',
+      'orçamento automotivo',
+      'vistoria de entrada',
+      'laudo de avarias',
+      'funilaria',
+    ],
+    date: '2026-07-13',
+    readingMinutes: 7,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#1e3a5f 0%,#0369a1 45%,#38bdf8 100%)',
+      emoji: '🔧',
+      image: '/vehicles-img/car2d.png',
+    },
+    toc: [
+      { id: 'resposta-rapida', label: 'Resposta rápida' },
+      { id: 'dor', label: 'Por que o orçamento vira briga' },
+      { id: 'entrada', label: 'Registre o estado na entrada' },
+      { id: 'alinhamento', label: 'Alinhamento com o cliente' },
+      { id: 'profissional', label: 'Laudo que eleva a oficina' },
+      { id: 'passo-a-passo', label: 'Passo a passo prático' },
+      { id: 'faq', label: 'Perguntas frequentes' },
+    ],
+    faq: [
+      {
+        question: 'Por que fazer vistoria antes do orçamento na oficina?',
+        answer:
+          'A vistoria antes do orçamento registra o estado do carro na entrada com diagrama, foto e aceite do cliente. Assim o orçamento parte de prova objetiva e a oficina evita a briga clássica na entrega: “isso não era assim”.',
+      },
+      {
+        question: 'Foto no WhatsApp serve como prova de avaria na oficina?',
+        answer:
+          'Foto solta no WhatsApp é fraca como prova: não amarra peça, laudo e aceite. O ideal é anexar a imagem à avaria no diagrama, colher assinatura na entrada e gerar PDF com validação — documento profissional, não print de conversa.',
+      },
+      {
+        question: 'Como evitar contestação do orçamento na entrega do veículo?',
+        answer:
+          'Mostre o laudo de entrada, peça a assinatura do responsável e orce com base nesse registro. Na entrega, compare com o estado inicial. O alinhamento precoce reduz surpresa de escopo e de valor.',
+      },
+    ],
+    howTo: {
+      name: 'Como registrar o veículo antes de orçar',
+      steps: [
+        {
+          name: 'Faça a vistoria de entrada no diagrama',
+          text: 'Marque riscos, amassados e peças afetadas antes de abrir o orçamento.',
+        },
+        {
+          name: 'Anexe foto em cada avaria relevante',
+          text: 'Foto vinculada à peça — não galeria solta no WhatsApp.',
+        },
+        {
+          name: 'Mostre o laudo e colha o aceite',
+          text: 'Cliente ou responsável assina na tela, alinhando o estado do carro na entrada.',
+        },
+        {
+          name: 'Orce com base no registro',
+          text: 'O orçamento parte do que foi documentado, não da memória de cada um.',
+        },
+        {
+          name: 'Na entrega, compare com a entrada',
+          text: 'Evita a frase “não era assim” e reduz contestação do serviço.',
+        },
+      ],
+    },
+    content: (
+      <>
+        <h2 id="resposta-rapida">Por que fazer vistoria antes do orçamento na oficina?</h2>
+        <p>
+          A vistoria antes do orçamento registra o estado do carro na entrada com diagrama, foto e aceite
+          do cliente. Assim o orçamento parte de prova objetiva e a oficina evita a briga clássica na
+          entrega: <strong>&ldquo;isso não era assim&rdquo;</strong>.
+        </p>
+        <p>
+          Em oficina, o orçamento quase nunca quebra só por preço. Quebra quando o cliente chega na entrega
+          e diz que o dano “não era assim” — ou quando a única “prova” da entrada é uma foto solta no
+          WhatsApp, sem peça marcada e sem aceite.
+        </p>
+        <p>
+          A saída não é discutir mais alto. É <strong>registrar o estado do carro antes de orçar</strong>,
+          com diagrama, fotos e assinatura. O <strong>Danos Aparentes</strong> transforma essa entrada em
+          laudo PDF profissional — com cara de processo, não de gambiarra.
+        </p>
+
+        <h2 id="dor">Por que o orçamento vira briga na entrega</h2>
+        <ul>
+          <li>
+            <strong>Orçamento contestado</strong> porque o escopo do dano não ficou claro na entrada.
+          </li>
+          <li>
+            <strong>Fotos soltas no WhatsApp</strong> — sem vínculo com peça, data ou responsável.
+          </li>
+          <li>
+            <strong>Cliente diz que “não era assim”</strong> e a oficina fica sem linha de base para mostrar
+            o estado inicial.
+          </li>
+        </ul>
+
+        <h2 id="entrada">Antes de orçar, registre o estado do carro</h2>
+        <p>
+          O momento certo é a <strong>entrada do veículo</strong>: toque no diagrama, marque a avaria, anexe
+          a foto na peça e feche o laudo. Assim o orçamento parte de um registro objetivo — onde está o
+          dano, qual o tipo e o que o cliente já reconheceu.
+        </p>
+        <p>
+          Isso também protege a oficina de danos que o cliente não comentou: se estava no laudo de entrada
+          assinado, a discussão muda de tom.
+        </p>
+
+        <LaudoSheet />
+
+        <h2 id="alinhamento">Feche o alinhamento com o cliente na entrada</h2>
+        <p>
+          Mostrar o laudo e colher a <strong>assinatura na tela</strong> é o que evita a briga na entrega.
+          O cliente vê o que foi registrado; a oficina não depende de “eu te mandei no zap”. Hash e QR Code
+          reforçam que o PDF não foi editado depois.
+        </p>
+
+        <Cta />
+
+        <h2 id="profissional">Laudo profissional que sobe o nível da oficina</h2>
+        <p>
+          Um PDF com logo, peças marcadas, fotos e validação transmite método. Em funilaria, mecânica
+          rápida ou multi-serviço, isso diferencia a casa que “anota no caderno” da que documenta o
+          veículo como operação séria. Configure a marca uma vez e use em toda entrada — veja{' '}
+          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</a>.
+        </p>
+
+        <h2 id="passo-a-passo">Passo a passo prático</h2>
+        <ol>
+          <li>
+            <strong>Faça a vistoria de entrada no diagrama</strong> — riscos, amassados e peças afetadas.
+          </li>
+          <li>
+            <strong>Anexe foto em cada avaria relevante</strong> — vinculada à peça, não solta na galeria.
+          </li>
+          <li>
+            <strong>Mostre o laudo e colha o aceite</strong> — assinatura do cliente ou responsável.
+          </li>
+          <li>
+            <strong>Orce com base no registro</strong> — menos surpresa no valor e no escopo.
+          </li>
+          <li>
+            <strong>Na entrega, compare com a entrada</strong> — fecha o ciclo com prova, não com memória.
+          </li>
+        </ol>
+        <p>
+          Para fotos que sustentam o laudo, use o guia{' '}
+          <a href="/blog/como-fotografar-avarias">como fotografar avarias à prova de contestação</a>. Para
+          o fluxo geral do documento, veja{' '}
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">como fazer laudo de vistoria veicular</a>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'laudo-de-vistoria-para-despachantes',
+    title: 'Laudo de vistoria para despachantes: rápido no celular, sem redigitar',
+    excerpt:
+      'Volume alto, retrabalho e laudo incompleto atrasam o cliente. Veja como emitir laudo no celular com padrão único, cara de processo (hash/QR) e envio imediato para cliente ou parceiro.',
+    category: 'Despachante',
+    tags: [
+      'despachante',
+      'laudo de vistoria',
+      'vistoria digital',
+      'laudo no celular',
+      'documentação veicular',
+    ],
+    date: '2026-07-13',
+    readingMinutes: 7,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#312e81 0%,#4f46e5 45%,#a5b4fc 100%)',
+      emoji: '📄',
+      image: '/vehicles-img/car.png',
+    },
+    toc: [
+      { id: 'resposta-rapida', label: 'Resposta rápida' },
+      { id: 'dor', label: 'Volume, retrabalho e laudo fraco' },
+      { id: 'celular', label: 'Laudo pronto no celular' },
+      { id: 'padrao', label: 'Um padrão para vários casos' },
+      { id: 'documento', label: 'Cara de processo, não de folha' },
+      { id: 'envio', label: 'Envio imediato' },
+      { id: 'fluxo', label: 'Da placa ao PDF em minutos' },
+      { id: 'faq', label: 'Perguntas frequentes' },
+    ],
+    faq: [
+      {
+        question: 'Como fazer laudo de vistoria para despachante no celular?',
+        answer:
+          'Identifique o veículo pela placa, marque as avarias no diagrama, anexe fotos, colha assinaturas e gere o PDF com hash e QR Code — tudo no celular, sem redigitar depois no computador. Em seguida envie o arquivo na hora para o cliente ou parceiro.',
+      },
+      {
+        question: 'Por que o laudo do despachante precisa de QR Code e hash?',
+        answer:
+          'QR Code e hash mostram que o PDF é o original e não foi adulterado depois. Isso dá cara de processo ao documento e reduz retrabalho quando cliente ou parceiro pedem “um laudo decente”, não folha improvisada ou print.',
+      },
+      {
+        question: 'Dá para eliminar a redigitação do laudo no escritório?',
+        answer:
+          'Sim: se a vistoria nasce no celular e o PDF sai no mesmo fluxo, não há etapa de passar a limpo no PC. Menos erro de transcrição, mais velocidade por veículo e mais capacidade no volume diário do despachante.',
+      },
+    ],
+    howTo: {
+      name: 'Como emitir laudo de vistoria no fluxo do despachante',
+      steps: [
+        {
+          name: 'Identifique o veículo pela placa',
+          text: 'Comece no celular, sem abrir planilha nem redigitar depois no PC.',
+        },
+        {
+          name: 'Marque as avarias no diagrama',
+          text: 'Toque na peça, classifique o dano e anexe a foto no mesmo fluxo.',
+        },
+        {
+          name: 'Feche assinaturas e gere o PDF',
+          text: 'Documento com hash, QR Code e layout profissional.',
+        },
+        {
+          name: 'Envie na hora para cliente ou parceiro',
+          text: 'WhatsApp ou arquivo pronto — sem etapa pendente no escritório.',
+        },
+      ],
+    },
+    content: (
+      <>
+        <h2 id="resposta-rapida">Como fazer laudo de vistoria para despachante no celular?</h2>
+        <p>
+          Identifique o veículo pela placa, marque as avarias no diagrama, anexe fotos, colha assinaturas e
+          gere o PDF com hash e QR Code — tudo no celular, sem redigitar depois no computador. Em seguida
+          envie o arquivo na hora para o cliente ou parceiro.
+        </p>
+        <p>
+          Para despachante, tempo é capacidade. Se cada vistoria vira foto solta, anotações e{' '}
+          <strong>redigitação no computador</strong>, o volume trava — e o cliente quer o documento ontem.
+          Laudo “feio” ou incompleto ainda gera retrabalho e pergunta no WhatsApp.
+        </p>
+        <p>
+          O <strong>Danos Aparentes</strong> fecha o laudo no celular: placa, diagrama, fotos, assinatura e
+          PDF com validação — padrão único para vários casos, com envio imediato.
+        </p>
+
+        <h2 id="dor">Volume, retrabalho e laudo fraco</h2>
+        <ul>
+          <li>
+            <strong>Volume</strong> — vários veículos por dia, sem tempo para processo artesanal.
+          </li>
+          <li>
+            <strong>Retrabalho</strong> — anotar no pátio e digitar de novo no escritório.
+          </li>
+          <li>
+            <strong>Laudo incompleto ou improvisado</strong> — cliente e parceiro pedem “um documento
+            decente”.
+          </li>
+        </ul>
+
+        <h2 id="celular">Laudo pronto no celular, sem redigitar no PC</h2>
+        <p>
+          O fluxo nasce e termina no aparelho. Você não precisa “passar a limpo” depois: o que foi marcado
+          no diagrama já vira o PDF. Isso corta erro de transcrição e libera o dia para mais casos. Se
+          redigitação é a dor da sua operação, veja também{' '}
+          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a>.
+        </p>
+
+        <h2 id="padrao">Padrão único para vários casos — menos erro, mais velocidade</h2>
+        <p>
+          Cada despacho, transferência ou inspeção rápida ganha o <strong>mesmo checklist visual</strong>.
+          A equipe (ou você sozinho) não reinventa o laudo a cada cliente. Menos campo esquecido, menos
+          “esqueceu a foto do para-choque”, mais previsibilidade no tempo por veículo.
+        </p>
+
+        <Cta />
+
+        <h2 id="documento">Documento com cara de processo (hash/QR), não folha improvisada</h2>
+        <p>
+          Cliente e parceiro diferenciam na hora um PDF com logo, peças marcadas, assinatura e{' '}
+          <strong>QR/hash de verificação</strong> de uma folha digitalizada ou print de conversa. Isso
+          eleva a percepção do serviço do despachante sem alongar o atendimento.
+        </p>
+        <LaudoSheet />
+
+        <h2 id="envio">Envio imediato para cliente, despacho ou parceiro</h2>
+        <p>
+          Com o PDF pronto, o envio acontece no mesmo momento — sem “te mando amanhã quando chegar no
+          escritório”. Menos follow-up, menos fila no zap, mais conclusão no ato.
+        </p>
+
+        <h2 id="fluxo">Da placa ao laudo em poucos minutos</h2>
+        <ol>
+          <li>
+            <strong>Identifique o veículo pela placa</strong> — começo no celular.
+          </li>
+          <li>
+            <strong>Marque as avarias no diagrama</strong> — peça, tipo de dano e foto.
+          </li>
+          <li>
+            <strong>Feche assinaturas e gere o PDF</strong> — com hash e QR Code.
+          </li>
+          <li>
+            <strong>Envie na hora</strong> — cliente ou parceiro recebem o arquivo pronto.
+          </li>
+        </ol>
+        <p>
+          Para acelerar ainda mais a identificação, veja o{' '}
+          <a href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH com autofill</a>. Para o
+          documento em si, o guia{' '}
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">como fazer laudo de vistoria</a> fecha o
+          método.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'controle-avarias-frota-entrada-saida',
+    title: 'Controle de avarias na frota: entrada, saída e histórico auditável',
+    excerpt:
+      'Sinistro interno, briga motorista × oficina e gestor sem visão. Veja como registrar toda saída/entrada com o mesmo padrão, reduzir disputa e ter histórico da frota — com laudo white-label da empresa.',
+    category: 'Frota',
+    tags: [
+      'controle de frota',
+      'avarias na frota',
+      'entrada e saída de veículo',
+      'gestão de frota',
+      'laudo white-label',
+    ],
+    date: '2026-07-13',
+    readingMinutes: 8,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#14532d 0%,#15803d 45%,#86efac 100%)',
+      emoji: '🚛',
+      image: '/vehicles-img/van.png',
+    },
+    toc: [
+      { id: 'resposta-rapida', label: 'Resposta rápida' },
+      { id: 'dor', label: 'Onde a frota perde controle' },
+      { id: 'registro', label: 'Saída e entrada auditáveis' },
+      { id: 'historico', label: 'Um histórico, não 10 planilhas' },
+      { id: 'disputa', label: 'Menos disputa interna' },
+      { id: 'marca', label: 'Laudo com a marca da empresa' },
+      { id: 'visao', label: 'Visão do mês para o gestor' },
+      { id: 'faq', label: 'Perguntas frequentes' },
+    ],
+    faq: [
+      {
+        question: 'Como controlar avarias na frota com entrada e saída?',
+        answer:
+          'Torne a vistoria obrigatória na saída e repita o mesmo padrão na entrada: diagrama, fotos, assinatura e PDF. Compare laudo com laudo para saber o que mudou. Centralize os documentos para o gestor ter histórico único — não dez planilhas.',
+      },
+      {
+        question: 'Como reduzir disputa entre motorista e oficina na frota?',
+        answer:
+          'Use laudos auditáveis de saída e entrada como linha do tempo. A discussão deixa de ser “quem tem razão” e passa a ser o que os registros mostram: quem estava com o veículo, quando e qual dano surgiu, com prova visual e assinatura.',
+      },
+      {
+        question: 'Por que laudo white-label importa na gestão de frota?',
+        answer:
+          'O PDF com logo e nome da empresa reforça que o processo é institucional. Ajuda em auditoria interna, alinhamento com oficinas parceiras e entrega a terceiros — o documento representa a frota, não um arquivo genérico.',
+      },
+    ],
+    howTo: {
+      name: 'Como implantar controle de avarias na entrada e saída',
+      steps: [
+        {
+          name: 'Defina vistoria obrigatória na saída',
+          text: 'Todo veículo que deixa a base sai com laudo assinado e fotos no diagrama.',
+        },
+        {
+          name: 'Repita o mesmo padrão na entrada',
+          text: 'Compare com o laudo da saída — mesmo checklist, mesma lógica de peças.',
+        },
+        {
+          name: 'Centralize os laudos da equipe',
+          text: 'Gestor enxerga a frota inteira, não planilhas espalhadas por motorista ou unidade.',
+        },
+        {
+          name: 'Use o histórico na disputa interna',
+          text: 'Quem danificou, quando e com qual prova — motorista, oficina ou terceiro.',
+        },
+        {
+          name: 'Padronize o PDF com a marca da empresa',
+          text: 'White-label: logo e nome da frota em todo documento.',
+        },
+      ],
+    },
+    content: (
+      <>
+        <h2 id="resposta-rapida">Como controlar avarias na frota com entrada e saída?</h2>
+        <p>
+          Torne a vistoria obrigatória na saída e repita o mesmo padrão na entrada: diagrama, fotos,
+          assinatura e PDF. Compare laudo com laudo para saber o que mudou. Centralize os documentos para o
+          gestor ter histórico único — não dez planilhas.
+        </p>
+        <p>
+          Em frota, o prejuízo não aparece só no sinistro grande. Aparece no{' '}
+          <strong>dano sem dono</strong>: motorista diz que já estava, oficina diz que não foi no serviço,
+          gestor não tem um histórico único — só planilhas e prints.
+        </p>
+        <p>
+          O remédio é operacional: <strong>toda saída e toda entrada com registro auditável</strong>, no
+          mesmo padrão. Com o <strong>Danos Aparentes</strong>, o laudo vira a linha do tempo da frota —
+          e o PDF sai com a marca da empresa.
+        </p>
+
+        <h2 id="dor">Onde a frota perde o controle</h2>
+        <ul>
+          <li>
+            <strong>Sinistro interno</strong> sem laudo comparável entre turnos ou motoristas.
+          </li>
+          <li>
+            <strong>Motorista × oficina</strong> — cada lado com uma versão do estado do veículo.
+          </li>
+          <li>
+            <strong>Falta de histórico</strong> — avarias espalhadas em WhatsApp e Excel.
+          </li>
+          <li>
+            <strong>Gestor sem visão</strong> — não sabe quais veículos mais geram dano no mês.
+          </li>
+        </ul>
+
+        <h2 id="registro">Toda saída/entrada com registro auditável</h2>
+        <p>
+          Na saída, o veículo só libera com laudo: diagrama, fotos, quilometragem e assinatura. Na
+          entrada, o mesmo fluxo. A comparação deixa claro o que mudou no período — e sustenta cobrança
+          interna, treinamento ou acionamento de seguro com base em prova, não em achismo.
+        </p>
+
+        <h2 id="historico">Histórico da frota no mesmo padrão — não 10 planilhas</h2>
+        <p>
+          Quando cada unidade ou motorista usa um formulário diferente, o gestor não consegue consolidar
+          nada. Um padrão único de laudo digital cria um <strong>histórico comparável</strong> por placa:
+          o que já existia, o que é novo, em qual data. Para padronizar a equipe, veja também{' '}
+          <a href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</a>.
+        </p>
+
+        <Cta />
+
+        <h2 id="disputa">Reduz disputa interna: quem danificou, quando, com prova</h2>
+        <p>
+          A pergunta deixa de ser “quem tem razão?” e passa a ser “o que os laudos mostram?”. Isso acelera
+          a decisão entre RH, manutenção e operação — e reduz o tempo que o gestor gasta apagando
+          incêndio no grupo do WhatsApp.
+        </p>
+
+        <h2 id="marca">Marca da empresa no laudo (white-label)</h2>
+        <p>
+          O PDF com logo e nome da frota reforça que o processo é institucional. Útil em auditoria
+          interna, entrega a terceiros e alinhamento com oficinas parceiras. Detalhes em{' '}
+          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa</a>.
+        </p>
+        <LaudoSheet />
+
+        <h2 id="visao">Visão do mês: avarias e veículos — mais um laudo real</h2>
+        <p>
+          Com os laudos centralizados, o gestor enxerga padrão: quais veículos mais sofrem dano, quais
+          rotas ou motoristas concentram ocorrência, onde o processo de saída está falhando. Isso alimenta
+          ação — não só arquivo. Para o lado financeiro, leia{' '}
+          <a href="/blog/como-reduzir-prejuizo-com-avarias-na-frota">como reduzir prejuízo com avarias na frota</a>
+          . Para equipe multi-vistoriador, o{' '}
+          <a href="/planos">Plano Corporativo</a> e a página de{' '}
+          <a href="/locadoras">locadoras e frotistas</a> mostram o encaixe operacional.
+        </p>
+        <ol>
+          <li>
+            <strong>Vistoria obrigatória na saída</strong> — laudo assinado antes de liberar o veículo.
+          </li>
+          <li>
+            <strong>Mesmo padrão na entrada</strong> — compare com o laudo da saída.
+          </li>
+          <li>
+            <strong>Centralize os laudos da equipe</strong> — visão da frota inteira.
+          </li>
+          <li>
+            <strong>Use o histórico na disputa</strong> — prova de quem, quando e o quê.
+          </li>
+          <li>
+            <strong>PDF com a marca da empresa</strong> — white-label em todo documento.
+          </li>
+        </ol>
+      </>
+    ),
+  },
+)
+
+BLOG_POSTS.push(
+  {
+    slug: 'como-provar-amassado-pre-existente-locacao',
+    title: 'Como provar que um amassado no carro já existia antes da locação',
+    excerpt:
+      'Sem vistoria de entrada bem documentada, é a palavra do cliente contra a da locadora. Veja como um laudo com foto, GPS e hash resolve essa disputa.',
+    category: 'Locadora',
+    tags: ['locadora', 'avarias', 'laudo de vistoria', 'checklist'],
+    date: '2026-07-13',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '🔍', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'o-problema', label: 'O problema da avaria pré-existente' },
+      { id: 'como-provar', label: 'Como provar com a vistoria digital' },
+      { id: 'perfil', label: 'Perfil e campos' },
+      { id: 'logo', label: 'Logo no PDF' },
+      { id: 'validacao', label: 'QR Code e hash' },
+    ],
+    content: (
+      <>
+        <p>
+          Um dos conflitos mais comuns entre locadora e cliente acontece na devolução: um risco ou
+          amassado é apontado, e o cliente alega que &quot;já estava assim&quot; na retirada. Sem um registro
+          confiável do estado do veículo na entrega, a locadora não tem como provar o contrário.
+        </p>
+
+        <h2 id="o-problema">O problema da avaria pré-existente</h2>
+        <p>
+          Uma ficha de papel preenchida às pressas no balcão, sem foto ou com fotos sem data, não
+          resiste a uma contestação. O resultado é a locadora perder a cobrança de um dano real, ou
+          o cliente pagar por um dano que não causou.
+        </p>
+
+        <h2 id="como-provar">Como provar com a vistoria digital</h2>
+        <p>
+          A vistoria digital resolve isso registrando, no momento da retirada, fotos com{' '}
+          <strong>GPS e timestamp automáticos</strong> de cada parte do veículo marcada num diagrama
+          padronizado. Na devolução, o mesmo processo se repete — e agora há dois laudos, com data e
+          local, para comparar lado a lado.
+        </p>
+
+        <RecursosLaudo />
+
+        <p>
+          Trabalha com frota inteira, não só locação avulsa? Veja também o{' '}
+          <a href="/frotas">app de vistoria de frota que funciona offline</a>.
+        </p>
+      </>
+    ),
+    faq: [
+      {
+        question: 'Como provar que um amassado no carro já existia antes da locação?',
+        answer:
+          'Com uma vistoria de entrada registrada em laudo digital: fotos com GPS e data/hora de cada parte do veículo, marcadas num diagrama padronizado e seladas com hash SHA-256, permitindo comparar o estado exato na retirada e na devolução.',
+      },
+    ],
+  },
+  {
+    slug: 'como-digitalizar-a-vistoria-da-sua-oficina',
+    title: 'Como digitalizar a vistoria da sua oficina',
+    excerpt:
+      'Troque a prancheta de papel por um laudo digital em minutos: diagrama do veículo, fotos com GPS, assinatura na tela e PDF com a marca da sua oficina.',
+    category: 'Vistoria',
+    tags: ['oficina', 'laudo de vistoria', 'checklist', 'avarias'],
+    date: '2026-07-13',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)', emoji: '🔧', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'por-que-digitalizar', label: 'Por que digitalizar a vistoria' },
+      { id: 'passo-a-passo', label: 'Passo a passo na oficina' },
+      { id: 'perfil', label: 'Perfil e campos' },
+      { id: 'logo', label: 'Logo no PDF' },
+      { id: 'validacao', label: 'QR Code e hash' },
+    ],
+    content: (
+      <>
+        <p>
+          Toda oficina que recebe veículo de cliente enfrenta o mesmo risco: sem um registro claro do
+          estado do carro na entrada, qualquer arranhão notado na retirada vira discussão. Digitalizar
+          esse processo resolve isso em poucos minutos por veículo.
+        </p>
+
+        <h2 id="por-que-digitalizar">Por que digitalizar a vistoria</h2>
+        <p>
+          Papel se perde, rasga ou fica ilegível. Um laudo digital fica salvo, é fácil de enviar por
+          WhatsApp e — com hash e QR Code — não pode ser alterado depois de gerado sem que isso seja
+          detectável.
+        </p>
+
+        <h2 id="passo-a-passo">Passo a passo na oficina</h2>
+        <ol>
+          <li>Digite a placa do veículo — marca, modelo e cor preenchem automaticamente.</li>
+          <li>Marque cada avaria no diagrama do tipo de veículo (carro, van, caminhão etc).</li>
+          <li>Anexe fotos e, se preferir, descreva por voz em vez de digitar.</li>
+          <li>Colete a assinatura do cliente na própria tela.</li>
+          <li>Envie o PDF com a marca da sua oficina direto pelo WhatsApp.</li>
+        </ol>
+
+        <RecursosLaudo />
+      </>
+    ),
+    howTo: {
+      name: 'Como digitalizar a vistoria da sua oficina',
+      steps: [
+        { name: 'Buscar a placa', text: 'Digite a placa do veículo — marca, modelo e cor preenchem automaticamente.' },
+        { name: 'Marcar as avarias', text: 'Marque cada avaria no diagrama do tipo de veículo (carro, van, caminhão etc).' },
+        { name: 'Anexar fotos', text: 'Anexe fotos e, se preferir, descreva por voz em vez de digitar.' },
+        { name: 'Coletar assinatura', text: 'Colete a assinatura do cliente na própria tela.' },
+        { name: 'Enviar o laudo', text: 'Envie o PDF com a marca da sua oficina direto pelo WhatsApp.' },
+      ],
+    },
+  },
+  {
+    slug: 'laudo-de-avaria-com-qr-code',
+    title: 'Laudo de avaria com QR Code: o que é e para que serve',
+    excerpt:
+      'Entenda como o QR Code de verificação e o hash SHA-256 tornam um laudo de vistoria à prova de adulteração — e por que isso importa para seguradoras.',
+    category: 'Seguro',
+    tags: ['seguradora', 'laudo de vistoria', 'avarias'],
+    date: '2026-07-13',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#1e293b 0%,#334155 45%,#64748b 100%)', emoji: '🔐', image: '/vehicles-img/car.png' },
+    toc: [
+      { id: 'o-que-e', label: 'O que é o QR Code do laudo' },
+      { id: 'como-funciona', label: 'Como funciona a verificação' },
+      { id: 'perfil', label: 'Perfil e campos' },
+      { id: 'logo', label: 'Logo no PDF' },
+      { id: 'validacao', label: 'QR Code e hash' },
+    ],
+    content: (
+      <>
+        <p>
+          Um PDF comum pode ser editado em qualquer editor sem deixar rastro visível. Isso é um
+          problema sério quando o documento é usado para sustentar uma cobrança ou contestar um
+          sinistro. O QR Code de verificação existe para resolver exatamente isso.
+        </p>
+
+        <h2 id="o-que-e">O que é o QR Code do laudo</h2>
+        <p>
+          Ao concluir a vistoria, o app gera um <strong>hash SHA-256</strong> do conteúdo do laudo —
+          uma espécie de &quot;impressão digital&quot; única daquele documento exato. O <strong>QR Code</strong>
+          {' '}impresso no PDF leva a uma página pública onde esse hash pode ser conferido a qualquer
+          momento.
+        </p>
+
+        <h2 id="como-funciona">Como funciona a verificação</h2>
+        <p>
+          Quem recebe o laudo escaneia o QR Code (ou acessa a página de verificação e cola o código)
+          e confere se o hash bate com o do documento original. Se alguém alterou qualquer campo do
+          PDF depois de gerado, o hash não confere — a adulteração fica evidente.
+        </p>
+
+        <RecursosLaudo />
+
+        <p>
+          Trabalha com seguradora ou corretora? Veja também a{' '}
+          <a href="/seguradoras">página de vistoria com QR Code anti-fraude para seguradoras</a>.
+        </p>
+      </>
+    ),
+    faq: [
+      {
+        question: 'Para que serve o QR Code no laudo de vistoria?',
+        answer:
+          'O QR Code leva a uma página pública de verificação onde é possível conferir o hash SHA-256 do laudo original. Se o documento foi alterado depois de gerado, o hash não confere — expondo a adulteração e reforçando a confiança no laudo.',
+      },
+    ],
+  },
+  {
+    slug: 'vistoria-de-frota-sem-internet',
+    title: 'Vistoria de frota sem internet: como funciona',
+    excerpt:
+      'Pátios e galpões sem sinal não são desculpa para vistoria em papel. Veja como registrar avarias offline e sincronizar tudo automaticamente depois.',
+    category: 'Frota',
+    tags: ['frota', 'laudo de vistoria', 'checklist', 'avarias'],
+    date: '2026-07-13',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#166534 45%,#4ade80 100%)', emoji: '📡', image: '/vehicles-img/truck.png' },
+    toc: [
+      { id: 'o-desafio', label: 'O desafio do pátio sem sinal' },
+      { id: 'como-funciona', label: 'Como funciona o modo offline' },
+      { id: 'perfil', label: 'Perfil e campos' },
+      { id: 'logo', label: 'Logo no PDF' },
+      { id: 'validacao', label: 'QR Code e hash' },
+    ],
+    content: (
+      <>
+        <p>
+          Frotas costumam ficar estacionadas em pátios, galpões ou áreas afastadas — exatamente onde
+          o sinal de internet costuma faltar. Um app que depende de conexão constante simplesmente
+          não funciona nesse cenário.
+        </p>
+
+        <h2 id="o-desafio">O desafio do pátio sem sinal</h2>
+        <p>
+          Sem internet, a alternativa vira papel — e papel se perde, não tem GPS automático e não
+          gera um documento com validação. Isso enfraquece justamente o controle que uma frota grande
+          mais precisa: comparar o estado de cada veículo ao longo do tempo.
+        </p>
+
+        <h2 id="como-funciona">Como funciona o modo offline</h2>
+        <p>
+          A vistoria — fotos, marcações no diagrama, assinaturas — é salva localmente no aparelho do
+          vistoriador, mesmo sem nenhuma conexão. Assim que o aparelho encontra sinal novamente
+          (saindo do pátio, por exemplo), os dados sincronizam automaticamente com o servidor, sem
+          nenhuma ação manual.
+        </p>
+
+        <RecursosLaudo />
       </>
     ),
   },
