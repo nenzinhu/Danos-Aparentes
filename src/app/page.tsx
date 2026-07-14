@@ -452,6 +452,9 @@ export default function LandingPage() {
           </div>
           <div className="flex gap-8 flex-wrap justify-center">
             <a href="/locadoras" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Locadoras</a>
+            <a href="/oficinas" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Oficinas</a>
+            <a href="/seguradoras" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Seguradoras</a>
+            <a href="/frotas" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Frotas</a>
             <a href="/demo" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Demonstração</a>
             <a href="/verify" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Verificar Laudo</a>
             <a href="/blog" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Blog</a>
