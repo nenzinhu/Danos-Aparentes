@@ -333,6 +333,7 @@ export default function AppMainPage() {
           onLoad={handleLoad}
           onDelete={deleteReport}
           hasAccess={subscription?.hasAccess ?? false}
+          accessToken={session?.access_token}
         />
 
         <CompanySettingsModal

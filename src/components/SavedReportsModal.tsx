@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useDeferredValue } from 'react'
+import { QRCodeSVG } from 'qrcode.react'
 import { SavedReport, VehicleType, Damage } from '../types'
 import { generatePdf } from '../lib/pdf'
 import { captureSvgs } from './ReportActions'
@@ -33,6 +34,7 @@ interface Props {
   onLoad: (r: SavedReport) => void
   onDelete: (id: string) => void
   hasAccess?: boolean
+  accessToken?: string
 }
 
 function getVehicleType(desc: string, damages: Damage[]): VehicleType {
@@ -84,11 +86,13 @@ function CloudBadge({ state }: { state: CloudState }) {
   )
 }
 
-export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLoad, onDelete, hasAccess }: Props) {
+export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLoad, onDelete, hasAccess, accessToken }: Props) {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>('recent')
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set())
   const [downloadingId, setDownloadingId] = useState<string | null>(null)
+  const [generatingQrId, setGeneratingQrId] = useState<string | null>(null)
+  const [qrModal, setQrModal] = useState<{ plate: string; url: string } | null>(null)
 
   const deferredSearchQuery = useDeferredValue(searchQuery)
 
@@ -145,6 +149,27 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
     }
   } else {
     groups.push({ label: null, items: sorted })
+  }
+
+  const handleGenerateQr = async (r: SavedReport) => {
+    const plate = r.vehicleInfo.plate
+    if (!plate || !accessToken) return
+    setGeneratingQrId(r.id)
+    try {
+      const res = await fetch('/api/vehicle-qr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+        body: JSON.stringify({ plate }),
+      })
+      if (!res.ok) return
+      const data = await res.json()
+      const url = `${window.location.origin}/historico/${data.token}`
+      setQrModal({ plate, url })
+    } catch (e) {
+      console.error('Failed to generate vehicle QR:', e)
+    } finally {
+      setGeneratingQrId(null)
+    }
   }
 
   const handleDownloadPdf = async (r: SavedReport) => {
@@ -205,6 +230,26 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
         >
           {downloadingId === r.id ? '⏳' : '📄 PDF'}
         </button>
+        <button
+          onClick={() => handleGenerateQr(r)}
+          disabled={generatingQrId !== null || !r.vehicleInfo.plate}
+          title="Gerar QR para colar no veículo"
+          style={{
+            background: 'rgba(168,85,247,0.1)',
+            border: '1px solid rgba(168,85,247,0.2)',
+            borderRadius: 8,
+            padding: '6px 12px',
+            color: '#a855f7',
+            cursor: 'pointer',
+            fontFamily: 'Outfit,sans-serif',
+            fontWeight: 700,
+            fontSize: '0.78rem',
+            flexShrink: 0,
+            opacity: generatingQrId !== null && generatingQrId !== r.id ? 0.5 : 1,
+          }}
+        >
+          {generatingQrId === r.id ? '⏳' : '🏷️ QR'}
+        </button>
         <button onClick={() => onLoad(r)} style={{ background: 'rgba(0,170,255,0.1)', border: '1px solid rgba(0,170,255,0.2)', borderRadius: 8, padding: '6px 12px', color: 'var(--primary)', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: '0.78rem', flexShrink: 0 }}>Carregar</button>
         <button onClick={() => onDelete(r.id)} style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '6px 10px', color: '#ef4444', cursor: 'pointer', fontSize: '0.78rem', flexShrink: 0 }}>🗑️</button>
       </div>
@@ -251,11 +296,11 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                 onChange={e => setSortKey(e.target.value as SortKey)}
                 title="Ordenar"
                 style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--input-border)',
                   borderRadius: 10,
                   padding: '8px 12px',
-                  color: '#ffffff',
+                  color: 'var(--input-color)',
                   fontFamily: 'Outfit,sans-serif',
                   fontSize: '0.85rem',
                   fontWeight: 700,
@@ -264,7 +309,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                 }}
               >
                 {SORT_OPTIONS.map(o => (
-                  <option key={o.key} value={o.key} style={{ background: '#0f172a' }}>{o.label}</option>
+                  <option key={o.key} value={o.key}>{o.label}</option>
                 ))}
               </select>
             </div>
@@ -291,6 +336,41 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
             ))}
         </div>
       </div>
+
+      {qrModal && (
+        <div
+          style={{ position: 'fixed', inset: 0, background: 'rgba(2,6,23,0.85)', zIndex: 10000, padding: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          onClick={e => { if (e.target === e.currentTarget) setQrModal(null) }}
+        >
+          <div style={{ width: '100%', maxWidth: 340, background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: 24, textAlign: 'center' }}>
+            <div style={{ fontWeight: 800, fontSize: '0.95rem', marginBottom: 4 }}>QR do veículo {qrModal.plate}</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: 16 }}>
+              Cole este QR no veículo (para-brisa, porta-luvas). Qualquer pessoa que escanear vê o histórico
+              de vistorias, sem dados pessoais do proprietário.
+            </div>
+            <div style={{ background: '#fff', borderRadius: 12, padding: 16, display: 'inline-block' }}>
+              <QRCodeSVG value={qrModal.url} size={200} />
+            </div>
+            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 12, wordBreak: 'break-all' }}>
+              {qrModal.url}
+            </div>
+            <div style={{ display: 'flex', gap: 8, marginTop: 16, justifyContent: 'center' }}>
+              <button
+                onClick={() => navigator.clipboard?.writeText(qrModal.url)}
+                style={{ background: 'rgba(0,170,255,0.1)', border: '1px solid rgba(0,170,255,0.2)', borderRadius: 8, padding: '8px 14px', color: 'var(--primary)', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: '0.8rem' }}
+              >
+                Copiar link
+              </button>
+              <button
+                onClick={() => setQrModal(null)}
+                style={{ background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', borderRadius: 8, padding: '8px 14px', color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: '0.8rem' }}
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
