@@ -93,6 +93,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
   const [downloadingId, setDownloadingId] = useState<string | null>(null)
   const [generatingQrId, setGeneratingQrId] = useState<string | null>(null)
   const [qrModal, setQrModal] = useState<{ plate: string; url: string } | null>(null)
+  const [copiedSignatureId, setCopiedSignatureId] = useState<string | null>(null)
 
   const deferredSearchQuery = useDeferredValue(searchQuery)
 
@@ -149,6 +150,13 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
     }
   } else {
     groups.push({ label: null, items: sorted })
+  }
+
+  const handleCopySignatureLink = (r: SavedReport) => {
+    const url = `${window.location.origin}/assinar/${r.id}`
+    navigator.clipboard?.writeText(url)
+    setCopiedSignatureId(r.id)
+    setTimeout(() => setCopiedSignatureId(id => (id === r.id ? null : id)), 2000)
   }
 
   const handleGenerateQr = async (r: SavedReport) => {
@@ -249,6 +257,26 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
           }}
         >
           {generatingQrId === r.id ? '⏳' : '🏷️ QR'}
+        </button>
+        <button
+          onClick={() => handleCopySignatureLink(r)}
+          disabled={cloudStateOf(r.id) !== 'cloud'}
+          title={cloudStateOf(r.id) === 'cloud' ? 'Copiar link de assinatura remota' : 'Aguarde a vistoria sincronizar com a nuvem'}
+          style={{
+            background: 'rgba(236,72,153,0.1)',
+            border: '1px solid rgba(236,72,153,0.2)',
+            borderRadius: 8,
+            padding: '6px 12px',
+            color: '#ec4899',
+            cursor: 'pointer',
+            fontFamily: 'Outfit,sans-serif',
+            fontWeight: 700,
+            fontSize: '0.78rem',
+            flexShrink: 0,
+            opacity: cloudStateOf(r.id) !== 'cloud' ? 0.5 : 1,
+          }}
+        >
+          {copiedSignatureId === r.id ? '✓ Copiado' : '🖊️ Assinatura'}
         </button>
         <button onClick={() => onLoad(r)} style={{ background: 'rgba(0,170,255,0.1)', border: '1px solid rgba(0,170,255,0.2)', borderRadius: 8, padding: '6px 12px', color: 'var(--primary)', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: '0.78rem', flexShrink: 0 }}>Carregar</button>
         <button onClick={() => onDelete(r.id)} style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '6px 10px', color: '#ef4444', cursor: 'pointer', fontSize: '0.78rem', flexShrink: 0 }}>🗑️</button>
