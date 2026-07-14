@@ -11,6 +11,7 @@ import ReportActions from '@/src/components/ReportActions'
 import { TtsConfig } from '@/src/types'
 import { ClearAllIcon } from './ClearAllIcon'
 import { VEHICLE_NAME, VIEW_NAME } from './constants'
+import type { PreviousReportSummary } from '@/src/lib/reportComparison'
 
 interface InspectTabProps {
   vehicleType: VehicleType
@@ -21,6 +22,8 @@ interface InspectTabProps {
   viewDamages: Damage[]
   allVehicleDamages: Damage[]
   visitedViews?: ViewType[]
+  previousReport?: PreviousReportSummary | null
+  onPlateConfirmed?: (plate: string) => void
   ttsConfig: TtsConfig
   voices: SpeechSynthesisVoice[]
   hasAccess: boolean
@@ -52,6 +55,8 @@ export default function InspectTab({
   viewDamages,
   allVehicleDamages,
   visitedViews,
+  previousReport,
+  onPlateConfirmed,
   ttsConfig,
   voices,
   hasAccess,
@@ -84,7 +89,15 @@ export default function InspectTab({
           onVehicleTypeDetected={onVehicleTypeChange}
           resetToken={formResetToken}
           onWizardComplete={onWizardComplete}
+          onPlateConfirmed={onPlateConfirmed}
         />
+        {previousReport && (
+          <div className="mt-4 text-[0.8rem] px-3 py-2.5 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-500">
+            Encontramos uma vistoria anterior deste veículo, de{' '}
+            <strong>{new Date(previousReport.updatedAt).toLocaleDateString('pt-BR')}</strong>.
+            Avarias que não existiam nela aparecem marcadas como <strong>Nova</strong> na lista abaixo.
+          </div>
+        )}
         {!formCollapsed && (
           <div className="flex gap-4 mt-6 pt-4 border-t border-[var(--panel-border)] justify-between items-center flex-wrap">
             <button onClick={onOpenSaved} className="text-xs px-4 py-2 rounded-lg font-bold border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-all">
@@ -151,7 +164,7 @@ export default function InspectTab({
             )}
           </div>
 
-          <DamageList damages={allVehicleDamages} onRemove={onRemoveDamage} onUpdate={onUpdateDamage} />
+          <DamageList damages={allVehicleDamages} onRemove={onRemoveDamage} onUpdate={onUpdateDamage} previousReport={previousReport} />
 
           <div className="mt-6 pt-6 border-t border-[var(--panel-border)]">
             <ReportActions

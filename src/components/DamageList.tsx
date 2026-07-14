@@ -11,11 +11,14 @@ import {
 } from '../lib/photoUploadProgress'
 import { ResolvedPhoto } from './ResolvedPhoto'
 import SpeechButton from './SpeechButton'
+import { isNewDamage, type PreviousReportSummary } from '../lib/reportComparison'
 
 interface Props {
   damages: Damage[]
   onRemove: (id: string) => void
   onUpdate: (id: string, patch: Partial<Damage>) => void
+  /** Laudo anterior do mesmo veículo (por placa), usado para marcar avarias novas. */
+  previousReport?: PreviousReportSummary | null
 }
 
 const SEV_LABEL = { low: 'Leve', medium: 'Média', high: 'Grave' } satisfies Record<Severity, string>
@@ -24,7 +27,7 @@ const VIEW_LABEL = {
   'lateral-left': 'Lat. Esq.', 'lateral-right': 'Lat. Dir.', frontal: 'Frontal', traseira: 'Traseira'
 } satisfies Record<ViewType, string>
 
-export default function DamageList({ damages, onRemove, onUpdate }: Props) {
+export default function DamageList({ damages, onRemove, onUpdate, previousReport }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [photoViewer, setPhotoViewer] = useState<string | null>(null)
   const [compressingId, setCompressingId] = useState<string | null>(null)
@@ -94,7 +97,8 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
         {damages.map(d => {
           const photoNotes = d.photoNotes ?? d.photos.map(() => '')
           const sevColor = SEV_COLOR[d.severity]
-          
+          const isNew = previousReport ? isNewDamage(d, previousReport) : false
+
           return (
             <div 
               key={d.id} 
@@ -111,7 +115,14 @@ export default function DamageList({ damages, onRemove, onUpdate }: Props) {
                   style={{ background: sevColor }} 
                 />
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-[0.85rem] text-[var(--text-main)] truncate">{d.partName}</div>
+                  <div className="font-bold text-[0.85rem] text-[var(--text-main)] truncate flex items-center gap-1.5">
+                    {d.partName}
+                    {isNew && (
+                      <span className="shrink-0 text-[0.62rem] font-extrabold uppercase tracking-wide px-1.5 py-0.5 rounded-md bg-red-500/15 text-red-400">
+                        Nova
+                      </span>
+                    )}
+                  </div>
                   <div className="text-[0.72rem] text-[var(--text-muted)]">
                     {d.typeName} • <span style={{ color: sevColor }} className="font-bold">{SEV_LABEL[d.severity]}</span> • {VIEW_LABEL[d.view] || d.view}
                   </div>

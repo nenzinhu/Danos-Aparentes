@@ -13,6 +13,7 @@ import { createId } from '@/src/lib/id'
 import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '@/src/lib/imageUtils'
 import { storePhoto } from '@/src/lib/photoStore'
 import { playDamageAddedFeedback } from '@/src/lib/feedback'
+import { buildPreviousReportSummary, type PreviousReportSummary } from '@/src/lib/reportComparison'
 import {
   finishPhotoUploadProgress,
   startPhotoUploadProgress,
@@ -60,6 +61,7 @@ export default function AppMainPage() {
   const [termsTab, setTermsTab] = useState<'terms' | 'privacy'>('terms')
   const [tutorialOpen, setTutorialOpen] = useState(false)
   const [coachMarksOpen, setCoachMarksOpen] = useState(false)
+  const [previousReport, setPreviousReport] = useState<PreviousReportSummary | null>(null)
 
   useEffect(() => {
     if (typeof window !== 'undefined' && localStorage.getItem('app_tour_seen') !== 'true') {
@@ -102,6 +104,23 @@ export default function AppMainPage() {
   )
 
   const showToast = useCallback((msg: string) => { setToast(msg) }, [])
+
+  const handlePlateConfirmed = useCallback(async (plate: string) => {
+    setPreviousReport(null)
+    if (!session?.access_token) return
+    try {
+      const res = await fetch(`/api/report-by-plate?plate=${encodeURIComponent(plate)}`, {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+      if (!res.ok) return
+      const data = await res.json()
+      if (data.found) {
+        setPreviousReport(buildPreviousReportSummary(data.updatedAt, data.damages ?? []))
+      }
+    } catch {
+      // Busca de laudo anterior é um recurso de apoio — falha silenciosa não deve travar a vistoria.
+    }
+  }, [session])
 
   const handleAddDamage = useCallback((partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => {
     playDamageAddedFeedback()
@@ -157,6 +176,7 @@ export default function AppMainPage() {
     clearDamages()
     r.damages.forEach(d => addDamage(d))
     setSavedModal(false)
+    setPreviousReport(null)
     showToast('📂 Vistoria Carregada!')
   }, [clearDamages, addDamage, showToast])
 
@@ -164,6 +184,7 @@ export default function AppMainPage() {
     setVehicleInfo(EMPTY_INFO)
     clearDamages()
     setFormResetToken(t => t + 1)
+    setPreviousReport(null)
     showToast('🧽 Dados Limpos!')
   }, [clearDamages, showToast])
 
@@ -202,7 +223,7 @@ export default function AppMainPage() {
   if (supabaseEnabled && (authLoading || (session && subLoading))) {
     return (
       <DirectionalTransition>
-        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center pb-12">
+        <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center pb-12">
           <ViewTransition name="persistent-nav" default="none">
             <Header
               darkMode={darkMode}
@@ -215,7 +236,7 @@ export default function AppMainPage() {
               onManageSubscription={handleManageSubscription}
             />
           </ViewTransition>
-          <div className="flex-1 flex items-center justify-center text-slate-200">Carregando…</div>
+          <div className="flex-1 flex items-center justify-center text-[var(--text-muted)]">Carregando…</div>
         </div>
       </DirectionalTransition>
     )
@@ -223,7 +244,7 @@ export default function AppMainPage() {
 
   if (supabaseEnabled && !session) {
     return (
-      <Suspense fallback={<div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center">Carregando…</div>}>
+      <Suspense fallback={<div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex items-center justify-center">Carregando…</div>}>
         <Login onSignIn={signIn} onSignUp={signUp} onResetPassword={resetPassword} />
       </Suspense>
     )
@@ -236,7 +257,7 @@ export default function AppMainPage() {
   return (
     <DirectionalTransition>
       <PhotoUploadProgressBar />
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center pb-12">
+      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center pb-12">
         <ViewTransition name="persistent-nav" default="none">
           <Header
             darkMode={darkMode}
@@ -273,6 +294,8 @@ export default function AppMainPage() {
               viewDamages={viewDamages}
               allVehicleDamages={allVehicleDamages}
               visitedViews={visitedViews}
+              previousReport={previousReport}
+              onPlateConfirmed={handlePlateConfirmed}
               ttsConfig={ttsConfig}
               voices={voices}
               hasAccess={subscription?.hasAccess ?? false}

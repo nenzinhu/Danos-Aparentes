@@ -44,6 +44,8 @@ interface Props {
   onVehicleTypeDetected?: (type: 'car' | 'moto' | 'truck' | 'van' | 'bus') => void
   resetToken?: number
   onWizardComplete?: () => void
+  /** Disparado quando a placa atinge o formato completo (7 caracteres), independente do resultado da busca de marca/modelo. */
+  onPlateConfirmed?: (plate: string) => void
 }
 
 const UF_LIST = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']
@@ -154,10 +156,10 @@ function saveCustomFieldDefs(defs: CustomFieldDef[]) {
   localStorage.setItem('vistoria_custom_field_defs', JSON.stringify(defs))
 }
 
-const inputClasses = "w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-2.5 py-2 text-[var(--input-color)] font-outfit text-[0.85rem] outline-none focus:border-sky-500/50 transition-colors placeholder:text-slate-500";
-const labelClasses = "block text-[0.68rem] font-bold text-slate-500 uppercase tracking-wider mb-1";
+const inputClasses = "w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-2.5 py-2 text-[var(--input-color)] font-outfit text-[0.85rem] outline-none focus:border-sky-500/50 transition-colors placeholder:text-[var(--text-muted)]";
+const labelClasses = "block text-[0.68rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1";
 
-function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse, onVehicleTypeDetected, resetToken, onWizardComplete }: Props) {
+function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse, onVehicleTypeDetected, resetToken, onWizardComplete, onPlateConfirmed }: Props) {
   const [visibleFields, setVisibleFields] = useState<Record<string, boolean>>(loadFieldFilter)
   const [fieldOrder, setFieldOrder] = useState<string[]>(loadFieldOrder)
   const [filterOpen, setFilterOpen] = useState(false)
@@ -485,8 +487,9 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
     if (lookupTimer.current) clearTimeout(lookupTimer.current)
     if (clean.length === 7) {
       lookupTimer.current = setTimeout(() => lookupPlate(clean), 600)
+      onPlateConfirmed?.(clean)
     }
-  }, [set, lookupPlate])
+  }, [set, lookupPlate, onPlateConfirmed])
 
   const summary = useMemo(() => [info.owner, info.plate, info.brand].filter(Boolean).join(' • '), [info.owner, info.plate, info.brand])
 
