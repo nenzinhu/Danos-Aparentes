@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import { LocadorasHeroCtas, LocadorasPlanosLink, LocadorasFinalCta } from '@/src/components/LocadorasCtas'
+import { BlogVideo } from '@/src/components/blog/BlogVideo'
+import ChatSupportWidget from '@/src/components/ChatSupportWidget'
 
 const TITLE = 'Sistema de Vistoria Veicular para Locadora | Danos Aparentes'
 const DESCRIPTION =
@@ -101,6 +103,25 @@ export default function LocadorasPage() {
           <LocadorasHeroCtas />
         </header>
 
+        <section className="mt-12 text-center">
+          <h2 className="font-display text-2xl font-bold tracking-tight mb-2">
+            Vistoria digital para locadora em poucos segundos
+          </h2>
+          <p className="text-sm text-[var(--text-muted)] max-w-lg mx-auto mb-2">
+            Evite discussões por riscos na devolução. Faça a vistoria digital rápida no celular e
+            saia com laudo pronto para cobrar o que é da frota.
+          </p>
+          <BlogVideo
+            src="/videos/vistoria-locadoras.mp4"
+            poster="/videos/vistoria-locadoras-poster.jpg"
+            title="Vistoria digital para locadoras — Danos Aparentes"
+            description="Evite discussões por riscos. Faça a vistoria digital rápida no celular e registre avarias com prova na devolução."
+            duration="PT8S"
+            uploadDate="2026-07-13"
+            caption="8 segundos · play quando quiser"
+          />
+        </section>
+
         {/* Dor */}
         <section className="mt-16">
           <h2 className="font-display text-2xl font-bold tracking-tight text-center mb-8">
@@ -180,6 +201,8 @@ export default function LocadorasPage() {
         {/* CTA final */}
         <LocadorasFinalCta />
       </div>
+
+      <ChatSupportWidget segment="locadoras" />
     </main>
   )
 }

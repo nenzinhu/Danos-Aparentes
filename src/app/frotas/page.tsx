@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import { FrotasHeroCtas, FrotasPlanosLink, FrotasFinalCta } from '@/src/components/FrotasCtas'
 import { BlogVideo } from '@/src/components/blog/BlogVideo'
+import ChatSupportWidget from '@/src/components/ChatSupportWidget'
 
 const TITLE = 'App de Vistoria de Frota Offline | Danos Aparentes'
 const DESCRIPTION =
@@ -193,6 +194,8 @@ export default function FrotasPage() {
 
         <FrotasFinalCta />
       </div>
+
+      <ChatSupportWidget segment="frotas" />
     </main>
   )
 }

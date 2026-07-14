@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import { OficinasHeroCtas, OficinasPlanosLink, OficinasFinalCta } from '@/src/components/OficinasCtas'
 import { BlogVideo } from '@/src/components/blog/BlogVideo'
+import ChatSupportWidget from '@/src/components/ChatSupportWidget'
 
 const TITLE = 'Laudo de Vistoria Digital para Oficina Mecânica | Danos Aparentes'
 const DESCRIPTION =
@@ -193,6 +194,8 @@ export default function OficinasPage() {
 
         <OficinasFinalCta />
       </div>
+
+      <ChatSupportWidget segment="oficinas" />
     </main>
   )
 }

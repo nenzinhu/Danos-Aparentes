@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import { SeguradorasHeroCtas, SeguradorasPlanosLink, SeguradorasFinalCta } from '@/src/components/SeguradorasCtas'
 import { BlogVideo } from '@/src/components/blog/BlogVideo'
+import ChatSupportWidget from '@/src/components/ChatSupportWidget'
 
 const TITLE = 'Laudo de Vistoria com QR Code Anti-Fraude para Seguradora | Danos Aparentes'
 const DESCRIPTION =
@@ -193,6 +194,8 @@ export default function SeguradorasPage() {
 
         <SeguradorasFinalCta />
       </div>
+
+      <ChatSupportWidget segment="seguradoras" />
     </main>
   )
 }
