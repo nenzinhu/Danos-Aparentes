@@ -67,6 +67,7 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
       if (!res.ok) return
       const data = await res.json()
       setSuggestions(prev => ({ ...prev, [d.id]: { severity: data.severity, description: data.description } }))
+      setExpandedId(d.id)
     } catch (e) {
       console.error('Failed to analyze damage photo:', e)
     } finally {
@@ -194,6 +195,21 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                 </div>
                 {d.photos.length > 0 && (
                   <span className="text-[0.72rem] text-[var(--primary)] bg-sky-500/10 px-1.5 py-0.5 rounded-md font-medium">📷 {d.photos.length}</span>
+                )}
+                {d.photos.length > 0 && !suggestions[d.id] && (
+                  <button
+                    onClick={e => { e.stopPropagation(); handleAnalyze(d) }}
+                    disabled={analyzingId !== null}
+                    className="shrink-0 text-[0.72rem] font-extrabold px-2.5 py-1 rounded-full text-white shadow-md shadow-fuchsia-500/30 transition-transform hover:scale-105 active:scale-95 disabled:opacity-60 disabled:hover:scale-100"
+                    style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7, #ec4899)', backgroundSize: '200% 200%' }}
+                  >
+                    {analyzingId === d.id ? '⏳' : '✨ IA'}
+                  </button>
+                )}
+                {d.photos.length > 0 && suggestions[d.id] && (
+                  <span className="shrink-0 text-[0.68rem] font-extrabold px-2 py-1 rounded-full bg-emerald-500/15 text-emerald-400">
+                    ✨ Sugestão pronta
+                  </span>
                 )}
                 <span className="text-[0.7rem] text-[var(--text-muted)]">{expandedId === d.id ? '▲' : '▼'}</span>
                 <button 
