@@ -1,5 +1,7 @@
 # Assessment de Modernização — AvariasAPARENTES PWA
 
+> **Atualização 2026-07-15:** o roadmap full stack vivo (P0/P1/P2 por camada, APIs, storage, sync, PDF, testes) está em [`FULLSTACK_AUDIT.md`](FULLSTACK_AUDIT.md). Este assessment permanece como baseline de modernização; a auditoria nova revalida e prioriza o que ainda falta.
+
 > **Nota de escopo:** este é um sistema Next.js/React moderno em desenvolvimento ativo, não um sistema legado clássico. O framework do `/modernize-assess` (COCOMO, débito técnico, segurança) foi aplicado mesmo assim porque ainda gera sinal útil, mas a recomendação final não é "modernizar" — é consolidar uma migração de API já em andamento e fechar uma exposição de credencial ativa.
 
 ## Resumo Executivo
