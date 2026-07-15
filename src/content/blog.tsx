@@ -3289,6 +3289,451 @@ BLOG_POSTS.push(
   },
 )
 
+BLOG_POSTS.unshift(
+  {
+    slug: 'laudo-vistoria-marca-empresa-a-prova-de-fraude',
+    title: 'Laudo de vistoria com a marca da sua empresa — e à prova de fraude',
+    excerpt:
+      'Todo laudo deveria provar duas coisas: que é verdadeiro e que é seu. Veja como marca própria, QR Code e hash SHA-256 fecham o documento — com ou sem IA.',
+    category: 'Laudo',
+    tags: ['laudo de vistoria', 'marca própria', 'QR Code', 'hash SHA-256', 'anti-fraude', 'logo'],
+    date: '2026-07-15',
+    readingMinutes: 6,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#0c4a6e 0%,#1e3a8a 45%,#1FB6FF 100%)',
+      emoji: '🏢',
+      image: '/vehicles-img/car.png',
+    },
+    toc: [
+      { id: 'pergunta', label: 'A pergunta que todo laudo precisa responder' },
+      { id: 'ia-opcional', label: 'IA é opcional, não obrigatória' },
+      { id: 'sua-marca', label: 'Sua marca no laudo' },
+      { id: 'qr-hash', label: 'QR Code + hash: sem fraude' },
+      { id: 'resultado', label: 'O resultado na prática' },
+    ],
+    faq: [
+      {
+        question: 'O laudo de vistoria pode sair com a logo da minha empresa?',
+        answer:
+          'Sim. No Danos Aparentes cada PDF carrega o logo e o nome da sua empresa no cabeçalho. Você configura uma vez e usa em todas as vistorias — documento white-label, sem parecer formulário genérico.',
+      },
+      {
+        question: 'Preciso usar inteligência artificial para gerar o laudo?',
+        answer:
+          'Não. A IA é opcional: sugere peça ou descrição a partir da foto, mas o vistoriador confirma. Quem preferir marca tudo manualmente no diagrama — o laudo final com marca e anti-fraude sai igual.',
+      },
+      {
+        question: 'Como o QR Code e o hash impedem fraude no laudo?',
+        answer:
+          'O hash SHA-256 é a impressão digital do PDF. O QR Code aponta para a verificação pública. Se alguém editar foto, data ou assinatura depois, a verificação não bate mais com o original.',
+      },
+    ],
+    content: (
+      <>
+        <p>
+          Todo laudo de vistoria deveria responder a uma pergunta: <strong>como provar que ele é
+          verdadeiro e que é seu?</strong> No Danos Aparentes, isso acontece de duas formas — pela
+          identidade visual da sua empresa no documento, e por um sistema técnico de verificação que
+          dificulta fraude.
+        </p>
+        <p>
+          Abaixo, o que muda na prática quando o laudo carrega <strong>sua marca</strong>, tem{' '}
+          <strong>QR Code + hash</strong> e trata a <strong>IA como opção</strong>, não obrigação.
+        </p>
+
+        <h2 id="pergunta">A pergunta que todo laudo precisa responder</h2>
+        <p>
+          Na entrega, na devolução ou numa contestação, o cliente (ou a seguradora) vai olhar o
+          documento e perguntar: isso foi gerado pela sua operação? Ainda é o mesmo arquivo de quando
+          foi assinado? Sem logo e sem verificação, o PDF vira &ldquo;mais um arquivo&rdquo;. Com marca e
+          selo técnico, ele vira <strong>prova + identidade</strong>.
+        </p>
+
+        <h2 id="ia-opcional">IA é opcional, não obrigatória</h2>
+        <p>
+          Muita gente acha que vistoria digital significa depender de inteligência artificial. Não é
+          o caso. No app, a IA é um <strong>apoio</strong>: ela pode sugerir a peça avariada a partir
+          de uma foto, ou analisar a gravidade de um dano já marcado. O vistoriador{' '}
+          <strong>sempre confirma</strong> antes de gravar.
+        </p>
+        <p>
+          Quem não quiser usar IA faz a vistoria 100% manual, tocando a peça direto no diagrama. O
+          resultado final é o mesmo: laudo completo, com fotos, assinaturas e validação.
+        </p>
+
+        <h2 id="sua-marca">Sua marca no laudo</h2>
+        <p>
+          Cada laudo gerado carrega o <strong>logo e o nome da sua empresa</strong>. O documento que
+          você entrega ao cliente não parece um formulário genérico — ele representa sua operação.
+          Isso reforça profissionalismo na entrega e na devolução do veículo.
+        </p>
+
+        <LaudoSheet />
+
+        <h2 id="qr-hash">QR Code + hash: sem fraude</h2>
+        <p>
+          Todo PDF gerado tem um <strong>hash SHA-256</strong> — uma espécie de impressão digital
+          única do documento — e um <strong>QR Code</strong> de verificação pública. Qualquer pessoa
+          pode escanear o código e conferir se aquele laudo é autêntico e não foi alterado depois de
+          gerado.
+        </p>
+        <p>
+          Se alguém tentar editar uma foto, mudar uma data ou trocar uma assinatura, a verificação{' '}
+          <strong>não bate mais</strong>. É isso que transforma o PDF em documento difícil de forjar.
+        </p>
+
+        <h2 id="resultado">O resultado na prática</h2>
+        <p>
+          Um laudo com a cara da sua empresa, gerado <strong>com ou sem</strong> apoio de IA, e que
+          ninguém consegue adulterar em silêncio. Teste grátis por 7 dias, sem cartão de crédito.
+        </p>
+
+        <Cta />
+      </>
+    ),
+  },
+  {
+    slug: 'ia-opcional-prova-contra-fraude-laudo-vistoria',
+    title: 'IA é opcional. A prova contra fraude, não.',
+    excerpt:
+      'Vistoria digital não exige IA. Exige laudo com a sua marca e verificação (QR Code + hash). Entenda o que é apoio opcional e o que é padrão anti-fraude.',
+    category: 'Comparativo',
+    tags: ['inteligência artificial', 'anti-fraude', 'laudo de vistoria', 'QR Code', 'vistoria digital'],
+    date: '2026-07-15',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#4c1d95 0%,#6d28d9 45%,#a78bfa 100%)',
+      emoji: '✨',
+      image: '/vehicles-img/car.png',
+    },
+    toc: [
+      { id: 'mito', label: 'O mito da vistoria “só com IA”' },
+      { id: 'o-que-e-opcional', label: 'O que a IA faz — e o que não faz' },
+      { id: 'o-que-e-obrigatorio', label: 'O que não pode ser opcional' },
+      { id: 'como-escolher', label: 'Como escolher o fluxo no dia a dia' },
+    ],
+    faq: [
+      {
+        question: 'A IA substitui o vistoriador no Danos Aparentes?',
+        answer:
+          'Não. A IA sugere peça ou texto a partir da foto; o vistoriador revisa e confirma. Dá para trabalhar 100% no toque no diagrama, sem abrir nenhuma função de IA.',
+      },
+      {
+        question: 'Se eu não usar IA, o laudo ainda tem QR Code e hash?',
+        answer:
+          'Sim. Marca própria, hash SHA-256 e QR Code de verificação fazem parte do laudo digital — independem do uso de inteligência artificial.',
+      },
+    ],
+    content: (
+      <>
+        <p>
+          <strong>IA é opcional. A prova contra fraude, não.</strong> Essa frase resume o posicionamento
+          certo para quem faz vistoria em campo: velocidade e apoio tecnológico quando ajudar —
+          identidade e verificação sempre.
+        </p>
+
+        <h2 id="mito">O mito da vistoria “só com IA”</h2>
+        <p>
+          Muita propaganda mistura &ldquo;vistoria digital&rdquo; com &ldquo;robô que faz tudo sozinho&rdquo;. Na
+          operação real de locadora, oficina ou frota, quem carrega a responsabilidade é o
+          vistoriador. A ferramenta certa <strong>acelera</strong> e <strong>padroniza</strong>, sem
+          tirar o controle da equipe.
+        </p>
+
+        <h2 id="o-que-e-opcional">O que a IA faz — e o que não faz</h2>
+        <p>No Danos Aparentes, a inteligência artificial entra como apoio:</p>
+        <ul>
+          <li>
+            <strong>Foto → diagrama:</strong> sugere qual peça do veículo aparece na foto da avaria.
+          </li>
+          <li>
+            <strong>Foto de um dano já marcado:</strong> sugere severidade e uma descrição técnica
+            objetiva.
+          </li>
+        </ul>
+        <p>
+          Em ambos os casos, você <strong>revisa e confirma</strong> antes de gravar. Se a sugestão
+          estiver errada (ângulo ruim, lado esquerdo/direito ambíguo), você corrige em segundos.
+        </p>
+        <p>
+          Não quiser usar? Marque a peça no SVG com o dedo, anexe a foto e siga. O PDF final não fica
+          &ldquo;menor&rdquo; por isso.
+        </p>
+
+        <h2 id="o-que-e-obrigatorio">O que não pode ser opcional</h2>
+        <p>
+          Independente de IA, o laudo precisa carregar:
+        </p>
+        <ul>
+          <li>
+            <strong>Sua marca</strong> — logo e nome da empresa no cabeçalho.
+          </li>
+          <li>
+            <strong>Prova técnica</strong> — hash SHA-256 + QR Code para conferência pública.
+          </li>
+          <li>
+            <strong>Evidência</strong> — peças marcadas, fotos, assinaturas (e GPS quando disponível).
+          </li>
+        </ul>
+        <p>
+          É isso que segura a conversa do &ldquo;já estava assim&rdquo; e protege a operação se o PDF for
+          contestado depois.
+        </p>
+
+        <LaudoSheet />
+
+        <h2 id="como-escolher">Como escolher o fluxo no dia a dia</h2>
+        <ul>
+          <li>
+            <strong>Pátio rápido / vistoriador experiente:</strong> toque no diagrama + foto — sem IA.
+          </li>
+          <li>
+            <strong>Equipe nova / muita peça semelhante:</strong> use foto → IA e confirme; ganha
+            padronização de texto.
+          </li>
+          <li>
+            <strong>Sempre:</strong> logo, assinaturas e verificação QR/hash ligados.
+          </li>
+        </ul>
+
+        <Cta />
+      </>
+    ),
+  },
+  {
+    slug: 'qr-code-hash-sha256-blindar-laudo-vistoria',
+    title: 'QR Code e hash SHA-256: como blindar seu laudo de vistoria',
+    excerpt:
+      'Entenda, em linguagem clara, o que o hash SHA-256 e o QR Code fazem no PDF de vistoria — e por que isso torna adulteração fácil de detectar.',
+    category: 'Laudo',
+    tags: ['QR Code', 'hash SHA-256', 'anti-fraude', 'laudo de vistoria', 'validação', 'PDF'],
+    date: '2026-07-15',
+    readingMinutes: 6,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#7f1d1d 0%,#b91c1c 45%,#f97316 100%)',
+      emoji: '🔐',
+      image: '/vehicles-img/car.png',
+    },
+    toc: [
+      { id: 'problema', label: 'O problema do PDF editável' },
+      { id: 'hash', label: 'O que é o hash SHA-256' },
+      { id: 'qr', label: 'Para que serve o QR Code' },
+      { id: 'na-pratica', label: 'O que acontece se alguém adulterar' },
+      { id: 'marca', label: 'Marca + verificação juntos' },
+    ],
+    howTo: {
+      name: 'Como conferir se um laudo de vistoria é autêntico',
+      steps: [
+        {
+          name: 'Abra o PDF do laudo',
+          text: 'Localize o QR Code de verificação impresso no documento.',
+        },
+        {
+          name: 'Escaneie o QR Code',
+          text: 'Use a câmera do celular para abrir a página pública de verificação.',
+        },
+        {
+          name: 'Compare com o original',
+          text: 'Confira se os dados, avarias e o status batem com o PDF que você recebeu. Se o arquivo foi alterado depois, a verificação deixa de bater.',
+        },
+      ],
+    },
+    faq: [
+      {
+        question: 'O que é hash SHA-256 em um laudo de vistoria?',
+        answer:
+          'É uma assinatura criptográfica do conteúdo do PDF: um código único gerado a partir do arquivo. Se mudar uma vírgula, uma foto ou uma data, o hash muda — e a autenticidade falha na checagem.',
+      },
+      {
+        question: 'O QR Code do laudo substitui a assinatura?',
+        answer:
+          'Não. Assinatura registra o aceite das partes. O QR Code + hash provam que o documento verificado é o original gerado — e não uma cópia alterada depois.',
+      },
+    ],
+    content: (
+      <>
+        <p>
+          Um PDF bonito não basta. Se o arquivo puder ser editado em silêncio — trocar foto, apagar
+          uma avaria, mudar a data — o laudo perde força numa disputa. Por isso o Danos Aparentes
+          sela cada documento com <strong>hash SHA-256</strong> e <strong>QR Code</strong> de
+          verificação.
+        </p>
+
+        <h2 id="problema">O problema do PDF editável</h2>
+        <p>
+          Na prática, disputas de avaria nascem de confiança quebrada: o cliente diz que a foto foi
+          &ldquo;colada depois&rdquo;, ou que o risco &ldquo;não estava no laudo da entrega&rdquo;. Sem um
+          mecanismo de verificação, a discussão vira palavra contra palavra.
+        </p>
+
+        <h2 id="hash">O que é o hash SHA-256</h2>
+        <p>
+          Pense no hash como a <strong>impressão digital</strong> do arquivo. A partir do conteúdo do
+          laudo (texto, marcas, fotos referenciadas no PDF), o sistema calcula uma sequência longa e
+          única. Qualquer alteração mínima muda o resultado.
+        </p>
+        <p>
+          Você não precisa &ldquo;entender de criptografia&rdquo; no dia a dia: o app gera o hash
+          automaticamente ao emitir o laudo. O importante é o efeito —{' '}
+          <strong>adulteração deixa rastros</strong>.
+        </p>
+
+        <h2 id="qr">Para que serve o QR Code</h2>
+        <p>
+          O QR Code é a porta de entrada humana para a verificação. Qualquer pessoa — cliente,
+          gerente, jurídico — pode escanear e abrir a checagem pública do laudo, sem instalar o seu
+          app e sem depender da sua palavra.
+        </p>
+
+        <h2 id="na-pratica">O que acontece se alguém adulterar</h2>
+        <ol>
+          <li>O PDF original foi gerado e selado com hash + QR.</li>
+          <li>Alguém edita o arquivo (foto, data, peça, assinatura).</li>
+          <li>
+            Na verificação, o conteúdo <strong>não confere mais</strong> com o registro original.
+          </li>
+        </ol>
+        <p>
+          Isso não &ldquo;impede&rdquo; o mundo físico de mentir — mas torna a mentira no documento
+          digital <strong>detectável</strong>, o que muda o jogo em cobrança e contestação.
+        </p>
+
+        <h2 id="marca">Marca + verificação juntos</h2>
+        <p>
+          Blindagem técnica sem cara da sua empresa ainda parece documento genérico. Por isso o laudo
+          também sai com <strong>logo e nome da empresa</strong>. Identidade visual + QR/hash: o
+          cliente sabe de quem é e consegue conferir se ainda é o mesmo arquivo.
+        </p>
+        <p>
+          E a IA? Continua opcional. Com ou sem sugestão automática de peça, o selo anti-fraude é o
+          mesmo.
+        </p>
+
+        <LaudoSheet />
+
+        <Cta />
+      </>
+    ),
+  },
+  {
+    slug: 'logo-no-laudo-vistoria-digital-sem-depender-de-ia',
+    title: 'Seu logo no laudo, sua empresa protegida: vistoria digital sem depender de IA',
+    excerpt:
+      'Quer vistoria digital com cara da sua marca e verificação anti-fraude — sem obrigar a equipe a usar IA? Esse é o caminho do Danos Aparentes.',
+    category: 'Operação',
+    tags: ['logo no laudo', 'marca própria', 'vistoria digital', 'sem IA', 'frota', 'locadora'],
+    date: '2026-07-15',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#134e4a 0%,#0f766e 45%,#2dd4bf 100%)',
+      emoji: '🏷️',
+      image: '/vehicles-img/van.png',
+    },
+    toc: [
+      { id: 'para-quem', label: 'Para quem esse fluxo serve' },
+      { id: 'fluxo-manual', label: 'Vistoria sem IA, passo a passo' },
+      { id: 'marca', label: 'Logo e nome no PDF' },
+      { id: 'protecao', label: 'Proteção anti-fraude mesmo sem IA' },
+      { id: 'quando-ligar-ia', label: 'Quando vale ligar a IA' },
+    ],
+    howTo: {
+      name: 'Como fazer uma vistoria digital sem usar IA',
+      steps: [
+        {
+          name: 'Preencha os dados do veículo',
+          text: 'Placa, modelo, cor e referência da OS ou contrato.',
+        },
+        {
+          name: 'Marque as avarias no diagrama',
+          text: 'Toque nas peças do SVG, escolha tipo e severidade, anexe fotos.',
+        },
+        {
+          name: 'Colete assinaturas e gere o PDF',
+          text: 'O laudo sai com logo da empresa, hash SHA-256 e QR Code — sem precisar da IA.',
+        },
+      ],
+    },
+    faq: [
+      {
+        question: 'Consigo usar o Danos Aparentes sem inteligência artificial?',
+        answer:
+          'Sim. A marcação no diagrama, fotos, assinaturas, logo no PDF e verificação por QR/hash funcionam sem abrir recursos de IA. A inteligência artificial é só um atalho opcional.',
+      },
+      {
+        question: 'O laudo white-label funciona no plano Pro?',
+        answer:
+          'Sim. Você configura logo e nome da empresa nas configurações e todos os PDFs passam a sair com sua identidade visual.',
+      },
+    ],
+    content: (
+      <>
+        <p>
+          Nem toda equipe quer (ou precisa) de inteligência artificial no pátio. O que quase toda
+          operação precisa é de um <strong>laudo com a cara da empresa</strong> e que{' '}
+          <strong>não seja fácil forjar</strong> depois. É exatamente esse recorte: vistoria digital{' '}
+          <em>sem depender de IA</em>, com marca própria e verificação.
+        </p>
+
+        <h2 id="para-quem">Para quem esse fluxo serve</h2>
+        <ul>
+          <li>Locadoras pequenas e médias que querem padrão sem treinar “robô”.</li>
+          <li>Oficinas que já sabem marcar peça e só querem PDF profissional.</li>
+          <li>Frotas que precisam de prova entre turnos, com ou sem Wi‑Fi.</li>
+        </ul>
+
+        <h2 id="fluxo-manual">Vistoria sem IA, passo a passo</h2>
+        <ol>
+          <li>
+            <strong>Dados do veículo</strong> — placa, modelo, cor, OS/contrato.
+          </li>
+          <li>
+            <strong>Diagrama</strong> — toque na peça, tipo de dano, severidade, foto.
+          </li>
+          <li>
+            <strong>Assinaturas</strong> — vistoriador e cliente/responsável na tela.
+          </li>
+          <li>
+            <strong>PDF</strong> — logo + nome, hash SHA-256 e QR Code de verificação.
+          </li>
+        </ol>
+        <p>
+          Offline funciona: a vistoria grava no aparelho e sincroniza quando houver conexão.
+        </p>
+
+        <h2 id="marca">Logo e nome no PDF</h2>
+        <p>
+          O documento deixa de parecer um template anônimo. Na entrega ao cliente, fica claro:{' '}
+          <strong>é o laudo da sua operação</strong>. Isso importa tanto na percepção de
+          profissionalismo quanto na hora de cobrança de avaria.
+        </p>
+
+        <LaudoSheet />
+
+        <h2 id="protecao">Proteção anti-fraude mesmo sem IA</h2>
+        <p>
+          Sem IA, você ainda tem o essencial da prova digital: marcas no diagrama, fotos,
+          assinaturas e o par <strong>QR Code + hash</strong>. A verificação pública permite
+          conferir se o PDF continua sendo o original gerado no app.
+        </p>
+
+        <h2 id="quando-ligar-ia">Quando vale ligar a IA</h2>
+        <p>
+          Use como atalho quando a equipe é nova, quando quiser padronizar descrições técnicas ou
+          quando a foto vier antes da marcação (fluxo foto → diagrama). Continue{' '}
+          <strong>confirmando</strong> cada sugestão. A marca e o anti-fraude não dependem disso —
+          eles estão no laudo de qualquer forma.
+        </p>
+
+        <Cta />
+      </>
+    ),
+  },
+)
+
 export function getPost(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find(p => p.slug === slug)
 }
