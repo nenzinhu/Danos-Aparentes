@@ -337,6 +337,16 @@ body::before {
 
 body > * { position: relative; z-index: 1; }
 
+/* Blog — corpo legível (mais claro que --text-muted puro) */
+.blog-prose p,
+.blog-prose li {
+  color: color-mix(in srgb, var(--text-main) 78%, var(--text-muted));
+}
+html.light .blog-prose p,
+html.light .blog-prose li {
+  color: color-mix(in srgb, var(--text-main) 88%, var(--text-muted));
+}
+
 /* Scroll Reveal (transform + opacity only) */
 .reveal {
   opacity: 0;

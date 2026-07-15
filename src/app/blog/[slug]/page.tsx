@@ -119,12 +119,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {/* Conteúdo */}
           <article
             className="
-              max-w-none order-2 lg:order-1
+              blog-prose max-w-none order-2 lg:order-1
               [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-[var(--text-main)] [&_h2]:mt-10 [&_h2]:mb-3 [&_h2]:scroll-mt-24
-              [&_p]:text-[0.95rem] [&_p]:leading-[1.75] [&_p]:text-[var(--text-muted)] [&_p]:mb-4
+              [&_p]:text-[0.95rem] [&_p]:leading-[1.75] [&_p]:mb-4
               [&_ul]:my-4 [&_ul]:space-y-2 [&_ul]:pl-1
-              [&_li]:relative [&_li]:pl-6 [&_li]:text-[0.95rem] [&_li]:leading-[1.7] [&_li]:text-[var(--text-muted)]
-              [&_li]:before:content-['▹'] [&_li]:before:absolute [&_li]:before:left-0 [&_li]:before:text-[var(--signal-bright)] [&_li]:before:font-bold
+              [&_ol]:my-4 [&_ol]:space-y-2 [&_ol]:pl-6 [&_ol]:list-decimal
+              [&_li]:text-[0.95rem] [&_li]:leading-[1.7]
+              [&_ul>li]:relative [&_ul>li]:pl-6
+              [&_ul>li]:before:content-['▹'] [&_ul>li]:before:absolute [&_ul>li]:before:left-0 [&_ul>li]:before:text-[var(--signal-bright)] [&_ul>li]:before:font-bold
+              [&_ol>li]:pl-1 [&_ol>li]:marker:text-[var(--signal-bright)]
               [&_strong]:text-[var(--text-main)] [&_strong]:font-semibold
               [&_em]:text-[var(--text-main)] [&_em]:not-italic [&_em]:font-medium
               [&_a]:text-[var(--primary)] [&_a]:font-semibold [&_a]:underline [&_a]:decoration-[var(--primary)]/30 hover:[&_a]:decoration-[var(--primary)] [&_a]:underline-offset-2 [&_a]:transition-colors
