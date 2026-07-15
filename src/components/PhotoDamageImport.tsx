@@ -37,7 +37,8 @@ export default function PhotoDamageImport({
   onConfirm,
   onViewChange,
 }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
+  const galleryInputRef = useRef<HTMLInputElement>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [photoFile, setPhotoFile] = useState<File | null>(null)
@@ -53,7 +54,8 @@ export default function PhotoDamageImport({
     setSuggestions([])
     setSelectedIdx(0)
     setDraft(null)
-    if (inputRef.current) inputRef.current.value = ''
+    if (cameraInputRef.current) cameraInputRef.current.value = ''
+    if (galleryInputRef.current) galleryInputRef.current.value = ''
   }
 
   async function handleFile(file: File | undefined) {
@@ -143,28 +145,47 @@ export default function PhotoDamageImport({
 
   return (
     <div className="mb-5 rounded-xl border border-[var(--panel-border)] bg-black/15 p-3.5">
-      <div className="flex items-start justify-between gap-3 flex-wrap">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="text-sm font-bold text-[var(--text-main)] flex items-center gap-1.5">
             <span aria-hidden="true">📷✨</span> Foto → diagrama
           </div>
           <p className="text-[0.72rem] text-[var(--text-muted)] mt-0.5 leading-snug">
-            Tire ou envie a foto da avaria. A IA sugere a peça; você confirma antes de gravar.
+            Tire uma foto ou anexe da galeria. A IA sugere a peça; você confirma antes de gravar.
           </p>
         </div>
-        <button
-          type="button"
-          disabled={analyzing || disabled}
-          onClick={() => inputRef.current?.click()}
-          className="shrink-0 text-xs px-3.5 py-2 rounded-lg font-bold border border-fuchsia-500/35 bg-fuchsia-500/10 text-fuchsia-300 hover:bg-fuchsia-500/20 transition-all disabled:opacity-50"
-        >
-          {analyzing ? 'Analisando…' : 'Analisar foto'}
-        </button>
+        <div className="flex flex-wrap gap-2 shrink-0">
+          <button
+            type="button"
+            disabled={analyzing || disabled}
+            onClick={() => cameraInputRef.current?.click()}
+            className="text-xs px-3.5 py-2 rounded-lg font-bold border border-fuchsia-500/35 bg-fuchsia-500/10 text-fuchsia-300 hover:bg-fuchsia-500/20 transition-all disabled:opacity-50"
+          >
+            {analyzing ? 'Analisando…' : 'Tirar foto'}
+          </button>
+          <button
+            type="button"
+            disabled={analyzing || disabled}
+            onClick={() => galleryInputRef.current?.click()}
+            className="text-xs px-3.5 py-2 rounded-lg font-bold border border-sky-500/35 bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 transition-all disabled:opacity-50"
+          >
+            {analyzing ? 'Analisando…' : 'Anexar foto'}
+          </button>
+        </div>
+        {/* Câmera: capture tipicamente abre a câmera no celular */}
         <input
-          ref={inputRef}
+          ref={cameraInputRef}
           type="file"
           accept="image/*"
           capture="environment"
+          className="hidden"
+          onChange={e => void handleFile(e.target.files?.[0])}
+        />
+        {/* Galeria: sem capture abre o seletor de arquivos */}
+        <input
+          ref={galleryInputRef}
+          type="file"
+          accept="image/*"
           className="hidden"
           onChange={e => void handleFile(e.target.files?.[0])}
         />
