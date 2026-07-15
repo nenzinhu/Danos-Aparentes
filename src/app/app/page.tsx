@@ -341,6 +341,8 @@ export default function AppMainPage() {
           isOpen={settingsModal}
           onClose={() => setSettingsModal(false)}
           hasAccess={subscription?.hasAccess ?? false}
+          isCorporate={subscription?.isCorporate ?? false}
+          accessToken={session?.access_token}
         />
 
         <AppFooter
