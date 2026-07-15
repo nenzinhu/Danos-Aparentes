@@ -337,14 +337,26 @@ body::before {
 
 body > * { position: relative; z-index: 1; }
 
-/* Blog — corpo legível (mais claro que --text-muted puro) */
+/* Blog — corpo sempre legível (contraste alto) */
 .blog-prose p,
-.blog-prose li {
-  color: color-mix(in srgb, var(--text-main) 78%, var(--text-muted));
+.blog-prose li,
+.blog-prose ol,
+.blog-prose ul {
+  color: #e2eef9 !important;
+}
+.blog-prose strong,
+.blog-prose em {
+  color: #ffffff !important;
 }
 html.light .blog-prose p,
-html.light .blog-prose li {
-  color: color-mix(in srgb, var(--text-main) 88%, var(--text-muted));
+html.light .blog-prose li,
+html.light .blog-prose ol,
+html.light .blog-prose ul {
+  color: #1c1b19 !important;
+}
+html.light .blog-prose strong,
+html.light .blog-prose em {
+  color: #0a0a09 !important;
 }
 
 /* Scroll Reveal (transform + opacity only) */
