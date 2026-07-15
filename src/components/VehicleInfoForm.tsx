@@ -1,14 +1,9 @@
 'use client';
 import React, { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react'
 import { VehicleInfo, CustomField, GeoLocation } from '../types'
-import SignaturePad from './SignaturePad'
-import SpeechButton from './SpeechButton'
-import CnhScanner from './CnhScanner'
-import { toTitleCase } from '../lib/cnhBarcode'
 import Button from './ui/Button'
 import WizardStepper from './WizardStepper'
 import type { WizardStep } from './wizardTypes'
-import { ResolvedPhoto } from './ResolvedPhoto'
 import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '../lib/imageUtils'
 import { storePhoto, deletePhotoRef } from '../lib/photoStore'
 import {
@@ -19,14 +14,9 @@ import {
 import { supabase } from '../lib/supabase'
 import {
   FIELD_LABELS,
-  UF_LIST,
-  VEHICLE_TYPES,
-  inputClasses,
-  labelClasses,
   type CustomFieldDef,
   type FoundData,
 } from './vehicleInfoForm/constants'
-import { formatCNH, formatCPF, formatPhone } from './vehicleInfoForm/formatters'
 import {
   loadCustomFieldDefs,
   loadFieldFilter,
@@ -35,9 +25,12 @@ import {
   saveFieldFilter,
   saveFieldOrder,
 } from './vehicleInfoForm/fieldPrefs'
-import { Chip, InspectionDataIcon, TrashIcon } from './vehicleInfoForm/icons'
+import { InspectionDataIcon } from './vehicleInfoForm/icons'
 import { mapPlateApiToFound } from './vehicleInfoForm/parsePlateLookup'
 import FieldVisibilityPanel from './vehicleInfoForm/FieldVisibilityPanel'
+import WizardStepVehicle from './vehicleInfoForm/WizardStepVehicle'
+import WizardStepOwner from './vehicleInfoForm/WizardStepOwner'
+import WizardStepExtras from './vehicleInfoForm/WizardStepExtras'
 
 interface Props {
   info: VehicleInfo
@@ -501,539 +494,49 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
         }`}
       >
       {renderedStep === 1 && (
-      <>
-      <div className="bg-gradient-to-br from-sky-700/15 to-blue-900/10 border border-sky-500/30 rounded-2xl p-5 mb-5 shadow-2xl relative overflow-hidden group">
-        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-sky-400 to-transparent opacity-60 pointer-events-none" />
-
-        <div className="flex items-center gap-2 mb-3">
-          <div className="inline-flex items-center gap-1.5 bg-sky-500/15 border border-sky-500/30 rounded-full px-3 py-1 text-[0.7rem] font-black text-sky-400 tracking-wider uppercase backdrop-blur-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shadow-[0_0_6px_#38bdf8] inline-block" />
-            Consulta de Placa
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-4 items-end">
-          <div className="flex-[1_1_220px] min-w-0 max-w-[280px]">
-            <label htmlFor="plate-input" className={labelClasses}>
-              Placa do Veículo
-            </label>
-            <div className="relative block w-full">
-              <input
-                id="plate-input"
-                value={info.plate}
-                onChange={e => onPlateChange(e.target.value)}
-                placeholder="ABC1D23"
-                maxLength={7}
-                autoComplete="off"
-                spellCheck={false}
-                className={`
-                  w-full max-w-[240px] bg-slate-950/85 border-[1.5px] rounded-xl p-3 text-white font-mono text-2xl font-black outline-none tracking-[0.14em] uppercase text-center box-border transition-all duration-300
-                  ${plateBorderClass}
-                `}
-              />
-              {plateStatus === 'loading' && (
-                <div className="absolute -top-2.5 -right-2.5 bg-yellow-500/20 border border-yellow-500/50 text-yellow-500 rounded-full px-2 py-0.5 text-[0.65rem] font-black animate-pulse">⏳</div>
-              )}
-              {plateStatus === 'found' && (
-                <div className="absolute -top-2.5 -right-2.5 bg-green-500/20 border border-green-500/50 text-green-500 rounded-full px-2 py-0.5 text-[0.65rem] font-black">✓</div>
-              )}
-              {plateStatus === 'error' && (
-                <div className="absolute -top-2.5 -right-2.5 bg-red-500/20 border border-red-500/50 text-red-500 rounded-full px-2 py-0.5 text-[0.65rem] font-black">✖</div>
-              )}
-            </div>
-          </div>
-
-          <div className="flex-1 min-w-[160px] pb-0.5">
-            {plateStatus === 'idle' && (
-              <div className="text-[0.78rem] text-slate-400 leading-relaxed">
-                Digite a placa completa (7 caracteres) para buscar automaticamente os dados do veículo.
-              </div>
-            )}
-            {plateStatus === 'loading' && (
-              <div className="text-[0.82rem] text-yellow-500 font-bold flex items-center gap-2">
-                <span className="animate-spin inline-block text-lg">⏳</span>
-                Consultando base de dados...
-              </div>
-            )}
-            {plateStatus === 'found' && foundData && (
-              <div className="animate-in fade-in slide-in-from-left-2 duration-300">
-                <div className="text-[0.72rem] font-black text-green-500 uppercase tracking-wider mb-2">
-                  ✓ Veículo Encontrado
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {foundData.brand && <Chip icon="🚗" label={foundData.brand} color="sky" />}
-                  {foundData.color && <Chip icon="🎨" label={foundData.color} color="violet" />}
-                  {foundData.especie && <Chip icon="🏷️" label={foundData.especie} color="orange" />}
-                  {foundData.city && foundData.state && <Chip icon="📍" label={`${foundData.city} / ${foundData.state}`} color="green" />}
-                </div>
-              </div>
-            )}
-            {plateStatus === 'error' && (
-              <div className="text-[0.82rem] text-red-500 font-bold">
-                ✖ Placa não encontrada na base de dados.
-                <div className="text-[0.72rem] text-slate-400 font-normal mt-1">Preencha os dados manualmente abaixo.</div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {(show('brand') || show('color') || show('vehicleTypeDesc')) && (
-        <div className="flex flex-wrap gap-3 mb-3">
-          {orderedKeysIn(['brand', 'color', 'vehicleTypeDesc']).filter(show).map(key => (
-            <div key={key} className="flex-1 min-w-[160px]">
-              {key === 'brand' && (
-                <>
-                  <label htmlFor="brand-input" className={labelClasses}>Marca / Modelo / Ano</label>
-                  <input id="brand-input" className={inputClasses} value={info.brand} onChange={e => set('brand', e.target.value)} placeholder="Ex: Toyota Corolla 2023" />
-                </>
-              )}
-              {key === 'color' && (
-                <>
-                  <label htmlFor="color-input" className={labelClasses}>Cor do Veículo</label>
-                  <input id="color-input" className={inputClasses} value={info.color} onChange={e => set('color', e.target.value)} placeholder="Ex: Prata, Preto" />
-                </>
-              )}
-              {key === 'vehicleTypeDesc' && (
-                <>
-                  <label htmlFor="vehicle-type-select" className={labelClasses}>Tipo / Espécie</label>
-                  <select id="vehicle-type-select" className={inputClasses} value={info.vehicleTypeDesc} onChange={e => set('vehicleTypeDesc', e.target.value)}>
-                    <option value="">— Selecione —</option>
-                    {VEHICLE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-                  </select>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {(show('city') || show('state')) && (
-        <div className="flex flex-wrap gap-3 mb-3">
-          {orderedKeysIn(['city', 'state']).filter(show).map(key => (
-            <div key={key} className={key === 'city' ? 'flex-[2] min-w-[200px]' : 'flex-1 min-w-[100px]'}>
-              {key === 'city' && (
-                <>
-                  <label htmlFor="city-input" className={labelClasses}>Cidade de Emplacamento</label>
-                  <input id="city-input" className={inputClasses} value={info.city} onChange={e => set('city', e.target.value)} placeholder="Ex: São Paulo" />
-                </>
-              )}
-              {key === 'state' && (
-                <>
-                  <label htmlFor="state-select" className={labelClasses}>Estado (UF)</label>
-                  <select id="state-select" className={inputClasses} value={info.state} onChange={e => set('state', e.target.value)}>
-                    <option value="">— UF —</option>
-                    {UF_LIST.map(uf => <option key={uf} value={uf}>{uf}</option>)}
-                  </select>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-      </>
+        <WizardStepVehicle
+          info={info}
+          set={set}
+          show={show}
+          orderedKeysIn={orderedKeysIn}
+          plateStatus={plateStatus}
+          foundData={foundData}
+          plateBorderClass={plateBorderClass}
+          onPlateChange={onPlateChange}
+        />
       )}
 
       {renderedStep === 2 && (
-      <>
-      {(show('profile') || show('ref')) && (
-        <div className="flex flex-wrap gap-3 mb-3">
-          {orderedKeysIn(['profile', 'ref']).filter(show).map(key => (
-            <div key={key} className="flex-1 min-w-[160px]">
-              {key === 'profile' && (
-                <>
-                  <label htmlFor="profile-select" className={labelClasses}>Perfil do Relatório</label>
-                  <select id="profile-select" className={inputClasses} value={info.profile} onChange={e => set('profile', e.target.value)}>
-                    <option value="">— Selecione —</option>
-                    <option value="oficina">Oficina</option>
-                    <option value="perito">Perito</option>
-                    <option value="seguradora">Seguradora</option>
-                  </select>
-                </>
-              )}
-              {key === 'ref' && (
-                <>
-                  <label htmlFor="ref-input" className={labelClasses}>Nº da OS / Referência</label>
-                  <input id="ref-input" className={inputClasses} value={info.ref} onChange={e => set('ref', e.target.value)} placeholder="Ex: 2026-00123" />
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {(show('owner') || show('phone')) && (
-        <div className="flex flex-wrap gap-3 mb-3">
-          {orderedKeysIn(['owner', 'phone']).filter(show).map(key => (
-            <div key={key} className="flex-1 min-w-[200px]">
-              {key === 'owner' && (
-                <>
-                  <label htmlFor="owner-input" className={labelClasses}>Proprietário / Cliente</label>
-                  <input id="owner-input" className={inputClasses} value={info.owner} onChange={e => set('owner', toTitleCase(e.target.value))} placeholder="Ex: João Silva" />
-                </>
-              )}
-              {key === 'phone' && (
-                <>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-                    <label htmlFor="phone-input" className={labelClasses}>Telefone (com DDD)</label>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)', userSelect: 'none' }}>
-                      <input
-                        type="checkbox"
-                        checked={info.phone?.startsWith('+') || false}
-                        onChange={e => {
-                          if (e.target.checked) {
-                            set('phone', '+')
-                          } else {
-                            set('phone', '')
-                          }
-                        }}
-                        style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
-                      />
-                      🌍 Estrangeiro
-                    </label>
-                  </div>
-                  {info.phone?.startsWith('+') ? (
-                    <input
-                      id="phone-input"
-                      className={inputClasses}
-                      value={info.phone}
-                      onChange={e => set('phone', '+' + e.target.value.replace(/[^0-9\s\-().]/g, '').replace(/^\+*/, ''))}
-                      placeholder="+1 555 000-0000"
-                      type="tel"
-                    />
-                  ) : (
-                    <input
-                      id="phone-input"
-                      className={inputClasses}
-                      value={info.phone}
-                      onChange={e => set('phone', formatPhone(e.target.value))}
-                      placeholder="(11) 99999-9999"
-                      type="tel"
-                      maxLength={15}
-                    />
-                  )}
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {(show('cpf') || show('cnh') || show('cnhCategory')) && (
-        <div className="flex flex-wrap gap-3 mb-3">
-          {orderedKeysIn(['cpf', 'cnh', 'cnhCategory']).filter(show).map(key => (
-            <div key={key} className="flex-1 min-w-[160px]">
-              {key === 'cpf' && (
-                <>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-                    <label htmlFor="cpf-input" className={labelClasses}>CPF</label>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)', userSelect: 'none' }}>
-                      <input
-                        type="checkbox"
-                        checked={info.cpf?.startsWith('EX-') || false}
-                        onChange={e => set('cpf', e.target.checked ? 'EX-' : '')}
-                        style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
-                      />
-                      🌍 Estrangeiro
-                    </label>
-                  </div>
-                  {info.cpf?.startsWith('EX-') ? (
-                    <input
-                      id="cpf-input"
-                      className={inputClasses}
-                      value={info.cpf.slice(3)}
-                      onChange={e => set('cpf', 'EX-' + e.target.value)}
-                      placeholder="Nº do documento estrangeiro"
-                    />
-                  ) : (
-                    <input
-                      id="cpf-input"
-                      className={inputClasses}
-                      value={info.cpf || ''}
-                      onChange={e => set('cpf', formatCPF(e.target.value))}
-                      placeholder="000.000.000-00"
-                      maxLength={14}
-                    />
-                  )}
-                </>
-              )}
-              {key === 'cnh' && (
-                <>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 2 }}>
-                    <label htmlFor="cnh-input" className={labelClasses}>Nº da Habilitação (CNH)</label>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: '0.7rem', color: 'var(--text-muted)', userSelect: 'none' }}>
-                      <input
-                        type="checkbox"
-                        checked={info.cnh?.startsWith('EX-') || false}
-                        onChange={e => set('cnh', e.target.checked ? 'EX-' : '')}
-                        style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
-                      />
-                      🌍 Estrangeiro
-                    </label>
-                  </div>
-                  {info.cnh?.startsWith('EX-') ? (
-                    <input
-                      id="cnh-input"
-                      className={inputClasses}
-                      value={info.cnh.slice(3)}
-                      onChange={e => set('cnh', 'EX-' + e.target.value)}
-                      placeholder="Nº da carteira estrangeira"
-                    />
-                  ) : (
-                    <div style={{ display: 'flex', gap: 6 }}>
-                      <input
-                        id="cnh-input"
-                        className={inputClasses}
-                        value={info.cnh || ''}
-                        onChange={e => set('cnh', formatCNH(e.target.value))}
-                        placeholder="Ex: 12345678900"
-                        maxLength={11}
-                        style={{ flex: 1 }}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowCnhScanner(true)}
-                        title="Escanear código de barras da CNH"
-                        style={{ flexShrink: 0, width: 40, borderRadius: 10, background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', color: 'var(--text-main)', fontSize: '1.1rem' }}
-                      >
-                        📷
-                      </button>
-                    </div>
-                  )}
-                  {showCnhScanner && (
-                    <CnhScanner
-                      onResult={(fields) => {
-                        // Nome já vem em Title Case de extractCnhFieldsFromBarcode.
-                        if (fields.nome) set('owner', fields.nome)
-                        if (fields.cpf) set('cpf', formatCPF(fields.cpf))
-                        if (fields.cnhNumber) set('cnh', fields.cnhNumber)
-                        setShowCnhScanner(false)
-                      }}
-                      onClose={() => setShowCnhScanner(false)}
-                    />
-                  )}
-                </>
-              )}
-              {key === 'cnhCategory' && (
-                <>
-                  <label htmlFor="cnh-category-select" className={labelClasses}>Categoria CNH</label>
-                  <select
-                    id="cnh-category-select"
-                    className={inputClasses}
-                    value={info.cnhCategory || ''}
-                    onChange={e => set('cnhCategory', e.target.value)}
-                  >
-                    <option value="">— Categoria —</option>
-                    {['A', 'B', 'C', 'D', 'E', 'AB', 'AC', 'AD', 'AE'].map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-      </>
+        <WizardStepOwner
+          info={info}
+          set={set}
+          show={show}
+          orderedKeysIn={orderedKeysIn}
+          showCnhScanner={showCnhScanner}
+          setShowCnhScanner={setShowCnhScanner}
+        />
       )}
 
       {renderedStep === 3 && (
-      <>
-      <div>
-        <div className="flex justify-between items-center mb-1.5">
-          <label htmlFor="general-notes-textarea" className={labelClasses} style={{ marginBottom: 0 }}>📝 Observações Gerais</label>
-          <SpeechButton
-            onTranscript={(text) => {
-              const current = info.generalNotes || ''
-              const space = current ? (current.endsWith(' ') ? '' : ' ') : ''
-              set('generalNotes', current + space + text)
-            }}
-          />
-        </div>
-        <textarea
-          id="general-notes-textarea"
-          className={`${inputClasses} min-h-[52px] resize-vertical`}
-          value={info.generalNotes} onChange={e => set('generalNotes', e.target.value)}
-          placeholder="Observações adicionais sobre o veículo..." />
-      </div>
-
-      <div className="mt-4">
-        <label htmlFor="interior-notes-textarea" className={labelClasses}>🪑 Interior do Veículo</label>
-        <textarea
-          id="interior-notes-textarea"
-          className={`${inputClasses} min-h-[52px] resize-vertical`}
-          value={info.interiorNotes}
-          onChange={e => onChange({ ...info, interiorNotes: e.target.value })}
-          placeholder="Observações sobre bancos, painel, forro, porta-malas..." />
-
-        <div className="flex flex-col gap-2 mt-2.5">
-          {info.interiorPhotos.map((p, i) => (
-            <div key={i} className="bg-black/20 border border-white/5 rounded-xl p-2 flex gap-2.5 items-start">
-              <div className="relative shrink-0">
-                <ResolvedPhoto
-                  refOrDataUrl={p}
-                  alt=""
-                  className="w-[72px] h-[72px] object-cover rounded-lg border border-white/10 block"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeInteriorPhoto(i)}
-                  className="absolute -top-1.5 -right-1.5 bg-black/80 hover:bg-red-600 rounded-full text-white w-5 h-5 text-[0.65rem] flex items-center justify-center font-black transition-colors shadow-lg"
-                >✕</button>
-              </div>
-              <div className="flex-1 min-w-0 flex flex-col gap-1">
-                <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                  🏷️ Legenda da foto
-                </div>
-                <textarea
-                  value={(info.interiorPhotoNotes ?? [])[i] ?? ''}
-                  onChange={e => updateInteriorPhotoNote(i, e.target.value)}
-                  placeholder="Ex.: Banco traseiro rasgado..."
-                  rows={2}
-                  className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg p-1.5 text-[var(--input-color)] font-outfit text-[0.78rem] resize-none outline-none focus:border-sky-500/40 transition-colors"
-                />
-              </div>
-            </div>
-          ))}
-
-          <label className={`h-11 rounded-lg border border-dashed flex items-center justify-center text-[0.8rem] gap-1.5 font-bold font-outfit transition-colors ${
-            interiorCompressing
-              ? 'border-sky-500/40 bg-sky-500/10 text-sky-400 cursor-wait'
-              : 'border-sky-500/30 bg-sky-500/5 text-sky-500 hover:bg-sky-500/10 cursor-pointer'
-          }`}>
-            {interiorCompressing ? '⏳ Comprimindo…' : '📷 Anexar Foto do Interior'}
-            <input type="file" accept="image/*" capture="environment" className="hidden"
-              disabled={interiorCompressing}
-              onChange={e => { if (e.target.files?.[0]) handleInteriorPhoto(e.target.files[0]) }} />
-          </label>
-        </div>
-      </div>
-
-      {show('geo') && (
-        <div className="mt-4 rounded-2xl border border-sky-500/25 bg-gradient-to-br from-sky-700/10 to-blue-900/5 p-4">
-          <div className="flex items-center justify-between gap-2 mb-2.5">
-            <div className="inline-flex items-center gap-1.5 text-[0.7rem] font-black text-sky-400 tracking-wider uppercase">
-              📍 Localização da Vistoria
-            </div>
-            {info.geo && (
-              <button
-                type="button"
-                onClick={clearGeo}
-                className="text-[0.7rem] font-bold text-red-400 hover:text-red-300 transition-colors"
-              >
-                Remover
-              </button>
-            )}
-          </div>
-
-          {!info.geo ? (
-            <>
-              <p className="text-[0.78rem] text-slate-400 leading-relaxed mb-3">
-                Registre o ponto GPS exato de onde a vistoria está sendo feita. A coordenada entra no laudo junto do hash e do QR Code.
-              </p>
-              <Button
-                type="button"
-                variant="primary"
-                onClick={captureGeo}
-                loading={geoStatus === 'loading'}
-                className="w-full"
-              >
-                {geoStatus === 'loading' ? 'Obtendo localização…' : '📡 Capturar localização atual'}
-              </Button>
-              {geoStatus === 'error' && (
-                <p className="text-[0.75rem] text-red-400 font-semibold mt-2">{geoError}</p>
-              )}
-            </>
-          ) : (
-            <div className="animate-in fade-in slide-in-from-bottom-1 duration-300 ease-out motion-reduce:animate-none">
-              <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                <span className="inline-flex items-center gap-1 bg-green-500/15 border border-green-500/30 text-green-400 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold animate-in zoom-in-75 duration-200 motion-reduce:animate-none">
-                  ✓ Localização registrada
-                </span>
-                {typeof info.geo.accuracy === 'number' && (
-                  <span className="inline-flex items-center gap-1 bg-sky-500/15 border border-sky-500/30 text-sky-400 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold">
-                    ± {info.geo.accuracy} m
-                  </span>
-                )}
-              </div>
-              <p className="font-mono text-[0.8rem] text-[var(--text-main)] font-bold">
-                {info.geo.lat.toFixed(6)}, {info.geo.lng.toFixed(6)}
-              </p>
-              {info.geo.address && (
-                <p className="text-[0.75rem] text-slate-400 mt-1 leading-relaxed">{info.geo.address}</p>
-              )}
-              <div className="flex flex-wrap gap-3 mt-2.5">
-                <a
-                  href={`https://www.google.com/maps?q=${info.geo.lat},${info.geo.lng}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[0.75rem] font-bold text-sky-400 hover:text-sky-300 transition-colors"
-                >
-                  🗺️ Ver no mapa
-                </a>
-                <button
-                  type="button"
-                  onClick={captureGeo}
-                  className="text-[0.75rem] font-bold text-slate-400 hover:text-slate-200 transition-colors"
-                >
-                  ↻ Atualizar
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {customFieldDefs.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 mt-3">
-          {customFieldDefs.map(d => (
-            <div key={d.id}>
-              <label htmlFor={`custom-${d.id}`} className={`${labelClasses} flex items-center justify-between gap-2`}>
-                <span>{d.label}</span>
-                <button
-                  type="button"
-                  onClick={() => { if (window.confirm(`Excluir o campo "${d.label}"? Ele será removido de todas as vistorias.`)) removeCustomField(d.id) }}
-                  title="Excluir campo"
-                  className="bg-transparent border-none text-red-500 cursor-pointer p-0.5 flex items-center opacity-50 hover:opacity-100 transition-opacity"
-                >
-                  <TrashIcon size={12} />
-                </button>
-              </label>
-              <input
-                id={`custom-${d.id}`}
-                className={inputClasses}
-                value={customFieldValue(d.id)}
-                onChange={e => setCustomFieldValue(d.id, d.label, e.target.value)}
-                placeholder={`Digite ${d.label.toLowerCase()}`}
-              />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {(show('inspectorSignature') || show('clientSignature')) && (
-        <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-white/5">
-          {orderedKeysIn(['inspectorSignature', 'clientSignature']).filter(show).map(key => (
-            <div key={key} className="flex-1 min-w-[220px]">
-              {key === 'inspectorSignature' && (
-                <SignaturePad
-                  label="Assinatura do Vistoriador"
-                  value={info.inspectorSignature}
-                  onChange={val => set('inspectorSignature', val)}
-                />
-              )}
-              {key === 'clientSignature' && (
-                <SignaturePad
-                  label="Assinatura do Proprietário / Responsável"
-                  value={info.clientSignature}
-                  onChange={val => set('clientSignature', val)}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-      </>
+        <WizardStepExtras
+          info={info}
+          onChange={onChange}
+          set={set}
+          show={show}
+          orderedKeysIn={orderedKeysIn}
+          customFieldDefs={customFieldDefs}
+          customFieldValue={customFieldValue}
+          setCustomFieldValue={setCustomFieldValue}
+          removeCustomField={removeCustomField}
+          interiorCompressing={interiorCompressing}
+          handleInteriorPhoto={handleInteriorPhoto}
+          updateInteriorPhotoNote={updateInteriorPhotoNote}
+          removeInteriorPhoto={removeInteriorPhoto}
+          geoStatus={geoStatus}
+          geoError={geoError}
+          captureGeo={captureGeo}
+          clearGeo={clearGeo}
+        />
       )}
 
       </div>
