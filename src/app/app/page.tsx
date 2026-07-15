@@ -73,7 +73,7 @@ export default function AppMainPage() {
   const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts(session?.access_token)
   const { saved, saveReport, deleteReport } = useSavedReports(session?.user.id)
   const { status: syncStatus } = useSyncStatus(session?.user.id)
-  const { info: subscription, loading: subLoading, openPortal } = useSubscription(session?.user.id, session?.access_token)
+  const { info: subscription, loading: subLoading, openPortal, startCheckout } = useSubscription(session?.user.id, session?.access_token)
 
   useEffect(() => {
     if (darkMode) {
@@ -251,7 +251,14 @@ export default function AppMainPage() {
   }
 
   if (supabaseEnabled && session && subscription && !subscription.hasAccess) {
-    return <Paywall status={subscription.status} onSignOut={signOut} />
+    return (
+      <Paywall
+        status={subscription.status}
+        onSignOut={signOut}
+        accessToken={session.access_token}
+        onCheckoutCard={startCheckout}
+      />
+    )
   }
 
   return (

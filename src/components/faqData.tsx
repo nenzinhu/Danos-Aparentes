@@ -157,8 +157,8 @@ export const FAQS: FaqEntry[] = [
     q: 'Quais formas de pagamento são aceitas?',
     a: (
       <p>
-        O pagamento é processado de forma segura via cartão de crédito pelo nosso provedor (Stripe). Os
-        dados do cartão não ficam armazenados em nossos servidores.
+        Você pode pagar com <strong>PIX</strong> (Mercado Pago — QR Code na tela, sem cartão) ou com
+        cartão de crédito (Stripe). Os dados do cartão não ficam armazenados em nossos servidores.
       </p>
     ),
   },
