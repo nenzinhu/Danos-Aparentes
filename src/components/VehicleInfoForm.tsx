@@ -17,25 +17,27 @@ import {
   updatePhotoUploadProgress,
 } from '../lib/photoUploadProgress'
 import { supabase } from '../lib/supabase'
-
-function TrashIcon({ size = 13 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox='0 0 24 24' className='shrink-0' aria-hidden='true' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
-      <polyline points='3 6 5 6 21 6' />
-      <path d='M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6' />
-      <path d='M10 11v6' /><path d='M14 11v6' />
-      <path d='M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2' />
-    </svg>
-  )
-}
-
-function InspectionDataIcon({ size = 16 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox='0 0 512 341.39' className='shrink-0' aria-hidden='true' fill='currentColor'>
-      <path d='M3.62 302.83c-2 0-3.62-1.62-3.62-3.62 0-1.04.14-2.05.39-3.06 5.8-46 41.82-58.27 67.37-64.9 12.79-3.31 44.6-15.93 31.92-33.3-7.1-9.74-13.53-16.58-19.97-26.87-4.65-6.86-7.1-12.99-7.1-17.89 0-5.23 2.77-11.35 8.32-12.74-.73-10.53-.98-24.38-.48-35.65 1.76-19.35 15.64-33.61 33.57-39.93 7.09-2.7 3.66-13.49 11.5-13.72 18.38-.5 48.51 15.19 60.28 27.92 6.86 7.35 11.26 17.15 12 30.14l-.74 32.46c3.43.98 5.64 3.19 6.62 6.62.98 3.92 0 9.31-3.43 16.91 0 .24-.25.24-.25.49-7.56 12.46-15.44 20.72-24.1 32.26-3.86 5.16-3.11 10.09.1 14.53-4.51 2.63-8.92 5.66-13.15 9.22-16.79 14.09-29.76 35.09-34.32 68.53-.9 3.91-1.25 8.64-.6 12.6H3.62zm415.6-73.61c-.03-3.56-.36-6.1 4.05-6.04l14.28.18c4.61-.03 5.84 1.43 5.79 5.75v19.48h19.36c3.55-.03 6.09-.36 6.03 4.05l-.17 14.29c.02 4.61-1.44 5.83-5.76 5.78h-19.46v19.47c.05 4.32-1.18 5.78-5.79 5.75l-14.28.18c-4.41.06-4.08-2.48-4.05-6.04v-19.36h-19.49c-4.31.05-5.77-1.17-5.75-5.78l-.17-14.29c-.07-4.41 2.48-4.08 6.03-4.05h19.38v-19.37zm12.05-49.31c22.29 0 42.48 9.04 57.08 23.65 14.61 14.61 23.65 34.81 23.65 57.09 0 22.3-9.04 42.48-23.65 57.09-14.6 14.61-34.8 23.65-57.08 23.65-22.3 0-42.48-9.04-57.09-23.65l-.45-.48c-14.35-14.59-23.2-34.59-23.2-56.61 0-22.26 9.04-42.45 23.66-57.06 14.6-14.64 34.79-23.68 57.08-23.68zm45.31 35.42c-11.59-11.59-27.61-18.76-45.31-18.76-17.7 0-33.74 7.17-45.33 18.76-11.6 11.57-18.76 27.6-18.76 45.32 0 17.53 7.01 33.41 18.36 44.94l.41.38c11.59 11.6 27.61 18.77 45.32 18.77 17.69 0 33.72-7.17 45.31-18.77 11.6-11.59 18.77-27.62 18.77-45.32 0-17.69-7.17-33.73-18.77-45.32z' />
-    </svg>
-  )
-}
+import {
+  FIELD_LABELS,
+  UF_LIST,
+  VEHICLE_TYPES,
+  inputClasses,
+  labelClasses,
+  type CustomFieldDef,
+  type FoundData,
+} from './vehicleInfoForm/constants'
+import { formatCNH, formatCPF, formatPhone } from './vehicleInfoForm/formatters'
+import {
+  loadCustomFieldDefs,
+  loadFieldFilter,
+  loadFieldOrder,
+  saveCustomFieldDefs,
+  saveFieldFilter,
+  saveFieldOrder,
+} from './vehicleInfoForm/fieldPrefs'
+import { Chip, InspectionDataIcon, TrashIcon } from './vehicleInfoForm/icons'
+import { mapPlateApiToFound } from './vehicleInfoForm/parsePlateLookup'
+import FieldVisibilityPanel from './vehicleInfoForm/FieldVisibilityPanel'
 
 interface Props {
   info: VehicleInfo
@@ -48,117 +50,6 @@ interface Props {
   /** Disparado quando a placa atinge o formato completo (7 caracteres), independente do resultado da busca de marca/modelo. */
   onPlateConfirmed?: (plate: string) => void
 }
-
-const UF_LIST = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO']
-const VEHICLE_TYPES = ['Passeio (Carro)', 'SUV / Crossover', 'Pickup / Caminhonete', 'Motocicleta', 'Caminhão', 'Van / Utilitário', 'Ônibus / Micro-ônibus', 'Outro']
-
-interface FoundData {
-  brand: string
-  color: string
-  city: string
-  state: string
-  vehicleTypeDesc: string
-  svgType: 'car' | 'moto' | 'truck' | 'van' | 'bus'
-  ano: string
-  especie: string
-}
-
-const FIELD_LABELS: Record<string, string> = {
-  profile: 'Perfil do Relatório',
-  ref: 'Nº da OS',
-  owner: 'Proprietário / Cliente',
-  phone: 'Telefone',
-  cpf: 'CPF',
-  cnh: 'Nº da Habilitação (CNH)',
-  cnhCategory: 'Categoria CNH',
-  brand: 'Marca / Modelo',
-  plate: 'Placa do Veículo',
-  color: 'Cor do Veículo',
-  vehicleTypeDesc: 'Tipo do Veículo',
-  city: 'Cidade de Emplacamento',
-  state: 'Estado (UF)',
-  geo: 'Localização da Vistoria (GPS)',
-  inspectorSignature: 'Assinatura do Vistoriador',
-  clientSignature: 'Assinatura do Cliente',
-}
-
-const formatCPF = (val: string) => {
-  const clean = val.replace(/\D/g, '').slice(0, 11)
-  let formatted = ''
-  if (clean.length > 0) {
-    formatted += clean.slice(0, 3)
-  }
-  if (clean.length > 3) {
-    formatted += '.' + clean.slice(3, 6)
-  }
-  if (clean.length > 6) {
-    formatted += '.' + clean.slice(6, 9)
-  }
-  if (clean.length > 9) {
-    formatted += '-' + clean.slice(9, 11)
-  }
-  return formatted
-}
-
-const formatPhone = (val: string) => {
-  const clean = val.replace(/\D/g, '').slice(0, 11)
-  if (clean.length === 0) return ''
-  let f = '(' + clean.slice(0, 2)
-  if (clean.length > 2) f += ') ' + clean.slice(2, 7)
-  if (clean.length > 7) f += '-' + clean.slice(7, 11)
-  return f
-}
-
-const formatCNH = (val: string) => {
-  return val.replace(/\D/g, '').slice(0, 11)
-}
-
-function loadFieldFilter(): Record<string, boolean> {
-  try {
-    const saved = localStorage.getItem('vistoria_field_filter')
-    if (saved) return JSON.parse(saved)
-  } catch {}
-  return Object.fromEntries(Object.keys(FIELD_LABELS).map(k => [k, true]))
-}
-
-function saveFieldFilter(state: Record<string, boolean>) {
-  localStorage.setItem('vistoria_field_filter', JSON.stringify(state))
-}
-
-function loadFieldOrder(): string[] {
-  const keys = Object.keys(FIELD_LABELS)
-  try {
-    const saved = localStorage.getItem('vistoria_field_order')
-    if (saved) {
-      const parsed: string[] = JSON.parse(saved)
-      const valid = parsed.filter(k => keys.includes(k))
-      const missing = keys.filter(k => !valid.includes(k))
-      return [...valid, ...missing]
-    }
-  } catch {}
-  return keys
-}
-
-function saveFieldOrder(order: string[]) {
-  localStorage.setItem('vistoria_field_order', JSON.stringify(order))
-}
-
-interface CustomFieldDef { id: string; label: string }
-
-function loadCustomFieldDefs(): CustomFieldDef[] {
-  try {
-    const saved = localStorage.getItem('vistoria_custom_field_defs')
-    if (saved) return JSON.parse(saved)
-  } catch {}
-  return []
-}
-
-function saveCustomFieldDefs(defs: CustomFieldDef[]) {
-  localStorage.setItem('vistoria_custom_field_defs', JSON.stringify(defs))
-}
-
-const inputClasses = "w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-2.5 py-2 text-[var(--input-color)] font-outfit text-[0.85rem] outline-none focus:border-sky-500/50 transition-colors placeholder:text-[var(--text-muted)]";
-const labelClasses = "block text-[0.68rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1";
 
 function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse, onVehicleTypeDetected, resetToken, onWizardComplete, onPlateConfirmed }: Props) {
   const [visibleFields, setVisibleFields] = useState<Record<string, boolean>>(loadFieldFilter)
@@ -474,53 +365,20 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
-      if (data.erro || data.error || data.message?.toLowerCase().includes('not found')) throw new Error('not found')
+      const fd = mapPlateApiToFound(data)
+      if (!fd) throw new Error('not found')
 
-      const marca = (data.MARCA || data.marca || '').trim()
-      const modelo = (data.MODELO || data.modelo || data.SUBMODELO || '').trim()
-      const anoVal = String(data.anoModelo || data.ano || data.ANO || '').trim()
-      const cor = (data.cor || data.COR || '').trim()
-      const cidade = (data.municipio || data.MUNICIPIO || data.cidade || '').trim()
-      const uf = (data.uf || data.UF || data.estado || '').trim().toUpperCase()
-      const especieRaw = [data.especie, data.ESPECIE].filter(Boolean).join(' ')
-      const tipoRaw = [data.tipo, data.TIPO, data.carroceria, data.CARROCERIA, data.especie, data.ESPECIE, data.categoria, data.CATEGORIA].filter(Boolean).join(' ').toLowerCase()
-
-      let vtypeVal = 'Passeio (Carro)'
-      let svgType: 'car' | 'moto' | 'truck' | 'van' | 'bus' = 'car'
-
-      if (tipoRaw.includes('motoneta') || tipoRaw.includes('motociclet') || tipoRaw.includes('moto') || tipoRaw.includes('ciclomotor') || tipoRaw.includes('triciclo')) {
-        vtypeVal = 'Motocicleta'; svgType = 'moto'
-      } else if (tipoRaw.includes('caminh') || tipoRaw.includes('trator') || tipoRaw.includes('reboque') || tipoRaw.includes('semi-reboque')) {     
-        vtypeVal = 'Caminhão'; svgType = 'truck'
-      } else if (tipoRaw.includes('ônibus') || tipoRaw.includes('onibus') || tipoRaw.includes('micro') || tipoRaw.includes('microônibus')) {      
-        vtypeVal = 'Ônibus / Micro-ônibus'; svgType = 'bus'
-      } else if (tipoRaw.includes('van') || tipoRaw.includes('utilitário') || tipoRaw.includes('utilitario') || tipoRaw.includes('furgão') || tipoRaw.includes('furgao')) {
-        vtypeVal = 'Van / Utilitário'; svgType = 'van'
-      } else if (tipoRaw.includes('caminhonete') || tipoRaw.includes('pickup')) {
-        vtypeVal = 'Pickup / Caminhonete'
-      } else if (tipoRaw.includes('suv') || tipoRaw.includes('crossover')) {
-        vtypeVal = 'SUV / Crossover'
-      }
-
-      const brandText = [marca, modelo, anoVal].filter(Boolean).join(' ')
-      const colorText = cor ? cor.charAt(0).toUpperCase() + cor.slice(1).toLowerCase() : ''
-      const cityText = cidade ? cidade.charAt(0).toUpperCase() + cidade.slice(1).toLowerCase() : ''
-
-      const fd: FoundData = {
-        brand: brandText, color: colorText, city: cityText, state: uf,
-        vehicleTypeDesc: vtypeVal, svgType, ano: anoVal, especie: especieRaw || vtypeVal,
-      }
       setFoundData(fd)
 
       const updates: Partial<VehicleInfo> = {}
-      if (brandText && !info.brand) updates.brand = brandText
-      if (colorText && !info.color) updates.color = colorText
-      if (cityText && !info.city) updates.city = cityText
-      if (uf && !info.state) updates.state = uf
-      if (!info.vehicleTypeDesc) updates.vehicleTypeDesc = vtypeVal
+      if (fd.brand && !info.brand) updates.brand = fd.brand
+      if (fd.color && !info.color) updates.color = fd.color
+      if (fd.city && !info.city) updates.city = fd.city
+      if (fd.state && !info.state) updates.state = fd.state
+      if (!info.vehicleTypeDesc) updates.vehicleTypeDesc = fd.vehicleTypeDesc
 
       onChange({ ...info, ...updates, plate })
-      if (onVehicleTypeDetected) onVehicleTypeDetected(svgType)
+      if (onVehicleTypeDetected) onVehicleTypeDetected(fd.svgType)
 
       setPlateStatus('found')
     } catch {
@@ -573,180 +431,51 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       <div className="flex justify-between items-center mb-4">
         <div className="font-extrabold text-[0.95rem]">🗒️ Dados da Vistoria</div>
         <div className="flex gap-2 items-center relative">
-          <div ref={filterRef} className="relative">
-            <button onClick={() => setFilterOpen(o => !o)} className={`
-              ${anyHidden ? 'bg-sky-500/15 border-sky-500/50 text-sky-400 shadow-[0_0_10px_rgba(0,200,255,0.2)]' : 'bg-sky-500/10 border-sky-500/20 text-slate-400'}
-              border rounded-lg px-3 py-1.5 cursor-pointer font-extrabold text-[0.75rem] flex items-center gap-1.5 backdrop-blur-sm transition-all  
-            `}>
-              ⚙️ Campos {anyHidden ? `(${Object.values(visibleFields).filter(v => !v).length} oculto${Object.values(visibleFields).filter(v => !v).length > 1 ? 's' : ''})` : ''}
-            </button>
-            {filterOpen && (
-              <div className="absolute top-[calc(100%+8px)] right-0 z-[500] bg-slate-950/95 border border-sky-500/25 rounded-2xl p-4 min-w-[230px] shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in duration-200">
-                <div className="text-[0.72rem] font-black text-sky-500 tracking-widest uppercase mb-1">
-                  ⚙️ Campos Visíveis
-                </div>
-                <div className="text-[0.62rem] text-slate-500 font-semibold mb-2 select-none">
-                  Arraste pelo ⠿ ou use as setas ↑ ↓ para reordenar
-                </div>
-                <div className="flex flex-col gap-1">
-                  {fieldOrder.map((key, i) => (
-                    <div
-                      key={key}
-                      draggable
-                      onDragStart={() => setDraggedFieldKey(key)}
-                      onDragOver={(e) => { e.preventDefault(); if (draggedFieldKey && draggedFieldKey !== key) setDragOverFieldKey(key) }}
-                      onDragLeave={() => setDragOverFieldKey(prev => (prev === key ? null : prev))}
-                      onDrop={(e) => {
-                        e.preventDefault()
-                        if (draggedFieldKey) reorderFieldTo(draggedFieldKey, key)
-                        setDraggedFieldKey(null)
-                        setDragOverFieldKey(null)
-                      }}
-                      onDragEnd={() => { setDraggedFieldKey(null); setDragOverFieldKey(null) }}
-                      className={`flex items-center gap-1.5 rounded-md transition-colors ${
-                        draggedFieldKey === key ? 'opacity-40' : ''
-                      } ${dragOverFieldKey === key ? 'bg-sky-500/15 ring-1 ring-sky-500/40' : ''}`}
-                    >
-                      <span
-                        className="w-4 h-6 flex items-center justify-center text-slate-600 cursor-grab active:cursor-grabbing shrink-0 select-none"
-                        title="Arraste para reordenar"
-                        aria-hidden="true"
-                      >
-                        ⠿
-                      </span>
-                      <label className="flex items-center gap-2 cursor-pointer text-[0.78rem] text-slate-300 font-semibold select-none flex-1 min-w-0">
-                        <input type="checkbox" checked={visibleFields[key] !== false} onChange={() => toggleField(key)}
-                          className="accent-sky-500 w-3.5 h-3.5 cursor-pointer shrink-0" />
-                        <span className="truncate">{FIELD_LABELS[key]}</span>
-                      </label>
-                      <div className="inline-flex rounded-md border border-sky-500/25 overflow-hidden divide-x divide-sky-500/20 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => moveField(key, -1)}
-                          disabled={i === 0}
-                          title="Mover para cima"
-                          aria-label={`Mover ${FIELD_LABELS[key]} para cima`}
-                          className="bg-sky-500/10 text-sky-300 w-6 h-6 flex items-center justify-center text-[0.65rem] leading-none cursor-pointer hover:bg-sky-500/25 active:bg-sky-500/30 transition-colors disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:bg-sky-500/10"
-                        >
-                          ↑
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => moveField(key, 1)}
-                          disabled={i === fieldOrder.length - 1}
-                          title="Mover para baixo"
-                          aria-label={`Mover ${FIELD_LABELS[key]} para baixo`}
-                          className="bg-sky-500/10 text-sky-300 w-6 h-6 flex items-center justify-center text-[0.65rem] leading-none cursor-pointer hover:bg-sky-500/25 active:bg-sky-500/30 transition-colors disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:bg-sky-500/10"
-                        >
-                          ↓
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex gap-1.5 mt-3 pt-2.5 border-t border-sky-500/10">
-                  <button onClick={() => filterAll(true)} className="flex-1 bg-sky-500/10 border border-sky-500/25 text-sky-500 rounded-md p-1.5 text-[0.72rem] font-black cursor-pointer hover:bg-sky-500/20 transition-colors">Todos</button>
-                  <button onClick={() => filterAll(false)} className="flex-1 bg-red-500/10 border border-red-500/25 text-red-500 rounded-md p-1.5 text-[0.72rem] font-black cursor-pointer hover:bg-red-500/20 transition-colors">Nenhum</button>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-sky-500/10">
-                  <div className="text-[0.72rem] font-black text-sky-500 tracking-widest uppercase mb-3">
-                    ➕ Campos Personalizados
-                  </div>
-                  {customFieldDefs.length > 0 && (
-                    <div className="flex flex-col gap-1 mb-2.5">
-                      {customFieldDefs.length > 1 && (
-                        <div className="text-[0.62rem] text-slate-500 font-semibold mb-1 select-none">
-                          Arraste pelo ⠿ ou use as setas ↑ ↓ para reordenar
-                        </div>
-                      )}
-                      {customFieldDefs.map((d, i) => (
-                        <div
-                          key={d.id}
-                          draggable
-                          onDragStart={() => setDraggedCustomId(d.id)}
-                          onDragOver={(e) => { e.preventDefault(); if (draggedCustomId && draggedCustomId !== d.id) setDragOverCustomId(d.id) }}
-                          onDragLeave={() => setDragOverCustomId(prev => (prev === d.id ? null : prev))}
-                          onDrop={(e) => {
-                            e.preventDefault()
-                            if (draggedCustomId) reorderCustomFieldTo(draggedCustomId, d.id)
-                            setDraggedCustomId(null)
-                            setDragOverCustomId(null)
-                          }}
-                          onDragEnd={() => { setDraggedCustomId(null); setDragOverCustomId(null) }}
-                          className={`flex items-center gap-2 bg-white/[0.03] border border-white/5 rounded-lg pl-2 pr-1.5 py-1 transition-colors ${
-                            draggedCustomId === d.id ? 'opacity-40' : ''
-                          } ${dragOverCustomId === d.id ? 'bg-sky-500/15 ring-1 ring-sky-500/40' : ''}`}
-                        >
-                          <span
-                            className="w-4 h-6 flex items-center justify-center text-slate-600 cursor-grab active:cursor-grabbing shrink-0 select-none"
-                            title="Arraste para reordenar"
-                            aria-hidden="true"
-                          >
-                            ⠿
-                          </span>
-                          <span className="flex-1 text-[0.78rem] text-slate-200 font-semibold truncate">{d.label}</span>
-                          {/* Reordenar — controle segmentado agrupado */}
-                          <div className="inline-flex rounded-md border border-sky-500/25 overflow-hidden divide-x divide-sky-500/20">
-                            <button
-                              type="button"
-                              onClick={() => moveCustomField(d.id, -1)}
-                              disabled={i === 0}
-                              title="Mover para cima"
-                              aria-label={`Mover ${d.label} para cima`}
-                              className="bg-sky-500/10 text-sky-300 w-7 h-7 flex items-center justify-center text-xs leading-none cursor-pointer hover:bg-sky-500/25 active:bg-sky-500/30 transition-colors disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:bg-sky-500/10"
-                            >
-                              ↑
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => moveCustomField(d.id, 1)}
-                              disabled={i === customFieldDefs.length - 1}
-                              title="Mover para baixo"
-                              aria-label={`Mover ${d.label} para baixo`}
-                              className="bg-sky-500/10 text-sky-300 w-7 h-7 flex items-center justify-center text-xs leading-none cursor-pointer hover:bg-sky-500/25 active:bg-sky-500/30 transition-colors disabled:opacity-25 disabled:cursor-not-allowed disabled:hover:bg-sky-500/10"
-                            >
-                              ↓
-                            </button>
-                          </div>
-                          {/* Excluir — separado e discreto até hover (ação destrutiva) */}
-                          <button
-                            type="button"
-                            onClick={() => { if (window.confirm(`Excluir o campo "${d.label}"? Ele será removido de todas as vistorias.`)) removeCustomField(d.id) }}
-                            title="Excluir campo"
-                            aria-label={`Excluir ${d.label}`}
-                            className="ml-0.5 w-7 h-7 flex items-center justify-center rounded-md text-red-400/70 cursor-pointer hover:bg-red-500/15 hover:text-red-400 transition-colors"
-                          >
-                            <TrashIcon />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  <div className="flex gap-1.5">
-                    <input
-                      value={newFieldName}
-                      onChange={e => setNewFieldName(e.target.value)}
-                      onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCustomField() } }}
-                      placeholder="Nome do novo campo"
-                      className={`${inputClasses} flex-1 p-1.5 text-[0.78rem]`}
-                    />
-                    <button
-                      type="button"
-                      onClick={addCustomField}
-                      disabled={!newFieldName.trim()}
-                      className={`
-                        rounded-md px-3 py-1.5 text-[0.72rem] font-black transition-all
-                        ${newFieldName.trim()
-                          ? 'bg-green-500/15 border border-green-500/40 text-green-500 cursor-pointer hover:bg-green-500/25'
-                          : 'bg-white/5 border border-white/10 text-slate-500 cursor-not-allowed'}
-                      `}
-                    >+ Criar</button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+          <FieldVisibilityPanel
+            filterRef={filterRef}
+            anyHidden={anyHidden}
+            filterOpen={filterOpen}
+            onToggleOpen={() => setFilterOpen((o) => !o)}
+            fieldOrder={fieldOrder}
+            visibleFields={visibleFields}
+            onToggleField={toggleField}
+            onMoveField={moveField}
+            onFilterAll={filterAll}
+            draggedFieldKey={draggedFieldKey}
+            dragOverFieldKey={dragOverFieldKey}
+            onDragFieldStart={setDraggedFieldKey}
+            onDragFieldOver={setDragOverFieldKey}
+            onDragFieldLeave={(key) => setDragOverFieldKey((prev) => (prev === key ? null : prev))}
+            onDropField={(key) => {
+              if (draggedFieldKey) reorderFieldTo(draggedFieldKey, key)
+              setDraggedFieldKey(null)
+              setDragOverFieldKey(null)
+            }}
+            onDragFieldEnd={() => {
+              setDraggedFieldKey(null)
+              setDragOverFieldKey(null)
+            }}
+            customFieldDefs={customFieldDefs}
+            newFieldName={newFieldName}
+            onNewFieldNameChange={setNewFieldName}
+            onAddCustomField={addCustomField}
+            onRemoveCustomField={removeCustomField}
+            onMoveCustomField={moveCustomField}
+            draggedCustomId={draggedCustomId}
+            dragOverCustomId={dragOverCustomId}
+            onDragCustomStart={setDraggedCustomId}
+            onDragCustomOver={setDragOverCustomId}
+            onDragCustomLeave={(id) => setDragOverCustomId((prev) => (prev === id ? null : prev))}
+            onDropCustom={(id) => {
+              if (draggedCustomId) reorderCustomFieldTo(draggedCustomId, id)
+              setDraggedCustomId(null)
+              setDragOverCustomId(null)
+            }}
+            onDragCustomEnd={() => {
+              setDraggedCustomId(null)
+              setDragOverCustomId(null)
+            }}
+          />
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
@@ -1331,26 +1060,4 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
 const VehicleInfoForm = memo(VehicleInfoFormComponent)
 export default VehicleInfoForm
-
-function Chip({ icon, label, color }: { icon: string; label: string; color: string }) {
-  const colorClasses: Record<string, string> = {
-    sky: "bg-sky-500/15 border-sky-500/30 text-sky-400",
-    violet: "bg-violet-500/15 border-violet-500/30 text-violet-400",
-    orange: "bg-orange-500/15 border-orange-500/30 text-orange-400",
-    green: "bg-green-500/15 border-green-500/30 text-green-400",
-  }
-
-  return (
-    <div className={`
-      inline-flex items-center gap-1.5 border rounded-full px-2.5 py-0.5
-      text-[0.72rem] font-bold max-w-[240px] truncate ${colorClasses[color] || colorClasses.sky}
-    `}>
-      <span>{icon}</span>
-      <span className="truncate">{label}</span>
-    </div>
-  )
-}
-
-
-
 
