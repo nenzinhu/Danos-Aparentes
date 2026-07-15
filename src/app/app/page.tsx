@@ -1,7 +1,7 @@
 'use client';
 import React, { Suspense, useState, useEffect, useCallback, ViewTransition } from 'react'
 import { DirectionalTransition } from '../DirectionalTransition'
-import { VehicleType, ViewType, VehicleInfo, Damage, DamageType } from '@/src/types'
+import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity } from '@/src/types'
 import { useDamages } from '@/src/hooks/useDamages'
 import { useTts } from '@/src/hooks/useTts'
 import { useSavedReports } from '@/src/hooks/useSavedReports'
@@ -151,6 +151,52 @@ export default function AppMainPage() {
       }
     })()
   }, [vehicleType, viewType, addDamage, updateDamage])
+
+  const handleAddDamageFromPhoto = useCallback((payload: {
+    partId: string
+    partName: string
+    view: ViewType
+    type: DamageType
+    typeName: string
+    severity: Severity
+    notes: string
+    photoFile: File
+  }) => {
+    playDamageAddedFeedback()
+    setViewType(payload.view)
+    setVisitedViews(prev => prev.includes(payload.view) ? prev : [...prev, payload.view])
+
+    const id = createId() as Damage['id']
+    addDamage({
+      id,
+      vehicle: vehicleType,
+      view: payload.view,
+      partId: payload.partId,
+      partName: payload.partName,
+      type: payload.type,
+      typeName: payload.typeName,
+      severity: payload.severity,
+      notes: payload.notes,
+      photos: [],
+      photoNotes: [],
+    })
+
+    ;(async () => {
+      startPhotoUploadProgress(1, 'Preparando foto da avaria…')
+      try {
+        updatePhotoUploadProgress({ phase: 'compressing', label: 'Comprimindo imagem…' })
+        const compressedBlob = await compressImage(payload.photoFile, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY)
+        updatePhotoUploadProgress({ phase: 'uploading', current: 0, label: 'Salvando foto localmente…' })
+        const photoRef = await storePhoto(compressedBlob)
+        updatePhotoUploadProgress({ current: 1 })
+        updateDamage(id, { photos: [photoRef], photoNotes: [''] })
+      } catch (error) {
+        console.error('Error compressing image:', error)
+      } finally {
+        finishPhotoUploadProgress()
+      }
+    })()
+  }, [vehicleType, addDamage, updateDamage])
 
   const handleRemoveDamageFromPart = useCallback((partId: string) => {
     const dmg = viewDamages.find(d => d.partId === partId)
@@ -313,6 +359,7 @@ export default function AppMainPage() {
               onClearAll={handleClearAll}
               onClearDamages={handleClearDamages}
               onAddDamage={handleAddDamage}
+              onAddDamageFromPhoto={handleAddDamageFromPhoto}
               onRemoveDamageFromPart={handleRemoveDamageFromPart}
               onRemoveDamage={removeDamage}
               onUpdateDamage={updateDamage}

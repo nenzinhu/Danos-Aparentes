@@ -152,7 +152,7 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
     return (
       <div className="text-center text-[var(--text-muted)] py-8 text-[0.9rem]">
         Nenhuma avaria registrada.<br />
-        <span className="text-[0.8rem]">Clique em uma peça no SVG para começar.</span>
+        <span className="text-[0.8rem]">Clique em uma peça no SVG ou use Foto → diagrama.</span>
       </div>
     )
   }

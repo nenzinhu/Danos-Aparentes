@@ -1,10 +1,11 @@
 'use client';
 import React, { Suspense } from 'react'
-import { VehicleType, ViewType, VehicleInfo, Damage, DamageType } from '@/src/types'
+import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity } from '@/src/types'
 import VehicleSelector, { VehicleIconSvg } from '@/src/components/VehicleSelector'
 import ViewSelector from '@/src/components/ViewSelector'
 import { VehicleViewer } from '@/src/components/VehicleViewer'
 import DamageList from '@/src/components/DamageList'
+import PhotoDamageImport from '@/src/components/PhotoDamageImport'
 import VehicleInfoForm from '@/src/components/VehicleInfoForm'
 import TtsSettings from '@/src/components/TtsSettings'
 import ReportActions from '@/src/components/ReportActions'
@@ -36,6 +37,16 @@ interface InspectTabProps {
   onClearAll: () => void
   onClearDamages: () => void
   onAddDamage: (partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => void
+  onAddDamageFromPhoto: (payload: {
+    partId: string
+    partName: string
+    view: ViewType
+    type: DamageType
+    typeName: string
+    severity: Severity
+    notes: string
+    photoFile: File
+  }) => void
   onRemoveDamageFromPart: (partId: string) => void
   onRemoveDamage: (id: string) => void
   onUpdateDamage: (id: string, patch: Partial<Damage>) => void
@@ -70,6 +81,7 @@ export default function InspectTab({
   onClearAll,
   onClearDamages,
   onAddDamage,
+  onAddDamageFromPhoto,
   onRemoveDamageFromPart,
   onRemoveDamage,
   onUpdateDamage,
@@ -143,7 +155,7 @@ export default function InspectTab({
             <VehicleViewer.FloatingDamage />
             <VehicleViewer.FullscreenOverlay />
             <div className="mt-1.5 text-[0.72rem] text-[var(--text-muted)] text-center">
-              Clique em uma peça para registrar avaria • Scroll ou pinch para zoom
+              Clique em uma peça ou use Foto → diagrama • Scroll/pinch para zoom
             </div>
           </VehicleViewer.Root>
           <div className="mt-8 pt-6 border-t border-[var(--panel-border)]">
@@ -165,6 +177,15 @@ export default function InspectTab({
               </button>
             )}
           </div>
+
+          <PhotoDamageImport
+            vehicleType={vehicleType}
+            accessToken={accessToken}
+            disabled={!hasAccess && !!accessToken}
+            onToast={onToast}
+            onConfirm={onAddDamageFromPhoto}
+            onViewChange={onViewTypeChange}
+          />
 
           <DamageList damages={allVehicleDamages} onRemove={onRemoveDamage} onUpdate={onUpdateDamage} previousReport={previousReport} accessToken={accessToken} />
 
