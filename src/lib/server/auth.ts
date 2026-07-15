@@ -1,22 +1,36 @@
 import { NextRequest } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
 import { createClient, type User } from '@supabase/supabase-js'
 import { getSupabaseUrl, getSupabaseAnonKey } from '@/lib/supabaseEnv'
 import { hasActiveSubscriptionAccess } from '@/src/lib/subscriptionAccess'
 import { supabaseAdmin } from './supabaseAdmin'
 
-// Valida o JWT enviado pelo client (header Authorization: Bearer <token>) e
-// devolve o usuário autenticado, ou null se o token for inválido/ausente.
+// Valida o JWT (Bearer) ou, em fallback, a sessão nos cookies (@supabase/ssr).
 export async function getUserFromRequest(req: NextRequest): Promise<User | null> {
   const url = getSupabaseUrl()
   const anonKey = getSupabaseAnonKey()
   if (!url || !anonKey) return null
 
   const authHeader = req.headers.get('authorization')
-  if (!authHeader?.startsWith('Bearer ')) return null
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.slice('Bearer '.length)
+    const supabase = createClient(url, anonKey)
+    const { data, error } = await supabase.auth.getUser(token)
+    if (!error && data.user) return data.user
+  }
 
-  const token = authHeader.slice('Bearer '.length)
-  const supabase = createClient(url, anonKey)
-  const { data, error } = await supabase.auth.getUser(token)
+  // Fallback cookie (útil quando a chamada vem do App Router sem Bearer).
+  const cookieSupabase = createServerClient(url, anonKey, {
+    cookies: {
+      getAll() {
+        return req.cookies.getAll()
+      },
+      setAll() {
+        // Route Handler: cookies de refresh ficam a cargo do middleware.
+      },
+    },
+  })
+  const { data, error } = await cookieSupabase.auth.getUser()
   if (error || !data.user) return null
   return data.user
 }

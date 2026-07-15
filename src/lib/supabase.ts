@@ -1,11 +1,6 @@
-import { getSupabaseUrl, getSupabaseAnonKey } from '@/lib/supabaseEnv'
-import { createClient } from '@supabase/supabase-js'
+import { createBrowserSupabase, supabaseBrowserEnabled } from './supabase/browser'
 
-const url = getSupabaseUrl()
-const anonKey = getSupabaseAnonKey()
+export const supabaseEnabled = supabaseBrowserEnabled
 
-export const supabaseEnabled = Boolean(url && anonKey)
-
-export const supabase = supabaseEnabled
-  ? createClient(url!, anonKey!)
-  : null
+/** Cliente browser (cookies via @supabase/ssr). Null se env ausente. */
+export const supabase = createBrowserSupabase()
