@@ -28,10 +28,10 @@ export default function TtsSettings({ config, onChange, onTest }: Props) {
   const males = GOOGLE_TTS_VOICES.filter((v) => v.gender === 'male')
 
   return (
-    <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 16, marginTop: 8 }}>
-      <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+    <div style={{ borderTop: '1px solid var(--panel-border)', paddingTop: 16, marginTop: 8 }}>
+      <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', color: 'var(--text-main)' }}>
         🗣️ Configurações de Voz
-        <span style={{ fontSize: '0.65rem', background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.25)', color: '#60a5fa', padding: '2px 8px', borderRadius: 100 }}>
+        <span style={{ fontSize: '0.65rem', background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.25)', color: 'var(--primary)', padding: '2px 8px', borderRadius: 100 }}>
           Google TTS — PT-BR
         </span>
       </div>

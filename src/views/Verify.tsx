@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { supabase, supabaseEnabled } from '../lib/supabase'
 
 interface HashRecord {
@@ -18,37 +18,142 @@ interface HashRecord {
 
 type Status = 'loading' | 'valid' | 'not_found' | 'no_hash' | 'offline' | 'error'
 
+function normalizeHash(raw: string): string {
+  return raw.trim().replace(/[\s-]/g, '').toUpperCase()
+}
+
+/** Extrai hash (+ geo opcional) de URL /verify?hash=… ou de um hash puro. */
+function parseQrPayload(raw: string): { hash: string; lat?: string; lng?: string } | null {
+  const text = raw.trim()
+  if (!text) return null
+
+  try {
+    const url = new URL(text)
+    const hash = normalizeHash(url.searchParams.get('hash') || '')
+    if (hash) {
+      const lat = (url.searchParams.get('lat') || '').trim() || undefined
+      const lng = (url.searchParams.get('lng') || '').trim() || undefined
+      return { hash, lat, lng }
+    }
+  } catch {
+    /* não é URL — tenta hash puro ou querystring solta */
+  }
+
+  const queryMatch = text.match(/[?&]hash=([^&\s#]+)/i)
+  if (queryMatch) {
+    const hash = normalizeHash(decodeURIComponent(queryMatch[1]))
+    if (hash) return { hash }
+  }
+
+  const hash = normalizeHash(text)
+  if (/^[A-F0-9]{16,64}$/.test(hash)) return { hash }
+
+  return null
+}
+
 export default function Verify() {
   const [status, setStatus] = useState<Status>('loading')
   const [record, setRecord] = useState<HashRecord | null>(null)
   const [hash, setHash] = useState('')
+  const [inputHash, setInputHash] = useState('')
   const [geo, setGeo] = useState<{ lat: string; lng: string } | null>(null)
+  const [qrScanning, setQrScanning] = useState(false)
+  const [qrError, setQrError] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const applyAndVerify = useCallback(async (rawHash: string, nextGeo?: { lat: string; lng: string } | null) => {
+    const h = normalizeHash(rawHash)
+    setInputHash(h)
+    if (nextGeo?.lat && nextGeo?.lng) setGeo(nextGeo)
+
+    if (!h) {
+      setStatus('no_hash')
+      setHash('')
+      setRecord(null)
+      return
+    }
+
+    const url = new URL(window.location.href)
+    url.searchParams.set('hash', h)
+    if (nextGeo?.lat && nextGeo?.lng) {
+      url.searchParams.set('lat', nextGeo.lat)
+      url.searchParams.set('lng', nextGeo.lng)
+    }
+    window.history.replaceState({}, '', url.toString())
+
+    setHash(h)
+    setRecord(null)
+
+    if (!supabaseEnabled || !supabase) {
+      setStatus('offline')
+      return
+    }
+
+    setStatus('loading')
+
+    try {
+      const { data, error } = await supabase.from('report_hashes').select('*').eq('hash', h).maybeSingle()
+      if (error) {
+        setStatus('error')
+        return
+      }
+      if (!data) {
+        setStatus('not_found')
+        return
+      }
+      setRecord(data as HashRecord)
+      setStatus('valid')
+    } catch {
+      setStatus('error')
+    }
+  }, [])
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const h = (params.get('hash') || '').trim()
-    setHash(h)
+    setInputHash(normalizeHash(h))
 
     const lat = (params.get('lat') || '').trim()
     const lng = (params.get('lng') || '').trim()
     if (lat && lng) setGeo({ lat, lng })
 
-    if (!h) { setStatus('no_hash'); return }
-    if (!supabaseEnabled || !supabase) { setStatus('offline'); return }
+    void applyAndVerify(h, lat && lng ? { lat, lng } : null)
+  }, [applyAndVerify])
 
-    async function verifyHash() {
-      try {
-        const { data, error } = await supabase!.from('report_hashes').select('*').eq('hash', h).maybeSingle()
-        if (error) { setStatus('error'); return }
-        if (!data) { setStatus('not_found'); return }
-        setRecord(data as HashRecord)
-        setStatus('valid')
-      } catch (err) {
-        setStatus('error')
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+    void applyAndVerify(inputHash)
+  }
+
+  async function handleQrUpload(file: File | undefined) {
+    if (!file) return
+    setQrError('')
+    setQrScanning(true)
+
+    const objectUrl = URL.createObjectURL(file)
+    try {
+      const { BrowserQRCodeReader } = await import('@zxing/browser')
+      const reader = new BrowserQRCodeReader()
+      const result = await reader.decodeFromImageUrl(objectUrl)
+      const parsed = parseQrPayload(result.getText())
+
+      if (!parsed?.hash) {
+        setQrError('QR Code lido, mas não contém um HASH válido do Danos Aparentes.')
+        return
       }
+
+      await applyAndVerify(
+        parsed.hash,
+        parsed.lat && parsed.lng ? { lat: parsed.lat, lng: parsed.lng } : null,
+      )
+    } catch {
+      setQrError('Não foi possível ler o QR Code. Envie uma foto nítida do código no laudo.')
+    } finally {
+      URL.revokeObjectURL(objectUrl)
+      setQrScanning(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
     }
-    verifyHash()
-  }, [])
+  }
 
   const ICONS: Record<Status, { icon: string; bg: string; text: string; border: string; title: string; desc: string }> = {
     loading:   { 
@@ -65,7 +170,7 @@ export default function Verify() {
     },
     no_hash:   { 
       icon: '⚠️', bg: 'bg-slate-50', text: 'text-slate-800', border: 'border-slate-200',
-      title: 'CÓDIGO AUSENTE', desc: 'Nenhum identificador de verificação foi fornecido. Por favor, utilize o link ou QR Code presente no documento.' 
+      title: 'INFORME O HASH OU O QR', desc: 'Digite o HASH do laudo ou envie uma foto do QR Code impresso no documento para verificar a autenticidade.' 
     },
     offline:   { 
       icon: '⚠️', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200',
@@ -78,6 +183,9 @@ export default function Verify() {
   }
 
   const view = ICONS[status]
+  const isBusy = status === 'loading' || qrScanning
+  const showForm = status === 'no_hash' || status === 'not_found' || status === 'error' || status === 'valid'
+  const canSubmit = !isBusy && !!normalizeHash(inputHash)
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-outfit text-slate-900">
@@ -106,6 +214,77 @@ export default function Verify() {
               <p className="text-sm leading-relaxed opacity-80">{view.desc}</p>
             </div>
           </div>
+
+          {/* Manual hash + QR upload */}
+          {showForm && (
+            <div className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <label htmlFor="hash-input" className="block text-xs font-bold text-slate-400 uppercase tracking-widest">
+                  Verificar pelo HASH do laudo
+                </label>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <input
+                    id="hash-input"
+                    type="text"
+                    value={inputHash}
+                    onChange={(e) => setInputHash(e.target.value.toUpperCase())}
+                    placeholder="Cole ou digite o HASH (ex: EEA9011EA43BCD2177DBB4F6CA639B87)"
+                    autoComplete="off"
+                    spellCheck={false}
+                    inputMode="text"
+                    className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded px-4 py-3 font-mono text-sm text-slate-800 tracking-wide placeholder:text-slate-400 placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!canSubmit}
+                    className="shrink-0 px-5 py-3 rounded bg-slate-900 text-white text-xs font-black uppercase tracking-wider hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Verificar
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-400 leading-relaxed">
+                  O HASH aparece no rodapé do PDF, junto ao QR Code. Aceita letras e números; espaços são ignorados.
+                </p>
+              </form>
+
+              <div className="relative flex items-center gap-3">
+                <div className="flex-1 h-px bg-slate-200" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">ou</span>
+                <div className="flex-1 h-px bg-slate-200" />
+              </div>
+
+              <div className="space-y-3">
+                <label htmlFor="qr-upload" className="block text-xs font-bold text-slate-400 uppercase tracking-widest">
+                  Enviar foto do QR Code
+                </label>
+                <input
+                  ref={fileInputRef}
+                  id="qr-upload"
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  className="sr-only"
+                  onChange={(e) => void handleQrUpload(e.target.files?.[0])}
+                />
+                <button
+                  type="button"
+                  disabled={isBusy}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-800 text-xs font-black uppercase tracking-wider transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {qrScanning ? 'Lendo QR Code…' : '📷 Escolher ou tirar foto do QR'}
+                </button>
+                <p className="text-[11px] text-slate-400 leading-relaxed">
+                  Tire uma foto ou envie a imagem do QR Code impresso no laudo. O sistema extrai o HASH automaticamente.
+                </p>
+                {qrError && (
+                  <p className="text-[11px] font-bold text-rose-600 leading-relaxed" role="alert">
+                    {qrError}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Data Section */}
           {status === 'valid' && record && (

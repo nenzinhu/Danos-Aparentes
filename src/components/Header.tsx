@@ -200,7 +200,7 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
         <Logo size={88} variant="full" className="mb-2 drop-shadow-[0_0_28px_rgba(31,182,255,0.3)]" />
       </div>
 
-      <p className='text-slate-400 text-base max-w-[500px] mx-auto mb-6'>
+      <p className='text-[var(--text-muted)] text-base max-w-[500px] mx-auto mb-6'>
         Inspeção veicular interativa — registre danos com precisão
       </p>
 
@@ -218,10 +218,10 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
         <button
           onClick={onOpenSaved}
           title="Ver vistorias salvas"
-          className="group h-10 px-4 bg-slate-800/40 hover:bg-sky-500/10 border border-slate-700/60 hover:border-sky-500/50 rounded-xl text-slate-300 hover:text-sky-400 transition-all duration-300 text-[0.82rem] font-bold backdrop-blur-md shadow-lg hover:shadow-sky-500/10 flex items-center justify-center gap-2 hover:-translate-y-0.5 active:translate-y-0"
+          className="group h-10 px-4 bg-[var(--btn-secondary-bg)] hover:bg-sky-500/10 border border-[var(--btn-secondary-border)] hover:border-sky-500/50 rounded-xl text-[var(--text-main)] hover:text-sky-400 transition-all duration-300 text-[0.82rem] font-bold backdrop-blur-md shadow-lg hover:shadow-sky-500/10 flex items-center justify-center gap-2 hover:-translate-y-0.5 active:translate-y-0"
         >
           <svg 
-            className="w-[18px] h-[18px] text-slate-400 group-hover:text-sky-400 transition-colors duration-300"
+            className="w-[18px] h-[18px] text-[var(--text-muted)] group-hover:text-sky-400 transition-colors duration-300"
             fill="none" 
             viewBox="0 0 24 24" 
             stroke="currentColor" 
@@ -235,7 +235,7 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
         <button
           onClick={onToggleDark}
           title={darkMode ? 'Mudar para Modo Claro' : 'Mudar para Modo Escuro'}
-          className="group w-10 h-10 bg-slate-800/40 border border-slate-700/60 rounded-xl transition-all duration-300 backdrop-blur-md shadow-lg flex items-center justify-center hover:-translate-y-0.5 active:translate-y-0"
+          className="group w-10 h-10 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] rounded-xl transition-all duration-300 backdrop-blur-md shadow-lg flex items-center justify-center hover:-translate-y-0.5 active:translate-y-0"
           style={{
             borderColor: darkMode ? 'rgba(251,191,36,0.2)' : 'rgba(56,189,248,0.2)',
           }}
@@ -245,9 +245,9 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
             e.currentTarget.style.boxShadow = darkMode ? '0 0 15px rgba(251,191,36,0.2)' : '0 0 15px rgba(56,189,248,0.2)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(30,41,59,0.4)';
-            e.currentTarget.style.borderColor = 'rgba(51,65,85,0.6)';
-            e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.1)';
+            e.currentTarget.style.backgroundColor = '';
+            e.currentTarget.style.borderColor = darkMode ? 'rgba(251,191,36,0.2)' : 'rgba(56,189,248,0.2)';
+            e.currentTarget.style.boxShadow = '';
           }}
         >
           {darkMode ? (

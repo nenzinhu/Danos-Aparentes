@@ -60,7 +60,7 @@ export default function SupportForm() {
         </div>
         <button
           onClick={copyEmail}
-          className="shrink-0 px-3 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer"
+          className="shrink-0 px-3 py-2 rounded-xl text-xs font-bold text-[var(--text-main)] bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] border border-[var(--btn-secondary-border)] transition-all cursor-pointer"
         >
           {copied ? '✓ Copiado' : 'Copiar'}
         </button>
@@ -73,15 +73,15 @@ export default function SupportForm() {
         </p>
 
         {/* Abas de assunto */}
-        <div className="flex flex-wrap gap-2 mb-3">
+        <div className="theme-tabs flex flex-wrap gap-2 mb-3 p-1 rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)]">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                 activeTab === tab.id
-                  ? 'border-sky-500 text-sky-400 bg-sky-500/10'
-                  : 'border-white/10 text-slate-400 hover:text-slate-200 bg-white/5'
+                  ? 'theme-tab-active border-sky-500 text-sky-400 bg-sky-500/10'
+                  : 'theme-tab-idle border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] bg-transparent'
               }`}
             >
               {tab.label}

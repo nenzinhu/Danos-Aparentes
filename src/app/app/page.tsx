@@ -1,7 +1,7 @@
 'use client';
 import React, { Suspense, useState, useEffect, useCallback, ViewTransition } from 'react'
 import { DirectionalTransition } from '../DirectionalTransition'
-import { VehicleType, ViewType, VehicleInfo, Damage, DamageType } from '@/src/types'
+import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity } from '@/src/types'
 import { useDamages } from '@/src/hooks/useDamages'
 import { useTts } from '@/src/hooks/useTts'
 import { useSavedReports } from '@/src/hooks/useSavedReports'
@@ -19,7 +19,9 @@ import {
   startPhotoUploadProgress,
   updatePhotoUploadProgress,
 } from '@/src/lib/photoUploadProgress'
+import { useRouter } from 'next/navigation'
 import Header from '@/src/components/Header'
+import ManageSubscriptionModal from '@/src/components/ManageSubscriptionModal'
 import Paywall from '@/src/components/Paywall'
 import SavedReportsModal from '@/src/components/SavedReportsModal'
 import DashboardView from '@/src/components/DashboardView'
@@ -38,6 +40,7 @@ import TorchButton from '@/src/components/TorchButton'
 import { EMPTY_INFO } from '@/src/components/app/constants'
 
 export default function AppMainPage() {
+  const router = useRouter()
   const { session, loading: authLoading, signIn, signUp, signOut, resetPassword } = useAuth()
   const [vehicleType, setVehicleType] = useState<VehicleType>('car')
   const [viewType, setViewType] = useState<ViewType>('lateral-left')
@@ -152,6 +155,17 @@ export default function AppMainPage() {
     })()
   }, [vehicleType, viewType, addDamage, updateDamage])
 
+  const handleAddDamageDetailed = useCallback((partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string) => {
+    playDamageAddedFeedback()
+    addDamage({
+      id: createId() as Damage['id'],
+      vehicle: vehicleType,
+      view: viewType,
+      partId, partName, type, typeName, severity, notes,
+      photos: [], photoNotes: [],
+    })
+  }, [vehicleType, viewType, addDamage])
+
   const handleRemoveDamageFromPart = useCallback((partId: string) => {
     const dmg = viewDamages.find(d => d.partId === partId)
     if (dmg) removeDamage(dmg.id)
@@ -162,13 +176,25 @@ export default function AppMainPage() {
     showToast('✅ Vistoria Salva!')
   }, [vehicleInfo, damages, vehicleType, saveReport, showToast])
 
-  const handleManageSubscription = useCallback(async () => {
+  const [managePaymentModalOpen, setManagePaymentModalOpen] = useState(false)
+
+  const handleManageSubscription = useCallback(() => {
+    setManagePaymentModalOpen(true)
+  }, [])
+
+  const handleChooseCartaoPayment = useCallback(async () => {
+    setManagePaymentModalOpen(false)
     try {
       await openPortal()
     } catch (err) {
       showToast(err instanceof Error ? `❌ ${err.message}` : '❌ Falha ao Abrir Portal de Gerenciamento')
     }
   }, [openPortal, showToast])
+
+  const handleChoosePixPayment = useCallback(() => {
+    setManagePaymentModalOpen(false)
+    router.push('/pagamento-pix')
+  }, [router])
 
   const handleLoad = useCallback((r: { vehicleInfo: VehicleInfo; damages: Damage[]; vehicleType?: VehicleType }) => {
     setVehicleInfo(r.vehicleInfo)
@@ -313,6 +339,7 @@ export default function AppMainPage() {
               onClearAll={handleClearAll}
               onClearDamages={handleClearDamages}
               onAddDamage={handleAddDamage}
+              onAddDamageDetailed={handleAddDamageDetailed}
               onRemoveDamageFromPart={handleRemoveDamageFromPart}
               onRemoveDamage={removeDamage}
               onUpdateDamage={updateDamage}
@@ -359,6 +386,12 @@ export default function AppMainPage() {
         />
         <TorchButton onToast={showToast} />
         {toast && <AppToast msg={toast} onDone={() => setToast(null)} />}
+        <ManageSubscriptionModal
+          open={managePaymentModalOpen}
+          onClose={() => setManagePaymentModalOpen(false)}
+          onChooseCartao={handleChooseCartaoPayment}
+          onChoosePix={handleChoosePixPayment}
+        />
       </div>
     </DirectionalTransition>
   )

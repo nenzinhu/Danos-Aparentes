@@ -100,7 +100,11 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#020617',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#faf9f5' },
+    { media: '(prefers-color-scheme: dark)', color: '#020617' },
+    { color: '#020617' },
+  ],
 }
 
 export default function RootLayout({
@@ -109,16 +113,19 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-BR" style={{ colorScheme: 'dark' }}>
+    <html lang="pt-BR" suppressHydrationWarning>
       <head>
         <link rel="preload" href="/logo.png" as="image" type="image/png" fetchPriority="high" />
         <style dangerouslySetInnerHTML={{ __html: `
+          :root { color-scheme: dark; }
+          html.light { color-scheme: light; }
           body {
             background: #020617;
             color: #e8f4ff;
           }
-          .text-slate-400 {
-            color: rgb(148, 163, 184);
+          html.light body {
+            background: #faf9f5;
+            color: #141413;
           }
         `}} />
         <script dangerouslySetInnerHTML={{ __html: `

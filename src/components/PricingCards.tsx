@@ -1,13 +1,21 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import LandingCtaLink from './LandingCtaLink';
 import { buttonVariants } from './ui/Button';
 import { whatsappLink } from '../lib/whatsapp';
 
+type PaymentMethod = 'cartao' | 'pix';
+
 // Cartões de plano (Pro + Corporativo) — usados na home (resumo) e em
 // /planos (página completa). Conteúdo único, sem duplicar entre os dois.
 export default function PricingCards() {
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cartao');
+  const [durationMonths, setDurationMonths] = useState<number>(1);
+
+  const price = paymentMethod === 'pix' ? 49.90 * durationMonths : 49.90;
+  const priceLabel = `R$ ${price.toFixed(2).replace('.', ',')}`;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
       {/* Plano Pro */}
@@ -21,8 +29,10 @@ export default function PricingCards() {
           <p className="text-xs text-[var(--text-muted)] mt-1">Perfeito para vistoriadores autônomos e oficinas.</p>
 
           <div className="my-6 min-h-[92px]">
-            <span className="text-4xl font-black text-[var(--primary)] tracking-tight">R$ 49,90</span>
-            <span className="text-sm text-[var(--text-muted)] ml-1">/ mês</span>
+            <div className="text-4xl font-black text-[var(--primary)] tracking-tight">{priceLabel}</div>
+            <span className="text-sm text-[var(--text-muted)] ml-1">
+              {paymentMethod === 'pix' ? `/ ${durationMonths} mês${durationMonths > 1 ? 'es' : ''}` : '/ mês'}
+            </span>
             <p className="text-[11px] text-[var(--text-muted)] mt-2 font-semibold">
               ≈ R$ 1,66/dia · custo de um único laudo terceirizado
             </p>
@@ -47,12 +57,68 @@ export default function PricingCards() {
         </div>
 
         <div className="mt-8">
-          <LandingCtaLink className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}>
-            Testar 7 dias grátis
-          </LandingCtaLink>
-          <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
-            Cancele quando quiser, sem multa e sem burocracia.
-          </p>
+          {/* Abas para escolher a forma de pagamento */}
+          <div role="tablist" aria-label="Forma de pagamento" className="grid grid-cols-2 gap-1 p-1 mb-4 rounded-lg bg-[var(--bg-main)] border border-[var(--card-border)]/40">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={paymentMethod === 'cartao'}
+              onClick={() => setPaymentMethod('cartao')}
+              className={`text-xs font-bold py-2 rounded-md transition-colors ${
+                paymentMethod === 'cartao'
+                  ? 'bg-[var(--primary)] text-[var(--bg-main)]'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
+              }`}
+            >
+              Cartão
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={paymentMethod === 'pix'}
+              onClick={() => setPaymentMethod('pix')}
+              className={`text-xs font-bold py-2 rounded-md transition-colors ${
+                paymentMethod === 'pix'
+                  ? 'bg-[var(--primary)] text-[var(--bg-main)]'
+                  : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
+              }`}
+            >
+              PIX
+            </button>
+            {/* Duration selector (appears when PIX is selected) */}
+            {paymentMethod === 'pix' && (
+              <select
+                value={durationMonths}
+                onChange={(e) => setDurationMonths(Number(e.target.value))}
+                className="ml-2 text-xs bg-[var(--bg-main)] text-[var(--text-main)] border border-[var(--card-border)] rounded"
+              >
+                <option value={1}>1 mês</option>
+                <option value={3}>3 meses</option>
+                <option value={6}>6 meses</option>
+                <option value={12}>12 meses</option>
+              </select>
+            )}
+          </div>
+
+          {paymentMethod === 'cartao' ? (
+            <>
+              <LandingCtaLink className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}>
+                Testar 7 dias grátis
+              </LandingCtaLink>
+              <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
+                Cancele quando quiser, sem multa e sem burocracia.
+              </p>
+            </>
+          ) : (
+            <>
+                <Link href={`/pagamento-pix?duration=${durationMonths}`} className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}>
+                  Pagar com PIX
+                </Link>
+              <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
+                Gera um QR Code na hora, sem cartão de crédito.
+              </p>
+            </>
+          )}
         </div>
       </div>
 

@@ -36,7 +36,7 @@
   --card-border: rgba(0, 190, 255, 0.12);
   --glass-shadow: 0 8px 40px 0 rgba(0,0,0,0.6), 0 0 0 1px rgba(0,190,255,0.06);
   --text-main: #e8f4ff;
-  --text-muted: #7a9bbf;
+  --text-muted: #9bb4d0;
   --primary: #1FB6FF;
   --primary-hover: #72C5EE;
   --primary-glow: rgba(31, 182, 255, 0.4);
@@ -222,9 +222,9 @@ html.light {
   --primary-badge-text: #a34b30;
   --elevenlabs-badge: #065f46;
   --signal: #b06d12;
-  --signal-bright: #c47e1a;
-  --signal-glow: rgba(176, 109, 18, 0.25);
-  --sheet-line: rgba(176, 109, 18, 0.45);
+  --signal-bright: #8a5508;
+  --signal-glow: rgba(138, 85, 8, 0.22);
+  --sheet-line: rgba(138, 85, 8, 0.5);
 }
 
 /* ── Tipografia de papéis ──────────────────────────────────────
@@ -237,6 +237,25 @@ html.light {
 .font-mono-data {
   font-family: var(--font-mono-data), ui-monospace, 'SFMono-Regular', monospace;
   font-feature-settings: 'tnum' 1, 'zero' 1;
+}
+
+/* CTA do blog: superfície escura fixa + texto claro (evita contraste quebrado
+   quando o article aplica [&_p]/[&_h3] ou quando o modo dia deixa --text-* escuros). */
+.blog-cta {
+  color: #f8fafc;
+}
+.blog-cta .blog-cta-eyebrow {
+  color: #fbbf24 !important;
+}
+.blog-cta .blog-cta-title {
+  color: #ffffff !important;
+}
+.blog-cta .blog-cta-body {
+  color: #cbd5e1 !important;
+}
+html.light .blog-cta {
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.12);
 }
 
 /* ── Prancha de vistoria: moldura com marcas de corte ───────── */
@@ -321,6 +340,13 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   transition: background 0.3s, color 0.3s;
+}
+
+/* Garante que o FOUC critical CSS do layout não “prenda” o body no escuro
+   depois que html.light / tokens do tema já estão ativos. */
+html.light body {
+  background: var(--bg-gradient);
+  color: var(--text-main);
 }
 
 body::before {
@@ -597,17 +623,23 @@ select option {
   color: var(--input-color);
 }
 
+/* Dropdown nativo: no Windows/macOS o SO ignora várias classes Tailwind
+   e acaba com texto branco sobre fundo claro no modo dia. */
+html.light select,
+html.light select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+html:not(.light) select option {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+
 @media (max-width: 768px) {
   .main-grid { grid-template-columns: 1fr !important; }
 }
 
 /* ── Light-mode contrast fixes (WCAG 2.1 4.5:1) ──────────────── */
-html.light .glass-card div.font-extrabold,
-html.light .glass-card span.font-bold,
-html.light .glass-card .font-extrabold {
-  color: #1e293b;
-}
-
 html.light .glass-card label,
 html.light .glass-card label span,
 html.light .glass-card .text-slate-400,
@@ -623,17 +655,26 @@ html.light .glass-card textarea {
   border-color: #cbd5e1;
 }
 
+html.light .glass-card select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
 html.light .glass-card input::placeholder,
 html.light .glass-card textarea::placeholder {
-  color: #94a3b8;
+  color: #64748b;
 }
 
 html.light .glass-card .text-\[var\(--text-muted\)\] {
-  color: #475569;
+  color: #3f3e3a;
 }
 
 html.light .glass-card .text-\[var\(--text-main\)\] {
-  color: #1e293b;
+  color: #141413;
+}
+
+html.light .glass-card .text-\[var\(--signal-bright\)\] {
+  color: #8a5508;
 }
 
 html.light .glass-card button.bg-sky-500\/10,
@@ -680,11 +721,28 @@ html.light .glass-card .bg-white\/\[0\.02\],
 html.light .glass-card .bg-white\/\[0\.04\],
 html.light .glass-card .bg-white\/\[0\.05\],
 html.light .glass-card .bg-white\/5 {
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(241, 245, 249, 0.9);
 }
 
+/* .text-white em fundo claro some; em botão preenchido precisa continuar branco.
+   Exceção: badges sobre capa escura (bg-black/30) devem permanecer brancos. */
 html.light .glass-card .text-white {
   color: #0f172a;
+}
+html.light .glass-card .bg-primary,
+html.light .glass-card .bg-primary .text-white,
+html.light .glass-card button.bg-primary,
+html.light .glass-card .bg-sky-500,
+html.light .glass-card .bg-sky-600,
+html.light .glass-card .bg-green-500,
+html.light .glass-card .bg-green-600,
+html.light .glass-card .bg-blue-600,
+html.light .glass-card [class*="bg-gradient-to"] {
+  color: #ffffff !important;
+}
+html.light .glass-card .cover-badge,
+html.light .glass-card [class*="bg-black/"] {
+  color: #ffffff !important;
 }
 
 html.light .glass-card .border-white\/10 {
@@ -697,12 +755,13 @@ html.light .glass-card .form-input {
   border-color: #cbd5e1;
 }
 
+html.light .glass-card .text-slate-200,
 html.light .glass-card .text-slate-300 {
   color: #334155;
 }
 
 html.light .glass-card .text-slate-600 {
-  color: #64748b;
+  color: #475569;
 }
 
 html.light .glass-card .text-red-400 {
@@ -727,6 +786,34 @@ html.light .glass-card .text-violet-400 {
 
 html.light .glass-card .text-orange-400 {
   color: #c2410c;
+}
+
+/* Abas / seletores segmentados fora do glass-card */
+html.light .theme-tabs {
+  background-color: rgba(255, 255, 255, 0.92);
+  border-color: #cbd5e1;
+}
+html.light .theme-tabs .theme-tab-idle {
+  color: #475569;
+}
+html.light .theme-tabs .theme-tab-idle:hover {
+  color: #0f172a;
+}
+html.light .theme-tabs .theme-tab-active {
+  color: #0369a1;
+  background-color: rgba(2, 132, 199, 0.12);
+  border-color: rgba(2, 132, 199, 0.35);
+}
+
+html.light .theme-segment {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+html.light .theme-segment .theme-segment-idle {
+  color: #475569;
+}
+html.light .theme-segment .theme-segment-active {
+  color: #ffffff;
 }
 
 .feature-card {

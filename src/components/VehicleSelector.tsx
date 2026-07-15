@@ -16,7 +16,7 @@ const iconClass = (active: boolean) =>
   `block shrink-0 transition-all duration-300 object-contain ${
     active
       ? 'opacity-100 scale-110 -translate-y-0.5 brightness-[1.6] saturate-[1.4] drop-shadow-[0_0_4px_#00ccff] drop-shadow-[0_0_10px_rgba(0,210,255,0.85)]'
-      : 'opacity-40 saturate-[0.25] brightness-[0.65]'
+      : 'opacity-55 saturate-[0.45] brightness-[0.85]'
   }`
 
 function VehicleTypeIcon({ type, active, size = 36 }: { type: VehicleType; active: boolean; size?: number }) {
@@ -69,7 +69,7 @@ function VehicleSelectorComponent({ current, onChange }: Props) {
   const numItems = VEHICLES.length
 
   return (
-    <div className="relative flex bg-slate-950/80 border border-sky-500/20 rounded-[18px] p-[5px] gap-[3px] backdrop-blur-xl overflow-hidden shadow-[0_0_0_1px_rgba(0,100,200,0.12),inset_0_1px_0_rgba(255,255,255,0.04)] font-outfit">
+    <div className="theme-segment relative flex bg-[var(--card-bg-solid)] border border-[var(--card-border)] rounded-[18px] p-[5px] gap-[3px] backdrop-blur-xl overflow-hidden shadow-[0_0_0_1px_rgba(0,100,200,0.08)] font-outfit">
       <div
         className="absolute top-[5px] h-[calc(100%-10px)] rounded-[13px] bg-gradient-to-br from-blue-800 via-blue-700 to-sky-700 shadow-[0_0_0_1px_rgba(0,210,255,0.4),0_4px_20px_rgba(0,160,255,0.55),0_0_30px_rgba(0,200,255,0.2)] transition-all duration-[0.38s] ease-[cubic-bezier(0.34,1.56,0.64,1)] pointer-events-none z-0"
         style={{
@@ -85,7 +85,7 @@ function VehicleSelectorComponent({ current, onChange }: Props) {
             key={v.id}
             onClick={() => onChange(v.id)}
             className={`relative z-10 bg-transparent border-none py-2 px-3 pb-[7px] rounded-[13px] cursor-pointer flex flex-col items-center gap-1.5 flex-1 transition-all duration-200 active:scale-90 motion-reduce:active:scale-100 min-w-0 ${
-              isActive ? 'text-white' : 'text-slate-400'
+              isActive ? 'theme-segment-active text-white' : 'theme-segment-idle text-[var(--text-muted)]'
             }`}
           >
             <VehicleTypeIcon type={v.id} active={isActive} />

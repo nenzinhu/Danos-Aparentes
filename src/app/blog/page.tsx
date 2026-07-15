@@ -34,7 +34,7 @@ export default function BlogIndexPage() {
             <span aria-hidden="true" className="w-5 h-px bg-[var(--sheet-line)]" />
             Blog
           </span>
-          <h1 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95]">
+          <h1 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
             Vistoria sem achismo
           </h1>
           <p className="text-sm text-[var(--text-muted)] leading-relaxed mt-3 max-w-xl">
@@ -50,7 +50,7 @@ export default function BlogIndexPage() {
             className="group block glass-card overflow-hidden mb-8 transition-all hover:border-sky-500/40 focus-visible:ring-2 ring-[var(--primary)] outline-none"
           >
             <BlogCover cover={featured.cover} className="h-44 sm:h-52">
-              <span className="absolute top-4 left-4 text-[0.62rem] font-extrabold uppercase tracking-widest bg-black/30 text-white px-2.5 py-1 rounded-full backdrop-blur-sm">
+              <span className="cover-badge absolute top-4 left-4 text-[0.62rem] font-extrabold uppercase tracking-widest bg-black/40 text-white px-2.5 py-1 rounded-full backdrop-blur-sm">
                 {featured.category}
               </span>
               <span className="absolute top-4 right-4 text-[0.6rem] font-bold uppercase tracking-wider bg-[var(--signal-bright)] text-black px-2.5 py-1 rounded-full">
@@ -58,7 +58,7 @@ export default function BlogIndexPage() {
               </span>
             </BlogCover>
             <div className="p-6">
-              <h2 className="font-display text-2xl font-bold leading-tight group-hover:text-[var(--primary-hover)] transition-colors">
+              <h2 className="font-display text-2xl font-bold leading-tight text-[var(--text-main)] group-hover:text-[var(--primary-hover)] transition-colors">
                 {featured.title}
               </h2>
               <p className="text-sm text-[var(--text-muted)] leading-relaxed mt-2">{featured.excerpt}</p>

@@ -1,6 +1,6 @@
 'use client';
 import React, { Suspense } from 'react'
-import { VehicleType, ViewType, VehicleInfo, Damage, DamageType } from '@/src/types'
+import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity } from '@/src/types'
 import VehicleSelector, { VehicleIconSvg } from '@/src/components/VehicleSelector'
 import ViewSelector from '@/src/components/ViewSelector'
 import { VehicleViewer } from '@/src/components/VehicleViewer'
@@ -36,6 +36,7 @@ interface InspectTabProps {
   onClearAll: () => void
   onClearDamages: () => void
   onAddDamage: (partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => void
+  onAddDamageDetailed?: (partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string) => void
   onRemoveDamageFromPart: (partId: string) => void
   onRemoveDamage: (id: string) => void
   onUpdateDamage: (id: string, patch: Partial<Damage>) => void
@@ -70,6 +71,7 @@ export default function InspectTab({
   onClearAll,
   onClearDamages,
   onAddDamage,
+  onAddDamageDetailed,
   onRemoveDamageFromPart,
   onRemoveDamage,
   onUpdateDamage,
@@ -132,6 +134,7 @@ export default function InspectTab({
             viewType={viewType}
             damages={viewDamages}
             onAddDamage={onAddDamage}
+            onAddDamageDetailed={onAddDamageDetailed}
             onRemoveDamageFromPart={onRemoveDamageFromPart}
             speak={speak}
             speakHover={speakHover}
@@ -145,6 +148,7 @@ export default function InspectTab({
             <div className="mt-1.5 text-[0.72rem] text-[var(--text-muted)] text-center">
               Clique em uma peça para registrar avaria • Scroll ou pinch para zoom
             </div>
+            <VehicleViewer.AutoDetect accessToken={accessToken} onToast={onToast} />
           </VehicleViewer.Root>
           <div className="mt-8 pt-6 border-t border-[var(--panel-border)]">
             <TtsSettings config={ttsConfig} onChange={onTtsConfigChange} onTest={onTtsTest} voices={voices} />

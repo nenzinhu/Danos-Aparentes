@@ -32,7 +32,7 @@ export default function SuportePage() {
           .
         </p>
 
-        <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+        <div className="glass-card p-6 space-y-6">
           <SupportForm />
         </div>
       </div>

@@ -3287,6 +3287,182 @@ BLOG_POSTS.push(
       </>
     ),
   },
+  {
+    slug: 'relatorio-pdf-oficial-com-seguranca-maxima',
+    title: 'Relatório oficial em PDF com segurança máxima: hash, QR Code e identidade da empresa',
+    excerpt:
+      'Como o Danos Aparentes gera um laudo em PDF com logo institucional, hash exclusivo e QR Code de validação — para auditorias rápidas em campo e zero fraude no documento do sinistro.',
+    category: 'Validade',
+    tags: [
+      'pdf de vistoria',
+      'hash sha-256',
+      'qr code',
+      'laudo oficial',
+      'segurança jurídica',
+      'sinistro',
+      'danos aparentes',
+    ],
+    date: '2026-07-14',
+    readingMinutes: 6,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#020617 0%,#0f172a 40%,#1e3a5f 70%,#9E4428 100%)',
+      emoji: '🛡️',
+      image: '/vehicles-img/car.png',
+    },
+    toc: [
+      { id: 'pilares', label: 'Por que o PDF importa' },
+      { id: 'identidade', label: 'Identidade visual institucional' },
+      { id: 'hash', label: 'Código hash exclusivo' },
+      { id: 'qr-code', label: 'QR Code de validação' },
+      { id: 'diferenciais', label: 'Diferenciais práticos' },
+      { id: 'como-gerar', label: 'Como gerar o laudo' },
+    ],
+    howTo: {
+      name: 'Como gerar um relatório oficial em PDF com segurança máxima',
+      steps: [
+        {
+          name: 'Finalize o preenchimento',
+          text: 'Complete os dados do sinistro ou da vistoria e as avarias no diagrama do veículo.',
+        },
+        {
+          name: 'Confirme identidade e assinaturas',
+          text: 'Verifique logo/nome da empresa e colete as assinaturas na tela.',
+        },
+        {
+          name: 'Exporte o PDF oficial',
+          text: 'Gere o documento com hash exclusivo e QR Code de validação.',
+        },
+        {
+          name: 'Valide em campo',
+          text: 'Use o QR Code no celular para confirmar que o laudo bate com o original no sistema.',
+        },
+      ],
+    },
+    content: (
+      <>
+        <p>
+          Além do mapeamento visual interativo e do suporte por Inteligência Artificial, um dos maiores
+          pilares do <strong>Danos Aparentes</strong> é a exportação de <strong>relatórios em PDF com
+          alta segurança jurídica</strong>. Ao finalizar o preenchimento dos dados do sinistro e das
+          avarias, o operador exporta um documento oficial pensado para seguradoras, tribunais, órgãos
+          de trânsito e auditorias em campo.
+        </p>
+
+        <BlogVideo
+          src="/videos/relatorio-pdf-seguranca.mp4"
+          poster="/videos/relatorio-pdf-seguranca-poster.jpg"
+          title="Relatório oficial em PDF com segurança máxima — Danos Aparentes"
+          description="Em menos de um minuto: laudo com logo da empresa, hash exclusivo e QR Code para validar autenticidade no celular."
+          duration="PT45S"
+          uploadDate="2026-07-14"
+          caption="Laudo oficial: identidade da empresa, hash e QR Code de validação rápida."
+        />
+
+        <h2 id="pilares">Por que o PDF oficial importa</h2>
+        <p>
+          Relatórios informais — planilha, foto do papel ou PDF editável sem trilha — abrem espaço para
+          dúvida e fraude. O laudo do Danos Aparentes nasce como documento técnico: layout limpo,
+          identidade da instituição e mecanismos que tornam adulteração evidente.
+        </p>
+
+        <h2 id="identidade">Identidade visual institucional</h2>
+        <p>
+          O relatório é gerado automaticamente com o <strong>nome e a logo oficial</strong> da empresa
+          ou instituição. Isso padroniza a apresentação do laudo e confere credibilidade imediata perante
+          seguradoras, tribunais e órgãos de trânsito.
+        </p>
+        <ul>
+          <li><strong>White-label:</strong> o documento sai com a cara da sua operação.</li>
+          <li><strong>Padronização:</strong> todos os vistoriadores usam o mesmo modelo.</li>
+          <li><strong>Profissionalismo:</strong> visual limpo, moderno e técnico — sem laudo &ldquo;caseiro&rdquo;.</li>
+        </ul>
+
+        <LaudoSheet />
+
+        <h2 id="hash">Código hash exclusivo (assinatura digital do conteúdo)</h2>
+        <p>
+          Cada arquivo PDF gerado recebe uma <strong>chave hash exclusiva</strong> — a impressão digital
+          do relatório. Se qualquer informação, texto ou imagem for adulterado depois, a chave original
+          deixa de bater e a fraude fica evidenciada.
+        </p>
+        <ul>
+          <li><strong>Impressão digital:</strong> cobre dados, avarias, fotos e assinaturas do laudo.</li>
+          <li><strong>Detecção de fraude:</strong> qualquer edição não autorizada invalida o hash.</li>
+          <li><strong>Prova operacional:</strong> útil em contestação, sinistro e auditoria.</li>
+        </ul>
+
+        <h2 id="qr-code">QR Code para validação rápida</h2>
+        <p>
+          No laudo impresso ou digital entra um <strong>QR Code exclusivo</strong>. Qualquer agente,
+          perito ou cidadão envolvido no sinistro aponta a câmera do celular e confere no sistema se
+          aquele relatório é autêntico e condiz com a versão original salva no banco de dados.
+        </p>
+        <ul>
+          <li><strong>Validação em segundos</strong> — sem ligar, sem adivinhar versão de WhatsApp.</li>
+          <li><strong>Original no sistema</strong> — o QR aponta para a conferência do laudo autenticado.</li>
+          <li><strong>Auditoria em campo</strong> — perfeito no atendimento imediato do sinistro.</li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="diferenciais">Diferenciais práticos</h2>
+        <ul>
+          <li>
+            <strong>Segurança de ponta a ponta:</strong> blindagem do documento contra falsificação ou
+            edição não autorizada — hash + QR Code + registro no sistema.
+          </li>
+          <li>
+            <strong>Profissionalismo:</strong> elimina relatórios informais e traz layout técnico,
+            moderno e padronizado.
+          </li>
+          <li>
+            <strong>Zero fraude operacional:</strong> integridade dos dados coletados logo no momento do
+            atendimento, pronta para auditoria rápida.
+          </li>
+        </ul>
+
+        <h2 id="como-gerar">Como gerar o laudo com segurança máxima</h2>
+        <ol>
+          <li>
+            <strong>Finalize o preenchimento</strong> — dados do sinistro/vistoria e avarias no diagrama.
+          </li>
+          <li>
+            <strong>Confirme identidade e assinaturas</strong> — logo/nome da empresa e aceite das partes.
+          </li>
+          <li>
+            <strong>Exporte o PDF oficial</strong> — com hash exclusivo e QR Code embutidos.
+          </li>
+          <li>
+            <strong>Valide em campo</strong> — escaneie o QR e confira o original no sistema.
+          </li>
+        </ol>
+        <p>
+          Quer aprofundar só um pilar? Veja também{' '}
+          <a href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash no laudo de avarias</a>,{' '}
+          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">logo da empresa no PDF</a> e{' '}
+          <a href="/blog/laudo-de-vistoria-com-assinatura-digital">assinatura digital no laudo</a>.
+        </p>
+      </>
+    ),
+    faq: [
+      {
+        question: 'O que é o hash no PDF do Danos Aparentes?',
+        answer:
+          'O hash é uma impressão digital exclusiva do laudo. Se texto, imagem ou dado for alterado depois da geração, a chave original deixa de bater — evidenciando adulteração e reforçando a segurança jurídica do documento.',
+      },
+      {
+        question: 'Para que serve o QR Code no relatório de vistoria?',
+        answer:
+          'O QR Code permite validação rápida: qualquer pessoa aponta o celular e confere no sistema se o relatório é autêntico e corresponde à versão original salva — ideal para sinistro, perito e auditoria em campo.',
+      },
+      {
+        question: 'O PDF sai com a logo da minha empresa?',
+        answer:
+          'Sim. O relatório oficial inclui nome e logo da empresa ou instituição, padronizando a identidade visual e conferindo credibilidade perante seguradoras, tribunais e órgãos de trânsito.',
+      },
+    ],
+  },
 )
 
 export function getPost(slug: string): BlogPost | undefined {

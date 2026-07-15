@@ -35,7 +35,7 @@ export default function CookieConsentBanner() {
           <Link href="/privacidade" className="text-sky-400 underline">Política de Privacidade</Link>
         </p>
         <div className="flex gap-2 shrink-0">
-          <Button variant="secondary" size="sm" onClick={reject}>
+          <Button variant="secondary" size="sm" onClick={reject} className="!text-slate-200 !border-slate-600 !bg-slate-800 hover:!bg-slate-700">
             Recusar
           </Button>
           <Button variant="primary" size="sm" onClick={accept}>

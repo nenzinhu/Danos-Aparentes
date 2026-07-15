@@ -2,11 +2,13 @@
 import React, { createContext, useContext, useRef, useState, useEffect, useCallback, useMemo, memo } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { VehicleType, ViewType, Damage, DamageType } from '../types'
+import { VehicleType, ViewType, Damage, DamageType, Severity } from '../types'
 import { vehicleRegistry } from './vehicles/registry'
 import { useZoomPan } from '../hooks/useZoomPan'
 import DamageFloat from './DamageFloat'
 import VehicleDefs from './vehicles/VehicleDefs'
+import DamageSuggestionsReview, { type DamageSuggestion } from './DamageSuggestionsReview'
+import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '../lib/imageUtils'
 
 // --- Types ---
 interface VehicleViewerContextValue {
@@ -14,6 +16,7 @@ interface VehicleViewerContextValue {
   viewType: ViewType
   damages: Damage[]
   onAddDamage: (partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => void
+  onAddDamageDetailed?: (partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string) => void
   onRemoveDamageFromPart: (partId: string) => void
   speak: (text: string) => void
   speakHover: (text: string) => void
@@ -49,6 +52,7 @@ interface RootProps {
   viewType: ViewType
   damages: Damage[]
   onAddDamage: (partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => void
+  onAddDamageDetailed?: (partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string) => void
   onRemoveDamageFromPart: (partId: string) => void
   speak: (text: string) => void
   speakHover: (text: string) => void
@@ -57,7 +61,7 @@ interface RootProps {
 const VIEW_ORDER: ViewType[] = ['lateral-left', 'frontal', 'lateral-right', 'traseira']
 
 function RootComponent({
-  children, vehicleType, viewType, damages, onAddDamage, onRemoveDamageFromPart, speak, speakHover
+  children, vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover
 }: RootProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const targetRef = useRef<HTMLDivElement>(null)
@@ -87,11 +91,11 @@ function RootComponent({
   }, [viewType, vehicleType])
 
   const contextValue = useMemo(() => ({
-    vehicleType, viewType, damages, onAddDamage, onRemoveDamageFromPart, speak, speakHover,
+    vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
     fullscreen, setFullscreen, selectedPart, setSelectedPart, orbitDir,
     scale, zoomIn, zoomOut, reset, containerRef, targetRef
   }), [
-    vehicleType, viewType, damages, onAddDamage, onRemoveDamageFromPart, speak, speakHover,
+    vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
     fullscreen, selectedPart, orbitDir, scale, zoomIn, zoomOut, reset
   ])
 
@@ -307,6 +311,134 @@ const FloatingDamage = memo(function FloatingDamage() {
   )
 })
 
+const TYPE_NAME: Record<DamageType, string> = {
+  scratch: 'Riscos / Abrasão',
+  dent: 'Deformação',
+  broken: 'Dano / Fratura',
+}
+
+const AutoDetect = memo(function AutoDetect({
+  accessToken,
+  onToast,
+}: {
+  accessToken?: string
+  onToast?: (msg: string) => void
+}) {
+  const { vehicleType, viewType, containerRef, onAddDamageDetailed } = useVehicleViewer()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [analyzing, setAnalyzing] = useState(false)
+  const [suggestions, setSuggestions] = useState<DamageSuggestion[] | null>(null)
+
+  const handleFile = useCallback(async (file: File) => {
+    if (!accessToken) {
+      onToast?.('❌ Entre na sua conta para usar a detecção automática')
+      return
+    }
+    setAnalyzing(true)
+    try {
+      const parts = Array.from(containerRef.current?.querySelectorAll('.part') ?? [])
+        .map(el => ({ id: el.getAttribute('id') || '', name: el.getAttribute('data-name') || '' }))
+        .filter(p => p.id && p.name)
+
+      if (parts.length === 0) {
+        onToast?.('❌ Não foi possível ler as peças desta vista')
+        return
+      }
+
+      const compressedBlob = await compressImage(file, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY)
+      const photoDataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = reject
+        reader.readAsDataURL(compressedBlob)
+      })
+
+      const res = await fetch('/api/damage-vision-bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
+        body: JSON.stringify({ photo: photoDataUrl, vehicle: vehicleType, view: viewType, availableParts: parts }),
+      })
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        onToast?.(`❌ ${err.error || 'Não foi possível analisar a foto'}`)
+        return
+      }
+
+      const { detections } = await res.json()
+      const nameById = new Map(parts.map(p => [p.id, p.name]))
+      const built: DamageSuggestion[] = (detections || []).map((d: { partId: string; type: DamageType; severity: Severity; description: string }) => ({
+        partId: d.partId,
+        partName: nameById.get(d.partId) || d.partId,
+        type: d.type,
+        typeName: TYPE_NAME[d.type] || d.type,
+        severity: d.severity,
+        description: d.description,
+        accepted: true,
+      }))
+
+      if (built.length === 0) {
+        onToast?.('✅ Nenhuma avaria identificada nesta foto')
+      } else {
+        setSuggestions(built)
+      }
+    } catch (err) {
+      console.error('Erro na detecção automática de avarias:', err)
+      onToast?.('❌ Falha ao analisar a foto')
+    } finally {
+      setAnalyzing(false)
+    }
+  }, [accessToken, containerRef, vehicleType, viewType, onToast])
+
+  const toggleSuggestion = useCallback((partId: string) => {
+    setSuggestions(prev => prev?.map(s => s.partId === partId ? { ...s, accepted: !s.accepted } : s) ?? null)
+  }, [])
+
+  const confirmSuggestions = useCallback(() => {
+    if (!suggestions) return
+    const accepted = suggestions.filter(s => s.accepted)
+    accepted.forEach(s => {
+      onAddDamageDetailed?.(s.partId, s.partName, s.type, s.typeName, s.severity, s.description)
+    })
+    onToast?.(`✅ ${accepted.length} avaria${accepted.length === 1 ? '' : 's'} adicionada${accepted.length === 1 ? '' : 's'}`)
+    setSuggestions(null)
+  }, [suggestions, onAddDamageDetailed, onToast])
+
+  return (
+    <>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }}
+      />
+      <button
+        type="button"
+        onClick={() => fileInputRef.current?.click()}
+        disabled={analyzing}
+        className="w-full mt-2 py-2.5 rounded-lg font-bold text-xs border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-colors disabled:opacity-50 disabled:cursor-wait flex items-center justify-center gap-2"
+      >
+        {analyzing ? (
+          <>⏳ Analisando foto…</>
+        ) : (
+          <>🤖 Detectar avarias automaticamente</>
+        )}
+      </button>
+
+      {suggestions && (
+        <DamageSuggestionsReview
+          suggestions={suggestions}
+          onToggle={toggleSuggestion}
+          onConfirm={confirmSuggestions}
+          onDiscard={() => setSuggestions(null)}
+        />
+      )}
+    </>
+  )
+})
+
 // --- Namespace ---
 
 export const VehicleViewer = Object.assign(Root, {
@@ -315,6 +447,7 @@ export const VehicleViewer = Object.assign(Root, {
   Controls,
   FullscreenOverlay,
   FloatingDamage,
+  AutoDetect,
 })
 
 // Default export for backward compatibility or simple use cases

@@ -30,19 +30,19 @@ export default function WizardStepper({ current, maxVisited, onStepClick }: Prop
               aria-current={active ? 'step' : undefined}
             >
               <span className={`w-7 h-7 rounded-full text-xs font-black flex items-center justify-center border shrink-0 ${
-                done ? 'bg-green-500/20 border-green-500/50 text-green-400' :
-                active ? 'bg-sky-500/20 border-sky-500/50 text-sky-400' :
-                'bg-white/5 border-white/10 text-slate-500'
+                done ? 'bg-green-500/20 border-green-500/50 text-green-500' :
+                active ? 'bg-sky-500/20 border-sky-500/50 text-sky-500' :
+                'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)]'
               }`}>
                 {done ? '✓' : step}
               </span>
-              <span className={`text-[0.65rem] font-bold truncate max-w-full ${active ? 'text-sky-400' : 'text-slate-500'}`}>
+              <span className={`text-[0.65rem] font-bold truncate max-w-full ${active ? 'text-sky-500' : 'text-[var(--text-muted)]'}`}>
                 {label}
               </span>
             </button>
             {i < WIZARD_STEPS.length - 1 && (
               <div
-                className={`h-px w-3 shrink-0 ${step < current ? 'bg-green-500/40' : 'bg-white/10'}`}
+                className={`h-px w-3 shrink-0 ${step < current ? 'bg-green-500/40' : 'bg-[var(--card-border)]'}`}
                 aria-hidden
               />
             )}
