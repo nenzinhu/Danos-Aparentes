@@ -56,14 +56,17 @@ create index if not exists idx_damages_user on damages(user_id);
 alter table vehicle_inspections enable row level security;
 alter table damages enable row level security;
 
--- Helper para verificar se o usuário possui assinatura ativa ou trial válido
+-- Helper para verificar se o usuário possui assinatura ativa, PIX válido ou trial
+-- (espelha src/lib/subscriptionAccess.ts → hasActiveSubscriptionAccess)
 create or replace function public.user_has_active_subscription(p_user_id uuid)
 returns boolean as $$
 declare
   v_status text;
   v_trial_ends_at timestamptz;
+  v_expires_at timestamptz;
 begin
-  select status, trial_ends_at into v_status, v_trial_ends_at
+  select status, trial_ends_at, expires_at
+    into v_status, v_trial_ends_at, v_expires_at
   from public.subscriptions
   where user_id = p_user_id;
 
@@ -72,6 +75,10 @@ begin
   end if;
 
   if v_status = 'active' then
+    return true;
+  end if;
+
+  if v_status = 'active_pix' and v_expires_at is not null and v_expires_at > now() then
     return true;
   end if;
 
@@ -149,10 +156,10 @@ drop policy if exists "insert_own_hash" on report_hashes;
 create policy "insert_own_hash" on report_hashes
   for insert with check (auth.uid() = user_id);
 
--- Storage: bucket para fotos das avarias (rode também via dashboard, ou aqui)
+-- Storage: bucket privado para fotos das avarias (acesso via download/signed URL + RLS)
 insert into storage.buckets (id, name, public)
-values ('damage-photos', 'damage-photos', true)
-on conflict (id) do nothing;
+values ('damage-photos', 'damage-photos', false)
+on conflict (id) do update set public = excluded.public;
 
 drop policy if exists "select_own_photos" on storage.objects;
 create policy "select_own_photos" on storage.objects
@@ -184,21 +191,27 @@ drop policy if exists "delete_own_document_photos" on storage.objects;
 create policy "delete_own_document_photos" on storage.objects
   for delete using (bucket_id = 'document-photos' and auth.uid()::text = (storage.foldername(name))[1]);
 
--- ─── Assinaturas (trial de 7 dias + Stripe) ───────────────────────────────────
+-- ─── Assinaturas (trial de 7 dias + Stripe + PIX) ─────────────────────────────
 create table if not exists subscriptions (
   user_id uuid primary key references auth.users(id) on delete cascade,
-  status text not null default 'trialing' -- 'trialing' | 'active' | 'past_due' | 'canceled'
-    check (status in ('trialing', 'active', 'past_due', 'canceled')),
+  status text not null default 'trialing'
+    -- 'trialing' | 'active' | 'past_due' | 'canceled' | 'pending_pix' | 'active_pix'
+    check (status in ('trialing', 'active', 'past_due', 'canceled', 'pending_pix', 'active_pix')),
   trial_ends_at timestamptz not null,
   stripe_customer_id text,
   stripe_subscription_id text,
   current_period_end timestamptz,
-  updated_at timestamptz not null default now(),
-  created_at timestamptz not null default now()
+   updated_at timestamptz not null default now(),
+   created_at timestamptz not null default now(),
+   expires_at timestamptz,
+   pending_months int default 0,
+   pix_charge_id text
 );
 
 create index if not exists idx_subscriptions_stripe_subscription_id
   on subscriptions(stripe_subscription_id);
+create index if not exists idx_subscriptions_pix_charge_id
+  on subscriptions(pix_charge_id);
 
 alter table subscriptions enable row level security;
 

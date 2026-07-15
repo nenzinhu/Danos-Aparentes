@@ -5,7 +5,7 @@ import { db } from './db'
 import {
   buildStoragePath,
   downloadPhotoBlob,
-  getStoragePublicUrl,
+  getStorageSignedUrl,
   isStorageRef,
   normalizeRemotePhotoRef,
   storagePathFromRef,
@@ -44,7 +44,7 @@ async function mapWithConcurrency<T, R>(
   return results
 }
 
-export { isStorageRef, toStorageRef, normalizeRemotePhotoRef, getStoragePublicUrl }
+export { isStorageRef, toStorageRef, normalizeRemotePhotoRef, getStorageSignedUrl }
 
 export function isPhotoRef(ref: string): boolean {
   return ref.startsWith(PHOTO_REF_PREFIX)
@@ -141,7 +141,7 @@ export async function resolvePhotoUrl(ref: string): Promise<string> {
       }
     }
 
-    return getStoragePublicUrl(path)
+    return getStorageSignedUrl(path)
   }
 
   return ref
@@ -326,7 +326,7 @@ export async function resolvePhotosForSync(photos: string[]): Promise<string[]> 
   return Promise.all(photos.map(async (ref) => {
     if (isStorageRef(ref) || (!isInlinePhoto(ref) && !isPhotoRef(ref) && ref.includes('/'))) {
       const path = storagePathFromRef(normalizeRemotePhotoRef(ref))
-      return getStoragePublicUrl(path)
+      return getStorageSignedUrl(path)
     }
     return resolvePhotoUrl(ref)
   }))

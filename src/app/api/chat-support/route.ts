@@ -12,7 +12,7 @@ const VALID_SEGMENTS: ChatSupportSegment[] = ['locadoras', 'oficinas', 'segurado
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req);
-    const { allowed, retryAfterSec } = checkRateLimit(`chat-support:${ip}`, 10, 60 * 1000);
+    const { allowed, retryAfterSec } = await checkRateLimit(`chat-support:${ip}`, 10, 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: 'Muitas mensagens em pouco tempo. Tente novamente em instantes.' },

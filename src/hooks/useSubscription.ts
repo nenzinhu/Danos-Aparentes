@@ -1,8 +1,12 @@
 'use client';
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { supabase, supabaseEnabled } from '../lib/supabase'
+import {
+  hasActiveSubscriptionAccess,
+  type SubscriptionStatus,
+} from '../lib/subscriptionAccess'
 
-export type SubscriptionStatus = 'trialing' | 'active' | 'past_due' | 'canceled'
+export type { SubscriptionStatus }
 export type PlanTier = 'pro' | 'corporativo'
 
 export interface SubscriptionInfo {
@@ -10,6 +14,7 @@ export interface SubscriptionInfo {
   trialEndsAt: string
   hasAccess: boolean
   trialDaysLeft: number
+  trialEnded: boolean
   planTier: PlanTier
   isCorporate: boolean
 }
@@ -40,7 +45,7 @@ export function useSubscription(userId?: string, accessToken?: string) {
 
     const { data, error: queryError } = await supabase
       .from('subscriptions')
-      .select('status, trial_ends_at, plan_tier')
+      .select('status, trial_ends_at, plan_tier, expires_at')
       .eq('user_id', userId)
       .maybeSingle()
 
@@ -56,7 +61,15 @@ export function useSubscription(userId?: string, accessToken?: string) {
 
     if (!data) {
       // Fail-closed: sem linha de assinatura (ex: trigger falhou), sem acesso.
-      setInfo({ status: 'canceled', trialEndsAt: '', hasAccess: false, trialDaysLeft: 0, planTier: 'pro', isCorporate: false })
+      setInfo({
+        status: 'canceled',
+        trialEndsAt: '',
+        hasAccess: false,
+        trialDaysLeft: 0,
+        trialEnded: true,
+        planTier: 'pro',
+        isCorporate: false,
+      })
       setError(null)
       setLoading(false)
       return
@@ -64,12 +77,29 @@ export function useSubscription(userId?: string, accessToken?: string) {
 
     const status = data.status as SubscriptionStatus
     const trialEndsAt = data.trial_ends_at as string
+    const expiresAt = (data.expires_at as string | null) ?? null
     const planTier = (data.plan_tier as PlanTier) || 'pro'
-    const trialActive = new Date(trialEndsAt).getTime() > Date.now()
-    const hasAccess = status === 'active' || (status === 'trialing' && trialActive)
-    const trialDaysLeft = Math.max(0, Math.ceil((new Date(trialEndsAt).getTime() - Date.now()) / 86_400_000))
+    const now = Date.now()
+    const trialEndsTime = new Date(trialEndsAt).getTime()
+    const trialActive = Number.isFinite(trialEndsTime) && trialEndsTime > now
+    const trialEnded = !trialActive
+    const hasAccess = hasActiveSubscriptionAccess({
+      status,
+      trialEndsAt,
+      expiresAt,
+      now,
+    })
+    const trialDaysLeft = Math.min(7, Math.max(0, Math.ceil((trialEndsTime - now) / 86_400_000)))
 
-    setInfo({ status, trialEndsAt, hasAccess, trialDaysLeft, planTier, isCorporate: hasAccess && planTier === 'corporativo' })
+    setInfo({
+      status,
+      trialEndsAt,
+      hasAccess,
+      trialDaysLeft,
+      trialEnded,
+      planTier,
+      isCorporate: hasAccess && planTier === 'corporativo',
+    })
     setError(null)
     setLoading(false)
   }, [userId])
@@ -98,5 +128,16 @@ export function useSubscription(userId?: string, accessToken?: string) {
     window.location.href = url
   }, [accessToken])
 
-  return { info, loading, error, refresh, startCheckout, openPortal }
+  const startPixCheckout = useCallback(async (): Promise<{ qrCode: string; copyPaste: string }> => {
+    if (!accessToken) throw new Error('Não autenticado')
+    const res = await fetch('/api/create-pix-charge', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+    if (!res.ok) throw new Error(await readErrorMessage(res, 'Não foi possível gerar a cobrança PIX'))
+    const { qrCode, copyPaste } = await res.json()
+    return { qrCode, copyPaste }
+  }, [accessToken])
+
+  return { info, loading, error, refresh, startCheckout, openPortal, startPixCheckout }
 }

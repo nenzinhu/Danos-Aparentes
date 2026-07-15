@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
     const hasAccess = user ? await userHasActiveSubscription(user.id) : false;
 
     if (hasAccess && user) {
-      const { allowed, retryAfterSec } = checkRateLimit(`tts:${user.id}`, 60, 10 * 60 * 1000);
+      const { allowed, retryAfterSec } = await checkRateLimit(`tts:${user.id}`, 60, 10 * 60 * 1000);
       if (!allowed) {
         return NextResponse.json(
           { error: 'Muitas requisições. Tente novamente em instantes.' },
@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
       }
     } else {
       const ip = getClientIp(req);
-      const { allowed, retryAfterSec } = checkRateLimit(`tts-ip:${ip}`, 8, 10 * 60 * 1000);
+      const { allowed, retryAfterSec } = await checkRateLimit(`tts-ip:${ip}`, 8, 10 * 60 * 1000);
       if (!allowed) {
         return NextResponse.json(
           { error: 'Muitas requisições. Tente novamente em instantes.' },

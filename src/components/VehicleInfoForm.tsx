@@ -16,6 +16,7 @@ import {
   startPhotoUploadProgress,
   updatePhotoUploadProgress,
 } from '../lib/photoUploadProgress'
+import { supabase } from '../lib/supabase'
 
 function TrashIcon({ size = 13 }: { size?: number }) {
   return (
@@ -395,6 +396,50 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
   const orderedKeysIn = useCallback((keys: string[]) => fieldOrder.filter(k => keys.includes(k)), [fieldOrder])
 
+  // Arrastar para reordenar (além das setas ↑ ↓, que continuam funcionando
+  // como alternativa acessível/no toque).
+  const [draggedFieldKey, setDraggedFieldKey] = useState<string | null>(null)
+  const [dragOverFieldKey, setDragOverFieldKey] = useState<string | null>(null)
+
+  const reorderFieldTo = useCallback((draggedKey: string, targetKey: string) => {
+    if (draggedKey === targetKey) return
+    setFieldOrder(prev => {
+      const from = prev.indexOf(draggedKey)
+      const to = prev.indexOf(targetKey)
+      if (from < 0 || to < 0) return prev
+      const next = [...prev]
+      next.splice(from, 1)
+      next.splice(to, 0, draggedKey)
+      saveFieldOrder(next)
+      return next
+    })
+  }, [])
+
+  const [draggedCustomId, setDraggedCustomId] = useState<string | null>(null)
+  const [dragOverCustomId, setDragOverCustomId] = useState<string | null>(null)
+
+  const reorderCustomFieldTo = useCallback((draggedId: string, targetId: string) => {
+    if (draggedId === targetId) return
+    setCustomFieldDefs(prev => {
+      const from = prev.findIndex(d => d.id === draggedId)
+      const to = prev.findIndex(d => d.id === targetId)
+      if (from < 0 || to < 0) return prev
+      const next = [...prev]
+      const [moved] = next.splice(from, 1)
+      next.splice(to, 0, moved)
+      saveCustomFieldDefs(next)
+      const existing = info.customFields || []
+      if (existing.length) {
+        const ordered = next
+          .map(d => existing.find(f => f.id === d.id))
+          .filter((f): f is CustomField => Boolean(f))
+        const orphans = existing.filter(f => !next.some(d => d.id === f.id))
+        onChange({ ...info, customFields: [...ordered, ...orphans] })
+      }
+      return next
+    })
+  }, [info, onChange])
+
   const goToStep = useCallback((step: WizardStep) => {
     setWizardStep(step)
     setMaxVisited(prev => (step > prev ? step : prev))
@@ -421,7 +466,12 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   const lookupPlate = useCallback(async (plate: string) => {
     setPlateStatus('loading')
     try {
-      const res = await fetch(`/api/plate-lookup?plate=${encodeURIComponent(plate)}`)
+      const { data: { session } } = await supabase?.auth.getSession() ?? { data: { session: null } }
+      if (!session?.access_token) throw new Error('Não autenticado')
+
+      const res = await fetch(`/api/plate-lookup?plate=${encodeURIComponent(plate)}`, {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
       if (data.erro || data.error || data.message?.toLowerCase().includes('not found')) throw new Error('not found')
@@ -536,11 +586,34 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
                   ⚙️ Campos Visíveis
                 </div>
                 <div className="text-[0.62rem] text-slate-500 font-semibold mb-2 select-none">
-                  Use as setas ↑ ↓ para ordenar os campos
+                  Arraste pelo ⠿ ou use as setas ↑ ↓ para reordenar
                 </div>
                 <div className="flex flex-col gap-1">
                   {fieldOrder.map((key, i) => (
-                    <div key={key} className="flex items-center gap-2">
+                    <div
+                      key={key}
+                      draggable
+                      onDragStart={() => setDraggedFieldKey(key)}
+                      onDragOver={(e) => { e.preventDefault(); if (draggedFieldKey && draggedFieldKey !== key) setDragOverFieldKey(key) }}
+                      onDragLeave={() => setDragOverFieldKey(prev => (prev === key ? null : prev))}
+                      onDrop={(e) => {
+                        e.preventDefault()
+                        if (draggedFieldKey) reorderFieldTo(draggedFieldKey, key)
+                        setDraggedFieldKey(null)
+                        setDragOverFieldKey(null)
+                      }}
+                      onDragEnd={() => { setDraggedFieldKey(null); setDragOverFieldKey(null) }}
+                      className={`flex items-center gap-1.5 rounded-md transition-colors ${
+                        draggedFieldKey === key ? 'opacity-40' : ''
+                      } ${dragOverFieldKey === key ? 'bg-sky-500/15 ring-1 ring-sky-500/40' : ''}`}
+                    >
+                      <span
+                        className="w-4 h-6 flex items-center justify-center text-slate-600 cursor-grab active:cursor-grabbing shrink-0 select-none"
+                        title="Arraste para reordenar"
+                        aria-hidden="true"
+                      >
+                        ⠿
+                      </span>
                       <label className="flex items-center gap-2 cursor-pointer text-[0.78rem] text-slate-300 font-semibold select-none flex-1 min-w-0">
                         <input type="checkbox" checked={visibleFields[key] !== false} onChange={() => toggleField(key)}
                           className="accent-sky-500 w-3.5 h-3.5 cursor-pointer shrink-0" />
@@ -584,12 +657,34 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
                     <div className="flex flex-col gap-1 mb-2.5">
                       {customFieldDefs.length > 1 && (
                         <div className="text-[0.62rem] text-slate-500 font-semibold mb-1 select-none">
-                          Use as setas ↑ ↓ para ordenar os campos
+                          Arraste pelo ⠿ ou use as setas ↑ ↓ para reordenar
                         </div>
                       )}
                       {customFieldDefs.map((d, i) => (
-                        <div key={d.id} className="flex items-center gap-2 bg-white/[0.03] border border-white/5 rounded-lg pl-2 pr-1.5 py-1">
-                          <span className="text-[0.66rem] font-mono tabular-nums text-slate-500 w-3.5 text-center select-none">{i + 1}</span>
+                        <div
+                          key={d.id}
+                          draggable
+                          onDragStart={() => setDraggedCustomId(d.id)}
+                          onDragOver={(e) => { e.preventDefault(); if (draggedCustomId && draggedCustomId !== d.id) setDragOverCustomId(d.id) }}
+                          onDragLeave={() => setDragOverCustomId(prev => (prev === d.id ? null : prev))}
+                          onDrop={(e) => {
+                            e.preventDefault()
+                            if (draggedCustomId) reorderCustomFieldTo(draggedCustomId, d.id)
+                            setDraggedCustomId(null)
+                            setDragOverCustomId(null)
+                          }}
+                          onDragEnd={() => { setDraggedCustomId(null); setDragOverCustomId(null) }}
+                          className={`flex items-center gap-2 bg-white/[0.03] border border-white/5 rounded-lg pl-2 pr-1.5 py-1 transition-colors ${
+                            draggedCustomId === d.id ? 'opacity-40' : ''
+                          } ${dragOverCustomId === d.id ? 'bg-sky-500/15 ring-1 ring-sky-500/40' : ''}`}
+                        >
+                          <span
+                            className="w-4 h-6 flex items-center justify-center text-slate-600 cursor-grab active:cursor-grabbing shrink-0 select-none"
+                            title="Arraste para reordenar"
+                            aria-hidden="true"
+                          >
+                            ⠿
+                          </span>
                           <span className="flex-1 text-[0.78rem] text-slate-200 font-semibold truncate">{d.label}</span>
                           {/* Reordenar — controle segmentado agrupado */}
                           <div className="inline-flex rounded-md border border-sky-500/25 overflow-hidden divide-x divide-sky-500/20">

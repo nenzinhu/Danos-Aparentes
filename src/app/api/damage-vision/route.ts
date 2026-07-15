@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       if (!hasAccess) {
         return NextResponse.json({ error: 'Assinatura inativa' }, { status: 403 });
       }
-      const { allowed, retryAfterSec } = checkRateLimit(`damage-vision:${user.id}`, 20, 10 * 60 * 1000);
+      const { allowed, retryAfterSec } = await checkRateLimit(`damage-vision:${user.id}`, 20, 10 * 60 * 1000);
       if (!allowed) {
         return NextResponse.json(
           { error: 'Muitas análises em pouco tempo. Tente novamente em instantes.' },

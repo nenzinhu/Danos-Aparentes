@@ -1,13 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getClientIp } from '@/src/lib/server/auth';
+import { getClientIp, getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
 
 // Placas brasileiras: formato antigo (ABC1234) ou Mercosul (ABC1D23).
 const PLATE_REGEX = /^[A-Z]{3}\d[A-Z\d]\d{2}$/;
 
 export async function GET(req: NextRequest) {
+  const user = await getUserFromRequest(req);
+  if (!user) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
+  }
+
+  const hasAccess = await userHasActiveSubscription(user.id);
+  if (!hasAccess) {
+    return NextResponse.json({ error: 'Assinatura necessária para consultar placas' }, { status: 403 });
+  }
+
   const ip = getClientIp(req);
-  const { allowed, retryAfterSec } = checkRateLimit(`plate-lookup:${ip}`, 20, 10 * 60 * 1000);
+  const { allowed, retryAfterSec } = await checkRateLimit(`plate-lookup:${user.id}:${ip}`, 30, 10 * 60 * 1000);
   if (!allowed) {
     return NextResponse.json(
       { error: 'Muitas requisições. Tente novamente em instantes.' },

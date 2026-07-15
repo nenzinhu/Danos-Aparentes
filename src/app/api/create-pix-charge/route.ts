@@ -1,0 +1,64 @@
+// src/app/api/create-pix-charge/route.ts
+
+import { NextRequest, NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin'
+import { getUserFromRequest } from '@/src/lib/server/auth'
+import { createPixCharge } from '@/src/lib/server/pixClient'
+
+/**
+ * Endpoint called from the front‑end when the user selects "PIX" as payment method.
+ * It creates a PIX charge via Mercado Pago, stores a pending subscription in Supabase
+ * and returns the QR code / copy‑paste string to the client.
+ */
+export async function POST(req: NextRequest) {
+  const user = await getUserFromRequest(req)
+  if (!user) {
+    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+  }
+
+  if (!supabaseAdmin) {
+    return NextResponse.json({ error: 'Supabase não configurado' }, { status: 500 })
+  }
+
+  // Recebe a quantidade de meses (padrão 1) via query string
+  const durationRaw = Number(req.nextUrl.searchParams.get('duration') ?? '1')
+  const duration = Number.isFinite(durationRaw) && durationRaw > 0 ? Math.min(Math.floor(durationRaw), 24) : 1
+  const amountCents = 4990 * duration // preço base R$49,90 por mês
+
+  const charge = await createPixCharge(amountCents, user.email as string)
+  const chargeId = String((charge as { id?: string | number }).id ?? '')
+  if (!chargeId) {
+    console.error('[create-pix-charge] cobrança sem id', charge)
+    return NextResponse.json({ error: 'Erro ao criar cobrança PIX' }, { status: 502 })
+  }
+
+  // Cada usuário tem uma única linha em subscriptions (trigger no signup).
+  // Update (não upsert) evita insert parcial sem trial_ends_at NOT NULL.
+  const { data, error } = await supabaseAdmin
+    .from('subscriptions')
+    .update({
+      status: 'pending_pix',
+      pix_charge_id: chargeId,
+      pending_months: duration,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('user_id', user.id)
+    .select('user_id')
+    .maybeSingle()
+
+  if (error) {
+    console.error('Erro ao atualizar subscription PIX:', error)
+    return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
+  }
+
+  if (!data) {
+    return NextResponse.json({ error: 'Assinatura não encontrada para o usuário' }, { status: 404 })
+  }
+
+  const tx = charge.point_of_interaction?.transaction_data
+  return NextResponse.json({
+    qrCode: tx?.qr_code_base64,
+    copyPaste: tx?.qr_code,
+    message: 'Cobrança PIX criada – escaneie o QR Code ou copie o código para pagar.',
+  })
+}

@@ -14,7 +14,7 @@ interface Summary {
 const SEV_LABEL: Record<string, string> = { low: 'Leve', medium: 'Média', high: 'Grave' }
 
 export default function AssinarPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
+  const { id: token } = use(params)
   const [summary, setSummary] = useState<Summary | null>(null)
   const [status, setStatus] = useState<'loading' | 'ready' | 'not_found' | 'error'>('loading')
   const [signature, setSignature] = useState('')
@@ -22,15 +22,18 @@ export default function AssinarPage({ params }: { params: Promise<{ id: string }
   const [done, setDone] = useState(false)
 
   useEffect(() => {
-    fetch(`/api/remote-signature?id=${encodeURIComponent(id)}`)
-      .then(async res => {
-        if (!res.ok) { setStatus(res.status === 404 ? 'not_found' : 'error'); return }
+    fetch(`/api/remote-signature?token=${encodeURIComponent(token)}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          setStatus(res.status === 404 || res.status === 400 ? 'not_found' : 'error')
+          return
+        }
         const data = await res.json()
         setSummary(data)
         setStatus('ready')
       })
       .catch(() => setStatus('error'))
-  }, [id])
+  }, [token])
 
   async function handleSubmit() {
     if (!signature) return
@@ -39,7 +42,7 @@ export default function AssinarPage({ params }: { params: Promise<{ id: string }
       const res = await fetch('/api/remote-signature', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, signature }),
+        body: JSON.stringify({ token, signature }),
       })
       if (res.ok) {
         setDone(true)
@@ -70,7 +73,7 @@ export default function AssinarPage({ params }: { params: Promise<{ id: string }
 
         {status === 'not_found' && (
           <p className="text-center text-sm text-[var(--text-muted)]">
-            Vistoria não encontrada. Confira o link com quem te enviou.
+            Link inválido ou expirado. Peça um novo link a quem te enviou.
           </p>
         )}
 
@@ -82,7 +85,7 @@ export default function AssinarPage({ params }: { params: Promise<{ id: string }
 
         {status === 'ready' && summary && (done || summary.alreadySigned) ? (
           <div className="glass-card p-6 text-center">
-            <p className="text-sm font-bold">✅ Assinatura registrada</p>
+            <p className="text-sm font-bold">Assinatura registrada</p>
             <p className="text-xs text-[var(--text-muted)] mt-2">
               Obrigado. O vistoriador já tem acesso à sua assinatura no laudo.
             </p>

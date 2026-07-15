@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { createClient, type User } from '@supabase/supabase-js'
 import { getSupabaseUrl, getSupabaseAnonKey } from '@/lib/supabaseEnv'
+import { hasActiveSubscriptionAccess } from '@/src/lib/subscriptionAccess'
 import { supabaseAdmin } from './supabaseAdmin'
 
 // Valida o JWT enviado pelo client (header Authorization: Bearer <token>) e
@@ -20,21 +21,23 @@ export async function getUserFromRequest(req: NextRequest): Promise<User | null>
   return data.user
 }
 
-// Mesma lógica de acesso usada em src/hooks/useSubscription.ts, replicada
-// no servidor para que as rotas de IA/TTS não confiem só na checagem do client.
+// Mesma regra de `hasActiveSubscriptionAccess` / useSubscription / SQL RLS.
 export async function userHasActiveSubscription(userId: string): Promise<boolean> {
   if (!supabaseAdmin) return false
 
   const { data, error } = await supabaseAdmin
     .from('subscriptions')
-    .select('status, trial_ends_at')
+    .select('status, trial_ends_at, expires_at')
     .eq('user_id', userId)
     .maybeSingle()
 
   if (error || !data) return false
 
-  const trialActive = new Date(data.trial_ends_at as string).getTime() > Date.now()
-  return data.status === 'active' || (data.status === 'trialing' && trialActive)
+  return hasActiveSubscriptionAccess({
+    status: data.status as string,
+    trialEndsAt: data.trial_ends_at as string | null,
+    expiresAt: data.expires_at as string | null,
+  })
 }
 
 export function getClientIp(req: NextRequest): string {

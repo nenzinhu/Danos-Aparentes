@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Assinatura inativa' }, { status: 403 });
       }
 
-      const { allowed, retryAfterSec } = checkRateLimit(`ia:${user.id}`, 30, 10 * 60 * 1000);
+      const { allowed, retryAfterSec } = await checkRateLimit(`ia:${user.id}`, 30, 10 * 60 * 1000);
       if (!allowed) {
         return NextResponse.json(
           { error: 'Muitas requisições. Tente novamente em instantes.' },
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       // Modo sem Supabase configurado (ex: instância local/demo sem contas):
       // não há como autenticar, então aplicamos limite básico por IP.
       const ip = getClientIp(req);
-      const { allowed, retryAfterSec } = checkRateLimit(`ia-ip:${ip}`, 10, 10 * 60 * 1000);
+      const { allowed, retryAfterSec } = await checkRateLimit(`ia-ip:${ip}`, 10, 10 * 60 * 1000);
       if (!allowed) {
         return NextResponse.json(
           { error: 'Muitas requisições. Tente novamente em instantes.' },

@@ -35,11 +35,31 @@ export function normalizeRemotePhotoRef(ref: string): string {
   return toStorageRef(ref)
 }
 
+/** @deprecated Bucket damage-photos é privado — use getStorageSignedUrl. */
 export function getStoragePublicUrl(path: string): string {
   const base = getSupabaseUrl()
   if (!base) return ''
   const clean = path.replace(/^\//, '')
-  return `${base}/storage/v1/object/public/${STORAGE_BUCKET}/${clean}`
+  // URL assinada estável não existe de forma síncrona; não expor /object/public.
+  void clean
+  return ''
+}
+
+/** URL temporária para leitura autenticada (bucket privado). */
+export async function getStorageSignedUrl(
+  path: string,
+  expiresInSec = 60 * 60,
+): Promise<string> {
+  if (!supabase) return ''
+  const clean = path.replace(/^\//, '')
+  const { data, error } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .createSignedUrl(clean, expiresInSec)
+  if (error || !data?.signedUrl) {
+    console.warn('Falha ao assinar URL de foto:', error?.message)
+    return ''
+  }
+  return data.signedUrl
 }
 
 export async function uploadPhotoBlob(

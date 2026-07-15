@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin';
 import { getUserFromRequest } from '@/src/lib/server/auth';
+import { hasActiveSubscriptionAccess } from '@/src/lib/subscriptionAccess';
 
 const STORAGE_REF_PREFIX = 'storage:';
 
@@ -13,12 +14,15 @@ async function isCorporate(userId: string): Promise<boolean> {
   if (!supabaseAdmin) return false;
   const { data } = await supabaseAdmin
     .from('subscriptions')
-    .select('status, trial_ends_at, plan_tier')
+    .select('status, trial_ends_at, expires_at, plan_tier')
     .eq('user_id', userId)
     .maybeSingle();
   if (!data || data.plan_tier !== 'corporativo') return false;
-  const trialActive = new Date(data.trial_ends_at).getTime() > Date.now();
-  return data.status === 'active' || (data.status === 'trialing' && trialActive);
+  return hasActiveSubscriptionAccess({
+    status: data.status as string,
+    trialEndsAt: data.trial_ends_at as string | null,
+    expiresAt: data.expires_at as string | null,
+  });
 }
 
 function mapInspection(insp: Record<string, unknown>, damages: Record<string, unknown>[]) {
