@@ -303,11 +303,7 @@ export default function AppMainPage() {
   return (
     <DirectionalTransition>
       <PhotoUploadProgressBar />
-      <div className={`bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center ${
-        activeTab === 'inspect'
-          ? 'h-dvh max-h-dvh overflow-hidden'
-          : 'min-h-screen pb-12'
-      }`}>
+      <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center pb-12">
         <ViewTransition name="persistent-nav" default="none">
           <Header
             darkMode={darkMode}
@@ -329,11 +325,7 @@ export default function AppMainPage() {
           showTeamTab={subscription?.isCorporate ?? false}
         />
 
-        <main className={`w-full max-w-7xl px-3 sm:px-4 flex flex-col ${
-          activeTab === 'inspect'
-            ? 'flex-1 min-h-0 overflow-hidden mt-1 pb-2'
-            : 'gap-6 mt-4'
-        }`}>
+        <main className="w-full max-w-7xl px-3 sm:px-4 flex flex-col gap-4 mt-3">
           {activeTab === 'dashboard' ? (
             <DashboardView saved={saved} />
           ) : activeTab === 'team' ? (
@@ -398,12 +390,10 @@ export default function AppMainPage() {
           hasAccess={subscription?.hasAccess ?? false}
         />
 
-        {activeTab !== 'inspect' && (
-          <AppFooter
-            onOpenTerms={() => { setTermsTab('terms'); setTermsOpen(true) }}
-            onOpenPrivacy={() => { setTermsTab('privacy'); setTermsOpen(true) }}
-          />
-        )}
+        <AppFooter
+          onOpenTerms={() => { setTermsTab('terms'); setTermsOpen(true) }}
+          onOpenPrivacy={() => { setTermsTab('privacy'); setTermsOpen(true) }}
+        />
 
         <TermsModal isOpen={termsOpen} onClose={() => setTermsOpen(false)} defaultTab={termsTab} />
         <FeaturesSlidesModal isOpen={tutorialOpen} onClose={() => setTutorialOpen(false)} />
