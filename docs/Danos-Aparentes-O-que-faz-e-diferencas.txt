@@ -1,0 +1,171 @@
+================================================================================
+  DANOS APARENTES
+  O que o aplicativo faz — e por que é diferente
+================================================================================
+  Documento informativo | danosaparentes.com.br
+  Atualizado: julho/2026
+================================================================================
+
+
+1. EM UMA FRASE
+--------------------------------------------------------------------------------
+
+O Danos Aparentes é o aplicativo de vistoria veicular digital em que você marca
+as avarias direto no diagrama do veículo, anexa fotos, assina na tela e gera um
+laudo em PDF pronto para enviar — inclusive offline, no pátio.
+
+
+2. PARA QUEM É
+--------------------------------------------------------------------------------
+
+• Locadoras (entrega e devolução de veículos)
+• Oficinas e funilarias
+• Gestores de frota
+• Peritos e despachantes
+• Operações que precisam provar como o veículo estava antes de uma disputa
+
+
+3. O QUE FAZ, EXATAMENTE
+--------------------------------------------------------------------------------
+
+3.1 Identifica o veículo
+    Placa, marca/modelo, cor, número de OS, dados do proprietário/cliente.
+    A consulta de placa ajuda a preencher os dados com mais velocidade.
+
+3.2 Escolhe o tipo de veículo e a vista
+    Suporte a carro, moto, caminhão, van, ônibus e outros.
+    Quatro vistas: lateral esquerda, lateral direita, frontal e traseira.
+
+3.3 Marca a avaria no desenho (diagrama SVG)
+    Toque na peça (porta, para-lama, para-choque, vidro etc.).
+    Classifica o dano: risco/abrasão, amassado/deformação ou quebra/fratura.
+    Define a severidade: leve, média ou grave.
+
+3.4 Anexa evidência
+    Fotos da avaria, notas escritas ou por voz, assinatura do vistoriador
+    e do cliente na tela.
+
+3.5 Inteligência artificial de apoio (opcional)
+    • Foto → IA sugere a peça no diagrama (fluxo inverso).
+    • Ou analisa a foto de um dano já marcado (severidade + descrição técnica).
+    Você sempre confirma antes de gravar. A IA auxilia; a decisão final é humana.
+
+3.6 Gera o laudo profissional
+    PDF com diagrama das avarias, fotos, assinaturas e dados do veículo.
+    Inclui hash SHA-256, QR Code de verificação pública e, quando disponível,
+    localização GPS e horário da vistoria.
+
+3.7 Entrega na hora
+    Salva no histórico, sincroniza na nuvem quando há internet e permite
+    envio por WhatsApp.
+
+
+4. FLUXO RESUMIDO (PASSO A PASSO)
+--------------------------------------------------------------------------------
+
+  1. Abrir a vistoria e preencher os dados do veículo
+  2. Selecionar tipo de veículo e vista do diagrama
+  3. Marcar a(s) peça(s) danificada(s) — ou usar foto → IA e confirmar
+  4. Anexar fotos e observações
+  5. Coletar assinaturas
+  6. Gerar o PDF e enviar / salvar
+
+
+5. DIFERENÇAS — O QUE NÃO É (E O QUE SUBSTITUI)
+--------------------------------------------------------------------------------
+
+Em vez de…                              Danos Aparentes oferece…
+--------------------------------------  ---------------------------------------
+Prancheta + foto solta no celular       Tudo no mesmo fluxo: peça + foto +
+                                        assinatura + PDF
+
+Checklist genérico (só “sim/não”)       Marcação gráfica na peça real do
+                                        veículo (diagrama interativo)
+
+WhatsApp como “laudo”                   Documento padronizado, verificável,
+                                        com marca da empresa
+
+IA de sinistro enterprise (orçamento)   IA leve de apoio em campo, com
+                                        confirmação humana — sem custo alto
+                                        por análise de multinacional
+
+Redigitar depois no computador          Nascido no celular; funciona offline
+                                        e sincroniza depois
+
+
+6. O DIFERENCIAL PRINCIPAL
+--------------------------------------------------------------------------------
+
+A prova visual.
+
+A avaria não fica registrada como “algum arranhão no lado”.
+Fica marcada, por exemplo, na porta dianteira esquerda — com foto, gravidade
+e assinatura — no mesmo laudo.
+
+Isso reduz a frase clássica do cliente: “já estava assim”.
+
+
+7. COMPARAÇÃO RÁPIDA COM O MERCADO
+--------------------------------------------------------------------------------
+
+• Apps de checklist tradicionais
+  Foco em formulários e conformidade. Em geral sem diagrama gráfico fino
+  de peças no veículo, no mesmo preço acessível.
+
+• Soluções de IA de seguradora (Tractable, similares)
+  Foco em sinistro e orçamento de reparo. Caras, empresariais, com meses
+  de implantação. Não substituem o uso diário leve no pátio de PME.
+
+• Danos Aparentes
+  Foco no vistoriador em campo: diagrama + foto + laudo verificável +
+  preço acessível (a partir de R$ 49,90/mês no plano Pro).
+
+
+8. RECURSOS DESTACADOS
+--------------------------------------------------------------------------------
+
+[✓] Diagramas SVG interativos por tipo de veículo
+[✓] Marcação de peça, tipo de dano e severidade
+[✓] Fotos com legendas / notas
+[✓] IA assistida (foto → sugestão de peça / descrição)
+[✓] Assinatura digital (vistoriador e cliente)
+[✓] PDF com hash SHA-256 e QR Code de verificação
+[✓] GPS e timestamp (quando disponíveis)
+[✓] Funcionamento offline (PWA)
+[✓] Histórico de vistorias e sincronização em nuvem
+[✓] Envio por WhatsApp
+[✓] Marca própria no laudo (logo/empresa)
+[✓] Plano Pro e plano Corporativo (equipe)
+
+
+9. PLANOS (RESUMO)
+--------------------------------------------------------------------------------
+
+• Pro — a partir de R$ 49,90/mês
+  Vistorias digitais com os recursos do aplicativo.
+  7 dias grátis, sem cartão para começar.
+
+• Corporativo — sob consulta
+  Para frotas e locadoras com múltiplos vistoriadores / volume maior.
+
+
+10. FRASE PARA APRESENTAÇÃO / VENDAS
+--------------------------------------------------------------------------------
+
+“Marca a avaria no desenho do carro. Tira a foto. A IA pode sugerir.
+Você confirma. PDF assinado e verificável — no celular, até sem internet.
+A partir de R$ 49,90/mês.”
+
+
+11. CONTATO E SITE
+--------------------------------------------------------------------------------
+
+Site:     https://danosaparentes.com.br
+App:      https://danosaparentes.com.br/app
+Planos:   https://danosaparentes.com.br/planos
+
+
+================================================================================
+  © Danos Aparentes — Documento informativo para divulgação e apresentação
+  comercial. Conteúdo sujeito a atualização do produto.
+================================================================================
