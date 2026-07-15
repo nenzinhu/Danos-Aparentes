@@ -128,9 +128,12 @@ export function useSubscription(userId?: string, accessToken?: string) {
     window.location.href = url
   }, [accessToken])
 
-  const startPixCheckout = useCallback(async (): Promise<{ qrCode: string; copyPaste: string }> => {
+  const startPixCheckout = useCallback(async (durationMonths = 1): Promise<{ qrCode: string; copyPaste: string }> => {
     if (!accessToken) throw new Error('Não autenticado')
-    const res = await fetch('/api/create-pix-charge', {
+    const months = Number.isFinite(durationMonths) && durationMonths > 0
+      ? Math.min(Math.floor(durationMonths), 24)
+      : 1
+    const res = await fetch(`/api/create-pix-charge?duration=${months}`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${accessToken}` },
     })

@@ -57,8 +57,7 @@ export default function PricingCards() {
         </div>
 
         <div className="mt-8">
-          {/* Abas para escolher a forma de pagamento */}
-          <div role="tablist" aria-label="Forma de pagamento" className="grid grid-cols-2 gap-1 p-1 mb-4 rounded-lg bg-[var(--bg-main)] border border-[var(--card-border)]/40">
+          <div role="tablist" aria-label="Forma de pagamento" className="grid grid-cols-2 gap-1 p-1 mb-3 rounded-lg bg-[var(--bg-main)] border border-[var(--card-border)]/40">
             <button
               type="button"
               role="tab"
@@ -85,20 +84,31 @@ export default function PricingCards() {
             >
               PIX
             </button>
-            {/* Duration selector (appears when PIX is selected) */}
-            {paymentMethod === 'pix' && (
-              <select
-                value={durationMonths}
-                onChange={(e) => setDurationMonths(Number(e.target.value))}
-                className="ml-2 text-xs bg-[var(--bg-main)] text-[var(--text-main)] border border-[var(--card-border)] rounded"
-              >
-                <option value={1}>1 mês</option>
-                <option value={3}>3 meses</option>
-                <option value={6}>6 meses</option>
-                <option value={12}>12 meses</option>
-              </select>
-            )}
           </div>
+
+          {paymentMethod === 'pix' && (
+            <div className="mb-4">
+              <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wide mb-2">
+                Quantos meses?
+              </p>
+              <div className="grid grid-cols-4 gap-2" role="group" aria-label="Duração do PIX">
+                {[1, 3, 6, 12].map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setDurationMonths(m)}
+                    className={`rounded-lg border py-2 text-xs font-bold transition-colors ${
+                      durationMonths === m
+                        ? 'border-[var(--primary)] bg-[var(--primary)]/15 text-[var(--primary)]'
+                        : 'border-[var(--card-border)] text-[var(--text-muted)]'
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {paymentMethod === 'cartao' ? (
             <>
@@ -111,9 +121,9 @@ export default function PricingCards() {
             </>
           ) : (
             <>
-                <Link href={`/pagamento-pix?duration=${durationMonths}`} className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}>
-                  Pagar com PIX
-                </Link>
+              <Link href={`/pagamento-pix?duration=${durationMonths}`} className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}>
+                Pagar com PIX · {priceLabel}
+              </Link>
               <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
                 Gera um QR Code na hora, sem cartão de crédito.
               </p>
