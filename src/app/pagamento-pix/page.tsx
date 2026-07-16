@@ -64,10 +64,10 @@ function PagamentoPixContent() {
   }, [startPixCheckout])
 
   useEffect(() => {
-    if (!qrCode || subscription?.hasAccess) return
+    if (!qrCode) return
     const interval = setInterval(refresh, 5000)
     return () => clearInterval(interval)
-  }, [qrCode, subscription?.hasAccess, refresh])
+  }, [qrCode, refresh])
 
   function selectDuration(months: number) {
     setDurationMonths(months)
@@ -105,7 +105,11 @@ function PagamentoPixContent() {
     )
   }
 
-  if (subscription?.hasAccess) {
+  const paidSubscription =
+    subscription?.hasAccess &&
+    (subscription.status === 'active' || subscription.status === 'active_pix')
+
+  if (paidSubscription) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center gap-4 px-4 text-center">
         <p className="text-2xl" aria-hidden>✅</p>

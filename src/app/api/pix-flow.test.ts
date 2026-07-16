@@ -11,6 +11,7 @@ type SubRow = {
   pix_charge_id: string | null
   pending_months: number
   expires_at: string | null
+  trial_ends_at?: string | null
 }
 
 const { mockFrom, mockMercadoPagoRequest, subscriptionStore } = vi.hoisted(() => {
@@ -34,6 +35,8 @@ const { mockFrom, mockMercadoPagoRequest, subscriptionStore } = vi.hoisted(() =>
           return {
             data: {
               user_id: subscriptionStore.row.user_id,
+              status: subscriptionStore.row.status,
+              trial_ends_at: subscriptionStore.row.trial_ends_at ?? null,
               expires_at: subscriptionStore.row.expires_at,
               pending_months: subscriptionStore.row.pending_months,
             },
@@ -130,6 +133,7 @@ describe('fluxo PIX charge → webhook → access', () => {
       pix_charge_id: null,
       pending_months: 0,
       expires_at: null,
+      trial_ends_at: '2026-07-20T00:00:00.000Z',
     }
     process.env.PIX_WEBHOOK_SECRET = SECRET
     process.env.PIX_MERCADO_PAGO_ACCESS_TOKEN = 'TEST-MP-TOKEN'
@@ -165,7 +169,42 @@ describe('fluxo PIX charge → webhook → access', () => {
     expect(createPixCharge).toHaveBeenCalledTimes(8)
   })
 
-  it('create-pix-charge grava pending_pix sem liberar acesso', async () => {
+  it('create-pix-charge durante trial mantém status e preserva acesso', async () => {
+    vi.mocked(createPixCharge).mockResolvedValue({
+      id: PAYMENT_ID,
+      point_of_interaction: {
+        transaction_data: { qr_code: 'pix-copy', qr_code_base64: 'base64qr' },
+      },
+    } as never)
+
+    const res = await createPixChargePost(
+      new NextRequest('https://danosaparentes.com.br/api/create-pix-charge?duration=1', {
+        method: 'POST',
+      }),
+    )
+    expect(res.status).toBe(200)
+    expect(subscriptionStore.row?.status).toBe('trialing')
+    expect(subscriptionStore.row?.pix_charge_id).toBe(PAYMENT_ID)
+    expect(subscriptionStore.row?.pending_months).toBe(1)
+    expect(
+      hasActiveSubscriptionAccess({
+        status: subscriptionStore.row!.status,
+        trialEndsAt: subscriptionStore.row!.trial_ends_at,
+        expiresAt: subscriptionStore.row!.expires_at,
+        now: NOW,
+      }),
+    ).toBe(true)
+  })
+
+  it('create-pix-charge sem acesso grava pending_pix', async () => {
+    subscriptionStore.row = {
+      user_id: USER_ID,
+      status: 'canceled',
+      pix_charge_id: null,
+      pending_months: 0,
+      expires_at: null,
+      trial_ends_at: '2026-07-01T00:00:00.000Z',
+    }
     vi.mocked(createPixCharge).mockResolvedValue({
       id: PAYMENT_ID,
       point_of_interaction: {
@@ -260,6 +299,14 @@ describe('fluxo PIX charge → webhook → access', () => {
   })
 
   it('fluxo ponta a ponta: charge → pay → access', async () => {
+    subscriptionStore.row = {
+      user_id: USER_ID,
+      status: 'canceled',
+      pix_charge_id: null,
+      pending_months: 0,
+      expires_at: null,
+      trial_ends_at: '2026-07-01T00:00:00.000Z',
+    }
     vi.mocked(createPixCharge).mockResolvedValue({
       id: PAYMENT_ID,
       point_of_interaction: {

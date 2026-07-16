@@ -5,6 +5,7 @@ import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin'
 import { getClientIp, getUserFromRequest } from '@/src/lib/server/auth'
 import { createPixCharge } from '@/src/lib/server/pixClient'
 import { checkRateLimit } from '@/src/lib/server/rateLimit'
+import { hasActiveSubscriptionAccess } from '@/src/lib/subscriptionAccess'
 
 /** Máx. cobranças PIX por usuário — evita spam no MP e pending_pix repetido. */
 const PIX_CHARGE_LIMIT_PER_USER = 8
@@ -93,14 +94,44 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Erro ao criar cobrança PIX' }, { status: 502 })
   }
 
+  const { data: existing, error: fetchError } = await supabaseAdmin
+    .from('subscriptions')
+    .select('status, trial_ends_at, expires_at')
+    .eq('user_id', user.id)
+    .maybeSingle()
+
+  if (fetchError) {
+    console.error('Erro ao obter subscription para PIX:', fetchError)
+    return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
+  }
+
+  if (!existing) {
+    return NextResponse.json({ error: 'Assinatura não encontrada para o usuário' }, { status: 404 })
+  }
+
+  const hasAccess = hasActiveSubscriptionAccess({
+    status: existing.status as string,
+    trialEndsAt: existing.trial_ends_at as string | null,
+    expiresAt: existing.expires_at as string | null,
+  })
+
+  const updatePayload: {
+    pix_charge_id: string
+    pending_months: number
+    updated_at: string
+    status?: 'pending_pix'
+  } = {
+    pix_charge_id: chargeId,
+    pending_months: duration,
+    updated_at: new Date().toISOString(),
+  }
+  if (!hasAccess) {
+    updatePayload.status = 'pending_pix'
+  }
+
   const { data, error } = await supabaseAdmin
     .from('subscriptions')
-    .update({
-      status: 'pending_pix',
-      pix_charge_id: chargeId,
-      pending_months: duration,
-      updated_at: new Date().toISOString(),
-    })
+    .update(updatePayload)
     .eq('user_id', user.id)
     .select('user_id')
     .maybeSingle()
