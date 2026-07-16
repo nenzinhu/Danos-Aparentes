@@ -101,8 +101,8 @@ Regras estritas:
       systemInstruction: { parts: [{ text: systemPrompt }] },
       generationConfig: {
         temperature: 0.2,
-        maxOutputTokens: 350,
-        thinkingConfig: { thinkingBudget: 0 },
+        // Sem thinkingConfig: modelos flash/pro variam e 400 abortava a cadeia.
+        maxOutputTokens: 512,
       },
     };
 

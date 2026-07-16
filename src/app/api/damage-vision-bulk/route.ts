@@ -117,8 +117,8 @@ Regras estritas:
       systemInstruction: { parts: [{ text: systemPrompt }] },
       generationConfig: {
         temperature: 0.2,
-        maxOutputTokens: 800,
-        thinkingConfig: { thinkingBudget: 0 },
+        // Sem thinkingConfig: evita 400 em modelos que não aceitam o campo.
+        maxOutputTokens: 1024,
       },
     };
 

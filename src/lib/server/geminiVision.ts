@@ -59,18 +59,14 @@ function withoutThinkingConfig(body: GeminiVisionRequest): GeminiVisionRequest {
 }
 
 function shouldTryNextModel(status: number, errText: string): boolean {
-  if (status === 404) return true
+  // Mesma chave / cota — não adianta trocar de modelo.
   if (status === 429) return false
-  const lower = errText.toLowerCase()
-  return (
-    lower.includes('not found') ||
-    lower.includes('not_found') ||
-    lower.includes('is not found') ||
-    lower.includes('unsupported') ||
-    lower.includes('not supported') ||
-    status === 503 ||
-    status === 500
-  )
+  if (/API_KEY_INVALID|api key not valid|PERMISSION_DENIED|CONSUMER_INVALID/i.test(errText)) {
+    return false
+  }
+  // 404/400 (modelo indisponível, quota do modelo, schema) e 5xx → tenta próximo.
+  return status === 404 || status === 400 || status === 500 || status === 503 ||
+    /not found|not_found|unsupported|not supported|quota|resource_exhausted/i.test(errText)
 }
 
 async function postGemini(
