@@ -221,7 +221,7 @@ export default function InspectTab({
             )}
           </div>
 
-          <DamageList damages={allVehicleDamages} onRemove={onRemoveDamage} onUpdate={onUpdateDamage} previousReport={previousReport} accessToken={accessToken} />
+          <DamageList damages={allVehicleDamages} onRemove={onRemoveDamage} onUpdate={onUpdateDamage} previousReport={previousReport} accessToken={accessToken} onToast={onToast} />
 
           <div className="mt-6 pt-6 border-t border-[var(--panel-border)]">
             <ReportActions
