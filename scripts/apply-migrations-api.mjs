@@ -46,7 +46,7 @@ if (args.length > 0) {
   files = args.map((f) => (f.includes('/') || f.includes('\\') ? f : join(migrationsDir, f)))
 } else {
   files = readdirSync(migrationsDir)
-    .filter((f) => f.startsWith('20260715_') && f.endsWith('.sql'))
+    .filter((f) => /^2026071[4-9]_/.test(f) && f.endsWith('.sql'))
     .sort()
     .map((f) => join(migrationsDir, f))
 }
@@ -87,7 +87,7 @@ const verify = await runQuery(
   select
     (select public from storage.buckets where id = 'damage-photos') as damage_photos_public,
     (select count(*)::int from information_schema.columns
-      where table_schema = 'public' and table_name = 'subscriptions' and column_name = 'pix_charge_id') as has_pix_charge_id,
+      where table_schema = 'public' and table_name = 'subscriptions' and column_name = 'expires_at') as has_expires_at,
     (select pg_get_constraintdef(oid) from pg_constraint
       where conrelid = 'public.subscriptions'::regclass and conname = 'subscriptions_status_check') as status_check;
   `,

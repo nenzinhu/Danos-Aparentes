@@ -1,36 +1,18 @@
+import QRCode from 'qrcode'
 import { Damage, VehicleInfo } from '../../types'
 import { supabase, supabaseEnabled } from '../supabase'
 
-/** QR Code via vendor script já presente no projeto */
+/** QR Code de verificação do laudo (PDF) — bundled via pacote `qrcode`. */
 export async function generateQrDataUrl(text: string): Promise<string> {
   try {
-    await new Promise<void>((resolve) => {
-      if ((window as any).QRCode) { resolve(); return }
-      const s = document.createElement('script')
-      s.src = '/vendor/qrcode.min.js'
-      s.onload = () => resolve()
-      s.onerror = () => resolve()
-      document.head.appendChild(s)
+    return await QRCode.toDataURL(text, {
+      width: 96,
+      margin: 1,
+      color: { dark: '#141413', light: '#ffffff' },
     })
-    if (!(window as any).QRCode) return ''
-    return await new Promise<string>((resolve) => {
-      const wrap = document.createElement('div')
-      wrap.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;'
-      document.body.appendChild(wrap)
-      new (window as any).QRCode(wrap, {
-        text,
-        width: 96, height: 96,
-        colorDark: '#141413', colorLight: '#ffffff',
-        correctLevel: (window as any).QRCode?.CorrectLevel?.M ?? 0,
-      })
-      setTimeout(() => {
-        const canvas = wrap.querySelector('canvas') as HTMLCanvasElement | null
-        const url = canvas?.toDataURL('image/png') ?? ''
-        document.body.removeChild(wrap)
-        resolve(url)
-      }, 300)
-    })
-  } catch { return '' }
+  } catch {
+    return ''
+  }
 }
 
 /**

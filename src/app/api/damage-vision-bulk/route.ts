@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseEnabled } from '@/src/lib/supabase';
 import { getClientIp, getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
+import { callGeminiVision, getGeminiApiKey } from '@/src/lib/server/geminiVision';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
 
 /** Varredura Gemini de vista inteira — mais cara que foto única (~8 / 10 min). */
@@ -88,8 +89,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Formato de foto inválido' }, { status: 400 });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_TTS_API_KEY;
-    if (!apiKey) {
+    if (!getGeminiApiKey()) {
       return NextResponse.json({ error: 'Chave GEMINI_API_KEY não configurada' }, { status: 500 });
     }
 
@@ -128,25 +128,12 @@ Regras estritas:
       },
     };
 
-    const modelName = process.env.GEMINI_VISION_MODEL || 'gemini-2.5-pro';
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody),
-      }
-    );
-
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error('Erro Gemini API (damage-vision-bulk):', errText);
-      return NextResponse.json({ error: 'Não foi possível analisar a foto agora.' }, { status: 502 });
+    const gemini = await callGeminiVision(requestBody, 'damage-vision-bulk');
+    if (!gemini.ok) {
+      return NextResponse.json({ error: gemini.error }, { status: gemini.status });
     }
 
-    const responseData = await response.json();
-    const rawText: string = responseData.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    const cleaned = rawText.trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
+    const cleaned = gemini.text.trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
 
     let parsedResult: { detections?: unknown[] };
     try {
