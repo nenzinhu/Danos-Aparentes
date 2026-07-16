@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin';
 import { getUserFromRequest } from '@/src/lib/server/auth';
+import { getTrustedBaseUrl } from '@/src/lib/server/trustedBaseUrl';
 import { hasActiveSubscriptionAccess } from '@/src/lib/subscriptionAccess';
 
 async function isCorporate(userId: string): Promise<boolean> {
@@ -38,7 +39,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'E-mail inválido' }, { status: 400 });
   }
 
-  const origin = req.headers.get('origin') || `https://${req.headers.get('host')}`;
+  const origin = getTrustedBaseUrl({
+    origin: req.headers.get('origin'),
+    host: req.headers.get('host'),
+  });
 
   try {
     let { data: company } = await supabaseAdmin
