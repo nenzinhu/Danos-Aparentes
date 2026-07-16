@@ -113,9 +113,17 @@ async function logSyncError(userId: string, item: SyncQueueItem, error: unknown)
   }
 }
 
-export async function flushQueue(userId: string): Promise<boolean> {
+export type DroppedSyncItem = { reportId: string; error: string }
+
+export type FlushResult = {
+  ok: boolean
+  dropped: DroppedSyncItem[]
+}
+
+export async function flushQueue(userId: string): Promise<FlushResult> {
   const queue = await db.getSyncQueue()
   let hasErrors = false
+  const dropped: DroppedSyncItem[] = []
 
   for (const item of queue.sort((a, b) => a.timestamp - b.timestamp)) {
     const delay = Math.pow(2, item.retry_count) * 1000
@@ -141,6 +149,7 @@ export async function flushQueue(userId: string): Promise<boolean> {
       if (newRetryCount >= MAX_RETRIES) {
         await logSyncError(userId, item, err)
         await db.removeFromSyncQueue(item.qid)
+        dropped.push({ reportId: item.reportId, error: lastError })
       } else {
         await db.updateSyncQueueItem({
           ...item,
@@ -151,7 +160,7 @@ export async function flushQueue(userId: string): Promise<boolean> {
       }
     }
   }
-  return !hasErrors
+  return { ok: !hasErrors, dropped }
 }
 
 export async function pullRemote(userId: string): Promise<SavedReport[]> {
@@ -250,34 +259,50 @@ export async function mergeRemoteReports(userId: string): Promise<SavedReport[]>
 
 export type SyncStatus = 'synced' | 'pending' | 'offline' | 'error'
 
-export function useSyncStatus(userId: string | undefined) {
+export type UseSyncStatusOptions = {
+  onPermanentFailure?: (dropped: DroppedSyncItem[]) => void
+}
+
+export function useSyncStatus(userId: string | undefined, options?: UseSyncStatusOptions) {
   const [status, setStatus] = useState<SyncStatus>('synced')
+  const [lastError, setLastError] = useState<string | undefined>()
   const flushing = useRef(false)
+  const onPermanentFailureRef = useRef(options?.onPermanentFailure)
+  onPermanentFailureRef.current = options?.onPermanentFailure
 
   const tryFlush = useCallback(async () => {
     if (!supabaseEnabled || !userId || flushing.current) return
     const queue = await db.getSyncQueue()
     if (queue.length === 0) {
       setStatus('synced')
+      setLastError(undefined)
       return
     }
     if (!navigator.onLine) {
       setStatus('offline')
+      setLastError(queue.find(i => i.last_error)?.last_error)
       return
     }
     flushing.current = true
     setStatus('pending')
-    const ok = await flushQueue(userId)
+    const { ok, dropped } = await flushQueue(userId)
+    if (dropped.length > 0) {
+      onPermanentFailureRef.current?.(dropped)
+    }
     flushing.current = false
     const remaining = await db.getSyncQueue()
     if (remaining.length === 0) {
       setStatus('synced')
+      setLastError(undefined)
     } else if (!navigator.onLine) {
       setStatus('offline')
+      setLastError(remaining.find(i => i.last_error)?.last_error)
     } else if (!ok || remaining.some(i => i.retry_count > 0)) {
       setStatus('error')
+      setLastError(remaining.find(i => i.last_error)?.last_error)
     } else {
       setStatus('pending')
+      setLastError(undefined)
     }
     return ok
   }, [userId])
@@ -302,5 +327,5 @@ export function useSyncStatus(userId: string | undefined) {
     }
   }, [userId, tryFlush])
 
-  return { status, tryFlush }
+  return { status, lastError, tryFlush }
 }

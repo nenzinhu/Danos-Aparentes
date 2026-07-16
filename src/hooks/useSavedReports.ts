@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { SavedReport, VehicleInfo, Damage, VehicleType } from '../types'
 import { db } from '../lib/db'
 import { mergeRemoteReports } from '../lib/sync'
@@ -9,14 +9,20 @@ import { createId } from '../lib/id'
 export function useSavedReports(userId?: string) {
   const [saved, setSaved] = useState<SavedReport[]>([])
 
+  const refreshRemote = useCallback(async () => {
+    if (!supabaseEnabled || !userId) return
+    const merged = await mergeRemoteReports(userId)
+    setSaved(merged)
+  }, [userId])
+
   useEffect(() => {
     db.getAllSaved().then(setSaved)
   }, [])
 
   useEffect(() => {
     if (!supabaseEnabled || !userId) return
-    mergeRemoteReports(userId).then(setSaved)
-  }, [userId])
+    void refreshRemote()
+  }, [userId, refreshRemote])
 
   async function saveReport(vehicleInfo: VehicleInfo, damages: Damage[], vehicleType: VehicleType) {
     const report: SavedReport = {
@@ -42,5 +48,5 @@ export function useSavedReports(userId?: string) {
     }
   }
 
-  return { saved, saveReport, deleteReport }
+  return { saved, saveReport, deleteReport, refreshRemote }
 }

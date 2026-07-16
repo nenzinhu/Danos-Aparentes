@@ -10,6 +10,7 @@ interface Props {
   onOpenSettings?: () => void
   onSignOut?: () => void
   syncStatus?: 'synced' | 'pending' | 'offline' | 'error'
+  syncLastError?: string
   onRetrySync?: () => void
   subscription?: { status: SubscriptionStatus; trialDaysLeft: number }
   onManageSubscription?: () => void
@@ -189,7 +190,7 @@ function ProBenefitsButton({
 
 
 
-function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, onSignOut, syncStatus, onRetrySync, subscription, onManageSubscription }: Props) {
+function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, onSignOut, syncStatus, syncLastError, onRetrySync, subscription, onManageSubscription }: Props) {
   return (
     <header className='relative w-full max-w-[1250px] mx-auto text-center px-5 pt-8 sm:pt-12 pb-7 font-outfit'>
 
@@ -218,11 +219,15 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
           (() => {
             const label = SYNC_LABEL[syncStatus]
             const canRetry = syncStatus !== 'synced' && !!onRetrySync
+            const errorDetail = syncStatus === 'error' && syncLastError ? syncLastError : undefined
+            const title = errorDetail
+              ? `${label.text}: ${errorDetail}${canRetry ? ' — toque para tentar de novo' : ''}`
+              : canRetry ? `${label.text} — toque para tentar de novo` : label.text
             const Tag = canRetry ? 'button' : 'span'
             return (
               <Tag
                 {...(canRetry ? { type: 'button' as const, onClick: onRetrySync } : {})}
-                title={canRetry ? `${label.text} — toque para tentar de novo` : label.text}
+                title={title}
                 className={`h-10 px-3 rounded-xl border text-[0.72rem] font-bold backdrop-blur-md shadow-lg flex items-center justify-center gap-1.5 ${label.bgColor} ${label.borderColor} ${label.color} ${canRetry ? 'cursor-pointer hover:opacity-90 active:scale-[0.98] transition-all' : ''}`}
               >
                 <span aria-hidden>{label.icon}</span>

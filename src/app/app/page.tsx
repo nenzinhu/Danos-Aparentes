@@ -1,12 +1,12 @@
 'use client';
-import React, { useMemo, ViewTransition, useEffect, useRef } from 'react'
+import React, { useMemo, ViewTransition, useEffect, useRef, useCallback } from 'react'
 import { DirectionalTransition } from '../DirectionalTransition'
 import { useDamages } from '@/src/hooks/useDamages'
 import { useTts } from '@/src/hooks/useTts'
 import { useSavedReports } from '@/src/hooks/useSavedReports'
 import { useAuth } from '@/src/hooks/useAuth'
 import { useSubscription } from '@/src/hooks/useSubscription'
-import { useSyncStatus } from '@/src/lib/sync'
+import { useSyncStatus, type DroppedSyncItem } from '@/src/lib/sync'
 import { useAppShellState } from '@/src/hooks/useAppShellState'
 import { useInspectionWorkflow } from '@/src/hooks/useInspectionWorkflow'
 import { supabaseEnabled } from '@/src/lib/supabase'
@@ -19,24 +19,41 @@ import InspectTab from '@/src/components/app/InspectTab'
 import TeamTab from '@/src/components/app/TeamTab'
 import PhotoUploadProgressBar from '@/src/components/PhotoUploadProgressBar'
 
+function formatSyncFailureToast(dropped: DroppedSyncItem[]): string {
+  const first = dropped[0]
+  const shortId = first.reportId.slice(0, 8)
+  const extra = dropped.length > 1 ? ` (+${dropped.length - 1} outro${dropped.length > 2 ? 's' : ''})` : ''
+  return `❌ Falha permanente ao sincronizar laudo ${shortId}${extra}`
+}
+
 export default function AppMainPage() {
   const { session, loading: authLoading, signIn, signUp, signOut, resetPassword } = useAuth()
   const { damages, addDamage, removeDamage, updateDamage, clearDamages } = useDamages()
   const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts(session?.access_token)
-  const { saved, saveReport, deleteReport } = useSavedReports(session?.user.id)
-  const { status: syncStatus, tryFlush } = useSyncStatus(session?.user.id)
+  const { saved, saveReport, deleteReport, refreshRemote } = useSavedReports(session?.user.id)
   const { info: subscription, loading: subLoading, openPortal } = useSubscription(session?.user.id, session?.access_token)
+  const shell = useAppShellState({ openPortal })
+
+  const onSyncPermanentFailure = useCallback((dropped: DroppedSyncItem[]) => {
+    if (dropped.length === 0) return
+    shell.showToast(formatSyncFailureToast(dropped))
+  }, [shell.showToast])
+
+  const { status: syncStatus, lastError: syncLastError, tryFlush } = useSyncStatus(session?.user.id, {
+    onPermanentFailure: onSyncPermanentFailure,
+  })
 
   const hadAccessRef = useRef<boolean | null>(null)
   useEffect(() => {
     const hasAccess = subscription?.hasAccess ?? false
     if (hadAccessRef.current === false && hasAccess) {
-      void tryFlush()
+      void (async () => {
+        await tryFlush()
+        await refreshRemote()
+      })()
     }
     hadAccessRef.current = hasAccess
-  }, [subscription?.hasAccess, tryFlush])
-
-  const shell = useAppShellState({ openPortal })
+  }, [subscription?.hasAccess, tryFlush, refreshRemote])
 
   const inspection = useInspectionWorkflow({
     damages,
@@ -90,6 +107,7 @@ export default function AppMainPage() {
               onOpenSettings={() => shell.setSettingsModal(true)}
               onSignOut={supabaseEnabled ? signOut : undefined}
               syncStatus={supabaseEnabled ? syncStatus : undefined}
+              syncLastError={supabaseEnabled ? syncLastError : undefined}
               onRetrySync={supabaseEnabled ? () => { void tryFlush() } : undefined}
               subscription={headerSubscription}
               onManageSubscription={shell.handleManageSubscription}

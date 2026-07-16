@@ -248,9 +248,10 @@ describe('flushQueue', () => {
     })
     dbState.saved.set('r1', report)
 
-    const ok = await flushQueue('user-1')
+    const { ok, dropped } = await flushQueue('user-1')
 
     expect(ok).toBe(true)
+    expect(dropped).toHaveLength(0)
     expect(dbState.queue).toHaveLength(0)
     expect(dbState.saved.get('r1')?.syncedAt).toBeTypeOf('number')
   })
@@ -267,9 +268,10 @@ describe('flushQueue', () => {
       retry_count: 0,
     })
 
-    const ok = await flushQueue('user-1')
+    const { ok, dropped } = await flushQueue('user-1')
 
     expect(ok).toBe(false)
+    expect(dropped).toHaveLength(0)
     expect(dbState.queue).toHaveLength(1)
     expect(dbState.queue[0].retry_count).toBe(1)
     expect(dbState.queue[0].last_error).toBe('upsert failed')
@@ -287,9 +289,11 @@ describe('flushQueue', () => {
       retry_count: 4,
     })
 
-    const ok = await flushQueue('user-1')
+    const { ok, dropped } = await flushQueue('user-1')
 
     expect(ok).toBe(false)
+    expect(dropped).toHaveLength(1)
+    expect(dropped[0]).toMatchObject({ reportId: 'r1', error: 'upsert failed' })
     expect(dbState.queue).toHaveLength(0)
     expect(remoteState.syncErrors).toHaveLength(1)
     expect(remoteState.syncErrors[0]).toMatchObject({
