@@ -17,6 +17,10 @@ pnpm-debug.log*
 .env
 .env.*
 
+# Artefatos locais do Supabase CLI (podem conter connection strings)
+src/supabase/.temp/
+supabase/.temp/
+
 # OS / editor
 .DS_Store
 Thumbs.db
