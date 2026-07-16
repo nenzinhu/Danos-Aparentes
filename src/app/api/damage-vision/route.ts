@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseEnabled } from '@/src/lib/supabase';
-import { getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
+import { getClientIp, getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
+
+/** Gemini vision por foto de avaria — assinante autenticado (~25 / 10 min). */
+const DAMAGE_VISION_LIMIT_PER_USER = 25;
+/** Demo/local sem Supabase: limite básico por IP. */
+const DAMAGE_VISION_LIMIT_PER_IP = 10;
+const DAMAGE_VISION_WINDOW_MS = 10 * 60 * 1000;
 
 const MAX_PHOTO_BASE64_LENGTH = 4_000_000; // ~3MB de imagem, suficiente para foto comprimida no app
 
@@ -22,7 +28,24 @@ export async function POST(req: NextRequest) {
       if (!hasAccess) {
         return NextResponse.json({ error: 'Assinatura inativa' }, { status: 403 });
       }
-      const { allowed, retryAfterSec } = await checkRateLimit(`damage-vision:${user.id}`, 20, 10 * 60 * 1000);
+      const { allowed, retryAfterSec } = await checkRateLimit(
+        `damage-vision:${user.id}`,
+        DAMAGE_VISION_LIMIT_PER_USER,
+        DAMAGE_VISION_WINDOW_MS,
+      );
+      if (!allowed) {
+        return NextResponse.json(
+          { error: 'Muitas análises em pouco tempo. Tente novamente em instantes.' },
+          { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
+        );
+      }
+    } else {
+      const ip = getClientIp(req);
+      const { allowed, retryAfterSec } = await checkRateLimit(
+        `damage-vision-ip:${ip}`,
+        DAMAGE_VISION_LIMIT_PER_IP,
+        DAMAGE_VISION_WINDOW_MS,
+      );
       if (!allowed) {
         return NextResponse.json(
           { error: 'Muitas análises em pouco tempo. Tente novamente em instantes.' },

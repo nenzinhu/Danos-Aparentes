@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseEnabled } from '@/src/lib/supabase';
-import { getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
+import { getClientIp, getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
+
+/** Varredura Gemini de vista inteira — mais cara que foto única (~8 / 10 min). */
+const DAMAGE_VISION_BULK_LIMIT_PER_USER = 8;
+/** Demo/local sem Supabase: limite básico por IP. */
+const DAMAGE_VISION_BULK_LIMIT_PER_IP = 4;
+const DAMAGE_VISION_BULK_WINDOW_MS = 10 * 60 * 1000;
 
 const MAX_PHOTO_BASE64_LENGTH = 4_000_000; // ~3MB de imagem, suficiente para foto comprimida no app
 const MAX_PARTS = 60;
@@ -36,7 +42,24 @@ export async function POST(req: NextRequest) {
       if (!hasAccess) {
         return NextResponse.json({ error: 'Assinatura inativa' }, { status: 403 });
       }
-      const { allowed, retryAfterSec } = await checkRateLimit(`damage-vision-bulk:${user.id}`, 10, 10 * 60 * 1000);
+      const { allowed, retryAfterSec } = await checkRateLimit(
+        `damage-vision-bulk:${user.id}`,
+        DAMAGE_VISION_BULK_LIMIT_PER_USER,
+        DAMAGE_VISION_BULK_WINDOW_MS,
+      );
+      if (!allowed) {
+        return NextResponse.json(
+          { error: 'Muitas análises em pouco tempo. Tente novamente em instantes.' },
+          { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
+        );
+      }
+    } else {
+      const ip = getClientIp(req);
+      const { allowed, retryAfterSec } = await checkRateLimit(
+        `damage-vision-bulk-ip:${ip}`,
+        DAMAGE_VISION_BULK_LIMIT_PER_IP,
+        DAMAGE_VISION_BULK_WINDOW_MS,
+      );
       if (!allowed) {
         return NextResponse.json(
           { error: 'Muitas análises em pouco tempo. Tente novamente em instantes.' },

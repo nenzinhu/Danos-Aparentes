@@ -3,6 +3,10 @@ import { getClientIp } from '@/src/lib/server/auth';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
 import { GENERAL_KNOWLEDGE, getSegmentKnowledge, type ChatSupportSegment } from '@/src/content/chatSupportKnowledge';
 
+/** Chat marketing público (sem auth) — por IP (~18 / 10 min). */
+const CHAT_SUPPORT_LIMIT_PER_IP = 18;
+const CHAT_SUPPORT_WINDOW_MS = 10 * 60 * 1000;
+
 const MAX_MESSAGES = 12;
 const MAX_MESSAGE_LENGTH = 1000;
 const ESCALATE_MARKER = '[ESCALAR]';
@@ -12,7 +16,11 @@ const VALID_SEGMENTS: ChatSupportSegment[] = ['locadoras', 'oficinas', 'segurado
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req);
-    const { allowed, retryAfterSec } = await checkRateLimit(`chat-support:${ip}`, 10, 60 * 1000);
+    const { allowed, retryAfterSec } = await checkRateLimit(
+      `chat-support:${ip}`,
+      CHAT_SUPPORT_LIMIT_PER_IP,
+      CHAT_SUPPORT_WINDOW_MS,
+    );
     if (!allowed) {
       return NextResponse.json(
         { error: 'Muitas mensagens em pouco tempo. Tente novamente em instantes.' },

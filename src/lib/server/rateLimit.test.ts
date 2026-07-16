@@ -90,3 +90,36 @@ describe('rateLimit (config)', () => {
     expect(isDistributedRateLimitConfigured()).toBe(true)
   })
 })
+
+/** Budgets usados nas rotas Gemini (damage-vision, bulk, chat-support). */
+describe('Gemini API rate budgets', () => {
+  const TEN_MIN = 10 * 60 * 1000
+
+  afterEach(() => {
+    resetRateLimitMemoryForTests()
+  })
+
+  it('damage-vision: 25 req/10min por usuário', async () => {
+    const key = `damage-vision:test-user-${Date.now()}`
+    for (let i = 0; i < 25; i += 1) {
+      expect((await checkRateLimit(key, 25, TEN_MIN)).allowed).toBe(true)
+    }
+    expect((await checkRateLimit(key, 25, TEN_MIN)).allowed).toBe(false)
+  })
+
+  it('damage-vision-bulk: 8 req/10min por usuário', async () => {
+    const key = `damage-vision-bulk:test-user-${Date.now()}`
+    for (let i = 0; i < 8; i += 1) {
+      expect((await checkRateLimit(key, 8, TEN_MIN)).allowed).toBe(true)
+    }
+    expect((await checkRateLimit(key, 8, TEN_MIN)).allowed).toBe(false)
+  })
+
+  it('chat-support: 18 req/10min por IP', async () => {
+    const key = `chat-support:203.0.113.${Date.now() % 255}`
+    for (let i = 0; i < 18; i += 1) {
+      expect((await checkRateLimit(key, 18, TEN_MIN)).allowed).toBe(true)
+    }
+    expect((await checkRateLimit(key, 18, TEN_MIN)).allowed).toBe(false)
+  })
+})
