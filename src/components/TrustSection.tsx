@@ -1,6 +1,4 @@
 'use client';
-import { useEffect, useRef } from 'react';
-import { animate, stagger, onScroll } from 'animejs';
 import Reveal from './Reveal';
 import { LEGAL_CONTACT_EMAIL } from './LegalContent';
 
@@ -22,36 +20,11 @@ const TRUST_ITEMS = [
   },
 ];
 
+/**
+ * Motion 2 — scroll reveal único (mesmo sistema da home: Reveal + CSS).
+ * animejs removido para uma só linguagem de motion com o resto da landing.
+ */
 export default function TrustSection() {
-  const cardsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const container = cardsRef.current;
-    if (!container) return;
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const cards = container.querySelectorAll<HTMLElement>('.trust-card');
-    if (reduceMotion) {
-      cards.forEach((card) => { card.style.opacity = '1'; card.style.transform = 'none'; });
-      return;
-    }
-
-    const animation = animate(cards, {
-      opacity: [0, 1],
-      translateY: [28, 0],
-      scale: [0.97, 1],
-      duration: 700,
-      ease: 'outExpo',
-      delay: stagger(110),
-      autoplay: onScroll({
-        target: container,
-        enter: 'bottom-=10% top',
-      }),
-    });
-
-    return () => { animation.revert(); };
-  }, []);
-
   return (
     <section className="w-full max-w-6xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-4 text-left">
       <Reveal className="text-center mb-12 flex flex-col items-center">
@@ -68,19 +41,23 @@ export default function TrustSection() {
         </p>
       </Reveal>
 
-      <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {TRUST_ITEMS.map((item) => (
-          <div key={item.k} className="trust-card glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group" style={{ opacity: 0 }}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {TRUST_ITEMS.map((item, idx) => (
+          <Reveal
+            key={item.k}
+            delay={idx * 70}
+            className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group"
+          >
             <div className="font-mono-data text-[10px] uppercase tracking-widest text-[var(--signal-bright)] mb-3">
               {item.k}
             </div>
             <h3 className="font-display text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mb-2">{item.title}</h3>
             <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
-          </div>
+          </Reveal>
         ))}
       </div>
 
-      <Reveal delay={270} className="glass-card mt-8 p-6 sm:p-8 border border-[var(--card-border)]/50 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+      <Reveal delay={220} className="glass-card mt-8 p-6 sm:p-8 border border-[var(--card-border)]/50 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
         <div className="shrink-0 grid place-items-center w-12 h-12 rounded-full border border-[var(--sheet-line)] font-mono-data text-lg text-[var(--signal-bright)]">
           JS
         </div>
