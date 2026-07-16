@@ -1,5 +1,13 @@
 {
   "entries": [
-    { "path": "esc-skills-main/skills" }
+    {
+      "path": ".cursor/skills"
+    },
+    {
+      "path": ".claude/skills"
+    },
+    {
+      "path": "esc-skills-main/skills"
+    }
   ]
 }

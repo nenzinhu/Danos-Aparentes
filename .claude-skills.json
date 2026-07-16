@@ -1,20 +1,20 @@
 {
   "version": 1,
+  "source": "esc-skills-main",
+  "active_paths": [
+    ".cursor/skills",
+    ".claude/skills",
+    "esc-skills-main/skills"
+  ],
+  "workflows": ".cursor/workflows",
   "installed": {
-    "senior-fullstack": {
+    "esc-skills-pack": {
       "version": "1.0.0",
-      "domain": "engineering",
-      "target": "claude",
-      "path": ".claude\\skills\\senior-fullstack",
-      "files": [
-        "SKILL.md",
-        "references/architecture_patterns.md",
-        "references/development_workflows.md",
-        "references/tech_stack_guide.md",
-        "scripts/code_quality_analyzer.py",
-        "scripts/project_scaffolder.py"
-      ],
-      "installed_at": "2026-07-04T19:40:07.426Z"
+      "domain": "marketing+engineering",
+      "target": "cursor",
+      "path": "esc-skills-main/skills",
+      "count": 85,
+      "note": "Activated into .cursor/skills (local, gitignored) from Desktop/skills pack README"
     }
   }
 }
