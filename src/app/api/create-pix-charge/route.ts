@@ -2,8 +2,14 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin'
-import { getUserFromRequest } from '@/src/lib/server/auth'
+import { getClientIp, getUserFromRequest } from '@/src/lib/server/auth'
 import { createPixCharge } from '@/src/lib/server/pixClient'
+import { checkRateLimit } from '@/src/lib/server/rateLimit'
+
+/** Máx. cobranças PIX por usuário — evita spam no MP e pending_pix repetido. */
+const PIX_CHARGE_LIMIT_PER_USER = 8
+const PIX_CHARGE_LIMIT_PER_IP = 12
+const PIX_CHARGE_WINDOW_MS = 10 * 60 * 1000
 
 type PixChargeResponse = {
   id?: string | number
@@ -30,6 +36,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { error: 'Sua conta não tem e-mail. Atualize o perfil antes de pagar com PIX.' },
       { status: 400 },
+    )
+  }
+
+  const { allowed, retryAfterSec } = await checkRateLimit(
+    `pix-charge:${user.id}`,
+    PIX_CHARGE_LIMIT_PER_USER,
+    PIX_CHARGE_WINDOW_MS,
+  )
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Muitas requisições. Tente novamente em instantes.' },
+      { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
+    )
+  }
+
+  const ip = getClientIp(req)
+  const ipLimit = await checkRateLimit(
+    `pix-charge-ip:${ip}`,
+    PIX_CHARGE_LIMIT_PER_IP,
+    PIX_CHARGE_WINDOW_MS,
+  )
+  if (!ipLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Muitas requisições. Tente novamente em instantes.' },
+      { status: 429, headers: { 'Retry-After': String(ipLimit.retryAfterSec) } },
     )
   }
 

@@ -1,8 +1,9 @@
 import { createHmac } from 'crypto'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { NextRequest } from 'next/server'
 import { hasActiveSubscriptionAccess } from '@/src/lib/subscriptionAccess'
 import { buildMercadoPagoManifest } from '@/src/lib/server/mercadoPagoWebhook'
+import { resetRateLimitMemoryForTests } from '@/src/lib/server/rateLimit'
 
 type SubRow = {
   user_id: string
@@ -71,9 +72,13 @@ vi.mock('@/src/lib/server/mercadoPagoClient', () => ({
   mercadoPagoRequest: (...args: unknown[]) => mockMercadoPagoRequest(...args),
 }))
 
-vi.mock('@/src/lib/server/auth', () => ({
-  getUserFromRequest: vi.fn(),
-}))
+vi.mock('@/src/lib/server/auth', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/src/lib/server/auth')>()
+  return {
+    ...actual,
+    getUserFromRequest: vi.fn(),
+  }
+})
 
 vi.mock('@/src/lib/server/pixClient', () => ({
   createPixCharge: vi.fn(),
@@ -112,8 +117,13 @@ function webhookRequest(body: { type?: string; data?: { id?: string | number } }
 }
 
 describe('fluxo PIX charge → webhook → access', () => {
+  afterEach(() => {
+    resetRateLimitMemoryForTests()
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
+    resetRateLimitMemoryForTests()
     subscriptionStore.row = {
       user_id: USER_ID,
       status: 'trialing',
@@ -127,6 +137,32 @@ describe('fluxo PIX charge → webhook → access', () => {
       id: USER_ID,
       email: 'cliente@teste.com',
     } as never)
+  })
+
+  it('create-pix-charge retorna 429 após exceder limite por usuário', async () => {
+    vi.mocked(createPixCharge).mockResolvedValue({
+      id: PAYMENT_ID,
+      point_of_interaction: {
+        transaction_data: { qr_code: 'pix-copy', qr_code_base64: 'base64qr' },
+      },
+    } as never)
+
+    const req = () =>
+      new NextRequest('https://danosaparentes.com.br/api/create-pix-charge?duration=1', {
+        method: 'POST',
+      })
+
+    for (let i = 0; i < 8; i += 1) {
+      const res = await createPixChargePost(req())
+      expect(res.status).toBe(200)
+    }
+
+    const blocked = await createPixChargePost(req())
+    expect(blocked.status).toBe(429)
+    expect(blocked.headers.get('Retry-After')).toBeTruthy()
+    const json = await blocked.json()
+    expect(json.error).toMatch(/Muitas requisições/)
+    expect(createPixCharge).toHaveBeenCalledTimes(8)
   })
 
   it('create-pix-charge grava pending_pix sem liberar acesso', async () => {
