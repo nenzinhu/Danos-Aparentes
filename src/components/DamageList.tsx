@@ -10,6 +10,7 @@ import {
   updatePhotoUploadProgress,
 } from '../lib/photoUploadProgress'
 import { ResolvedPhoto } from './ResolvedPhoto'
+import PhotoAttachButtons from './PhotoAttachButtons'
 import SpeechButton from './SpeechButton'
 import { isNewDamage, type PreviousReportSummary } from '../lib/reportComparison'
 
@@ -348,17 +349,11 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                         </div>
                       ))}
 
-                      {/* Add photo button */}
-                      <label className={`h-14 rounded-xl border border-dashed flex items-center justify-center text-sm gap-2.5 font-bold font-outfit transition-colors ${
-                        compressingId === d.id
-                          ? 'border-sky-500/40 bg-sky-500/10 text-sky-400 cursor-wait'
-                          : 'border-sky-500/30 bg-sky-500/5 text-sky-500 hover:bg-sky-500/10 cursor-pointer'
-                      }`}>
-                        {compressingId === d.id ? '⏳ Comprimindo…' : '📷 Anexar Foto da Avaria'}
-                        <input type="file" accept="image/*" capture="environment" className="hidden"
-                          disabled={compressingId === d.id}
-                          onChange={e => { if (e.target.files?.[0]) handlePhoto(d.id, e.target.files[0]) }} />
-                      </label>
+                      <PhotoAttachButtons
+                        label="foto da avaria"
+                        compressing={compressingId === d.id}
+                        onFile={file => handlePhoto(d.id, file)}
+                      />
                     </div>
                   </div>
                 </div>
