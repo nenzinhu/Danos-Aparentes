@@ -7,6 +7,8 @@
 // `NEXT_PUBLIC_` prefix, otherwise it would be exposed to the client.
 // The token name is `PIX_MERCADO_PAGO_ACCESS_TOKEN` (see .env.example).
 
+import { randomUUID } from 'crypto'
+
 /**
  * Perform a request to the Mercado Pago API.
  *
@@ -18,45 +20,40 @@
 export async function mercadoPagoRequest(
   endpoint: string,
   method: string = 'GET',
-  body?: any
-): Promise<any> {
-  const accessToken = process.env.PIX_MERCADO_PAGO_ACCESS_TOKEN;
+  body?: unknown,
+  options?: { idempotencyKey?: string },
+): Promise<unknown> {
+  const accessToken = process.env.PIX_MERCADO_PAGO_ACCESS_TOKEN
   if (!accessToken) {
     throw new Error(
-      'PIX_MERCADO_PAGO_ACCESS_TOKEN is not defined. Set it in your .env file.'
-    );
+      'PIX_MERCADO_PAGO_ACCESS_TOKEN is not defined. Set it in your .env file.',
+    )
   }
 
-  const url = `https://api.mercadopago.com${endpoint}`;
+  const url = `https://api.mercadopago.com${endpoint}`
   const headers: Record<string, string> = {
     Authorization: `Bearer ${accessToken}`,
     'Content-Type': 'application/json',
-  };
-
-  const response = await fetch(url, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
-
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(
-      `MercadoPago request failed (${response.status}): ${errorBody}`
-    );
   }
 
-  return response.json();
-}
+  // POST/PUT de pagamento exige X-Idempotency-Key (erro 4292 se ausente).
+  const methodUpper = method.toUpperCase()
+  if (methodUpper !== 'GET' && methodUpper !== 'HEAD') {
+    headers['X-Idempotency-Key'] = options?.idempotencyKey || randomUUID()
+  }
 
-// ------------------------------------------------------------
-// Example usage (you can remove this block in production):
-// ------------------------------------------------------------
-// (async () => {
-//   try {
-//     const result = await mercadoPagoRequest('/v1/payments', 'GET');
-//     console.log('Payments list:', result);
-//   } catch (e) {
-//     console.error(e);
-//   }
-// })();
+  const response = await fetch(url, {
+    method: methodUpper,
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+  })
+
+  if (!response.ok) {
+    const errorBody = await response.text()
+    throw new Error(
+      `MercadoPago request failed (${response.status}): ${errorBody}`,
+    )
+  }
+
+  return response.json()
+}
