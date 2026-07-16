@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import { trackPixCtaClick } from '../lib/analytics/events'
 
 export type AppTab = 'inspect' | 'dashboard' | 'team'
 
@@ -80,6 +81,7 @@ export function useAppShellState({ openPortal }: UseAppShellStateOptions) {
   }, [openPortal, showToast])
 
   const handleChoosePixPayment = useCallback(() => {
+    trackPixCtaClick({ source: 'paywall' })
     setManagePaymentModalOpen(false)
     router.push('/pagamento-pix')
   }, [router])

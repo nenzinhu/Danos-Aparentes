@@ -1,10 +1,11 @@
 'use client'
 
-import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/src/hooks/useAuth'
 import { useSubscription } from '@/src/hooks/useSubscription'
+import { trackPixPaymentConfirmed, trackPixQrGenerated } from '@/src/lib/analytics/events'
 import { whatsappLink } from '@/src/lib/whatsapp'
 import { loginUrlWithReturnTo } from '@/src/lib/safeReturnTo'
 
@@ -44,6 +45,7 @@ function PagamentoPixContent() {
   const [error, setError] = useState<string | null>(null)
   const [generating, setGenerating] = useState(false)
   const [copied, setCopied] = useState(false)
+  const paymentConfirmedTracked = useRef(false)
 
   const total = useMemo(() => MONTHLY_BRL * durationMonths, [durationMonths])
 
@@ -57,6 +59,12 @@ function PagamentoPixContent() {
       setQrCode(result.qrCode)
       setCopyPaste(result.copyPaste)
       setChargedMonths(months)
+      trackPixQrGenerated({
+        source: 'pagamento-pix',
+        duration_months: months,
+        value: MONTHLY_BRL * months,
+        currency: 'BRL',
+      })
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro ao gerar cobrança PIX')
     } finally {
@@ -87,6 +95,21 @@ function PagamentoPixContent() {
     setTimeout(() => setCopied(false), 2000)
   }
 
+  const paidSubscription =
+    Boolean(session) &&
+    Boolean(subscription?.hasAccess) &&
+    (subscription?.status === 'active' || subscription?.status === 'active_pix')
+
+  useEffect(() => {
+    if (!paidSubscription || paymentConfirmedTracked.current) return
+    paymentConfirmedTracked.current = true
+    trackPixPaymentConfirmed({
+      duration_months: chargedMonths ?? durationMonths,
+      value: MONTHLY_BRL * (chargedMonths ?? durationMonths),
+      currency: 'BRL',
+    })
+  }, [paidSubscription, chargedMonths, durationMonths])
+
   if (authLoading) {
     return (
       <main className="min-h-screen flex items-center justify-center text-sm text-[var(--text-muted)]">
@@ -106,10 +129,6 @@ function PagamentoPixContent() {
       </main>
     )
   }
-
-  const paidSubscription =
-    subscription?.hasAccess &&
-    (subscription.status === 'active' || subscription.status === 'active_pix')
 
   if (paidSubscription) {
     return (

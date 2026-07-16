@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import type { SubscriptionStatus } from '../hooks/useSubscription'
+import { trackPixCtaClick } from '@/src/lib/analytics/events'
 import { LEGAL_CONTACT_EMAIL } from './LegalContent'
 
 interface Props {
@@ -57,6 +58,7 @@ export default function Paywall({ status, onSignOut }: Props) {
           <Link
             href="/pagamento-pix?duration=1"
             className="block w-full rounded-xl bg-[var(--primary)] text-[var(--bg-main)] font-extrabold text-sm py-3.5 no-underline"
+            onClick={() => trackPixCtaClick({ source: 'paywall', duration_months: 1, value: 49.9, currency: 'BRL' })}
           >
             Pagar com PIX
           </Link>

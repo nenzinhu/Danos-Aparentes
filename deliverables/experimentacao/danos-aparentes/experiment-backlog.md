@@ -20,7 +20,7 @@
 | Conversões/mês | **Desconhecida** — assumido **< 100/mês** | 🔴 Re-think |
 | Ticket Pro | R$ 49,90/mês | ✅ Confirmado no código |
 | Ferramenta de teste | Nenhuma (manual / before-after) | ✅ Assumido |
-| Tracking | GA4 + pixels (Meta, TikTok, Google Ads) — **eventos de assinatura PIX a validar** | ⚠️ Verificar |
+| Tracking | GA4 + pixels (Meta, TikTok, Google Ads) — **eventos PIX instrumentados** (`pix_cta_click`, `pix_qr_generated`, `pix_payment_confirmed`) | ✅ Instrumentado 2026-07-16 |
 | Dados qualitativos | Nenhum fornecido (heatmaps, recordings, surveys) | ⚠️ Coletar |
 | Testes anteriores | Nenhum documentado | — |
 
@@ -285,10 +285,10 @@
 
 | Evento | Onde | Status |
 |--------|------|:------:|
-| `pix_cta_click` | `/planos`, `/` | ⚠️ Criar |
+| `pix_cta_click` | `/planos`, `/`, paywall, manage modal | ✅ Instrumentado |
 | `pix_page_view` | `/pagamento-pix` | ⚠️ Verificar GA4 |
-| `pix_qr_generated` | Após API `create-pix-charge` OK | ⚠️ Criar |
-| `pix_payment_confirmed` | Webhook MP → `active_pix` | ⚠️ Verificar |
+| `pix_qr_generated` | Após API `create-pix-charge` OK | ✅ Instrumentado |
+| `pix_payment_confirmed` | Polling cliente em `/pagamento-pix` | ✅ Instrumentado |
 | `trial_signup_started` | `/app?mode=signup` | ⚠️ Verificar |
 | `lead_whatsapp_corporate` | Links WA corporativo | Parcial (`trackLead`) |
 

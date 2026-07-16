@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import LandingCtaLink from './LandingCtaLink';
 import { buttonVariants } from './ui/Button';
+import { trackPixCtaClick } from '@/src/lib/analytics/events';
 import { whatsappLink } from '../lib/whatsapp';
 
 type PaymentMethod = 'cartao' | 'pix';
@@ -116,7 +117,11 @@ export default function PricingCards() {
                 Testar 7 dias grátis
               </LandingCtaLink>
               <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
-                <Link href="/pagamento-pix?duration=1" className="font-bold text-[var(--primary)] hover:underline">
+                <Link
+                  href="/pagamento-pix?duration=1"
+                  className="font-bold text-[var(--primary)] hover:underline"
+                  onClick={() => trackPixCtaClick({ source: 'trial_link', duration_months: 1 })}
+                >
                   Prefere PIX? Pague agora sem cartão
                 </Link>
               </p>
@@ -126,7 +131,18 @@ export default function PricingCards() {
             </>
           ) : (
             <>
-              <Link href={`/pagamento-pix?duration=${durationMonths}`} className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}>
+              <Link
+                href={`/pagamento-pix?duration=${durationMonths}`}
+                className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}
+                onClick={() =>
+                  trackPixCtaClick({
+                    source: 'planos',
+                    duration_months: durationMonths,
+                    value: price,
+                    currency: 'BRL',
+                  })
+                }
+              >
                 Pagar com PIX · {priceLabel}
               </Link>
               <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
