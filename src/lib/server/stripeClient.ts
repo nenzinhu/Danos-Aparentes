@@ -1,9 +1,23 @@
 import Stripe from 'stripe'
 
-const secretKey = process.env.STRIPE_SECRET_KEY
+let stripeSingleton: Stripe | null = null
 
-if (!secretKey) {
-  throw new Error('STRIPE_SECRET_KEY não configurada nas variáveis de ambiente')
+/** Cliente Stripe lazy — evita quebrar o `next build` se a env ainda não estiver disponível. */
+export function getStripe(): Stripe {
+  if (stripeSingleton) return stripeSingleton
+  const secretKey = process.env.STRIPE_SECRET_KEY
+  if (!secretKey) {
+    throw new Error('STRIPE_SECRET_KEY não configurada nas variáveis de ambiente')
+  }
+  stripeSingleton = new Stripe(secretKey)
+  return stripeSingleton
 }
 
-export const stripe = new Stripe(secretKey)
+/** Compat: `import { stripe }` continua válido, mas só instancia no primeiro acesso. */
+export const stripe = new Proxy({} as Stripe, {
+  get(_target, prop, receiver) {
+    const client = getStripe() as unknown as Record<PropertyKey, unknown>
+    const value = Reflect.get(client, prop, receiver)
+    return typeof value === 'function' ? value.bind(client) : value
+  },
+})
