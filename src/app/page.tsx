@@ -14,7 +14,14 @@ import FinalCtaSection from '../components/FinalCtaSection';
 import LandingPromoVideo from '../components/LandingPromoVideo';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
 import { motion, useReducedMotion } from 'framer-motion';
-import HeroCarStage, { heroCarVariant, heroTagVariant, heroSpecCellVariant, heroSpecStage } from '../components/HeroCarStage';
+import HeroCarStage, {
+  heroCarVariant,
+  heroTagVariant,
+  heroSpecCellVariant,
+  heroSpecStage,
+  heroCopyStage,
+  heroCopyItem,
+} from '../components/HeroCarStage';
 import type { Damage } from '../types';
 
 // Avarias reais do laudo (2 riscos leves nas portas esquerdas) para o
@@ -112,39 +119,55 @@ function TextCarousel() {
   }, [reduceMotion]);
 
   return (
-    <div className="relative">
-      <h1 className="font-display text-4xl sm:text-5xl lg:text-[5.25rem] font-bold uppercase leading-[0.92] tracking-[-0.015em] text-[var(--text-main)] [text-wrap:balance]">
-        Danos Aparentes
-        <span className="block mt-2 text-[0.55em] sm:text-[0.48em] lg:text-[2.75rem] normal-case tracking-tight font-semibold text-[var(--signal-bright)]">
-          Vistoria digital que prova a si mesma.
-        </span>
-      </h1>
-
-      <div
-        key={index}
-        aria-live="polite"
-        className="space-y-3 mt-6 animate-in fade-in slide-in-from-bottom-4 duration-700 motion-reduce:animate-none"
+    <motion.div
+      className="relative"
+      variants={reduceMotion ? undefined : heroCopyStage}
+      initial={reduceMotion ? undefined : 'hidden'}
+      animate={reduceMotion ? undefined : 'show'}
+    >
+      {/* Beat 1 — brand (hero-level) */}
+      <motion.h1
+        variants={reduceMotion ? undefined : heroCopyItem}
+        className="font-display text-4xl sm:text-5xl lg:text-[5.25rem] font-bold uppercase leading-[0.92] tracking-[-0.015em] text-[var(--text-main)] [text-wrap:balance]"
       >
-        <p className="font-mono-data text-[11px] tracking-[0.18em] uppercase text-[var(--signal-bright)]">
-          {slides[index].kicker}
-        </p>
-        <p className="text-base lg:text-lg text-[var(--text-muted)] max-w-xl leading-relaxed">
-          {slides[index].description}
-        </p>
-      </div>
+        Danos Aparentes
+      </motion.h1>
+
+      {/* Beat 2 — one supporting headline */}
+      <motion.p
+        variants={reduceMotion ? undefined : heroCopyItem}
+        className="mt-3 text-xl sm:text-2xl lg:text-[2.75rem] tracking-tight font-semibold text-[var(--signal-bright)] leading-tight [text-wrap:balance]"
+      >
+        Vistoria digital que prova a si mesma.
+      </motion.p>
+
+      <motion.div variants={reduceMotion ? undefined : heroCopyItem} className="mt-6">
+        <div
+          key={index}
+          aria-live="polite"
+          className="space-y-3 motion-safe:transition-opacity motion-safe:duration-500"
+        >
+          <p className="font-mono-data text-[11px] tracking-[0.18em] uppercase text-[var(--signal-bright)]">
+            {slides[index].kicker}
+          </p>
+          <p className="text-base lg:text-lg text-[var(--text-muted)] max-w-xl leading-relaxed">
+            {slides[index].description}
+          </p>
+        </div>
+      </motion.div>
 
       {/* Indicador em índice de laudo: 01 — 03 com navegação */}
-      <div className="flex items-center gap-4 pt-7">
+      <motion.div variants={reduceMotion ? undefined : heroCopyItem} className="flex items-center gap-4 pt-7">
         <button
           onClick={prev}
-          className="grid place-items-center w-9 h-9 border border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--signal-bright)] hover:border-[var(--sheet-line)] transition-colors focus-visible:ring-2 ring-[var(--signal)] outline-none"
+          className="grid place-items-center w-9 h-9 border border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--signal-bright)] hover:border-[var(--sheet-line)] transition-colors duration-150 focus-visible:ring-2 ring-[var(--signal)] outline-none"
           aria-label="Mensagem anterior"
         >
           ←
         </button>
         <button
           onClick={next}
-          className="grid place-items-center w-9 h-9 border border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--signal-bright)] hover:border-[var(--sheet-line)] transition-colors focus-visible:ring-2 ring-[var(--signal)] outline-none"
+          className="grid place-items-center w-9 h-9 border border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--signal-bright)] hover:border-[var(--sheet-line)] transition-colors duration-150 focus-visible:ring-2 ring-[var(--signal)] outline-none"
           aria-label="Próxima mensagem"
         >
           →
@@ -155,8 +178,33 @@ function TextCarousel() {
           {String(slides.length).padStart(2, '0')}
         </span>
         <span aria-hidden="true" className="h-px flex-1 bg-[var(--card-border)]" />
-      </div>
-    </div>
+      </motion.div>
+
+      {/* Beat 3 — CTA settle (same stage so brand leads) */}
+      <motion.div variants={reduceMotion ? undefined : heroCopyItem} className="flex flex-wrap gap-4 pt-9">
+        <LandingCtaLink
+          id="hero-primary-cta"
+          transitionTypes={['nav-forward']}
+          className="group/cta px-8 py-4 text-white font-black rounded-xl shadow-2xl shadow-[var(--primary)]/20 inline-flex items-center gap-3 transition-transform duration-150 motion-safe:hover:scale-[1.02] active:scale-[0.99] focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
+          style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
+        >
+          Testar 7 dias grátis
+          <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-150 group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </LandingCtaLink>
+      </motion.div>
+
+      <motion.div
+        variants={reduceMotion ? undefined : heroCopyItem}
+        className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 font-mono-data text-[11px] text-[var(--text-muted)] uppercase tracking-wider"
+      >
+        <span aria-hidden="true" className="text-[var(--signal-bright)]">✓</span>
+        <span>Sem cartão</span>
+        <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
+        <span>7 dias liberados</span>
+        <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
+        <span>Cancele online</span>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -237,7 +285,7 @@ export default function LandingPage() {
           >
             {darkMode ? '☀️' : '🌙'}
           </button>
-          <LandingCtaLink className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-xl shadow-[var(--primary)]/15 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none">
+          <LandingCtaLink className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-xl shadow-[var(--primary)]/15 transition-transform duration-150 motion-safe:hover:scale-[1.02] active:scale-[0.99] focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none">
             Testar 7 dias grátis
           </LandingCtaLink>
         </nav>
@@ -245,7 +293,7 @@ export default function LandingPage() {
 
       {/* Main Content — Prancha de Vistoria */}
       <main className="flex-1 flex items-center justify-center px-4 sm:px-8 py-6 z-10 relative">
-        <div className="sheet-frame max-w-7xl w-full animate-in fade-in duration-700 motion-reduce:animate-none">
+        <div className="sheet-frame max-w-7xl w-full">
           <span aria-hidden="true" className="crop-tr" />
           <span aria-hidden="true" className="crop-br" />
 
@@ -266,32 +314,11 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
-            {/* Coluna esquerda: tese + ação */}
-            <div className="px-5 sm:px-8 py-10 lg:py-12 lg:border-r border-[var(--card-border)] animate-in fade-in slide-in-from-left-6 duration-1000 motion-reduce:animate-none">
+            {/* Coluna esquerda: tese + ação — motion 1: brand → copy → CTA */}
+            <div className="px-5 sm:px-8 py-10 lg:py-12 lg:border-r border-[var(--card-border)]">
               <TextCarousel />
 
-              <div className="flex flex-wrap gap-4 pt-9">
-                <LandingCtaLink
-                  id="hero-primary-cta"
-                  transitionTypes={['nav-forward']}
-                  className="group/cta px-8 py-4 text-white font-black rounded-xl shadow-2xl shadow-[var(--primary)]/20 inline-flex items-center gap-3 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
-                  style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
-                >
-                  Testar 7 dias grátis
-                  <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </LandingCtaLink>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 font-mono-data text-[11px] text-[var(--text-muted)] uppercase tracking-wider">
-                <span aria-hidden="true" className="text-[var(--signal-bright)]">✓</span>
-                <span>Sem cartão</span>
-                <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
-                <span>7 dias liberados</span>
-                <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
-                <span>Cancele online</span>
-              </div>
-
-              {/* Especificações — encodadas como ficha técnica */}
+              {/* Especificações — último beat da coluna (após CTA) */}
               <motion.dl
                 className="grid grid-cols-1 sm:grid-cols-3 gap-px mt-10 bg-[var(--card-border)] border border-[var(--card-border)]"
                 variants={reduceMotion ? undefined : heroSpecStage}
@@ -312,8 +339,8 @@ export default function LandingPage() {
               </motion.dl>
             </div>
 
-            {/* Coluna direita: prancha do veículo */}
-            <div className="relative px-5 sm:px-8 py-10 flex flex-col animate-in fade-in slide-in-from-right-8 duration-1000 delay-150 motion-reduce:animate-none">
+            {/* Coluna direita: prancha do veículo — motion 1b: carro + tags */}
+            <div className="relative px-5 sm:px-8 py-10 flex flex-col">
               <div className="flex items-center justify-between font-mono-data text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-4">
                 <span>Vista · Lateral Esq.</span>
                 <span>2 avarias</span>
@@ -330,7 +357,7 @@ export default function LandingPage() {
                       <CarLateralLeft damages={HERO_DAMAGES} selectedPartId="car-ll-door-front" onPartClick={()=>{}} onPartHover={()=>{}} />
                     </motion.div>
 
-                    {/* Marcadores de avaria — posicionados em relação ao mesmo container do SVG para manter alinhamento proporcional! */}
+                    {/* Marcadores de avaria — alinhados ao SVG */}
                     <motion.div variants={heroTagVariant} className="absolute top-[45%] left-[28%] flex items-center gap-2 pointer-events-none">
                       <span className="damage-tag hidden sm:inline-block px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)] rounded whitespace-nowrap shadow-lg">Porta diant. esq. · risco</span>
                       <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)] shrink-0" />
@@ -395,7 +422,7 @@ export default function LandingPage() {
               desc: 'Vistoriador e cliente assinam digitalmente na tela do celular. O laudo em PDF inviolável com hash SHA-256 é gerado e enviado por WhatsApp.'
             }
           ].map((item, idx) => (
-            <Reveal key={idx} delay={idx * 90} className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-all duration-300 relative group">
+            <Reveal key={idx} delay={idx * 70} className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-all duration-300 relative group">
               <div className="font-mono-data text-4xl font-bold text-[var(--signal)]/25 group-hover:text-[var(--signal-bright)]/60 transition-colors absolute top-4 right-6">
                 {item.step}
               </div>

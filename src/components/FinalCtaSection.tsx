@@ -25,7 +25,7 @@ export default function FinalCtaSection() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-9">
           <LandingCtaLink
             transitionTypes={['nav-forward']}
-            className="group/cta px-10 py-5 text-white font-black text-base sm:text-lg rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-3 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
+            className="group/cta px-10 py-5 text-white font-black text-base sm:text-lg rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-3 transition-transform duration-150 motion-safe:hover:scale-[1.02] active:scale-[0.99] focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
             style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
           >
             Testar 7 dias grátis
