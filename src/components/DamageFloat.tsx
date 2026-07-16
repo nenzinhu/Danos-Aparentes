@@ -18,12 +18,8 @@ const EXIT_DURATION_MS = 200
 export default function DamageFloat({ partName, position, currentType, onChoose, onClear, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const [isMobile, setIsMobile] = useState(false)
-  const [pendingChoice, setPendingChoice] = useState<{ type: DamageType; typeName: string } | null>(null)
   const [isClosing, setIsClosing] = useState(false)
 
-  // Anima a saída antes de desmontar — o pai remove este componente sempre
-  // que onClose/onChoose/onClear é chamado, então adiamos a chamada real até
-  // a animação terminar (ou disparamos na hora se o usuário prefere menos movimento).
   const closeThen = (action: () => void) => {
     if (isClosing) return
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -84,11 +80,9 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
 
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') { handleClose(); return }
-      // Atalhos numéricos 1/2/3 para escolher o tipo de avaria rapidamente,
-      // sem precisar clicar — agiliza quem faz muitas vistorias por dia.
-      if (!pendingChoice && /^[1-3]$/.test(e.key)) {
+      if (/^[1-3]$/.test(e.key)) {
         const t = types[Number(e.key) - 1]
-        if (t) { e.preventDefault(); setPendingChoice({ type: t.type, typeName: t.label }); return }
+        if (t) { e.preventDefault(); closeThen(() => onChoose(t.type, t.label)); return }
       }
       if (e.key === 'Tab') {
         const items = focusables()
@@ -107,7 +101,6 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       if (ref.current && !ref.current.contains(e.target as Node)) handleClose()
     }
 
-    // Foco inicial no diálogo; restaura o foco anterior ao fechar.
     const previouslyFocused = document.activeElement as HTMLElement | null
     ref.current?.focus()
 
@@ -118,13 +111,11 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       document.removeEventListener('mousedown', onClickOutside)
       previouslyFocused?.focus?.()
     }
-  }, [onClose, pendingChoice])
+  }, [onClose])
 
   const left = Math.max(8, Math.min(position.x, window.innerWidth - 208))
   const top = Math.max(8, Math.min(position.y, window.innerHeight - 210))
 
-  // No mobile o popup vira um painel fixo no fundo (bottom sheet), em vez de
-  // tentar caber ao lado do veículo num ecrã estreito.
   const containerClass = isMobile
     ? `fixed z-[10000] left-0 right-0 bottom-0 w-full p-4 pb-[max(1rem,env(safe-area-inset-bottom))] rounded-t-2xl border-t backdrop-blur-xl shadow-2xl motion-reduce:animate-none duration-300 ${
         isClosing ? 'animate-out fade-out slide-out-to-bottom-4 duration-200' : 'animate-in fade-in slide-in-from-bottom-4'
@@ -147,12 +138,10 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       className={`${containerClass} outline-none`}
       style={containerStyle}
     >
-      {/* Pega do bottom sheet (mobile) */}
       {isMobile && (
         <div aria-hidden="true" className="mx-auto mb-2.5 h-1 w-10 rounded-full bg-[var(--text-muted)]/40" />
       )}
 
-      {/* Título */}
       <div className="flex justify-between items-center mb-2.5">
         <span className="font-outfit font-extrabold text-sm text-[var(--text-main)] flex items-center gap-1.5">
           <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 83.62 122.88" className="h-[18px] w-auto fill-red-500 animate-pulse shrink-0" aria-hidden="true">
@@ -169,88 +158,44 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
         </button>
       </div>
 
-      {pendingChoice ? (
-        <>
-          {/* Etapa: anexar foto? */}
-          <div className="text-[0.68rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">
-            Deseja anexar uma foto?
-          </div>
-          <div className="text-[0.72rem] text-[var(--text-main)] font-semibold mb-3">
-            {pendingChoice.typeName}
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="flex items-center justify-center gap-1.5 px-2.5 py-2.5 rounded-xl border font-outfit text-[0.78rem] font-black transition-all duration-200 cursor-pointer bg-sky-500/10 hover:bg-sky-500/15 border-sky-500/35 text-sky-500">
-              📷 Sim, anexar foto
-              <input
-                type="file"
-                accept="image/*"
-                capture="environment"
-                className="hidden"
-                onChange={e => {
-                  const file = e.target.files?.[0]
-                  if (file) closeThen(() => onChoose(pendingChoice.type, pendingChoice.typeName, file))
-                }}
-              />
-            </label>
-            <button
-              onClick={() => closeThen(() => onChoose(pendingChoice.type, pendingChoice.typeName))}
-              className="w-full px-2.5 py-2 rounded-xl border font-outfit text-[0.75rem] font-bold transition-all duration-200 cursor-pointer bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)]"
-            >
-              Pular, sem foto
-            </button>
-            <button
-              onClick={() => setPendingChoice(null)}
-              className="w-full px-2.5 py-1.5 rounded-lg text-[0.7rem] font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors cursor-pointer"
-            >
-              ← Voltar
-            </button>
-          </div>
-        </>
-      ) : (
-        <>
-          {/* Label acima */}
-          <div className="text-[0.68rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">
-            Tipo de avaria <span className="normal-case font-medium opacity-60">(atalhos 1-3)</span>
-          </div>
+      <div className="text-[0.68rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">
+        Tipo de avaria <span className="normal-case font-medium opacity-60">(atalhos 1-3)</span>
+      </div>
 
-          {/* Opções */}
-          <div className="grid grid-cols-3 gap-1.5">
-            {types.map((t, i) => {
-              const isActive = currentType === t.type
-              return (
-                <button
-                  key={t.type}
-                  onClick={() => setPendingChoice({ type: t.type, typeName: t.label })}
-                  className={`relative flex flex-col items-center gap-1 p-1.5 rounded-xl border font-outfit text-xs font-bold transition-all duration-200 cursor-pointer ${
-                    isActive
-                      ? `${t.bg} ${t.border} ${t.color} scale-[1.05] ring-2 ring-[var(--primary)]`
-                      : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] hover:scale-[1.02]'
-                  }`}
-                >
-                  <span className="absolute top-1 left-1.5 text-[0.6rem] font-black text-[var(--text-muted)] opacity-50">{i + 1}</span>
-                  <div className={`h-10 sm:h-8 flex items-center justify-center transition-transform duration-200 ${isActive ? 'scale-110' : 'hover:scale-110'}`}>
-                    {t.icon}
-                  </div>
-                  <span className="text-[0.7rem] sm:text-[0.6rem] tracking-tight leading-tight text-center">{t.label}</span>
-                  {isActive && (
-                    <span className="text-[0.55rem] uppercase font-black tracking-widest text-[var(--primary)] mt-0.5 animate-bounce">
-                      Ativo
-                    </span>
-                  )}
-                </button>
-              )
-            })}
-          </div>
+      <div className="grid grid-cols-3 gap-1.5">
+        {types.map((t, i) => {
+          const isActive = currentType === t.type
+          return (
+            <button
+              key={t.type}
+              onClick={() => closeThen(() => onChoose(t.type, t.label))}
+              className={`relative flex flex-col items-center gap-1 p-1.5 rounded-xl border font-outfit text-xs font-bold transition-all duration-200 cursor-pointer ${
+                isActive
+                  ? `${t.bg} ${t.border} ${t.color} scale-[1.05] ring-2 ring-[var(--primary)]`
+                  : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] hover:scale-[1.02]'
+              }`}
+            >
+              <span className="absolute top-1 left-1.5 text-[0.6rem] font-black text-[var(--text-muted)] opacity-50">{i + 1}</span>
+              <div className={`h-10 sm:h-8 flex items-center justify-center transition-transform duration-200 ${isActive ? 'scale-110' : 'hover:scale-110'}`}>
+                {t.icon}
+              </div>
+              <span className="text-[0.7rem] sm:text-[0.6rem] tracking-tight leading-tight text-center">{t.label}</span>
+              {isActive && (
+                <span className="text-[0.55rem] uppercase font-black tracking-widest text-[var(--primary)] mt-0.5 animate-bounce">
+                  Ativo
+                </span>
+              )}
+            </button>
+          )
+        })}
+      </div>
 
-          {/* Sem avaria */}
-          <button
-            onClick={() => closeThen(onClear)}
-            className="mt-2.5 w-full flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl border font-outfit text-[0.7rem] font-black transition-all duration-200 cursor-pointer bg-red-500/10 hover:bg-red-500/15 border-red-500/35 hover:border-red-500/50 text-red-500"
-          >
-            <span>🧽</span> Sem avaria / Limpar
-          </button>
-        </>
-      )}
+      <button
+        onClick={() => closeThen(onClear)}
+        className="mt-3.5 w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl border font-outfit text-xs font-black transition-all duration-200 cursor-pointer bg-red-500/10 hover:bg-red-500/15 border-red-500/35 hover:border-red-500/50 text-red-500"
+      >
+        <span>🧽</span> Sem avaria / Limpar
+      </button>
     </div>
   )
 }

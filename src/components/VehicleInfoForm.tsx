@@ -543,16 +543,16 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
       <div className="sticky bottom-0 z-10 mt-4 pt-3 pb-1 bg-[var(--card-bg)]/95 border-t border-white/5 flex gap-2">
         {wizardStep > 1 && (
-          <Button variant="secondary" onClick={goBack} className="flex-1">
+          <Button variant="secondary" size="lg" onClick={goBack} className="flex-1">
             ← Voltar
           </Button>
         )}
         {wizardStep < 3 ? (
-          <Button variant="primary" onClick={goNext} className="flex-1">
+          <Button variant="primary" size="lg" onClick={goNext} className="flex-1">
             Continuar →
           </Button>
         ) : (
-          <Button variant="success" onClick={handleComplete} className="flex-1">
+          <Button variant="success" size="lg" onClick={handleComplete} className="flex-1">
             Concluir dados
           </Button>
         )}

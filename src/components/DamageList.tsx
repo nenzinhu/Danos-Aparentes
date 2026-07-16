@@ -238,7 +238,7 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                         <button 
                           key={sev} 
                           onClick={() => onUpdate(d.id, { severity: sev })} 
-                          className={`flex-1 py-1.5 rounded-lg font-outfit text-[0.78rem] font-extrabold border transition-all ${
+                          className={`flex-1 py-3 rounded-xl font-outfit text-[0.85rem] font-extrabold border transition-all ${
                             d.severity === sev 
                               ? 'bg-[var(--severity-color)]/10 text-[var(--severity-color)] border-[var(--severity-color)]' 
                               : 'bg-white/[0.02] text-[var(--text-muted)] border-white/[0.08] hover:border-white/20'
@@ -349,12 +349,12 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                       ))}
 
                       {/* Add photo button */}
-                      <label className={`h-11 rounded-lg border border-dashed flex items-center justify-center text-[0.8rem] gap-1.5 font-bold font-outfit transition-colors ${
+                      <label className={`h-14 rounded-xl border border-dashed flex items-center justify-center text-sm gap-2.5 font-bold font-outfit transition-colors ${
                         compressingId === d.id
                           ? 'border-sky-500/40 bg-sky-500/10 text-sky-400 cursor-wait'
                           : 'border-sky-500/30 bg-sky-500/5 text-sky-500 hover:bg-sky-500/10 cursor-pointer'
                       }`}>
-                        {compressingId === d.id ? '⏳ Comprimindo…' : '📷 Anexar Foto'}
+                        {compressingId === d.id ? '⏳ Comprimindo…' : '📷 Anexar Foto da Avaria'}
                         <input type="file" accept="image/*" capture="environment" className="hidden"
                           disabled={compressingId === d.id}
                           onChange={e => { if (e.target.files?.[0]) handlePhoto(d.id, e.target.files[0]) }} />
