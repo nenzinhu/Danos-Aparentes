@@ -53,14 +53,14 @@ export default function TrustSection() {
   }, []);
 
   return (
-    <section className="w-full max-w-6xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-4 text-left">
-      <Reveal className="text-center mb-12 flex flex-col items-center">
+    <section className="w-full max-w-6xl mx-auto py-12 sm:py-16 px-4 sm:px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-4 text-left">
+      <Reveal className="text-center mb-8 sm:mb-12 flex flex-col items-center">
         <div className="inline-flex items-center gap-2 font-mono-data text-[11px] tracking-[0.2em] text-[var(--signal-bright)] uppercase mb-4">
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
           Segurança do Laudo
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
         </div>
-        <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
+        <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance]">
           Um laudo que <span className="text-[var(--signal-bright)]">comprova a si mesmo</span>
         </h2>
         <p className="text-sm text-[var(--text-muted)] mt-3 max-w-xl">
@@ -68,14 +68,14 @@ export default function TrustSection() {
         </p>
       </Reveal>
 
-      <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {TRUST_ITEMS.map((item) => (
-          <div key={item.k} className="trust-card glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group" style={{ opacity: 0 }}>
+          <div key={item.k} className="trust-card glass-card p-6 sm:p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group" style={{ opacity: 0 }}>
             <div className="font-mono-data text-[10px] uppercase tracking-widest text-[var(--signal-bright)] mb-3">
               {item.k}
             </div>
-            <h3 className="font-display text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mb-2">{item.title}</h3>
-            <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
+            <h3 className="font-display text-lg sm:text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mb-2">{item.title}</h3>
+            <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
           </div>
         ))}
       </div>

@@ -13,6 +13,7 @@ import TrustSection from '../components/TrustSection';
 import FinalCtaSection from '../components/FinalCtaSection';
 import LandingPromoVideo from '../components/LandingPromoVideo';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
+import AudienceStrip, { LossHookSection } from '../components/AudienceStrip';
 import { motion, useReducedMotion } from 'framer-motion';
 import HeroCarStage, { heroCarVariant, heroTagVariant, heroSpecCellVariant, heroSpecStage } from '../components/HeroCarStage';
 import type { Damage } from '../types';
@@ -26,7 +27,7 @@ const HERO_DAMAGES: Damage[] = [
 
 // Data da última revisão de conteúdo/copy da home. Atualize ao editar
 // headline, seções ou schema — reflete no dateModified do SoftwareApplication.
-const HOME_UPDATED_DATE = '2026-07-12'
+const HOME_UPDATED_DATE = '2026-07-16'
 
 // Schema de marca/produto para rich results e Knowledge Graph.
 const LANDING_JSONLD = {
@@ -113,9 +114,9 @@ function TextCarousel() {
 
   return (
     <div className="relative">
-      <h1 className="font-display text-4xl sm:text-5xl lg:text-[5.25rem] font-bold uppercase leading-[0.92] tracking-[-0.015em] text-[var(--text-main)] [text-wrap:balance]">
+      <h1 className="font-display text-[clamp(2.1rem,8vw,5.25rem)] sm:text-5xl lg:text-[5.25rem] font-bold uppercase leading-[0.92] tracking-[-0.015em] text-[var(--text-main)] [text-wrap:balance]">
         Danos Aparentes
-        <span className="block mt-2 text-[0.55em] sm:text-[0.48em] lg:text-[2.75rem] normal-case tracking-tight font-semibold text-[var(--signal-bright)]">
+        <span className="block mt-2 text-[clamp(1.05rem,3.8vw,2.75rem)] sm:text-[0.48em] lg:text-[2.75rem] normal-case tracking-tight font-semibold text-[var(--signal-bright)]">
           Vistoria digital que prova a si mesma.
         </span>
       </h1>
@@ -212,45 +213,49 @@ export default function LandingPage() {
       {/* Grid Overlay */}
       <div aria-hidden="true" className="fixed inset-0 bg-[linear-gradient(var(--grid-color)_1px,transparent_1px),linear-gradient(90deg,var(--grid-color)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none z-0" />
 
-      {/* Header */}
-      <header className="w-full px-4 sm:px-8 py-6 flex justify-between items-center gap-3 z-50 shrink-0">
+      {/* Header — compacto no mobile; CTA principal fica no sticky bar */}
+      <header className="w-full px-3 sm:px-6 md:px-8 py-3 sm:py-5 flex justify-between items-center gap-2 sm:gap-3 z-50 shrink-0 sticky top-0 bg-[var(--bg-main)]/90 backdrop-blur-md border-b border-[var(--card-border)]/30 supports-[backdrop-filter]:bg-[var(--bg-main)]/75">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          <Image src="/logo.svg" alt="Danos Aparentes" width={48} height={48} className="object-contain shrink-0" priority />
-          <span className="hidden sm:inline text-base sm:text-lg font-extrabold tracking-tight uppercase bg-clip-text text-transparent whitespace-nowrap" style={{ backgroundImage: 'var(--header-title-gradient)' }}>
+          <Image src="/logo.svg" alt="Danos Aparentes" width={40} height={40} className="object-contain shrink-0 sm:w-12 sm:h-12" priority />
+          <span className="hidden md:inline text-base lg:text-lg font-extrabold tracking-tight uppercase bg-clip-text text-transparent whitespace-nowrap" style={{ backgroundImage: 'var(--header-title-gradient)' }}>
             Danos Aparentes
           </span>
         </div>
-        <nav className="flex items-center gap-3 sm:gap-6 shrink-0">
+        <nav className="flex items-center gap-2 sm:gap-4 md:gap-6 shrink-0">
           <Link href="/planos" className="hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             Planos
           </Link>
-          <a href="#faq" onClick={scrollToFaq} className="hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
+          <a href="#faq" onClick={scrollToFaq} className="hidden md:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             FAQ
           </a>
-          <Link href="/app" transitionTypes={['nav-forward']} className="inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
+          <a href="#laudo" className="hidden lg:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
+            Laudo
+          </a>
+          <Link href="/app" transitionTypes={['nav-forward']} className="inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none px-1">
             Entrar
           </Link>
           <button
             onClick={toggleDarkMode}
-            className="p-2 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] rounded-xl transition-all outline-none"
+            className="p-2 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] rounded-xl transition-all outline-none touch-manipulation"
             aria-label="Alternar tema"
           >
             {darkMode ? '☀️' : '🌙'}
           </button>
-          <LandingCtaLink className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-xl shadow-[var(--primary)]/15 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none">
-            Testar 7 dias grátis
+          <LandingCtaLink className="hidden sm:inline-flex px-4 md:px-5 py-2 md:py-2.5 bg-primary hover:bg-primary-hover text-white text-xs md:text-sm font-bold rounded-xl shadow-xl shadow-[var(--primary)]/15 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none">
+            <span className="md:hidden">Testar grátis</span>
+            <span className="hidden md:inline">Testar 7 dias grátis</span>
           </LandingCtaLink>
         </nav>
       </header>
 
       {/* Main Content — Prancha de Vistoria */}
-      <main className="flex-1 flex items-center justify-center px-4 sm:px-8 py-6 z-10 relative">
+      <main className="flex-1 flex items-center justify-center px-3 sm:px-6 md:px-8 py-4 sm:py-6 z-10 relative landing-main">
         <div className="sheet-frame max-w-7xl w-full animate-in fade-in duration-700 motion-reduce:animate-none">
           <span aria-hidden="true" className="crop-tr" />
           <span aria-hidden="true" className="crop-br" />
 
           {/* Faixa-cabeçalho do laudo */}
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-5 sm:px-8 py-3 border-b border-[var(--card-border)] font-mono-data text-[11px] tracking-wider text-[var(--text-muted)] uppercase">
+          <div className="flex flex-wrap items-center gap-x-3 sm:gap-x-5 gap-y-2 px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 border-b border-[var(--card-border)] font-mono-data text-[10px] sm:text-[11px] tracking-wider text-[var(--text-muted)] uppercase">
             <span className="text-[var(--signal-bright)] font-semibold">Relatório de Vistoria</span>
             <span aria-hidden="true" className="text-[var(--card-border)]">/</span>
             <span>OS <span className="text-[var(--text-main)]">2026-0628</span></span>
@@ -265,24 +270,30 @@ export default function LandingPage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.05fr_1fr]">
             {/* Coluna esquerda: tese + ação */}
-            <div className="px-5 sm:px-8 py-10 lg:py-12 lg:border-r border-[var(--card-border)] animate-in fade-in slide-in-from-left-6 duration-1000 motion-reduce:animate-none">
+            <div className="px-4 sm:px-6 md:px-8 py-8 sm:py-10 lg:py-12 md:border-r border-[var(--card-border)] animate-in fade-in slide-in-from-left-6 duration-1000 motion-reduce:animate-none">
               <TextCarousel />
 
-              <div className="flex flex-wrap gap-4 pt-9">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-7 sm:pt-9">
                 <LandingCtaLink
                   id="hero-primary-cta"
                   transitionTypes={['nav-forward']}
-                  className="group/cta px-8 py-4 text-white font-black rounded-xl shadow-2xl shadow-[var(--primary)]/20 inline-flex items-center gap-3 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
+                  className="group/cta w-full sm:w-auto justify-center px-6 sm:px-8 py-3.5 sm:py-4 text-white font-black rounded-xl shadow-2xl shadow-[var(--primary)]/20 inline-flex items-center gap-3 transition-all motion-safe:hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none touch-manipulation text-sm sm:text-base"
                   style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
                 >
                   Testar 7 dias grátis
                   <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </LandingCtaLink>
+                <a
+                  href="#laudo"
+                  className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold border border-[var(--card-border)] text-[var(--text-main)] hover:border-[var(--sheet-line)] transition-colors focus-visible:ring-2 ring-[var(--primary)] outline-none touch-manipulation"
+                >
+                  Ver modelo do laudo
+                </a>
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 font-mono-data text-[11px] text-[var(--text-muted)] uppercase tracking-wider">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 font-mono-data text-[10px] sm:text-[11px] text-[var(--text-muted)] uppercase tracking-wider">
                 <span aria-hidden="true" className="text-[var(--signal-bright)]">✓</span>
                 <span>Sem cartão</span>
                 <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
@@ -293,35 +304,35 @@ export default function LandingPage() {
 
               {/* Especificações — encodadas como ficha técnica */}
               <motion.dl
-                className="grid grid-cols-1 sm:grid-cols-3 gap-px mt-10 bg-[var(--card-border)] border border-[var(--card-border)]"
+                className="grid grid-cols-3 gap-px mt-8 sm:mt-10 bg-[var(--card-border)] border border-[var(--card-border)]"
                 variants={reduceMotion ? undefined : heroSpecStage}
                 initial={reduceMotion ? undefined : 'hidden'}
                 animate={reduceMotion ? undefined : 'show'}
               >
                 {[
-                  { k: 'Saída', v: 'Laudo PDF', sub: 'hash 0DF20434…' },
-                  { k: 'Prova', v: 'Fotos HD', sub: 'galeria + QR' },
-                  { k: 'Rede', v: 'Offline', sub: '100% no pátio' },
+                  { k: 'Saída', v: 'Laudo PDF', sub: 'hash + QR' },
+                  { k: 'Prova', v: 'Fotos HD', sub: 'GPS + hora' },
+                  { k: 'Rede', v: 'Offline', sub: '100% pátio' },
                 ].map(item => (
-                  <motion.div key={item.k} variants={reduceMotion ? undefined : heroSpecCellVariant} className="bg-[var(--bg-main)] px-3 py-3">
-                    <dt className="font-mono-data text-[9px] uppercase tracking-widest text-[var(--text-muted)]">{item.k}</dt>
-                    <dd className="font-display text-lg font-semibold uppercase text-[var(--text-main)] leading-tight mt-0.5">{item.v}</dd>
-                    <dd className="font-mono-data text-[9px] text-[var(--signal-bright)] tracking-wide">{item.sub}</dd>
+                  <motion.div key={item.k} variants={reduceMotion ? undefined : heroSpecCellVariant} className="bg-[var(--bg-main)] px-2 sm:px-3 py-2.5 sm:py-3">
+                    <dt className="font-mono-data text-[8px] sm:text-[9px] uppercase tracking-widest text-[var(--text-muted)]">{item.k}</dt>
+                    <dd className="font-display text-sm sm:text-lg font-semibold uppercase text-[var(--text-main)] leading-tight mt-0.5">{item.v}</dd>
+                    <dd className="font-mono-data text-[8px] sm:text-[9px] text-[var(--signal-bright)] tracking-wide">{item.sub}</dd>
                   </motion.div>
                 ))}
               </motion.dl>
             </div>
 
             {/* Coluna direita: prancha do veículo */}
-            <div className="relative px-5 sm:px-8 py-10 flex flex-col animate-in fade-in slide-in-from-right-8 duration-1000 delay-150 motion-reduce:animate-none">
-              <div className="flex items-center justify-between font-mono-data text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-4">
+            <div className="relative px-4 sm:px-6 md:px-8 py-8 sm:py-10 flex flex-col border-t md:border-t-0 border-[var(--card-border)] animate-in fade-in slide-in-from-right-8 duration-1000 delay-150 motion-reduce:animate-none">
+              <div className="flex items-center justify-between font-mono-data text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-3 sm:mb-4">
                 <span>Vista · Lateral Esq.</span>
                 <span>2 avarias</span>
               </div>
 
-              <div className="relative flex-1 grid place-items-center min-h-[260px]">
+              <div className="relative flex-1 grid place-items-center min-h-[200px] sm:min-h-[260px] md:min-h-[280px]">
                 <div aria-hidden="true" className="absolute inset-x-6 bottom-8 h-px bg-[var(--sheet-line)] opacity-60" />
-                <div aria-hidden="true" className="absolute left-1/2 bottom-6 -translate-x-1/2 font-mono-data text-[9px] text-[var(--text-muted)] tracking-[0.3em] uppercase">eixo de referência</div>
+                <div aria-hidden="true" className="absolute left-1/2 bottom-6 -translate-x-1/2 font-mono-data text-[9px] text-[var(--text-muted)] tracking-[0.3em] uppercase hidden sm:block">eixo de referência</div>
 
                 <VehicleDefs />
                 <ViewTransition name="car-visualizer" share="morph" default="none">
@@ -330,21 +341,27 @@ export default function LandingPage() {
                       <CarLateralLeft damages={HERO_DAMAGES} selectedPartId="car-ll-door-front" onPartClick={()=>{}} onPartHover={()=>{}} />
                     </motion.div>
 
-                    {/* Marcadores de avaria — posicionados em relação ao mesmo container do SVG para manter alinhamento proporcional! */}
-                    <motion.div variants={heroTagVariant} className="absolute top-[45%] left-[28%] flex items-center gap-2 pointer-events-none">
-                      <span className="damage-tag hidden sm:inline-block px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)] rounded whitespace-nowrap shadow-lg">Porta diant. esq. · risco</span>
-                      <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)] shrink-0" />
+                    {/* Marcadores — versão curta no mobile, completa no tablet+ */}
+                    <motion.div variants={heroTagVariant} className="absolute top-[45%] left-[28%] flex items-center gap-1.5 sm:gap-2 pointer-events-none">
+                      <span className="damage-tag inline-block px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)] rounded whitespace-nowrap shadow-lg text-[8px] sm:text-[10px]">
+                        <span className="sm:hidden">Porta D · risco</span>
+                        <span className="hidden sm:inline">Porta diant. esq. · risco</span>
+                      </span>
+                      <span aria-hidden="true" className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)] shrink-0" />
                     </motion.div>
-                    <motion.div variants={heroTagVariant} className="absolute top-[45%] left-[58%] flex items-center gap-2 pointer-events-none">
-                      <span aria-hidden="true" className="w-2.5 h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)] shrink-0" />
-                      <span className="damage-tag hidden sm:inline-block px-2 py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)] rounded whitespace-nowrap shadow-lg">Porta tras. esq. · risco</span>
+                    <motion.div variants={heroTagVariant} className="absolute top-[45%] left-[58%] flex items-center gap-1.5 sm:gap-2 pointer-events-none">
+                      <span aria-hidden="true" className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[var(--severity-low)] shadow-[0_0_10px_var(--severity-low)] shrink-0" />
+                      <span className="damage-tag inline-block px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[var(--card-bg-solid)] border border-[var(--severity-low)]/70 text-[var(--text-main)] rounded whitespace-nowrap shadow-lg text-[8px] sm:text-[10px]">
+                        <span className="sm:hidden">Porta T · risco</span>
+                        <span className="hidden sm:inline">Porta tras. esq. · risco</span>
+                      </span>
                     </motion.div>
                   </HeroCarStage>
                 </ViewTransition>
               </div>
 
               {/* Legenda de severidade */}
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-5 mt-2 border-t border-[var(--card-border)] font-mono-data text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
+              <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-2 pt-4 sm:pt-5 mt-2 border-t border-[var(--card-border)] font-mono-data text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
                 {[
                   { c: 'var(--severity-low)', l: 'Leve' },
                   { c: 'var(--severity-medium)', l: 'Média' },
@@ -361,23 +378,25 @@ export default function LandingPage() {
         </div>
       </main>
 
+      <AudienceStrip />
+
       {/* Seção Como Funciona */}
-      <section className="w-full max-w-6xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-16 text-left">
-        <Reveal className="text-center mb-12 flex flex-col items-center">
+      <section className="w-full max-w-6xl mx-auto py-12 sm:py-16 px-4 sm:px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-10 sm:mt-16 text-left">
+        <Reveal className="text-center mb-8 sm:mb-12 flex flex-col items-center">
           <div className="inline-flex items-center gap-2 font-mono-data text-[11px] tracking-[0.2em] text-[var(--signal-bright)] uppercase mb-4">
             <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
             Fluxo de Trabalho
             <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
           </div>
-          <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance]">
             Da placa ao laudo assinado <span className="text-[var(--signal-bright)]">em 3 passos</span>
           </h2>
-          <p className="text-sm text-[var(--text-muted)] mt-3 max-w-xl">
+          <p className="text-sm text-[var(--text-muted)] mt-3 max-w-xl px-1">
             O que no papel leva 20 minutos, você faz no pátio em poucos toques, com prova fotográfica e PDF pronto para enviar.
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {[
             {
               step: '01',
@@ -395,16 +414,18 @@ export default function LandingPage() {
               desc: 'Vistoriador e cliente assinam digitalmente na tela do celular. O laudo em PDF inviolável com hash SHA-256 é gerado e enviado por WhatsApp.'
             }
           ].map((item, idx) => (
-            <Reveal key={idx} delay={idx * 90} className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-all duration-300 relative group">
-              <div className="font-mono-data text-4xl font-bold text-[var(--signal)]/25 group-hover:text-[var(--signal-bright)]/60 transition-colors absolute top-4 right-6">
+            <Reveal key={idx} delay={idx * 90} className={`glass-card p-6 sm:p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-all duration-300 relative group ${idx === 2 ? 'sm:col-span-2 lg:col-span-1' : ''}`}>
+              <div className="font-mono-data text-3xl sm:text-4xl font-bold text-[var(--signal)]/25 group-hover:text-[var(--signal-bright)]/60 transition-colors absolute top-4 right-5 sm:right-6">
                 {item.step}
               </div>
-              <h3 className="font-display text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mt-4 mb-2">{item.title}</h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
+              <h3 className="font-display text-lg sm:text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mt-4 mb-2 pr-10">{item.title}</h3>
+              <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
             </Reveal>
           ))}
         </div>
       </section>
+
+      <LossHookSection />
 
       {/* Vídeo promo — abaixo da dobra, sem autoplay */}
       <LandingPromoVideo />
@@ -432,7 +453,7 @@ export default function LandingPage() {
       <FloatingWhatsAppButton />
 
       {/* Footer */}
-      <footer className="w-full px-8 py-8 flex flex-col gap-6 text-[10px] font-black tracking-widest text-[var(--text-muted)] uppercase shrink-0 z-50 border-t border-[var(--card-border)]/20 bg-[var(--panel-bg)]">
+      <footer className="w-full px-4 sm:px-8 py-8 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-8 flex flex-col gap-6 text-[10px] font-black tracking-widest text-[var(--text-muted)] uppercase shrink-0 z-50 border-t border-[var(--card-border)]/20 bg-[var(--panel-bg)]">
         {/* Legal Info & Disclaimer */}
         <div className="w-full flex flex-col gap-2 text-center md:text-left text-[9px] font-semibold tracking-normal normal-case border-b border-[var(--card-border)]/10 pb-6 opacity-75">
           <p>
@@ -445,12 +466,14 @@ export default function LandingPage() {
         </div>
         
         {/* Bottom row */}
-        <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex gap-8">
-            <span>© 2026 Danos Aparentes</span>
-            <span className="hidden md:inline">Vistoria Digital de Alta Fidelidade</span>
+        <div className="w-full flex flex-col gap-5">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div className="flex gap-4 sm:gap-8 flex-wrap justify-center">
+              <span>© 2026 Danos Aparentes</span>
+              <span className="hidden md:inline">Vistoria Digital de Alta Fidelidade</span>
+            </div>
           </div>
-          <div className="flex gap-8 flex-wrap justify-center">
+          <nav aria-label="Links do rodapé" className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap gap-x-4 gap-y-3 justify-items-center lg:justify-center text-center">
             <a href="/locadoras" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Locadoras</a>
             <a href="/oficinas" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Oficinas</a>
             <a href="/seguradoras" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Seguradoras</a>
@@ -462,7 +485,7 @@ export default function LandingPage() {
             <a href="/privacidade" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Privacidade</a>
             <a href="/termos" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Termos de Uso</a>
             <a href="/suporte" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Suporte</a>
-          </div>
+          </nav>
         </div>
       </footer>
     </div>

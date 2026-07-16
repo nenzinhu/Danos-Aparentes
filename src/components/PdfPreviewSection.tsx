@@ -63,15 +63,15 @@ const MODEL = {
 
 export default function PdfPreviewSection() {
   return (
-    <section id="laudo" className="w-full max-w-6xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 text-left scroll-mt-24">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    <section id="laudo" className="w-full max-w-6xl mx-auto py-12 sm:py-16 px-4 sm:px-6 z-10 relative border-t border-[var(--card-border)]/40 text-left scroll-mt-24">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center">
         {/* Coluna Esquerda: Mockup Visual do PDF */}
         <div className="lg:col-span-7 flex flex-col items-center gap-4 order-2 lg:order-1">
           <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--signal-bright)]">
             Modelo · Relatório de Vistoria Veicular
           </span>
 
-          <div className="w-full max-w-[480px] rounded-2xl shadow-2xl p-6 border relative overflow-hidden text-left" style={{ minHeight: '580px', fontFamily: MODEL.font, background: MODEL.bg, color: MODEL.text, borderColor: MODEL.border }}>
+          <div className="pdf-mock-frame w-full max-w-[480px] rounded-2xl shadow-2xl p-4 sm:p-6 border relative overflow-hidden text-left" style={{ minHeight: '480px', fontFamily: MODEL.font, background: MODEL.bg, color: MODEL.text, borderColor: MODEL.border }}>
 
             {/* Detalhe Superior colorido */}
             <div className="absolute top-0 left-0 right-0 h-1" style={{ background: MODEL.bar }} />
@@ -259,12 +259,18 @@ export default function PdfPreviewSection() {
         {/* Coluna Direita: Informações explicativas */}
         <div className="lg:col-span-5 space-y-6 order-1 lg:order-2">
           <Reveal className="space-y-6">
-          <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance]">
             Laudos PDF invioláveis, prontos para enviar
           </h2>
           <p className="text-sm text-[var(--text-muted)] leading-relaxed">
             Ao concluir a vistoria, o sistema gera instantaneamente um PDF pronto para enviar, com identificação do veículo, fotos anexadas, diagrama de danos, hash de validação e as assinaturas colhidas na tela. Veja ao lado um modelo real de Relatório de Vistoria Veicular gerado pelo app.
           </p>
+          <a
+            href="#pricing"
+            className="inline-flex sm:hidden items-center gap-2 text-xs font-bold text-[var(--primary)] hover:underline"
+          >
+            Ver planos e começar o teste →
+          </a>
           </Reveal>
 
           <ul className="space-y-3.5">

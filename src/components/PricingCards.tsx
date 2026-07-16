@@ -18,9 +18,9 @@ export default function PricingCards() {
   const priceLabel = `R$ ${price.toFixed(2).replace('.', ',')}`;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-8 items-stretch max-w-4xl mx-auto">
       {/* Plano Pro */}
-      <div className="glass-card flex flex-col justify-between p-8 relative overflow-hidden group border border-[var(--primary)]/20 hover:border-[var(--primary)]/40 transition-all duration-300 shadow-[0_0_30px_var(--primary-glow)]">
+      <div className="glass-card flex flex-col justify-between p-5 sm:p-8 relative overflow-hidden group border border-[var(--primary)]/20 hover:border-[var(--primary)]/40 transition-all duration-300 shadow-[0_0_30px_var(--primary-glow)]">
         <div className="absolute top-0 right-0 bg-[var(--primary)] text-[var(--bg-main)] text-[10px] font-black tracking-wider uppercase px-4 py-1.5 rounded-bl-xl">
           Mais Popular
         </div>
@@ -154,7 +154,7 @@ export default function PricingCards() {
       </div>
 
       {/* Plano Corporativo */}
-      <div className="glass-card flex flex-col justify-between p-8 relative overflow-hidden group border border-[var(--card-border)]/50 hover:border-[var(--primary)]/20 transition-all duration-300">
+      <div className="glass-card flex flex-col justify-between p-5 sm:p-8 relative overflow-hidden group border border-[var(--card-border)]/50 hover:border-[var(--primary)]/20 transition-all duration-300">
         <div>
           <h3 className="text-xl font-extrabold text-[var(--text-main)] tracking-wide">Corporativo</h3>
           <p className="text-xs text-[var(--text-muted)] mt-1">Para grandes frotistas, locadoras e concessionárias.</p>

@@ -31,17 +31,17 @@ export default function LandingPromoVideo() {
   }
 
   return (
-    <section className="w-full max-w-6xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-4">
+    <section className="w-full max-w-6xl mx-auto py-12 sm:py-16 px-4 sm:px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-4">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
-        <Reveal className="text-left flex flex-col items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.1fr_0.9fr] gap-8 md:gap-10 lg:gap-14 items-center">
+        <Reveal className="text-left flex flex-col items-start order-2 md:order-1">
           <div className="inline-flex items-center gap-2 font-mono-data text-[11px] tracking-[0.2em] text-[var(--signal-bright)] uppercase mb-4">
             <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
             Como funciona em 60s
             <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
           </div>
-          <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance]">
             Do papel ao laudo{' '}
             <span className="text-[var(--signal-bright)]">em poucos toques</span>
           </h2>
@@ -49,13 +49,13 @@ export default function LandingPromoVideo() {
             Veja a diferença: prancheta e redigitação de um lado; marcação no diagrama, assinatura na
             tela e PDF com hash e QR Code do outro — inclusive offline.
           </p>
-          <LandingCtaLink className="mt-7 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 transition-[transform,background-color] motion-safe:hover:-translate-y-0.5 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none">
+          <LandingCtaLink className="mt-7 w-full sm:w-auto justify-center inline-flex items-center gap-2 px-5 py-3 sm:py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 transition-[transform,background-color] motion-safe:hover:-translate-y-0.5 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none touch-manipulation">
             Testar 7 dias grátis
           </LandingCtaLink>
         </Reveal>
 
-        <Reveal delay={80} className="flex flex-col items-center lg:items-end">
-          <div className="w-full max-w-[280px] overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black shadow-xl">
+        <Reveal delay={80} className="flex flex-col items-center md:items-end order-1 md:order-2">
+          <div className="w-full max-w-[240px] sm:max-w-[280px] md:max-w-[300px] overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black shadow-xl">
             <video
               src={SRC}
               poster={POSTER}
@@ -66,7 +66,7 @@ export default function LandingPromoVideo() {
               className="w-full h-auto aspect-[9/16]"
             />
           </div>
-          <p className="mt-3 text-center lg:text-right text-xs text-[var(--text-muted)] max-w-[280px]">
+          <p className="mt-3 text-center md:text-right text-xs text-[var(--text-muted)] max-w-[280px]">
             58 segundos · play quando quiser
           </p>
         </Reveal>

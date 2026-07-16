@@ -639,6 +639,37 @@ html:not(.light) select option {
   .main-grid { grid-template-columns: 1fr !important; }
 }
 
+/* ── Landing: respiro para sticky CTA + tipografia fluida ── */
+.landing-main {
+  scroll-margin-top: 4.5rem;
+}
+
+@media (max-width: 1023px) {
+  /* Evita conteúdo escondido atrás do sticky CTA / WhatsApp */
+  body:has(.landing-main) {
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .sheet-frame {
+    border-radius: 0;
+  }
+
+  /* Mock do PDF: altura menor no telefone */
+  .pdf-mock-frame {
+    min-height: 0 !important;
+    padding: 1rem !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1023px) {
+  /* Tablet: hero em 2 colunas já via Tailwind; reforça área de toque */
+  .landing-main .sheet-frame {
+    margin-inline: auto;
+  }
+}
+
 /* ── Light-mode contrast fixes (WCAG 2.1 4.5:1) ──────────────── */
 html.light .glass-card label,
 html.light .glass-card label span,
