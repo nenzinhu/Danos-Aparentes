@@ -9,7 +9,21 @@ import {
 describe('signatureLink', () => {
   afterEach(() => {
     delete process.env.SIGNATURE_LINK_SECRET
-    delete process.env.SUPABASE_SERVICE_ROLE_KEY
+  })
+
+  it('falha ao criar token sem SIGNATURE_LINK_SECRET', () => {
+    expect(() => createSignatureToken('insp-1')).toThrow('SIGNATURE_LINK_SECRET não configurado')
+  })
+
+  it('não usa SUPABASE_SERVICE_ROLE_KEY como fallback', () => {
+    process.env.SUPABASE_SERVICE_ROLE_KEY = 'service-role-only'
+    expect(() => createSignatureToken('insp-1')).toThrow('SIGNATURE_LINK_SECRET não configurado')
+    expect(verifySignatureToken('a.b.c')).toBeNull()
+  })
+
+  it('rejeita SIGNATURE_LINK_SECRET vazio ou só espaços', () => {
+    process.env.SIGNATURE_LINK_SECRET = '   '
+    expect(() => createSignatureToken('insp-1')).toThrow('SIGNATURE_LINK_SECRET não configurado')
   })
 
   it('round-trip: cria e valida token', () => {

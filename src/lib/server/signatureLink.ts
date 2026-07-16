@@ -7,12 +7,9 @@ const DEFAULT_TTL_MS = 7 * 24 * 60 * 60 * 1000
 export const MAX_SIGNATURE_DATA_URL_CHARS = 220_000
 
 function getSecret(): string {
-  const secret =
-    process.env.SIGNATURE_LINK_SECRET ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    ''
+  const secret = process.env.SIGNATURE_LINK_SECRET?.trim() ?? ''
   if (!secret) {
-    throw new Error('SIGNATURE_LINK_SECRET (ou SUPABASE_SERVICE_ROLE_KEY) não configurado')
+    throw new Error('SIGNATURE_LINK_SECRET não configurado')
   }
   return secret
 }
