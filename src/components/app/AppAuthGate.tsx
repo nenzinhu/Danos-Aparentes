@@ -1,12 +1,29 @@
 'use client';
-import React, { Suspense, ViewTransition } from 'react'
+import React, { Suspense, useEffect, ViewTransition } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { DirectionalTransition } from '@/src/app/DirectionalTransition'
 import Header from '@/src/components/Header'
 import Paywall from '@/src/components/Paywall'
 import Login from '@/src/views/Login'
 import { supabaseEnabled } from '@/src/lib/supabase'
+import { getSafeReturnTo } from '@/src/lib/safeReturnTo'
 import type { Session } from '@supabase/supabase-js'
 import type { SubscriptionInfo } from '@/src/hooks/useSubscription'
+
+function ReturnToRedirect({ session }: { session: Session | null }) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const raw = searchParams.get('returnTo')
+    if (!session || !raw) return
+    const returnTo = getSafeReturnTo(raw)
+    if (returnTo === '/app') return
+    router.replace(returnTo)
+  }, [session, searchParams, router])
+
+  return null
+}
 
 interface AppAuthGateProps {
   session: Session | null
@@ -25,6 +42,17 @@ interface AppAuthGateProps {
   onSignUp: (email: string, password: string) => Promise<void>
   onResetPassword: (email: string) => Promise<void>
   children: React.ReactNode
+}
+
+function withReturnToRedirect(session: Session | null, node: React.ReactNode) {
+  return (
+    <>
+      <Suspense fallback={null}>
+        <ReturnToRedirect session={session} />
+      </Suspense>
+      {node}
+    </>
+  )
 }
 
 export default function AppAuthGate({
@@ -46,7 +74,7 @@ export default function AppAuthGate({
   children,
 }: AppAuthGateProps) {
   if (supabaseEnabled && (authLoading || (session && subLoading))) {
-    return (
+    return withReturnToRedirect(session, (
       <DirectionalTransition>
         <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center pb-12">
           <ViewTransition name="persistent-nav" default="none">
@@ -65,7 +93,7 @@ export default function AppAuthGate({
           <div className="flex-1 flex items-center justify-center text-[var(--text-muted)]">Carregando…</div>
         </div>
       </DirectionalTransition>
-    )
+    ))
   }
 
   if (supabaseEnabled && !session) {
@@ -77,8 +105,10 @@ export default function AppAuthGate({
   }
 
   if (supabaseEnabled && session && subscription && !subscription.hasAccess) {
-    return <Paywall status={subscription.status} onSignOut={signOut} />
+    return withReturnToRedirect(session, (
+      <Paywall status={subscription.status} onSignOut={signOut} />
+    ))
   }
 
-  return <>{children}</>
+  return withReturnToRedirect(session, children)
 }

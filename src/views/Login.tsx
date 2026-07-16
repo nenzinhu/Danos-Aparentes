@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Logo from '../components/Logo'
 import { trackCompleteRegistration } from '@/src/lib/analytics/pixels'
+import { getSafeReturnTo } from '@/src/lib/safeReturnTo'
 
 interface Props {
   onSignIn: (email: string, password: string) => Promise<void>
@@ -13,7 +14,9 @@ interface Props {
 type Mode = 'login' | 'signup' | 'reset'
 
 export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
+  const router = useRouter()
   const searchParams = useSearchParams()
+  const returnTo = getSafeReturnTo(searchParams.get('returnTo'))
   const [mode, setMode] = useState<Mode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -33,6 +36,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
     try {
       if (mode === 'login') {
         await onSignIn(email, password)
+        router.replace(returnTo)
       } else if (mode === 'signup') {
         await onSignUp(email, password)
         trackCompleteRegistration()

@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { useAuth } from '@/src/hooks/useAuth'
 import { useSubscription } from '@/src/hooks/useSubscription'
 import { whatsappLink } from '@/src/lib/whatsapp'
+import { loginUrlWithReturnTo } from '@/src/lib/safeReturnTo'
 
 const MONTHLY_BRL = 49.9
 const DURATION_OPTIONS = [1, 3, 6, 12] as const
@@ -95,10 +96,11 @@ function PagamentoPixContent() {
   }
 
   if (!session) {
+    const loginHref = loginUrlWithReturnTo(`/pagamento-pix?duration=${durationMonths}`)
     return (
       <main className="min-h-screen flex flex-col items-center justify-center gap-4 px-4 text-center">
         <p className="text-sm text-[var(--text-muted)]">Você precisa entrar na sua conta para pagar com PIX.</p>
-        <Link href="/app" className="text-sm font-bold text-[var(--primary)] hover:underline">
+        <Link href={loginHref} className="text-sm font-bold text-[var(--primary)] hover:underline">
           Fazer login →
         </Link>
       </main>
