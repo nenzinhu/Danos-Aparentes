@@ -15,6 +15,17 @@
         "scripts/project_scaffolder.py"
       ],
       "installed_at": "2026-07-04T19:40:07.426Z"
+    },
+    "tech-innovation-mentor": {
+      "version": "1.0.0",
+      "domain": "strategy",
+      "target": "claude",
+      "path": ".claude\\skills\\tech-innovation-mentor",
+      "files": [
+        "SKILL.md",
+        "references/innovation-frameworks.md"
+      ],
+      "installed_at": "2026-07-16T15:55:00.000Z"
     }
   }
 }
