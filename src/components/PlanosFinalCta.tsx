@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Link from 'next/link';
 import LandingCtaLink from './LandingCtaLink';
 import { buttonVariants } from './ui/Button';
 
@@ -13,6 +14,11 @@ export default function PlanosFinalCta() {
       <LandingCtaLink className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}>
         Testar 7 dias grátis
       </LandingCtaLink>
+      <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
+        <Link href="/pagamento-pix?duration=1" className="font-bold text-[var(--primary)] hover:underline">
+          Prefere PIX? Pague agora sem cartão
+        </Link>
+      </p>
     </div>
   );
 }
