@@ -3,6 +3,7 @@ import type { VehicleInfo } from '../../types'
 import SignaturePad from '../SignaturePad'
 import SpeechButton from '../SpeechButton'
 import { ResolvedPhoto } from '../ResolvedPhoto'
+import PhotoAttachButtons from '../PhotoAttachButtons'
 import Button from '../ui/Button'
 import { inputClasses, labelClasses, type CustomFieldDef } from './constants'
 import { TrashIcon } from './icons'
@@ -91,16 +92,11 @@ export default function WizardStepExtras({
             </div>
           ))}
 
-          <label className={`h-11 rounded-lg border border-dashed flex items-center justify-center text-[0.8rem] gap-1.5 font-bold font-outfit transition-colors ${
-            interiorCompressing
-              ? 'border-sky-500/40 bg-sky-500/10 text-sky-400 cursor-wait'
-              : 'border-sky-500/30 bg-sky-500/5 text-sky-500 hover:bg-sky-500/10 cursor-pointer'
-          }`}>
-            {interiorCompressing ? '⏳ Comprimindo…' : '📷 Anexar Foto do Interior'}
-            <input type="file" accept="image/*" capture="environment" className="hidden"
-              disabled={interiorCompressing}
-              onChange={e => { if (e.target.files?.[0]) handleInteriorPhoto(e.target.files[0]) }} />
-          </label>
+          <PhotoAttachButtons
+            label="foto do interior"
+            compressing={interiorCompressing}
+            onFile={handleInteriorPhoto}
+          />
         </div>
       </div>
 
