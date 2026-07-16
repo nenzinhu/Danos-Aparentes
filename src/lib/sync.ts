@@ -88,17 +88,29 @@ async function deleteRemoteReport(id: string, userId: string) {
 
 const MAX_RETRIES = 5
 
+function errorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message
+  if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+    return (err as { message: string }).message
+  }
+  return String(err)
+}
+
 async function logSyncError(userId: string, item: SyncQueueItem, error: unknown) {
   if (!supabase) return
-  const message = error instanceof Error ? error.message : String(error)
-  await supabase.from('sync_errors').insert({
-    user_id: userId,
-    type: item.type,
-    report_id: item.reportId,
-    error: message,
-    retry_count: item.retry_count,
-    timestamp: Date.now()
-  })
+  const message = errorMessage(error)
+  try {
+    await supabase.from('sync_errors').insert({
+      user_id: userId,
+      type: item.type,
+      report_id: item.reportId,
+      error: message,
+      retry_count: item.retry_count,
+      timestamp: Date.now(),
+    })
+  } catch {
+    // sync_errors is best-effort telemetry; never block queue drain
+  }
 }
 
 export async function flushQueue(userId: string): Promise<boolean> {
@@ -124,7 +136,7 @@ export async function flushQueue(userId: string): Promise<boolean> {
     } catch (err: unknown) {
       hasErrors = true
       const newRetryCount = item.retry_count + 1
-      const lastError = err instanceof Error ? err.message : String(err)
+      const lastError = errorMessage(err)
 
       if (newRetryCount >= MAX_RETRIES) {
         await logSyncError(userId, item, err)
@@ -275,12 +287,17 @@ export function useSyncStatus(userId: string | undefined) {
     tryFlush()
     const onOnline = () => tryFlush()
     const onOffline = () => setStatus('offline')
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') tryFlush()
+    }
     window.addEventListener('online', onOnline)
     window.addEventListener('offline', onOffline)
+    document.addEventListener('visibilitychange', onVisible)
     const interval = setInterval(tryFlush, 30000)
     return () => {
       window.removeEventListener('online', onOnline)
       window.removeEventListener('offline', onOffline)
+      document.removeEventListener('visibilitychange', onVisible)
       clearInterval(interval)
     }
   }, [userId, tryFlush])

@@ -10,12 +10,23 @@ import type { SavedReport } from '../types'
 
 const dbState = {
   saved: new Map<string, SavedReport>(),
-  queue: [] as { type: 'upsert' | 'delete'; reportId: string; report?: SavedReport }[],
+  queue: [] as {
+    qid: number
+    type: 'upsert' | 'delete'
+    reportId: string
+    report?: SavedReport
+    timestamp: number
+    retry_count: number
+    last_error?: string
+  }[],
   deleted: [] as string[],
+  nextQid: 1,
 }
 
 const remoteState = {
   inspections: [] as SavedReport[],
+  syncErrors: [] as Record<string, unknown>[],
+  upsertShouldFail: false,
 }
 
 vi.mock('./db', () => ({
@@ -24,22 +35,68 @@ vi.mock('./db', () => ({
     getSyncQueue: async () => dbState.queue,
     putSaved: async (r: SavedReport) => { dbState.saved.set(r.id, r) },
     deleteSaved: async (id: string) => { dbState.deleted.push(id); dbState.saved.delete(id) },
-    addToSyncQueue: async (item: { type: 'upsert' | 'delete'; reportId: string; report?: SavedReport }) => {
-      dbState.queue.push(item)
+    addToSyncQueue: async (item: {
+      type: 'upsert' | 'delete'
+      reportId: string
+      report?: SavedReport
+      timestamp: number
+    }) => {
+      const queue = dbState.queue
+      if (item.type === 'upsert') {
+        const existing = queue.find(q => q.type === 'upsert' && q.reportId === item.reportId)
+        if (existing) {
+          existing.report = item.report
+          existing.timestamp = item.timestamp
+          existing.last_error = undefined
+          return
+        }
+      }
+      if (item.type === 'delete') {
+        dbState.queue = queue.filter(q => !(q.type === 'upsert' && q.reportId === item.reportId))
+        if (dbState.queue.some(q => q.type === 'delete' && q.reportId === item.reportId)) return
+      }
+      dbState.queue.push({
+        ...item,
+        qid: dbState.nextQid++,
+        retry_count: 0,
+      })
+    },
+    removeFromSyncQueue: async (qid: number) => {
+      dbState.queue = dbState.queue.filter(q => q.qid !== qid)
+    },
+    updateSyncQueueItem: async (item: (typeof dbState.queue)[number]) => {
+      const idx = dbState.queue.findIndex(q => q.qid === item.qid)
+      if (idx >= 0) dbState.queue[idx] = item
     },
   },
 }))
 
 vi.mock('./supabase', () => ({
   supabase: {
-    from: (table: string) => ({
-      select: () => ({
-        eq: async () => ({
-          data: table === 'vehicle_inspections' ? remoteState.inspections : [],
-          error: null,
+    from: (table: string) => {
+      if (table === 'sync_errors') {
+        return {
+          insert: async (row: Record<string, unknown>) => {
+            remoteState.syncErrors.push(row)
+            return { error: null }
+          },
+        }
+      }
+      return {
+        select: () => ({
+          eq: async () => ({
+            data: table === 'vehicle_inspections' ? remoteState.inspections : [],
+            error: null,
+          }),
         }),
-      }),
-    }),
+        upsert: async () => ({
+          error: remoteState.upsertShouldFail ? { message: 'upsert failed' } : null,
+        }),
+        delete: () => ({
+          eq: async () => ({ error: null }),
+        }),
+      }
+    },
   },
   supabaseEnabled: true,
 }))
@@ -53,15 +110,22 @@ vi.mock('./reportMapping', () => ({
 vi.mock('./photoStore', () => ({
   normalizeDamagePhotos: (photos: string[]) => photos,
   prefetchReportPhotoCache: vi.fn(async () => {}),
-  uploadDamagePhotosForSync: vi.fn(),
-  uploadInteriorPhotosForSync: vi.fn(),
+  uploadDamagePhotosForSync: vi.fn(async (damages: SavedReport['damages']) => ({
+    remoteDamages: damages,
+    localDamages: damages,
+  })),
+  uploadInteriorPhotosForSync: vi.fn(async (photos: string[], notes: string[]) => ({
+    remotePhotos: photos,
+    localPhotos: photos,
+    localNotes: notes,
+  })),
 }))
 
 vi.mock('./photoStorage', () => ({
   deleteInspectionPhotos: vi.fn(async () => {}),
 }))
 
-const { mergeRemoteReports } = await import('./sync')
+const { mergeRemoteReports, flushQueue } = await import('./sync')
 
 function makeReport(overrides: Partial<SavedReport> = {}): SavedReport {
   return {
@@ -83,7 +147,10 @@ describe('mergeRemoteReports', () => {
     dbState.saved.clear()
     dbState.queue.length = 0
     dbState.deleted.length = 0
+    dbState.nextQid = 1
     remoteState.inspections = []
+    remoteState.syncErrors = []
+    remoteState.upsertShouldFail = false
   })
 
   it('remoto mais novo vence e sobrescreve o local', async () => {
@@ -111,7 +178,7 @@ describe('mergeRemoteReports', () => {
 
   it('não duplica na fila se já existe upsert pendente para o mesmo id', async () => {
     dbState.saved.set('r1', makeReport({ id: 'r1', savedAt: 3000 }))
-    dbState.queue.push({ type: 'upsert', reportId: 'r1' })
+    dbState.queue.push({ qid: 1, type: 'upsert', reportId: 'r1', timestamp: 1000, retry_count: 0 })
     remoteState.inspections = [makeReport({ id: 'r1', savedAt: 1000 })]
 
     await mergeRemoteReports('user-1')
@@ -139,7 +206,7 @@ describe('mergeRemoteReports', () => {
 
   it('preserva um laudo local com upsert pendente mesmo sem contraparte remota', async () => {
     dbState.saved.set('r1', makeReport({ id: 'r1', savedAt: 1000, syncedAt: 1000 }))
-    dbState.queue.push({ type: 'upsert', reportId: 'r1' })
+    dbState.queue.push({ qid: 1, type: 'upsert', reportId: 'r1', timestamp: 1000, retry_count: 0 })
 
     const merged = await mergeRemoteReports('user-1')
 
@@ -155,5 +222,81 @@ describe('mergeRemoteReports', () => {
     expect(merged).toHaveLength(1)
     expect(merged[0].id).toBe('r2')
     expect(dbState.saved.get('r2')?.id).toBe('r2')
+  })
+})
+
+describe('flushQueue', () => {
+  beforeEach(() => {
+    dbState.saved.clear()
+    dbState.queue.length = 0
+    dbState.deleted.length = 0
+    dbState.nextQid = 1
+    remoteState.inspections = []
+    remoteState.syncErrors = []
+    remoteState.upsertShouldFail = false
+  })
+
+  it('drena upsert com sucesso e remove da fila', async () => {
+    const report = makeReport({ id: 'r1', savedAt: 1000 })
+    dbState.queue.push({
+      qid: 1,
+      type: 'upsert',
+      reportId: 'r1',
+      report,
+      timestamp: 1000,
+      retry_count: 0,
+    })
+    dbState.saved.set('r1', report)
+
+    const ok = await flushQueue('user-1')
+
+    expect(ok).toBe(true)
+    expect(dbState.queue).toHaveLength(0)
+    expect(dbState.saved.get('r1')?.syncedAt).toBeTypeOf('number')
+  })
+
+  it('incrementa retry_count em falha transitória', async () => {
+    remoteState.upsertShouldFail = true
+    const report = makeReport({ id: 'r1' })
+    dbState.queue.push({
+      qid: 1,
+      type: 'upsert',
+      reportId: 'r1',
+      report,
+      timestamp: 1000,
+      retry_count: 0,
+    })
+
+    const ok = await flushQueue('user-1')
+
+    expect(ok).toBe(false)
+    expect(dbState.queue).toHaveLength(1)
+    expect(dbState.queue[0].retry_count).toBe(1)
+    expect(dbState.queue[0].last_error).toBe('upsert failed')
+  })
+
+  it('após MAX_RETRIES registra sync_errors e remove da fila', async () => {
+    remoteState.upsertShouldFail = true
+    const report = makeReport({ id: 'r1' })
+    dbState.queue.push({
+      qid: 1,
+      type: 'upsert',
+      reportId: 'r1',
+      report,
+      timestamp: Date.now() - 60_000,
+      retry_count: 4,
+    })
+
+    const ok = await flushQueue('user-1')
+
+    expect(ok).toBe(false)
+    expect(dbState.queue).toHaveLength(0)
+    expect(remoteState.syncErrors).toHaveLength(1)
+    expect(remoteState.syncErrors[0]).toMatchObject({
+      user_id: 'user-1',
+      type: 'upsert',
+      report_id: 'r1',
+      retry_count: 4,
+    })
   })
 })

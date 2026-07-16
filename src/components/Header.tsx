@@ -10,6 +10,7 @@ interface Props {
   onOpenSettings?: () => void
   onSignOut?: () => void
   syncStatus?: 'synced' | 'pending' | 'offline' | 'error'
+  onRetrySync?: () => void
   subscription?: { status: SubscriptionStatus; trialDaysLeft: number }
   onManageSubscription?: () => void
 }
@@ -188,7 +189,7 @@ function ProBenefitsButton({
 
 
 
-function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, onSignOut, syncStatus, subscription, onManageSubscription }: Props) {
+function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, onSignOut, syncStatus, onRetrySync, subscription, onManageSubscription }: Props) {
   return (
     <header className='relative w-full max-w-[1250px] mx-auto text-center px-5 pt-8 sm:pt-12 pb-7 font-outfit'>
 
@@ -212,6 +213,24 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
 
       {/* Floating Action Buttons */}
       <div className='flex items-center justify-center gap-2 mt-5 sm:mt-0 sm:absolute sm:top-10 sm:right-10 z-20'>
+
+        {syncStatus && (
+          (() => {
+            const label = SYNC_LABEL[syncStatus]
+            const canRetry = syncStatus !== 'synced' && !!onRetrySync
+            const Tag = canRetry ? 'button' : 'span'
+            return (
+              <Tag
+                {...(canRetry ? { type: 'button' as const, onClick: onRetrySync } : {})}
+                title={canRetry ? `${label.text} — toque para tentar de novo` : label.text}
+                className={`h-10 px-3 rounded-xl border text-[0.72rem] font-bold backdrop-blur-md shadow-lg flex items-center justify-center gap-1.5 ${label.bgColor} ${label.borderColor} ${label.color} ${canRetry ? 'cursor-pointer hover:opacity-90 active:scale-[0.98] transition-all' : ''}`}
+              >
+                <span aria-hidden>{label.icon}</span>
+                <span className="hidden sm:inline">{label.text}</span>
+              </Tag>
+            )
+          })()
+        )}
 
         {/* Logo da empresa movido para a barra de abas (ver CompanyLogoButton em app/page.tsx) */}
 

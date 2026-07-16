@@ -95,6 +95,26 @@ export const db = {
     return tx<SyncQueueItem[]>('sync_queue', 'readonly', s => s.getAll())
   },
   async addToSyncQueue(item: Omit<SyncQueueItem, 'qid' | 'retry_count'>) {
+    const queue = await this.getSyncQueue()
+    if (item.type === 'upsert') {
+      const existing = queue.find(q => q.type === 'upsert' && q.reportId === item.reportId)
+      if (existing) {
+        return this.updateSyncQueueItem({
+          ...existing,
+          report: item.report,
+          timestamp: item.timestamp,
+          last_error: undefined,
+        })
+      }
+    }
+    if (item.type === 'delete') {
+      for (const pending of queue.filter(q => q.type === 'upsert' && q.reportId === item.reportId)) {
+        await this.removeFromSyncQueue(pending.qid)
+      }
+      if (queue.some(q => q.type === 'delete' && q.reportId === item.reportId)) {
+        return
+      }
+    }
     return tx('sync_queue', 'readwrite', s => s.add({ ...item, retry_count: 0 }))
   },
   async removeFromSyncQueue(qid: number) {

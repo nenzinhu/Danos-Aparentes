@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, ViewTransition } from 'react'
+import React, { useMemo, ViewTransition, useEffect, useRef } from 'react'
 import { DirectionalTransition } from '../DirectionalTransition'
 import { useDamages } from '@/src/hooks/useDamages'
 import { useTts } from '@/src/hooks/useTts'
@@ -24,8 +24,17 @@ export default function AppMainPage() {
   const { damages, addDamage, removeDamage, updateDamage, clearDamages } = useDamages()
   const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts(session?.access_token)
   const { saved, saveReport, deleteReport } = useSavedReports(session?.user.id)
-  const { status: syncStatus } = useSyncStatus(session?.user.id)
+  const { status: syncStatus, tryFlush } = useSyncStatus(session?.user.id)
   const { info: subscription, loading: subLoading, openPortal } = useSubscription(session?.user.id, session?.access_token)
+
+  const hadAccessRef = useRef<boolean | null>(null)
+  useEffect(() => {
+    const hasAccess = subscription?.hasAccess ?? false
+    if (hadAccessRef.current === false && hasAccess) {
+      void tryFlush()
+    }
+    hadAccessRef.current = hasAccess
+  }, [subscription?.hasAccess, tryFlush])
 
   const shell = useAppShellState({ openPortal })
 
@@ -59,6 +68,7 @@ export default function AppMainPage() {
       subLoading={subLoading}
       subscription={subscription}
       syncStatus={syncStatus}
+      onRetrySync={() => { void tryFlush() }}
       darkMode={shell.darkMode}
       toggleDarkMode={shell.toggleDarkMode}
       openSavedModal={shell.openSavedModal}
@@ -80,6 +90,7 @@ export default function AppMainPage() {
               onOpenSettings={() => shell.setSettingsModal(true)}
               onSignOut={supabaseEnabled ? signOut : undefined}
               syncStatus={supabaseEnabled ? syncStatus : undefined}
+              onRetrySync={supabaseEnabled ? () => { void tryFlush() } : undefined}
               subscription={headerSubscription}
               onManageSubscription={shell.handleManageSubscription}
             />

@@ -14,6 +14,7 @@ interface AppAuthGateProps {
   subLoading: boolean
   subscription: SubscriptionInfo | null
   syncStatus: 'synced' | 'pending' | 'offline' | 'error'
+  onRetrySync?: () => void
   darkMode: boolean
   toggleDarkMode: () => void
   openSavedModal: () => void
@@ -32,6 +33,7 @@ export default function AppAuthGate({
   subLoading,
   subscription,
   syncStatus,
+  onRetrySync,
   darkMode,
   toggleDarkMode,
   openSavedModal,
@@ -55,6 +57,7 @@ export default function AppAuthGate({
               onOpenSettings={onOpenSettings}
               onSignOut={supabaseEnabled && session ? signOut : undefined}
               syncStatus={supabaseEnabled && session ? syncStatus : undefined}
+              onRetrySync={supabaseEnabled && session ? onRetrySync : undefined}
               subscription={undefined}
               onManageSubscription={onManageSubscription}
             />
