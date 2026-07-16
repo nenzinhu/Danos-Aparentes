@@ -192,14 +192,46 @@ function PagamentoPixContent() {
           </ul>
 
           {!qrCode && (
-            <button
-              type="button"
-              onClick={() => generate(durationMonths)}
-              disabled={generating}
-              className="w-full py-3 rounded-xl bg-[var(--primary)] text-[var(--bg-main)] text-sm font-bold disabled:opacity-60"
-            >
-              {generating ? 'Gerando cobrança…' : `Gerar PIX · ${formatBRL(total)}`}
-            </button>
+            <div className="space-y-3">
+              <div className="rounded-xl border border-[var(--card-border)]/60 bg-[var(--bg-main)] px-4 py-3">
+                <p className="text-[10px] font-black uppercase tracking-wider text-[var(--signal-bright)] mb-2">
+                  Pagamento seguro
+                </p>
+                <ul className="space-y-1.5 text-[11px] text-[var(--text-muted)]">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
+                    <span>Processado pelo <strong className="text-[var(--text-main)] font-semibold">Mercado Pago</strong></span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
+                    <span>PIX instantâneo — QR Code gerado na hora</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
+                    <span>Acesso liberado assim que o pagamento for confirmado</span>
+                  </li>
+                </ul>
+                <p className="text-[10px] text-[var(--text-muted)] mt-2.5">
+                  Cancele quando quiser pelo portal de assinatura.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => generate(durationMonths)}
+                disabled={generating}
+                className="w-full py-3 rounded-xl bg-[var(--primary)] text-[var(--bg-main)] text-sm font-bold disabled:opacity-60"
+              >
+                {generating ? 'Gerando cobrança…' : `Gerar PIX · ${formatBRL(total)}`}
+              </button>
+
+              <p className="text-center text-[11px] text-[var(--text-muted)]">
+                Prefere testar antes?{' '}
+                <Link href="/app?mode=signup" className="font-bold text-[var(--primary)] hover:underline">
+                  7 dias grátis sem cartão
+                </Link>
+              </p>
+            </div>
           )}
         </section>
 
