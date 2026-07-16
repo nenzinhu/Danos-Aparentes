@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react'
-import { VehicleInfo, CustomField, GeoLocation } from '../types'
+import { VehicleInfo, CustomField, GeoLocation, VehicleType } from '../types'
 import Button from './ui/Button'
 import WizardStepper from './WizardStepper'
 import type { WizardStep } from './wizardTypes'
@@ -37,7 +37,7 @@ interface Props {
   onChange: (info: VehicleInfo) => void
   collapsed?: boolean
   onToggleCollapse?: () => void
-  onVehicleTypeDetected?: (type: 'car' | 'moto' | 'truck' | 'van' | 'bus') => void
+  onVehicleTypeDetected?: (type: VehicleType) => void
   resetToken?: number
   onWizardComplete?: () => void
   /** Disparado quando a placa atinge o formato completo (7 caracteres), independente do resultado da busca de marca/modelo. */

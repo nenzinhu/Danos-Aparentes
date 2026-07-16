@@ -4,7 +4,7 @@ export type Plate = Brand<string, 'Plate'>;
 export type ReportId = Brand<string, 'ReportId'>;
 export type DamageId = Brand<string, 'DamageId'>;
 
-export type VehicleType = 'car' | 'car2d' | 'moto' | 'truck' | 'van' | 'bus' | 'microbus' | 'custom'
+export type VehicleType = 'car' | 'car2d' | 'moto' | 'motoneta' | 'truck' | 'van' | 'bus' | 'microbus' | 'custom'
 export type ViewType = 'lateral-left' | 'lateral-right' | 'frontal' | 'traseira'
 export type DamageType = 'scratch' | 'dent' | 'broken'
 export type Severity = 'low' | 'medium' | 'high'

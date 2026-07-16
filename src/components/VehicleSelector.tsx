@@ -4,8 +4,9 @@ import { VehicleType } from '../types'
 
 export const VEHICLES: { id: VehicleType; label: string; icon: string }[] = [
   { id: 'car', label: 'Carro 4P', icon: '/icons/vehicles/car.svg' },
-  { id: 'car2d', label: 'Carro 2P', icon: '/icons/vehicles/car2d.svg' },
+  { id: 'car2d', label: 'Carro 2/3P', icon: '/icons/vehicles/car2d.svg' },
   { id: 'moto', label: 'Moto', icon: '/icons/vehicles/moto.svg' },
+  { id: 'motoneta', label: 'Motoneta', icon: '/icons/vehicles/moto.svg' },
   { id: 'truck', label: 'Caminhão', icon: '/icons/vehicles/truck.svg' },
   { id: 'bus', label: 'Ônibus', icon: '/icons/vehicles/bus.svg' },
   { id: 'microbus', label: 'Micro-ônibus', icon: '/icons/vehicles/microbus.svg' },

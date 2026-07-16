@@ -5,12 +5,15 @@ export const UF_LIST = [
 
 export const VEHICLE_TYPES = [
   'Passeio (Carro)',
+  'Passeio (Carro 2/3 Portas)',
   'SUV / Crossover',
   'Pickup / Caminhonete',
   'Motocicleta',
+  'Motoneta',
   'Caminhão',
   'Van / Utilitário',
-  'Ônibus / Micro-ônibus',
+  'Ônibus',
+  'Micro-ônibus',
   'Outro',
 ] as const
 
@@ -39,13 +42,15 @@ export const inputClasses =
 export const labelClasses =
   'block text-[0.68rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1'
 
+import type { VehicleType } from '../../types'
+
 export interface FoundData {
   brand: string
   color: string
   city: string
   state: string
   vehicleTypeDesc: string
-  svgType: 'car' | 'moto' | 'truck' | 'van' | 'bus'
+  svgType: Exclude<VehicleType, 'custom'>
   ano: string
   especie: string
 }

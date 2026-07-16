@@ -1,6 +1,7 @@
 'use client';
 import React, { useMemo } from 'react'
 import { SavedReport, VehicleType, Severity } from '../types'
+import { resolveVehicleType } from '../lib/vehicleTypeInference'
 import { usePerformanceTelemetry } from '../hooks/usePerformanceTelemetry'
 
 
@@ -10,8 +11,9 @@ interface Props {
 
 const VEHICLE_NAME: Record<VehicleType, string> = {
   car: 'Automóvel',
-  car2d: 'Carro (2 Portas)',
+  car2d: 'Carro (2/3 Portas)',
   moto: 'Motocicleta',
+  motoneta: 'Motoneta',
   truck: 'Caminhão',
   van: 'Van / Utilitário',
   bus: 'Ônibus',
@@ -23,6 +25,7 @@ const VEHICLE_COLOR: Record<VehicleType, string> = {
   car: '#38bdf8', // sky-400
   car2d: '#0ea5e9', // sky-500
   moto: '#a855f7', // purple-500
+  motoneta: '#c084fc', // purple-400
   truck: '#eab308', // yellow-500
   van: '#14b8a6', // teal-500
   bus: '#f97316', // orange-500
@@ -31,16 +34,7 @@ const VEHICLE_COLOR: Record<VehicleType, string> = {
 }
 
 function getReportVehicleType(r: SavedReport): VehicleType {
-  if (r.damages && r.damages.length > 0) {
-    const type = r.damages[0].vehicle
-    if (type) return type
-  }
-  const text = (r.vehicleInfo.vehicleTypeDesc || '').toLowerCase()
-  if (text.includes('moto')) return 'moto'
-  if (text.includes('caminh')) return 'truck'
-  if (text.includes('ônibus') || text.includes('onibus') || text.includes('ônibus / micro-ônibus')) return 'bus'
-  if (text.includes('van') || text.includes('utilit')) return 'van'
-  return 'car'
+  return resolveVehicleType(r.vehicleInfo.vehicleTypeDesc, r.damages)
 }
 
 export default function DashboardView({ saved }: Props) {
@@ -64,6 +58,7 @@ export default function DashboardView({ saved }: Props) {
       car: 0,
       car2d: 0,
       moto: 0,
+      motoneta: 0,
       truck: 0,
       van: 0,
       bus: 0,

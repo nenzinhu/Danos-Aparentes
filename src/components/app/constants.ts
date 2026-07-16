@@ -11,8 +11,9 @@ export const EMPTY_INFO: VehicleInfo = {
 
 export const VEHICLE_NAME: Record<VehicleType, string> = {
   car: 'Automóvel',
-  car2d: 'Carro (2 Portas)',
-  moto: 'Moto',
+  car2d: 'Carro (2/3 Portas)',
+  moto: 'Motocicleta',
+  motoneta: 'Motoneta',
   truck: 'Caminhão',
   van: 'Utilitário',
   bus: 'Ônibus',

@@ -58,6 +58,12 @@ export const staticVehicleRegistry: Record<VehicleType, Record<ViewType, Compone
     'frontal': MotoFrontal,
     'traseira': MotoTraseira,
   },
+  motoneta: {
+    'lateral-left': MotoLateralLeft,
+    'lateral-right': MotoLateralRight,
+    'frontal': MotoFrontal,
+    'traseira': MotoTraseira,
+  },
   truck: {
     'lateral-left': TruckLateralLeft,
     'lateral-right': TruckLateralRight,

@@ -5,15 +5,7 @@ import { generatePdf } from '@/src/lib/pdf'
 import { captureSvgs } from '@/src/components/ReportActions'
 import { Damage, VehicleType } from '@/src/types'
 
-function getVehicleType(desc: string, damages: Damage[]): VehicleType {
-  if (damages && damages.length > 0 && damages[0].vehicle) return damages[0].vehicle
-  const text = (desc || '').toLowerCase()
-  if (text.includes('moto')) return 'moto'
-  if (text.includes('caminh')) return 'truck'
-  if (text.includes('ônibus') || text.includes('onibus')) return 'bus'
-  if (text.includes('van') || text.includes('utilit')) return 'van'
-  return 'car'
-}
+import { resolveVehicleType } from '@/src/lib/vehicleTypeInference'
 
 interface Props {
   accessToken?: string
@@ -55,7 +47,7 @@ export default function TeamTab({ accessToken, onToast }: Props) {
   const handleDownloadPdf = async (tr: TeamReport) => {
     setDownloadingId(tr.report.id)
     try {
-      const vType = getVehicleType(tr.report.vehicleInfo.vehicleTypeDesc, tr.report.damages)
+      const vType = resolveVehicleType(tr.report.vehicleInfo.vehicleTypeDesc, tr.report.damages)
       const svgData = await captureSvgs(vType, tr.report.damages)
       await generatePdf(tr.report.vehicleInfo, tr.report.damages, svgData, {})
     } catch (err) {

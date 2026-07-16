@@ -2,6 +2,7 @@
 import { useState, useEffect, useDeferredValue } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { SavedReport, VehicleType, Damage } from '../types'
+import { resolveVehicleType } from '../lib/vehicleTypeInference'
 import { generatePdf } from '../lib/pdf'
 import { captureSvgs } from './ReportActions'
 import { VehicleIconSvg } from './VehicleSelector'
@@ -35,19 +36,6 @@ interface Props {
   onDelete: (id: string) => void
   hasAccess?: boolean
   accessToken?: string
-}
-
-function getVehicleType(desc: string, damages: Damage[]): VehicleType {
-  if (damages && damages.length > 0) {
-    const type = damages[0].vehicle
-    if (type) return type
-  }
-  const text = (desc || '').toLowerCase()
-  if (text.includes('moto')) return 'moto'
-  if (text.includes('caminh')) return 'truck'
-  if (text.includes('ônibus') || text.includes('onibus') || text.includes('ônibus / micro-ônibus')) return 'bus'
-  if (text.includes('van') || text.includes('utilit')) return 'van'
-  return 'car'
 }
 
 // Cabeçalho do grupo: "Hoje", "Ontem" ou "Mês de Ano"
@@ -290,7 +278,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
   const handleDownloadPdf = async (r: SavedReport) => {
     setDownloadingId(r.id)
     try {
-      const vType = getVehicleType(r.vehicleInfo.vehicleTypeDesc, r.damages)
+      const vType = resolveVehicleType(r.vehicleInfo.vehicleTypeDesc, r.damages)
       const svgData = await captureSvgs(vType, r.damages)
       const companyName = hasAccess ? (localStorage.getItem('company_name') || '') : ''
       const companyLogo = hasAccess ? (localStorage.getItem('company_logo') || '') : ''
@@ -304,7 +292,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
   }
 
   const renderItem = (r: SavedReport, flatIdx: number) => {
-    const vType = getVehicleType(r.vehicleInfo.vehicleTypeDesc, r.damages)
+    const vType = resolveVehicleType(r.vehicleInfo.vehicleTypeDesc, r.damages)
     const detail = [
       r.vehicleInfo.owner || 'Proprietário não informado',
       r.vehicleInfo.city || null,

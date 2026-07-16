@@ -2,7 +2,7 @@
 import type { WizardStep } from './wizardTypes'
 
 const WIZARD_STEPS: { step: WizardStep; label: string }[] = [
-  { step: 1, label: 'Veículo' },
+  { step: 1, label: 'Dados' },
   { step: 2, label: 'Cliente' },
   { step: 3, label: 'Finalizar' },
 ]

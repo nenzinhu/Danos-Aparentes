@@ -19,8 +19,9 @@ interface Message {
 
 const VEHICLE_NAME: Record<VehicleType, string> = {
   car: 'Automóvel',
-  car2d: 'Carro (2 Portas)',
+  car2d: 'Carro (2/3 Portas)',
   moto: 'Motocicleta',
+  motoneta: 'Motoneta',
   truck: 'Caminhão',
   van: 'Van / Utilitário',
   bus: 'Ônibus',

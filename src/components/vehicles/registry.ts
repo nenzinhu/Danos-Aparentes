@@ -26,6 +26,12 @@ export const vehicleRegistry: VehicleRegistry = {
     'frontal': dynamic(() => import('./MotoFrontal')),
     'traseira': dynamic(() => import('./MotoTraseira')),
   },
+  motoneta: {
+    'lateral-left': dynamic(() => import('./MotoLateralLeft')),
+    'lateral-right': dynamic(() => import('./MotoLateralRight')),
+    'frontal': dynamic(() => import('./MotoFrontal')),
+    'traseira': dynamic(() => import('./MotoTraseira')),
+  },
   truck: {
     'lateral-left': dynamic(() => import('./TruckLateralLeft')),
     'lateral-right': dynamic(() => import('./TruckLateralRight')),
