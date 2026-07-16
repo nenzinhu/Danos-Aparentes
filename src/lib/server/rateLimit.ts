@@ -1,12 +1,59 @@
-// Rate limiter: Upstash Redis REST quando configurado; fallback em memória.
+// Rate limiter: Upstash Redis / Vercel KV quando configurado; fallback em memória.
 // Em multi-instance Vercel o fallback só protege cada instância quente.
+
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
 
 type Bucket = { count: number; resetAt: number }
 
 const buckets = new Map<string, Bucket>()
 const MAX_BUCKETS = 5000
 
+const limiterCache = new Map<string, Ratelimit>()
+let redisClient: Redis | null | undefined
+
 export type RateLimitResult = { allowed: boolean; retryAfterSec: number }
+
+/** True quando UPSTASH_* ou KV_REST_* estão definidos. */
+export function isDistributedRateLimitConfigured(): boolean {
+  return Boolean(getRedisRestCredentials())
+}
+
+function getRedisRestCredentials(): { url: string; token: string } | null {
+  const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN
+  if (!url || !token) return null
+  return { url, token }
+}
+
+function getRedisClient(): Redis | null {
+  if (redisClient !== undefined) return redisClient
+  const creds = getRedisRestCredentials()
+  if (!creds) {
+    redisClient = null
+    return null
+  }
+  redisClient = new Redis({ url: creds.url, token: creds.token })
+  return redisClient
+}
+
+function getDistributedLimiter(limit: number, windowMs: number): Ratelimit | null {
+  const redis = getRedisClient()
+  if (!redis) return null
+
+  const windowSec = Math.max(1, Math.ceil(windowMs / 1000))
+  const cacheKey = `${limit}:${windowSec}`
+  let limiter = limiterCache.get(cacheKey)
+  if (!limiter) {
+    limiter = new Ratelimit({
+      redis,
+      limiter: Ratelimit.fixedWindow(limit, `${windowSec} s`),
+      prefix: 'rl',
+    })
+    limiterCache.set(cacheKey, limiter)
+  }
+  return limiter
+}
 
 function checkRateLimitMemory(
   key: string,
@@ -30,62 +77,31 @@ function checkRateLimitMemory(
   return { allowed: true, retryAfterSec: 0 }
 }
 
-function pruneExpired(now: number) {
-  for (const [k, bucket] of buckets) {
-    if (bucket.resetAt <= now) buckets.delete(k)
-  }
-}
-
-async function checkRateLimitUpstash(
+async function checkRateLimitDistributed(
   key: string,
   limit: number,
   windowMs: number,
 ): Promise<RateLimitResult | null> {
-  const base = process.env.UPSTASH_REDIS_REST_URL
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN
-  if (!base || !token) return null
-
-  const windowSec = Math.max(1, Math.ceil(windowMs / 1000))
-  const windowId = Math.floor(Date.now() / windowMs)
-  const redisKey = `rl:${key}:${windowId}`
+  const limiter = getDistributedLimiter(limit, windowMs)
+  if (!limiter) return null
 
   try {
-    const res = await fetch(`${base}/pipeline`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify([
-        ['INCR', redisKey],
-        ['EXPIRE', redisKey, windowSec],
-      ]),
-    })
-    if (!res.ok) {
-      console.warn('[rateLimit] Upstash HTTP', res.status)
-      return null
-    }
-    const data = (await res.json()) as { result?: number }[]
-    const count = Number(data?.[0]?.result ?? 0)
-    if (!Number.isFinite(count) || count <= 0) return null
-    if (count > limit) {
-      const retryAfterSec = Math.max(1, windowSec - Math.floor(((Date.now() % windowMs) / 1000)))
-      return { allowed: false, retryAfterSec }
-    }
-    return { allowed: true, retryAfterSec: 0 }
+    const { success, reset } = await limiter.limit(key)
+    const retryAfterSec = success ? 0 : Math.max(1, Math.ceil((reset - Date.now()) / 1000))
+    return { allowed: success, retryAfterSec }
   } catch (err) {
     console.warn('[rateLimit] Upstash falhou, usando memória:', err)
     return null
   }
 }
 
-/** Preferencialmente async — usa Redis se UPSTASH_* estiver no env. */
+/** Preferencialmente async — usa Redis/KV se credenciais estiverem no env. */
 export async function checkRateLimit(
   key: string,
   limit: number,
   windowMs: number,
 ): Promise<RateLimitResult> {
-  const distributed = await checkRateLimitUpstash(key, limit, windowMs)
+  const distributed = await checkRateLimitDistributed(key, limit, windowMs)
   if (distributed) return distributed
   return checkRateLimitMemory(key, limit, windowMs)
 }
@@ -97,4 +113,17 @@ export function checkRateLimitSync(
   windowMs: number,
 ): RateLimitResult {
   return checkRateLimitMemory(key, limit, windowMs)
+}
+
+/** Limpa estado in-memory entre testes unitários. */
+export function resetRateLimitMemoryForTests(): void {
+  buckets.clear()
+  limiterCache.clear()
+  redisClient = undefined
+}
+
+function pruneExpired(now: number) {
+  for (const [k, bucket] of buckets) {
+    if (bucket.resetAt <= now) buckets.delete(k)
+  }
 }
