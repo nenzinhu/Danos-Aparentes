@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/src/lib/server/stripeClient';
 import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin';
 import { getUserFromRequest } from '@/src/lib/server/auth';
+import { getTrustedBaseUrl } from '@/src/lib/server/trustedBaseUrl';
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromRequest(req);
@@ -13,7 +14,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Supabase não configurado' }, { status: 500 });
   }
 
-  const origin = req.headers.get('origin') || `https://${req.headers.get('host')}`;
+  const origin = getTrustedBaseUrl({
+    origin: req.headers.get('origin'),
+    host: req.headers.get('host'),
+  });
 
   try {
     const { data: sub } = await supabaseAdmin

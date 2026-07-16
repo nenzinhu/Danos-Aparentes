@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getUserFromRequest } from '@/src/lib/server/auth'
 import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin'
 import { createSignatureToken } from '@/src/lib/server/signatureLink'
+import { getTrustedBaseUrl } from '@/src/lib/server/trustedBaseUrl'
 
 /**
  * Gera um link de assinatura remota com token HMAC (7 dias).
@@ -39,11 +40,11 @@ export async function POST(req: NextRequest) {
 
   try {
     const { token, expiresAt } = createSignatureToken(inspectionId)
-    const origin =
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      req.headers.get('origin') ||
-      `https://${req.headers.get('host')}`
-    const url = `${origin.replace(/\/$/, '')}/assinar/${encodeURIComponent(token)}`
+    const origin = getTrustedBaseUrl({
+      origin: req.headers.get('origin'),
+      host: req.headers.get('host'),
+    })
+    const url = `${origin}/assinar/${encodeURIComponent(token)}`
     return NextResponse.json({ url, token, expiresAt })
   } catch (err) {
     console.error('[create-signature-link] secret:', err)
