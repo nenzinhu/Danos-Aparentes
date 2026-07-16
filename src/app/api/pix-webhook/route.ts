@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
 
   let payment: { status?: string }
   try {
-    payment = await mercadoPagoRequest(`/v1/payments/${paymentIdStr}`, 'GET')
+    payment = (await mercadoPagoRequest(`/v1/payments/${paymentIdStr}`, 'GET')) as { status?: string }
   } catch (err) {
     console.error('[pix-webhook] erro ao buscar pagamento no Mercado Pago:', err)
     return NextResponse.json({ error: 'Failed to fetch payment' }, { status: 502 })
