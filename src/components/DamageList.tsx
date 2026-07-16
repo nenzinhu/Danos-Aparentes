@@ -10,6 +10,7 @@ import {
   updatePhotoUploadProgress,
 } from '../lib/photoUploadProgress'
 import { ResolvedPhoto } from './ResolvedPhoto'
+import PhotoAttachButtons from './PhotoAttachButtons'
 import SpeechButton from './SpeechButton'
 import { isNewDamage, type PreviousReportSummary } from '../lib/reportComparison'
 
@@ -20,6 +21,7 @@ interface Props {
   /** Laudo anterior do mesmo veículo (por placa), usado para marcar avarias novas. */
   previousReport?: PreviousReportSummary | null
   accessToken?: string
+  onToast?: (msg: string) => void
 }
 
 interface AiSuggestion {
@@ -29,8 +31,14 @@ interface AiSuggestion {
 
 async function photoRefToDataUrl(ref: string): Promise<string> {
   const resolved = await resolvePhotoUrl(ref)
+  if (!resolved) {
+    throw new Error('Foto da avaria não encontrada neste aparelho')
+  }
   if (resolved.startsWith('data:')) return resolved
   const res = await fetch(resolved)
+  if (!res.ok) {
+    throw new Error('Não foi possível carregar a foto para análise')
+  }
   const blob = await res.blob()
   return await new Promise<string>((resolve, reject) => {
     const reader = new FileReader()
@@ -46,7 +54,7 @@ const VIEW_LABEL = {
   'lateral-left': 'Lat. Esq.', 'lateral-right': 'Lat. Dir.', frontal: 'Frontal', traseira: 'Traseira'
 } satisfies Record<ViewType, string>
 
-export default function DamageList({ damages, onRemove, onUpdate, previousReport, accessToken }: Props) {
+export default function DamageList({ damages, onRemove, onUpdate, previousReport, accessToken, onToast }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [photoViewer, setPhotoViewer] = useState<string | null>(null)
   const [compressingId, setCompressingId] = useState<string | null>(null)
@@ -55,7 +63,14 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
   const prefersReducedMotion = useReducedMotion()
 
   async function handleAnalyze(d: Damage) {
-    if (!d.photos[0] || !accessToken) return
+    if (!d.photos[0]) {
+      onToast?.('❌ Adicione uma foto da avaria antes de analisar')
+      return
+    }
+    if (!accessToken) {
+      onToast?.('❌ Entre na sua conta para usar a análise por IA')
+      return
+    }
     setAnalyzingId(d.id)
     try {
       const photo = await photoRefToDataUrl(d.photos[0])
@@ -64,12 +79,17 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({ photo, partName: d.partName }),
       })
-      if (!res.ok) return
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        onToast?.(`❌ ${err.error || 'Não foi possível analisar a foto'}`)
+        return
+      }
       const data = await res.json()
       setSuggestions(prev => ({ ...prev, [d.id]: { severity: data.severity, description: data.description } }))
       setExpandedId(d.id)
     } catch (e) {
       console.error('Failed to analyze damage photo:', e)
+      onToast?.(e instanceof Error ? `❌ ${e.message}` : '❌ Falha ao analisar a foto')
     } finally {
       setAnalyzingId(null)
     }
@@ -348,17 +368,11 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                         </div>
                       ))}
 
-                      {/* Add photo button */}
-                      <label className={`h-14 rounded-xl border border-dashed flex items-center justify-center text-sm gap-2.5 font-bold font-outfit transition-colors ${
-                        compressingId === d.id
-                          ? 'border-sky-500/40 bg-sky-500/10 text-sky-400 cursor-wait'
-                          : 'border-sky-500/30 bg-sky-500/5 text-sky-500 hover:bg-sky-500/10 cursor-pointer'
-                      }`}>
-                        {compressingId === d.id ? '⏳ Comprimindo…' : '📷 Anexar Foto da Avaria'}
-                        <input type="file" accept="image/*" capture="environment" className="hidden"
-                          disabled={compressingId === d.id}
-                          onChange={e => { if (e.target.files?.[0]) handlePhoto(d.id, e.target.files[0]) }} />
-                      </label>
+                      <PhotoAttachButtons
+                        label="foto da avaria"
+                        compressing={compressingId === d.id}
+                        onFile={file => handlePhoto(d.id, file)}
+                      />
                     </div>
                   </div>
                 </div>

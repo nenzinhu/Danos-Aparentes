@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseEnabled } from '@/src/lib/supabase';
 import { getClientIp, getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
-import { callGeminiVision, getGeminiApiKey } from '@/src/lib/server/geminiVision';
+import { callGeminiVision, getGeminiApiKey, parseImageDataUrl } from '@/src/lib/server/geminiVision';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
 
 /** Varredura Gemini de vista inteira — mais cara que foto única (~8 / 10 min). */
@@ -14,12 +14,6 @@ const MAX_PHOTO_BASE64_LENGTH = 4_000_000; // ~3MB de imagem, suficiente para fo
 const MAX_PARTS = 60;
 const VALID_TYPES = ['scratch', 'dent', 'broken'];
 const VALID_SEVERITIES = ['low', 'medium', 'high'];
-
-function parseDataUrl(dataUrl: string): { mimeType: string; base64: string } | null {
-  const match = /^data:(image\/[a-z]+);base64,(.+)$/i.exec(dataUrl);
-  if (!match) return null;
-  return { mimeType: match[1], base64: match[2] };
-}
 
 interface PartRef {
   id: string;
@@ -84,7 +78,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Nenhuma peça válida informada para esta vista' }, { status: 400 });
     }
 
-    const parsed = parseDataUrl(photo);
+    const parsed = parseImageDataUrl(photo);
     if (!parsed) {
       return NextResponse.json({ error: 'Formato de foto inválido' }, { status: 400 });
     }
@@ -123,8 +117,8 @@ Regras estritas:
       systemInstruction: { parts: [{ text: systemPrompt }] },
       generationConfig: {
         temperature: 0.2,
-        maxOutputTokens: 800,
-        thinkingConfig: { thinkingBudget: 0 },
+        // Sem thinkingConfig: evita 400 em modelos que não aceitam o campo.
+        maxOutputTokens: 1024,
       },
     };
 

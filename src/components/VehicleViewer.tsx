@@ -325,7 +325,8 @@ const AutoDetect = memo(function AutoDetect({
   onToast?: (msg: string) => void
 }) {
   const { vehicleType, viewType, containerRef, onAddDamageDetailed } = useVehicleViewer()
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
+  const galleryInputRef = useRef<HTMLInputElement>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [suggestions, setSuggestions] = useState<DamageSuggestion[] | null>(null)
 
@@ -407,25 +408,46 @@ const AutoDetect = memo(function AutoDetect({
   return (
     <>
       <input
-        ref={fileInputRef}
+        ref={cameraInputRef}
         type="file"
         accept="image/*"
         capture="environment"
         className="hidden"
         onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }}
       />
-      <button
-        type="button"
-        onClick={() => fileInputRef.current?.click()}
-        disabled={analyzing}
-        className="w-full mt-2 py-2.5 rounded-lg font-bold text-xs border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-colors disabled:opacity-50 disabled:cursor-wait flex items-center justify-center gap-2"
-      >
-        {analyzing ? (
-          <>⏳ Analisando foto…</>
-        ) : (
-          <>🤖 Detectar avarias automaticamente</>
-        )}
-      </button>
+      <input
+        ref={galleryInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }}
+      />
+      {analyzing ? (
+        <button
+          type="button"
+          disabled
+          className="w-full mt-2 py-2.5 rounded-lg font-bold text-xs border border-sky-500/30 bg-sky-500/10 text-sky-400 disabled:opacity-50 disabled:cursor-wait flex items-center justify-center gap-2"
+        >
+          ⏳ Analisando foto…
+        </button>
+      ) : (
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => cameraInputRef.current?.click()}
+            className="py-2.5 rounded-lg font-bold text-[0.7rem] sm:text-xs border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-colors flex items-center justify-center gap-1.5 px-2"
+          >
+            📷 Detectar (câmera)
+          </button>
+          <button
+            type="button"
+            onClick={() => galleryInputRef.current?.click()}
+            className="py-2.5 rounded-lg font-bold text-[0.7rem] sm:text-xs border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors flex items-center justify-center gap-1.5 px-2"
+          >
+            🖼️ Detectar (galeria)
+          </button>
+        </div>
+      )}
 
       {suggestions && (
         <DamageSuggestionsReview

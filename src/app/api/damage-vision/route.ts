@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseEnabled } from '@/src/lib/supabase';
 import { getClientIp, getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
-import { callGeminiVision, getGeminiApiKey } from '@/src/lib/server/geminiVision';
+import { callGeminiVision, getGeminiApiKey, parseImageDataUrl } from '@/src/lib/server/geminiVision';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
 
 /** Gemini vision por foto de avaria — assinante autenticado (~25 / 10 min). */
@@ -11,12 +11,6 @@ const DAMAGE_VISION_LIMIT_PER_IP = 10;
 const DAMAGE_VISION_WINDOW_MS = 10 * 60 * 1000;
 
 const MAX_PHOTO_BASE64_LENGTH = 4_000_000; // ~3MB de imagem, suficiente para foto comprimida no app
-
-function parseDataUrl(dataUrl: string): { mimeType: string; base64: string } | null {
-  const match = /^data:(image\/[a-z]+);base64,(.+)$/i.exec(dataUrl);
-  if (!match) return null;
-  return { mimeType: match[1], base64: match[2] };
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -63,7 +57,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Foto muito grande' }, { status: 400 });
     }
 
-    const parsed = parseDataUrl(photo);
+    const parsed = parseImageDataUrl(photo);
     if (!parsed) {
       return NextResponse.json({ error: 'Formato de foto inválido' }, { status: 400 });
     }
@@ -107,8 +101,8 @@ Regras estritas:
       systemInstruction: { parts: [{ text: systemPrompt }] },
       generationConfig: {
         temperature: 0.2,
-        maxOutputTokens: 350,
-        thinkingConfig: { thinkingBudget: 0 },
+        // Sem thinkingConfig: modelos flash/pro variam e 400 abortava a cadeia.
+        maxOutputTokens: 512,
       },
     };
 
