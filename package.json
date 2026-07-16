@@ -18,10 +18,8 @@
     "logos": "node scripts/prepare-logos.mjs"
   },
   "dependencies": {
-    "@react-three/fiber": "^9.6.1",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
-    "@types/three": "^0.185.0",
     "@upstash/ratelimit": "^2.0.8",
     "@upstash/redis": "^1.38.0",
     "@vercel/speed-insights": "^2.0.0",
@@ -39,8 +37,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "stripe": "^22.2.1",
-    "tailwindcss-animate": "^1.0.7",
-    "three": "^0.185.0"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
