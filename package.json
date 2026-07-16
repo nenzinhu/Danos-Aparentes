@@ -15,7 +15,10 @@
     "check:sync-schema": "node scripts/check-sync-schema.mjs",
     "indexnow": "node scripts/indexnow.mjs",
     "email:config": "node scripts/configure-email.mjs",
-    "logos": "node scripts/prepare-logos.mjs"
+    "logos": "node scripts/prepare-logos.mjs",
+    "agent": "node scripts/cursor-agent.mjs",
+    "agent:pix": "node scripts/cursor-agent.mjs --task pix-idempotency --stream",
+    "agent:sync": "node scripts/cursor-agent.mjs --task sync-pull-safe --stream"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.0",
@@ -41,6 +44,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@cursor/sdk": "^1.0.23",
     "@eslint/eslintrc": "^3.3.5",
     "@types/node": "^25.9.3",
     "@types/pg": "^8.20.0",
