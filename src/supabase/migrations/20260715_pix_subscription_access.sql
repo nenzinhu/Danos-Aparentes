@@ -7,9 +7,12 @@ alter table public.subscriptions
   add constraint subscriptions_status_check
   check (status in ('trialing', 'active', 'past_due', 'canceled', 'pending_pix', 'active_pix'));
 
--- 2. Link to Mercado Pago payment id
+-- 2. Link to Mercado Pago payment id + pending plan duration
 alter table public.subscriptions
   add column if not exists pix_charge_id text;
+
+alter table public.subscriptions
+  add column if not exists pending_months int default 0;
 
 create index if not exists idx_subscriptions_pix_charge_id
   on public.subscriptions (pix_charge_id);
