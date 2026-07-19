@@ -4,15 +4,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin'
 import { getClientIp, getUserFromRequest } from '@/src/lib/server/auth'
 import { createPixCharge } from '@/src/lib/server/pixClient'
+import { createAsaasPixCharge } from '@/src/lib/server/asaasPix'
+import { getAsaasApiKey } from '@/src/lib/server/asaasClient'
 import { checkRateLimit } from '@/src/lib/server/rateLimit'
 import { hasActiveSubscriptionAccess } from '@/src/lib/subscriptionAccess'
 
-/** Máx. cobranças PIX por usuário — evita spam no MP e pending_pix repetido. */
+/** Máx. cobranças PIX por usuário — evita spam e pending_pix repetido. */
 const PIX_CHARGE_LIMIT_PER_USER = 8
 const PIX_CHARGE_LIMIT_PER_IP = 12
 const PIX_CHARGE_WINDOW_MS = 10 * 60 * 1000
 
-type PixChargeResponse = {
+export type PixProvider = 'mercadopago' | 'asaas'
+
+type MpPixChargeResponse = {
   id?: string | number
   point_of_interaction?: {
     transaction_data?: {
@@ -22,10 +26,19 @@ type PixChargeResponse = {
   }
 }
 
+function resolveProvider(req: NextRequest): PixProvider {
+  const fromQuery = (req.nextUrl.searchParams.get('provider') || '').toLowerCase()
+  if (fromQuery === 'asaas' || fromQuery === 'mercadopago') {
+    return fromQuery
+  }
+  const fromEnv = (process.env.PIX_PROVIDER || '').toLowerCase()
+  if (fromEnv === 'asaas') return 'asaas'
+  return 'mercadopago'
+}
+
 /**
- * Endpoint called from the front‑end when the user selects "PIX" as payment method.
- * It creates a PIX charge via Mercado Pago, stores a pending subscription in Supabase
- * and returns the QR code / copy‑paste string to the client.
+ * Cria cobrança PIX (Mercado Pago ou Asaas), grava pending na subscription
+ * e devolve QR / copia-e-cola para a UI.
  */
 export async function POST(req: NextRequest) {
   const user = await getUserFromRequest(req)
@@ -69,28 +82,63 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Supabase não configurado' }, { status: 500 })
   }
 
+  const provider = resolveProvider(req)
+  if (provider === 'asaas' && !getAsaasApiKey()) {
+    return NextResponse.json(
+      { error: 'PIX Asaas não configurado (ASAAS_API_KEY).' },
+      { status: 503 },
+    )
+  }
+  if (provider === 'mercadopago' && !process.env.PIX_MERCADO_PAGO_ACCESS_TOKEN) {
+    return NextResponse.json(
+      { error: 'PIX Mercado Pago não configurado.' },
+      { status: 503 },
+    )
+  }
+
   const durationRaw = Number(req.nextUrl.searchParams.get('duration') ?? '1')
   const duration = Number.isFinite(durationRaw) && durationRaw > 0 ? Math.min(Math.floor(durationRaw), 24) : 1
   const amountCents = 4990 * duration
 
-  let charge: PixChargeResponse
+  let chargeId: string
+  let qrCode: string | undefined
+  let copyPaste: string | undefined
+
   try {
-    charge = (await createPixCharge(amountCents, user.email)) as PixChargeResponse
+    if (provider === 'asaas') {
+      const charge = await createAsaasPixCharge(amountCents, user.email, {
+        customerName: user.email.split('@')[0],
+        description: `Assinatura Danos Aparentes (${duration} mês${duration > 1 ? 'es' : ''})`,
+        externalReference: user.id,
+      })
+      chargeId = charge.id
+      qrCode = charge.qrCodeBase64
+      copyPaste = charge.copyPaste
+    } else {
+      const charge = (await createPixCharge(amountCents, user.email)) as MpPixChargeResponse
+      chargeId = String(charge.id ?? '')
+      const tx = charge.point_of_interaction?.transaction_data
+      qrCode = tx?.qr_code_base64
+      copyPaste = tx?.qr_code
+    }
   } catch (err) {
-    console.error('[create-pix-charge] Mercado Pago:', err)
+    console.error(`[create-pix-charge] ${provider}:`, err)
     const msg = err instanceof Error ? err.message : 'Erro ao criar cobrança PIX'
-    // Evita vazar token/corpo longo; mantém status HTTP do MP se presente.
-    const statusMatch = msg.match(/MercadoPago request failed \((\d+)\)/)
+    const statusMatch = msg.match(/request failed \((\d+)\)/i)
     const status = statusMatch ? Number(statusMatch[1]) : 502
     return NextResponse.json(
-      { error: status === 400 ? 'Não foi possível criar o PIX. Tente novamente em instantes.' : 'Erro ao criar cobrança PIX' },
+      {
+        error:
+          status === 400
+            ? 'Não foi possível criar o PIX. Tente novamente em instantes.'
+            : 'Erro ao criar cobrança PIX',
+      },
       { status: status >= 400 && status < 600 ? status : 502 },
     )
   }
 
-  const chargeId = String(charge.id ?? '')
   if (!chargeId) {
-    console.error('[create-pix-charge] cobrança sem id', charge)
+    console.error('[create-pix-charge] cobrança sem id')
     return NextResponse.json({ error: 'Erro ao criar cobrança PIX' }, { status: 502 })
   }
 
@@ -145,10 +193,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Assinatura não encontrada para o usuário' }, { status: 404 })
   }
 
-  const tx = charge.point_of_interaction?.transaction_data
   return NextResponse.json({
-    qrCode: tx?.qr_code_base64,
-    copyPaste: tx?.qr_code,
+    qrCode,
+    copyPaste,
+    provider,
     message: 'Cobrança PIX criada – escaneie o QR Code ou copie o código para pagar.',
   })
 }

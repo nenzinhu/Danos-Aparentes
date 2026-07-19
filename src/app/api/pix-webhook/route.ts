@@ -1,9 +1,8 @@
 // src/app/api/pix-webhook/route.ts
 
 import { NextRequest, NextResponse } from 'next/server'
-import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin'
 import { mercadoPagoRequest } from '@/src/lib/server/mercadoPagoClient'
-import { extendSubscriptionExpiry } from '@/src/lib/subscriptionAccess'
+import { activatePixSubscriptionByChargeId } from '@/src/lib/server/activatePixSubscription'
 import {
   buildMercadoPagoManifest,
   parseMercadoPagoSignatureHeader,
@@ -14,10 +13,6 @@ import {
  * Webhook Mercado Pago PIX — valida x-signature, busca pagamento e ativa active_pix.
  */
 export async function POST(req: NextRequest) {
-  if (!supabaseAdmin) {
-    return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 })
-  }
-
   const rawBody = await req.text()
   const signatureHeader = req.headers.get('x-signature')
   const requestId = req.headers.get('x-request-id') || ''
@@ -78,44 +73,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true, status: payment.status })
   }
 
-  const { data: sub, error } = await supabaseAdmin
-    .from('subscriptions')
-    .select('user_id, expires_at, pending_months')
-    .eq('pix_charge_id', paymentIdStr)
-    .maybeSingle()
-
-  if (error) {
-    console.error('[pix-webhook] erro ao obter subscription:', error)
-    return NextResponse.json({ error: 'Failed to find subscription' }, { status: 500 })
+  const result = await activatePixSubscriptionByChargeId(paymentIdStr)
+  if (!result.ok) {
+    return NextResponse.json(
+      { error: result.error || 'Failed' },
+      { status: result.status || 500 },
+    )
   }
 
-  if (!sub) {
-    console.error('[pix-webhook] nenhuma subscription com pix_charge_id=', paymentIdStr)
-    return NextResponse.json({ error: 'Subscription not found' }, { status: 404 })
-  }
-
-  const extraMonths = sub.pending_months ?? 1
-  const newExpires = extendSubscriptionExpiry(
-    sub.expires_at as string | null,
-    Number(extraMonths),
-  )
-
-  const { data: updated, error: updateError } = await supabaseAdmin
-    .from('subscriptions')
-    .update({
-      status: 'active_pix',
-      expires_at: newExpires.toISOString(),
-      pending_months: 0,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('pix_charge_id', paymentIdStr)
-    .select('user_id')
-    .maybeSingle()
-
-  if (updateError) {
-    console.error('[pix-webhook] erro ao atualizar subscription:', updateError)
-    return NextResponse.json({ error: 'Failed to update subscription' }, { status: 500 })
-  }
-
-  return NextResponse.json({ received: true, userId: updated?.user_id })
+  return NextResponse.json({ received: true, userId: result.userId })
 }

@@ -11,6 +11,7 @@ import { loginUrlWithReturnTo } from '@/src/lib/safeReturnTo'
 
 const MONTHLY_BRL = 49.9
 const DURATION_OPTIONS = [1, 3, 6, 12] as const
+type PixProviderOption = 'mercadopago' | 'asaas'
 
 const PRO_FEATURES = [
   'Vistorias offline e online ilimitadas',
@@ -39,9 +40,14 @@ function PagamentoPixContent() {
   )
 
   const [durationMonths, setDurationMonths] = useState(() => parseDuration(searchParams.get('duration')))
+  const [provider, setProvider] = useState<PixProviderOption>(() => {
+    const p = (searchParams.get('provider') || '').toLowerCase()
+    return p === 'asaas' ? 'asaas' : 'mercadopago'
+  })
   const [qrCode, setQrCode] = useState<string | null>(null)
   const [copyPaste, setCopyPaste] = useState<string | null>(null)
   const [chargedMonths, setChargedMonths] = useState<number | null>(null)
+  const [chargedProvider, setChargedProvider] = useState<PixProviderOption | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [generating, setGenerating] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -49,16 +55,17 @@ function PagamentoPixContent() {
 
   const total = useMemo(() => MONTHLY_BRL * durationMonths, [durationMonths])
 
-  const generate = useCallback(async (months: number) => {
+  const generate = useCallback(async (months: number, pixProvider: PixProviderOption) => {
     setGenerating(true)
     setError(null)
     setQrCode(null)
     setCopyPaste(null)
     try {
-      const result = await startPixCheckout(months)
+      const result = await startPixCheckout(months, pixProvider)
       setQrCode(result.qrCode)
       setCopyPaste(result.copyPaste)
       setChargedMonths(months)
+      setChargedProvider((result.provider as PixProviderOption) || pixProvider)
       trackPixQrGenerated({
         source: 'pagamento-pix',
         duration_months: months,
@@ -84,6 +91,18 @@ function PagamentoPixContent() {
       setQrCode(null)
       setCopyPaste(null)
       setChargedMonths(null)
+      setChargedProvider(null)
+      setError(null)
+    }
+  }
+
+  function selectProvider(next: PixProviderOption) {
+    setProvider(next)
+    if (qrCode) {
+      setQrCode(null)
+      setCopyPaste(null)
+      setChargedMonths(null)
+      setChargedProvider(null)
       setError(null)
     }
   }
@@ -214,30 +233,65 @@ function PagamentoPixContent() {
             <div className="space-y-3">
               <div className="rounded-xl border border-[var(--card-border)]/60 bg-[var(--bg-main)] px-4 py-3">
                 <p className="text-[10px] font-black uppercase tracking-wider text-[var(--signal-bright)] mb-2">
-                  Pagamento seguro
+                  Como pagar
                 </p>
+                <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wide mb-2">
+                  Provedor PIX
+                </p>
+                <div className="grid grid-cols-2 gap-2 mb-3" role="group" aria-label="Provedor PIX">
+                  <button
+                    type="button"
+                    onClick={() => selectProvider('mercadopago')}
+                    className={`rounded-xl border py-2.5 px-2 text-[11px] font-bold transition-colors ${
+                      provider === 'mercadopago'
+                        ? 'border-[var(--primary)] bg-[var(--primary)]/15 text-[var(--primary)]'
+                        : 'border-[var(--card-border)] text-[var(--text-muted)] hover:border-[var(--primary)]/40'
+                    }`}
+                  >
+                    Mercado Pago
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => selectProvider('asaas')}
+                    className={`rounded-xl border py-2.5 px-2 text-[11px] font-bold transition-colors ${
+                      provider === 'asaas'
+                        ? 'border-[var(--primary)] bg-[var(--primary)]/15 text-[var(--primary)]'
+                        : 'border-[var(--card-border)] text-[var(--text-muted)] hover:border-[var(--primary)]/40'
+                    }`}
+                  >
+                    Asaas (sandbox)
+                  </button>
+                </div>
                 <ul className="space-y-1.5 text-[11px] text-[var(--text-muted)]">
                   <li className="flex items-start gap-2">
                     <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
-                    <span>Processado pelo <strong className="text-[var(--text-main)] font-semibold">Mercado Pago</strong></span>
+                    <span>
+                      Processado por{' '}
+                      <strong className="text-[var(--text-main)] font-semibold">
+                        {provider === 'asaas' ? 'Asaas (ambiente de testes)' : 'Mercado Pago'}
+                      </strong>
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
-                    <span>PIX instantâneo — QR Code gerado na hora</span>
+                    <span>PIX — QR Code gerado na hora</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
                     <span>Acesso liberado assim que o pagamento for confirmado</span>
                   </li>
                 </ul>
-                <p className="text-[10px] text-[var(--text-muted)] mt-2.5">
-                  Cancele quando quiser pelo portal de assinatura.
-                </p>
+                {provider === 'asaas' && (
+                  <p className="text-[10px] text-amber-500/90 mt-2.5">
+                    Sandbox: no painel Asaas use “Confirmar pagamento” na cobrança, ou configure o webhook
+                    em <code className="text-[9px]">/api/webhooks/asaas</code>.
+                  </p>
+                )}
               </div>
 
               <button
                 type="button"
-                onClick={() => generate(durationMonths)}
+                onClick={() => generate(durationMonths, provider)}
                 disabled={generating}
                 className="w-full py-3 rounded-xl bg-[var(--primary)] text-[var(--bg-main)] text-sm font-bold disabled:opacity-60"
               >
@@ -275,7 +329,7 @@ function PagamentoPixContent() {
             <p className="text-sm text-red-500">{error}</p>
             <button
               type="button"
-              onClick={() => generate(durationMonths)}
+              onClick={() => generate(durationMonths, provider)}
               className="text-sm font-bold text-[var(--primary)] hover:underline"
             >
               Tentar novamente
@@ -290,6 +344,14 @@ function PagamentoPixContent() {
               <strong className="text-[var(--text-main)]">
                 {chargedMonths} {chargedMonths === 1 ? 'mês' : 'meses'}
               </strong>
+              {chargedProvider && (
+                <>
+                  {' '}via{' '}
+                  <strong className="text-[var(--text-main)]">
+                    {chargedProvider === 'asaas' ? 'Asaas' : 'Mercado Pago'}
+                  </strong>
+                </>
+              )}
             </p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -321,7 +383,7 @@ function PagamentoPixContent() {
             {chargedMonths !== durationMonths && (
               <button
                 type="button"
-                onClick={() => generate(durationMonths)}
+                onClick={() => generate(durationMonths, provider)}
                 disabled={generating}
                 className="w-full py-2.5 rounded-xl border border-[var(--primary)]/40 text-sm font-bold text-[var(--primary)] disabled:opacity-60"
               >

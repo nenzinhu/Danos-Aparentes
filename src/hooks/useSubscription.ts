@@ -128,18 +128,21 @@ export function useSubscription(userId?: string, accessToken?: string) {
     window.location.href = url
   }, [accessToken])
 
-  const startPixCheckout = useCallback(async (durationMonths = 1): Promise<{ qrCode: string; copyPaste: string }> => {
+  const startPixCheckout = useCallback(async (
+    durationMonths = 1,
+    provider: 'mercadopago' | 'asaas' = 'mercadopago',
+  ): Promise<{ qrCode: string; copyPaste: string; provider: string }> => {
     if (!accessToken) throw new Error('Não autenticado')
     const months = Number.isFinite(durationMonths) && durationMonths > 0
       ? Math.min(Math.floor(durationMonths), 24)
       : 1
-    const res = await fetch(`/api/create-pix-charge?duration=${months}`, {
+    const res = await fetch(`/api/create-pix-charge?duration=${months}&provider=${provider}`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${accessToken}` },
     })
     if (!res.ok) throw new Error(await readErrorMessage(res, 'Não foi possível gerar a cobrança PIX'))
-    const { qrCode, copyPaste } = await res.json()
-    return { qrCode, copyPaste }
+    const { qrCode, copyPaste, provider: usedProvider } = await res.json()
+    return { qrCode, copyPaste, provider: usedProvider || provider }
   }, [accessToken])
 
   return { info, loading, error, refresh, startCheckout, openPortal, startPixCheckout }
