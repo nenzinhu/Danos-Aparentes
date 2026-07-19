@@ -8,14 +8,14 @@ import InspectionCoachMarks from '@/src/components/app/InspectionCoachMarks'
 import AppToast from '@/src/components/app/AppToast'
 import AppFooter from '@/src/components/app/AppFooter'
 import TorchButton from '@/src/components/TorchButton'
-import type { Damage, VehicleInfo, SavedReport, VehicleType } from '@/src/types'
+import type { SavedReport } from '@/src/types'
 
 interface AppShellOverlaysProps {
   savedModal: boolean
   onCloseSavedModal: () => void
   saved: SavedReport[]
   onSave: () => Promise<void>
-  onLoad: (r: { vehicleInfo: VehicleInfo; damages: Damage[]; vehicleType?: VehicleType }) => void
+  onLoad: (r: SavedReport) => void
   onDeleteReport: (id: string) => Promise<void>
   hasAccess: boolean
   accessToken?: string

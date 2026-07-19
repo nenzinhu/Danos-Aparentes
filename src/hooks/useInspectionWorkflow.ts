@@ -1,6 +1,6 @@
 'use client';
 import { useState, useCallback, useMemo } from 'react'
-import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity, SavedReport } from '@/src/types'
+import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity, SavedReport, InspectionStatus } from '@/src/types'
 import { createId } from '@/src/lib/id'
 import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '@/src/lib/imageUtils'
 import { storePhoto } from '@/src/lib/photoStore'
@@ -19,7 +19,12 @@ interface UseInspectionWorkflowOptions {
   removeDamage: (id: string) => Promise<void>
   updateDamage: (id: string, patch: Partial<Damage>) => Promise<void>
   clearDamages: () => Promise<void>
-  saveReport: (vehicleInfo: VehicleInfo, damages: Damage[], vehicleType: VehicleType) => Promise<SavedReport>
+  saveReport: (
+    vehicleInfo: VehicleInfo,
+    damages: Damage[],
+    vehicleType: VehicleType,
+    options?: { id?: string; status?: InspectionStatus },
+  ) => Promise<SavedReport>
   accessToken?: string
   showToast: (msg: string) => void
 }
@@ -41,6 +46,8 @@ export function useInspectionWorkflow({
   const [formCollapsed, setFormCollapsed] = useState(false)
   const [formResetToken, setFormResetToken] = useState(0)
   const [previousReport, setPreviousReport] = useState<PreviousReportSummary | null>(null)
+  /** Id da prévia/vistoria ativa — permite atualizar a mesma entrada no sync PC → celular. */
+  const [activeReportId, setActiveReportId] = useState<string | null>(null)
 
   const viewDamages = useMemo(
     () => damages.filter(d => d.vehicle === vehicleType && d.view === viewType),
@@ -116,17 +123,35 @@ export function useInspectionWorkflow({
   }, [viewDamages, removeDamage])
 
   const handleSave = useCallback(async () => {
-    await saveReport(vehicleInfo, damages, vehicleType)
+    const report = await saveReport(vehicleInfo, damages, vehicleType, {
+      id: activeReportId ?? undefined,
+      status: 'complete',
+    })
+    setActiveReportId(report.id)
     showToast('✅ Vistoria Salva!')
-  }, [vehicleInfo, damages, vehicleType, saveReport, showToast])
+  }, [vehicleInfo, damages, vehicleType, activeReportId, saveReport, showToast])
 
-  const handleLoad = useCallback((r: { vehicleInfo: VehicleInfo; damages: Damage[]; vehicleType?: VehicleType }) => {
+  const handleSaveDraft = useCallback(async () => {
+    if (!vehicleInfo.owner && !vehicleInfo.plate) {
+      showToast('❌ Informe ao menos o cliente ou a placa para salvar a prévia')
+      return
+    }
+    const report = await saveReport(vehicleInfo, damages, vehicleType, {
+      id: activeReportId ?? undefined,
+      status: 'draft',
+    })
+    setActiveReportId(report.id)
+    showToast('✅ Prévia salva — sincroniza com o celular')
+  }, [vehicleInfo, damages, vehicleType, activeReportId, saveReport, showToast])
+
+  const handleLoad = useCallback((r: SavedReport) => {
     setVehicleInfo(r.vehicleInfo)
     if (r.vehicleType) setVehicleType(r.vehicleType)
+    setActiveReportId(r.id)
     clearDamages()
     r.damages.forEach(d => addDamage(d))
     setPreviousReport(null)
-    showToast('📂 Vistoria Carregada!')
+    showToast(r.status === 'draft' ? '📂 Prévia carregada — continue a vistoria' : '📂 Vistoria Carregada!')
   }, [clearDamages, addDamage, showToast])
 
   const handleClearAll = useCallback(() => {
@@ -134,6 +159,7 @@ export function useInspectionWorkflow({
     clearDamages()
     setFormResetToken(t => t + 1)
     setPreviousReport(null)
+    setActiveReportId(null)
     showToast('🧽 Dados Limpos!')
   }, [clearDamages, showToast])
 
@@ -169,6 +195,7 @@ export function useInspectionWorkflow({
     handleAddDamageDetailed,
     handleRemoveDamageFromPart,
     handleSave,
+    handleSaveDraft,
     handleLoad,
     handleClearAll,
     handleClearDamages,

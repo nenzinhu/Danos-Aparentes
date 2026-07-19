@@ -33,7 +33,7 @@ export function isTrialActive(status: string | null | undefined, trialEndsAt?: s
   return Number.isFinite(ends) && ends > now
 }
 
-/** True when the user may use paid product features (IA, sync, PDF extras, etc.). */
+/** True when the user may use paid product features (sync, PDF extras, etc.). */
 export function hasActiveSubscriptionAccess(input: SubscriptionAccessInput): boolean {
   const now = input.now ?? Date.now()
   const status = input.status

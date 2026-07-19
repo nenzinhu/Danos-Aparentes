@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react'
-import { VehicleInfo, CustomField, GeoLocation, VehicleType } from '../types'
+import { VehicleInfo, CustomField, VehicleType } from '../types'
 import Button from './ui/Button'
 import WizardStepper from './WizardStepper'
 import type { WizardStep } from './wizardTypes'
@@ -60,8 +60,6 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   const [stepDirection, setStepDirection] = useState<'forward' | 'backward'>('forward')
   const [isStepLeaving, setIsStepLeaving] = useState(false)
   const pendingStepRef = useRef<WizardStep>(1)
-  const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
-  const [geoError, setGeoError] = useState('')
   const [showCnhScanner, setShowCnhScanner] = useState(false)
   const [interiorCompressing, setInteriorCompressing] = useState(false)
   const filterRef = useRef<HTMLDivElement>(null)
@@ -196,57 +194,6 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       interiorPhotos: info.interiorPhotos.filter((_, i) => i !== idx),
       interiorPhotoNotes: (info.interiorPhotoNotes ?? []).filter((_, i) => i !== idx),
     })
-  }, [info, onChange])
-
-  const captureGeo = useCallback(() => {
-    if (typeof navigator === 'undefined' || !navigator.geolocation) {
-      setGeoStatus('error')
-      setGeoError('Este dispositivo não suporta geolocalização.')
-      return
-    }
-    setGeoStatus('loading')
-    setGeoError('')
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const geo: GeoLocation = {
-          lat: +pos.coords.latitude.toFixed(6),
-          lng: +pos.coords.longitude.toFixed(6),
-          accuracy: pos.coords.accuracy ? Math.round(pos.coords.accuracy) : undefined,
-          capturedAt: Date.now(),
-        }
-        // Reverse geocoding best-effort — não bloqueia se estiver offline.
-        try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${geo.lat}&lon=${geo.lng}&accept-language=pt-BR`,
-            { headers: { 'Accept': 'application/json' } }
-          )
-          if (res.ok) {
-            const data = await res.json()
-            if (data?.display_name) geo.address = String(data.display_name)
-          }
-        } catch { /* offline: mantém só as coordenadas */ }
-        onChange({ ...info, geo })
-        setGeoStatus('done')
-      },
-      (err) => {
-        setGeoStatus('error')
-        setGeoError(
-          err.code === err.PERMISSION_DENIED
-            ? 'Permissão de localização negada. Libere o GPS para este site.'
-            : err.code === err.TIMEOUT
-              ? 'Tempo esgotado ao obter a localização. Tente novamente.'
-              : 'Não foi possível obter a localização.'
-        )
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-    )
-  }, [info, onChange])
-
-  const clearGeo = useCallback(() => {
-    const { geo, ...rest } = info
-    onChange(rest as VehicleInfo)
-    setGeoStatus('idle')
-    setGeoError('')
   }, [info, onChange])
 
   const toggleField = useCallback((key: string) => {
@@ -494,6 +441,17 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
         }`}
       >
       {renderedStep === 1 && (
+        <WizardStepOwner
+          info={info}
+          set={set}
+          show={show}
+          orderedKeysIn={orderedKeysIn}
+          showCnhScanner={showCnhScanner}
+          setShowCnhScanner={setShowCnhScanner}
+        />
+      )}
+
+      {renderedStep === 2 && (
         <WizardStepVehicle
           info={info}
           set={set}
@@ -506,24 +464,11 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
         />
       )}
 
-      {renderedStep === 2 && (
-        <WizardStepOwner
-          info={info}
-          set={set}
-          show={show}
-          orderedKeysIn={orderedKeysIn}
-          showCnhScanner={showCnhScanner}
-          setShowCnhScanner={setShowCnhScanner}
-        />
-      )}
-
       {renderedStep === 3 && (
         <WizardStepExtras
           info={info}
           onChange={onChange}
           set={set}
-          show={show}
-          orderedKeysIn={orderedKeysIn}
           customFieldDefs={customFieldDefs}
           customFieldValue={customFieldValue}
           setCustomFieldValue={setCustomFieldValue}
@@ -532,10 +477,6 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
           handleInteriorPhoto={handleInteriorPhoto}
           updateInteriorPhotoNote={updateInteriorPhotoNote}
           removeInteriorPhoto={removeInteriorPhoto}
-          geoStatus={geoStatus}
-          geoError={geoError}
-          captureGeo={captureGeo}
-          clearGeo={clearGeo}
         />
       )}
 
@@ -553,7 +494,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
           </Button>
         ) : (
           <Button variant="success" size="lg" onClick={handleComplete} className="flex-1">
-            Concluir dados
+            Ir ao diagrama →
           </Button>
         )}
       </div>

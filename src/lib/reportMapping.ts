@@ -6,11 +6,16 @@ function normalizeDamagePhotos(photos: string[]): string[] {
 }
 
 export function mapRemoteInspection(insp: Record<string, unknown>, damages: Record<string, unknown>[]): SavedReport {
+  const geoLat = insp.geo_lat as number | null | undefined
+  const geoLng = insp.geo_lng as number | null | undefined
+  const hasGeo = typeof geoLat === 'number' && typeof geoLng === 'number'
+
   return {
     id: insp.id as SavedReport['id'],
     savedAt: insp.updated_at as number,
     syncedAt: insp.updated_at as number,
     vehicleType: (insp.vehicle_type as VehicleType | undefined) ?? undefined,
+    status: (insp.status as SavedReport['status']) === 'draft' ? 'draft' : 'complete',
     vehicleInfo: {
       owner: insp.owner as string,
       phone: insp.phone as string,
@@ -31,6 +36,17 @@ export function mapRemoteInspection(insp: Record<string, unknown>, damages: Reco
       cnhCategory: (insp.cnh_category as string) || '',
       inspectorSignature: (insp.inspector_signature as string) || '',
       clientSignature: (insp.client_signature as string) || '',
+      ...(hasGeo
+        ? {
+            geo: {
+              lat: geoLat,
+              lng: geoLng,
+              accuracy: typeof insp.geo_accuracy === 'number' ? insp.geo_accuracy : undefined,
+              address: typeof insp.geo_address === 'string' ? insp.geo_address : undefined,
+              capturedAt: typeof insp.geo_captured_at === 'number' ? insp.geo_captured_at : (insp.updated_at as number),
+            },
+          }
+        : {}),
     },
     damages: damages
       .filter(d => d.inspection_id === insp.id)
