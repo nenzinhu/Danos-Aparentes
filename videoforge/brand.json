@@ -1,6 +1,8 @@
 {
   "name": "Danos Aparentes",
   "tagline": "Vistoria digital de alta fidelidade",
+  "guidelines": "../marketing/brand-guidelines/BRAND-GUIDELINES.md",
+  "site": "https://danosaparentes.com.br",
   "palette": {
     "bg": "#020617",
     "bgGradient": "#0d1f3c",
@@ -8,22 +10,49 @@
     "primary": "#1FB6FF",
     "primaryHover": "#72C5EE",
     "text": "#e8f4ff",
-    "textMuted": "#7a9bbf",
+    "textMuted": "#9bb4d0",
+    "signal": "#f5a623",
+    "signalBright": "#ffb938",
     "accent": "#22c55e",
-    "danger": "#ef4444"
+    "danger": "#ef4444",
+    "severityLow": "#94a3b8",
+    "severityMedium": "#f97316",
+    "severityHigh": "#ef4444"
+  },
+  "paletteLight": {
+    "bg": "#faf9f5",
+    "text": "#141413",
+    "primary": "#9e4428",
+    "accent": "#d97757",
+    "midGray": "#b0aea5",
+    "lightGray": "#e8e6dc",
+    "signalBright": "#8a5508"
+  },
+  "accentRoles": {
+    "primary": "action — CTAs, selection, links",
+    "signal": "structure — eyebrows, labels, sheet frames, mono data",
+    "severity": "damage severity only"
   },
   "fonts": {
-    "headline": "Outfit",
+    "headline": "Saira Condensed",
     "body": "Outfit",
-    "mono": "ui-monospace"
+    "mono": "IBM Plex Mono"
   },
   "logo": {
-    "icon": "../public/logo.svg",
-    "full": "../public/brand/logo-full.svg"
+    "icon": "../public/brand/logo-icon.svg",
+    "full": "../public/brand/logo-full.svg",
+    "png": "../public/logo.png"
   },
   "cta": {
     "primary": "Testar 7 dias grátis",
-    "secondary": "Sem cartão de crédito",
-    "url": "https://danosaparentes.vercel.app/app?mode=signup&utm_source=video&utm_medium=paid_social"
+    "secondary": "Sem cartão",
+    "url": "https://danosaparentes.com.br/app?mode=signup&utm_source=video&utm_medium=paid_social"
+  },
+  "iconography": {
+    "marketing": "SVG line art currentColor — no emoji",
+    "components": [
+      "src/components/marketing/MarketingIcons.tsx",
+      "src/components/marketing/VehicleLineIcons.tsx"
+    ]
   }
 }
