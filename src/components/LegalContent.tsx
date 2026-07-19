@@ -1,6 +1,6 @@
 import { Fragment } from 'react'
 
-export const LEGAL_LAST_UPDATED = '20 de junho de 2026'
+export const LEGAL_LAST_UPDATED = '19 de julho de 2026'
 export const LEGAL_CONTACT_EMAIL = 'suporte@danosaparentes.com.br'
 /** Razão / nome comercial exibido nos rodapés e textos legais. */
 export const LEGAL_COMPANY_NAME = 'Danos Aparentes'
