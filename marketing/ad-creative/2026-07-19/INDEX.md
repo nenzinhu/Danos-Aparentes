@@ -22,6 +22,7 @@
 - `google-rsa.csv` — 9 ad groups, 15 headlines + 4 descriptions each
 - `meta-ads.csv` — 27 variations (3 primary texts × 9 angles)
 - `/ad-creative-review.html` — review visual das capas + copy
+- `/ads/impact/*` — criativos fotográficos de impacto (substituem og-image genérico nos Meta ads)
 
 ## Quality
 - All Google headlines ≤ 30 chars
