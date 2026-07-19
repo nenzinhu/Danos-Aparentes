@@ -111,13 +111,13 @@ export default function FrotasPage() {
             para cada veículo da frota.
           </p>
           <BlogVideo
-            src="/videos/vistoria-locadoras.mp4"
-            poster="/videos/vistoria-locadoras-poster.jpg"
+            src="/videos/vistoria-digital-promo.mp4"
+            poster="/videos/vistoria-frotas-poster.jpg"
             title="Vistoria digital de frota — Danos Aparentes"
             description="Faça a vistoria rápida no celular, mesmo sem internet no local, com laudo pronto para cada veículo."
-            duration="PT8S"
+            duration="PT58S"
             uploadDate="2026-07-13"
-            caption="8 segundos · play quando quiser"
+            caption="Demo · play quando quiser"
           />
         </section>
 

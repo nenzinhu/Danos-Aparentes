@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ad Creative Review — Danos Aparentes</title>
+<style>
+:root { --bg:#0b1220; --card:#111827; --line:#1f2937; --text:#e5e7eb; --muted:#9ca3af; --accent:#1FB6FF; }
+* { box-sizing:border-box; }
+body { margin:0; font-family: ui-sans-serif, system-ui, sans-serif; background:var(--bg); color:var(--text); }
+header { padding:28px 20px 10px; max-width:1100px; margin:0 auto; }
+header h1 { margin:0 0 8px; font-size:1.5rem; }
+header p { margin:0; color:var(--muted); line-height:1.5; max-width:70ch; }
+.disclosure { max-width:1100px; margin:16px auto; padding:12px 16px; border:1px solid var(--line); border-radius:12px; background:#0f172a; color:var(--muted); font-size:.85rem; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; max-width:1100px; margin:20px auto 48px; padding:0 16px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.card img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; background:#000; }
+.meta { padding:14px 14px 16px; }
+.badge { display:inline-block; font-size:.65rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#001018; background:var(--accent); padding:3px 8px; border-radius:999px; margin-bottom:8px; }
+.primary { font-size:.92rem; line-height:1.45; margin:0 0 10px; }
+.hl { font-weight:800; margin:0; font-size:1rem; }
+.desc { color:var(--muted); font-size:.8rem; margin:4px 0 10px; }
+.g { font-size:.75rem; color:var(--muted); }
+.g code { color:#93c5fd; }
+a { color:var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Ad Creative Review — Danos Aparentes</h1>
+  <p>Pack Meta Feed + Google RSA (9 ângulos). Capas dos 8 posts prioritários + oferta Pro. Escolha 3–5 pra testar primeiro.</p>
+</header>
+<div class="disclosure">
+  <strong>Grounding:</strong> copy baseada em features reais do produto (offline, consulta de placa, hash/QR, white-label, assinatura na tela) e preço publicado (Pro R$49,90/mês, 7 dias grátis). Sem depoimentos ou métricas inventadas. Imagens geradas pra blog/ads — não são fotos de clientes reais.
+</div>
+<div class="grid" id="grid"></div>
+<script>
+const DATA = [{"id": "amassado-preexistente", "name": "Prova — amassado pré-existente", "audience": "Locadoras", "landing": "https://danosaparentes.com.br/blog/como-provar-amassado-pre-existente-locacao", "cover": "/blog/como-provar-amassado-pre-existente-locacao.jpg", "primary": "Cliente diz que o amassado já estava lá. Sem vistoria de entrada, você perde. Com laudo (foto + GPS + hash), a prova fecha o caso.", "headline": "Prove o amassado na entrada", "description": "Teste o plano Pro", "google_sample": ["Prove o amassado na entrada", "Amassado já existia? Prove", "Laudo com foto, GPS e hash", "Fim da palavra contra palavra", "Vistoria digital pra locadora"]}, {"id": "cobranca-devolucao", "name": "Dor→Prova — cobrança na devolução", "audience": "Locadoras", "landing": "https://danosaparentes.com.br/blog/cobranca-avaria-devolucao-locadora", "cover": "/blog/cobranca-avaria-devolucao-locadora.jpg", "primary": "Cliente nega o risco na devolução e a cobrança morre. Com retirada × devolução no mesmo padrão + laudo assinável, você sustenta a cobrança.", "headline": "Cobre avaria com prova", "description": "Teste 7 dias grátis", "google_sample": ["Cobre avaria sem perder", "Retirada × devolução iguais", "Cobrança com laudo digital", "Cliente nega? Mostre o PDF", "Padrão único no pátio"]}, {"id": "oficina-orcamento", "name": "Dor — vistoria antes do orçamento", "audience": "Oficinas", "landing": "https://danosaparentes.com.br/blog/vistoria-antes-do-orcamento-oficina", "cover": "/blog/vistoria-antes-do-orcamento-oficina.jpg", "primary": "Orçamento contestado e cliente falando “não era assim”. Registre o estado na entrada — diagrama, foto e aceite — e entregue laudo profissional.", "headline": "Vistoria antes do orçamento", "description": "7 dias grátis", "google_sample": ["Vistoria antes do orçamento", "Evite briga na entrega", "Foto solta não prova nada", "Registre o carro na entrada", "Laudo pra oficina"]}, {"id": "consulta-placa", "name": "Desejo — consulta automática de placa", "audience": "Vistoriadores / operações", "landing": "https://danosaparentes.com.br/blog/consulta-automatica-de-placa", "cover": "/blog/consulta-automatica-de-placa.jpg", "primary": "Marca, modelo, cor e cidade — sem digitar um por um. Basta a placa. O resto se preenche.", "headline": "Digite a placa. Pronto.", "description": "Teste 7 dias grátis", "google_sample": ["Digite a placa. Pronto.", "Marca e modelo automáticos", "Sem digitar tudo na mão", "Consulta de placa no laudo", "Vistoria mais rápida"]}, {"id": "avarias-preexistentes", "name": "Prova — avarias preexistentes", "audience": "Locadoras / frotas", "landing": "https://danosaparentes.com.br/blog/avarias-preexistentes-como-provar", "cover": "/blog/avarias-preexistentes-como-provar.jpg", "primary": "Quando o cliente diz que o risco já existia, só a prova encerra. Registre de forma clara, comparável e com hash.", "headline": "Prove a avaria preexistente", "description": "7 dias grátis", "google_sample": ["Prove a avaria preexistente", "Dano já estava no carro", "Registro claro e comparável", "Laudo incontestável", "Foto + diagrama + hash"]}, {"id": "sem-papel", "name": "Desejo — vistoria sem papel", "audience": "Operações / frotas", "landing": "https://danosaparentes.com.br/blog/vistoria-sem-papel", "cover": "/blog/vistoria-sem-papel.jpg", "primary": "Prancheta, carbonada e planilha já não dão conta. Fotos, assinatura e PDF no mesmo fluxo — no celular.", "headline": "Vistoria sem prancheta", "description": "7 dias grátis", "google_sample": ["Vistoria sem prancheta", "Saia do papel molhado", "Laudo digital no celular", "Fotos + assinatura + PDF", "Sem carbonada no pátio"]}, {"id": "qr-hash", "name": "Prova — QR Code e hash", "audience": "Locadoras / seguros / peritos", "landing": "https://danosaparentes.com.br/blog/qr-code-e-hash-no-laudo-de-avarias", "cover": "/blog/qr-code-e-hash-no-laudo-de-avarias.jpg", "primary": "Laudo sem trilha de autenticidade é fácil de questionar. QR Code + hash reforçam o original e detectam alteração.", "headline": "Laudo com QR e hash", "description": "Teste 7 dias", "google_sample": ["Laudo com QR e hash", "Valide o PDF original", "Anti-adulteração no laudo", "Hash SHA-256 no PDF", "Mais validade no laudo"]}, {"id": "frota-entrada-saida", "name": "Desejo — controle de frota", "audience": "Gestores de frota", "landing": "https://danosaparentes.com.br/blog/controle-avarias-frota-entrada-saida", "cover": "/blog/controle-avarias-frota-entrada-saida.jpg", "primary": "Sinistro interno e gestor sem visão? Registre saída/entrada no mesmo padrão e tenha histórico auditável — com a marca da empresa.", "headline": "Controle avarias na frota", "description": "7 dias grátis", "google_sample": ["Controle avarias na frota", "Entrada e saída auditáveis", "Fim da briga interna", "Histórico da frota", "Laudo white-label"]}, {"id": "oferta-pro", "name": "Oferta — Plano Pro", "audience": "Todos", "landing": "https://danosaparentes.com.br/planos", "cover": "/og-image.jpg", "primary": "Vistoria veicular no celular: diagrama, fotos, assinatura e PDF com hash/QR. Offline no pátio. 7 dias grátis — depois R$49,90/mês com vistorias ilimitadas.", "headline": "7 dias grátis de vistoria", "description": "Sem cartão no trial", "google_sample": ["Vistoria veicular digital", "7 dias grátis — sem cartão", "Laudo PDF com hash e QR", "Pro por R$49,90/mês", "Vistorias ilimitadas"]}];
+const grid = document.getElementById('grid');
+for (const c of DATA) {
+  const el = document.createElement('article');
+  el.className = 'card';
+  el.innerHTML = `
+    <img src="${c.cover}" alt=""/>
+    <div class="meta">
+      <div class="badge">${c.audience}</div>
+      <p class="primary">${c.primary}</p>
+      <p class="hl">${c.headline}</p>
+      <p class="desc">${c.description}</p>
+      <p class="g">Google sample: ${c.google_sample.map(h => `<code>${h}</code>`).join(' · ')}</p>
+      <p class="g"><a href="${c.landing}" target="_blank" rel="noopener">Landing</a> · ${c.id}</p>
+    </div>`;
+  grid.appendChild(el);
+}
+</script>
+</body>
+</html>
