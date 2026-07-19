@@ -87,7 +87,7 @@ export default function PlanosPage() {
           {[
             { label: 'Sem cartão pra testar', desc: '7 dias grátis começam sem cobrança nem dados de pagamento.' },
             { label: 'Cancele quando quiser', desc: 'Direto pelo portal de assinatura, sem multa nem burocracia.' },
-            { label: 'Dados protegidos', desc: 'Cartão via Stripe; PIX via Mercado Pago — seus dados de pagamento nunca ficam com a gente.' },
+            { label: 'Dados protegidos', desc: 'Cartão via Stripe; PIX via Asaas — seus dados de pagamento nunca ficam com a gente.' },
           ].map(({ label, desc }) => (
             <div key={label}>
               <p className="text-xs font-bold text-[var(--text-main)]">{label}</p>

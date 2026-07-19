@@ -11,6 +11,7 @@ import { loginUrlWithReturnTo } from '@/src/lib/safeReturnTo'
 
 const MONTHLY_BRL = 49.9
 const DURATION_OPTIONS = [1, 3, 6, 12] as const
+const PIX_PROVIDER = 'asaas' as const
 
 const PRO_FEATURES = [
   'Vistorias offline e online ilimitadas',
@@ -45,6 +46,11 @@ function PagamentoPixContent() {
   const [error, setError] = useState<string | null>(null)
   const [generating, setGenerating] = useState(false)
   const [copied, setCopied] = useState(false)
+  /** Só true depois de gerar um PIX nesta sessão e o webhook confirmar. */
+  const [pixJustPaid, setPixJustPaid] = useState(false)
+  const [awaitingPix, setAwaitingPix] = useState(false)
+  const [sawPendingCharge, setSawPendingCharge] = useState(false)
+  const expiresAtWhenCharged = useRef<string | null>(null)
   const paymentConfirmedTracked = useRef(false)
 
   const total = useMemo(() => MONTHLY_BRL * durationMonths, [durationMonths])
@@ -54,29 +60,62 @@ function PagamentoPixContent() {
     setError(null)
     setQrCode(null)
     setCopyPaste(null)
+    setPixJustPaid(false)
+    setSawPendingCharge(false)
+    paymentConfirmedTracked.current = false
+    expiresAtWhenCharged.current = subscription?.expiresAt ?? null
     try {
-      const result = await startPixCheckout(months)
+      const result = await startPixCheckout(months, PIX_PROVIDER)
       setQrCode(result.qrCode)
       setCopyPaste(result.copyPaste)
       setChargedMonths(months)
+      setAwaitingPix(true)
       trackPixQrGenerated({
         source: 'pagamento-pix',
         duration_months: months,
         value: MONTHLY_BRL * months,
         currency: 'BRL',
       })
+      await refresh()
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erro ao gerar cobrança PIX')
+      setAwaitingPix(false)
     } finally {
       setGenerating(false)
     }
-  }, [startPixCheckout])
+  }, [startPixCheckout, refresh, subscription?.expiresAt])
 
   useEffect(() => {
-    if (!qrCode) return
-    const interval = setInterval(refresh, 5000)
+    if (!qrCode || !awaitingPix) return
+    const interval = setInterval(() => { void refresh() }, 3000)
     return () => clearInterval(interval)
-  }, [qrCode, refresh])
+  }, [qrCode, awaitingPix, refresh])
+
+  // Confirma só o PIX gerado nesta sessão (não a assinatura que já existia).
+  useEffect(() => {
+    if (!awaitingPix || !subscription) return
+
+    if (subscription.pendingMonths > 0) {
+      setSawPendingCharge(true)
+      return
+    }
+
+    const expiresGrew =
+      Boolean(subscription.expiresAt) &&
+      (
+        !expiresAtWhenCharged.current ||
+        new Date(subscription.expiresAt!).getTime() > new Date(expiresAtWhenCharged.current).getTime()
+      )
+
+    const settled =
+      (sawPendingCharge && subscription.pendingMonths === 0) ||
+      (subscription.pendingMonths === 0 && expiresGrew && (subscription.status === 'active_pix' || subscription.status === 'active'))
+
+    if (settled) {
+      setPixJustPaid(true)
+      setAwaitingPix(false)
+    }
+  }, [awaitingPix, subscription, sawPendingCharge])
 
   function selectDuration(months: number) {
     setDurationMonths(months)
@@ -85,6 +124,8 @@ function PagamentoPixContent() {
       setCopyPaste(null)
       setChargedMonths(null)
       setError(null)
+      setAwaitingPix(false)
+      setSawPendingCharge(false)
     }
   }
 
@@ -95,20 +136,17 @@ function PagamentoPixContent() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const paidSubscription =
-    Boolean(session) &&
-    Boolean(subscription?.hasAccess) &&
-    (subscription?.status === 'active' || subscription?.status === 'active_pix')
+  const alreadyHasAccess = Boolean(session) && Boolean(subscription?.hasAccess)
 
   useEffect(() => {
-    if (!paidSubscription || paymentConfirmedTracked.current) return
+    if (!pixJustPaid || paymentConfirmedTracked.current) return
     paymentConfirmedTracked.current = true
     trackPixPaymentConfirmed({
       duration_months: chargedMonths ?? durationMonths,
       value: MONTHLY_BRL * (chargedMonths ?? durationMonths),
       currency: 'BRL',
     })
-  }, [paidSubscription, chargedMonths, durationMonths])
+  }, [pixJustPaid, chargedMonths, durationMonths])
 
   if (authLoading) {
     return (
@@ -130,7 +168,7 @@ function PagamentoPixContent() {
     )
   }
 
-  if (paidSubscription) {
+  if (pixJustPaid) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center gap-4 px-4 text-center">
         <p className="text-2xl" aria-hidden>✅</p>
@@ -158,6 +196,15 @@ function PagamentoPixContent() {
         <p className="text-sm text-[var(--text-muted)] mb-6">
           Escolha o plano e quantos meses deseja pagar agora.
         </p>
+
+        {alreadyHasAccess && (
+          <div className="mb-4 rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-[12px] text-emerald-400 leading-relaxed">
+            Sua conta já tem acesso ativo
+            {subscription?.status === 'trialing' ? ' (período de teste)' : ''}.
+            Você pode gerar um PIX para <strong className="font-bold">renovar/estender</strong> o período —
+            a confirmação só aparece depois que este pagamento for creditado.
+          </div>
+        )}
 
         <section className="rounded-2xl border border-[var(--primary)]/30 bg-[var(--card-bg)] p-5 mb-4 shadow-[0_0_24px_var(--primary-glow)]">
           <div className="flex items-start justify-between gap-3 mb-3">
@@ -214,24 +261,27 @@ function PagamentoPixContent() {
             <div className="space-y-3">
               <div className="rounded-xl border border-[var(--card-border)]/60 bg-[var(--bg-main)] px-4 py-3">
                 <p className="text-[10px] font-black uppercase tracking-wider text-[var(--signal-bright)] mb-2">
-                  Pagamento seguro
+                  Como pagar
                 </p>
                 <ul className="space-y-1.5 text-[11px] text-[var(--text-muted)]">
                   <li className="flex items-start gap-2">
                     <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
-                    <span>Processado pelo <strong className="text-[var(--text-main)] font-semibold">Mercado Pago</strong></span>
+                    <span>
+                      Processado por{' '}
+                      <strong className="text-[var(--text-main)] font-semibold">Asaas</strong>
+                    </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
-                    <span>PIX instantâneo — QR Code gerado na hora</span>
+                    <span>PIX — QR Code gerado na hora</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
                     <span>Acesso liberado assim que o pagamento for confirmado</span>
                   </li>
                 </ul>
-                <p className="text-[10px] text-[var(--text-muted)] mt-2.5">
-                  Cancele quando quiser pelo portal de assinatura.
+                <p className="text-[10px] text-amber-500/90 mt-2.5">
+                  Ambiente de testes (sandbox): no painel Asaas use “Confirmar pagamento” na cobrança.
                 </p>
               </div>
 
@@ -290,6 +340,7 @@ function PagamentoPixContent() {
               <strong className="text-[var(--text-main)]">
                 {chargedMonths} {chargedMonths === 1 ? 'mês' : 'meses'}
               </strong>
+              {' '}via <strong className="text-[var(--text-main)]">Asaas</strong>
             </p>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -330,7 +381,9 @@ function PagamentoPixContent() {
             )}
 
             <p className="text-[11px] text-[var(--text-muted)]">
-              Assim que o pagamento for confirmado, esta página atualiza automaticamente.
+              {awaitingPix
+                ? 'Aguardando confirmação do pagamento… esta página atualiza sozinha.'
+                : 'Assim que o pagamento for confirmado, esta página atualiza automaticamente.'}
             </p>
           </div>
         )}
