@@ -127,12 +127,11 @@ export async function POST(req: NextRequest) {
     const statusMatch = msg.match(/request failed \((\d+)\)/i)
     const status = statusMatch ? Number(statusMatch[1]) : 502
 
-    // Em sandbox/dev, devolve a descrição do Asaas para facilitar homologação.
     let detail: string | undefined
     const asaasDesc = msg.match(/\[\{"code":"[^"]+","description":"([^"]+)"\}/)
     if (asaasDesc?.[1]) detail = asaasDesc[1]
     else if (/chave Pix/i.test(msg)) {
-      detail = 'Conta Asaas sem chave PIX. Cadastre uma chave aleatória (EVP) no painel sandbox.'
+      detail = 'Conta Asaas sem chave PIX. Cadastre uma chave PIX (EVP) no painel Asaas.'
     }
 
     return NextResponse.json(

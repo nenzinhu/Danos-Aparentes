@@ -6,7 +6,7 @@
  */
 
 export function getAsaasBaseUrl(): string {
-  const raw = (process.env.ASAAS_API_URL || 'https://api-sandbox.asaas.com').replace(/\/$/, '')
+  const raw = (process.env.ASAAS_API_URL || 'https://api.asaas.com').replace(/\/$/, '')
   return raw
 }
 

@@ -4,6 +4,16 @@ import { LaudoSheet } from '@/src/components/LaudoSheet'
 import { OficinasHeroCtas, OficinasPlanosLink, OficinasFinalCta } from '@/src/components/OficinasCtas'
 import { BlogVideo } from '@/src/components/blog/BlogVideo'
 import ChatSupportWidget from '@/src/components/ChatSupportWidget'
+import {
+  BrandMarkIcon,
+  ClipboardCheckIcon,
+  FeatureIconBadge,
+  OfflineIcon,
+  PainIconBadge,
+  ShieldHashIcon,
+  WhatsAppSendIcon,
+  WrenchIcon,
+} from '@/src/components/marketing/MarketingIcons'
 
 const TITLE = 'Laudo de Vistoria Digital para Oficina Mecânica | Danos Aparentes'
 const DESCRIPTION =
@@ -21,24 +31,27 @@ const PAIN_POINTS = [
   {
     title: 'Laudo em papel some ou fica ilegível',
     desc: 'Prancheta e ficha impressa se perdem ou rasgam — quando o cliente questiona uma avaria depois, não sobra prova nenhuma.',
+    icon: <ClipboardCheckIcon size={18} />,
   },
   {
     title: 'Cliente desconfia do que foi registrado',
     desc: 'Sem assinatura digital e sem validação, fica a palavra da oficina contra a palavra do cliente na hora da entrega do veículo.',
+    icon: <ShieldHashIcon size={18} />,
   },
   {
     title: 'Cada mecânico anota do seu jeito',
     desc: 'Sem um diagrama padrão do veículo, um funcionário anota no capô, outro na porta — o laudo final fica inconsistente.',
+    icon: <WrenchIcon size={18} />,
   },
 ]
 
 const FEATURES = [
-  { title: 'Diagrama do veículo por tipo', desc: 'Marque a avaria direto no diagrama certo — carro, moto, van, caminhão — em vez de descrever de improviso.' },
-  { title: 'Laudo pronto em minutos', desc: 'Fotos, observações e assinatura direto no celular; o PDF sai formatado, sem precisar digitar depois.' },
-  { title: 'Laudo com hash SHA-256 e QR Code', desc: 'O documento comprova a si mesmo — reduz a discussão de "isso não estava assim quando entrou".' },
-  { title: 'Marca própria no laudo (white-label)', desc: 'O PDF sai com a logo e o nome da sua oficina, reforçando profissionalismo com o cliente.' },
-  { title: 'Funciona 100% offline', desc: 'Sem sinal na oficina? A vistoria continua e sincroniza sozinha quando a conexão voltar.' },
-  { title: 'Envio direto por WhatsApp', desc: 'O laudo em PDF vai pro cliente com 1 clique, no mesmo momento da entrega ou devolução.' },
+  { title: 'Diagrama do veículo por tipo', desc: 'Marque a avaria direto no diagrama certo — carro, moto, van, caminhão — em vez de descrever de improviso.', icon: <WrenchIcon size={18} /> },
+  { title: 'Laudo pronto em minutos', desc: 'Fotos, observações e assinatura direto no celular; o PDF sai formatado, sem precisar digitar depois.', icon: <ClipboardCheckIcon size={18} /> },
+  { title: 'Laudo com hash SHA-256 e QR Code', desc: 'O documento comprova a si mesmo — reduz a discussão de "isso não estava assim quando entrou".', icon: <ShieldHashIcon size={18} /> },
+  { title: 'Marca própria no laudo (white-label)', desc: 'O PDF sai com a logo e o nome da sua oficina, reforçando profissionalismo com o cliente.', icon: <BrandMarkIcon size={18} /> },
+  { title: 'Funciona 100% offline', desc: 'Sem sinal na oficina? A vistoria continua e sincroniza sozinha quando a conexão voltar.', icon: <OfflineIcon size={18} /> },
+  { title: 'Envio direto por WhatsApp', desc: 'O laudo em PDF vai pro cliente com 1 clique, no mesmo momento da entrega ou devolução.', icon: <WhatsAppSendIcon size={18} /> },
 ]
 
 const FAQ: { q: string; a: string }[] = [
@@ -128,6 +141,7 @@ export default function OficinasPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {PAIN_POINTS.map(item => (
               <div key={item.title} className="glass-card p-6 border border-[var(--card-border)]/50">
+                <PainIconBadge>{item.icon}</PainIconBadge>
                 <h3 className="text-sm font-bold text-[var(--text-main)] mb-2">{item.title}</h3>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
               </div>
@@ -142,7 +156,7 @@ export default function OficinasPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {FEATURES.map(item => (
               <div key={item.title} className="flex items-start gap-3">
-                <span className="text-[var(--signal-bright)] text-base mt-0.5">✓</span>
+                <FeatureIconBadge>{item.icon}</FeatureIconBadge>
                 <div>
                   <h3 className="text-sm font-bold text-[var(--text-main)]">{item.title}</h3>
                   <p className="text-xs text-[var(--text-muted)] mt-1 leading-relaxed">{item.desc}</p>

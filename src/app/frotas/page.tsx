@@ -4,6 +4,17 @@ import { LaudoSheet } from '@/src/components/LaudoSheet'
 import { FrotasHeroCtas, FrotasPlanosLink, FrotasFinalCta } from '@/src/components/FrotasCtas'
 import { BlogVideo } from '@/src/components/blog/BlogVideo'
 import ChatSupportWidget from '@/src/components/ChatSupportWidget'
+import {
+  BrandMarkIcon,
+  ChartBarsIcon,
+  ClipboardCheckIcon,
+  FeatureIconBadge,
+  OfflineIcon,
+  PainIconBadge,
+  ShieldHashIcon,
+  TruckIcon,
+  WhatsAppSendIcon,
+} from '@/src/components/marketing/MarketingIcons'
 
 const TITLE = 'App de Vistoria de Frota Offline | Danos Aparentes'
 const DESCRIPTION =
@@ -21,24 +32,27 @@ const PAIN_POINTS = [
   {
     title: 'Pátio ou galpão sem sinal de internet',
     desc: 'Apps que dependem de conexão travam ou perdem dados justamente onde a frota costuma ficar estacionada.',
+    icon: <OfflineIcon size={18} />,
   },
   {
     title: 'Frota grande, formatos de vistoria diferentes',
     desc: 'Cada motorista ou vistoriador registra do seu jeito, dificultando comparar avarias entre veículos da mesma frota.',
+    icon: <TruckIcon size={18} />,
   },
   {
     title: 'Sem visão consolidada de todos os veículos',
     desc: 'Planilhas soltas por veículo tornam impossível enxergar, num único lugar, o estado geral da frota no mês.',
+    icon: <ChartBarsIcon size={18} />,
   },
 ]
 
 const FEATURES = [
-  { title: 'Funciona 100% offline', desc: 'Registre a vistoria sem sinal — os dados ficam salvos no aparelho e sincronizam sozinhos assim que a conexão voltar.' },
-  { title: 'Checklist padronizado entre veículos', desc: 'Todo vistoriador segue o mesmo diagrama por tipo de veículo (carro, van, caminhão, ônibus), sem depender de experiência individual.' },
-  { title: 'Laudo com hash SHA-256 e QR Code', desc: 'Cada laudo comprova a si mesmo — reduz disputa de avaria não declarada entre uma vistoria e outra da mesma frota.' },
-  { title: 'Busca automática por placa', desc: 'Marca, modelo, cor e ano preenchidos automaticamente ao digitar a placa, agilizando frotas com muitos veículos.' },
-  { title: 'Marca própria no laudo (white-label)', desc: 'O PDF sai com a logo e o nome da sua empresa de frota, não com uma marca genérica.' },
-  { title: 'Envio direto por WhatsApp', desc: 'O laudo em PDF vai pro responsável pelo veículo com 1 clique, assim que a vistoria termina.' },
+  { title: 'Funciona 100% offline', desc: 'Registre a vistoria sem sinal — os dados ficam salvos no aparelho e sincronizam sozinhos assim que a conexão voltar.', icon: <OfflineIcon size={18} /> },
+  { title: 'Checklist padronizado entre veículos', desc: 'Todo vistoriador segue o mesmo diagrama por tipo de veículo (carro, van, caminhão, ônibus), sem depender de experiência individual.', icon: <ClipboardCheckIcon size={18} /> },
+  { title: 'Laudo com hash SHA-256 e QR Code', desc: 'Cada laudo comprova a si mesmo — reduz disputa de avaria não declarada entre uma vistoria e outra da mesma frota.', icon: <ShieldHashIcon size={18} /> },
+  { title: 'Busca automática por placa', desc: 'Marca, modelo, cor e ano preenchidos automaticamente ao digitar a placa, agilizando frotas com muitos veículos.', icon: <TruckIcon size={18} /> },
+  { title: 'Marca própria no laudo (white-label)', desc: 'O PDF sai com a logo e o nome da sua empresa de frota, não com uma marca genérica.', icon: <BrandMarkIcon size={18} /> },
+  { title: 'Envio direto por WhatsApp', desc: 'O laudo em PDF vai pro responsável pelo veículo com 1 clique, assim que a vistoria termina.', icon: <WhatsAppSendIcon size={18} /> },
 ]
 
 const FAQ: { q: string; a: string }[] = [
@@ -128,6 +142,7 @@ export default function FrotasPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {PAIN_POINTS.map(item => (
               <div key={item.title} className="glass-card p-6 border border-[var(--card-border)]/50">
+                <PainIconBadge>{item.icon}</PainIconBadge>
                 <h3 className="text-sm font-bold text-[var(--text-main)] mb-2">{item.title}</h3>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
               </div>
@@ -142,7 +157,7 @@ export default function FrotasPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {FEATURES.map(item => (
               <div key={item.title} className="flex items-start gap-3">
-                <span className="text-[var(--signal-bright)] text-base mt-0.5">✓</span>
+                <FeatureIconBadge>{item.icon}</FeatureIconBadge>
                 <div>
                   <h3 className="text-sm font-bold text-[var(--text-main)]">{item.title}</h3>
                   <p className="text-xs text-[var(--text-muted)] mt-1 leading-relaxed">{item.desc}</p>

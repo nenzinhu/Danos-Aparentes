@@ -50,7 +50,9 @@ export default function PricingCards() {
               'Acesso ao painel de estatísticas e dashboard'
             ].map((feat) => (
               <li key={feat} className="flex items-start gap-3 text-xs text-[var(--text-main)]">
-                <span className="text-[var(--signal-bright)] mt-0.5">✓</span>
+                <span className="text-[var(--signal-bright)] mt-0.5 shrink-0 inline-flex" aria-hidden>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                </span>
                 <span>{feat}</span>
               </li>
             ))}
@@ -175,7 +177,9 @@ export default function PricingCards() {
               'Suporte prioritário 24/7 com gerente de conta'
             ].map((feat) => (
               <li key={feat} className="flex items-start gap-3 text-xs text-[var(--text-main)]">
-                <span className="text-[var(--signal-bright)] mt-0.5">✓</span>
+                <span className="text-[var(--signal-bright)] mt-0.5 shrink-0 inline-flex" aria-hidden>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                </span>
                 <span>{feat}</span>
               </li>
             ))}

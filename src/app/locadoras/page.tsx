@@ -4,6 +4,18 @@ import { LaudoSheet } from '@/src/components/LaudoSheet'
 import { LocadorasHeroCtas, LocadorasPlanosLink, LocadorasFinalCta } from '@/src/components/LocadorasCtas'
 import { BlogVideo } from '@/src/components/blog/BlogVideo'
 import ChatSupportWidget from '@/src/components/ChatSupportWidget'
+import {
+  BrandMarkIcon,
+  CameraGpsIcon,
+  ChartBarsIcon,
+  ClipboardCheckIcon,
+  FeatureIconBadge,
+  OfflineIcon,
+  PainIconBadge,
+  ShieldHashIcon,
+  UsersIcon,
+  WhatsAppSendIcon,
+} from '@/src/components/marketing/MarketingIcons'
 
 const TITLE = 'Sistema de Vistoria Veicular para Locadora | Danos Aparentes'
 const DESCRIPTION =
@@ -21,24 +33,27 @@ const PAIN_POINTS = [
   {
     title: 'Cada vistoriador registra do seu jeito',
     desc: 'Sem um checklist padronizado, a devolução de um veículo vira uma prancheta diferente por pessoa — e a locadora perde argumento na hora de cobrar avaria.',
+    icon: <ClipboardCheckIcon size={18} />,
   },
   {
     title: 'Fotos soltas, sem hora nem local',
     desc: 'Sem GPS e timestamp automáticos, uma foto solta no celular não prova quando o dano apareceu — só gera discussão no balcão.',
+    icon: <CameraGpsIcon size={18} />,
   },
   {
     title: 'Sem visão consolidada da frota',
     desc: 'Cada vistoriador com sua planilha ou papel torna impossível enxergar, em um único lugar, quantas avarias a frota acumulou no mês.',
+    icon: <ChartBarsIcon size={18} />,
   },
 ]
 
 const FEATURES = [
-  { title: 'Checklist padronizado entre vistoriadores', desc: 'Todo mundo segue o mesmo diagrama por vista do veículo (frontal, traseira, laterais) — sem depender da experiência individual de cada vistoriador.' },
-  { title: 'Funciona 100% offline', desc: 'Sem sinal no pátio? A vistoria continua normalmente e sincroniza sozinha assim que a conexão voltar.' },
-  { title: 'Laudo com hash SHA-256 e QR Code', desc: 'Cada laudo comprova a si mesmo — reduz a disputa de "avaria que já existia" na devolução.' },
-  { title: 'Marca própria no laudo (white-label)', desc: 'O PDF sai com a logo e o nome da sua locadora ou concessionária, não com uma marca genérica.' },
-  { title: 'Gestão centralizada de equipe', desc: 'Múltiplos vistoriadores, painel consolidado por filial e por vistoriador, no plano Corporativo.' },
-  { title: 'Envio direto por WhatsApp', desc: 'O laudo em PDF vai pro cliente com 1 clique, no mesmo momento da devolução.' },
+  { title: 'Checklist padronizado entre vistoriadores', desc: 'Todo mundo segue o mesmo diagrama por vista do veículo (frontal, traseira, laterais) — sem depender da experiência individual de cada vistoriador.', icon: <ClipboardCheckIcon size={18} /> },
+  { title: 'Funciona 100% offline', desc: 'Sem sinal no pátio? A vistoria continua normalmente e sincroniza sozinha assim que a conexão voltar.', icon: <OfflineIcon size={18} /> },
+  { title: 'Laudo com hash SHA-256 e QR Code', desc: 'Cada laudo comprova a si mesmo — reduz a disputa de "avaria que já existia" na devolução.', icon: <ShieldHashIcon size={18} /> },
+  { title: 'Marca própria no laudo (white-label)', desc: 'O PDF sai com a logo e o nome da sua locadora ou concessionária, não com uma marca genérica.', icon: <BrandMarkIcon size={18} /> },
+  { title: 'Gestão centralizada de equipe', desc: 'Múltiplos vistoriadores, painel consolidado por filial e por vistoriador, no plano Corporativo.', icon: <UsersIcon size={18} /> },
+  { title: 'Envio direto por WhatsApp', desc: 'O laudo em PDF vai pro cliente com 1 clique, no mesmo momento da devolução.', icon: <WhatsAppSendIcon size={18} /> },
 ]
 
 const FAQ: { q: string; a: string }[] = [
@@ -130,6 +145,7 @@ export default function LocadorasPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {PAIN_POINTS.map(item => (
               <div key={item.title} className="glass-card p-6 border border-[var(--card-border)]/50">
+                <PainIconBadge>{item.icon}</PainIconBadge>
                 <h3 className="text-sm font-bold text-[var(--text-main)] mb-2">{item.title}</h3>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
               </div>
@@ -145,7 +161,7 @@ export default function LocadorasPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {FEATURES.map(item => (
               <div key={item.title} className="flex items-start gap-3">
-                <span className="text-[var(--signal-bright)] text-base mt-0.5">✓</span>
+                <FeatureIconBadge>{item.icon}</FeatureIconBadge>
                 <div>
                   <h3 className="text-sm font-bold text-[var(--text-main)]">{item.title}</h3>
                   <p className="text-xs text-[var(--text-muted)] mt-1 leading-relaxed">{item.desc}</p>
