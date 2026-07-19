@@ -980,7 +980,7 @@ BLOG_POSTS.unshift(
     slug: 'vistoria-sem-papel',
     title: 'Vistoria sem papel: como sair da prancheta para o laudo digital',
     excerpt:
-      'Prancheta, folha carbonada e planilha já não dão conta da vistoria moderna. Veja como migrar com o Danos Aparentes para um processo sem papel, com fotos, assinatura e PDF no mesmo fluxo.',
+      'Prancheta molha, some e vira retrabalho. Troque carbonada e planilha por fotos, assinatura e PDF no mesmo fluxo — no celular, offline no pátio.',
     category: 'Operação',
     tags: ['vistoria sem papel', 'prancheta', 'laudo digital', 'checklist digital', 'frota'],
     date: '2026-07-03',
@@ -1198,7 +1198,7 @@ BLOG_POSTS.unshift(
     slug: 'avarias-preexistentes-como-provar',
     title: 'Avarias preexistentes: como provar que o dano já estava no veículo',
     excerpt:
-      'Quando o cliente diz que o risco ou amassado já existia, só a prova encerra a discussão. Veja como o Danos Aparentes ajuda a registrar avarias preexistentes de forma clara, comparável e incontestável.',
+      'Cliente diz que o risco já existia? Sem registro, o prejuízo é seu. Veja como documentar avaria preexistente com diagrama, foto e hash — prova clara na disputa.',
     category: 'Locadora',
     tags: ['avarias preexistentes', 'vistoria veicular', 'locadora', 'frota', 'laudo de avarias'],
     date: '2026-07-04',
@@ -1646,7 +1646,7 @@ BLOG_POSTS.unshift(
     slug: 'qr-code-e-hash-no-laudo-de-avarias',
     title: 'QR Code e hash no laudo de avarias: por que isso reforça a validade',
     excerpt:
-      'Entenda como o Danos Aparentes usa QR Code e hash no laudo para reforçar autenticidade, consulta do original e mais segurança na comprovação das avarias.',
+      'Laudo sem trilha de autenticidade é fácil de questionar. QR Code + hash deixam consultar o original e detectar alteração — na cobrança e no sinistro.',
     category: 'Validade',
     tags: ['qr code', 'hash', 'validade do laudo', 'laudo de avarias', 'danos aparentes'],
     date: '2026-07-04',
@@ -2169,7 +2169,7 @@ BLOG_POSTS.unshift(
     slug: 'consulta-automatica-de-placa',
     title: 'Digite a placa e o resto se preenche sozinho',
     excerpt:
-      'Marca, modelo, cor e cidade de emplacamento não precisam ser digitados um por um. No Danos Aparentes, basta digitar a placa e o sistema busca os dados do veículo automaticamente.',
+      'Cada campo digitado à mão é tempo — e erro. Basta a placa: marca, modelo, cor e cidade se preenchem sozinhos no laudo.',
     category: 'Produtividade',
     tags: ['consulta de placa', 'autofill', 'produtividade', 'checklist', 'vistoria digital'],
     date: '2026-07-06',
@@ -2397,7 +2397,7 @@ BLOG_POSTS.unshift(
     slug: 'cobranca-avaria-devolucao-locadora',
     title: 'Como cobrar avaria na devolução da locadora sem perder a discussão',
     excerpt:
-      'Cliente nega o dano, cada vistoriador faz de um jeito e a cobrança fica fraca. Veja como comparar retirada × devolução no mesmo padrão, com laudo assinável, QR/hash e PDF no WhatsApp — com a marca da locadora.',
+      'Cliente nega o risco e a cobrança morre. Compare retirada × devolução no mesmo padrão, com laudo assinável, QR/hash e PDF no WhatsApp — com a marca da locadora.',
     category: 'Locadora',
     tags: [
       'cobrança de avaria',
@@ -2584,7 +2584,7 @@ BLOG_POSTS.unshift(
     slug: 'vistoria-antes-do-orcamento-oficina',
     title: 'Vistoria antes do orçamento: como a oficina evita briga na entrega',
     excerpt:
-      'Orçamento contestado, foto solta no WhatsApp e cliente dizendo que “não era assim”. Veja como registrar o estado do carro com diagrama, foto e aceite na entrada — e entregar um laudo profissional.',
+      'Foto solta no WhatsApp não fecha discussão. Registre o estado na entrada — diagrama, foto e aceite — e entregue laudo profissional antes do orçamento.',
     category: 'Oficina',
     tags: [
       'oficina mecânica',
@@ -2903,7 +2903,7 @@ BLOG_POSTS.unshift(
     slug: 'controle-avarias-frota-entrada-saida',
     title: 'Controle de avarias na frota: entrada, saída e histórico auditável',
     excerpt:
-      'Sinistro interno, briga motorista × oficina e gestor sem visão. Veja como registrar toda saída/entrada com o mesmo padrão, reduzir disputa e ter histórico da frota — com laudo white-label da empresa.',
+      'Planilha não segura disputa. Registre saída e entrada no mesmo padrão, reduza briga interna e tenha histórico auditável — com laudo white-label da empresa.',
     category: 'Frota',
     tags: [
       'controle de frota',
@@ -3076,7 +3076,7 @@ BLOG_POSTS.push(
     slug: 'como-provar-amassado-pre-existente-locacao',
     title: 'Como provar que um amassado no carro já existia antes da locação',
     excerpt:
-      'Sem vistoria de entrada bem documentada, é a palavra do cliente contra a da locadora. Veja como um laudo com foto, GPS e hash resolve essa disputa.',
+      'Sem vistoria de entrada, é palavra contra palavra — e a locadora perde. Laudo com foto, GPS e hash fecha o caso na devolução.',
     category: 'Locadora',
     tags: ['locadora', 'avarias', 'laudo de vistoria', 'checklist'],
     date: '2026-07-13',
