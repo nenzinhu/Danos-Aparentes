@@ -31,9 +31,9 @@ function resolveProvider(req: NextRequest): PixProvider {
   if (fromQuery === 'asaas' || fromQuery === 'mercadopago') {
     return fromQuery
   }
-  const fromEnv = (process.env.PIX_PROVIDER || '').toLowerCase()
-  if (fromEnv === 'asaas') return 'asaas'
-  return 'mercadopago'
+  const fromEnv = (process.env.PIX_PROVIDER || 'asaas').toLowerCase()
+  if (fromEnv === 'mercadopago') return 'mercadopago'
+  return 'asaas'
 }
 
 /**

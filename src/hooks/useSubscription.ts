@@ -138,7 +138,7 @@ export function useSubscription(userId?: string, accessToken?: string) {
 
   const startPixCheckout = useCallback(async (
     durationMonths = 1,
-    provider: 'mercadopago' | 'asaas' = 'mercadopago',
+    provider: 'mercadopago' | 'asaas' = 'asaas',
   ): Promise<{ qrCode: string; copyPaste: string; provider: string }> => {
     if (!accessToken) throw new Error('Não autenticado')
     const months = Number.isFinite(durationMonths) && durationMonths > 0

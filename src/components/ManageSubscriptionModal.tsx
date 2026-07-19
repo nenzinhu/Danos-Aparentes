@@ -41,7 +41,7 @@ export default function ManageSubscriptionModal({ open, onClose, onChooseCartao,
             onClick={onChoosePix}
             className="w-full py-3 rounded-lg border border-[var(--card-border)] text-[var(--text-main)] text-sm font-bold"
           >
-            PIX (Mercado Pago)
+            PIX (Asaas)
           </button>
         </div>
 
