@@ -126,12 +126,21 @@ export async function POST(req: NextRequest) {
     const msg = err instanceof Error ? err.message : 'Erro ao criar cobrança PIX'
     const statusMatch = msg.match(/request failed \((\d+)\)/i)
     const status = statusMatch ? Number(statusMatch[1]) : 502
+
+    // Em sandbox/dev, devolve a descrição do Asaas para facilitar homologação.
+    let detail: string | undefined
+    const asaasDesc = msg.match(/\[\{"code":"[^"]+","description":"([^"]+)"\}/)
+    if (asaasDesc?.[1]) detail = asaasDesc[1]
+    else if (/chave Pix/i.test(msg)) {
+      detail = 'Conta Asaas sem chave PIX. Cadastre uma chave aleatória (EVP) no painel sandbox.'
+    }
+
     return NextResponse.json(
       {
-        error:
-          status === 400
+        error: detail
+          || (status === 400
             ? 'Não foi possível criar o PIX. Tente novamente em instantes.'
-            : 'Erro ao criar cobrança PIX',
+            : 'Erro ao criar cobrança PIX'),
       },
       { status: status >= 400 && status < 600 ? status : 502 },
     )

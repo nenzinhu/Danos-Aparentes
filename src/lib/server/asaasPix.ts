@@ -19,6 +19,7 @@ type AsaasPixQr = {
   encodedImage?: string
   payload?: string
 }
+type AsaasPixKeyList = { data?: Array<{ id?: string; status?: string }> }
 
 /** CPF só para sandbox quando o usuário não tem documento cadastrado. */
 const SANDBOX_FALLBACK_CPF = '24971563792'
@@ -48,6 +49,24 @@ async function findOrCreateCustomer(email: string, name: string): Promise<string
   return created.id
 }
 
+/** Garante chave PIX (EVP) — sem ela o Asaas rejeita billingType PIX. */
+async function ensurePixAddressKey(): Promise<void> {
+  try {
+    const listed = await asaasRequest<AsaasPixKeyList>('/pix/addressKeys?limit=10', 'GET')
+    const hasActive = (listed.data || []).some(k => (k.status || '').toUpperCase() === 'ACTIVE')
+    if (hasActive) return
+  } catch (err) {
+    console.warn('[asaas] falha ao listar chaves PIX, tentando criar EVP:', err)
+  }
+
+  await asaasRequest('/pix/addressKeys', 'POST', { type: 'EVP' })
+}
+
+function isMissingPixKeyError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err)
+  return /chave Pix cadastrada/i.test(msg) || /invalid_action/i.test(msg)
+}
+
 /**
  * Cria cobrança PIX no Asaas e busca QR Code / copia-e-cola.
  * @param amountCents valor em centavos
@@ -57,17 +76,31 @@ export async function createAsaasPixCharge(
   email: string,
   opts?: { customerName?: string; description?: string; externalReference?: string },
 ): Promise<AsaasPixChargeResult> {
+  await ensurePixAddressKey()
+
   const customerId = await findOrCreateCustomer(email, opts?.customerName || email)
   const value = Math.round(amountCents) / 100
 
-  const payment = await asaasRequest<AsaasPayment>('/payments', 'POST', {
+  const paymentBody = {
     customer: customerId,
-    billingType: 'PIX',
+    billingType: 'PIX' as const,
     value,
     dueDate: todayPlusDays(1),
     description: opts?.description || 'Assinatura Danos Aparentes',
     externalReference: opts?.externalReference,
-  })
+  }
+
+  let payment: AsaasPayment
+  try {
+    payment = await asaasRequest<AsaasPayment>('/payments', 'POST', paymentBody)
+  } catch (err) {
+    if (isMissingPixKeyError(err)) {
+      await asaasRequest('/pix/addressKeys', 'POST', { type: 'EVP' })
+      payment = await asaasRequest<AsaasPayment>('/payments', 'POST', paymentBody)
+    } else {
+      throw err
+    }
+  }
 
   if (!payment.id) throw new Error('Asaas: cobrança criada sem id')
 
