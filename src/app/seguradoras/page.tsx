@@ -4,6 +4,16 @@ import { LaudoSheet } from '@/src/components/LaudoSheet'
 import { SeguradorasHeroCtas, SeguradorasPlanosLink, SeguradorasFinalCta } from '@/src/components/SeguradorasCtas'
 import { BlogVideo } from '@/src/components/blog/BlogVideo'
 import ChatSupportWidget from '@/src/components/ChatSupportWidget'
+import {
+  BrandMarkIcon,
+  CameraGpsIcon,
+  ClipboardCheckIcon,
+  FeatureIconBadge,
+  OfflineIcon,
+  PainIconBadge,
+  QrCodeIcon,
+  ShieldHashIcon,
+} from '@/src/components/marketing/MarketingIcons'
 
 const TITLE = 'Laudo de Vistoria com QR Code Anti-Fraude para Seguradora | Danos Aparentes'
 const DESCRIPTION =
@@ -21,24 +31,27 @@ const PAIN_POINTS = [
   {
     title: 'Disputa sobre avaria pré-existente',
     desc: 'Sem um laudo confiável no momento da contratação, fica difícil provar se um dano já existia antes do sinistro reportado.',
+    icon: <ShieldHashIcon size={18} />,
   },
   {
     title: 'Laudo fácil de alterar depois',
     desc: 'PDF comum ou papel escaneado pode ser editado sem deixar rastro — o que enfraquece o documento numa contestação.',
+    icon: <QrCodeIcon size={18} />,
   },
   {
     title: 'Sem registro de local e hora da vistoria',
     desc: 'Fotos soltas do celular do vistoriador não têm GPS nem timestamp confiável, dificultando a checagem posterior.',
+    icon: <CameraGpsIcon size={18} />,
   },
 ]
 
 const FEATURES = [
-  { title: 'Hash SHA-256 em cada laudo', desc: 'Qualquer alteração no PDF depois de gerado quebra o hash — o documento comprova a si mesmo.' },
-  { title: 'QR Code de verificação pública', desc: 'Qualquer pessoa pode escanear o QR e conferir o laudo original em uma página de verificação, a qualquer momento.' },
-  { title: 'GPS e timestamp em cada foto', desc: 'Cada foto de avaria é registrada com local e data/hora exatos do momento da vistoria.' },
-  { title: 'Assinaturas digitais na tela', desc: 'Vistoriador e segurado assinam no próprio aparelho, no momento da vistoria.' },
-  { title: 'Funciona 100% offline', desc: 'A vistoria continua mesmo sem sinal e sincroniza sozinha assim que a conexão voltar.' },
-  { title: 'Marca própria no laudo (white-label)', desc: 'O PDF sai com a logo e o nome da corretora ou seguradora, não com uma marca genérica.' },
+  { title: 'Hash SHA-256 em cada laudo', desc: 'Qualquer alteração no PDF depois de gerado quebra o hash — o documento comprova a si mesmo.', icon: <ShieldHashIcon size={18} /> },
+  { title: 'QR Code de verificação pública', desc: 'Qualquer pessoa pode escanear o QR e conferir o laudo original em uma página de verificação, a qualquer momento.', icon: <QrCodeIcon size={18} /> },
+  { title: 'GPS e timestamp em cada foto', desc: 'Cada foto de avaria é registrada com local e data/hora exatos do momento da vistoria.', icon: <CameraGpsIcon size={18} /> },
+  { title: 'Assinaturas digitais na tela', desc: 'Vistoriador e segurado assinam no próprio aparelho, no momento da vistoria.', icon: <ClipboardCheckIcon size={18} /> },
+  { title: 'Funciona 100% offline', desc: 'A vistoria continua mesmo sem sinal e sincroniza sozinha assim que a conexão voltar.', icon: <OfflineIcon size={18} /> },
+  { title: 'Marca própria no laudo (white-label)', desc: 'O PDF sai com a logo e o nome da corretora ou seguradora, não com uma marca genérica.', icon: <BrandMarkIcon size={18} /> },
 ]
 
 const FAQ: { q: string; a: string }[] = [
@@ -128,6 +141,7 @@ export default function SeguradorasPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {PAIN_POINTS.map(item => (
               <div key={item.title} className="glass-card p-6 border border-[var(--card-border)]/50">
+                <PainIconBadge>{item.icon}</PainIconBadge>
                 <h3 className="text-sm font-bold text-[var(--text-main)] mb-2">{item.title}</h3>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
               </div>
@@ -142,7 +156,7 @@ export default function SeguradorasPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {FEATURES.map(item => (
               <div key={item.title} className="flex items-start gap-3">
-                <span className="text-[var(--signal-bright)] text-base mt-0.5">✓</span>
+                <FeatureIconBadge>{item.icon}</FeatureIconBadge>
                 <div>
                   <h3 className="text-sm font-bold text-[var(--text-main)]">{item.title}</h3>
                   <p className="text-xs text-[var(--text-muted)] mt-1 leading-relaxed">{item.desc}</p>

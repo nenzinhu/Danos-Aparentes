@@ -34,7 +34,9 @@ export default function FinalCtaSection() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 mt-5 font-mono-data text-[11px] text-[var(--text-muted)] uppercase tracking-wider">
-          <span aria-hidden="true" className="text-[var(--signal-bright)]">✓</span>
+          <span aria-hidden="true" className="text-[var(--signal-bright)] inline-flex">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+          </span>
           <span>Sem cartão</span>
           <span aria-hidden="true" className="text-[var(--card-border)]">·</span>
           <span>7 dias liberados</span>

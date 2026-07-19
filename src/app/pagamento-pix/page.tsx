@@ -171,7 +171,9 @@ function PagamentoPixContent() {
   if (pixJustPaid) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center gap-4 px-4 text-center">
-        <p className="text-2xl" aria-hidden>✅</p>
+        <span className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400" aria-hidden>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+        </span>
         <p className="text-sm font-bold text-[var(--text-main)]">
           Pagamento confirmado! Sua assinatura está ativa.
         </p>
@@ -251,7 +253,9 @@ function PagamentoPixContent() {
           <ul className="space-y-1.5 mb-5">
             {PRO_FEATURES.map((feat) => (
               <li key={feat} className="flex items-start gap-2 text-[11px] text-[var(--text-main)]">
-                <span className="text-[var(--signal-bright)] mt-0.5">✓</span>
+                <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                </span>
                 <span>{feat}</span>
               </li>
             ))}
@@ -265,24 +269,27 @@ function PagamentoPixContent() {
                 </p>
                 <ul className="space-y-1.5 text-[11px] text-[var(--text-muted)]">
                   <li className="flex items-start gap-2">
-                    <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
+                    <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                    </span>
                     <span>
                       Processado por{' '}
                       <strong className="text-[var(--text-main)] font-semibold">Asaas</strong>
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
+                    <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                    </span>
                     <span>PIX — QR Code gerado na hora</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>✓</span>
+                    <span className="text-[var(--signal-bright)] mt-0.5 shrink-0" aria-hidden>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                    </span>
                     <span>Acesso liberado assim que o pagamento for confirmado</span>
                   </li>
                 </ul>
-                <p className="text-[10px] text-amber-500/90 mt-2.5">
-                  Ambiente de testes (sandbox): no painel Asaas use “Confirmar pagamento” na cobrança.
-                </p>
               </div>
 
               <button
