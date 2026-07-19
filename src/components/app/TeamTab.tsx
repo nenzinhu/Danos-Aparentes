@@ -1,4 +1,5 @@
 'use client';
+import { UsersIcon, CheckIcon, LoaderIcon, FileIcon, ClipboardIcon, SparkleIcon, LinkIcon, XIcon } from '@/src/components/app/AppIcons'
 import { useState } from 'react'
 import { useTeam, TeamReport } from '@/src/hooks/useTeam'
 import { generatePdf } from '@/src/lib/pdf'
@@ -29,7 +30,7 @@ export default function TeamTab({ accessToken, onToast }: Props) {
       setInviteUrl(url)
       setEmail('')
     } catch (err) {
-      onToast(err instanceof Error ? `❌ ${err.message}` : '❌ Falha ao gerar convite')
+      onToast(err instanceof Error ? `${err.message}` : 'Falha ao gerar convite')
     } finally {
       setSending(false)
     }
@@ -38,9 +39,9 @@ export default function TeamTab({ accessToken, onToast }: Props) {
   const handleCopy = async (url: string) => {
     try {
       await navigator.clipboard.writeText(url)
-      onToast('🔗 Link copiado!')
+      onToast('Link copiado!')
     } catch {
-      onToast('❌ Não foi possível copiar o link')
+      onToast('Não foi possível copiar o link')
     }
   }
 
@@ -52,7 +53,7 @@ export default function TeamTab({ accessToken, onToast }: Props) {
       await generatePdf(tr.report.vehicleInfo, tr.report.damages, svgData, {})
     } catch (err) {
       console.error('Failed to generate team report PDF:', err)
-      onToast('❌ Falha ao gerar PDF')
+      onToast('Falha ao gerar PDF')
     } finally {
       setDownloadingId(null)
     }
@@ -61,7 +62,7 @@ export default function TeamTab({ accessToken, onToast }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <div className="glass-card p-5">
-        <h2 className="text-lg font-bold text-[var(--text-main)] mb-1">👥 Equipe</h2>
+        <h2 className="text-lg font-bold text-[var(--text-main)] mb-1"><span className="inline-flex items-center gap-2"><UsersIcon size={18} />Equipe</span></h2>
         <p className="text-xs text-[var(--text-muted)] mb-4">
           Convide inspetores para a sua empresa. Ao aceitarem, os laudos deles aparecem aqui.
         </p>
@@ -99,7 +100,7 @@ export default function TeamTab({ accessToken, onToast }: Props) {
               <div key={`${m.invited_email}-${m.invited_at}`} className="flex items-center justify-between bg-black/10 border border-white/5 rounded-lg px-3 py-2 text-xs">
                 <span className="text-[var(--text-main)]">{m.invited_email}</span>
                 <span className={m.status === 'accepted' ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
-                  {m.status === 'accepted' ? '✓ Ativo' : '⏳ Pendente'}
+                  {m.status === 'accepted' ? <span className="inline-flex items-center gap-1"><CheckIcon size={12} />Ativo</span> : <span className="inline-flex items-center gap-1"><LoaderIcon size={12} />Pendente</span>}
                 </span>
               </div>
             ))}
@@ -153,18 +154,18 @@ export default function TeamTab({ accessToken, onToast }: Props) {
                     disabled={downloadingId !== null}
                     className="px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold flex-shrink-0 disabled:opacity-50"
                   >
-                    {downloadingId === tr.report.id ? '⏳' : '📄 PDF'}
+                    {downloadingId === tr.report.id ? <LoaderIcon size={14} /> : <span className="inline-flex items-center gap-1"><FileIcon size={14} />PDF</span>}
                   </button>
                 </div>
 
                 {isExpanded && (
                   <div className="mt-2.5 pt-2.5 border-t border-white/5 flex flex-col gap-1.5" onClick={e => e.stopPropagation()}>
                     <div className="text-[0.62rem] font-bold text-[var(--text-muted)] tracking-wider">
-                      📋 AVARIAS DETALHADAS
+                      <span className="inline-flex items-center gap-1.5"><ClipboardIcon size={14} />AVARIAS DETALHADAS</span>
                     </div>
                     {tr.report.damages.length === 0 ? (
                       <div className="text-xs text-emerald-400 font-bold pl-2">
-                        ✨ Nenhuma avaria registrada neste laudo.
+                        <span className="inline-flex items-center gap-1.5"><SparkleIcon size={14} />Nenhuma avaria registrada neste laudo.</span>
                       </div>
                     ) : (
                       <div className="flex flex-col gap-1.5 pl-2">

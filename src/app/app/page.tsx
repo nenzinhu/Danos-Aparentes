@@ -23,7 +23,7 @@ function formatSyncFailureToast(dropped: DroppedSyncItem[]): string {
   const first = dropped[0]
   const shortId = first.reportId.slice(0, 8)
   const extra = dropped.length > 1 ? ` (+${dropped.length - 1} outro${dropped.length > 2 ? 's' : ''})` : ''
-  return `❌ Falha permanente ao sincronizar laudo ${shortId}${extra}`
+  return `Falha permanente ao sincronizar laudo ${shortId}${extra}`
 }
 
 export default function AppMainPage() {

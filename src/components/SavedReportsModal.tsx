@@ -8,6 +8,11 @@ import { captureSvgs } from './ReportActions'
 import { VehicleIconSvg } from './VehicleSelector'
 import { db } from '../lib/db'
 import { supabaseEnabled } from '../lib/supabase'
+import {
+  CloudIcon, LoaderIcon, PhoneOffIcon, LaptopIcon, FileIcon, TagIcon,
+  PenIcon, TrashIcon, ClipboardIcon, SparkleIcon, CameraIcon, PackageIcon,
+  XIcon, CheckIcon,
+} from '@/src/components/app/AppIcons'
 
 function SaveIcon({ size = 16 }: { size?: number }) {
   return (
@@ -51,14 +56,15 @@ function dateBucket(ts: number): string {
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
-const CLOUD_BADGE: Record<CloudState, { icon: string; text: string; color: string; bg: string; border: string }> = {
-  cloud:   { icon: '☁️', text: 'Na nuvem', color: '#38bdf8', bg: 'rgba(56,189,248,0.1)',  border: 'rgba(56,189,248,0.25)' },
-  pending: { icon: '⏳', text: 'Pendente', color: '#fbbf24', bg: 'rgba(251,191,36,0.1)',  border: 'rgba(251,191,36,0.25)' },
-  local:   { icon: '📴', text: 'Local',    color: '#94a3b8', bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.25)' },
+const CLOUD_BADGE: Record<CloudState, { icon: typeof CloudIcon; text: string; color: string; bg: string; border: string }> = {
+  cloud:   { icon: CloudIcon, text: 'Na nuvem', color: '#38bdf8', bg: 'rgba(56,189,248,0.1)',  border: 'rgba(56,189,248,0.25)' },
+  pending: { icon: LoaderIcon, text: 'Pendente', color: '#fbbf24', bg: 'rgba(251,191,36,0.1)',  border: 'rgba(251,191,36,0.25)' },
+  local:   { icon: PhoneOffIcon, text: 'Local',    color: '#94a3b8', bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.25)' },
 }
 
 function CloudBadge({ state }: { state: CloudState }) {
   const b = CLOUD_BADGE[state]
+  const Icon = b.icon
   return (
     <span
       title={state === 'cloud' ? 'Sincronizada na nuvem' : state === 'pending' ? 'Aguardando envio para a nuvem' : 'Salva apenas neste dispositivo'}
@@ -69,7 +75,7 @@ function CloudBadge({ state }: { state: CloudState }) {
         borderRadius: 999, padding: '2px 8px', lineHeight: 1.4,
       }}
     >
-      <span aria-hidden="true">{b.icon}</span> {b.text}
+      <span aria-hidden="true" style={{ display: 'inline-flex' }}><Icon size={12} /></span> {b.text}
     </span>
   )
 }
@@ -375,7 +381,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                     borderRadius: 999, padding: '2px 8px', lineHeight: 1.4,
                   }}
                 >
-                  💻 Prévia
+                  <LaptopIcon size={11} /> Prévia
                 </span>
               )}
               <CloudBadge state={cloudStateOf(r.id)} />
@@ -407,7 +413,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                 opacity: downloadingId !== null && downloadingId !== r.id ? 0.5 : 1
               }}
             >
-              {downloadingId === r.id ? '⏳' : '📄 PDF'}
+              {downloadingId === r.id ? <LoaderIcon size={12} /> : <><FileIcon size={12} /> PDF</>}
             </button>
             <button
               onClick={() => handleGenerateQr(r)}
@@ -426,7 +432,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                 opacity: generatingQrId !== null && generatingQrId !== r.id ? 0.5 : 1,
               }}
             >
-              {generatingQrId === r.id ? '⏳' : '🏷️ QR'}
+              {generatingQrId === r.id ? <LoaderIcon size={12} /> : <><TagIcon size={12} /> QR</>}
             </button>
             <button
               onClick={() => handleCopySignatureLink(r)}
@@ -445,7 +451,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                 opacity: cloudStateOf(r.id) !== 'cloud' ? 0.5 : 1,
               }}
             >
-              {copiedSignatureId === r.id ? '✓ Copiado' : '🖊️ Assinatura'}
+              {copiedSignatureId === r.id ? <><CheckIcon size={12} /> Copiado</> : <><PenIcon size={12} /> Assinatura</>}
             </button>
             <button
               onClick={() => onLoad(r)}
@@ -475,7 +481,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                 fontSize: '0.72rem'
               }}
             >
-              🗑️
+              <TrashIcon size={13} />
             </button>
           </div>
         </div>
@@ -493,11 +499,11 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
             onClick={e => e.stopPropagation()}
           >
             <div style={{ fontSize: '0.62rem', fontWeight: 800, color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
-              📋 DETALHES DAS AVARIAS
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><ClipboardIcon size={12} /> DETALHES DAS AVARIAS</span>
             </div>
             {r.damages.length === 0 ? (
-              <div style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 600, paddingLeft: 6 }}>
-                ✨ Nenhuma avaria registrada neste laudo.
+              <div style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 600, paddingLeft: 6, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                <SparkleIcon size={12} /> Nenhuma avaria registrada neste laudo.
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -522,7 +528,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                       </span>
                       {d.photos && d.photos.length > 0 && (
                         <span style={{ marginLeft: 6, color: 'var(--primary)', fontWeight: 800, fontSize: '0.68rem' }} title={`${d.photos.length} foto(s)`}>
-                          📷 {d.photos.length}
+                          <CameraIcon size={11} /> {d.photos.length}
                         </span>
                       )}
                       {d.notes && (
@@ -547,12 +553,12 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
       <div style={{ width: '100%', maxWidth: 700, background: 'rgba(15,23,42,0.97)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, overflow: 'hidden' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-            <div style={{ fontWeight: 800, fontSize: '1rem', color: '#f8fafc' }}>📦 Vistorias Salvas</div>
+            <div style={{ fontWeight: 800, fontSize: '1rem', color: '#f8fafc', display: 'inline-flex', alignItems: 'center', gap: 8 }}><PackageIcon size={18} /> Vistorias Salvas</div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{supabaseEnabled ? 'Local + nuvem (sincronizado)' : 'Armazenadas localmente (IndexedDB)'}</div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
             <button onClick={onSave} style={{ background: 'rgba(0,170,255,0.1)', border: '1px solid rgba(0,170,255,0.2)', borderRadius: 8, padding: '8px 14px', color: 'var(--primary)', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: 7 }}><SaveIcon /> Salvar Atual</button>
-            <button onClick={onClose} style={{ background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', borderRadius: 8, padding: '8px 12px', color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: '0.82rem' }}>✖ Fechar</button>
+            <button onClick={onClose} style={{ background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', borderRadius: 8, padding: '8px 12px', color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'Outfit,sans-serif', fontWeight: 700, fontSize: '0.82rem', display: 'inline-flex', alignItems: 'center', gap: 6 }}><XIcon size={12} /> Fechar</button>
           </div>
         </div>
         <div style={{ padding: '12px 18px', maxHeight: '60vh', overflowY: 'auto' }}>
@@ -593,10 +599,10 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                   cursor: 'pointer',
                 }}
               >
-                <option value="all">☁️ Todos os status</option>
-                <option value="draft">💻 Apenas prévias</option>
-                <option value="local">📴 Apenas Local/Pendente</option>
-                <option value="cloud">☁️ Sincronizados na Nuvem</option>
+                <option value="all">Todos os status</option>
+                <option value="draft">Apenas prévias</option>
+                <option value="local">Apenas Local/Pendente</option>
+                <option value="cloud">Sincronizados na Nuvem</option>
               </select>
               <select
                 value={sortKey}

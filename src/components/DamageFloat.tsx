@@ -1,4 +1,5 @@
 'use client';
+import { XIcon, EraserIcon } from '@/src/components/app/AppIcons'
 import { useEffect, useRef, useState } from 'react'
 import { DamageType } from '../types'
 
@@ -154,7 +155,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
           aria-label="Fechar"
           className="bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] rounded-lg w-7 h-7 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer focus-visible:ring-2 ring-[var(--primary)] outline-none"
         >
-          ✕
+          <XIcon size={16} />
         </button>
       </div>
 
@@ -194,7 +195,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
         onClick={() => closeThen(onClear)}
         className="mt-3.5 w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl border font-outfit text-xs font-black transition-all duration-200 cursor-pointer bg-red-500/10 hover:bg-red-500/15 border-red-500/35 hover:border-red-500/50 text-red-500"
       >
-        <span>🧽</span> Sem avaria / Limpar
+        <EraserIcon size={14} /> Sem avaria / Limpar
       </button>
     </div>
   )

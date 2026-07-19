@@ -1,4 +1,5 @@
 'use client'
+import { PinIcon, SignalIcon, MapIcon, CheckIcon } from '@/src/components/app/AppIcons'
 import { useState, useCallback } from 'react'
 import type { GeoLocation, VehicleInfo } from '../types'
 import SignaturePad from './SignaturePad'
@@ -84,7 +85,7 @@ export default function FinalizePanel({
         <div className="rounded-2xl border border-sky-500/25 bg-gradient-to-br from-sky-700/10 to-blue-900/5 p-4">
           <div className="flex items-center justify-between gap-2 mb-2.5">
             <div className="inline-flex items-center gap-1.5 text-[0.7rem] font-black text-sky-400 tracking-wider uppercase">
-              📍 Localização da Vistoria (GPS)
+              <span className="inline-flex items-center gap-2"><PinIcon size={16} />Localização da Vistoria (GPS)</span>
             </div>
             {info.geo && (
               <button
@@ -109,7 +110,7 @@ export default function FinalizePanel({
                 loading={geoStatus === 'loading'}
                 className="w-full"
               >
-                {geoStatus === 'loading' ? 'Obtendo localização…' : '📡 Capturar localização atual'}
+                {geoStatus === 'loading' ? 'Obtendo localização…' : (<span className="inline-flex items-center gap-1.5"><SignalIcon size={14} />Capturar localização atual</span>)}
               </Button>
               {geoStatus === 'error' && (
                 <p className="text-[0.75rem] text-red-400 font-semibold mt-2">{geoError}</p>
@@ -119,7 +120,7 @@ export default function FinalizePanel({
             <div className="animate-in fade-in slide-in-from-bottom-1 duration-300 ease-out motion-reduce:animate-none">
               <div className="flex flex-wrap items-center gap-1.5 mb-2">
                 <span className="inline-flex items-center gap-1 bg-green-500/15 border border-green-500/30 text-green-400 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold">
-                  ✓ Localização registrada
+                  <span className="inline-flex items-center gap-1.5"><CheckIcon size={14} />Localização registrada</span>
                 </span>
                 {typeof info.geo.accuracy === 'number' && (
                   <span className="inline-flex items-center gap-1 bg-sky-500/15 border border-sky-500/30 text-sky-400 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold">
@@ -140,7 +141,7 @@ export default function FinalizePanel({
                   rel="noopener noreferrer"
                   className="text-[0.75rem] font-bold text-sky-400 hover:text-sky-300 transition-colors"
                 >
-                  🗺️ Ver no mapa
+                  <span className="inline-flex items-center gap-1.5"><MapIcon size={14} />Ver no mapa</span>
                 </a>
                 <button
                   type="button"

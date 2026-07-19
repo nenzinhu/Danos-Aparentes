@@ -73,7 +73,7 @@ export default function ShareBar({ title }: { title: string }) {
       {/* Contato direto com o proprietário */}
       <div className="mt-5 rounded-2xl border border-[var(--whatsapp-color)]/30 bg-[var(--whatsapp-color)]/10 px-5 py-5">
         <p className="text-sm font-bold text-[var(--text-main)]">
-          Sou o Jeferson, proprietário da Danos Aparentes 👋
+          Sou o Jeferson, proprietário da Danos Aparentes 
         </p>
         <p className="text-xs text-[var(--text-muted)] mt-1 leading-relaxed">
           Estou aqui para tirar todas as suas dúvidas e ouvir sugestões. Fale comigo direto:

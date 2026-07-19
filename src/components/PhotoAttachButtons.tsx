@@ -1,4 +1,5 @@
 'use client';
+import { CameraIcon, ImageIcon, LoaderIcon } from '@/src/components/app/AppIcons'
 
 import { useRef } from 'react'
 
@@ -63,7 +64,7 @@ export default function PhotoAttachButtons({
 
       {compressing ? (
         <div className={`${baseBtn} border-sky-500/40 bg-sky-500/10 text-sky-400 cursor-wait w-full`}>
-          ⏳ Comprimindo…
+          <LoaderIcon size={14} /> Comprimindo…
         </div>
       ) : (
         <>
@@ -73,7 +74,7 @@ export default function PhotoAttachButtons({
             onClick={() => cameraRef.current?.click()}
             className={`${baseBtn} border-sky-500/30 bg-sky-500/5 text-sky-500 hover:bg-sky-500/10 disabled:opacity-50`}
           >
-            📷 Tirar {label}
+            <CameraIcon size={14} /> Tirar {label}
           </button>
           <button
             type="button"
@@ -81,7 +82,7 @@ export default function PhotoAttachButtons({
             onClick={() => galleryRef.current?.click()}
             className={`${baseBtn} border-emerald-500/30 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500/10 disabled:opacity-50`}
           >
-            🖼️ Galeria
+            <ImageIcon size={14} /> Galeria
           </button>
         </>
       )}

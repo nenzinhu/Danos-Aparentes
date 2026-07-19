@@ -13,13 +13,14 @@ import { TtsConfig } from '@/src/types'
 import { ClearAllIcon } from './ClearAllIcon'
 import { VEHICLE_NAME, VIEW_NAME } from './constants'
 import type { PreviousReportSummary } from '@/src/lib/reportComparison'
+import { CarIcon, ClipboardIcon, LaptopIcon, PackageIcon, PenIcon, type IconProps } from './AppIcons'
 
 type InspectSection = 'dados' | 'diagrama' | 'finalizar'
 
-const INSPECT_SECTIONS: { id: InspectSection; label: string; icon: string }[] = [
-  { id: 'dados', label: '1. Dados', icon: '📋' },
-  { id: 'diagrama', label: '2. Diagrama', icon: '🚗' },
-  { id: 'finalizar', label: '3. Laudo', icon: '✍️' },
+const INSPECT_SECTIONS: { id: InspectSection; label: string; icon: (p: IconProps) => React.ReactNode }[] = [
+  { id: 'dados', label: '1. Dados', icon: ClipboardIcon },
+  { id: 'diagrama', label: '2. Diagrama', icon: CarIcon },
+  { id: 'finalizar', label: '3. Laudo', icon: PenIcon },
 ]
 
 function sectionTabClass(active: boolean) {
@@ -114,7 +115,7 @@ export default function InspectTab({
           aria-label="Seções da vistoria"
           className="theme-tabs bg-[var(--card-bg-solid)] border border-[var(--card-border)] rounded-xl p-1 flex flex-wrap gap-1 justify-center shadow-inner backdrop-blur-md w-full max-w-2xl"
         >
-          {INSPECT_SECTIONS.map(({ id, label, icon }) => (
+          {INSPECT_SECTIONS.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               type="button"
@@ -123,7 +124,10 @@ export default function InspectTab({
               onClick={() => setSection(id)}
               className={sectionTabClass(section === id)}
             >
-              {icon} {label}
+              <span className="inline-flex items-center gap-1.5">
+                <Icon size={14} />
+                {label}
+              </span>
               {id === 'finalizar' && allVehicleDamages.length > 0 && (
                 <span className="ml-1 text-red-400">({allVehicleDamages.length})</span>
               )}
@@ -159,7 +163,7 @@ export default function InspectTab({
             <div className="flex gap-4 mt-6 pt-4 border-t border-[var(--panel-border)] justify-between items-center flex-wrap">
               <div className="flex gap-2 flex-wrap">
                 <button onClick={onOpenSaved} className="text-xs px-4 py-2 rounded-lg font-bold border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-all">
-                  📦 Vistorias Salvas
+                  <span className="inline-flex items-center gap-1.5"><PackageIcon size={14} />Vistorias Salvas</span>
                 </button>
                 {onSaveDraft && (
                   <button
@@ -167,7 +171,7 @@ export default function InspectTab({
                     className="text-xs px-4 py-2 rounded-lg font-bold border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all"
                     title="Salva cliente e veículo na nuvem para abrir no celular na hora da vistoria"
                   >
-                    💻 Salvar prévia
+                    <span className="inline-flex items-center gap-1.5"><LaptopIcon size={14} />Salvar prévia</span>
                   </button>
                 )}
               </div>

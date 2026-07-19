@@ -1,4 +1,5 @@
 'use client';
+import { CameraIcon, XIcon, TagIcon } from '@/src/components/app/AppIcons'
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Damage, Severity, ViewType } from '../types'
@@ -130,13 +131,13 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                   </div>
                 </div>
                 {d.photos.length > 0 && (
-                  <span className="text-[0.72rem] text-[var(--primary)] bg-sky-500/10 px-1.5 py-0.5 rounded-md font-medium">📷 {d.photos.length}</span>
+                  <span className="text-[0.72rem] text-[var(--primary)] bg-sky-500/10 px-1.5 py-0.5 rounded-md font-medium"><CameraIcon size={12} /> {d.photos.length}</span>
                 )}
                 <span className="text-[0.7rem] text-[var(--text-muted)]">{expandedId === d.id ? '▲' : '▼'}</span>
                 <button 
                   onClick={e => { e.stopPropagation(); onRemove(d.id) }}
                   className="text-red-500 hover:text-red-400 cursor-pointer text-[0.85rem] px-1.5 shrink-0 transition-colors"
-                >✕</button>
+                ><XIcon size={14} /></button>
               </div>
 
               {/* Expanded */}
@@ -212,12 +213,12 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                             <button 
                               onClick={() => removePhoto(d.id, i)}
                               className="absolute -top-1.5 -right-1.5 bg-black/80 hover:bg-red-600 rounded-full text-white w-5 h-5 text-[0.65rem] flex items-center justify-center font-black transition-colors shadow-lg"
-                            >✕</button>
+                            ><XIcon size={14} /></button>
                           </div>
                           {/* Caption/Tag */}
                           <div className="flex-1 min-w-0 flex flex-col gap-1">
                             <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                              🏷️ Tag / Descrição da Foto
+                              <span className="inline-flex items-center gap-1.5"><TagIcon size={12} />Tag / Descrição da Foto</span>
                             </div>
                             <textarea
                               value={photoNotes[i] ?? ''}
@@ -260,7 +261,7 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
           <button 
             onClick={() => setPhotoViewer(null)} 
             className="fixed top-4 right-4 bg-black/80 border border-white/20 rounded-full w-11 h-11 text-white text-xl flex items-center justify-center hover:bg-white/10 transition-colors"
-          >✕</button>
+          ><XIcon size={14} /></button>
         </div>
       )}
     </>

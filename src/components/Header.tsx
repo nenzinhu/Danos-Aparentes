@@ -1,7 +1,8 @@
 'use client';
-import React, { memo, useState, useEffect, useRef } from 'react'
+import React, { memo, useState, useEffect, useRef, type ReactNode } from 'react'
 import type { SubscriptionStatus } from '../hooks/useSubscription'
 import Logo from '@/src/components/Logo'
+import { AlertIcon, BuildingIcon, ChartIcon, ChatIcon, CheckIcon, FileIcon, GiftIcon, MicIcon, PenIcon, RefreshIcon, SearchIcon, SignalIcon, SparkleIcon, type IconProps } from '@/src/components/app/AppIcons'
 
 interface Props {
   darkMode: boolean
@@ -16,23 +17,23 @@ interface Props {
   onManageSubscription?: () => void
 }
 
-const SYNC_LABEL: Record<'synced' | 'pending' | 'offline' | 'error', { icon: string; text: string; color: string; bgColor: string; borderColor: string }> = {
-  synced:  { icon: '✔️', text: 'Sincronizado',            color: 'text-green-500',  bgColor: 'bg-green-500/10',  borderColor: 'border-green-500/30'  },
-  pending: { icon: '🔄', text: 'Pendente sincronização',  color: 'text-yellow-500', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/30' },
-  offline: { icon: '📡', text: 'Offline',                 color: 'text-red-500',    bgColor: 'bg-red-500/10',    borderColor: 'border-red-500/30'    },
-  error:   { icon: '⚠️', text: 'Erro de sincronização',  color: 'text-orange-500', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/30' },
+const SYNC_LABEL: Record<'synced' | 'pending' | 'offline' | 'error', { icon: (p: IconProps) => ReactNode; text: string; color: string; bgColor: string; borderColor: string }> = {
+  synced:  { icon: CheckIcon, text: 'Sincronizado',            color: 'text-green-500',  bgColor: 'bg-green-500/10',  borderColor: 'border-green-500/30'  },
+  pending: { icon: RefreshIcon, text: 'Pendente sincronização',  color: 'text-yellow-500', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/30' },
+  offline: { icon: SignalIcon, text: 'Offline',                 color: 'text-red-500',    bgColor: 'bg-red-500/10',    borderColor: 'border-red-500/30'    },
+  error:   { icon: AlertIcon, text: 'Erro de sincronização',  color: 'text-orange-500', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/30' },
 }
 
 // ─── Benefícios PRO ──────────────────────────────────────────────────────────
-const PRO_BENEFITS = [
-  { icon: '📄', title: 'PDF Profissional', desc: 'Laudo com hash SHA-256 e QR Code de autenticidade' },
-  { icon: '✍️', title: 'Assinatura Digital', desc: 'Vistoriador e cliente assinam na tela do celular' },
-  { icon: '📡', title: '100% Offline', desc: 'Funciona sem internet, sincroniza quando conectar' },
-  { icon: '🏢', title: 'Marca Própria', desc: 'Logo e nome da empresa em todos os relatórios' },
-  { icon: '🔍', title: 'Consulta de Placas', desc: 'Preenchimento automático dos dados do veículo' },
-  { icon: '💬', title: 'Envio por WhatsApp', desc: 'Compartilhe o laudo em 1 clique diretamente pelo app' },
-  { icon: '📊', title: 'Painel de Estatísticas', desc: 'Dashboard com histórico e análise das vistorias' },
-  { icon: '🗣️', title: 'Voz Antoni PT-BR', desc: 'Narração das peças via ElevenLabs em português' },
+const PRO_BENEFITS: { icon: (p: IconProps) => ReactNode; title: string; desc: string }[] = [
+  { icon: FileIcon, title: 'PDF Profissional', desc: 'Laudo com hash SHA-256 e QR Code de autenticidade' },
+  { icon: PenIcon, title: 'Assinatura Digital', desc: 'Vistoriador e cliente assinam na tela do celular' },
+  { icon: SignalIcon, title: '100% Offline', desc: 'Funciona sem internet, sincroniza quando conectar' },
+  { icon: BuildingIcon, title: 'Marca Própria', desc: 'Logo e nome da empresa em todos os relatórios' },
+  { icon: SearchIcon, title: 'Consulta de Placas', desc: 'Preenchimento automático dos dados do veículo' },
+  { icon: ChatIcon, title: 'Envio por WhatsApp', desc: 'Compartilhe o laudo em 1 clique diretamente pelo app' },
+  { icon: ChartIcon, title: 'Painel de Estatísticas', desc: 'Dashboard com histórico e análise das vistorias' },
+  { icon: MicIcon, title: 'Voz Antoni PT-BR', desc: 'Narração das peças via ElevenLabs em português' },
 ]
 
 function ProBenefitsButton({
@@ -88,11 +89,11 @@ function ProBenefitsButton({
         }}
       >
         {isActive ? (
-          <><span>✓</span> Plano PRO Ativo</>
+          <><CheckIcon size={14} /> Plano PRO Ativo</>
         ) : isTrial ? (
-          <><span>🎁</span> Teste PRO — {subscription!.trialDaysLeft} dia{subscription!.trialDaysLeft !== 1 ? 's' : ''} restante{subscription!.trialDaysLeft !== 1 ? 's' : ''}</>
+          <><GiftIcon size={14} /> Teste PRO — {subscription!.trialDaysLeft} dia{subscription!.trialDaysLeft !== 1 ? 's' : ''} restante{subscription!.trialDaysLeft !== 1 ? 's' : ''}</>
         ) : (
-          <><span style={{ fontSize: '0.9rem' }}>✦</span> Ver benefícios PRO</>
+          <><SparkleIcon size={14} /> Ver benefícios PRO</>
         )}
         {/* Chevron */}
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}>
@@ -131,7 +132,7 @@ function ProBenefitsButton({
             background: 'linear-gradient(135deg, rgba(0,170,255,0.07), rgba(99,102,241,0.04))',
           }}>
             <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#e8f4ff', letterSpacing: '-0.01em' }}>
-              ✦ Plano PRO — Vistoria Profissional
+              <span className="inline-flex items-center gap-1.5"><SparkleIcon size={14} />Plano PRO — Vistoria Profissional</span>
             </div>
             <div style={{ fontSize: '0.73rem', color: '#64748b', marginTop: 2 }}>
               Tudo que você precisa para vistorias perfeitas
@@ -145,7 +146,9 @@ function ProBenefitsButton({
             gap: 1,
             background: 'rgba(255,255,255,0.04)',
           }}>
-            {PRO_BENEFITS.map((b, i) => (
+            {PRO_BENEFITS.map((b, i) => {
+              const Icon = b.icon
+              return (
               <div key={i} style={{
                 padding: '12px 14px',
                 background: 'rgba(8,15,35,0.97)',
@@ -154,12 +157,12 @@ function ProBenefitsButton({
                 gap: 3,
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <span style={{ fontSize: '1rem' }}>{b.icon}</span>
+                  <span style={{ color: '#38bdf8', display: 'inline-flex' }}><Icon size={14} /></span>
                   <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#cbd5e1', fontFamily: 'Outfit, sans-serif' }}>{b.title}</span>
                 </div>
                 <span style={{ fontSize: '0.67rem', color: '#475569', lineHeight: 1.4, fontFamily: 'Outfit, sans-serif' }}>{b.desc}</span>
               </div>
-            ))}
+            )})}
           </div>
 
           {/* CTA footer */}
@@ -218,6 +221,7 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
         {syncStatus && (
           (() => {
             const label = SYNC_LABEL[syncStatus]
+            const SyncIcon = label.icon
             const canRetry = syncStatus !== 'synced' && !!onRetrySync
             const errorDetail = syncStatus === 'error' && syncLastError ? syncLastError : undefined
             const title = errorDetail
@@ -230,7 +234,7 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
                 title={title}
                 className={`h-10 px-3 rounded-xl border text-[0.72rem] font-bold backdrop-blur-md shadow-lg flex items-center justify-center gap-1.5 ${label.bgColor} ${label.borderColor} ${label.color} ${canRetry ? 'cursor-pointer hover:opacity-90 active:scale-[0.98] transition-all' : ''}`}
               >
-                <span aria-hidden>{label.icon}</span>
+                <span aria-hidden className="inline-flex"><SyncIcon size={14} /></span>
                 <span className="hidden sm:inline">{label.text}</span>
               </Tag>
             )

@@ -1,4 +1,5 @@
 'use client'
+import { GlobeIcon, CameraIcon } from '@/src/components/app/AppIcons'
 import type { VehicleInfo } from '../../types'
 import { toTitleCase } from '../../lib/cnhBarcode'
 import CnhScanner from '../CnhScanner'
@@ -72,7 +73,7 @@ export default function WizardStepOwner({
                         }}
                         style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
                       />
-                      🌍 Estrangeiro
+                      <span className="inline-flex items-center gap-1"><GlobeIcon size={12} />Estrangeiro</span>
                     </label>
                   </div>
                   {info.phone?.startsWith('+') ? (
@@ -117,7 +118,7 @@ export default function WizardStepOwner({
                         onChange={e => set('cpf', e.target.checked ? 'EX-' : '')}
                         style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
                       />
-                      🌍 Estrangeiro
+                      <span className="inline-flex items-center gap-1"><GlobeIcon size={12} />Estrangeiro</span>
                     </label>
                   </div>
                   {info.cpf?.startsWith('EX-') ? (
@@ -151,7 +152,7 @@ export default function WizardStepOwner({
                         onChange={e => set('cnh', e.target.checked ? 'EX-' : '')}
                         style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
                       />
-                      🌍 Estrangeiro
+                      <span className="inline-flex items-center gap-1"><GlobeIcon size={12} />Estrangeiro</span>
                     </label>
                   </div>
                   {info.cnh?.startsWith('EX-') ? (
@@ -179,7 +180,7 @@ export default function WizardStepOwner({
                         title="Escanear código de barras da CNH"
                         style={{ flexShrink: 0, width: 40, borderRadius: 10, background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', color: 'var(--text-main)', fontSize: '1.1rem' }}
                       >
-                        📷
+                        <CameraIcon size={16} />
                       </button>
                     </div>
                   )}

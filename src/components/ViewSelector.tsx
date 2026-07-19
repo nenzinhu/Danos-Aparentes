@@ -1,4 +1,5 @@
 ﻿'use client';
+import { CheckIcon } from '@/src/components/app/AppIcons'
 import React, { memo } from 'react'
 import { ViewType } from '../types'
 
@@ -38,8 +39,8 @@ function ViewSelectorComponent({ current, onChange, visited }: Props) {
             >
               {v.label}
               {isVisited && (
-                <span className='absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full bg-emerald-500 text-white text-[0.55rem] flex items-center justify-center font-black shadow-md'>
-                  ✓
+                <span className='absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md'>
+                  <CheckIcon size={10} />
                 </span>
               )}
             </button>

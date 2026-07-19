@@ -76,7 +76,7 @@ export function useAppShellState({ openPortal }: UseAppShellStateOptions) {
     try {
       await openPortal()
     } catch (err) {
-      showToast(err instanceof Error ? `❌ ${err.message}` : '❌ Falha ao Abrir Portal de Gerenciamento')
+      showToast(err instanceof Error ? err.message : 'Falha ao abrir portal de gerenciamento')
     }
   }, [openPortal, showToast])
 
@@ -92,7 +92,7 @@ export function useAppShellState({ openPortal }: UseAppShellStateOptions) {
   }, [])
 
   const onWizardComplete = useCallback(() => {
-    showToast('✅ Dados da vistoria prontos')
+    showToast('Dados da vistoria prontos')
     if (localStorage.getItem('inspection_coachmarks_seen') !== 'true') {
       setCoachMarksOpen(true)
     }

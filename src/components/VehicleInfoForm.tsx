@@ -1,4 +1,5 @@
 'use client';
+import { ClipboardIcon } from '@/src/components/app/AppIcons'
 import React, { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react'
 import { VehicleInfo, CustomField, VehicleType } from '../types'
 import Button from './ui/Button'
@@ -369,7 +370,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   return (
     <div className="font-outfit">
       <div className="flex justify-between items-center mb-4">
-        <div className="font-extrabold text-[0.95rem]">🗒️ Dados da Vistoria</div>
+        <div className="font-extrabold text-[0.95rem]"><span className="inline-flex items-center gap-2"><ClipboardIcon size={16} />Dados da Vistoria</span></div>
         <div className="flex gap-2 items-center relative">
           <FieldVisibilityPanel
             filterRef={filterRef}

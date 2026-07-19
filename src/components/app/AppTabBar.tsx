@@ -1,4 +1,5 @@
 'use client';
+import { NotesIcon, ChartIcon, UsersIcon, LightbulbIcon } from '@/src/components/app/AppIcons'
 import CompanyLogoButton from '@/src/components/CompanyLogoButton'
 import PwaInstallButton from '@/src/components/PwaInstallButton'
 
@@ -24,22 +25,22 @@ export default function AppTabBar({ activeTab, onTabChange, onOpenSettings, onOp
       <div className="theme-tabs bg-[var(--card-bg-solid)] border border-[var(--card-border)] rounded-xl p-1 flex flex-wrap gap-1 justify-center shadow-inner backdrop-blur-md max-w-full">
         <button
           onClick={() => onTabChange('inspect')}
-          className={tabClass(activeTab === 'inspect')}
+          className={`${tabClass(activeTab === 'inspect')} inline-flex items-center gap-1.5`}
         >
-          📝 <span className="hidden sm:inline">Nova Vistoria</span><span className="sm:hidden">Vistoria</span>
+          <NotesIcon size={14} /> <span className="hidden sm:inline">Nova Vistoria</span><span className="sm:hidden">Vistoria</span>
         </button>
         <button
           onClick={() => onTabChange('dashboard')}
-          className={tabClass(activeTab === 'dashboard')}
+          className={`${tabClass(activeTab === 'dashboard')} inline-flex items-center gap-1.5`}
         >
-          📊 <span className="hidden sm:inline">Estatísticas</span><span className="sm:hidden">Painel</span>
+          <ChartIcon size={14} /> <span className="hidden sm:inline">Estatísticas</span><span className="sm:hidden">Painel</span>
         </button>
         {showTeamTab && (
           <button
             onClick={() => onTabChange('team')}
-            className={tabClass(activeTab === 'team')}
+            className={`${tabClass(activeTab === 'team')} inline-flex items-center gap-1.5`}
           >
-            👥 <span className="hidden sm:inline">Equipe</span><span className="sm:hidden">Equipe</span>
+            <UsersIcon size={14} /> <span className="hidden sm:inline">Equipe</span><span className="sm:hidden">Equipe</span>
           </button>
         )}
         <CompanyLogoButton onClick={onOpenSettings} />
@@ -49,7 +50,7 @@ export default function AppTabBar({ activeTab, onTabChange, onOpenSettings, onOp
           className="theme-tab-idle px-3 py-2.5 rounded-lg text-xs font-bold font-outfit text-[var(--text-muted)] hover:text-sky-400 hover:bg-sky-500/10 hover:border-sky-500/20 transition-all cursor-pointer border border-transparent flex items-center gap-1.5 focus:outline-none"
           title="Como funciona o aplicativo"
         >
-          💡 <span className="hidden sm:inline">Tutorial</span>
+          <LightbulbIcon size={14} /> <span className="hidden sm:inline">Tutorial</span>
         </button>
       </div>
     </div>

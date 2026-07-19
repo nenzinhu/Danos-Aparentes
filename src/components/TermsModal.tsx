@@ -1,4 +1,5 @@
 'use client';
+import { ScrollIcon, XIcon } from '@/src/components/app/AppIcons'
 import { useEffect, useRef, useState } from 'react'
 import LegalContent from './LegalContent'
 
@@ -45,13 +46,13 @@ export default function TermsModal({ isOpen, onClose, defaultTab = 'terms' }: Pr
         <div className="p-5 pb-0 border-b border-slate-800/60 shrink-0">
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-extrabold text-base text-[var(--text-main)] flex items-center gap-2">
-              📜 Documentos Legais
+              <span className="inline-flex items-center gap-2"><ScrollIcon size={16} />Documentos Legais</span>
             </h3>
             <button 
               onClick={onClose} 
               className="bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] rounded-xl w-8 h-8 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer"
             >
-              ✕
+              <XIcon size={16} />
             </button>
           </div>
 

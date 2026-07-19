@@ -1,4 +1,5 @@
 'use client'
+import { LoaderIcon, CheckIcon, XIcon, CarIcon, PaletteIcon, TagIcon, PinIcon } from '@/src/components/app/AppIcons'
 import type { VehicleInfo } from '../../types'
 import { UF_LIST, VEHICLE_TYPES, inputClasses, labelClasses, type FoundData } from './constants'
 import { Chip } from './icons'
@@ -51,13 +52,13 @@ export default function WizardStepVehicle({
                 `}
               />
               {plateStatus === 'loading' && (
-                <div className="absolute -top-2.5 -right-2.5 bg-yellow-500/20 border border-yellow-500/50 text-yellow-500 rounded-full px-2 py-0.5 text-[0.65rem] font-black animate-pulse">⏳</div>
+                <div className="absolute -top-2.5 -right-2.5 bg-yellow-500/20 border border-yellow-500/50 text-yellow-500 rounded-full px-1.5 py-0.5 flex items-center"><LoaderIcon size={12} /></div>
               )}
               {plateStatus === 'found' && (
-                <div className="absolute -top-2.5 -right-2.5 bg-green-500/20 border border-green-500/50 text-green-500 rounded-full px-2 py-0.5 text-[0.65rem] font-black">✓</div>
+                <div className="absolute -top-2.5 -right-2.5 bg-green-500/20 border border-green-500/50 text-green-500 rounded-full px-1.5 py-0.5 flex items-center"><CheckIcon size={12} /></div>
               )}
               {plateStatus === 'error' && (
-                <div className="absolute -top-2.5 -right-2.5 bg-red-500/20 border border-red-500/50 text-red-500 rounded-full px-2 py-0.5 text-[0.65rem] font-black">✖</div>
+                <div className="absolute -top-2.5 -right-2.5 bg-red-500/20 border border-red-500/50 text-red-500 rounded-full px-1.5 py-0.5 flex items-center"><XIcon size={12} /></div>
               )}
             </div>
           </div>
@@ -70,26 +71,26 @@ export default function WizardStepVehicle({
             )}
             {plateStatus === 'loading' && (
               <div className="text-[0.82rem] text-yellow-500 font-bold flex items-center gap-2">
-                <span className="animate-spin inline-block text-lg">⏳</span>
+                <LoaderIcon size={16} />
                 Consultando base de dados...
               </div>
             )}
             {plateStatus === 'found' && foundData && (
               <div className="animate-in fade-in slide-in-from-left-2 duration-300">
                 <div className="text-[0.72rem] font-black text-green-500 uppercase tracking-wider mb-2">
-                  ✓ Veículo Encontrado
+                  <span className="inline-flex items-center gap-1.5"><CheckIcon size={12} />Veículo Encontrado</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  {foundData.brand && <Chip icon="🚗" label={foundData.brand} color="sky" />}
-                  {foundData.color && <Chip icon="🎨" label={foundData.color} color="violet" />}
-                  {foundData.especie && <Chip icon="🏷️" label={foundData.especie} color="orange" />}
-                  {foundData.city && foundData.state && <Chip icon="📍" label={`${foundData.city} / ${foundData.state}`} color="green" />}
+                  {foundData.brand && <Chip icon={<CarIcon size={12} />} label={foundData.brand} color="sky" />}
+                  {foundData.color && <Chip icon={<PaletteIcon size={12} />} label={foundData.color} color="violet" />}
+                  {foundData.especie && <Chip icon={<TagIcon size={12} />} label={foundData.especie} color="orange" />}
+                  {foundData.city && foundData.state && <Chip icon={<PinIcon size={12} />} label={`${foundData.city} / ${foundData.state}`} color="green" />}
                 </div>
               </div>
             )}
             {plateStatus === 'error' && (
               <div className="text-[0.82rem] text-red-500 font-bold">
-                ✖ Placa não encontrada na base de dados.
+                <span className="inline-flex items-center gap-1.5"><XIcon size={14} />Placa não encontrada na base de dados.</span>
                 <div className="text-[0.72rem] text-slate-400 font-normal mt-1">Preencha os dados manualmente abaixo.</div>
               </div>
             )}

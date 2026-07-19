@@ -7,20 +7,20 @@ const SEV_LABEL: Record<string, string> = { low: 'Leve', medium: 'Média', high:
 
 export function formatReport(info: VehicleInfo, damages: Damage[]): string {
   const date = new Date().toLocaleString('pt-BR')
-  let txt = `🔍 RELATÓRIO DE VISTORIA VEICULAR\n📅 ${date}\n━━━━━━━━━━━━━━━━━━━━━━━━━\n`
-  txt += `👤 Proprietário: ${info.owner || 'N/I'}\n`
-  txt += `📞 Telefone: ${info.phone || 'N/I'}\n`
-  txt += `🚗 Veículo: ${info.brand || 'N/I'}\n`
-  txt += `🔤 Placa: ${info.plate || 'N/I'}\n`
+  let txt = `RELATÓRIO DE VISTORIA VEICULAR\n${date}\n━━━━━━━━━━━━━━━━━━━━━━━━━\n`
+  txt += `Proprietário: ${info.owner || 'N/I'}\n`
+  txt += `Telefone: ${info.phone || 'N/I'}\n`
+  txt += `Veículo: ${info.brand || 'N/I'}\n`
+  txt += `Placa: ${info.plate || 'N/I'}\n`
   if (info.customFields?.length) {
     info.customFields.forEach(f => { if (f.value) txt += `${f.label}: ${f.value}\n` })
   }
-  if (info.generalNotes) txt += `📝 Obs.: ${info.generalNotes}\n`
+  if (info.generalNotes) txt += `Obs.: ${info.generalNotes}\n`
   txt += `━━━━━━━━━━━━━━━━━━━━━━━━━\n`
   if (damages.length === 0) {
-    txt += `✅ Nenhuma avaria registrada.\n`
+    txt += `Nenhuma avaria registrada.\n`
   } else {
-    txt += `⚠️ AVARIAS (${damages.length}):\n\n`
+    txt += `AVARIAS (${damages.length}):\n\n`
     damages.forEach((d, i) => {
       txt += `${i + 1}. ${d.partName} [${VIEW_LABEL[d.view] || d.view}]\n`
       txt += `   Tipo: ${d.typeName} | Grau: ${SEV_LABEL[d.severity]}\n`

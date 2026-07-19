@@ -1,4 +1,5 @@
 'use client';
+import { SpeakIcon, VolumeIcon } from '@/src/components/app/AppIcons'
 import { TtsConfig } from '../types'
 import { GOOGLE_TTS_VOICES } from '../lib/googleTtsVoices'
 
@@ -30,7 +31,7 @@ export default function TtsSettings({ config, onChange, onTest }: Props) {
   return (
     <div style={{ borderTop: '1px solid var(--panel-border)', paddingTop: 16, marginTop: 8 }}>
       <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', color: 'var(--text-main)' }}>
-        🗣️ Configurações de Voz
+        <span className="inline-flex items-center gap-2"><SpeakIcon size={16} />Configurações de Voz</span>
         <span style={{ fontSize: '0.65rem', background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.25)', color: 'var(--primary)', padding: '2px 8px', borderRadius: 100 }}>
           Google TTS — PT-BR
         </span>
@@ -98,7 +99,7 @@ export default function TtsSettings({ config, onChange, onTest }: Props) {
             alignSelf: 'end',
           }}
         >
-          🔊 Testar
+          <span className="inline-flex items-center gap-1.5"><VolumeIcon size={14} />Testar</span>
         </button>
       </div>
 

@@ -1,4 +1,5 @@
 'use client'
+import { NotesIcon, SeatIcon, XIcon, TagIcon } from '@/src/components/app/AppIcons'
 import type { VehicleInfo } from '../../types'
 import SpeechButton from '../SpeechButton'
 import { ResolvedPhoto } from '../ResolvedPhoto'
@@ -30,7 +31,7 @@ export default function WizardStepExtras({
       <>
       <div>
         <div className="flex justify-between items-center mb-1.5">
-          <label htmlFor="general-notes-textarea" className={labelClasses} style={{ marginBottom: 0 }}>📝 Observações Gerais</label>
+          <label htmlFor="general-notes-textarea" className={labelClasses} style={{ marginBottom: 0 }}><span className="inline-flex items-center gap-1.5"><NotesIcon size={14} />Observações Gerais</span></label>
           <SpeechButton
             onTranscript={(text) => {
               const current = info.generalNotes || ''
@@ -47,7 +48,7 @@ export default function WizardStepExtras({
       </div>
 
       <div className="mt-4">
-        <label htmlFor="interior-notes-textarea" className={labelClasses}>🪑 Interior do Veículo</label>
+        <label htmlFor="interior-notes-textarea" className={labelClasses}><span className="inline-flex items-center gap-1.5"><SeatIcon size={14} />Interior do Veículo</span></label>
         <textarea
           id="interior-notes-textarea"
           className={`${inputClasses} min-h-[52px] resize-vertical`}
@@ -68,11 +69,11 @@ export default function WizardStepExtras({
                   type="button"
                   onClick={() => removeInteriorPhoto(i)}
                   className="absolute -top-1.5 -right-1.5 bg-black/80 hover:bg-red-600 rounded-full text-white w-5 h-5 text-[0.65rem] flex items-center justify-center font-black transition-colors shadow-lg"
-                >✕</button>
+                ><XIcon size={14} /></button>
               </div>
               <div className="flex-1 min-w-0 flex flex-col gap-1">
                 <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                  🏷️ Legenda da foto
+                  <span className="inline-flex items-center gap-1.5"><TagIcon size={12} />Legenda da foto</span>
                 </div>
                 <textarea
                   value={(info.interiorPhotoNotes ?? [])[i] ?? ''}

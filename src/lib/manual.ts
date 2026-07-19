@@ -1,4 +1,5 @@
 import { MANUAL_STEPS, ManualStep } from './manualContent'
+import { MANUAL_ICON_SVG_HTML } from './manualIconSvg'
 
 async function getHtml2Pdf() {
   const mod = await import('html2pdf.js')
@@ -19,7 +20,7 @@ function esc(s: string): string {
 function highlightHtml(h: { icon: string; label: string; text: string }): string {
   return `
     <div class="nobreak highlight-card" style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;margin-bottom:8px;background:#fff;border:1px solid ${LINE};border-radius:10px;border-left:3px solid ${BRAND};">
-      <div style="width:28px;height:28px;border-radius:8px;background:${SOFT};display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">${h.icon}</div>
+      <div style="width:28px;height:28px;border-radius:8px;background:${SOFT};display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">${MANUAL_ICON_SVG_HTML[h.icon] || MANUAL_ICON_SVG_HTML.file}</div>
       <div style="flex:1;min-width:0;">
         <div style="font-size:10.5px;font-weight:800;color:${INK};margin-bottom:3px;letter-spacing:0.01em;">${esc(h.label)}</div>
         <div style="font-size:10px;color:${MUTED};line-height:1.5;">${esc(h.text)}</div>
@@ -99,9 +100,9 @@ function buildManualHtml(baseUrl: string): string {
     ${steps}
 
     <div style="margin-top:16px;padding:14px 16px;border-radius:12px;background:linear-gradient(135deg,#ecfdf5,#f0f9ff);border:1px solid #bae6fd;">
-      <div style="font-size:11px;font-weight:900;color:${INK};margin-bottom:6px;">💡 Dica</div>
+      <div style="font-size:11px;font-weight:900;color:${INK};margin-bottom:6px;">Dica</div>
       <div style="font-size:10px;color:${MUTED};line-height:1.55;">
-        Dentro do app, toque em <strong style="color:${INK};">💡 Tutorial</strong> para rever estes passos com ilustrações interativas. O manual em PDF é sempre o mesmo conteúdo, pronto para imprimir ou compartilhar com a equipe.
+        Dentro do app, toque em <strong style="color:${INK};">Tutorial</strong> para rever estes passos com ilustrações interativas. O manual em PDF é sempre o mesmo conteúdo, pronto para imprimir ou compartilhar com a equipe.
       </div>
     </div>
 

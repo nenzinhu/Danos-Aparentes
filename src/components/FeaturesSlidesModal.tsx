@@ -1,8 +1,10 @@
 'use client';
+import { LightbulbIcon, XIcon, FileIcon, LoaderIcon, DownloadIcon, CheckIcon } from '@/src/components/app/AppIcons'
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { MANUAL_STEPS, type ManualStep } from '../lib/manualContent';
 import { generateManualPdf } from '../lib/manual';
+import { ManualHighlightIcon } from '@/src/components/app/ManualHighlightIcon';
 
 interface FeaturesSlidesModalProps {
   isOpen: boolean;
@@ -96,7 +98,7 @@ function TutorialProgress({
                   active ? 'bg-sky-500 text-slate-950' : done ? 'bg-green-500/20 text-green-400' : 'bg-white/5'
                 }`}
               >
-                {done ? '✓' : s.num}
+                {done ? <CheckIcon size={10} /> : s.num}
               </span>
               <span className="hidden sm:inline max-w-[88px] truncate">{s.title}</span>
             </button>
@@ -150,7 +152,7 @@ export default function FeaturesSlidesModal({ isOpen, onClose }: FeaturesSlidesM
         <div className="px-5 sm:px-7 pt-5 pb-2 border-b border-white/5 shrink-0">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-[10px] font-black tracking-[0.18em] text-sky-400 uppercase mb-1">💡 Tutorial</p>
+              <p className="text-[10px] font-black tracking-[0.18em] text-sky-400 uppercase mb-1"><span className="inline-flex items-center gap-1.5"><LightbulbIcon size={12} />Tutorial</span></p>
               <h2 className="text-lg sm:text-xl font-black text-slate-100 font-outfit leading-tight truncate">
                 {step.title}
               </h2>
@@ -163,7 +165,7 @@ export default function FeaturesSlidesModal({ isOpen, onClose }: FeaturesSlidesM
               className="shrink-0 text-slate-400 hover:text-slate-100 p-2 hover:bg-white/5 rounded-xl transition-all text-lg leading-none"
               aria-label="Fechar tutorial"
             >
-              ✕
+              <XIcon size={16} />
             </button>
           </div>
           <TutorialProgress steps={steps} current={currentSlide} onSelect={setCurrentSlide} />
@@ -192,7 +194,7 @@ export default function FeaturesSlidesModal({ isOpen, onClose }: FeaturesSlidesM
                     className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-lg shrink-0"
                     aria-hidden
                   >
-                    {h.icon}
+                    <ManualHighlightIcon name={h.icon} size={18} />
                   </span>
                   <div className="min-w-0 pt-0.5">
                     <p className="text-xs font-extrabold text-slate-200 font-outfit">{h.label}</p>
@@ -205,7 +207,7 @@ export default function FeaturesSlidesModal({ isOpen, onClose }: FeaturesSlidesM
 
           <div className="mt-5 p-4 rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 to-sky-500/5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <p className="text-xs font-extrabold text-emerald-300 font-outfit">📄 Manual completo em PDF</p>
+              <p className="text-xs font-extrabold text-emerald-300 font-outfit"><span className="inline-flex items-center gap-1.5"><FileIcon size={14} />Manual completo em PDF</span></p>
               <p className="text-[11px] text-slate-400 mt-0.5 font-outfit">
                 Mesmo conteúdo e imagens do tutorial, pronto para imprimir ou enviar à equipe.
               </p>
@@ -215,7 +217,7 @@ export default function FeaturesSlidesModal({ isOpen, onClose }: FeaturesSlidesM
               disabled={downloading}
               className="shrink-0 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-extrabold font-outfit text-emerald-950 bg-emerald-400 hover:bg-emerald-300 transition-all disabled:opacity-60 disabled:cursor-wait shadow-lg shadow-emerald-900/20"
             >
-              {downloading ? '⏳ Gerando…' : '📥 Baixar PDF'}
+              {downloading ? <><LoaderIcon size={14} /> Gerando…</> : <><DownloadIcon size={14} /> Baixar PDF</>}
             </button>
           </div>
         </div>
@@ -241,7 +243,7 @@ export default function FeaturesSlidesModal({ isOpen, onClose }: FeaturesSlidesM
               onClick={handleNext}
               className="px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs rounded-xl shadow-lg shadow-sky-500/20 transition-all active:scale-[0.98]"
             >
-              {isLast ? '✓ Concluir' : 'Próximo →'}
+              {isLast ? <span className="inline-flex items-center gap-1.5"><CheckIcon size={14} />Concluir</span> : 'Próximo →'}
             </button>
           </div>
         </div>

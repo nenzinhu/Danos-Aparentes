@@ -1,4 +1,5 @@
 'use client';
+import { PenIcon, CameraIcon, CheckIcon, AlertIcon } from '@/src/components/app/AppIcons'
 import Reveal from './Reveal';
 
 // QR Code simulado (mockup do laudo) — três marcadores de canto + módulos determinísticos
@@ -160,14 +161,14 @@ export default function PdfPreviewSection() {
                   <tr className="border-t border-slate-100 bg-white">
                     <td className="px-2 py-1.5 font-bold uppercase">Porta Diant. Esquerda</td>
                     <td className="px-2 py-1.5">
-                      <span className="inline-flex items-center gap-1">✏️ Riscos / Abrasão</span>
+                      <span className="inline-flex items-center gap-1"><PenIcon size={14} /> Riscos / Abrasão</span>
                     </td>
                     <td className="px-2 py-1.5 text-center"><span className="text-amber-600 font-black uppercase">Leve</span></td>
                   </tr>
                   <tr className="border-t border-slate-100 bg-white">
                     <td className="px-2 py-1.5 font-bold uppercase">Porta Tras. Esquerda</td>
                     <td className="px-2 py-1.5">
-                      <span className="inline-flex items-center gap-1">✏️ Riscos / Abrasão</span>
+                      <span className="inline-flex items-center gap-1"><PenIcon size={14} /> Riscos / Abrasão</span>
                     </td>
                     <td className="px-2 py-1.5 text-center"><span className="text-amber-600 font-black uppercase">Leve</span></td>
                   </tr>
@@ -175,9 +176,9 @@ export default function PdfPreviewSection() {
               </table>
               <div className="bg-slate-50 px-2.5 py-1 border-t border-slate-100 flex items-center gap-2 text-[6px] text-slate-400 font-semibold uppercase tracking-wide">
                 <span>Tipos classificados:</span>
-                <span className="text-slate-500">✏️ Risco</span>
-                <span className="text-slate-500">🔨 Deformação</span>
-                <span className="text-slate-500">💥 Fratura</span>
+                <span className="text-slate-500 inline-flex items-center gap-1"><PenIcon size={12} />Risco</span>
+                <span className="text-slate-500 inline-flex items-center gap-1"><AlertIcon size={12} />Deformação</span>
+                <span className="text-slate-500 inline-flex items-center gap-1"><AlertIcon size={12} className="text-red-400" />Fratura</span>
               </div>
             </div>
 
@@ -188,7 +189,7 @@ export default function PdfPreviewSection() {
                 <div className="w-1/3 border border-slate-200 rounded overflow-hidden bg-white">
                   {/* Imagem simulada */}
                   <div className="h-16 bg-slate-100 flex items-center justify-center relative">
-                    <span className="text-lg">📷</span>
+                    <CameraIcon size={18} className="text-sky-400" />
                     <div className="absolute inset-0 bg-red-500/10 flex items-center justify-center">
                       <span className="w-3 h-3 rounded-full border border-red-500 animate-pulse" />
                     </div>
@@ -275,7 +276,7 @@ export default function PdfPreviewSection() {
               { title: 'Assinatura Eletrônica na Tela', desc: 'Elimina totalmente a necessidade de papéis físicos e canetas. Coleta rápida pelo celular de forma legal e simples.' }
             ].map((feat, idx) => (
               <li key={idx} className="flex items-start gap-3">
-                <span className="text-[var(--signal-bright)] text-base mt-0.5">✓</span>
+                <CheckIcon size={16} className="text-[var(--signal-bright)] mt-0.5" />
                 <div>
                   <h4 className="text-xs font-bold text-[var(--text-main)]">{feat.title}</h4>
                   <p className="text-[11px] text-[var(--text-muted)] mt-0.5 leading-relaxed">{feat.desc}</p>

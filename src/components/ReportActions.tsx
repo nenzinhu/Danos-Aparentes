@@ -1,4 +1,5 @@
 'use client';
+import { LoaderIcon } from '@/src/components/app/AppIcons'
 import { useState, createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { Damage, VehicleInfo, VehicleType, ViewType } from '../types'
@@ -137,7 +138,7 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
       if (successMsg && onToast) onToast(successMsg)
     } catch (e) {
       console.error(e)
-      if (onToast) onToast('❌ Erro ao gerar arquivo')
+      if (onToast) onToast('Erro ao gerar arquivo')
     } finally {
       setLoading(null)
     }
@@ -186,12 +187,12 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
           onChange={(e) => handleThemeChange(e.target.value as 'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante')}
           className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg font-outfit text-[0.82rem] font-medium outline-none focus:border-sky-500/40 transition-all cursor-pointer"
         >
-          <option value="modern">🎨 Modelo Moderno (Padrão)</option>
-          <option value="editorial">📖 Modelo Editorial (Poppins & Lora)</option>
-          <option value="tecnico">🔬 Modelo Técnico / Forense (Mono)</option>
-          <option value="corporativo">🏛️ Modelo Corporativo (Azul & Dourado)</option>
-          <option value="minimalista">⚪ Modelo Minimalista (Preto & Branco)</option>
-          <option value="vibrante">🌈 Modelo Vibrante (Roxo & Rosa)</option>
+          <option value="modern">Modelo Moderno (Padrão)</option>
+          <option value="editorial">Modelo Editorial (Poppins & Lora)</option>
+          <option value="tecnico">Modelo Técnico / Forense (Mono)</option>
+          <option value="corporativo">Modelo Corporativo (Azul & Dourado)</option>
+          <option value="minimalista">Modelo Minimalista (Preto & Branco)</option>
+          <option value="vibrante">Modelo Vibrante (Roxo & Rosa)</option>
         </select>
       </div>
 
@@ -201,7 +202,7 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
           disabled={loading !== null}
           className={`${btnBase} bg-green-500/10 border border-green-500/30 text-green-500 hover:bg-green-500/20 disabled:opacity-60`}
         >
-          {loading === 'wp' ? <span className="animate-pulse">⏳</span> : <IconWhatsApp />}
+          {loading === 'wp' ? <LoaderIcon size={16} /> : <IconWhatsApp />}
           Enviar via WhatsApp
         </button>
 
@@ -210,38 +211,38 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
           disabled={loading !== null}
           className={`${btnBase} bg-green-500/5 border border-green-500/20 text-green-500 hover:bg-green-500/15 disabled:opacity-60`}
         >
-          {loading === 'wp-pdf' ? <span className="animate-pulse">⏳</span> : <IconWhatsAppFull />}
+          {loading === 'wp-pdf' ? <LoaderIcon size={16} /> : <IconWhatsAppFull />}
           WhatsApp (PDF)
         </button>
 
         <div className="grid grid-cols-3 gap-2">
           <button
-            onClick={() => handle('pdf', handlePdf, '📄 PDF gerado!')}
+            onClick={() => handle('pdf', handlePdf, 'PDF gerado!')}
             disabled={loading !== null}
             title="Gerar PDF Profissional com Mapa de Avarias"
             className={`${btnBase} flex-col justify-center gap-1 bg-gradient-to-br from-emerald-500/15 to-emerald-600/10 border border-emerald-500/35 text-emerald-500 p-2.5 hover:from-emerald-500/20 hover:to-emerald-600/15 disabled:opacity-60`}
           >
-            {loading === 'pdf' ? <span className="text-xl animate-pulse">⏳</span> : <IconPdf />}
+            {loading === 'pdf' ? <LoaderIcon size={20} /> : <IconPdf />}
             <span className="text-[0.72rem]">PDF</span>
           </button>
 
           <button
-            onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, '📋 Copiado!')}
+            onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, 'Copiado!')}
             disabled={loading !== null}
             title="Copiar Relatório"
             className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
           >
-            {loading === 'copy' ? <span className="text-xl animate-pulse">⏳</span> : <IconCopy />}
+            {loading === 'copy' ? <LoaderIcon size={20} /> : <IconCopy />}
             <span className="text-[0.72rem]">Copiar</span>
           </button>
 
           <button
-            onClick={() => handle('txt', async () => downloadTxt(vehicleInfo, damages), '📝 TXT baixado!')}
+            onClick={() => handle('txt', async () => downloadTxt(vehicleInfo, damages), 'TXT baixado!')}
             disabled={loading !== null}
             title="Bloco de Notas (TXT)"
             className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
           >
-            {loading === 'txt' ? <span className="text-xl animate-pulse">⏳</span> : <IconTxt />}
+            {loading === 'txt' ? <LoaderIcon size={20} /> : <IconTxt />}
             <span className="text-[0.72rem]">TXT</span>
           </button>
         </div>
@@ -275,11 +276,11 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
             <button
               onClick={() => handle('badge-copy', async () => {
                 await navigator.clipboard.writeText(buildBadgeSnippet(reportHash))
-              }, '📋 Código copiado!')}
+              }, 'Código copiado!')}
               disabled={loading !== null}
               className={`${btnBase} justify-center bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
             >
-              {loading === 'badge-copy' ? <span className="animate-pulse">⏳</span> : <IconCopy />}
+              {loading === 'badge-copy' ? <LoaderIcon size={16} /> : <IconCopy />}
               Copiar código
             </button>
           </div>

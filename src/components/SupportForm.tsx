@@ -1,4 +1,5 @@
 'use client';
+import { CheckIcon } from '@/src/components/app/AppIcons'
 import { useState } from 'react'
 import { LEGAL_CONTACT_EMAIL } from './LegalContent'
 import Button from './ui/Button'
@@ -62,7 +63,7 @@ export default function SupportForm() {
           onClick={copyEmail}
           className="shrink-0 px-3 py-2 rounded-xl text-xs font-bold text-[var(--text-main)] bg-[var(--btn-secondary-bg)] hover:bg-[var(--btn-secondary-hover)] border border-[var(--btn-secondary-border)] transition-all cursor-pointer"
         >
-          {copied ? '✓ Copiado' : 'Copiar'}
+          {copied ? <span className="inline-flex items-center gap-1"><CheckIcon size={12} />Copiado</span> : 'Copiar'}
         </button>
       </div>
 

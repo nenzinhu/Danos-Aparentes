@@ -1,4 +1,5 @@
 'use client';
+import { CheckIcon } from '@/src/components/app/AppIcons'
 import type { WizardStep } from './wizardTypes'
 
 const WIZARD_STEPS: { step: WizardStep; label: string }[] = [
@@ -34,7 +35,7 @@ export default function WizardStepper({ current, maxVisited, onStepClick }: Prop
                 active ? 'bg-sky-500/20 border-sky-500/50 text-sky-500' :
                 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)]'
               }`}>
-                {done ? '✓' : step}
+                {done ? <CheckIcon size={12} /> : step}
               </span>
               <span className={`text-[0.65rem] font-bold truncate max-w-full ${active ? 'text-sky-500' : 'text-[var(--text-muted)]'}`}>
                 {label}

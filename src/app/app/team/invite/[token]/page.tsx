@@ -1,4 +1,5 @@
 'use client';
+import { XIcon, CheckIcon } from '@/src/components/app/AppIcons'
 import { useState, useEffect, Suspense } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/src/hooks/useAuth'
@@ -55,7 +56,7 @@ function AcceptInvite() {
     return (
       <Centered>
         <div>
-          <div className="text-2xl mb-2">❌</div>
+          <div className="mb-2 text-red-500 flex justify-center"><XIcon size={28} /></div>
           <p className="text-sm text-red-400">{error}</p>
         </div>
       </Centered>
@@ -66,7 +67,7 @@ function AcceptInvite() {
     return (
       <Centered>
         <div>
-          <div className="text-2xl mb-2">✅</div>
+          <div className="mb-2 text-emerald-500 flex justify-center"><CheckIcon size={28} /></div>
           <p className="text-sm text-[var(--text-muted)]">Convite aceito! Redirecionando…</p>
         </div>
       </Centered>

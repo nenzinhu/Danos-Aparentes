@@ -1,29 +1,30 @@
 'use client';
 import { useState } from 'react'
+import { ClipboardIcon, CarIcon, PenIcon, FileIcon, XIcon, type IconProps } from './AppIcons'
 
 interface Props {
   isOpen: boolean
   onClose: () => void
 }
 
-const STEPS = [
+const STEPS: { icon: (p: IconProps) => React.ReactNode; title: string; text: string }[] = [
   {
-    icon: '📋',
+    icon: ClipboardIcon,
     title: 'Dados do cliente e placa',
     text: 'Comece pelo cliente. Depois consulte a placa — os dados do veículo preenchem sozinhos. No computador, use “Salvar prévia” para continuar no celular.',
   },
   {
-    icon: '🚗',
+    icon: CarIcon,
     title: 'Marque as avarias no diagrama',
     text: 'Clique nas peças do SVG para registrar danos. Sem avarias? Siga mesmo assim para o laudo.',
   },
   {
-    icon: '✍️',
+    icon: PenIcon,
     title: 'Assine e capture o GPS',
     text: 'Na aba Laudo, revise as avarias, capture a localização do local e colete as assinaturas.',
   },
   {
-    icon: '📄',
+    icon: FileIcon,
     title: 'Gere o PDF',
     text: 'Exporte o laudo com hash, QR Code e GPS do local da vistoria.',
   },
@@ -36,6 +37,7 @@ export default function InspectionCoachMarks({ isOpen, onClose }: Props) {
 
   const isLast = step === STEPS.length - 1
   const current = STEPS[step]
+  const Icon = current.icon
 
   return (
     <div
@@ -47,15 +49,15 @@ export default function InspectionCoachMarks({ isOpen, onClose }: Props) {
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex items-center gap-2">
-          <span className="text-xl">{current.icon}</span>
+          <span className="text-[var(--primary)] inline-flex"><Icon size={20} /></span>
           <span className="font-outfit font-extrabold text-sm text-[var(--text-main)]">{current.title}</span>
         </div>
         <button
           onClick={onClose}
           aria-label="Fechar guia"
-          className="bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] rounded-lg w-6 h-6 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer shrink-0"
+          className="bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] rounded-lg w-6 h-6 flex items-center justify-center transition-colors cursor-pointer shrink-0"
         >
-          ✕
+          <XIcon size={12} />
         </button>
       </div>
 

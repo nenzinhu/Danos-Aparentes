@@ -1,4 +1,5 @@
 'use client'
+import { SettingsIcon, PlusIcon, GripIcon } from '@/src/components/app/AppIcons'
 
 import { FIELD_LABELS, inputClasses, type CustomFieldDef } from './constants'
 import { TrashIcon } from './icons'
@@ -80,7 +81,7 @@ export default function FieldVisibilityPanel(props: Props) {
               border rounded-lg px-3 py-1.5 cursor-pointer font-extrabold text-[0.75rem] flex items-center gap-1.5 backdrop-blur-sm transition-all  
             `}
       >
-        ⚙️ Campos{' '}
+        <span className="inline-flex items-center gap-1.5"><SettingsIcon size={14} />Campos</span>{' '}
         {anyHidden
           ? `(${hiddenCount} oculto${hiddenCount > 1 ? 's' : ''})`
           : ''}
@@ -88,10 +89,10 @@ export default function FieldVisibilityPanel(props: Props) {
       {filterOpen && (
         <div className="absolute top-[calc(100%+8px)] right-0 z-[500] bg-slate-950/95 border border-sky-500/25 rounded-2xl p-4 min-w-[230px] shadow-2xl backdrop-blur-xl animate-in fade-in zoom-in duration-200">
           <div className="text-[0.72rem] font-black text-sky-500 tracking-widest uppercase mb-1">
-            ⚙️ Campos Visíveis
+            <span className="inline-flex items-center gap-1.5"><SettingsIcon size={14} />Campos Visíveis</span>
           </div>
           <div className="text-[0.62rem] text-slate-500 font-semibold mb-2 select-none">
-            Arraste pelo ⠿ ou use as setas ↑ ↓ para reordenar
+            Arraste pela alça ou use as setas para reordenar
           </div>
           <div className="flex flex-col gap-1">
             {fieldOrder.map((key, i) => (
@@ -118,7 +119,7 @@ export default function FieldVisibilityPanel(props: Props) {
                   title="Arraste para reordenar"
                   aria-hidden="true"
                 >
-                  ⠿
+                  <GripIcon size={12} />
                 </span>
                 <label className="flex items-center gap-2 cursor-pointer text-[0.78rem] text-slate-300 font-semibold select-none flex-1 min-w-0">
                   <input
@@ -173,13 +174,13 @@ export default function FieldVisibilityPanel(props: Props) {
 
           <div className="mt-4 pt-3 border-t border-sky-500/10">
             <div className="text-[0.72rem] font-black text-sky-500 tracking-widest uppercase mb-3">
-              ➕ Campos Personalizados
+              <span className="inline-flex items-center gap-1.5"><PlusIcon size={14} />Campos Personalizados</span>
             </div>
             {customFieldDefs.length > 0 && (
               <div className="flex flex-col gap-1 mb-2.5">
                 {customFieldDefs.length > 1 && (
                   <div className="text-[0.62rem] text-slate-500 font-semibold mb-1 select-none">
-                    Arraste pelo ⠿ ou use as setas ↑ ↓ para reordenar
+                    Arraste pela alça ou use as setas para reordenar
                   </div>
                 )}
                 {customFieldDefs.map((d, i) => (
@@ -206,7 +207,7 @@ export default function FieldVisibilityPanel(props: Props) {
                       title="Arraste para reordenar"
                       aria-hidden="true"
                     >
-                      ⠿
+                      <GripIcon size={12} />
                     </span>
                     <span className="flex-1 text-[0.78rem] text-slate-200 font-semibold truncate">
                       {d.label}

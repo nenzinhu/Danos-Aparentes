@@ -35,10 +35,10 @@ export const MANUAL_STEPS: ManualStep[] = [
     image: '/brand/logo-full.png',
     imageAlt: 'Danos Aparentes — app de inspeção veicular',
     highlights: [
-      { icon: '🏢', label: 'Topo', text: 'Logo da sua empresa, status de internet e botão para tela clara ou escura.' },
-      { icon: '📋', label: 'Dados da vistoria', text: 'Formulário em 3 passos: Veículo → Cliente → Finalizar. Pode minimizar quando terminar.' },
-      { icon: '🚗', label: 'Desenho do veículo', text: 'O desenho no centro, em 4 lados, onde você toca para marcar os danos.' },
-      { icon: '📝', label: 'Lista de danos', text: 'Tudo que você marcou, com botões para assinar e gerar o laudo em PDF.' },
+      { icon: 'building', label: 'Topo', text: 'Logo da sua empresa, status de internet e botão para tela clara ou escura.' },
+      { icon: 'clipboard', label: 'Dados da vistoria', text: 'Formulário em 3 passos: Veículo → Cliente → Finalizar. Pode minimizar quando terminar.' },
+      { icon: 'car', label: 'Desenho do veículo', text: 'O desenho no centro, em 4 lados, onde você toca para marcar os danos.' },
+      { icon: 'notes', label: 'Lista de danos', text: 'Tudo que você marcou, com botões para assinar e gerar o laudo em PDF.' },
     ],
   },
   {
@@ -49,9 +49,9 @@ export const MANUAL_STEPS: ManualStep[] = [
     image: '/og-image.jpg',
     imageAlt: 'Consulta de placa e preenchimento automático',
     highlights: [
-      { icon: '🔍', label: 'Busca automática', text: 'Digite a placa (Mercosul ou a antiga) e o app procura os dados do veículo sozinho.' },
-      { icon: '⚡', label: 'Preenche na hora', text: 'Marca, modelo, ano, cor, cidade e estado aparecem automaticamente.' },
-      { icon: '✏️', label: 'Pode corrigir', text: 'Se faltar algo ou estiver errado, você edita qualquer campo na mão, quando quiser.' },
+      { icon: 'search', label: 'Busca automática', text: 'Digite a placa (Mercosul ou a antiga) e o app procura os dados do veículo sozinho.' },
+      { icon: 'bolt', label: 'Preenche na hora', text: 'Marca, modelo, ano, cor, cidade e estado aparecem automaticamente.' },
+      { icon: 'pen', label: 'Pode corrigir', text: 'Se faltar algo ou estiver errado, você edita qualquer campo na mão, quando quiser.' },
     ],
   },
   {
@@ -62,9 +62,9 @@ export const MANUAL_STEPS: ManualStep[] = [
     image: '/vehicles-img/car.png',
     imageAlt: 'Desenho do veículo com peça danificada em destaque',
     highlights: [
-      { icon: '🚐', label: 'Vários veículos', text: 'Escolha carro, moto, caminhão, van, ônibus ou micro-ônibus — o desenho muda para cada um.' },
-      { icon: '🔄', label: 'Os 4 lados', text: 'Veja o veículo pela lateral esquerda, lateral direita, frente e traseira.' },
-      { icon: '👆', label: 'Toque na peça', text: 'Cada parte (para-choque, porta, retrovisor, vidro) é separada. Toque exatamente na peça danificada para registrar.' },
+      { icon: 'car', label: 'Vários veículos', text: 'Escolha carro, moto, caminhão, van, ônibus ou micro-ônibus — o desenho muda para cada um.' },
+      { icon: 'refresh', label: 'Os 4 lados', text: 'Veja o veículo pela lateral esquerda, lateral direita, frente e traseira.' },
+      { icon: 'hand', label: 'Toque na peça', text: 'Cada parte (para-choque, porta, retrovisor, vidro) é separada. Toque exatamente na peça danificada para registrar.' },
     ],
   },
   {
@@ -78,9 +78,9 @@ export const MANUAL_STEPS: ManualStep[] = [
       { src: '/broken.png', alt: 'Ícone de peça quebrada ou fratura' },
     ],
     highlights: [
-      { icon: '🏷️', label: 'Tipo do dano', text: 'Escolha: risco, amassado, quebrado, trincado ou peça faltando.' },
-      { icon: '⚠️', label: 'Gravidade', text: 'Marque se é leve (verde), média (amarela) ou grave (vermelha) — fácil de bater o olho depois.' },
-      { icon: '📷', label: 'Foto e observação', text: 'Escreva uma observação e tire a foto na hora pelo celular para comprovar o dano.' },
+      { icon: 'tag', label: 'Tipo do dano', text: 'Escolha: risco, amassado, quebrado, trincado ou peça faltando.' },
+      { icon: 'alert', label: 'Gravidade', text: 'Marque se é leve (verde), média (amarela) ou grave (vermelha) — fácil de bater o olho depois.' },
+      { icon: 'camera', label: 'Foto e observação', text: 'Escreva uma observação e tire a foto na hora pelo celular para comprovar o dano.' },
     ],
   },
   {
@@ -91,10 +91,10 @@ export const MANUAL_STEPS: ManualStep[] = [
     image: '/logo-stamp.png',
     imageAlt: 'Área para logo da empresa no laudo PDF',
     highlights: [
-      { icon: '🎨', label: 'Moderno (padrão)', text: 'Visual atual, com cores fortes e destaque — bom para a maioria dos casos.' },
-      { icon: '📑', label: 'Técnico', text: 'Mais tabelas e detalhes, para quem quer tudo bem completo.' },
-      { icon: '📰', label: 'Editorial', text: 'Visual mais elegante e espaçado, bom para carros importados ou de luxo.' },
-      { icon: '🏢', label: 'Sua logo', text: 'Coloque a logo da sua empresa nas configurações e ela aparece no topo de todos os PDFs.' },
+      { icon: 'palette', label: 'Moderno (padrão)', text: 'Visual atual, com cores fortes e destaque — bom para a maioria dos casos.' },
+      { icon: 'file', label: 'Técnico', text: 'Mais tabelas e detalhes, para quem quer tudo bem completo.' },
+      { icon: 'file', label: 'Editorial', text: 'Visual mais elegante e espaçado, bom para carros importados ou de luxo.' },
+      { icon: 'building', label: 'Sua logo', text: 'Coloque a logo da sua empresa nas configurações e ela aparece no topo de todos os PDFs.' },
     ],
   },
   {
@@ -105,9 +105,9 @@ export const MANUAL_STEPS: ManualStep[] = [
     image: '/brand/logo-icon.png',
     imageAlt: 'Selo de verificação e segurança do laudo',
     highlights: [
-      { icon: '✍️', label: 'Assinatura na tela', text: 'Você e o cliente assinam com o dedo, direto na tela do celular.' },
-      { icon: '🔒', label: 'Selo de segurança', text: 'Cada PDF ganha um código único. Se alguém mexer no arquivo, o código muda e a fraude fica evidente.' },
-      { icon: '💬', label: 'Envia no WhatsApp', text: 'Gere o PDF e mande direto para o WhatsApp do cliente, ou copie um resumo pronto.' },
+      { icon: 'pen', label: 'Assinatura na tela', text: 'Você e o cliente assinam com o dedo, direto na tela do celular.' },
+      { icon: 'lock', label: 'Selo de segurança', text: 'Cada PDF ganha um código único. Se alguém mexer no arquivo, o código muda e a fraude fica evidente.' },
+      { icon: 'chat', label: 'Envia no WhatsApp', text: 'Gere o PDF e mande direto para o WhatsApp do cliente, ou copie um resumo pronto.' },
     ],
   },
   {
@@ -118,9 +118,9 @@ export const MANUAL_STEPS: ManualStep[] = [
     image: '/icon-512.png',
     imageAlt: 'Ícone do app instalável no celular',
     highlights: [
-      { icon: '💾', label: 'Salva no aparelho', text: 'Tudo (vistorias, danos, fotos, assinaturas) fica guardado no próprio celular na hora.' },
-      { icon: '📡', label: 'Não cai nem trava', text: 'Mesmo sem internet numa garagem no subsolo, o app continua funcionando normalmente.' },
-      { icon: '☁️', label: 'Envia pra nuvem sozinho', text: 'Quando a internet voltar, o app manda tudo para a nuvem automaticamente, sem você precisar fazer nada.' },
+      { icon: 'save', label: 'Salva no aparelho', text: 'Tudo (vistorias, danos, fotos, assinaturas) fica guardado no próprio celular na hora.' },
+      { icon: 'signal', label: 'Não cai nem trava', text: 'Mesmo sem internet numa garagem no subsolo, o app continua funcionando normalmente.' },
+      { icon: 'cloud', label: 'Envia pra nuvem sozinho', text: 'Quando a internet voltar, o app manda tudo para a nuvem automaticamente, sem você precisar fazer nada.' },
     ],
   },
 ]

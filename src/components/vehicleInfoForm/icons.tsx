@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 export function TrashIcon({ size = 13 }: { size?: number }) {
   return (
     <svg
@@ -36,7 +38,7 @@ export function InspectionDataIcon({ size = 16 }: { size?: number }) {
   )
 }
 
-export function Chip({ icon, label, color }: { icon: string; label: string; color: string }) {
+export function Chip({ icon, label, color }: { icon: ReactNode; label: string; color: string }) {
   const colorClasses: Record<string, string> = {
     sky: 'bg-sky-500/15 border-sky-500/30 text-sky-400',
     violet: 'bg-violet-500/15 border-violet-500/30 text-violet-400',
@@ -51,7 +53,7 @@ export function Chip({ icon, label, color }: { icon: string; label: string; colo
       text-[0.72rem] font-bold max-w-[240px] truncate ${colorClasses[color] || colorClasses.sky}
     `}
     >
-      <span>{icon}</span>
+      <span className="inline-flex shrink-0" aria-hidden>{icon}</span>
       <span className="truncate">{label}</span>
     </div>
   )

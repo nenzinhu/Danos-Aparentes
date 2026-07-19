@@ -128,12 +128,12 @@ export function useInspectionWorkflow({
       status: 'complete',
     })
     setActiveReportId(report.id)
-    showToast('✅ Vistoria Salva!')
+    showToast('Vistoria salva!')
   }, [vehicleInfo, damages, vehicleType, activeReportId, saveReport, showToast])
 
   const handleSaveDraft = useCallback(async () => {
     if (!vehicleInfo.owner && !vehicleInfo.plate) {
-      showToast('❌ Informe ao menos o cliente ou a placa para salvar a prévia')
+      showToast('Informe ao menos o cliente ou a placa para salvar a prévia')
       return
     }
     const report = await saveReport(vehicleInfo, damages, vehicleType, {
@@ -141,7 +141,7 @@ export function useInspectionWorkflow({
       status: 'draft',
     })
     setActiveReportId(report.id)
-    showToast('✅ Prévia salva — sincroniza com o celular')
+    showToast('Prévia salva — sincroniza com o celular')
   }, [vehicleInfo, damages, vehicleType, activeReportId, saveReport, showToast])
 
   const handleLoad = useCallback((r: SavedReport) => {
@@ -151,7 +151,7 @@ export function useInspectionWorkflow({
     clearDamages()
     r.damages.forEach(d => addDamage(d))
     setPreviousReport(null)
-    showToast(r.status === 'draft' ? '📂 Prévia carregada — continue a vistoria' : '📂 Vistoria Carregada!')
+    showToast(r.status === 'draft' ? 'Prévia carregada — continue a vistoria' : 'Vistoria carregada!')
   }, [clearDamages, addDamage, showToast])
 
   const handleClearAll = useCallback(() => {
@@ -160,12 +160,12 @@ export function useInspectionWorkflow({
     setFormResetToken(t => t + 1)
     setPreviousReport(null)
     setActiveReportId(null)
-    showToast('🧽 Dados Limpos!')
+    showToast('Dados limpos!')
   }, [clearDamages, showToast])
 
   const handleClearDamages = useCallback(() => {
     clearDamages()
-    showToast('🧽 Avarias Limpas!')
+    showToast('Avarias limpas!')
   }, [clearDamages, showToast])
 
   const handleViewTypeChange = useCallback((view: ViewType) => {

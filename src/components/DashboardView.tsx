@@ -1,4 +1,5 @@
 'use client';
+import { ChartIcon, FolderIcon, AlertIcon, SparkleIcon, CarIcon, PinIcon, BoltIcon, TrendUpIcon, LightbulbIcon } from '@/src/components/app/AppIcons'
 import React, { useMemo } from 'react'
 import { SavedReport, VehicleType, Severity } from '../types'
 import { resolveVehicleType } from '../lib/vehicleTypeInference'
@@ -107,7 +108,7 @@ export default function DashboardView({ saved }: Props) {
   if (saved.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '64px 16px', background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 24, backdropFilter: 'blur(16px)' }}>
-        <div style={{ fontSize: '3rem', marginBottom: 16 }}>📊</div>
+        <div style={{ marginBottom: 16, color: '#38bdf8' }}><ChartIcon size={48} /></div>
         <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 8, color: '#f8fafc' }}>Nenhum dado para exibir</h3>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: 400, margin: '0 auto 24px' }}>
           Para visualizar os gráficos e métricas gerenciais, realize e salve sua primeira vistoria localmente.
@@ -135,7 +136,7 @@ export default function DashboardView({ saved }: Props) {
         <div style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total de Vistorias</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.totalReports}</div>
-          <div style={{ fontSize: '0.72rem', color: '#10b981' }}>📂 Armazenadas localmente</div>
+          <div style={{ fontSize: '0.72rem', color: '#10b981' }}><span style={{display:'inline-flex',alignItems:'center',gap:6}}><FolderIcon size={12} />Armazenadas localmente</span></div>
         </div>
 
         {/* Card 2 */}
@@ -143,7 +144,7 @@ export default function DashboardView({ saved }: Props) {
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Avarias Registradas</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.totalDamages}</div>
           <div style={{ fontSize: '0.72rem', color: stats.totalDamages > 0 ? '#ef4444' : 'var(--text-muted)' }}>
-            ⚠️ {stats.totalDamages > 0 ? 'Danos aparentes encontrados' : 'Nenhuma avaria'}
+            <span style={{display:'inline-flex',alignItems:'center',gap:6}}><AlertIcon size={14} />{stats.totalDamages > 0 ? 'Danos aparentes encontrados' : 'Nenhuma avaria'}</span>
           </div>
         </div>
 
@@ -158,7 +159,7 @@ export default function DashboardView({ saved }: Props) {
         <div style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Laudos Sem Avarias</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.cleanReports}</div>
-          <div style={{ fontSize: '0.72rem', color: '#10b981' }}>✨ {stats.cleanReportsPct}% das vistorias limpas</div>
+          <div style={{ fontSize: '0.72rem', color: '#10b981' }}><span style={{display:'inline-flex',alignItems:'center',gap:6}}><SparkleIcon size={12} />{stats.cleanReportsPct}% das vistorias limpas</span></div>
         </div>
 
       </div>
@@ -169,7 +170,7 @@ export default function DashboardView({ saved }: Props) {
         {/* Gravidade Card */}
         <div style={{ background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24, backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
-            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}>⚠️ Gravidade das Avarias</h4>
+            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}><span style={{display:'inline-flex',alignItems:'center',gap:8}}><AlertIcon size={16} />Gravidade das Avarias</span></h4>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Distribuição percentual das avarias identificadas</span>
           </div>
 
@@ -222,7 +223,7 @@ export default function DashboardView({ saved }: Props) {
         {/* Tipos de Veículos Card */}
         <div style={{ background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24, backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
-            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}>🚗 Frota Vistoriada</h4>
+            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}><span style={{display:'inline-flex',alignItems:'center',gap:8}}><CarIcon size={16} />Frota Vistoriada</span></h4>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Quantidade de vistorias registradas por categoria</span>
           </div>
 
@@ -252,7 +253,7 @@ export default function DashboardView({ saved }: Props) {
       {/* ── TOP DAMAGED PARTS ───────────────────────────────────────────────── */}
       <div style={{ background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24, backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div>
-          <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}>📍 Top 5 Peças com Mais Avarias</h4>
+          <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}><span style={{display:'inline-flex',alignItems:'center',gap:8}}><PinIcon size={16} />Top 5 Peças com Mais Avarias</span></h4>
           <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Componentes com maior frequência de incidência de danos</span>
         </div>
 
@@ -283,7 +284,7 @@ export default function DashboardView({ saved }: Props) {
       <div style={{ background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24, backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
           <div>
-            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}>⚡ Telemetria de Desempenho (Tempo Real)</h4>
+            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}><span style={{display:'inline-flex',alignItems:'center',gap:8}}><BoltIcon size={16} />Telemetria de Desempenho (Tempo Real)</span></h4>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Métricas reais de Core Web Vitals e diagnósticos de renderização</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', background: metrics.online ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', border: metrics.online ? '1px solid rgba(16,185,129,0.2)' : '1px solid rgba(239,68,68,0.2)', padding: '4px 8px', borderRadius: 8, color: metrics.online ? '#10b981' : '#ef4444' }}>
@@ -377,7 +378,7 @@ export default function DashboardView({ saved }: Props) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, paddingTop: 8 }}>
           {/* Uptime SLO & Health */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, background: 'rgba(0,0,0,0.08)', borderRadius: 12, padding: 16, border: '1px solid rgba(255,255,255,0.02)' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1' }}>📊 Indicadores de Observabilidade (SLO)</span>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1' }}><span style={{display:'inline-flex',alignItems:'center',gap:6}}><ChartIcon size={12} />Indicadores de Observabilidade (SLO)</span></span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: '0.72rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Disponibilidade Planejada:</span>
@@ -402,7 +403,7 @@ export default function DashboardView({ saved }: Props) {
 
           {/* Applied Optimization Impacts */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, background: 'rgba(0,0,0,0.08)', borderRadius: 12, padding: 16, border: '1px solid rgba(255,255,255,0.02)' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1' }}>📈 Impacto de Otimizações Aplicadas</span>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1' }}><span style={{display:'inline-flex',alignItems:'center',gap:6}}><TrendUpIcon size={12} />Impacto de Otimizações Aplicadas</span></span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: '0.7rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Frictionless Vehicle Selector (CSS calc):</span>
@@ -426,7 +427,7 @@ export default function DashboardView({ saved }: Props) {
 
         {/* Diagnostic Text */}
         <div style={{ background: 'rgba(0,170,255,0.04)', border: '1px solid rgba(0,170,255,0.08)', borderRadius: 12, padding: '12px 16px', fontSize: '0.72rem', color: '#38bdf8', lineHeight: '1.4' }}>
-          💡 <strong>Dica de Performance:</strong> O sistema está rodando em ambiente local. O tempo de renderização (LCP) medido na primeira carga é acelerado pela injeção do CSS Crítico e do script de tema assíncrono no head. Para uma medição pura dos Web Vitals, execute o build de produção (`npm run build`) e acesse em uma janela anônima (sem extensões de terceiros).
+          <span style={{display:'inline-flex',alignItems:'center',gap:6,verticalAlign:'middle'}}><LightbulbIcon size={14} /></span> <strong>Dica de Performance:</strong> O sistema está rodando em ambiente local. O tempo de renderização (LCP) medido na primeira carga é acelerado pela injeção do CSS Crítico e do script de tema assíncrono no head. Para uma medição pura dos Web Vitals, execute o build de produção (`npm run build`) e acesse em uma janela anônima (sem extensões de terceiros).
         </div>
       </div>
 

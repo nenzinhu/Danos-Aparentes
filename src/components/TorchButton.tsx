@@ -1,5 +1,6 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { LoaderIcon } from '@/src/components/app/AppIcons'
 
 /**
  * Botão flutuante de lanterna: acende o LED de flash da câmera traseira
@@ -39,7 +40,7 @@ export default function TorchButton({ onToast }: Props) {
   const startTorch = useCallback(async () => {
     if (typeof navigator === 'undefined' || !navigator.mediaDevices?.getUserMedia) {
       setUnsupported(true)
-      onToast?.('🔦 Lanterna indisponível neste dispositivo.')
+      onToast?.('Lanterna indisponível neste dispositivo.')
       return
     }
     setBusy(true)
@@ -55,7 +56,7 @@ export default function TorchButton({ onToast }: Props) {
         stream.getTracks().forEach(t => t.stop())
         streamRef.current = null
         setUnsupported(true)
-        onToast?.('🔦 Este aparelho não permite acender o flash pelo navegador.')
+        onToast?.('Este aparelho não permite acender o flash pelo navegador.')
         return
       }
       await track.applyConstraints({ advanced: [{ torch: true }] } as any)
@@ -64,8 +65,8 @@ export default function TorchButton({ onToast }: Props) {
     } catch (err) {
       const denied = err instanceof DOMException && (err.name === 'NotAllowedError' || err.name === 'SecurityError')
       onToast?.(denied
-        ? '🔦 Permissão de câmera negada. Libere o acesso para usar a lanterna.'
-        : '🔦 Não foi possível acender a lanterna.')
+        ? 'Permissão de câmera negada. Libere o acesso para usar a lanterna.'
+        : 'Não foi possível acender a lanterna.')
     } finally {
       setBusy(false)
     }
@@ -109,7 +110,7 @@ export default function TorchButton({ onToast }: Props) {
           } ${busy ? 'opacity-70 cursor-wait' : ''}`}
         >
           {busy ? (
-            <span className="animate-spin text-lg">⏳</span>
+            <LoaderIcon size={22} />
           ) : (
             <svg
               width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
