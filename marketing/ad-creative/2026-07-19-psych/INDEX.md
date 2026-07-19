@@ -20,6 +20,7 @@
 | `meta-ads.csv` | 21 variations · coluna `psychology` |
 | `concepts/` | 15 estáticos (1 por template da library) |
 | `/ad-creative-review-psych.html` | Review visual (7 ângulos Meta + psych tags) |
+| `/ads/impact/*` | Criativos fotográficos 1200×628 e 1080 (contexto real + laudo PDF) |
 
 ## Angles (RSA)
 1. Locadoras — perda da cobrança → `/locadoras`
