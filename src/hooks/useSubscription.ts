@@ -17,6 +17,10 @@ export interface SubscriptionInfo {
   trialEnded: boolean
   planTier: PlanTier
   isCorporate: boolean
+  /** Meses aguardando confirmação de PIX (0 = nada pendente). */
+  pendingMonths: number
+  /** Fim do período PIX/pago, se houver. */
+  expiresAt: string | null
 }
 
 async function readErrorMessage(res: Response, fallback: string): Promise<string> {
@@ -45,7 +49,7 @@ export function useSubscription(userId?: string, accessToken?: string) {
 
     const { data, error: queryError } = await supabase
       .from('subscriptions')
-      .select('status, trial_ends_at, plan_tier, expires_at')
+      .select('status, trial_ends_at, plan_tier, expires_at, pending_months')
       .eq('user_id', userId)
       .maybeSingle()
 
@@ -69,6 +73,8 @@ export function useSubscription(userId?: string, accessToken?: string) {
         trialEnded: true,
         planTier: 'pro',
         isCorporate: false,
+        pendingMonths: 0,
+        expiresAt: null,
       })
       setError(null)
       setLoading(false)
@@ -99,6 +105,8 @@ export function useSubscription(userId?: string, accessToken?: string) {
       trialEnded,
       planTier,
       isCorporate: hasAccess && planTier === 'corporativo',
+      pendingMonths: Number(data.pending_months ?? 0) || 0,
+      expiresAt,
     })
     setError(null)
     setLoading(false)
