@@ -986,7 +986,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-03',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#3f3f46 0%,#0f766e 45%,#5eead4 100%)', emoji: '📋', image: '/vehicles-img/van.png' },
+    cover: { gradient: 'linear-gradient(135deg,#3f3f46 0%,#0f766e 45%,#5eead4 100%)', emoji: '📋', image: '/blog/vistoria-sem-papel.jpg' },
     toc: [
       { id: 'papel', label: 'Por que o papel atrasa' },
       { id: 'digital', label: 'O que muda no fluxo digital' },
@@ -1204,7 +1204,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-04',
     readingMinutes: 7,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#ea580c 45%,#fb923c 100%)', emoji: '🧾', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#ea580c 45%,#fb923c 100%)', emoji: '🧾', image: '/blog/avarias-preexistentes-como-provar.jpg' },
     toc: [
       { id: 'prejuizo', label: 'Por que a avaria preexistente vira prejuízo' },
       { id: 'provar', label: 'O que realmente prova' },
@@ -1652,7 +1652,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-04',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#111827 0%,#1d4ed8 45%,#60a5fa 100%)', emoji: '🔐', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#111827 0%,#1d4ed8 45%,#60a5fa 100%)', emoji: '🔐', image: '/blog/qr-code-e-hash-no-laudo-de-avarias.jpg' },
     toc: [
       { id: 'o-que-fazem', label: 'O que QR Code e hash fazem' },
       { id: 'original', label: 'Como ajudam a consultar o original' },
@@ -2175,7 +2175,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-06',
     readingMinutes: 4,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#052e2b 0%,#0d9488 45%,#5eead4 100%)', emoji: '🔎', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#052e2b 0%,#0d9488 45%,#5eead4 100%)', emoji: '🔎', image: '/blog/consulta-automatica-de-placa.jpg' },
     toc: [
       { id: 'problema', label: 'O problema de digitar tudo na mão' },
       { id: 'como-funciona', label: 'Como funciona a busca por placa' },
@@ -2412,7 +2412,7 @@ BLOG_POSTS.unshift(
     cover: {
       gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)',
       emoji: '🧾',
-      image: '/vehicles-img/car.png',
+      image: '/blog/cobranca-avaria-devolucao-locadora.jpg',
     },
     toc: [
       { id: 'resposta-rapida', label: 'Resposta rápida' },
@@ -2599,7 +2599,7 @@ BLOG_POSTS.unshift(
     cover: {
       gradient: 'linear-gradient(135deg,#1e3a5f 0%,#0369a1 45%,#38bdf8 100%)',
       emoji: '🔧',
-      image: '/vehicles-img/car2d.png',
+      image: '/blog/vistoria-antes-do-orcamento-oficina.jpg',
     },
     toc: [
       { id: 'resposta-rapida', label: 'Resposta rápida' },
@@ -2918,7 +2918,7 @@ BLOG_POSTS.unshift(
     cover: {
       gradient: 'linear-gradient(135deg,#14532d 0%,#15803d 45%,#86efac 100%)',
       emoji: '🚛',
-      image: '/vehicles-img/van.png',
+      image: '/blog/controle-avarias-frota-entrada-saida.jpg',
     },
     toc: [
       { id: 'resposta-rapida', label: 'Resposta rápida' },
@@ -3082,7 +3082,7 @@ BLOG_POSTS.push(
     date: '2026-07-13',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '🔍', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '🔍', image: '/blog/como-provar-amassado-pre-existente-locacao.jpg' },
     toc: [
       { id: 'o-problema', label: 'O problema da avaria pré-existente' },
       { id: 'como-provar', label: 'Como provar com a vistoria digital' },
