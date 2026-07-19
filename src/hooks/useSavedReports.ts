@@ -1,10 +1,16 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react'
-import { SavedReport, VehicleInfo, Damage, VehicleType } from '../types'
+import { SavedReport, VehicleInfo, Damage, VehicleType, InspectionStatus } from '../types'
 import { db } from '../lib/db'
 import { mergeRemoteReports } from '../lib/sync'
 import { supabaseEnabled } from '../lib/supabase'
 import { createId } from '../lib/id'
+
+export type SaveReportOptions = {
+  /** Atualiza a mesma prévia/vistoria em vez de criar outra. */
+  id?: string
+  status?: InspectionStatus
+}
 
 export function useSavedReports(userId?: string) {
   const [saved, setSaved] = useState<SavedReport[]>([])
@@ -24,16 +30,27 @@ export function useSavedReports(userId?: string) {
     void refreshRemote()
   }, [userId, refreshRemote])
 
-  async function saveReport(vehicleInfo: VehicleInfo, damages: Damage[], vehicleType: VehicleType) {
+  async function saveReport(
+    vehicleInfo: VehicleInfo,
+    damages: Damage[],
+    vehicleType: VehicleType,
+    options?: SaveReportOptions,
+  ) {
+    const status: InspectionStatus = options?.status ?? 'complete'
+    const id = (options?.id || createId()) as SavedReport['id']
     const report: SavedReport = {
-      id: createId() as SavedReport['id'],
+      id,
       savedAt: Date.now(),
       vehicleInfo,
       damages,
       vehicleType,
+      status,
     }
     await db.putSaved(report)
-    setSaved(prev => [report, ...prev])
+    setSaved(prev => {
+      const without = prev.filter(r => r.id !== id)
+      return [report, ...without]
+    })
     if (supabaseEnabled) {
       await db.addToSyncQueue({ type: 'upsert', reportId: report.id, report, timestamp: Date.now() })
     }

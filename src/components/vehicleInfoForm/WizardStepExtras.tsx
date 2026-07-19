@@ -1,10 +1,8 @@
 'use client'
 import type { VehicleInfo } from '../../types'
-import SignaturePad from '../SignaturePad'
 import SpeechButton from '../SpeechButton'
 import { ResolvedPhoto } from '../ResolvedPhoto'
 import PhotoAttachButtons from '../PhotoAttachButtons'
-import Button from '../ui/Button'
 import { inputClasses, labelClasses, type CustomFieldDef } from './constants'
 import { TrashIcon } from './icons'
 
@@ -12,8 +10,6 @@ interface Props {
   info: VehicleInfo
   onChange: (info: VehicleInfo) => void
   set: (field: keyof VehicleInfo, value: string) => void
-  show: (key: string) => boolean
-  orderedKeysIn: (keys: string[]) => string[]
   customFieldDefs: CustomFieldDef[]
   customFieldValue: (id: string) => string
   setCustomFieldValue: (id: string, label: string, value: string) => void
@@ -22,16 +18,13 @@ interface Props {
   handleInteriorPhoto: (file: File) => void
   updateInteriorPhotoNote: (idx: number, note: string) => void
   removeInteriorPhoto: (idx: number) => void
-  geoStatus: 'idle' | 'loading' | 'done' | 'error'
-  geoError: string
-  captureGeo: () => void
-  clearGeo: () => void
 }
 
+/** Observações e fotos do interior — sem GPS nem assinaturas (essas ficam após as avarias). */
 export default function WizardStepExtras({
-  info, onChange, set, show, orderedKeysIn, customFieldDefs, customFieldValue,
+  info, onChange, set, customFieldDefs, customFieldValue,
   setCustomFieldValue, removeCustomField, interiorCompressing, handleInteriorPhoto,
-  updateInteriorPhotoNote, removeInteriorPhoto, geoStatus, geoError, captureGeo, clearGeo,
+  updateInteriorPhotoNote, removeInteriorPhoto,
 }: Props) {
   return (
       <>
@@ -100,81 +93,6 @@ export default function WizardStepExtras({
         </div>
       </div>
 
-      {show('geo') && (
-        <div className="mt-4 rounded-2xl border border-sky-500/25 bg-gradient-to-br from-sky-700/10 to-blue-900/5 p-4">
-          <div className="flex items-center justify-between gap-2 mb-2.5">
-            <div className="inline-flex items-center gap-1.5 text-[0.7rem] font-black text-sky-400 tracking-wider uppercase">
-              📍 Localização da Vistoria
-            </div>
-            {info.geo && (
-              <button
-                type="button"
-                onClick={clearGeo}
-                className="text-[0.7rem] font-bold text-red-400 hover:text-red-300 transition-colors"
-              >
-                Remover
-              </button>
-            )}
-          </div>
-
-          {!info.geo ? (
-            <>
-              <p className="text-[0.78rem] text-slate-400 leading-relaxed mb-3">
-                Registre o ponto GPS exato de onde a vistoria está sendo feita. A coordenada entra no laudo junto do hash e do QR Code.
-              </p>
-              <Button
-                type="button"
-                variant="primary"
-                onClick={captureGeo}
-                loading={geoStatus === 'loading'}
-                className="w-full"
-              >
-                {geoStatus === 'loading' ? 'Obtendo localização…' : '📡 Capturar localização atual'}
-              </Button>
-              {geoStatus === 'error' && (
-                <p className="text-[0.75rem] text-red-400 font-semibold mt-2">{geoError}</p>
-              )}
-            </>
-          ) : (
-            <div className="animate-in fade-in slide-in-from-bottom-1 duration-300 ease-out motion-reduce:animate-none">
-              <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                <span className="inline-flex items-center gap-1 bg-green-500/15 border border-green-500/30 text-green-400 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold animate-in zoom-in-75 duration-200 motion-reduce:animate-none">
-                  ✓ Localização registrada
-                </span>
-                {typeof info.geo.accuracy === 'number' && (
-                  <span className="inline-flex items-center gap-1 bg-sky-500/15 border border-sky-500/30 text-sky-400 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold">
-                    ± {info.geo.accuracy} m
-                  </span>
-                )}
-              </div>
-              <p className="font-mono text-[0.8rem] text-[var(--text-main)] font-bold">
-                {info.geo.lat.toFixed(6)}, {info.geo.lng.toFixed(6)}
-              </p>
-              {info.geo.address && (
-                <p className="text-[0.75rem] text-slate-400 mt-1 leading-relaxed">{info.geo.address}</p>
-              )}
-              <div className="flex flex-wrap gap-3 mt-2.5">
-                <a
-                  href={`https://www.google.com/maps?q=${info.geo.lat},${info.geo.lng}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[0.75rem] font-bold text-sky-400 hover:text-sky-300 transition-colors"
-                >
-                  🗺️ Ver no mapa
-                </a>
-                <button
-                  type="button"
-                  onClick={captureGeo}
-                  className="text-[0.75rem] font-bold text-slate-400 hover:text-slate-200 transition-colors"
-                >
-                  ↻ Atualizar
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
       {customFieldDefs.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 mt-3">
           {customFieldDefs.map(d => (
@@ -197,29 +115,6 @@ export default function WizardStepExtras({
                 onChange={e => setCustomFieldValue(d.id, d.label, e.target.value)}
                 placeholder={`Digite ${d.label.toLowerCase()}`}
               />
-            </div>
-          ))}
-        </div>
-      )}
-
-      {(show('inspectorSignature') || show('clientSignature')) && (
-        <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-white/5">
-          {orderedKeysIn(['inspectorSignature', 'clientSignature']).filter(show).map(key => (
-            <div key={key} className="flex-1 min-w-[220px]">
-              {key === 'inspectorSignature' && (
-                <SignaturePad
-                  label="Assinatura do Vistoriador"
-                  value={info.inspectorSignature}
-                  onChange={val => set('inspectorSignature', val)}
-                />
-              )}
-              {key === 'clientSignature' && (
-                <SignaturePad
-                  label="Assinatura do Proprietário / Responsável"
-                  value={info.clientSignature}
-                  onChange={val => set('clientSignature', val)}
-                />
-              )}
             </div>
           ))}
         </div>

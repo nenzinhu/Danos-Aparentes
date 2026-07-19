@@ -7,8 +7,6 @@ import { vehicleRegistry } from './vehicles/registry'
 import { useZoomPan } from '../hooks/useZoomPan'
 import DamageFloat from './DamageFloat'
 import VehicleDefs from './vehicles/VehicleDefs'
-import DamageSuggestionsReview, { type DamageSuggestion } from './DamageSuggestionsReview'
-import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '../lib/imageUtils'
 
 // --- Types ---
 interface VehicleViewerContextValue {
@@ -311,156 +309,6 @@ const FloatingDamage = memo(function FloatingDamage() {
   )
 })
 
-const TYPE_NAME: Record<DamageType, string> = {
-  scratch: 'Riscos / Abrasão',
-  dent: 'Deformação',
-  broken: 'Dano / Fratura',
-}
-
-const AutoDetect = memo(function AutoDetect({
-  accessToken,
-  onToast,
-}: {
-  accessToken?: string
-  onToast?: (msg: string) => void
-}) {
-  const { vehicleType, viewType, containerRef, onAddDamageDetailed } = useVehicleViewer()
-  const cameraInputRef = useRef<HTMLInputElement>(null)
-  const galleryInputRef = useRef<HTMLInputElement>(null)
-  const [analyzing, setAnalyzing] = useState(false)
-  const [suggestions, setSuggestions] = useState<DamageSuggestion[] | null>(null)
-
-  const handleFile = useCallback(async (file: File) => {
-    if (!accessToken) {
-      onToast?.('❌ Entre na sua conta para usar a detecção automática')
-      return
-    }
-    setAnalyzing(true)
-    try {
-      const parts = Array.from(containerRef.current?.querySelectorAll('.part') ?? [])
-        .map(el => ({ id: el.getAttribute('id') || '', name: el.getAttribute('data-name') || '' }))
-        .filter(p => p.id && p.name)
-
-      if (parts.length === 0) {
-        onToast?.('❌ Não foi possível ler as peças desta vista')
-        return
-      }
-
-      const compressedBlob = await compressImage(file, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY)
-      const photoDataUrl = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => resolve(reader.result as string)
-        reader.onerror = reject
-        reader.readAsDataURL(compressedBlob)
-      })
-
-      const res = await fetch('/api/damage-vision-bulk', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` },
-        body: JSON.stringify({ photo: photoDataUrl, vehicle: vehicleType, view: viewType, availableParts: parts }),
-      })
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        onToast?.(`❌ ${err.error || 'Não foi possível analisar a foto'}`)
-        return
-      }
-
-      const { detections } = await res.json()
-      const nameById = new Map(parts.map(p => [p.id, p.name]))
-      const built: DamageSuggestion[] = (detections || []).map((d: { partId: string; type: DamageType; severity: Severity; description: string }) => ({
-        partId: d.partId,
-        partName: nameById.get(d.partId) || d.partId,
-        type: d.type,
-        typeName: TYPE_NAME[d.type] || d.type,
-        severity: d.severity,
-        description: d.description,
-        accepted: true,
-      }))
-
-      if (built.length === 0) {
-        onToast?.('✅ Nenhuma avaria identificada nesta foto')
-      } else {
-        setSuggestions(built)
-      }
-    } catch (err) {
-      console.error('Erro na detecção automática de avarias:', err)
-      onToast?.('❌ Falha ao analisar a foto')
-    } finally {
-      setAnalyzing(false)
-    }
-  }, [accessToken, containerRef, vehicleType, viewType, onToast])
-
-  const toggleSuggestion = useCallback((partId: string) => {
-    setSuggestions(prev => prev?.map(s => s.partId === partId ? { ...s, accepted: !s.accepted } : s) ?? null)
-  }, [])
-
-  const confirmSuggestions = useCallback(() => {
-    if (!suggestions) return
-    const accepted = suggestions.filter(s => s.accepted)
-    accepted.forEach(s => {
-      onAddDamageDetailed?.(s.partId, s.partName, s.type, s.typeName, s.severity, s.description)
-    })
-    onToast?.(`✅ ${accepted.length} avaria${accepted.length === 1 ? '' : 's'} adicionada${accepted.length === 1 ? '' : 's'}`)
-    setSuggestions(null)
-  }, [suggestions, onAddDamageDetailed, onToast])
-
-  return (
-    <>
-      <input
-        ref={cameraInputRef}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        className="hidden"
-        onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }}
-      />
-      <input
-        ref={galleryInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = '' }}
-      />
-      {analyzing ? (
-        <button
-          type="button"
-          disabled
-          className="w-full mt-2 py-2.5 rounded-lg font-bold text-xs border border-sky-500/30 bg-sky-500/10 text-sky-400 disabled:opacity-50 disabled:cursor-wait flex items-center justify-center gap-2"
-        >
-          ⏳ Analisando foto…
-        </button>
-      ) : (
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => cameraInputRef.current?.click()}
-            className="py-2.5 rounded-lg font-bold text-[0.7rem] sm:text-xs border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-colors flex items-center justify-center gap-1.5 px-2"
-          >
-            📷 Detectar (câmera)
-          </button>
-          <button
-            type="button"
-            onClick={() => galleryInputRef.current?.click()}
-            className="py-2.5 rounded-lg font-bold text-[0.7rem] sm:text-xs border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors flex items-center justify-center gap-1.5 px-2"
-          >
-            🖼️ Detectar (galeria)
-          </button>
-        </div>
-      )}
-
-      {suggestions && (
-        <DamageSuggestionsReview
-          suggestions={suggestions}
-          onToggle={toggleSuggestion}
-          onConfirm={confirmSuggestions}
-          onDiscard={() => setSuggestions(null)}
-        />
-      )}
-    </>
-  )
-})
-
 // --- Namespace ---
 
 export const VehicleViewer = Object.assign(Root, {
@@ -469,7 +317,6 @@ export const VehicleViewer = Object.assign(Root, {
   Controls,
   FullscreenOverlay,
   FloatingDamage,
-  AutoDetect,
 })
 
 // Default export for backward compatibility or simple use cases

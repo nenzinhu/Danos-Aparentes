@@ -66,6 +66,9 @@ export interface CustomField {
   value: string
 }
 
+/** draft = prévia cadastral (cliente/veículo) feita no PC; complete = vistoria/laudo. */
+export type InspectionStatus = 'draft' | 'complete'
+
 export interface SavedReport {
   id: ReportId
   savedAt: number
@@ -74,6 +77,8 @@ export interface SavedReport {
   vehicleType?: VehicleType
   /** Timestamp da última sync bem-sucedida com a nuvem (para detectar deletes remotos). */
   syncedAt?: number
+  /** Prévia no computador vs vistoria concluída. Default: complete (legado). */
+  status?: InspectionStatus
 }
 
 export interface TtsConfig {

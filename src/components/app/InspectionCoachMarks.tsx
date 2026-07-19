@@ -8,24 +8,24 @@ interface Props {
 
 const STEPS = [
   {
-    icon: '🚗',
-    title: 'Clique nas peças',
-    text: 'Clique em qualquer peça do veículo no desenho para registrar uma avaria ali.',
-  },
-  {
-    icon: '📷',
-    title: 'Anexe fotos na hora',
-    text: 'Ao escolher o tipo de avaria, você pode anexar uma foto direto — sem precisar voltar depois.',
-  },
-  {
     icon: '📋',
-    title: 'Acompanhe o resumo',
-    text: 'Todas as avarias registradas aparecem na lista ao lado, com opção de editar grau e observações.',
+    title: 'Dados do cliente e placa',
+    text: 'Comece pelo cliente. Depois consulte a placa — os dados do veículo preenchem sozinhos. No computador, use “Salvar prévia” para continuar no celular.',
+  },
+  {
+    icon: '🚗',
+    title: 'Marque as avarias no diagrama',
+    text: 'Clique nas peças do SVG para registrar danos. Sem avarias? Siga mesmo assim para o laudo.',
+  },
+  {
+    icon: '✍️',
+    title: 'Assine e capture o GPS',
+    text: 'Na aba Laudo, revise as avarias, capture a localização do local e colete as assinaturas.',
   },
   {
     icon: '📄',
-    title: 'Exporte o laudo',
-    text: 'Quando terminar, gere o PDF, envie por WhatsApp ou copie o relatório — tudo na seção "Exportar Relatório".',
+    title: 'Gere o PDF',
+    text: 'Exporte o laudo com hash, QR Code e GPS do local da vistoria.',
   },
 ]
 

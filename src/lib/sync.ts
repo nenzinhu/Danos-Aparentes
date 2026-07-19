@@ -8,6 +8,7 @@ import { mapRemoteInspection } from './reportMapping'
 
 function inspectionRow(r: SavedReport, userId: string) {
   const v = r.vehicleInfo
+  const geo = v.geo
   return {
     id: r.id,
     user_id: userId,
@@ -21,6 +22,12 @@ function inspectionRow(r: SavedReport, userId: string) {
     cnh_category: v.cnhCategory || '',
     inspector_signature: v.inspectorSignature || '',
     client_signature: v.clientSignature || '',
+    status: r.status ?? 'complete',
+    geo_lat: geo?.lat ?? null,
+    geo_lng: geo?.lng ?? null,
+    geo_accuracy: geo?.accuracy ?? null,
+    geo_address: geo?.address ?? null,
+    geo_captured_at: geo?.capturedAt ?? null,
     updated_at: r.savedAt,
   }
 }

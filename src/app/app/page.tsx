@@ -147,6 +147,7 @@ export default function AppMainPage() {
                 onVehicleInfoChange={inspection.setVehicleInfo}
                 onToggleFormCollapse={inspection.toggleFormCollapse}
                 onWizardComplete={shell.onWizardComplete}
+                onSaveDraft={inspection.handleSaveDraft}
                 onOpenSaved={shell.openSavedModal}
                 onClearAll={inspection.handleClearAll}
                 onClearDamages={inspection.handleClearDamages}
@@ -160,7 +161,6 @@ export default function AppMainPage() {
                 speak={speak}
                 speakHover={speakHover}
                 onToast={shell.showToast}
-                accessToken={session?.access_token}
               />
             )}
           </main>

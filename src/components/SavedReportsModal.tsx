@@ -83,7 +83,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
   const [qrModal, setQrModal] = useState<{ plate: string; url: string } | null>(null)
   const [copiedSignatureId, setCopiedSignatureId] = useState<string | null>(null)
 
-  const [workflowFilter, setWorkflowFilter] = useState<'all' | 'local' | 'cloud'>('all')
+  const [workflowFilter, setWorkflowFilter] = useState<'all' | 'local' | 'cloud' | 'draft'>('all')
   const [expandedReportIds, setExpandedReportIds] = useState<Set<string>>(new Set())
   const [activeReportIndex, setActiveReportIndex] = useState<number>(-1)
 
@@ -118,7 +118,9 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
   }
 
   const filtered = saved.filter(r => {
-    if (workflowFilter !== 'all') {
+    if (workflowFilter === 'draft') {
+      if (r.status !== 'draft') return false
+    } else if (workflowFilter !== 'all') {
       const state = cloudStateOf(r.id)
       if (workflowFilter === 'local' && state === 'cloud') return false
       if (workflowFilter === 'cloud' && state !== 'cloud') return false
@@ -363,6 +365,19 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
               <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#f8fafc' }}>
                 {r.vehicleInfo.brand || 'Veículo'} — {r.vehicleInfo.plate || 'S/P'}
               </span>
+              {r.status === 'draft' && (
+                <span
+                  title="Prévia cadastral — abra no celular para continuar a vistoria"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4, flexShrink: 0,
+                    fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit,sans-serif',
+                    color: '#34d399', background: 'rgba(52,211,153,0.1)', border: '1px solid rgba(52,211,153,0.25)',
+                    borderRadius: 999, padding: '2px 8px', lineHeight: 1.4,
+                  }}
+                >
+                  💻 Prévia
+                </span>
+              )}
               <CloudBadge state={cloudStateOf(r.id)} />
             </div>
             <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -563,7 +578,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
               />
               <select
                 value={workflowFilter}
-                onChange={e => setWorkflowFilter(e.target.value as 'all' | 'local' | 'cloud')}
+                onChange={e => setWorkflowFilter(e.target.value as 'all' | 'local' | 'cloud' | 'draft')}
                 title="Filtrar por Status de Nuvem"
                 style={{
                   background: 'var(--input-bg)',
@@ -579,6 +594,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                 }}
               >
                 <option value="all">☁️ Todos os status</option>
+                <option value="draft">💻 Apenas prévias</option>
                 <option value="local">📴 Apenas Local/Pendente</option>
                 <option value="cloud">☁️ Sincronizados na Nuvem</option>
               </select>

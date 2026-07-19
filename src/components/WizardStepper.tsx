@@ -2,9 +2,9 @@
 import type { WizardStep } from './wizardTypes'
 
 const WIZARD_STEPS: { step: WizardStep; label: string }[] = [
-  { step: 1, label: 'Dados' },
-  { step: 2, label: 'Cliente' },
-  { step: 3, label: 'Finalizar' },
+  { step: 1, label: 'Cliente' },
+  { step: 2, label: 'Veículo' },
+  { step: 3, label: 'Extras' },
 ]
 
 interface Props {
