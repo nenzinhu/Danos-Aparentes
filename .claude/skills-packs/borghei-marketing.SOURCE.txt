@@ -1,0 +1,3 @@
+source: https://github.com/borghei/Claude-Skills/tree/83dc60b0eed2e12da70df2b2bd57a973e38abee8/marketing
+commit: 83dc60b0eed2e12da70df2b2bd57a973e38abee8
+installed_at: 2026-07-19T18:02:24Z
