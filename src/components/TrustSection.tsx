@@ -1,6 +1,11 @@
 'use client';
 import Reveal from './Reveal';
-import { LEGAL_CONTACT_EMAIL } from './LegalContent';
+import {
+  LEGAL_CITY,
+  LEGAL_CNPJ,
+  LEGAL_CONTACT_EMAIL,
+  LEGAL_RESPONSIBLE_NAME,
+} from './LegalContent';
 
 const TRUST_ITEMS = [
   {
@@ -64,7 +69,7 @@ export default function TrustSection() {
         <div>
           <p className="font-mono-data text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-1">Quem responde por este produto</p>
           <p className="text-sm text-[var(--text-main)]">
-            <strong className="font-semibold">Jeferson da Silva</strong> — Florianópolis/SC. Responsável legal e desenvolvedor do Danos Aparentes.{' '}
+            <strong className="font-semibold">{LEGAL_RESPONSIBLE_NAME}</strong> — {LEGAL_CITY}. Responsável legal e desenvolvedor do Danos Aparentes. CNPJ {LEGAL_CNPJ}.{' '}
             <a href={`mailto:${LEGAL_CONTACT_EMAIL}`} className="text-primary hover:underline">{LEGAL_CONTACT_EMAIL}</a>
           </p>
         </div>

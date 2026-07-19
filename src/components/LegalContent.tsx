@@ -2,6 +2,11 @@ import { Fragment } from 'react'
 
 export const LEGAL_LAST_UPDATED = '20 de junho de 2026'
 export const LEGAL_CONTACT_EMAIL = 'suporte@danosaparentes.com.br'
+/** CNPJ da operação Danos Aparentes (exibir formatado). */
+export const LEGAL_CNPJ = '68.088.839/0001-67'
+export const LEGAL_CNPJ_DIGITS = '68088839000167'
+export const LEGAL_RESPONSIBLE_NAME = 'Jeferson da Silva'
+export const LEGAL_CITY = 'Florianópolis - SC'
 
 type Block =
   | { kind: 'p'; html: string }
@@ -137,7 +142,7 @@ const PRIVACY: Section[] = [
     blocks: [
       {
         kind: 'p',
-        html: `O <strong>Danos Aparentes</strong> atua como controlador dos dados tratados no aplicativo, nos termos da Lei Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD). Para exercer seus direitos ou esclarecer dúvidas sobre privacidade, entre em contato pelo e-mail <strong>${LEGAL_CONTACT_EMAIL}</strong>.`,
+        html: `O <strong>Danos Aparentes</strong> (CNPJ <strong>${LEGAL_CNPJ}</strong>) atua como controlador dos dados tratados no aplicativo, nos termos da Lei Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD). Responsável legal: <strong>${LEGAL_RESPONSIBLE_NAME}</strong> — ${LEGAL_CITY}. Para exercer seus direitos ou esclarecer dúvidas sobre privacidade, entre em contato pelo e-mail <strong>${LEGAL_CONTACT_EMAIL}</strong>.`,
       },
     ],
   },
