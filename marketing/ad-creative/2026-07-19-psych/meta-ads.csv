@@ -1,0 +1,62 @@
+angle_id,angle_name,psychology,audience,landing,primary_text,headline,description,image
+loc-perda,Locadoras — perda da cobrança,Loss aversion + Regret aversion,Locadoras,https://danosaparentes.com.br/locadoras,"Cliente nega o risco na devolução e a cobrança some. Sem laudo de entrada, o prejuízo é seu. Com diagrama + foto + GPS + hash, a prova fecha o caso — PDF no WhatsApp com a marca da locadora.
+
+7 dias grátis. Sem cartão.",Não perca mais cobrança,7 dias grátis,/og-image.jpg
+loc-perda,Locadoras — perda da cobrança,Contrast effect + Commitment,Locadoras,https://danosaparentes.com.br/locadoras,"Palavra contra palavra no balcão? Isso custa caro. Padronize retirada × devolução no celular e mande o laudo assinável com QR/hash.
+
+Teste 7 dias grátis — sem cartão.",Retirada × devolução iguais,Laudo no WhatsApp,/og-image.jpg
+loc-perda,Locadoras — perda da cobrança,Status-quo bias break + Unity,Locadoras,https://danosaparentes.com.br/locadoras,"Cada vistoriador faz de um jeito = cobrança fraca. Um padrão no app. Um PDF com a sua marca. Uma prova que sustenta.
+
+7 dias grátis no Danos Aparentes.",Cobrança com prova real,Sem cartão no trial,/og-image.jpg
+ofi-regret,Oficinas — “não era assim”,Regret aversion + Framing,Oficinas,https://danosaparentes.com.br/oficinas,"Orçamento contestado e cliente falando “não era assim”. O arrependimento vem depois — quando falta o laudo da entrada.
+
+Registre diagrama + foto + aceite na tela. 7 dias grátis.",Pare o “não era assim”,7 dias grátis,/og-image.jpg
+ofi-regret,Oficinas — “não era assim”,Availability heuristic + Contrast,Oficinas,https://danosaparentes.com.br/oficinas,"Foto solta no WhatsApp não fecha discussão. Laudo profissional na entrada da oficina fecha.
+
+Sem cartão pra começar. Teste 7 dias.",Vistoria antes do orçamento,Para oficinas,/og-image.jpg
+ofi-regret,Oficinas — “não era assim”,Mental accounting + Authority,Oficinas,https://danosaparentes.com.br/oficinas,"Entregue o carro com laudo — não com conversa. White-label da sua oficina no PDF.
+
+Plano Pro R$49,90/mês ≈ R$1,66/dia. Comece grátis.",Laudo com sua marca,"≈ R$1,66/dia",/og-image.jpg
+fro-hoje,Frotas — comece hoje,Present bias + Hyperbolic discounting,Gestores de frota,https://danosaparentes.com.br/frotas,"Planilha no fim do mês não evita a disputa de hoje. Registre saída/entrada agora — offline no pátio, sync depois.
+
+7 dias grátis. Sem cartão.",Controle avarias hoje,Offline no pátio,/og-image.jpg
+fro-hoje,Frotas — comece hoje,Activation energy + BJ Fogg Ability,Gestores de frota,https://danosaparentes.com.br/frotas,"Primeiro passo: digite a placa. Marca, modelo e cor se preenchem. Depois marque a avaria no diagrama.
+
+Ativação baixa. Resultado imediato. Teste grátis.",Digite a placa. Pronto.,7 dias grátis,/og-image.jpg
+fro-hoje,Frotas — comece hoje,Peak-end (laudo) + Identity,Gestores de frota,https://danosaparentes.com.br/frotas,"Histórico auditável da frota com a marca da empresa. Menos sinistro interno, menos “eu não vi”.
+
+Pro ou Corporativo. Comece com 7 dias grátis.",Histórico sem planilha,Para frotas,/og-image.jpg
+seg-auth,Seguradoras — validade,Authority bias + Framing,Corretoras / seguradoras,https://danosaparentes.com.br/seguradoras,"Laudo sem trilha é fácil de questionar. QR Code + hash SHA-256 fazem o PDF comprovar a si mesmo.
+
+Foto com GPS. Assinatura na tela. 7 dias grátis.",Laudo com QR e hash,Valide o original,/og-image.jpg
+seg-auth,Seguradoras — validade,Availability (demo mental) + Endowment,Corretoras / seguradoras,https://danosaparentes.com.br/seguradoras,"Aponte o celular no QR e confira se o PDF é o original. Incluso em todo laudo.
+
+Teste 7 dias — sem cartão.",Anti-adulteração no PDF,7 dias grátis,/og-image.jpg
+seg-auth,Seguradoras — validade,Jobs to be done + Authority,Corretoras / seguradoras,https://danosaparentes.com.br/seguradoras,"Para sinistro e perícia: prova com hash, QR e timestamp. White-label da corretora.
+
+Plano Pro R$49,90/mês. Comece grátis.",Prova pro sinistro,White-label incluso,/og-image.jpg
+oferta-zero,Oferta — zero price + âncora,Zero-price effect + Mental accounting + Anchoring,Todos,https://danosaparentes.com.br/planos,"Grátis não é “barato” — é outro jogo. 7 dias no Danos Aparentes, sem cartão.
+
+Depois: R$49,90/mês ≈ R$1,66/dia com vistorias ilimitadas. Um laudo terceirizado já chega perto disso.",7 dias grátis — sem cartão,"≈ R$1,66/dia",/og-image.jpg
+oferta-zero,Oferta — zero price + âncora,Foot-in-the-door + Endowment effect,Todos,https://danosaparentes.com.br/planos,"Teste o fluxo completo: placa → diagrama → foto → assinatura → PDF com hash/QR. Se servir, continue no Pro.
+
+Sem cartão pra começar.",Laudo em minutos,Comece grátis,/og-image.jpg
+oferta-zero,Oferta — zero price + âncora,Paradox of choice (1 CTA) + Unity,Todos,https://danosaparentes.com.br/planos,"Locadora, oficina ou frota: um app. Um padrão. Laudo com a sua marca.
+
+7 dias grátis → Pro R$49,90/mês ilimitado.",Vistorias ilimitadas,Ver planos,/og-image.jpg
+amas-loss,Amassado pré-existente,Loss aversion + Confirmation (align belief),Locadoras,https://danosaparentes.com.br/blog/como-provar-amassado-pre-existente-locacao,"“Esse amassado já estava.” Sem vistoria de entrada, você absorve o dano. Com laudo (foto + GPS + hash), a prova fecha.
+
+7 dias grátis.",Prove o amassado na entrada,Teste o Pro,/blog/como-provar-amassado-pre-existente-locacao.jpg
+amas-loss,Amassado pré-existente,Goal-gradient (fluxo curto) + Present bias,Locadoras,https://danosaparentes.com.br/blog/como-provar-amassado-pre-existente-locacao,"Marque o amassado no diagrama, anexe a foto, gere PDF com hash — pronto pro WhatsApp.
+
+Sem cartão no trial.",Laudo com hash e QR,PDF no WhatsApp,/blog/como-provar-amassado-pre-existente-locacao.jpg
+amas-loss,Amassado pré-existente,Zero-price + Identity (locadora),Locadoras,https://danosaparentes.com.br/blog/como-provar-amassado-pre-existente-locacao,Locadora: prove o dano pré-existente em minutos. 7 dias grátis no Danos Aparentes.,7 dias grátis pra locadora,Sem cartão,/blog/como-provar-amassado-pre-existente-locacao.jpg
+off-ability,Offline — capacidade no pátio,BJ Fogg (Ability) + COM-B,Frotas / locadoras,https://danosaparentes.com.br/blog/vistoria-de-frota-sem-internet,"Motivação alta + zero sinal = vistoria que não acontece. Com offline de verdade, a capacidade existe mesmo sem rede.
+
+7 dias grátis.",Sem sinal? Continua,Sync depois,/blog/vistoria-de-frota-sem-internet.jpg
+off-ability,Offline — capacidade no pátio,Status-quo break + EAST Easy,Frotas / locadoras,https://danosaparentes.com.br/blog/vistoria-de-frota-sem-internet,"Fotos e marcações ficam no aparelho e sobem sozinhas. Sem “espera o Wi-Fi”.
+
+Teste 7 dias — sem cartão.",Vistoria 100% offline,7 dias grátis,/blog/vistoria-de-frota-sem-internet.jpg
+off-ability,Offline — capacidade no pátio,Activation energy + Present bias,Frotas / locadoras,https://danosaparentes.com.br/blog/vistoria-de-frota-sem-internet,"Frota e locadora: pátio sem internet não pode ser desculpa. Abra o app e vistoriar.
+
+Comece grátis.",Pátio sem desculpa,Comece grátis,/blog/vistoria-de-frota-sem-internet.jpg

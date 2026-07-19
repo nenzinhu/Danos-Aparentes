@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ad Creative Review (Psychology) — Danos Aparentes</title>
+<style>
+:root { --bg:#020617; --card:rgba(10,20,40,.92); --line:rgba(0,190,255,.12); --text:#e8f4ff; --muted:#9bb4d0; --accent:#1FB6FF; --signal:#ffb938; }
+* { box-sizing:border-box; }
+body { margin:0; font-family: Outfit, ui-sans-serif, system-ui, sans-serif; background:radial-gradient(ellipse 120% 80% at 50% -10%, #0d1f3c 0%, #060d1a 50%, #020408 100%); color:var(--text); }
+header { padding:28px 20px 10px; max-width:1100px; margin:0 auto; }
+header h1 { margin:0 0 8px; font-size:1.5rem; letter-spacing:-.02em; }
+header p { margin:0; color:var(--muted); line-height:1.5; max-width:70ch; }
+.disclosure { max-width:1100px; margin:16px auto; padding:12px 16px; border:1px solid var(--line); border-radius:12px; background:var(--card); color:var(--muted); font-size:.85rem; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; max-width:1100px; margin:20px auto 48px; padding:0 16px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.card img { width:100%; aspect-ratio:16/9; object-fit:cover; display:block; background:#000; }
+.meta { padding:14px 14px 16px; }
+.badge { display:inline-block; font-size:.65rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:#001018; background:var(--accent); padding:3px 8px; border-radius:999px; margin-bottom:6px; }
+.psych { display:inline-block; font-size:.65rem; font-weight:700; letter-spacing:.04em; color:var(--signal); border:1px solid rgba(245,166,35,.45); padding:2px 8px; border-radius:6px; margin:0 0 8px 6px; }
+.primary { font-size:.92rem; line-height:1.45; margin:0 0 10px; }
+.hl { font-weight:800; margin:0; font-size:1rem; }
+.desc { color:var(--muted); font-size:.8rem; margin:4px 0 10px; }
+.g { font-size:.75rem; color:var(--muted); }
+.g code { color:#93c5fd; }
+a { color:var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Ad Creative Review — Psychology wave</h1>
+  <p>Lote <code>2026-07-19-psych</code>: verticais + modelos mentais (loss aversion, zero-price, anchoring, BJ Fogg…). Escolha 3–5 pra testar vs o lote baseline.</p>
+</header>
+<div class="disclosure">
+  <strong>Grounding:</strong> features e preço publicados (Pro R$49,90/mês ≈ R$1,66/dia, 7 dias grátis sem cartão). Sem depoimentos ou métricas inventadas. Sem falsa escassez. Ver <code>marketing/ad-creative/2026-07-19-psych/PSYCHOLOGY-MATRIX.md</code>.
+</div>
+<div class="grid" id="grid"></div>
+<script>
+const DATA = [{"id": "loc-perda", "name": "Locadoras — perda da cobrança", "psychology": "Loss aversion + Regret aversion", "audience": "Locadoras", "landing": "https://danosaparentes.com.br/locadoras", "cover": "/og-image.jpg", "primary": "Cliente nega o risco na devolução e a cobrança some. Sem laudo de entrada, o prejuízo é seu. Com diagrama + foto + GPS + hash, a prova fecha o caso — PDF no WhatsApp com a marca da locadora. 7 dias grátis. Sem cartão.", "headline": "Não perca mais cobrança", "description": "7 dias grátis", "google_sample": ["Perdeu a cobrança de novo?", "Prove o dano na retirada", "Fim da palavra contra palavra", "Retirada × devolução iguais", "Laudo com hash e QR"]}, {"id": "ofi-regret", "name": "Oficinas — “não era assim”", "psychology": "Regret aversion + Framing", "audience": "Oficinas", "landing": "https://danosaparentes.com.br/oficinas", "cover": "/og-image.jpg", "primary": "Orçamento contestado e cliente falando “não era assim”. O arrependimento vem depois — quando falta o laudo da entrada. Registre diagrama + foto + aceite na tela. 7 dias grátis.", "headline": "Pare o “não era assim”", "description": "7 dias grátis", "google_sample": ["Pare o “não era assim”", "Vistoria antes do orçamento", "Foto solta não prova nada", "Laudo na entrada da oficina", "Aceite do cliente na tela"]}, {"id": "fro-hoje", "name": "Frotas — comece hoje", "psychology": "Present bias + Hyperbolic discounting", "audience": "Gestores de frota", "landing": "https://danosaparentes.com.br/frotas", "cover": "/og-image.jpg", "primary": "Planilha no fim do mês não evita a disputa de hoje. Registre saída/entrada agora — offline no pátio, sync depois. 7 dias grátis. Sem cartão.", "headline": "Controle avarias hoje", "description": "Offline no pátio", "google_sample": ["Controle avarias hoje", "Entrada e saída iguais", "Histórico sem planilha", "Funciona 100% offline", "7 dias grátis — sem cartão"]}, {"id": "seg-auth", "name": "Seguradoras — validade", "psychology": "Authority bias + Framing", "audience": "Corretoras / seguradoras", "landing": "https://danosaparentes.com.br/seguradoras", "cover": "/og-image.jpg", "primary": "Laudo sem trilha é fácil de questionar. QR Code + hash SHA-256 fazem o PDF comprovar a si mesmo. Foto com GPS. Assinatura na tela. 7 dias grátis.", "headline": "Laudo com QR e hash", "description": "Valide o original", "google_sample": ["Laudo com QR e hash", "Valide o PDF original", "Anti-adulteração no laudo", "Foto com GPS e hora", "Assinatura na tela"]}, {"id": "oferta-zero", "name": "Oferta — zero price + âncora", "psychology": "Zero-price effect + Mental accounting + Anchoring", "audience": "Todos", "landing": "https://danosaparentes.com.br/planos", "cover": "/og-image.jpg", "primary": "Grátis não é “barato” — é outro jogo. 7 dias no Danos Aparentes, sem cartão. Depois: R$49,90/mês ≈ R$1,66/dia com vistorias ilimitadas. Um laudo terceirizado já chega perto disso.", "headline": "7 dias grátis — sem cartão", "description": "≈ R$1,66/dia", "google_sample": ["7 dias grátis — sem cartão", "Pro por R$49,90/mês", "≈ R$1,66 por dia", "Vistorias ilimitadas", "1 laudo terceirizado?"]}, {"id": "amas-loss", "name": "Amassado pré-existente", "psychology": "Loss aversion + Confirmation (align belief)", "audience": "Locadoras", "landing": "https://danosaparentes.com.br/blog/como-provar-amassado-pre-existente-locacao", "cover": "/blog/como-provar-amassado-pre-existente-locacao.jpg", "primary": "“Esse amassado já estava.” Sem vistoria de entrada, você absorve o dano. Com laudo (foto + GPS + hash), a prova fecha. 7 dias grátis.", "headline": "Prove o amassado na entrada", "description": "Teste o Pro", "google_sample": ["Amassado já existia?", "Prove na retirada", "Sem prova = prejuízo", "Laudo com foto e hash", "Fim da discussão"]}, {"id": "off-ability", "name": "Offline — capacidade no pátio", "psychology": "BJ Fogg (Ability) + COM-B", "audience": "Frotas / locadoras", "landing": "https://danosaparentes.com.br/blog/vistoria-de-frota-sem-internet", "cover": "/blog/vistoria-de-frota-sem-internet.jpg", "primary": "Motivação alta + zero sinal = vistoria que não acontece. Com offline de verdade, a capacidade existe mesmo sem rede. 7 dias grátis.", "headline": "Sem sinal? Continua", "description": "Sync depois", "google_sample": ["Sem sinal? Continua", "Vistoria 100% offline", "Sync quando voltar", "Pátio sem internet", "7 dias grátis — sem cartão"]}];
+const grid = document.getElementById('grid');
+for (const c of DATA) {
+  const el = document.createElement('article');
+  el.className = 'card';
+  el.innerHTML = `
+    <img src="${c.cover}" alt=""/>
+    <div class="meta">
+      <div><span class="badge">${c.audience}</span><span class="psych">${c.psychology}</span></div>
+      <p class="primary">${c.primary}</p>
+      <p class="hl">${c.headline}</p>
+      <p class="desc">${c.description}</p>
+      <p class="g">Google sample: ${c.google_sample.map(h => `<code>${h}</code>`).join(' · ')}</p>
+      <p class="g"><a href="${c.landing}" target="_blank" rel="noopener">Landing</a> · ${c.id}</p>
+    </div>`;
+  grid.appendChild(el);
+}
+</script>
+</body>
+</html>
