@@ -19,14 +19,14 @@ O maior achado desta pesquisa não é uma palavra-chave — é competitivo: exis
 
 ## Top priority clusters
 
-### Cluster 1: Sistema de vistoria para locadora (transacional/comercial — GAP, sem conteúdo hoje)
+### Cluster 1: Sistema de vistoria para locadora (transacional/comercial — landing OK; alimentar spokes)
 - **Primary keyword:** "sistema de vistoria veicular para locadora" (volume: Médio, dificuldade: Alto — SERP dominado por Vexsoft, LocaSmartPro, 7Carros, SVV, Loca Easy)
 - **Intent:** Comercial / Transacional
-- **Recommended page type:** Página de produto/landing dedicada (não um post de blog) — comparável a `/planos`, mas focada no ICP locadora com prova social e diferenciais (offline, hash, white-label)
+- **Recommended page type:** Landing `/locadoras` **já publicada** (title/H1/FAQ alinhados). Próximo passo: spokes + internal linking (ver `marketing/content-strategy/2026-07-19/CONTENT-STRATEGY.md`)
 - **Secondary keywords:** "software para locadora de veículos com vistoria", "app de vistoria para frota", "gestão de vistoriadores app", "checklist digital para locadora", "quanto custa um sistema de vistoria para locadora"
-- **Suggested URL:** `/locadoras` (nova) ou seção reforçada dentro de `/planos`
-- **Estimated effort:** Média (1 landing page nova, copy + prova técnica já existe em `TrustSection`/`PricingCards`)
-- **Why this cluster:** É o cluster com maior intenção de compra e maior valor de ticket (plano Corporativo, "sob consulta"), mas hoje o site não tem nenhuma página otimizada para essa query específica — só aparece de forma implícita em `/planos`.
+- **Suggested URL:** `/locadoras` (existe)
+- **Estimated effort:** Baixa–média (links internos + posts de preço/offline/comparativo)
+- **Why this cluster:** Maior intenção de compra e ticket Corporativo — hub comercial já existe; falta densificar o cluster e links dos posts de dor.
 
 ### Cluster 2: Alternativa a Vexsoft / comparação de apps de vistoria (comercial — GAP)
 - **Primary keyword:** "alternativa ao vexsoft" (volume: Baixo-Médio, dificuldade: Médio — pouco conteúdo de terceiros comparando, oportunidade de nicho)

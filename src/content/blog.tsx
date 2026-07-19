@@ -1040,8 +1040,10 @@ BLOG_POSTS.unshift(
         <p>
           A vistoria sem papel reduz tempo, organiza melhor a prova e melhora a experiência do cliente. Se
           você quiser aprofundar o lado operacional, leia também{' '}
-          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
-          <a href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</a>.
+          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a>,{' '}
+          <a href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</a> ou veja o
+          fluxo em <a href="/frotas">vistoria de frota digital</a> e{' '}
+          <a href="/locadoras">locadoras</a>.
         </p>
       </>
     ),
@@ -1294,7 +1296,8 @@ BLOG_POSTS.unshift(
         <p>
           Se sua operação quer parar de absorver pequenos reparos que somam no fim do mês, a prioridade é
           simples: registrar bem a retirada para cobrar com segurança na devolução. Comece pelo{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a>.
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a> ou veja
+          o <a href="/locadoras">sistema de vistoria veicular para locadora</a>.
         </p>
       </>
     ),
@@ -1703,8 +1706,10 @@ BLOG_POSTS.unshift(
         <p>
           Quando o documento combina apresentação profissional com mecanismos de validação, ele ganha peso
           operacional. Para aprofundar, veja também{' '}
-          <a href="/blog/laudo-de-vistoria-com-assinatura-digital">laudo com assinatura digital</a> e{' '}
-          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">como colocar sua logo e nome no PDF</a>.
+          <a href="/blog/laudo-de-vistoria-com-assinatura-digital">laudo com assinatura digital</a>,{' '}
+          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">como colocar sua logo e nome no PDF</a> e o uso
+          em <a href="/seguradoras">vistoria com QR para seguradoras</a> ou{' '}
+          <a href="/locadoras">locadoras</a>.
         </p>
       </>
     ),
@@ -1777,8 +1782,9 @@ BLOG_POSTS.unshift(
         <p>
           O cliente tende a confiar mais quando o documento parece parte oficial da operação. Para seguir
           nesse tema, veja também{' '}
-          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</a> e{' '}
-          <a href="/blog/como-entregar-um-pdf-de-vistoria-mais-profissional">como entregar um PDF de vistoria mais profissional</a>.
+          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</a>,{' '}
+          <a href="/blog/como-entregar-um-pdf-de-vistoria-mais-profissional">como entregar um PDF de vistoria mais profissional</a>{' '}
+          e a página de <a href="/locadoras">sistema de vistoria para locadoras</a> (white-label incluso).
         </p>
       </>
     ),
@@ -2216,8 +2222,9 @@ BLOG_POSTS.unshift(
         <p>
           Multiplicado por dezenas de vistorias no mês, esse único campo poupado por veículo representa
           bastante tempo de equipe. Para seguir nesse tema de produtividade, veja também{' '}
-          <a href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH: autofill de nome e CPF</a> e{' '}
-          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a>.
+          <a href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH: autofill de nome e CPF</a>,{' '}
+          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> ou
+          teste o fluxo em <a href="/planos">planos</a> / <a href="/locadoras">locadoras</a>.
         </p>
       </>
     ),
@@ -2738,6 +2745,8 @@ BLOG_POSTS.unshift(
           <a href="/blog/como-fotografar-avarias">como fotografar avarias à prova de contestação</a>. Para
           o fluxo geral do documento, veja{' '}
           <a href="/blog/como-fazer-laudo-de-vistoria-veicular">como fazer laudo de vistoria veicular</a>.
+          Oficina quer o processo completo digital? Veja{' '}
+          <a href="/oficinas">vistoria digital para oficinas</a>.
         </p>
       </>
     ),
@@ -3116,8 +3125,9 @@ BLOG_POSTS.push(
         <RecursosLaudo />
 
         <p>
-          Trabalha com frota inteira, não só locação avulsa? Veja também o{' '}
-          <a href="/frotas">app de vistoria de frota que funciona offline</a>.
+          Locadora montando o processo completo? Veja o{' '}
+          <a href="/locadoras">sistema de vistoria veicular para locadora</a>. Trabalha com frota
+          inteira? Veja o <a href="/frotas">app de vistoria de frota que funciona offline</a>.
         </p>
       </>
     ),
@@ -3170,6 +3180,11 @@ BLOG_POSTS.push(
           <li>Colete a assinatura do cliente na própria tela.</li>
           <li>Envie o PDF com a marca da sua oficina direto pelo WhatsApp.</li>
         </ol>
+        <p>
+          Quer o encaixe comercial da oficina? Veja a página{' '}
+          <a href="/oficinas">vistoria digital para oficinas</a> e os{' '}
+          <a href="/planos">planos</a>.
+        </p>
 
         <RecursosLaudo />
       </>
@@ -3281,6 +3296,11 @@ BLOG_POSTS.push(
           vistoriador, mesmo sem nenhuma conexão. Assim que o aparelho encontra sinal novamente
           (saindo do pátio, por exemplo), os dados sincronizam automaticamente com o servidor, sem
           nenhuma ação manual.
+        </p>
+        <p>
+          Para o fluxo completo de frota (entrada, saída e histórico), veja{' '}
+          <a href="/frotas">vistoria de frota digital</a> e o post{' '}
+          <a href="/blog/controle-avarias-frota-entrada-saida">controle de avarias na frota</a>.
         </p>
 
         <RecursosLaudo />
