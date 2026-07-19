@@ -6,7 +6,7 @@ import IntroVideo from '../components/IntroVideo'
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { LEGAL_CONTACT_EMAIL } from '../components/LegalContent';
+import { LEGAL_CONTACT_EMAIL, LEGAL_CNPJ, LEGAL_COMPANY_NAME } from '../components/LegalContent';
 import LandingCtaLink from '../components/LandingCtaLink';
 import Reveal from '../components/Reveal';
 import TrustSection from '../components/TrustSection';
@@ -463,7 +463,7 @@ export default function LandingPage() {
         {/* Legal Info & Disclaimer */}
         <div className="w-full flex flex-col gap-2 text-center md:text-left text-[9px] font-semibold tracking-normal normal-case border-b border-[var(--card-border)]/10 pb-6 opacity-75">
           <p>
-            <strong>Responsável Legal:</strong> Jeferson da Silva | Florianópolis - SC | <strong>Contato:</strong>{' '}
+            <strong>{LEGAL_COMPANY_NAME}</strong> | <strong>CNPJ:</strong> {LEGAL_CNPJ} | <strong>Contato:</strong>{' '}
             <a href={`mailto:${LEGAL_CONTACT_EMAIL}`} className="text-primary hover:underline">{LEGAL_CONTACT_EMAIL}</a>
           </p>
           <p className="text-[8px] opacity-70 leading-relaxed">

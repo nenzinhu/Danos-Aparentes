@@ -1,6 +1,10 @@
 'use client';
 import Reveal from './Reveal';
-import { LEGAL_CONTACT_EMAIL } from './LegalContent';
+import {
+  LEGAL_CNPJ,
+  LEGAL_COMPANY_NAME,
+  LEGAL_CONTACT_EMAIL,
+} from './LegalContent';
 
 const TRUST_ITEMS = [
   {
@@ -59,12 +63,12 @@ export default function TrustSection() {
 
       <Reveal delay={220} className="glass-card mt-8 p-6 sm:p-8 border border-[var(--card-border)]/50 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
         <div className="shrink-0 grid place-items-center w-12 h-12 rounded-full border border-[var(--sheet-line)] font-mono-data text-lg text-[var(--signal-bright)]">
-          JS
+          DA
         </div>
         <div>
           <p className="font-mono-data text-[10px] uppercase tracking-widest text-[var(--text-muted)] mb-1">Quem responde por este produto</p>
           <p className="text-sm text-[var(--text-main)]">
-            <strong className="font-semibold">Jeferson da Silva</strong> — Florianópolis/SC. Responsável legal e desenvolvedor do Danos Aparentes.{' '}
+            <strong className="font-semibold">{LEGAL_COMPANY_NAME}</strong> — CNPJ {LEGAL_CNPJ}.{' '}
             <a href={`mailto:${LEGAL_CONTACT_EMAIL}`} className="text-primary hover:underline">{LEGAL_CONTACT_EMAIL}</a>
           </p>
         </div>
