@@ -2,12 +2,17 @@
 import { useState } from 'react';
 import { VehicleType } from '../types'
 import Reveal from './Reveal'
+import {
+  VehicleLineIcon,
+  ScratchIcon,
+  DentIcon,
+  BrokenIcon,
+} from './marketing/VehicleLineIcons'
 
-const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamages: any[] }[] = [
+const vehicleOptions: { type: VehicleType; name: string; mockDamages: any[] }[] = [
   {
     type: 'car',
     name: 'Carro',
-    icon: '🚗',
     mockDamages: [
       {
         id: 'mock-1' as any,
@@ -27,7 +32,6 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
   {
     type: 'car2d',
     name: 'Carro 2 Portas',
-    icon: '🚙',
     mockDamages: [
       {
         id: 'mock-car2d' as any,
@@ -47,7 +51,6 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
   {
     type: 'moto',
     name: 'Moto',
-    icon: '🏍️',
     mockDamages: [
       {
         id: 'mock-2' as any,
@@ -67,7 +70,6 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
   {
     type: 'truck',
     name: 'Caminhão',
-    icon: '🚚',
     mockDamages: [
       {
         id: 'mock-3' as any,
@@ -87,7 +89,6 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
   {
     type: 'van',
     name: 'Utilitário (Van)',
-    icon: '🚐',
     mockDamages: [
       {
         id: 'mock-4' as any,
@@ -107,7 +108,6 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
   {
     type: 'bus',
     name: 'Ônibus',
-    icon: '🚌',
     mockDamages: [
       {
         id: 'mock-5' as any,
@@ -127,7 +127,6 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
   {
     type: 'microbus',
     name: 'Micro-ônibus',
-    icon: '🚐',
     mockDamages: [
       {
         id: 'mock-microbus' as any,
@@ -145,6 +144,12 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
     ]
   }
 ];
+
+function DamageTypeIcon({ type }: { type: string }) {
+  if (type === 'broken') return <BrokenIcon size={12} />
+  if (type === 'dent') return <DentIcon size={12} />
+  return <ScratchIcon size={12} />
+}
 
 export default function VehicleShowcaseSection() {
   const [activeVehicle, setActiveVehicle] = useState<VehicleType>('car');
@@ -165,25 +170,32 @@ export default function VehicleShowcaseSection() {
 
           {/* Botões do Seletor */}
           <div className="flex flex-col gap-2.5 pt-2">
-            {vehicleOptions.map((opt) => (
+            {vehicleOptions.map((opt) => {
+              const isActive = activeVehicle === opt.type
+              return (
               <button
                 key={opt.type}
                 onClick={() => setActiveVehicle(opt.type)}
                 className={`w-full px-5 py-4 rounded-xl border flex items-center justify-between text-sm font-bold transition-all outline-none ${
-                  activeVehicle === opt.type
+                  isActive
                     ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20'
                     : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)]'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-lg">{opt.icon}</span>
+                  <VehicleLineIcon
+                    type={opt.type}
+                    size={24}
+                    className={isActive ? 'opacity-95' : 'opacity-70'}
+                  />
                   <span>{opt.name}</span>
                 </div>
-                {activeVehicle === opt.type && (
+                {isActive && (
                   <span className="text-xs font-bold bg-white/20 px-2 py-0.5 rounded-full uppercase tracking-wider">Ativo</span>
                 )}
               </button>
-            ))}
+              )
+            })}
           </div>
         </div>
 
@@ -222,8 +234,8 @@ export default function VehicleShowcaseSection() {
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="flex items-center gap-1 text-[10px] font-black uppercase text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
-                      {selectedOpt.mockDamages[0].type === 'broken' ? '💥' : selectedOpt.mockDamages[0].type === 'dent' ? '🔨' : '✏️'}
+                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                      <DamageTypeIcon type={selectedOpt.mockDamages[0].type} />
                       Tipo: {selectedOpt.mockDamages[0].typeName}
                     </span>
                     <span className="text-[10px] font-black uppercase text-red-500 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">
