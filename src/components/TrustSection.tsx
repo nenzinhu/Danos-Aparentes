@@ -70,6 +70,8 @@ export default function TrustSection() {
           <p className="text-sm text-[var(--text-main)]">
             <strong className="font-semibold">{LEGAL_COMPANY_NAME}</strong> — CNPJ {LEGAL_CNPJ}.{' '}
             <a href={`mailto:${LEGAL_CONTACT_EMAIL}`} className="text-primary hover:underline">{LEGAL_CONTACT_EMAIL}</a>
+            {' · '}
+            <a href="/sobre" className="text-primary hover:underline">Sobre o produto</a>
           </p>
         </div>
       </Reveal>

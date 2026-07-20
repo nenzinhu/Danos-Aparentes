@@ -5,8 +5,11 @@ import { BLOG_POSTS, getPost, getRelatedPosts, categorySlug, formatDate, Cta } f
 import { BlogCover } from '@/src/components/BlogCover'
 import { BlogPostCard } from '@/src/components/BlogPostCard'
 import ShareBar from '@/src/components/ShareBar'
-
-const SITE_URL = 'https://danosaparentes.com.br'
+import {
+  ORG_ID,
+  SITE_URL,
+  blogAuthorJsonLd,
+} from '@/src/lib/seo/entity'
 
 export function generateStaticParams() {
   return BLOG_POSTS.map(p => ({ slug: p.slug }))
@@ -46,17 +49,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.excerpt,
+    ...(post.cover.image ? { image: `${SITE_URL}${post.cover.image}` } : {}),
     datePublished: post.date,
     dateModified: post.updatedDate || post.date,
-    author: {
-      '@type': 'Person',
-      name: post.author.name,
-      jobTitle: 'Proprietário',
-      worksFor: { '@type': 'Organization', name: 'Danos Aparentes' },
-    },
-    publisher: { '@type': 'Organization', name: 'Danos Aparentes', url: SITE_URL },
+    author: blogAuthorJsonLd,
+    publisher: { '@id': ORG_ID },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
     keywords: post.tags.join(', '),
+    inLanguage: 'pt-BR',
   }
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -70,7 +70,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     '@context': 'https://schema.org',
     '@type': 'HowTo',
     name: post.howTo.name,
-    step: post.howTo.steps.map(s => ({ '@type': 'HowToStep', name: s.name, text: s.text })),
+    description: post.excerpt,
+    inLanguage: 'pt-BR',
+    step: post.howTo.steps.map((s, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+    })),
   }
   const faqJsonLd = post.faq && post.faq.length > 0 && {
     '@context': 'https://schema.org',

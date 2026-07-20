@@ -21,6 +21,13 @@ import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import CookieConsentBanner from '@/src/components/CookieConsentBanner'
 import AnalyticsScripts from '@/src/components/AnalyticsScripts'
+import {
+  FOUNDER_NAME,
+  SITE_URL,
+  organizationJsonLd,
+  personJsonLd,
+  websiteJsonLd,
+} from '@/src/lib/seo/entity'
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap', variable: '--font-outfit' })
 const sairaCondensed = Saira_Condensed({
@@ -35,8 +42,6 @@ const plexMono = IBM_Plex_Mono({
   display: 'swap',
   variable: '--font-mono-data',
 })
-
-const SITE_URL = 'https://danosaparentes.com.br'
 
 export const metadata: Metadata = {
   title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
@@ -55,10 +60,11 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: 'Danos Aparentes',
   },
+  robots: { index: true, follow: true },
 
   // ── Autoria e Copyright ─────────────────────────────────────
-  authors: [{ name: 'Danos Aparentes', url: SITE_URL }],
-  creator: 'Danos Aparentes',
+  authors: [{ name: FOUNDER_NAME, url: `${SITE_URL}/sobre` }],
+  creator: FOUNDER_NAME,
   publisher: 'Danos Aparentes',
   keywords: [
     'vistoria veicular', 'danos aparentes', 'laudo de vistoria', 'inspeção de veículo',
@@ -115,7 +121,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
-        <link rel="preload" href="/logo.png" as="image" type="image/png" fetchPriority="high" />
+        <link rel="preload" href="/logo.svg" as="image" type="image/svg+xml" fetchPriority="high" />
         <style dangerouslySetInnerHTML={{ __html: `
           :root { color-scheme: dark; }
           html.light { color-scheme: light; }
@@ -142,33 +148,30 @@ export default function RootLayout({
           })();
         `}} />
         {/* ── Meta tags de Autoria e Direito Autoral ── */}
-        <meta name="author" content="Danos Aparentes" />
+        <meta name="author" content={FOUNDER_NAME} />
         <meta name="copyright" content="© 2026 Danos Aparentes. Todos os direitos reservados." />
         <meta name="rights" content="Protegido pela Lei 9.610/98 — Lei de Direitos Autorais do Brasil." />
         <meta name="generator" content="Danos Aparentes PWA v1.0" />
         <meta name="application-name" content="Danos Aparentes" />
-        <meta name="robots" content="index, follow" />
 
         {/* ── Marca d'água de autoria para indexadores ── */}
-        <meta name="dc.creator" content="Danos Aparentes" />
+        <meta name="dc.creator" content={FOUNDER_NAME} />
         <meta name="dc.rights" content="Copyright 2026, Danos Aparentes. Lei 9.610/98 - Brasil." />
         <meta name="dc.language" content="pt-BR" />
         <meta name="dc.type" content="Software / Web Application" />
 
-        {/* ── Organization (Knowledge Graph) — presente em todas as páginas ── */}
+        {/* ── Knowledge Graph / GEO — Organization + Person + WebSite ── */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: 'Danos Aparentes',
-              url: SITE_URL,
-              logo: `${SITE_URL}/logo-full.png`,
-              description:
-                'Plataforma de vistoria digital de avarias veiculares: marque os danos no diagrama do veículo, anexe fotos e gere laudos em PDF com QR Code de verificação.',
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
       <body className={`${outfit.variable} ${outfit.className} ${sairaCondensed.variable} ${plexMono.variable} min-h-screen selection:bg-primary selection:text-white`}>

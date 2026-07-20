@@ -23,6 +23,7 @@ import HeroCarStage, {
   heroCopyItem,
 } from '../components/HeroCarStage';
 import type { Damage } from '../types';
+import { ORG_ID, SITE_URL, SOFTWARE_ID } from '../lib/seo/entity';
 
 // Avarias reais do laudo (2 riscos leves nas portas esquerdas) para o
 // hero renderizar o modelo realista com as peças marcadas/selecionadas.
@@ -39,21 +40,48 @@ const HOME_UPDATED_DATE = '2026-07-12'
 const LANDING_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
+  '@id': SOFTWARE_ID,
   name: 'Danos Aparentes',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web, Android, iOS (PWA)',
-  url: 'https://danosaparentes.com.br',
+  url: SITE_URL,
   description:
     'Aplicativo de vistoria veicular: marque avarias em diagramas do veículo, anexe fotos com GPS e gere laudos em PDF com hash de validação e QR Code.',
   inLanguage: 'pt-BR',
   dateModified: HOME_UPDATED_DATE,
   offers: { '@type': 'Offer', category: 'subscription' },
-  publisher: {
-    '@type': 'Organization',
-    name: 'Danos Aparentes',
-    url: 'https://danosaparentes.com.br',
-    logo: 'https://danosaparentes.com.br/logo-full.png',
-  },
+  publisher: { '@id': ORG_ID },
+  provider: { '@id': ORG_ID },
+};
+
+// HowTo da home — espelha os 3 passos visíveis na landing (extraível por IA).
+const HOME_HOWTO_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'Como fazer uma vistoria digital em 3 passos',
+  description:
+    'Da placa ao laudo assinado: consulta automática, marcação de avarias no diagrama e PDF com hash e QR.',
+  inLanguage: 'pt-BR',
+  step: [
+    {
+      '@type': 'HowToStep',
+      position: 1,
+      name: 'Consulte a Placa',
+      text: 'Insira a placa do veículo e deixe o sistema preencher automaticamente marca, modelo, ano de fabricação, cor e município.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 2,
+      name: 'Toque para Marcar Avarias',
+      text: 'Selecione o modelo do veículo e toque na área exata do SVG clicável. Aponte o tipo de avaria (risco, amassado, quebrado), adicione fotos HD e notas.',
+    },
+    {
+      '@type': 'HowToStep',
+      position: 3,
+      name: 'Assine e Envie o Laudo',
+      text: 'Vistoriador e cliente assinam digitalmente na tela do celular. O laudo em PDF inviolável com hash SHA-256 é gerado e enviado por WhatsApp.',
+    },
+  ],
 };
 
 // Fonte única das perguntas do FAQ: usada tanto pelo FAQSection (visível)
@@ -245,6 +273,7 @@ export default function LandingPage() {
       <div className="min-h-screen w-full bg-[var(--bg-main)] text-[var(--text-main)] transition-colors duration-300 font-outfit overflow-y-auto flex flex-col relative selection:bg-primary selection:text-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(LANDING_JSONLD) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PRICING_FAQ_JSONLD) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_HOWTO_JSONLD) }} />
       <IntroVideo />
 
       {/* Hide native browser details arrows */}
@@ -493,6 +522,7 @@ export default function LandingPage() {
             <a href="/oficinas" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Oficinas</a>
             <a href="/seguradoras" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Seguradoras</a>
             <a href="/frotas" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Frotas</a>
+            <a href="/sobre" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Sobre</a>
             <a href="/demo" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Demonstração</a>
             <a href="/verify" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Verificar Laudo</a>
             <a href="/blog" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Blog</a>

@@ -43,8 +43,9 @@ Danos Aparentes é desenvolvido e operado por Jeferson da Silva, em Florianópol
 - [6 modelos de PDF para o laudo de vistoria](https://danosaparentes.com.br/blog/6-modelos-de-pdf-para-o-laudo-de-vistoria): Comparação de formatos de laudo disponíveis.
 - [Consulta automática de placa](https://danosaparentes.com.br/blog/consulta-automatica-de-placa): Como o preenchimento automático de dados do veículo funciona.
 
-## Trust
+## Trust e entidade
 
+- [Sobre](https://danosaparentes.com.br/sobre): Quem está por trás do produto (Jeferson da Silva, Florianópolis/SC), CNPJ, contato e LinkedIn da empresa.
 - [Segurança do laudo (hash, assinatura, GPS)](https://danosaparentes.com.br/#seguranca): Explicação técnica de como cada laudo comprova sua própria integridade.
 - [Política de Privacidade](https://danosaparentes.com.br/privacidade)
 - [Termos de Uso](https://danosaparentes.com.br/termos)

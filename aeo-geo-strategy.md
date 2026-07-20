@@ -1,40 +1,49 @@
 # AEO / GEO Strategy — Danos Aparentes
 
 **Site:** danosaparentes.com.br
-**Data da auditoria:** 2026-07-11
-**Escopo:** Home, /planos, /faq, /blog (33 posts), páginas legais
+**Data da auditoria original:** 2026-07-11
+**Reauditoria:** 2026-07-20
+**Escopo:** Home, /planos, /faq, /sobre, /blog (42 posts), páginas legais
 
 ---
 
-## 1. Auditoria atual de visibilidade em IA
+## 1. Reauditoria 2026-07-20 — veredicto
 
-Esta auditoria é **estrutural** (inspeção de código/HTML/schema), não uma consulta ao vivo nos produtos de IA — o site é novo, tem baixo volume histórico de indexação, e ainda não há dados de citação para comparar. Ela substitui o passo 3 do workflow ("testar visibilidade atual") por uma leitura de prontidão técnica: **o site está estruturalmente pronto para ser rastreado e citado, mas hoje deixa sinais valiosos na mesa.**
+**Produção já está estruturalmente pronta para GEO** (llms.txt, Organization+Person com `sameAs`, NAP, HowTo, dateModified). O risco crítico encontrado nesta verificação: **parte desse trabalho existia só no deploy Vercel (CLI dirty) e não no `main` do GitHub** — um deploy a partir do repo regrediria Organization/Person/`/sobre`.
 
-Achados-chave:
+Esta rodada **sincroniza o código do repositório com a produção** e documenta o scorecard atualizado.
 
-- ✅ Renderização **server-side / estática** em todas as páginas relevantes (`generateStaticParams` no blog, App Router com metadata server-rendered) — não depende de JS client-side para conteúdo crítico. Isso é uma vantagem real: muitos crawlers de IA renderizam JS de forma não confiável, e aqui não é necessário.
-- ✅ `robots.txt` usa `userAgent: '*', allow: '/'` sem bloqueio a bots de IA (GPTBot, ClaudeBot, PerplexityBot, Google-Extended passam por padrão).
-- ✅ Schema.org já presente: `Organization` (site-wide), `BlogPosting` + `BreadcrumbList` (todo post), `FAQPage` (home, /planos, /faq).
-- ❌ **Não existe `llms.txt`** na raiz do site.
-- ❌ **Nenhum schema `Person` com `sameAs`** — os autores dos posts (`author.name`) viram uma string em `BlogPosting`, sem entidade própria, sem perfil verificável.
-- ❌ **Nenhum link para perfil social/profissional** em lugar nenhum do site (nem footer, nem TrustSection, nem schema).
-- ❌ **Nenhum schema `HowTo`** — vários posts do blog são procedurais ("passo a passo de vistoria") e hoje só têm `BlogPosting`.
-- ❌ `dateModified` no schema de cada post **é sempre igual a `datePublished`** (`src/content/blog.tsx` não versiona atualizações) — nenhum sinal real de frescor.
-- ⚠️ Conteúdo é bem estruturado em prosa mas **sub-utiliza tabelas** (formato que IA extrai com mais confiança que parágrafos) para conteúdos comparativos (ex: "6 modelos de PDF", "laudo cautelar vs laudo de avarias").
+### Checklist vivo (produção + repo após este PR)
+
+| Sinal GEO | Status |
+|---|---|
+| SSR/SSG do conteúdo indexável | ✅ |
+| `robots.txt` permissivo (bots de IA não bloqueados) | ✅ |
+| `llms.txt` em `/llms.txt` | ✅ (200, content-type text/plain) |
+| Schema `Organization` com NAP + `sameAs` (LinkedIn empresa) | ✅ |
+| Schema `Person` com `sameAs` (LinkedIn fundador) + `@id` estável | ✅ |
+| Schema `WebSite` + `SoftwareApplication` com `@id` | ✅ |
+| `HowTo` na home + em posts procedurais | ✅ (home + 8 posts) |
+| `FAQPage` (home + /faq + posts com FAQ) | ✅ |
+| `dateModified` real via `updatedDate` | ⚠️ parcial (7/42 posts têm `updatedDate`) |
+| Página `/sobre` (entidade humana verificável) | ✅ |
+| HSTS em produção | ✅ (`max-age=63072000`) |
+| Tabelas em posts comparativos | ❌ ainda ausentes |
+| Menções externas de marca (off-page) | ❌ fora do código |
 
 ---
 
-## 2. Scorecard — 5 camadas
+## 2. Scorecard — 5 camadas (atualizado)
 
-| Camada | Nota (0–5) | Resumo |
-|---|---|---|
-| 1. Estrutura extraível | 3.5 | Boa estrutura de H2/H3, listas, TOC por post. Falta resposta direta logo na abertura de cada seção e mais uso de tabelas. |
-| 2. Citabilidade | 2.5 | Sem dados originais/pesquisa própria, sem metodologia declarada, `dateModified` não confiável, autoria fraca (sem credenciais/link verificável). |
-| 3. Profundidade de dados estruturados | 3 | `Organization`, `BlogPosting`, `BreadcrumbList`, `FAQPage` presentes. Faltam `Person` com `sameAs`, `HowTo`, `dateModified` real. |
-| 4. Acessibilidade para IA | 3.5 | SSR/SSG forte, `robots.txt` permissivo, sitemap presente. Falta `llms.txt`. |
-| 5. Sinais de entidade no mundo real | 1 | Nenhum perfil social vinculado, nenhuma menção de marca fora do próprio site, sem Wikidata (não se qualifica ainda), NAP não padronizado em schema. |
+| Camada | Nota (0–5) jul/11 | Nota (0–5) jul/20 | Resumo |
+|---|---|---|---|
+| 1. Estrutura extraível | 3.5 | 3.5 | H2/H3/TOC bons; HowTo na home ajuda. Ainda faltam tabelas nos posts comparativos e resposta direta mais consistente no topo dos H2. |
+| 2. Citabilidade | 2.5 | 3.5 | `dateModified` real existe; bio/`/sobre` + LinkedIn dão autoria verificável. Ainda falta cobertura de `updatedDate` na maioria dos posts e dados originais/metodologia. |
+| 3. Profundidade de dados estruturados | 3 | 4.5 | `Organization`, `Person`, `WebSite`, `SoftwareApplication`, `BlogPosting`, `BreadcrumbList`, `FAQPage`, `HowTo`, `AboutPage`, `VideoObject`. Falta expandir HowTo além dos 8 posts. |
+| 4. Acessibilidade para IA | 3.5 | 4.5 | `llms.txt` no ar, robots permissivo, sitemap com `/sobre`, SSR nas seções comerciais da home. `BlogTeaserSection` ainda é `ssr: false` (baixo impacto). |
+| 5. Sinais de entidade no mundo real | 1 | 3.5 | LinkedIn empresa + fundador em `sameAs`, NAP padronizado (e-mail, telefone, Florianópolis/SC, CNPJ), página `/sobre`. Menções externas ainda fracos. |
 
-**Média geral: 2.7 / 5** — base técnica é sólida (SSR, schema básico, robots permissivo), mas os sinais de *confiança e entidade* — exatamente o que separa "indexado" de "citado" — estão fracos. Isso é consistente com o que a própria `TrustSection` do site já assume: "ainda não temos histórico público".
+**Média geral: 3.9 / 5** (antes 2.7) — o gargalo deixou de ser “schema básico” e passou a ser **frescor de conteúdo (`updatedDate` em escala), tabelas extraíveis e autoridade off-page**.
 
 ---
 
@@ -60,53 +69,39 @@ Perguntas que o site deveria ser citado ao responder, mapeadas para conteúdo ex
 16. "Modelo de PDF de laudo de vistoria com logo da empresa" → `/blog/laudo-com-logo-da-empresa-no-pdf`, `/blog/6-modelos-de-pdf-para-o-laudo-de-vistoria`
 17. "Como treinar um vistoriador novo rapidamente" → `/blog/como-treinar-um-novo-vistoriador-rapidamente`
 18. "Vistoria em quantas vistas do veículo é necessária" → `/blog/vistoria-nas-4-vistas-do-veiculo`
-19. "Danos Aparentes é confiável / quem está por trás" → home (`TrustSection`) — hoje sem entidade verificável fora do site
+19. "Danos Aparentes é confiável / quem está por trás" → `/sobre` + home (`TrustSection`)
 20. "Software de vistoria veicular white label" → `/blog/laudo-white-label-para-locadoras`
 
 ---
 
-## 4. Plano de remediação por camada
+## 4. Plano de remediação restante
 
-### Camada 1 — Estrutura extraível
-- Adicionar um **parágrafo de resposta direta (1–3 frases)** logo abaixo de cada H2 nos 33 posts, antes de expandir o raciocínio. Hoje os posts já abrem contextualizando, mas nem sempre com a resposta definitiva na primeira frase.
-- Converter para **tabela** os conteúdos comparativos: `laudo-cautelar-vs-laudo-de-avarias` (tabela lado a lado), `6-modelos-de-pdf-para-o-laudo-de-vistoria` (tabela de modelos x campos).
-- Onde já há passo a passo em `<ul>`, considerar `<ol>` numerado explícito — reforça o padrão "procedural" que HowTo schema também vai usar.
+### Feito nesta reauditoria (código)
+- Fonte única de entidades em `src/lib/seo/entity.ts` (Organization / Person / WebSite / NAP / LinkedIn).
+- Schema site-wide no `layout.tsx` alinhado à produção.
+- Página `/sobre` + entrada no sitemap + links no footer/TrustSection.
+- `BlogPosting.author` aponta para o mesmo `@id` do Person + `sameAs`.
+- HowTo da home + HowTo de posts com `position`/`inLanguage`.
+- `llms.txt` referencia `/sobre`.
 
-### Camada 2 — Citabilidade
-- Adicionar **`dateModified` real** por post (campo novo em `BlogPost`, default = `date`, atualizado manualmente quando o conteúdo é revisado) — hoje `articleJsonLd.dateModified` mente ao repetir `date`.
-- Expandir a bio do autor nos posts: hoje é só `{ name, role }`. Adicionar credencial curta (ex: "Jeferson da Silva — desenvolvedor e responsável legal do Danos Aparentes, Florianópolis/SC") consistente com o que já existe na `TrustSection`.
-- Declarar metodologia quando o post afirma algo prático (ex: "testamos X vistorias e cronometramos" só se for verdade — não inventar dado que não existe, seguindo o próprio tom de transparência que a marca já adota).
-
-### Camada 3 — Dados estruturados
-- Adicionar **`Person` schema com `sameAs`** para o autor (hoje só existe como texto solto dentro de `BlogPosting.author`). Requer primeiro resolver a Camada 5 (ter um perfil público para linkar).
-- Adicionar **`HowTo` schema** nos posts procedurais (passo a passo de vistoria, como fotografar avarias, checklist de devolução) — schema adicional ao `BlogPosting` já existente, não substituto.
-- Corrigir `dateModified` no `articleJsonLd` de `src/app/blog/[slug]/page.tsx` para refletir o campo real do post (depende da mudança de Camada 2).
-
-### Camada 4 — Acessibilidade para IA
-- Criar **`/llms.txt`** na raiz (`public/llms.txt`, servido em `danosaparentes.com.br/llms.txt`) descrevendo: o que é o produto, público-alvo, e uma lista curada dos principais posts/páginas (home, /planos, /faq e os ~20 posts mais estratégicos da lista da Seção 3). Ver `references/llms-txt-guide.md` da skill para o formato.
-- Manter o `robots.txt` permissivo como está — não há necessidade de mudança aqui, já é o comportamento certo.
-
-### Camada 5 — Sinais de entidade (o gargalo real)
-Esta é a camada mais fraca e a que mais trava as demais (schema `Person.sameAs` depende dela).
-- Criar/vincular ao menos um **perfil profissional verificável** (LinkedIn do Jeferson da Silva, ou perfil da empresa) e referenciá-lo via `sameAs` no schema `Organization` e `Person`.
-- Padronizar **NAP** (nome, e-mail de contato, cidade) de forma idêntica em: footer, `TrustSection`, schema `Organization`, páginas legais — hoje o e-mail e "Florianópolis/SC" aparecem em `TrustSection`, mas não estão espelhados em schema.
-- Buscar **menções de marca em fontes externas** (diretórios de SaaS brasileiros, grupos de locadoras/frotistas, imprensa de nicho) — isso é trabalho de off-page, fora do escopo de código; registrar como ação de marketing, não de engenharia.
-- Não perseguir Wikipedia/Wikidata agora — o produto é novo demais para notabilidade; reavaliar em 12+ meses.
+### Ainda aberto
+- **Camada 1:** tabelas em `laudo-cautelar-vs-laudo-de-avarias` e `6-modelos-de-pdf-para-o-laudo-de-vistoria`; resposta direta no topo dos H2 nos posts restantes.
+- **Camada 2:** popular `updatedDate` nos ~35 posts sem revisão explícita (só quando o conteúdo for de fato revisado — não inventar frescor).
+- **Camada 3:** HowTo nos demais posts procedurais (checklist devolução, fotografar avarias, etc.).
+- **Camada 4:** remover `ssr: false` de `BlogTeaserSection` se não houver dependência real de `window`.
+- **Camada 5:** menções externas (diretórios SaaS BR, grupos de locadoras) — marketing, não engenharia.
 
 ---
 
-## 5. Roadmap de implementação
+## 5. Roadmap de implementação (pós-sincronização)
 
 | Prioridade | Ação | Camada | Esforço |
 |---|---|---|---|
-| P0 | Corrigir `dateModified` real por post | 2, 3 | Baixo |
-| P0 | Criar `/llms.txt` | 4 | Baixo |
-| P1 | Adicionar `HowTo` schema aos posts procedurais (5–6 posts) | 3 | Médio |
-| P1 | Resposta direta no topo de cada H2 (33 posts) | 1 | Médio-Alto |
-| P1 | Vincular 1 perfil profissional verificável + `sameAs` em `Organization`/`Person` | 5, 3 | Baixo (depende de decisão de negócio) |
-| P2 | Converter conteúdo comparativo em tabelas (2 posts) | 1 | Baixo |
-| P2 | Padronizar NAP em schema | 5 | Baixo |
-| P3 | Buscar menções externas de marca | 5 | Alto (fora do código) |
+| P1 | Tabelas nos 2 posts comparativos | 1 | Baixo |
+| P1 | HowTo nos posts procedurais restantes | 3 | Médio |
+| P2 | SSR do `BlogTeaserSection` | 4 | Baixo |
+| P2 | `updatedDate` só quando houver revisão real | 2 | Contínuo |
+| P3 | Menções externas de marca | 5 | Alto (fora do código) |
 
 ---
 
@@ -114,4 +109,5 @@ Esta é a camada mais fraca e a que mais trava as demais (schema `Person.sameAs`
 
 - **Trimestral**: reexecutar a auditoria estrutural (schema, llms.txt, dateModified) e, assim que houver volume de tráfego/indexação suficiente, testar as 20 priority queries diretamente em ChatGPT, Perplexity, Google AI Overviews e Claude, registrando quais fontes são citadas.
 - **A cada novo post do blog**: checklist de publicação deve incluir resposta direta no topo, `dateModified` inicial = `date`, e considerar `HowTo` se o conteúdo for procedural.
-- **Gatilho fora do ciclo**: se a Camada 5 mudar (perfil social criado, menção externa relevante conquistada), reauditar imediatamente essa camada.
+- **Gatilho fora do ciclo**: se a Camada 5 mudar (nova menção externa relevante), reauditar imediatamente essa camada.
+- **Regra de deploy**: mudanças GEO devem ir para o GitHub antes/junto do deploy Vercel — evitar “só CLI dirty” (causa da divergência encontrada em 2026-07-20).
