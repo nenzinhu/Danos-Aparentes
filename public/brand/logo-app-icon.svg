@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Danos Aparentes">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Danos Aparentes">
+  <rect width="64" height="64" rx="14" fill="#020617"/>
   <g stroke="#f5a623" stroke-width="2.25" stroke-linecap="square" fill="none">
     <path d="M11 17V11h6"/>
     <path d="M47 11h6v6"/>
@@ -7,7 +8,7 @@
     <path d="M17 53H11v-6"/>
   </g>
   <path fill="#1FB6FF" d="M11 37.2c0-1.15.55-2.2 1.45-2.85l3.9-2.55 3.1-5.7A4.1 4.1 0 0 1 23 24.2h15.2a4.1 4.1 0 0 1 3.5 1.9l3.55 5.55 4.7.55a3.9 3.9 0 0 1 3.45 3.85v3.1a1.7 1.7 0 0 1-1.7 1.7H48.2a5.35 5.35 0 0 1-10.5 0H26.3a5.35 5.35 0 0 1-10.5 0H14.2A1.7 1.7 0 0 1 12.5 39v-1.8z"/>
-  <path fill="#0B1B30" d="M24.6 27.1h11.2c.6 0 1.1.4 1.3.95l1.45 3.35H23.35l1.1-3.3c.2-.6.7-1 1.15-1z"/>
+  <path fill="#020617" d="M24.6 27.1h11.2c.6 0 1.1.4 1.3.95l1.45 3.35H23.35l1.1-3.3c.2-.6.7-1 1.15-1z"/>
   <circle cx="21.1" cy="41.1" r="4.35" fill="#0B1B30"/>
   <circle cx="21.1" cy="41.1" r="1.7" fill="#1FB6FF"/>
   <circle cx="43" cy="41.1" r="4.35" fill="#0B1B30"/>

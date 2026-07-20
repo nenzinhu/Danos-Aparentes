@@ -123,16 +123,22 @@ Não introduzir `rounded-3xl` nem raios fora desta escala.
 
 ## 6. Logo e assets
 
+Marca pericial em 3 sinais: **silhueta de veículo** (produto) + **crop marks** âmbar (prancha de vistoria) + **selo com check** (laudo que comprova). Sem gradiente — legível em 24px.
+
 | Asset | Path | Uso |
 |---|---|---|
 | Logo full | `/brand/logo-full.svg` | Header, footer, PDF white-label default |
-| Logo icon | `/brand/logo-icon.svg` | Favicon-adjacent, compact |
-| Logo PNG preload | `/logo.png` | LCP / splash |
-| Logo SVG | `/logo.svg` | Alternativa |
+| Logo icon | `/brand/logo-icon.svg` | Compact / nav |
+| Logo mono | `/brand/logo-icon-mono.svg` | `currentColor` — watermark, PDF 1 cor |
+| App icon | `/brand/logo-app-icon.svg` | PWA / favicon com fundo |
+| Logo PNG | `/logo.png` | LCP / splash (app icon raster) |
+| Logo SVG | `/logo.svg` | Mesmo que icon (header) |
 | OG | `/og-image.jpg` | 1200×630 |
 | Diagramas marketing | `/vehicles-img/{type}.png` | Showcase estático |
 | Ícones app (coloridos) | `/icons/vehicles/*.svg` | Seletor in-app |
 | Ícones marketing (line) | `src/components/marketing/VehicleLineIcons.tsx`, `MarketingIcons.tsx` | Landings |
+
+**Cores do mark:** carro/check `#1FB6FF` (primary), crop/anel `#f5a623` (signal), fundo/janela `#0B1B30` / `#020617`.
 
 **Clear space:** não colocar texto colado no ícone do logo; preferir altura ~28–36px no nav.
 
