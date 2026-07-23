@@ -133,10 +133,11 @@ describe('fluxo PIX charge → webhook → access', () => {
       pix_charge_id: null,
       pending_months: 0,
       expires_at: null,
-      trial_ends_at: '2026-07-20T00:00:00.000Z',
+      trial_ends_at: new Date(Date.now() + 7 * 86400000).toISOString(),
     }
     process.env.PIX_WEBHOOK_SECRET = SECRET
     process.env.PIX_MERCADO_PAGO_ACCESS_TOKEN = 'TEST-MP-TOKEN'
+    process.env.PIX_PROVIDER = 'mercadopago'
     vi.mocked(getUserFromRequest).mockResolvedValue({
       id: USER_ID,
       email: 'cliente@teste.com',
