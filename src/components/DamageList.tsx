@@ -131,7 +131,7 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                   </div>
                   {d.notes && (
                     <div className="text-[0.68rem] text-[var(--text-muted)] italic truncate opacity-70 mt-0.5">
-                      "{d.notes}"
+                      &quot;{d.notes}&quot;
                     </div>
                   )}
                 </div>
