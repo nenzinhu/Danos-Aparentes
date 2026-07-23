@@ -4,6 +4,7 @@ import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity } from
 import VehicleSelector, { VehicleIconSvg } from '@/src/components/VehicleSelector'
 import ViewSelector from '@/src/components/ViewSelector'
 import { VehicleViewer } from '@/src/components/VehicleViewer'
+import ErrorBoundary from '@/src/components/ErrorBoundary'
 import DamageList from '@/src/components/DamageList'
 import VehicleInfoForm from '@/src/components/VehicleInfoForm'
 import FinalizePanel from '@/src/components/FinalizePanel'
@@ -220,9 +221,11 @@ export default function InspectTab({
               speakHover={speakHover}
             >
               <VehicleViewer.Controls />
-              <Suspense fallback={<div className="flex-1 flex items-center justify-center text-sky-500/50 italic text-xs animate-pulse min-h-[220px]">Carregando visualizador…</div>}>
-                <VehicleViewer.Viewport />
-              </Suspense>
+              <ErrorBoundary>
+                <Suspense fallback={<div className="flex-1 flex items-center justify-center text-sky-500/50 italic text-xs animate-pulse min-h-[220px]">Carregando visualizador…</div>}>
+                  <VehicleViewer.Viewport />
+                </Suspense>
+              </ErrorBoundary>
               <VehicleViewer.FloatingDamage />
               <VehicleViewer.FullscreenOverlay />
               <div className="mt-1.5 text-[0.72rem] text-[var(--text-muted)] text-center">

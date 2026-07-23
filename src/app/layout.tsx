@@ -21,6 +21,7 @@ import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import CookieConsentBanner from '@/src/components/CookieConsentBanner'
 import AnalyticsScripts from '@/src/components/AnalyticsScripts'
+import ChunkErrorReload from '@/src/components/ChunkErrorReload'
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap', variable: '--font-outfit' })
 const sairaCondensed = Saira_Condensed({
@@ -177,6 +178,7 @@ export default function RootLayout({
       </head>
       <body className={`${outfit.variable} ${outfit.className} ${sairaCondensed.variable} ${plexMono.variable} min-h-screen selection:bg-primary selection:text-white`}>
         {children}
+        <ChunkErrorReload />
         <CookieConsentBanner />
         <AnalyticsScripts />
         <SpeedInsights />

@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useRef, useState, useEffect, useCallback, useMemo, memo } from 'react'
+import React, { createContext, useContext, useRef, useState, useEffect, useCallback, useMemo, memo, Suspense } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { VehicleType, ViewType, Damage, DamageType, Severity } from '../types'
@@ -7,6 +7,7 @@ import { vehicleRegistry } from './vehicles/registry'
 import { useZoomPan } from '../hooks/useZoomPan'
 import DamageFloat from './DamageFloat'
 import VehicleDefs from './vehicles/VehicleDefs'
+import ErrorBoundary from './ErrorBoundary'
 
 // --- Types ---
 interface VehicleViewerContextValue {
@@ -273,7 +274,11 @@ const FullscreenOverlay = memo(function FullscreenOverlay() {
         )}
       </div>
 
-      <Viewport isFullscreen />
+      <ErrorBoundary>
+        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-sky-500/50 italic text-xs animate-pulse min-h-[220px]">Carregando visualizador…</div>}>
+          <Viewport isFullscreen />
+        </Suspense>
+      </ErrorBoundary>
 
       <div className='mt-1.5 text-[0.72rem] text-sky-200/50 text-center shrink-0'>
         Clique em uma peça para registrar avaria • ESC para sair • Scroll para zoom
