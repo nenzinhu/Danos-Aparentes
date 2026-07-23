@@ -23,16 +23,17 @@ const SYNC_LABEL: Record<'synced' | 'pending' | 'offline' | 'error', { icon: str
   error:   { icon: '⚠️', text: 'Erro de sincronização',  color: 'text-orange-500', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/30' },
 }
 
-// ─── Benefícios PRO ──────────────────────────────────────────────────────────
+import { IconDocument, IconSignature, IconGps, IconShieldCheck, IconSearch, IconTeam, IconSparkles, IconSunMoon } from './ui/AnimatedIcons'
+
 const PRO_BENEFITS = [
-  { icon: '📄', title: 'PDF Profissional', desc: 'Laudo com hash SHA-256 e QR Code de autenticidade' },
-  { icon: '✍️', title: 'Assinatura Digital', desc: 'Vistoriador e cliente assinam na tela do celular' },
-  { icon: '📡', title: '100% Offline', desc: 'Funciona sem internet, sincroniza quando conectar' },
-  { icon: '🏢', title: 'Marca Própria', desc: 'Logo e nome da empresa em todos os relatórios' },
-  { icon: '🔍', title: 'Consulta de Placas', desc: 'Preenchimento automático dos dados do veículo' },
-  { icon: '💬', title: 'Envio por WhatsApp', desc: 'Compartilhe o laudo em 1 clique diretamente pelo app' },
-  { icon: '📊', title: 'Painel de Estatísticas', desc: 'Dashboard com histórico e análise das vistorias' },
-  { icon: '🗣️', title: 'Voz Antoni PT-BR', desc: 'Narração das peças via ElevenLabs em português' },
+  { icon: <IconDocument className="text-sky-400" size={18} />, title: 'PDF Profissional', desc: 'Laudo com hash SHA-256 e QR Code de autenticidade' },
+  { icon: <IconSignature className="text-emerald-400" size={18} />, title: 'Assinatura Digital', desc: 'Vistoriador e cliente assinam na tela do celular' },
+  { icon: <IconGps className="text-amber-400" size={18} />, title: '100% Offline', desc: 'Funciona sem internet, sincroniza quando conectar' },
+  { icon: <IconShieldCheck className="text-indigo-400" size={18} />, title: 'Marca Própria', desc: 'Logo e nome da empresa em todos os relatórios' },
+  { icon: <IconSearch className="text-cyan-400" size={18} />, title: 'Consulta de Placas', desc: 'Preenchimento automático dos dados do veículo' },
+  { icon: <IconTeam className="text-purple-400" size={18} />, title: 'Envio por WhatsApp', desc: 'Compartilhe o laudo em 1 clique diretamente pelo app' },
+  { icon: <IconSparkles className="text-pink-400" size={18} />, title: 'Painel de Estatísticas', desc: 'Dashboard com histórico e análise das vistorias' },
+  { icon: <IconSparkles className="text-sky-400" size={18} />, title: 'Voz Antoni PT-BR', desc: 'Narração das peças via ElevenLabs em português' },
 ]
 
 function ProBenefitsButton({
@@ -274,27 +275,7 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onOpenSettings, 
             e.currentTarget.style.boxShadow = '';
           }}
         >
-          {darkMode ? (
-            <svg 
-              className="w-5 h-5 text-amber-400 group-hover:rotate-45 transition-transform duration-500" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor" 
-              strokeWidth="2.2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m0 13.5V21M4.978 4.978l1.591 1.591m10.862 10.862l1.591 1.591M21 12h-2.25m-13.5 0H3m2.285-7.02l1.591 1.591M16.12 16.12l1.591 1.591M12 7.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9z" />
-            </svg>
-          ) : (
-            <svg 
-              className="w-5 h-5 text-slate-400 group-hover:text-sky-400 group-hover:-rotate-12 transition-all duration-500" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor" 
-              strokeWidth="2.2"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
-            </svg>
-          )}
+          <IconSunMoon isDark={darkMode} className={darkMode ? 'text-amber-400' : 'text-slate-400'} size={20} />
         </button>
 
         {onSignOut && (

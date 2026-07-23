@@ -1,24 +1,29 @@
 'use client';
+import { motion } from 'framer-motion';
 import Reveal from './Reveal';
 import {
   LEGAL_CNPJ,
   LEGAL_COMPANY_NAME,
   LEGAL_CONTACT_EMAIL,
 } from './LegalContent';
+import { IconShieldCheck, IconSignature, IconGps } from './ui/AnimatedIcons';
 
 const TRUST_ITEMS = [
   {
     k: 'Integridade',
+    icon: <IconShieldCheck className="text-sky-400" size={24} />,
     title: 'Hash SHA-256 em cada laudo',
     desc: 'Todo PDF gerado carrega um código único de verificação. Qualquer alteração no documento após a emissão invalida o hash — o laudo comprova a si mesmo.',
   },
   {
     k: 'Autenticação',
+    icon: <IconSignature className="text-emerald-400" size={24} />,
     title: 'Assinatura digital na tela',
     desc: 'Vistoriador e cliente assinam com o dedo, no próprio celular, no momento da vistoria. Sem impressão, sem "assino depois".',
   },
   {
     k: 'Rastreabilidade',
+    icon: <IconGps className="text-amber-400" size={24} />,
     title: 'Fotos com GPS e timestamp',
     desc: 'Cada foto anexada guarda local e horário de captura, reforçando que o registro foi feito no pátio, na hora da vistoria.',
   },
@@ -26,7 +31,6 @@ const TRUST_ITEMS = [
 
 /**
  * Motion 2 — scroll reveal único (mesmo sistema da home: Reveal + CSS).
- * animejs removido para uma só linguagem de motion com o resto da landing.
  */
 export default function TrustSection() {
   return (
@@ -50,13 +54,25 @@ export default function TrustSection() {
           <Reveal
             key={item.k}
             delay={idx * 70}
-            className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group"
           >
-            <div className="font-mono-data text-[10px] uppercase tracking-widest text-[var(--signal-bright)] mb-3">
-              {item.k}
-            </div>
-            <h3 className="font-display text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mb-2">{item.title}</h3>
-            <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
+            <motion.div
+              whileHover={{ y: -6, scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group h-full flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-mono-data text-[10px] uppercase tracking-widest text-[var(--signal-bright)]">
+                    {item.k}
+                  </span>
+                  <div className="p-2 rounded-lg bg-white/5 border border-white/10 group-hover:scale-110 transition-transform duration-300">
+                    {item.icon}
+                  </div>
+                </div>
+                <h3 className="font-display text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mb-2">{item.title}</h3>
+                <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
+              </div>
+            </motion.div>
           </Reveal>
         ))}
       </div>

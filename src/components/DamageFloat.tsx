@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import { DamageType, Severity } from '../types'
+import { IconEraser, IconCamera, IconGallery, IconCheck, IconArrowLeft } from './ui/AnimatedIcons'
 
 interface Props {
   partName: string
@@ -156,13 +158,15 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
             {TYPES.map((t, i) => {
               const isActive = currentType === t.type
               return (
-                <button
+                <motion.button
                   key={t.type}
                   onClick={() => handlePickType(t.type, t.label)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   className={`relative flex flex-col items-center gap-1 p-1.5 rounded-xl border font-outfit text-xs font-bold transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? `${t.bg} ${t.border} ${t.color} scale-[1.05] ring-2 ring-[var(--primary)]`
-                      : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] hover:scale-[1.02]'
+                      ? `${t.bg} ${t.border} ${t.color} ring-2 ring-[var(--primary)]`
+                      : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)]'
                   }`}
                 >
                   <span className="absolute top-1 left-1.5 text-[0.6rem] font-black text-[var(--text-muted)] opacity-50">{i + 1}</span>
@@ -173,17 +177,20 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
                   {isActive && (
                     <span className="text-[0.55rem] uppercase font-black tracking-widest text-[var(--primary)] mt-0.5 animate-bounce">Ativo</span>
                   )}
-                </button>
+                </motion.button>
               )
             })}
           </div>
 
-          <button
+          <motion.button
             onClick={() => closeThen(onClear)}
-            className="mt-3.5 w-full flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl border font-outfit text-xs font-black transition-all duration-200 cursor-pointer bg-red-500/10 hover:bg-red-500/15 border-red-500/35 hover:border-red-500/50 text-red-500"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
+            className="mt-3.5 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl border font-outfit text-xs font-black transition-all duration-200 cursor-pointer bg-red-500/10 hover:bg-red-500/15 border-red-500/35 hover:border-red-500/50 text-red-500"
           >
-            <span>🧽</span> Sem avaria / Limpar
-          </button>
+            <IconEraser className="text-red-500" size={16} />
+            <span>Sem avaria / Limpar</span>
+          </motion.button>
         </>
       )}
 
@@ -191,24 +198,28 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       {step === 2 && chosenType && (
         <>
           {/* Tipo selecionado (readonly, clicável para voltar) */}
-          <button
+          <motion.button
             onClick={() => setStep(1)}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.98 }}
             className="w-full flex items-center gap-2 mb-3 px-2 py-1.5 rounded-lg bg-white/5 border border-white/8 text-[0.72rem] text-[var(--text-muted)] hover:bg-white/10 transition-colors cursor-pointer"
           >
-            <span className="text-[0.65rem]">◀</span>
+            <IconArrowLeft size={14} className="text-[var(--text-muted)] shrink-0" />
             <img src={TYPES.find(t => t.type === chosenType.type)?.icon} alt="" className="h-4 w-auto" />
             <span className="font-bold text-[var(--text-main)]">{chosenType.label}</span>
-            <span className="ml-auto opacity-50">alterar</span>
-          </button>
+            <span className="ml-auto opacity-50 text-[10px]">alterar</span>
+          </motion.button>
 
           {/* Severidade */}
           <div className="mb-2.5">
             <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Grau do dano</div>
             <div className="grid grid-cols-3 gap-1">
               {SEV.map(s => (
-                <button
+                <motion.button
                   key={s.value}
                   onClick={() => setSeverity(s.value)}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
                   className={`py-2 rounded-lg text-[0.72rem] font-extrabold border transition-all cursor-pointer ${
                     severity === s.value
                       ? `${s.bg} ${s.border} ${s.color}`
@@ -216,7 +227,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
                   }`}
                 >
                   {s.label}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -253,31 +264,40 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-1.5">
-                <button
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.96 }}
                   onClick={() => { if (fileRef.current) { fileRef.current.removeAttribute('capture'); fileRef.current.setAttribute('capture', 'environment'); fileRef.current.click() } }}
-                  className="flex items-center justify-center gap-1 py-2 rounded-lg border border-dashed border-sky-500/30 bg-sky-500/5 text-sky-400 text-[0.72rem] font-bold hover:bg-sky-500/10 transition-colors cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-sky-500/30 bg-sky-500/5 text-sky-400 text-[0.72rem] font-bold hover:bg-sky-500/10 transition-colors cursor-pointer"
                 >
-                  📷 Câmera
-                </button>
-                <button
+                  <IconCamera size={15} />
+                  <span>Câmera</span>
+                </motion.button>
+                <motion.button
                   type="button"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.96 }}
                   onClick={() => { if (fileRef.current) { fileRef.current.removeAttribute('capture'); fileRef.current.click() } }}
-                  className="flex items-center justify-center gap-1 py-2 rounded-lg border border-dashed border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-[0.72rem] font-bold hover:bg-emerald-500/10 transition-colors cursor-pointer"
+                  className="flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-[0.72rem] font-bold hover:bg-emerald-500/10 transition-colors cursor-pointer"
                 >
-                  🖼️ Galeria
-                </button>
+                  <IconGallery size={15} />
+                  <span>Galeria</span>
+                </motion.button>
               </div>
             )}
           </div>
 
           {/* Confirmar */}
-          <button
+          <motion.button
             onClick={handleConfirm}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.97 }}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border font-outfit text-sm font-black transition-all duration-200 cursor-pointer bg-sky-500/15 hover:bg-sky-500/25 border-sky-500/40 hover:border-sky-500/60 text-sky-400"
           >
-            ✅ Confirmar avaria
-          </button>
+            <IconCheck size={18} />
+            <span>Confirmar avaria</span>
+          </motion.button>
         </>
       )}
     </div>

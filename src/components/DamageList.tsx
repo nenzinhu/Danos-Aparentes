@@ -13,6 +13,7 @@ import { ResolvedPhoto } from './ResolvedPhoto'
 import PhotoAttachButtons from './PhotoAttachButtons'
 import SpeechButton from './SpeechButton'
 import { isNewDamage, type PreviousReportSummary } from '../lib/reportComparison'
+import { IconCamera, IconTag } from './ui/AnimatedIcons'
 
 interface Props {
   damages: Damage[]
@@ -135,7 +136,9 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                   )}
                 </div>
                 {d.photos.length > 0 && (
-                  <span className="text-[0.72rem] text-[var(--primary)] bg-sky-500/10 px-1.5 py-0.5 rounded-md font-medium">📷 {d.photos.length}</span>
+                  <span className="text-[0.72rem] text-[var(--primary)] bg-sky-500/10 px-2 py-0.5 rounded-md font-medium inline-flex items-center gap-1">
+                    <IconCamera size={13} /> {d.photos.length}
+                  </span>
                 )}
                 <span className="text-[0.7rem] text-[var(--text-muted)]">{expandedId === d.id ? '▲' : '▼'}</span>
                 <button 
@@ -221,8 +224,8 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                           </div>
                           {/* Caption/Tag */}
                           <div className="flex-1 min-w-0 flex flex-col gap-1">
-                            <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                              🏷️ Tag / Descrição da Foto
+                            <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider inline-flex items-center gap-1">
+                              <IconTag size={13} className="text-sky-400" /> Tag / Descrição da Foto
                             </div>
                             <textarea
                               value={photoNotes[i] ?? ''}

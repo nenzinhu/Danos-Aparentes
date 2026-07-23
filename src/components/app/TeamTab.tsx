@@ -4,7 +4,9 @@ import { useTeam, TeamReport } from '@/src/hooks/useTeam'
 import { captureSvgs } from '@/src/components/ReportActions'
 import { Damage, VehicleType } from '@/src/types'
 
+import { motion } from 'framer-motion'
 import { resolveVehicleType } from '@/src/lib/vehicleTypeInference'
+import { IconTeam, IconDocument, IconCheck, IconSparkles } from '../ui/AnimatedIcons'
 
 interface Props {
   accessToken?: string
@@ -61,7 +63,9 @@ export default function TeamTab({ accessToken, onToast }: Props) {
   return (
     <div className="flex flex-col gap-6">
       <div className="glass-card p-5">
-        <h2 className="text-lg font-bold text-[var(--text-main)] mb-1">👥 Equipe</h2>
+        <h2 className="text-lg font-bold text-[var(--text-main)] mb-1 flex items-center gap-2">
+          <IconTeam className="text-sky-400" size={20} /> Equipe
+        </h2>
         <p className="text-xs text-[var(--text-muted)] mb-4">
           Convide inspetores para a sua empresa. Ao aceitarem, os laudos deles aparecem aqui.
         </p>
@@ -75,21 +79,28 @@ export default function TeamTab({ accessToken, onToast }: Props) {
             placeholder="email-do-inspetor@exemplo.com"
             className="flex-1 min-w-[220px] bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--text-main)] outline-none"
           />
-          <button
+          <motion.button
             type="submit"
             disabled={sending}
-            className="px-4 py-2 rounded-lg text-sm font-bold bg-sky-500/10 border border-sky-500/25 text-sky-400 disabled:opacity-50"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
+            className="px-4 py-2 rounded-lg text-sm font-bold bg-sky-500/10 border border-sky-500/25 text-sky-400 disabled:opacity-50 cursor-pointer"
           >
             {sending ? 'Gerando…' : 'Convidar'}
-          </button>
+          </motion.button>
         </form>
 
         {inviteUrl && (
           <div className="flex flex-wrap items-center gap-2 bg-black/20 border border-white/10 rounded-lg p-3 mb-3 text-xs">
             <span className="text-[var(--text-muted)] break-all flex-1 min-w-[180px]">{inviteUrl}</span>
-            <button onClick={() => handleCopy(inviteUrl)} className="px-3 py-1.5 rounded-md bg-sky-500/10 border border-sky-500/25 text-sky-400 font-bold">
+            <motion.button
+              onClick={() => handleCopy(inviteUrl)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-3 py-1.5 rounded-md bg-sky-500/10 border border-sky-500/25 text-sky-400 font-bold cursor-pointer"
+            >
               Copiar link
-            </button>
+            </motion.button>
           </div>
         )}
 
@@ -98,8 +109,8 @@ export default function TeamTab({ accessToken, onToast }: Props) {
             {members.map(m => (
               <div key={`${m.invited_email}-${m.invited_at}`} className="flex items-center justify-between bg-black/10 border border-white/5 rounded-lg px-3 py-2 text-xs">
                 <span className="text-[var(--text-main)]">{m.invited_email}</span>
-                <span className={m.status === 'accepted' ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold'}>
-                  {m.status === 'accepted' ? '✓ Ativo' : '⏳ Pendente'}
+                <span className={m.status === 'accepted' ? 'text-emerald-400 font-bold inline-flex items-center gap-1' : 'text-amber-400 font-bold inline-flex items-center gap-1'}>
+                  {m.status === 'accepted' ? <><IconCheck size={14} /> Ativo</> : '⏳ Pendente'}
                 </span>
               </div>
             ))}
@@ -108,7 +119,9 @@ export default function TeamTab({ accessToken, onToast }: Props) {
       </div>
 
       <div className="glass-card p-5">
-        <h3 className="text-base font-bold text-[var(--text-main)] mb-3">Laudos da equipe</h3>
+        <h3 className="text-base font-bold text-[var(--text-main)] mb-3 flex items-center gap-2">
+          <IconDocument className="text-emerald-400" size={18} /> Laudos da equipe
+        </h3>
         {loading && <div className="text-xs text-[var(--text-muted)]">Carregando…</div>}
         {error && <div className="text-xs text-red-400">{error}</div>}
         {!loading && !error && reports.length === 0 && (
@@ -148,23 +161,25 @@ export default function TeamTab({ accessToken, onToast }: Props) {
                       Inspetor: {tr.inspectorEmail || '—'} • {tr.report.damages.length} avaria(s)
                     </div>
                   </div>
-                  <button
+                  <motion.button
                     onClick={() => handleDownloadPdf(tr)}
                     disabled={downloadingId !== null}
-                    className="px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold flex-shrink-0 disabled:opacity-50"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold flex-shrink-0 disabled:opacity-50 inline-flex items-center gap-1 cursor-pointer"
                   >
-                    {downloadingId === tr.report.id ? '⏳' : '📄 PDF'}
-                  </button>
+                    {downloadingId === tr.report.id ? '⏳' : <><IconDocument size={14} /> PDF</>}
+                  </motion.button>
                 </div>
 
                 {isExpanded && (
                   <div className="mt-2.5 pt-2.5 border-t border-white/5 flex flex-col gap-1.5" onClick={e => e.stopPropagation()}>
-                    <div className="text-[0.62rem] font-bold text-[var(--text-muted)] tracking-wider">
-                      📋 AVARIAS DETALHADAS
+                    <div className="text-[0.62rem] font-bold text-[var(--text-muted)] tracking-wider flex items-center gap-1">
+                      <IconDocument size={12} className="text-sky-400" /> AVARIAS DETALHADAS
                     </div>
                     {tr.report.damages.length === 0 ? (
-                      <div className="text-xs text-emerald-400 font-bold pl-2">
-                        ✨ Nenhuma avaria registrada neste laudo.
+                      <div className="text-xs text-emerald-400 font-bold pl-2 flex items-center gap-1">
+                        <IconSparkles size={14} /> Nenhuma avaria registrada neste laudo.
                       </div>
                     ) : (
                       <div className="flex flex-col gap-1.5 pl-2">

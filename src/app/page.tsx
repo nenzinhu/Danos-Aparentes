@@ -22,6 +22,7 @@ import HeroCarStage, {
   heroCopyStage,
   heroCopyItem,
 } from '../components/HeroCarStage';
+import { IconSunMoon, IconSearch, IconCar, IconSignature } from '../components/ui/AnimatedIcons';
 import type { Damage } from '../types';
 
 // Avarias reais do laudo (2 riscos leves nas portas esquerdas) para o
@@ -280,10 +281,10 @@ export default function LandingPage() {
           </Link>
           <button
             onClick={toggleDarkMode}
-            className="p-2 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] rounded-xl transition-all outline-none"
+            className="p-2 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] rounded-xl transition-all outline-none cursor-pointer flex items-center justify-center"
             aria-label="Alternar tema"
           >
-            {darkMode ? '☀️' : '🌙'}
+            <IconSunMoon isDark={darkMode} className={darkMode ? 'text-amber-400' : 'text-slate-400'} size={20} />
           </button>
           <LandingCtaLink className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-xl shadow-xl shadow-[var(--primary)]/15 transition-transform duration-150 motion-safe:hover:scale-[1.02] active:scale-[0.99] focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none">
             Testar 7 dias grátis
@@ -408,26 +409,40 @@ export default function LandingPage() {
           {[
             {
               step: '01',
+              icon: <IconSearch className="text-sky-400" size={24} />,
               title: 'Consulte a Placa',
               desc: 'Insira a placa do veículo e deixe o sistema preencher automaticamente marca, modelo, ano de fabricação, cor e município.'
             },
             {
               step: '02',
+              icon: <IconCar className="text-amber-400" size={24} />,
               title: 'Toque para Marcar Avarias',
               desc: 'Selecione o modelo do veículo e toque na área exata do SVG clicável. Aponte o tipo de avaria (risco, amassado, quebrado), adicione fotos HD e notas.'
             },
             {
               step: '03',
+              icon: <IconSignature className="text-emerald-400" size={24} />,
               title: 'Assine e Envie o Laudo',
               desc: 'Vistoriador e cliente assinam digitalmente na tela do celular. O laudo em PDF inviolável com hash SHA-256 é gerado e enviado por WhatsApp.'
             }
           ].map((item, idx) => (
-            <Reveal key={idx} delay={idx * 70} className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-all duration-300 relative group">
-              <div className="font-mono-data text-4xl font-bold text-[var(--signal)]/25 group-hover:text-[var(--signal-bright)]/60 transition-colors absolute top-4 right-6">
-                {item.step}
-              </div>
-              <h3 className="font-display text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mt-4 mb-2">{item.title}</h3>
-              <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
+            <Reveal key={idx} delay={idx * 70}>
+              <motion.div
+                whileHover={{ y: -6, scale: 1.02 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group h-full"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 group-hover:scale-110 transition-transform duration-300">
+                    {item.icon}
+                  </div>
+                  <div className="font-mono-data text-3xl font-bold text-[var(--signal)]/25 group-hover:text-[var(--signal-bright)]/60 transition-colors">
+                    {item.step}
+                  </div>
+                </div>
+                <h3 className="font-display text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mt-2 mb-2">{item.title}</h3>
+                <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
+              </motion.div>
             </Reveal>
           ))}
         </div>

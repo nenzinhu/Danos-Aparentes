@@ -1,6 +1,8 @@
 'use client';
 
 import { useRef } from 'react'
+import { motion } from 'framer-motion'
+import { IconCamera, IconGallery } from './ui/AnimatedIcons'
 
 interface Props {
   disabled?: boolean
@@ -33,7 +35,7 @@ export default function PhotoAttachButtons({
   }
 
   const baseBtn =
-    'flex-1 min-h-12 rounded-xl border border-dashed flex items-center justify-center text-[0.78rem] sm:text-sm gap-1.5 font-bold font-outfit transition-colors px-2'
+    'flex-1 min-h-12 rounded-xl border border-dashed flex items-center justify-center text-[0.78rem] sm:text-sm gap-2 font-bold font-outfit transition-colors px-2 cursor-pointer'
 
   return (
     <div className={`flex gap-2 w-full ${className}`}>
@@ -63,26 +65,32 @@ export default function PhotoAttachButtons({
 
       {compressing ? (
         <div className={`${baseBtn} border-sky-500/40 bg-sky-500/10 text-sky-400 cursor-wait w-full`}>
-          ⏳ Comprimindo…
+          <span className="animate-spin text-sky-400">⏳</span> Comprimindo…
         </div>
       ) : (
         <>
-          <button
+          <motion.button
             type="button"
             disabled={busy}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
             onClick={() => cameraRef.current?.click()}
             className={`${baseBtn} border-sky-500/30 bg-sky-500/5 text-sky-500 hover:bg-sky-500/10 disabled:opacity-50`}
           >
-            📷 Tirar {label}
-          </button>
-          <button
+            <IconCamera size={18} />
+            <span>Tirar {label}</span>
+          </motion.button>
+          <motion.button
             type="button"
             disabled={busy}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.96 }}
             onClick={() => galleryRef.current?.click()}
             className={`${baseBtn} border-emerald-500/30 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500/10 disabled:opacity-50`}
           >
-            🖼️ Galeria
-          </button>
+            <IconGallery size={18} />
+            <span>Galeria</span>
+          </motion.button>
         </>
       )}
     </div>

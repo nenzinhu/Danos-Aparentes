@@ -1,6 +1,7 @@
 'use client';
 import LandingCtaLink from './LandingCtaLink';
 import Reveal from './Reveal';
+import { IconArrowRight } from './ui/AnimatedIcons';
 
 export default function FinalCtaSection() {
   return (
@@ -25,11 +26,11 @@ export default function FinalCtaSection() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-9">
           <LandingCtaLink
             transitionTypes={['nav-forward']}
-            className="group/cta px-10 py-5 text-white font-black text-base sm:text-lg rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-3 transition-transform duration-150 motion-safe:hover:scale-[1.02] active:scale-[0.99] focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
+            className="group/cta px-10 py-5 text-white font-black text-base sm:text-lg rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-3 transition-transform duration-150 motion-safe:hover:scale-[1.03] active:scale-[0.98] focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
             style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
           >
-            Testar 7 dias grátis
-            <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <span>Testar 7 dias grátis</span>
+            <IconArrowRight size={22} className="text-white" />
           </LandingCtaLink>
         </div>
 
