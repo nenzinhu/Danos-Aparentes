@@ -645,6 +645,108 @@ export function IconVehicleCar2d({ className = '', size = 20 }: IconProps) {
     </svg>
   );
 }
+// 35. Sync / Refresh (Sincronização)
+export function IconSync({ className = '', size = 14 }: IconProps) {
+  const ref = useRef<SVGSVGElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const tl = gsap.to(el, { rotation: 360, duration: 2, repeat: -1, ease: 'none', transformOrigin: '50% 50%' });
+    return () => { tl.kill(); };
+  }, []);
+  return (
+    <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+      className={`inline-block ${className}`}
+      style={{ transformOrigin: '50% 50%' }}>
+      <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+    </svg>
+  );
+}
+
+// 36. Offline / Signal (Rede Off)
+export function IconOffline({ className = '', size = 14 }: IconProps) {
+  const ref = useRef<SVGSVGElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.5, yoyo: true });
+    tl.to(el, { opacity: 0.4, duration: 0.5, ease: 'sine.inOut' });
+    return () => { tl.kill(); };
+  }, []);
+  return (
+    <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+      className={`inline-block ${className}`}>
+      <line x1="1" y1="1" x2="23" y2="23" />
+      <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55" />
+      <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39" />
+      <path d="M10.71 5.05A16 16 0 0 1 22.58 9" />
+      <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88" />
+      <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+      <line x1="12" y1="20" x2="12.01" y2="20" />
+    </svg>
+  );
+}
+
+// 37. Gift / Presente (Teste PRO)
+export function IconGift({ className = '', size = 14 }: IconProps) {
+  const ref = useRef<SVGSVGElement>(null);
+  useHoverScale(ref, 1.15);
+  return (
+    <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+      className={`inline-block ${className}`}>
+      <polyline points="20 12 20 22 4 22 4 12" />
+      <rect x="2" y="7" width="20" height="5" />
+      <line x1="12" y1="22" x2="12" y2="7" />
+      <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+      <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+    </svg>
+  );
+}
+
+// 38. Settings / Gear (Configurações de Campos)
+export function IconSettings({ className = '', size = 14 }: IconProps) {
+  const ref = useRef<SVGSVGElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ctx = gsap.context(() => {
+      el.addEventListener('mouseenter', () =>
+        gsap.to(el, { rotation: 90, duration: 0.35, ease: 'back.out(1.7)', transformOrigin: '50% 50%' })
+      );
+      el.addEventListener('mouseleave', () =>
+        gsap.to(el, { rotation: 0, duration: 0.35, ease: 'power2.out', transformOrigin: '50% 50%' })
+      );
+    }, el);
+    return () => ctx.revert();
+  }, []);
+  return (
+    <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+      className={`inline-block ${className}`}
+      style={{ transformOrigin: '50% 50%' }}>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  );
+}
+
+// 39. Globe (Estrangeiro)
+export function IconGlobe({ className = '', size = 12 }: IconProps) {
+  const ref = useRef<SVGSVGElement>(null);
+  useHoverScale(ref, 1.2);
+  return (
+    <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+      className={`inline-block ${className}`}>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </svg>
+  );
+}
 
 // 27. Moto (Moto)
 export function IconVehicleMoto({ className = '', size = 20 }: IconProps) {

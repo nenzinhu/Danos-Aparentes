@@ -4,6 +4,7 @@ import { VehicleInfo, CustomField, VehicleType } from '../types'
 import Button from './ui/Button'
 import WizardStepper from './WizardStepper'
 import type { WizardStep } from './wizardTypes'
+import { IconDocument } from './ui/AnimatedIcons'
 import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '../lib/imageUtils'
 import { storePhoto, deletePhotoRef } from '../lib/photoStore'
 import {
@@ -351,9 +352,10 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
         {onToggleCollapse && (
           <button
             onClick={onToggleCollapse}
-            className="bg-sky-500/10 border border-sky-500/20 rounded-lg px-3.5 py-1.5 cursor-pointer text-[var(--primary)] font-bold text-[0.75rem] hover:bg-sky-500/20 transition-colors"
+            className="bg-sky-500/10 border border-sky-500/20 rounded-lg px-3.5 py-1.5 cursor-pointer text-[var(--primary)] font-bold text-[0.75rem] hover:bg-sky-500/20 transition-colors inline-flex items-center gap-1"
           >
-            ▼ Expandir
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 4l4 4 4-4"/></svg>
+            Expandir
           </button>
         )}
       </div>
@@ -369,7 +371,9 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   return (
     <div className="font-outfit">
       <div className="flex justify-between items-center mb-4">
-        <div className="font-extrabold text-[0.95rem]">🗒️ Dados da Vistoria</div>
+        <div className="font-extrabold text-[0.95rem] flex items-center gap-2">
+          <IconDocument size={18} className="text-sky-400" /> Dados da Vistoria
+        </div>
         <div className="flex gap-2 items-center relative">
           <FieldVisibilityPanel
             filterRef={filterRef}
@@ -419,9 +423,10 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
-              className="bg-sky-500/10 border border-sky-500/20 rounded-lg px-3 py-1.5 cursor-pointer text-slate-400 font-bold text-[0.75rem] hover:bg-sky-500/20 transition-colors backdrop-blur-sm"
+              className="bg-sky-500/10 border border-sky-500/20 rounded-lg px-3 py-1.5 cursor-pointer text-slate-400 font-bold text-[0.75rem] hover:bg-sky-500/20 transition-colors backdrop-blur-sm inline-flex items-center gap-1"
             >
-              ▲ Minimizar
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 8l4-4 4 4"/></svg>
+              Minimizar
             </button>
           )}
         </div>

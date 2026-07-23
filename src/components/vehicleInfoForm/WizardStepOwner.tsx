@@ -4,6 +4,7 @@ import { toTitleCase } from '../../lib/cnhBarcode'
 import CnhScanner from '../CnhScanner'
 import { inputClasses, labelClasses } from './constants'
 import { formatCNH, formatCPF, formatPhone } from './formatters'
+import { IconCamera, IconGlobe } from '../ui/AnimatedIcons'
 
 interface Props {
   info: VehicleInfo
@@ -72,7 +73,7 @@ export default function WizardStepOwner({
                         }}
                         style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
                       />
-                      🌍 Estrangeiro
+                      <IconGlobe size={12} className="text-sky-400" /> Estrangeiro
                     </label>
                   </div>
                   {info.phone?.startsWith('+') ? (
@@ -117,7 +118,7 @@ export default function WizardStepOwner({
                         onChange={e => set('cpf', e.target.checked ? 'EX-' : '')}
                         style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
                       />
-                      🌍 Estrangeiro
+                      <IconGlobe size={12} className="text-sky-400" /> Estrangeiro
                     </label>
                   </div>
                   {info.cpf?.startsWith('EX-') ? (
@@ -151,7 +152,7 @@ export default function WizardStepOwner({
                         onChange={e => set('cnh', e.target.checked ? 'EX-' : '')}
                         style={{ width: 13, height: 13, accentColor: 'var(--primary)', cursor: 'pointer' }}
                       />
-                      🌍 Estrangeiro
+                      <IconGlobe size={12} className="text-sky-400" /> Estrangeiro
                     </label>
                   </div>
                   {info.cnh?.startsWith('EX-') ? (
@@ -177,9 +178,9 @@ export default function WizardStepOwner({
                         type="button"
                         onClick={() => setShowCnhScanner(true)}
                         title="Escanear código de barras da CNH"
-                        style={{ flexShrink: 0, width: 40, borderRadius: 10, background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', color: 'var(--text-main)', fontSize: '1.1rem' }}
+                        style={{ flexShrink: 0, width: 40, borderRadius: 10, background: 'var(--btn-secondary-bg)', border: '1px solid var(--btn-secondary-border)', color: 'var(--text-main)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
-                        📷
+                        <IconCamera size={18} className="text-sky-400" />
                       </button>
                     </div>
                   )}

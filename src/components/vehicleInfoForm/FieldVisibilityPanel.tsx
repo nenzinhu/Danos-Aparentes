@@ -2,6 +2,7 @@
 
 import { FIELD_LABELS, inputClasses, type CustomFieldDef } from './constants'
 import { TrashIcon } from './icons'
+import { IconSettings } from '../ui/AnimatedIcons'
 
 interface Props {
   anyHidden: boolean
@@ -80,7 +81,7 @@ export default function FieldVisibilityPanel(props: Props) {
               border rounded-lg px-3 py-1.5 cursor-pointer font-extrabold text-[0.75rem] flex items-center gap-1.5 backdrop-blur-sm transition-all  
             `}
       >
-        ⚙️ Campos{' '}
+        <IconSettings size={14} className={anyHidden ? 'text-sky-400' : 'text-slate-400'} /> Campos{' '}
         {anyHidden
           ? `(${hiddenCount} oculto${hiddenCount > 1 ? 's' : ''})`
           : ''}

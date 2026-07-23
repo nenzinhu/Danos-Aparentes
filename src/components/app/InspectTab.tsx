@@ -14,12 +14,14 @@ import { ClearAllIcon } from './ClearAllIcon'
 import { VEHICLE_NAME, VIEW_NAME } from './constants'
 import type { PreviousReportSummary } from '@/src/lib/reportComparison'
 
+import { IconDocument, IconCar, IconSignature, IconFolder } from '@/src/components/ui/AnimatedIcons'
+
 type InspectSection = 'dados' | 'diagrama' | 'finalizar'
 
-const INSPECT_SECTIONS: { id: InspectSection; label: string; icon: string }[] = [
-  { id: 'dados', label: '1. Dados', icon: '📋' },
-  { id: 'diagrama', label: '2. Diagrama', icon: '🚗' },
-  { id: 'finalizar', label: '3. Laudo', icon: '✍️' },
+const INSPECT_SECTIONS: { id: InspectSection; label: string; icon: React.ReactNode }[] = [
+  { id: 'dados', label: '1. Dados', icon: <IconDocument size={14} /> },
+  { id: 'diagrama', label: '2. Diagrama', icon: <IconCar size={14} /> },
+  { id: 'finalizar', label: '3. Laudo', icon: <IconSignature size={14} /> },
 ]
 
 function sectionTabClass(active: boolean) {
@@ -123,7 +125,7 @@ export default function InspectTab({
               onClick={() => setSection(id)}
               className={sectionTabClass(section === id)}
             >
-              {icon} {label}
+              <span className="inline-flex items-center gap-1.5">{icon} {label}</span>
               {id === 'finalizar' && allVehicleDamages.length > 0 && (
                 <span className="ml-1 text-red-400">({allVehicleDamages.length})</span>
               )}
@@ -158,16 +160,16 @@ export default function InspectTab({
           {!formCollapsed && (
             <div className="flex gap-4 mt-6 pt-4 border-t border-[var(--panel-border)] justify-between items-center flex-wrap">
               <div className="flex gap-2 flex-wrap">
-                <button onClick={onOpenSaved} className="text-xs px-4 py-2 rounded-lg font-bold border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-all">
-                  📦 Vistorias Salvas
+                <button onClick={onOpenSaved} className="text-xs px-4 py-2 rounded-lg font-bold border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-all inline-flex items-center gap-1.5">
+                  <IconFolder size={14} className="text-sky-400" /> Vistorias Salvas
                 </button>
                 {onSaveDraft && (
                   <button
                     onClick={onSaveDraft}
-                    className="text-xs px-4 py-2 rounded-lg font-bold border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all"
+                    className="text-xs px-4 py-2 rounded-lg font-bold border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all inline-flex items-center gap-1.5"
                     title="Salva cliente e veículo na nuvem para abrir no celular na hora da vistoria"
                   >
-                    💻 Salvar prévia
+                    <IconDocument size={14} className="text-emerald-400" /> Salvar prévia
                   </button>
                 )}
               </div>

@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react'
+import { IconDocument, IconCar, IconSignature } from '../ui/AnimatedIcons'
 
 interface Props {
   isOpen: boolean
@@ -8,22 +9,22 @@ interface Props {
 
 const STEPS = [
   {
-    icon: '📋',
+    icon: <IconDocument size={20} className="text-sky-400" />,
     title: 'Dados do cliente e placa',
     text: 'Comece pelo cliente. Depois consulte a placa — os dados do veículo preenchem sozinhos. No computador, use “Salvar prévia” para continuar no celular.',
   },
   {
-    icon: '🚗',
+    icon: <IconCar size={20} className="text-sky-400" />,
     title: 'Marque as avarias no diagrama',
     text: 'Clique nas peças do SVG para registrar danos. Sem avarias? Siga mesmo assim para o laudo.',
   },
   {
-    icon: '✍️',
+    icon: <IconSignature size={20} className="text-emerald-400" />,
     title: 'Assine e capture o GPS',
     text: 'Na aba Laudo, revise as avarias, capture a localização do local e colete as assinaturas.',
   },
   {
-    icon: '📄',
+    icon: <IconDocument size={20} className="text-purple-400" />,
     title: 'Gere o PDF',
     text: 'Exporte o laudo com hash, QR Code e GPS do local da vistoria.',
   },
@@ -47,7 +48,7 @@ export default function InspectionCoachMarks({ isOpen, onClose }: Props) {
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex items-center gap-2">
-          <span className="text-xl">{current.icon}</span>
+          <span className="shrink-0 p-1.5 rounded-lg bg-sky-500/10 border border-sky-500/20">{current.icon}</span>
           <span className="font-outfit font-extrabold text-sm text-[var(--text-main)]">{current.title}</span>
         </div>
         <button

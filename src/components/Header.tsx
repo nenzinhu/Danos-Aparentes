@@ -16,14 +16,14 @@ interface Props {
   onManageSubscription?: () => void
 }
 
-const SYNC_LABEL: Record<'synced' | 'pending' | 'offline' | 'error', { icon: string; text: string; color: string; bgColor: string; borderColor: string }> = {
-  synced:  { icon: '✔️', text: 'Sincronizado',            color: 'text-green-500',  bgColor: 'bg-green-500/10',  borderColor: 'border-green-500/30'  },
-  pending: { icon: '🔄', text: 'Pendente sincronização',  color: 'text-yellow-500', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/30' },
-  offline: { icon: '📡', text: 'Offline',                 color: 'text-red-500',    bgColor: 'bg-red-500/10',    borderColor: 'border-red-500/30'    },
-  error:   { icon: '⚠️', text: 'Erro de sincronização',  color: 'text-orange-500', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/30' },
-}
+import { IconDocument, IconSignature, IconGps, IconShieldCheck, IconSearch, IconTeam, IconSparkles, IconSunMoon, IconCheck, IconSync, IconOffline, IconWarning, IconGift } from './ui/AnimatedIcons'
 
-import { IconDocument, IconSignature, IconGps, IconShieldCheck, IconSearch, IconTeam, IconSparkles, IconSunMoon } from './ui/AnimatedIcons'
+const SYNC_LABEL: Record<'synced' | 'pending' | 'offline' | 'error', { icon: React.ReactNode; text: string; color: string; bgColor: string; borderColor: string }> = {
+  synced:  { icon: <IconCheck size={14} className="text-green-500" />, text: 'Sincronizado',            color: 'text-green-500',  bgColor: 'bg-green-500/10',  borderColor: 'border-green-500/30'  },
+  pending: { icon: <IconSync size={14} className="text-yellow-500" />, text: 'Pendente sincronização',  color: 'text-yellow-500', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/30' },
+  offline: { icon: <IconOffline size={14} className="text-red-500" />, text: 'Offline',                 color: 'text-red-500',    bgColor: 'bg-red-500/10',    borderColor: 'border-red-500/30'    },
+  error:   { icon: <IconWarning size={14} className="text-orange-500" />, text: 'Erro de sincronização',  color: 'text-orange-500', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/30' },
+}
 
 const PRO_BENEFITS = [
   { icon: <IconDocument className="text-sky-400" size={18} />, title: 'PDF Profissional', desc: 'Laudo com hash SHA-256 e QR Code de autenticidade' },
@@ -89,9 +89,9 @@ function ProBenefitsButton({
         }}
       >
         {isActive ? (
-          <><span>✓</span> Plano PRO Ativo</>
+          <><IconCheck size={14} className="text-green-400" /> Plano PRO Ativo</>
         ) : isTrial ? (
-          <><span>🎁</span> Teste PRO — {subscription!.trialDaysLeft} dia{subscription!.trialDaysLeft !== 1 ? 's' : ''} restante{subscription!.trialDaysLeft !== 1 ? 's' : ''}</>
+          <><IconGift size={14} className="text-amber-400" /> Teste PRO — {subscription!.trialDaysLeft} dia{subscription!.trialDaysLeft !== 1 ? 's' : ''} restante{subscription!.trialDaysLeft !== 1 ? 's' : ''}</>
         ) : (
           <><span style={{ fontSize: '0.9rem' }}>✦</span> Ver benefícios PRO</>
         )}
