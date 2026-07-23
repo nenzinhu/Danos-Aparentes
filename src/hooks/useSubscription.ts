@@ -40,8 +40,6 @@ export function useSubscription(userId?: string, accessToken?: string) {
   const requestUserIdRef = useRef<string | undefined>(undefined)
 
   const refresh = useCallback(async () => {
-    requestUserIdRef.current = userId
-
     if (!supabaseEnabled || !supabase || !userId) {
       setLoading(false)
       return
@@ -112,7 +110,10 @@ export function useSubscription(userId?: string, accessToken?: string) {
     setLoading(false)
   }, [userId])
 
-  useEffect(() => { refresh() }, [refresh])
+  useEffect(() => {
+    requestUserIdRef.current = userId
+    ;(async () => { await refresh() })()
+  }, [refresh, userId])
 
   const startCheckout = useCallback(async () => {
     if (!accessToken) throw new Error('Não autenticado')

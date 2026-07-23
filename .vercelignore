@@ -1,4 +1,36 @@
-videoforge/out
-videoforge/cache
-videoforge/remotion/node_modules
-videoforge/remotion/public/vo
+# Vercel Deployment Ignore List
+# Ignora pastas pesadas e arquivos que não pertencem ao build da web na Vercel
+
+# Agentes, Skills e ferramentas locais
+.agents
+.claude
+.cursor
+esc-skills-main
+skills-lock.json
+.claude-skills.json
+
+# Workspaces de vídeo, relatórios e modelos IA
+videoforge
+remotion-danos-aparentes
+videos
+PDF
+damage-model
+outputs
+analysis
+deliverables
+docs
+wireframes
+
+# Caches e relatórios temporários
+.lighthouse-reports
+.vercel-optimize-run
+
+# Arquivos avulsos da raiz
+pdf1.pdf
+pdf2.pdf
+pdf3.pdf
+van lateral.png
+danos-aparentes-architecture.html
+laudo-mockups.html
+logo_motion.html
+*.bat

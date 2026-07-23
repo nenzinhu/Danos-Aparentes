@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState, useEffect, RefObject } from 'react'
+import { useRef, useState, useEffect, useCallback, RefObject } from 'react'
 
 export function useZoomPan(
   containerRef: RefObject<HTMLDivElement | null>,
@@ -11,19 +11,17 @@ export function useZoomPan(
   const dragging = useRef(false)
   const last = useRef({ x: 0, y: 0 })
   const pinchDist = useRef<number | null>(null)
-
-  // Keep scaleRef in sync with state and apply transform
-  useEffect(() => {
-    scaleRef.current = scale
-    applyTransform()
-  }, [scale])
-
-  function applyTransform() {
-    const target = targetRef.current
+  const applyTransform = useCallback(() => {
+    const target = targetRef.current;
     if (target) {
-      target.style.transform = `translate3d(${offsetRef.current.x}px, ${offsetRef.current.y}px, 0) scale(${scaleRef.current})`
+      target.style.transform = `translate3d(${offsetRef.current.x}px, ${offsetRef.current.y}px, 0) scale(${scaleRef.current})`;
     }
-  }
+  }, [targetRef, offsetRef, scaleRef]);
+
+  useEffect(() => {
+    scaleRef.current = scale;
+    applyTransform();
+  }, [scale, applyTransform]);
 
   function reset() {
     offsetRef.current = { x: 0, y: 0 }
@@ -117,7 +115,7 @@ export function useZoomPan(
       el.removeEventListener('touchmove', onTouchMove)
       el.removeEventListener('touchend', onTouchEnd)
     }
-  }, [containerRef])
+  }, [containerRef, applyTransform])
 
   return { scale, reset, zoomIn, zoomOut }
 }

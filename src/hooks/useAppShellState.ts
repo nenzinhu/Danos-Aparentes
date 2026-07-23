@@ -33,15 +33,15 @@ export function useAppShellState({ openPortal }: UseAppShellStateOptions) {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && localStorage.getItem('app_tour_seen') !== 'true') {
-      setTutorialOpen(true)
+      setTimeout(() => setTutorialOpen(true), 0);
     }
   }, [])
 
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.remove('light')
+      setTimeout(() => document.documentElement.classList.remove('light'), 0)
     } else {
-      document.documentElement.classList.add('light')
+      setTimeout(() => document.documentElement.classList.add('light'), 0)
     }
   }, [darkMode])
 
@@ -50,7 +50,7 @@ export function useAppShellState({ openPortal }: UseAppShellStateOptions) {
   useEffect(() => {
     if (localStorage.getItem('darkMode') !== null) return
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const onChange = (e: MediaQueryListEvent) => setDarkMode(e.matches)
+    const onChange = (e: MediaQueryListEvent) => setTimeout(() => setDarkMode(e.matches), 0)
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
   }, [])

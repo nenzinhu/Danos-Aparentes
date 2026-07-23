@@ -24,9 +24,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
   const [info, setInfo] = useState('')
   const [busy, setBusy] = useState(false)
 
-  useEffect(() => {
-    if (searchParams.get('mode') === 'signup') setMode('signup')
-  }, [searchParams])
+  useEffect(() => { if (searchParams.get('mode') === 'signup') { const id = setTimeout(() => setMode('signup'), 0); return () => clearTimeout(id); } }, [searchParams])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

@@ -111,13 +111,13 @@ export default function Verify() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const h = (params.get('hash') || '').trim()
-    setInputHash(normalizeHash(h))
+    setTimeout(() => { setInputHash(normalizeHash(h)); }, 0)
 
     const lat = (params.get('lat') || '').trim()
     const lng = (params.get('lng') || '').trim()
-    if (lat && lng) setGeo({ lat, lng })
+    if (lat && lng) setTimeout(() => { setGeo({ lat, lng }); }, 0)
 
-    void applyAndVerify(h, lat && lng ? { lat, lng } : null)
+    setTimeout(() => { void applyAndVerify(h, lat && lng ? { lat, lng } : null); }, 0)
   }, [applyAndVerify])
 
   function handleSubmit(e: FormEvent) {

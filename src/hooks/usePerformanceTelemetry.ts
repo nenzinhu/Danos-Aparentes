@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export interface TelemetryMetrics {
   ttfb: number | null;
@@ -61,12 +61,12 @@ export function usePerformanceTelemetry() {
       if (navEntries.length > 0) {
         const nav = navEntries[0] as PerformanceNavigationTiming;
         const ttfbVal = Math.round(nav.responseStart - nav.startTime);
-        setMetrics((prev) => ({ ...prev, ttfb: ttfbVal }));
+        setTimeout(() => setMetrics((prev) => ({ ...prev, ttfb: ttfbVal })), 0);
       } else if (performance.timing) {
         // Fallback for older browsers
         const t = performance.timing;
         const ttfbVal = Math.max(0, t.responseStart - t.navigationStart);
-        setMetrics((prev) => ({ ...prev, ttfb: ttfbVal }));
+        setTimeout(() => setMetrics((prev) => ({ ...prev, ttfb: ttfbVal })), 0);
       }
     } catch (e) {
       console.warn('Navigation timing not supported:', e);
@@ -81,7 +81,7 @@ export function usePerformanceTelemetry() {
         const entries = entryList.getEntries();
         if (entries.length > 0) {
           const fcpVal = Math.round(entries[0].startTime);
-          setMetrics((prev) => ({ ...prev, fcp: fcpVal }));
+          setTimeout(() => setMetrics((prev) => ({ ...prev, fcp: fcpVal })), 0);
         }
       });
       fcpObserver.observe({ type: 'paint', buffered: true });
@@ -97,7 +97,7 @@ export function usePerformanceTelemetry() {
         if (entries.length > 0) {
           const lastEntry = entries[entries.length - 1];
           const lcpVal = Math.round(lastEntry.startTime);
-          setMetrics((prev) => ({ ...prev, lcp: lcpVal }));
+          setTimeout(() => setMetrics((prev) => ({ ...prev, lcp: lcpVal })), 0);
         }
       });
       lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
@@ -114,7 +114,7 @@ export function usePerformanceTelemetry() {
           const shiftEntry = entry as any;
           if (!shiftEntry.hadRecentInput) {
             clsValue += shiftEntry.value;
-            setMetrics((prev) => ({ ...prev, cls: parseFloat(clsValue.toFixed(4)) }));
+            setTimeout(() => setMetrics((prev) => ({ ...prev, cls: parseFloat(clsValue.toFixed(4)) })), 0);
           }
         }
       });
@@ -197,14 +197,16 @@ export function usePerformanceTelemetry() {
       const validCls = historyList.filter((h) => h.cls !== null && h.cls !== undefined) as { cls: number }[];
       const validFid = historyList.filter((h) => h.fid !== null && h.fid !== undefined) as { fid: number }[];
 
-      setBaseline({
-        ttfbAvg: validTtfb.length > 0 ? Math.round(validTtfb.reduce((s, x) => s + x.ttfb, 0) / validTtfb.length) : 0,
-        fcpAvg: validFcp.length > 0 ? Math.round(validFcp.reduce((s, x) => s + x.fcp, 0) / validFcp.length) : 0,
-        lcpAvg: validLcp.length > 0 ? Math.round(validLcp.reduce((s, x) => s + x.lcp, 0) / validLcp.length) : 0,
-        clsAvg: validCls.length > 0 ? parseFloat((validCls.reduce((s, x) => s + x.cls, 0) / validCls.length).toFixed(4)) : 0,
-        fidAvg: validFid.length > 0 ? Math.round(validFid.reduce((s, x) => s + x.fid, 0) / validFid.length) : 0,
-        samples: historyList.length,
-      });
+      setTimeout(() => {
+        setBaseline({
+          ttfbAvg: validTtfb.length > 0 ? Math.round(validTtfb.reduce((s, x) => s + x.ttfb, 0) / validTtfb.length) : 0,
+          fcpAvg: validFcp.length > 0 ? Math.round(validFcp.reduce((s, x) => s + x.fcp, 0) / validFcp.length) : 0,
+          lcpAvg: validLcp.length > 0 ? Math.round(validLcp.reduce((s, x) => s + x.lcp, 0) / validLcp.length) : 0,
+          clsAvg: validCls.length > 0 ? parseFloat((validCls.reduce((s, x) => s + x.cls, 0) / validCls.length).toFixed(4)) : 0,
+          fidAvg: validFid.length > 0 ? Math.round(validFid.reduce((s, x) => s + x.fid, 0) / validFid.length) : 0,
+          samples: historyList.length,
+        });
+      }, 0);
     } catch (e) {
       console.warn('Failed to calculate historical baseline:', e);
     }

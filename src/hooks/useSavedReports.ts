@@ -27,7 +27,9 @@ export function useSavedReports(userId?: string) {
 
   useEffect(() => {
     if (!supabaseEnabled || !userId) return
-    void refreshRemote()
+    ;(async () => {
+      await refreshRemote()
+    })()
   }, [userId, refreshRemote])
 
   async function saveReport(

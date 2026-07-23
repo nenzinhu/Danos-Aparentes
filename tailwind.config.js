@@ -1,7 +1,6 @@
-import tailwindAnimate from "tailwindcss-animate";
+import tailwindAnimate from 'tailwindcss-animate';
 
-/** @type {import('tailwindcss').Config} */
-export default {
+const tailwindConfig = {
   content: [
     "./src/App.tsx",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -30,4 +29,5 @@ export default {
   plugins: [
     tailwindAnimate,
   ],
-}
+};
+export default tailwindConfig;

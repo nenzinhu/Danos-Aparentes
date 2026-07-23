@@ -53,3 +53,16 @@ videos/*/.hyperframes/backup/
 
 # Relatórios de auditoria pontuais (regeráveis, não são fonte)
 .lighthouse-reports/
+
+# Pastas pesadas e artefatos locais
+damage-model/
+remotion-danos-aparentes/
+outputs/
+PDF/
+deliverables/
+DANOSAPARENTES/
+run-local.bat
+motion.css
+motion_spec.md
+tsconfig.tsbuildinfo
+

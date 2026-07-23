@@ -275,9 +275,10 @@ export function useSyncStatus(userId: string | undefined, options?: UseSyncStatu
   const [lastError, setLastError] = useState<string | undefined>()
   const flushing = useRef(false)
   const onPermanentFailureRef = useRef(options?.onPermanentFailure)
-  onPermanentFailureRef.current = options?.onPermanentFailure
 
-  const tryFlush = useCallback(async () => {
+  useEffect(() => { onPermanentFailureRef.current = options?.onPermanentFailure }, [options?.onPermanentFailure]);
+
+const tryFlush = useCallback(async () => {
     if (!supabaseEnabled || !userId || flushing.current) return
     const queue = await db.getSyncQueue()
     if (queue.length === 0) {
@@ -316,16 +317,16 @@ export function useSyncStatus(userId: string | undefined, options?: UseSyncStatu
 
   useEffect(() => {
     if (!supabaseEnabled || !userId) return
-    tryFlush()
-    const onOnline = () => tryFlush()
+    setTimeout(() => { tryFlush(); }, 0)
+    const onOnline = () => setTimeout(() => { tryFlush(); }, 0)
     const onOffline = () => setStatus('offline')
     const onVisible = () => {
-      if (document.visibilityState === 'visible') tryFlush()
+      if (document.visibilityState === 'visible') setTimeout(() => { tryFlush(); }, 0)
     }
     window.addEventListener('online', onOnline)
     window.addEventListener('offline', onOffline)
     document.addEventListener('visibilitychange', onVisible)
-    const interval = setInterval(tryFlush, 30000)
+    const interval = setInterval(() => { tryFlush(); }, 30000)
     return () => {
       window.removeEventListener('online', onOnline)
       window.removeEventListener('offline', onOffline)

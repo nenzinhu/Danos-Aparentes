@@ -50,7 +50,7 @@ export function useTeam(accessToken?: string, enabled: boolean = true) {
     }
   }, [accessToken, enabled])
 
-  useEffect(() => { refresh() }, [refresh])
+  useEffect(() => { const id = setTimeout(refresh, 0); return () => clearTimeout(id); }, [refresh])
 
   const inviteMember = useCallback(async (email: string): Promise<string> => {
     if (!accessToken) throw new Error('Não autenticado')

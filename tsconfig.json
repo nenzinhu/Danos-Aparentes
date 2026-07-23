@@ -30,21 +30,27 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "middleware.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
+    "remotion-danos-aparentes",
     "videoforge",
-    "src/app/agent-skills-main",
-    "src/app/.agents",
-    "src/gemini-agent-skills-master",
-    "src/pdfme-main",
-    "src/awesome-claude-skills-master",
-    "src/nextjs-developer",
-    "lighthouse-main",
-    "open-design-main"
+    "esc-skills-main",
+    "damage-model",
+    "videos",
+    "docs",
+    "outputs",
+    "wireframes",
+    "analysis",
+    "deliverables",
+    "PDF",
+    ".agents",
+    ".claude",
+    ".cursor"
   ]
 }
