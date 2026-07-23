@@ -1,0 +1,289 @@
+<template>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @font-face {
+      font-family: "IBM Plex Mono";
+      src: url("capture/assets/fonts/2fe89d53234c61d4-s.1u30mmyq6lnsd.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    #beat-3-marcacao {
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    #beat-3-marcacao .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(31, 182, 255, 0.05) 0px, rgba(31, 182, 255, 0.05) 1px, transparent 1px, transparent 48px),
+        repeating-linear-gradient(90deg, rgba(31, 182, 255, 0.05) 0px, rgba(31, 182, 255, 0.05) 1px, transparent 1px, transparent 48px);
+    }
+
+    #beat-3-marcacao .bg-glow-blue {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 42%, rgba(31, 182, 255, 0.12) 0%, transparent 62%);
+    }
+
+    #beat-3-marcacao .stage {
+      position: absolute;
+      inset: 0;
+      transform-origin: 50% 44%;
+    }
+
+    #beat-3-marcacao .glow-signal {
+      position: absolute;
+      left: 123px;
+      top: 540px;
+      width: 640px;
+      height: 640px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 185, 56, 0.4) 0%, rgba(255, 185, 56, 0) 68%);
+      opacity: 0;
+    }
+
+    #beat-3-marcacao .car-wrap {
+      position: absolute;
+      left: 54px;
+      top: 620px;
+      width: 972px;
+      height: 413px;
+      perspective: 1200px;
+    }
+
+    #beat-3-marcacao .car-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      transform-origin: 50% 50%;
+      filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5));
+    }
+
+    #beat-3-marcacao .selection-highlight {
+      position: absolute;
+      left: 294px;
+      top: 100px;
+      width: 223px;
+      height: 206px;
+      border-radius: 20px;
+      background: #ffb938;
+      mix-blend-mode: color;
+      opacity: 0;
+      transform-origin: 50% 50%;
+    }
+
+    #beat-3-marcacao .selection-highlight-border {
+      position: absolute;
+      left: 294px;
+      top: 100px;
+      width: 223px;
+      height: 206px;
+      border-radius: 20px;
+      border: 2px solid #ffb938;
+      box-shadow: 0 0 32px rgba(255, 185, 56, 0.45);
+      opacity: 0;
+      transform-origin: 50% 50%;
+    }
+
+    #beat-3-marcacao .touch-halo {
+      position: absolute;
+      left: 359px;
+      top: 210px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 185, 56, 0.35);
+      border: 1px solid rgba(255, 185, 56, 0.5);
+      opacity: 0;
+      transform-origin: 50% 50%;
+    }
+
+    #beat-3-marcacao .touch-dot {
+      position: absolute;
+      left: 377px;
+      top: 228px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #ffb938;
+      box-shadow: 0 0 18px 6px rgba(255, 185, 56, 0.75);
+      opacity: 0;
+      transform-origin: 50% 50%;
+    }
+
+    #beat-3-marcacao .touch-dot::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 185, 56, 0.6) 0%, transparent 70%);
+      filter: blur(4px);
+    }
+
+    #beat-3-marcacao .chip {
+      position: absolute;
+      left: 263px;
+      top: 1093px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 22px;
+      background: rgba(255, 185, 56, 0.15);
+      border: 1px solid rgba(255, 185, 56, 0.4);
+      border-radius: 4px;
+      color: #e8f4ff;
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 400;
+      font-size: 20px;
+      letter-spacing: 0.2px;
+      white-space: nowrap;
+      opacity: 0;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    #beat-3-marcacao .chip-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffb938;
+      box-shadow: 0 0 8px rgba(255, 185, 56, 0.8);
+      flex-shrink: 0;
+    }
+  </style>
+
+  <div
+    id="beat-3-marcacao"
+    data-composition-id="beat-3-marcacao"
+    data-width="1080"
+    data-height="1920"
+    style="width:1080px; height:1920px; position:relative; overflow:hidden; background:#020617;"
+  >
+    <div class="bg-grid"></div>
+    <div class="bg-glow-blue"></div>
+
+    <div class="stage" id="stage">
+      <div class="glow-signal" id="glowSignal"></div>
+
+      <div class="car-wrap" id="carWrap">
+        <img
+          class="car-img"
+          id="carImg"
+          src="capture/assets/diagrama-lateral-do-veculo-carro.png"
+          alt="Diagrama lateral do veículo"
+        />
+        <div class="selection-highlight" id="selectionHighlight"></div>
+        <div class="selection-highlight-border" id="selectionBorder"></div>
+        <div class="touch-halo" id="halo1"></div>
+        <div class="touch-halo" id="halo2"></div>
+        <div class="touch-dot" id="touchDot"></div>
+      </div>
+
+      <div class="chip" id="chip">
+        <span class="chip-dot"></span>
+        <span>Porta diant. esq. &middot; risco</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var BEAT = 6.0; // MUST match data-duration on the host div in index.html
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      var stage = "#stage";
+      var carImg = "#carImg";
+      var touchDot = "#touchDot";
+      var halo1 = "#halo1";
+      var halo2 = "#halo2";
+      var selectionHighlight = "#selectionHighlight";
+      var selectionBorder = "#selectionBorder";
+      var glowSignal = "#glowSignal";
+      var chip = "#chip";
+
+      // --- Car diagram entrance: 3D tilt settle, 0.0s -> 0.6s ---
+      tl.fromTo(
+        carImg,
+        { rotateY: -8, scale: 0.85, opacity: 1 },
+        { rotateY: 0, scale: 1, duration: 0.6, ease: "power3.out" },
+        0
+      );
+
+      // --- Camera dolly: slow push-in toward the door, 0.0s -> 1.5s ---
+      // (scale targets compressed proportionally along with the hold cap below,
+      // so the push stays monotonic and never zooms back out)
+      tl.fromTo(stage, { scale: 1.0 }, { scale: 1.09, duration: 1.5, ease: "none" }, 0);
+
+      // --- Touch SNAP at the door: fast camera push + point-of-contact pop, 1.5s ---
+      tl.to(stage, { scale: 1.17, duration: 0.3, ease: "power3.out" }, 1.5);
+      tl.fromTo(
+        touchDot,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2.6)" },
+        1.5
+      );
+
+      // --- Confirmation halo: two radar pulses, 1.8s -> 2.7s ---
+      tl.fromTo(
+        halo1,
+        { scale: 1, opacity: 0.5 },
+        { scale: 2.2, opacity: 0, duration: 0.6, ease: "power1.out" },
+        1.8
+      );
+      tl.fromTo(
+        halo2,
+        { scale: 1, opacity: 0.5 },
+        { scale: 2.2, opacity: 0, duration: 0.6, ease: "power1.out" },
+        2.1
+      );
+
+      // --- Door area recolors / selection outline pops, 2.0s -> 2.4s ---
+      tl.fromTo(
+        selectionHighlight,
+        { opacity: 0, scale: 0.9 },
+        { opacity: 0.85, scale: 1, duration: 0.4, ease: "back.out(1.5)" },
+        2.0
+      );
+      tl.fromTo(
+        selectionBorder,
+        { opacity: 0, scale: 0.9 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.5)" },
+        2.0
+      );
+      tl.fromTo(glowSignal, { opacity: 0 }, { opacity: 0.55, duration: 0.5, ease: "power2.out" }, 2.0);
+
+      // --- Legend chip slides in from the side, 2.3s -> 2.8s ---
+      tl.fromTo(
+        chip,
+        { x: 70, y: 20, opacity: 0 },
+        { x: 0, y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.6)" },
+        2.3
+      );
+
+      // --- Hold: camera keeps dollying in slowly, chip breathes, 1.8s -> 5.4s ---
+      // (scale capped at 1.22 instead of 1.46 — `hyperframes inspect` flagged the
+      // legend chip drifting off-canvas at the more aggressive zoom)
+      tl.to(stage, { scale: 1.22, duration: 3.6, ease: "none" }, 1.8);
+      tl.to(chip, { y: -4, duration: 1.0, ease: "sine.inOut" }, 2.8);
+      tl.to(chip, { y: 4, duration: 1.0, ease: "sine.inOut" }, 3.8);
+      tl.to(chip, { y: 0, duration: 0.6, ease: "sine.inOut" }, 4.8);
+
+      // --- Fast recede to prep the hard cut into beat 4, 5.6s -> 6.0s ---
+      tl.to(
+        stage,
+        { scale: 0.9, opacity: 0, duration: 0.4, ease: "power2.in" },
+        5.6
+      );
+
+      window.__timelines["beat-3-marcacao"] = tl;
+    })();
+  </script>
+</template>

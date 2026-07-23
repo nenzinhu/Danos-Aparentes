@@ -1,0 +1,59 @@
+{
+  "lines": [
+    {
+      "id": "01",
+      "sfx": [
+        "soft-thud on each phrase landing"
+      ]
+    },
+    {
+      "id": "02",
+      "sfx": [
+        "soft riser into the name reveal"
+      ]
+    },
+    {
+      "id": "03",
+      "sfx": [
+        "light key-tap ticks",
+        "soft pop per field"
+      ]
+    },
+    {
+      "id": "04",
+      "sfx": [
+        "soft tap",
+        "then a short confirm chime"
+      ]
+    },
+    {
+      "id": "05",
+      "sfx": [
+        "pen-stroke whoosh",
+        "then a soft metallic \"lock\" click"
+      ]
+    },
+    {
+      "id": "06",
+      "sfx": [
+        "three soft pops",
+        "one per card landing"
+      ]
+    },
+    {
+      "id": "07",
+      "sfx": [
+        "message-received pop"
+      ]
+    },
+    {
+      "id": "08",
+      "sfx": [
+        "soft chime on CTA landing"
+      ]
+    }
+  ],
+  "bgm": {
+    "mode": "none"
+  }
+}

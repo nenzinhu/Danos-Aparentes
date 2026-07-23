@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe Sketch - Danos Aparentes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: #FFFFFF;
+            color: #666666;
+            line-height: 1.7;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Architects Daughter', cursive;
+            color: #000000;
+            line-height: 1.3;
+        }
+        h1 { font-size: 42px; margin-bottom: 16px; }
+        h2 { font-size: 32px; margin-bottom: 14px; }
+        h3 { font-size: 22px; margin-bottom: 12px; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+        .section-label {
+            font-family: 'Architects Daughter', cursive;
+            font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 8px; padding: 4px 12px; border-left: 3px solid #CCCCCC; display: inline-block;
+        }
+
+        section { padding: 64px 0; }
+
+        .bg-cream    { background: #FFFDF7; }
+        .bg-rose     { background: #FFF5F3; }
+        .bg-white    { background: #FFFFFF; }
+        .bg-mint     { background: #F2FAF6; }
+        .bg-ice      { background: #EDF4FF; }
+        .bg-lavender { background: #F5F0FF; }
+        .bg-peach    { background: #FFF8F0; }
+        .bg-gray     { background: #F5F5F5; }
+
+        .card { border: 3px solid #000000; border-radius: 12px; padding: 24px; background: #FFFFFF; }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        .cards-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .cards-grid.cols-5 { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+
+        .cta-button {
+            font-family: 'Comic Neue', cursive; font-weight: 700; background: #E0E0E0; border: 2px solid #000000;
+            border-radius: 20px; box-shadow: 4px 4px 0px #000000; padding: 14px 32px; cursor: pointer; font-size: 16px;
+            color: #000000; display: inline-block; text-decoration: none; transition: all 0.15s ease;
+        }
+        .cta-button:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000000; }
+        .cta-button.primary { background: #F0F4F8; }
+        .cta-button.outline { background: #FFFFFF; }
+        .cta-row { display: flex; gap: 16px; flex-wrap: wrap; }
+
+        .image-placeholder {
+            background: #F0F4F8; border: 3px dashed #CCCCCC; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; min-height: 220px; border-radius: 8px; gap: 12px;
+        }
+        .image-placeholder .x-mark { font-size: 48px; color: #CCCCCC; font-weight: 700; }
+        .image-placeholder .direction { background: #FFF9C4; padding: 6px 14px; font-size: 13px; color: #555; border-radius: 6px; text-align: center; max-width: 85%; font-style: italic; }
+
+        input, textarea, select {
+            font-family: 'Comic Neue', cursive; border: 2px solid #CCCCCC; border-radius: 8px; padding: 14px 16px;
+            width: 100%; font-size: 14px; color: #555; background: #fff; outline: none; transition: border-color 0.2s; margin-bottom: 16px;
+        }
+        input::placeholder, textarea::placeholder { color: #BBBBBB; }
+        input:focus, textarea:focus, select:focus { border-color: #000; }
+
+        .trust-text { text-align: center; font-size: 12px; color: #999; margin-top: 12px; }
+
+        .icon { font-size: 30px; margin-bottom: 12px; color: #000000; }
+        .icon-alert { color: #D90429; }
+        .icon-brand { color: #2f6f4f; }
+
+        .hero { padding: 80px 0 60px; }
+        .hero h1 { font-size: 34px; max-width: 780px; }
+        .hero p { font-size: 17px; color: #666; max-width: 620px; margin-bottom: 28px; line-height: 1.8; }
+
+        .trust-bar { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 32px; }
+        .trust-bar span { font-size: 13px; border: 2px solid #000; border-radius: 20px; padding: 6px 14px; background: #fff; }
+
+        .sketch-badge {
+            position: fixed; top: 16px; right: 16px; background: #FFF9C4; border: 2px solid #000; border-radius: 8px;
+            padding: 8px 16px; font-family: 'Architects Daughter', cursive; font-size: 12px; color: #000;
+            box-shadow: 3px 3px 0 #000; z-index: 999;
+        }
+
+        .text-center { text-align: center; }
+        .mt-20 { margin-top: 20px; }
+        .mb-20 { margin-bottom: 20px; }
+        .max-640 { max-width: 640px; margin: 0 auto; }
+
+        .persona-card { text-align: center; }
+        .persona-card .cta-button { margin-top: 16px; }
+
+        .step-row { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 20px; }
+        .step-num {
+            flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; border: 2px solid #000; display: flex;
+            align-items: center; justify-content: center; font-family: 'Architects Daughter', cursive; font-weight: 700;
+        }
+
+        .accordion-item { border: 2px solid #000; border-radius: 10px; padding: 16px 20px; margin-bottom: 12px; background: #fff; }
+        .accordion-item h4 { font-family: 'Architects Daughter', cursive; font-size: 16px; margin-bottom: 4px; }
+        .accordion-item p { font-size: 14px; }
+
+        footer.sketch-footer { background: #1a1a1a; color: #ccc; padding: 40px 0; text-align: center; }
+        footer.sketch-footer p { font-size: 13px; margin-top: 8px; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+
+        [data-animate] { opacity: 0; }
+        [data-animate].is-visible { animation-fill-mode: both; animation-duration: 0.7s; animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+        [data-animate="fade-up"].is-visible    { animation-name: fadeInUp; }
+        [data-animate="fade-scale"].is-visible { animation-name: fadeInScale; }
+        [data-animate="slide-left"].is-visible { animation-name: slideInLeft; }
+        [data-animate="slide-right"].is-visible{ animation-name: slideInRight; }
+
+        [data-stagger]>*:nth-child(1) { --delay: 0s; }
+        [data-stagger]>*:nth-child(2) { --delay: 0.12s; }
+        [data-stagger]>*:nth-child(3) { --delay: 0.24s; }
+        [data-stagger]>*:nth-child(4) { --delay: 0.36s; }
+        [data-stagger]>*:nth-child(5) { --delay: 0.48s; }
+        [data-stagger].is-visible>* { animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--delay, 0s); }
+        [data-stagger]>* { opacity: 0; }
+
+        @media (max-width: 768px) {
+            section { padding: 40px 0; }
+            h1 { font-size: 26px; }
+            h2 { font-size: 22px; }
+            .hero { padding: 48px 0 40px; }
+            .hero h1 { font-size: 26px; }
+            .cards-grid, .cards-grid.cols-2, .cards-grid.cols-5 { grid-template-columns: 1fr; }
+            .cta-button { width: 100%; text-align: center; }
+            .cta-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sketch-badge">📐 Wireframe Sketch — Baixa Fidelidade</div>
+
+    <!-- HERO -->
+    <section class="hero bg-cream">
+        <div class="container">
+            <span class="section-label">Hero</span>
+            <div data-animate="fade-up">
+                <h1>Um laudo de vistoria que comprova a si mesmo</h1>
+                <p>Marque avarias no diagrama do veículo, tire fotos com GPS e horário, colha assinatura na tela e gere um PDF com hash SHA-256 e QR Code de verificação. Funciona offline e sincroniza sozinho.</p>
+                <div class="cta-row">
+                    <a href="#trial" class="cta-button primary">Testar 7 dias grátis →</a>
+                    <a href="#form" class="cta-button outline">Falar com o time comercial</a>
+                </div>
+                <div class="trust-bar">
+                    <span><i class="fas fa-lock icon-brand" style="font-size:14px;"></i> Hash SHA-256</span>
+                    <span><i class="fas fa-wifi-slash" style="font-size:14px;"></i> 100% offline</span>
+                    <span><i class="fas fa-signature" style="font-size:14px;"></i> Assinatura digital</span>
+                    <span><i class="fas fa-car" style="font-size:14px;"></i> Consulta de placa</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUALIFY -->
+    <section class="bg-white">
+        <div class="container">
+            <span class="section-label">Qualificação</span>
+            <h2 class="text-center" data-animate="fade-up">Qual é o seu cenário de vistoria?</h2>
+            <div class="cards-grid cols-2 mt-20" data-animate="fade-up" data-stagger>
+                <div class="card persona-card">
+                    <i class="fas fa-user icon icon-brand"></i>
+                    <h3>Vistoriador autônomo ou oficina</h3>
+                    <p>Faço vistorias avulsas e preciso de agilidade e prova por vistoria.</p>
+                    <a href="#trial" class="cta-button">Começar grátis</a>
+                </div>
+                <div class="card persona-card">
+                    <i class="fas fa-truck-moving icon icon-brand"></i>
+                    <h3>Locadora, frotista ou concessionária</h3>
+                    <p>Preciso padronizar vistoria em volume, com marca própria e time treinado.</p>
+                    <a href="#form" class="cta-button">Falar com vendas</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UNDERSTAND -->
+    <section class="bg-rose">
+        <div class="container">
+            <span class="section-label">Problema</span>
+            <h2 data-animate="fade-up">Vistoria em papel ainda leva 20 minutos — e termina em discussão</h2>
+            <div class="cards-grid mt-20" data-animate="fade-up" data-stagger>
+                <div class="card">
+                    <i class="fas fa-images icon icon-alert"></i>
+                    <h3>Fotos soltas</h3>
+                    <p>Sem hora nem local comprovados, difíceis de organizar depois.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-exclamation-triangle icon icon-alert"></i>
+                    <h3>Discussão no balcão</h3>
+                    <p>"Amassado que já existia" vira briga sem prova concreta.</p>
+                </div>
+                <div class="card">
+                    <i class="fas fa-times-circle icon icon-alert"></i>
+                    <h3>Erro de cadastro</h3>
+                    <p>Preenchimento manual de placa e modelo gera retrabalho.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EDUCATE -->
+    <section class="bg-white">
+        <div class="container">
+            <span class="section-label">Como funciona</span>
+            <h2 data-animate="fade-up">Da vistoria ao laudo verificável, em um fluxo só</h2>
+            <div class="mt-20" data-animate="fade-up">
+                <div class="step-row">
+                    <div class="step-num">1</div>
+                    <p>Consulta automática de placa preenche marca, modelo, cor e ano.</p>
+                </div>
+                <div class="step-row">
+                    <div class="step-num">2</div>
+                    <p>Marque avarias direto no diagrama do veículo (4 vistas: frontal, traseira, laterais) — carro, moto, caminhão, van, ônibus ou genérico.</p>
+                </div>
+                <div class="step-row">
+                    <div class="step-num">3</div>
+                    <p>Anexe fotos com GPS e horário automáticos.</p>
+                </div>
+                <div class="step-row">
+                    <div class="step-num">4</div>
+                    <p>Colha assinatura digital do vistoriador e do cliente na tela.</p>
+                </div>
+                <div class="step-row">
+                    <div class="step-num">5</div>
+                    <p>Gere o laudo em PDF com hash SHA-256 e QR Code, envie direto pelo WhatsApp.</p>
+                </div>
+            </div>
+            <div class="image-placeholder mt-20" data-animate="fade-scale">
+                <span class="direction">Direcionamento: screenshot do diagrama SVG do veículo com marcações de avaria coloridas por gravidade</span>
+                <span class="x-mark">✕</span>
+            </div>
+            <div class="card mt-20" data-animate="fade-up">
+                <i class="fas fa-wifi icon icon-brand"></i>
+                <h3>Sem sinal no pátio? Sem problema.</h3>
+                <p>O app funciona 100% offline e sincroniza automaticamente com a nuvem assim que a conexão voltar.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- STIMULATE -->
+    <section class="bg-gray">
+        <div class="container">
+            <span class="section-label">Confiança</span>
+            <h2 data-animate="fade-up">Um laudo que comprova a si mesmo — sem depender da nossa palavra</h2>
+            <p class="mt-20" style="max-width:680px;" data-animate="fade-up">Ainda não temos histórico público de clientes — o app é novo. O que oferecemos hoje é verificável: cada laudo é protegido por hash SHA-256, QR Code de verificação, assinatura digital e fotos com GPS/timestamp. Você não precisa confiar na nossa palavra — pode conferir tecnicamente.</p>
+            <div class="cards-grid cols-5 mt-20" data-animate="fade-up" data-stagger>
+                <div class="card text-center">
+                    <i class="fas fa-fingerprint icon icon-brand"></i>
+                    <p>Hash SHA-256 em cada laudo</p>
+                </div>
+                <div class="card text-center">
+                    <i class="fas fa-qrcode icon icon-brand"></i>
+                    <p>QR Code de verificação pública</p>
+                </div>
+                <div class="card text-center">
+                    <i class="fas fa-id-badge icon icon-brand"></i>
+                    <p>Responsável legal identificado publicamente</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRANSITION / CONVERSÃO -->
+    <section id="trial" class="bg-mint">
+        <div class="container">
+            <span class="section-label">Conversão — Self-serve</span>
+            <div class="card text-center max-640" data-animate="fade-up">
+                <h2>Abra sua primeira vistoria antes de terminar o café</h2>
+                <a href="#" class="cta-button primary mt-20">Testar 7 dias grátis →</a>
+                <p class="trust-text">Sem cartão · 7 dias liberados · Cancele online</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="form" class="bg-peach">
+        <div class="container">
+            <span class="section-label">Conversão — Corporativo</span>
+            <h2 class="text-center" data-animate="fade-up">Quer padronizar a vistoria da sua frota ou locadora? Fale com o time comercial</h2>
+            <div style="max-width: 520px; margin: 24px auto 0;" data-animate="fade-up">
+                <input type="text" placeholder="Nome completo">
+                <input type="email" placeholder="E-mail corporativo">
+                <input type="tel" placeholder="WhatsApp com DDD">
+                <input type="text" placeholder="Nome da empresa">
+                <select><option>Segmento: Locadora / Frotista / Concessionária / Oficina...</option></select>
+                <select><option>Tamanho da frota: até 10 / 11–50 / 51–200 / 200+</option></select>
+                <select><option>Principal desafio</option></select>
+                <button class="cta-button primary" style="width: 100%;">Quero uma demonstração →</button>
+                <p class="trust-text">🔒 Dados confidenciais. Respondemos em até 24h úteis.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="bg-white">
+        <div class="container">
+            <span class="section-label">FAQ</span>
+            <h2 class="text-center" data-animate="fade-up">Perguntas antes de começar</h2>
+            <div class="mt-20 max-640" data-animate="fade-up" data-stagger>
+                <div class="accordion-item">
+                    <h4>Funciona sem internet no pátio?</h4>
+                    <p>Sim, 100% offline com sincronização automática.</p>
+                </div>
+                <div class="accordion-item">
+                    <h4>Quais veículos são suportados?</h4>
+                    <p>Carro, moto, caminhão, van, ônibus e categoria genérica, com 4 vistas cada.</p>
+                </div>
+                <div class="accordion-item">
+                    <h4>Como funciona a consulta de placa?</h4>
+                    <p>Preenche automaticamente marca, modelo, cor e ano.</p>
+                </div>
+                <div class="accordion-item">
+                    <h4>Dá para personalizar com a marca da minha empresa?</h4>
+                    <p>Sim, no plano Corporativo o laudo sai com seu logo e identidade.</p>
+                </div>
+                <div class="accordion-item">
+                    <h4>Preciso de cartão para testar?</h4>
+                    <p>Não, o trial de 7 dias é liberado sem cartão.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="sketch-footer">
+        <div class="container">
+            <p>Danos Aparentes — Vistoria veicular digital</p>
+            <p>Contato via WhatsApp · Responsável legal identificado publicamente · © 2026 Danos Aparentes</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const els = document.querySelectorAll('[data-animate], [data-stagger]');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+            els.forEach(el => observer.observe(el));
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>

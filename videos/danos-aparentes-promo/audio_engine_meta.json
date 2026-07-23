@@ -1,0 +1,125 @@
+{
+  "tts_provider": "heygen",
+  "voice_id": "05f19352e8f74b0392a8f411eba40de1",
+  "bgm": null,
+  "bgm_pending": false,
+  "bgm_provider": null,
+  "bgm_pid": null,
+  "bgm_log": null,
+  "bgm_mode": null,
+  "bgm_target_duration_s": null,
+  "bgm_seed_duration_s": null,
+  "bgm_loop_count": null,
+  "voices": [],
+  "sfx": [
+    {
+      "id": "01",
+      "name": "soft-thud on each phrase landing",
+      "file": "assets/sfx/soft-thud-on-each-phrase-landing.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 0.864,
+      "volume": 0.35
+    },
+    {
+      "id": "02",
+      "name": "soft riser into the name reveal",
+      "file": "assets/sfx/soft-riser-into-the-name-reveal.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 3.405,
+      "volume": 0.35
+    },
+    {
+      "id": "03",
+      "name": "light key-tap ticks",
+      "file": "assets/sfx/light-key-tap-ticks.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 0.768,
+      "volume": 0.35
+    },
+    {
+      "id": "03",
+      "name": "soft pop per field",
+      "file": "assets/sfx/soft-pop-per-field.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 1.308,
+      "volume": 0.35
+    },
+    {
+      "id": "04",
+      "name": "soft tap",
+      "file": "assets/sfx/soft-tap.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 0.264,
+      "volume": 0.35
+    },
+    {
+      "id": "04",
+      "name": "then a short confirm chime",
+      "file": "assets/sfx/then-a-short-confirm-chime.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 0.72,
+      "volume": 0.35
+    },
+    {
+      "id": "05",
+      "name": "pen-stroke whoosh",
+      "file": "assets/sfx/pen-stroke-whoosh.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 0.288,
+      "volume": 0.35
+    },
+    {
+      "id": "05",
+      "name": "then a soft metallic \"lock\" click",
+      "file": "assets/sfx/then-a-soft-metallic-lock-click.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 1.56,
+      "volume": 0.35
+    },
+    {
+      "id": "06",
+      "name": "three soft pops",
+      "file": "assets/sfx/three-soft-pops.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 2.6,
+      "volume": 0.35
+    },
+    {
+      "id": "06",
+      "name": "one per card landing",
+      "file": "assets/sfx/one-per-card-landing.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 1.104,
+      "volume": 0.35
+    },
+    {
+      "id": "07",
+      "name": "message-received pop",
+      "file": "assets/sfx/message-received-pop.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 0.576,
+      "volume": 0.35
+    },
+    {
+      "id": "08",
+      "name": "soft chime on CTA landing",
+      "file": "assets/sfx/soft-chime-on-cta-landing.mp3",
+      "source": "heygen",
+      "offset_s": 0,
+      "duration_s": 4.362,
+      "volume": 0.35
+    }
+  ],
+  "total_duration_s": 0
+}

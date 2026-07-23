@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Outfit";
+          src: url("capture/assets/fonts/1b99372b3eaef0c8-s.p.1gsd1jahc5dg_.woff2") format("woff2");
+          font-weight: 100 900;
+          font-style: normal;
+          font-display: block;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          background: transparent;
+          font-family: "Outfit", sans-serif;
+          overflow: hidden;
+        }
+
+        .bg-clip {
+          position: absolute;
+          inset: 0;
+          background: #e8e6dc;
+        }
+
+        .eyebrow {
+          position: absolute;
+          top: 22%;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 26px;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #9e4428;
+          opacity: 0;
+          will-change: opacity, transform;
+        }
+
+        .card {
+          position: absolute;
+          top: 27%;
+          left: 50%;
+          width: 640px;
+          transform: translate(-50%, 0) scale(0.94);
+          background: rgba(158, 68, 40, 0.04);
+          border: 1.5px solid rgba(158, 68, 40, 0.2);
+          border-radius: 14px;
+          padding: 40px 44px 44px;
+          box-shadow: none;
+          opacity: 0;
+          will-change: opacity, transform;
+        }
+
+        .field-label {
+          font-size: 15px;
+          font-weight: 500;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          color: #6b6b6b;
+          margin-bottom: 14px;
+        }
+
+        .plate-field {
+          position: relative;
+          width: 100%;
+          height: 92px;
+          border-radius: 12px;
+          background: rgba(158, 68, 40, 0.08);
+          border: 1.5px solid rgba(158, 68, 40, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          overflow: hidden;
+        }
+
+        .plate-char {
+          font-size: 46px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          color: #141413;
+          opacity: 0;
+          will-change: opacity;
+        }
+
+        .sweep {
+          position: absolute;
+          top: 0;
+          left: -30%;
+          width: 30%;
+          height: 100%;
+          background: linear-gradient(
+            100deg,
+            rgba(158, 68, 40, 0) 0%,
+            rgba(158, 68, 40, 0.22) 50%,
+            rgba(158, 68, 40, 0) 100%
+          );
+          opacity: 0;
+          will-change: transform, opacity;
+        }
+
+        .result-grid {
+          margin-top: 26px;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+        }
+
+        .tag {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          background: rgba(158, 68, 40, 0.06);
+          border: 1.5px solid rgba(158, 68, 40, 0.18);
+          border-radius: 10px;
+          padding: 16px 20px;
+          transform: scale(0);
+          opacity: 0;
+          transform-origin: 50% 50%;
+          will-change: transform, opacity;
+        }
+
+        .tag-label {
+          font-size: 12px;
+          font-weight: 500;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: #9e4428;
+        }
+
+        .tag-value {
+          font-size: 26px;
+          font-weight: 600;
+          color: #141413;
+          letter-spacing: -0.01em;
+        }
+      </style>
+
+      <div data-hf-id="hf-qmv7" id="root" data-composition-id="03-placa" data-width="1080" data-height="1920" data-duration="4.489">
+        <div data-hf-id="hf-zi9q" class="clip bg-clip" data-start="0" data-duration="4" data-track-index="0"></div>
+
+        <div data-hf-id="hf-z1zt" class="clip eyebrow" data-start="0" data-duration="4" data-track-index="1">
+          CONSULTE A PLACA
+        </div>
+
+        <div data-hf-id="hf-qtiq" class="clip card" data-start="0" data-duration="4" data-track-index="2">
+          <div data-hf-id="hf-mocs" class="field-label">Placa do veículo</div>
+          <div data-hf-id="hf-lo6v" class="plate-field">
+            <span data-hf-id="hf-6rt2" class="plate-char" data-i="0">A</span>
+            <span data-hf-id="hf-y0uo" class="plate-char" data-i="1">B</span>
+            <span data-hf-id="hf-6luu" class="plate-char" data-i="2">C</span>
+            <span data-hf-id="hf-iqsr" class="plate-char" data-i="3">1</span>
+            <span data-hf-id="hf-hxyx" class="plate-char" data-i="4">D</span>
+            <span data-hf-id="hf-l2ss" class="plate-char" data-i="5">2</span>
+            <span data-hf-id="hf-riea" class="plate-char" data-i="6">3</span>
+            <div data-hf-id="hf-azqg" class="sweep"></div>
+          </div>
+
+          <div data-hf-id="hf-5prw" class="result-grid">
+            <div data-hf-id="hf-5e41" class="tag" id="tag-marca">
+              <span data-hf-id="hf-fox2" class="tag-label">Marca</span>
+              <span data-hf-id="hf-t25r" class="tag-value">Fiat</span>
+            </div>
+            <div data-hf-id="hf-3b6d" class="tag" id="tag-modelo">
+              <span data-hf-id="hf-oiog" class="tag-label">Modelo</span>
+              <span data-hf-id="hf-3of6" class="tag-value">Argo</span>
+            </div>
+            <div data-hf-id="hf-6185" class="tag" id="tag-cor">
+              <span data-hf-id="hf-aez6" class="tag-label">Cor</span>
+              <span data-hf-id="hf-ejfj" class="tag-value">Prata</span>
+            </div>
+            <div data-hf-id="hf-wuxj" class="tag" id="tag-cidade">
+              <span data-hf-id="hf-fc8a" class="tag-label">Cidade</span>
+              <span data-hf-id="hf-o720" class="tag-value">Curitiba</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // Scene 1 (0.0–1.3s): card + eyebrow seat centered-upper
+        tl.fromTo(
+          ".eyebrow",
+          { opacity: 0, y: 12 },
+          { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          0.0,
+        );
+        tl.fromTo(
+          ".card",
+          { opacity: 0, scale: 0.94 },
+          { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" },
+          0.15,
+        );
+
+        // Scene 2 (1.3–2.6s): plate chars type in one-by-one via a sweep,
+        // then Marca/Modelo tags pop in a 2-up row
+        const chars = gsap.utils.toArray(".plate-char");
+        const CHAR_STAGGER = 0.09;
+        chars.forEach((el, i) => {
+          tl.fromTo(
+            el,
+            { opacity: 0 },
+            { opacity: 1, duration: 0.18, ease: "power2.out" },
+            1.3 + i * CHAR_STAGGER,
+          );
+        });
+
+        // highlight sweep runs across the field while chars type in (asr-keyword-glow style emphasis on the surface)
+        tl.fromTo(
+          ".sweep",
+          { x: "0%", opacity: 0 },
+          { x: "430%", opacity: 1, duration: 1.15, ease: "power1.inOut" },
+          1.3,
+        );
+        tl.to(".sweep", { opacity: 0, duration: 0.2 }, 2.45);
+
+        // Marca / Modelo tags pop (spring-pop-entrance, group, capped stagger)
+        const TAG_STAGGER = 0.06;
+        tl.fromTo(
+          "#tag-marca",
+          { scale: 0, opacity: 0, y: 16 },
+          { scale: 1, opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          2.15,
+        );
+        tl.fromTo(
+          "#tag-modelo",
+          { scale: 0, opacity: 0, y: 16 },
+          { scale: 1, opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          2.15 + TAG_STAGGER,
+        );
+
+        // Scene 3 (2.6–4.0s): Cor + Cidade tags complete the 2x2 grid, then hold
+        tl.fromTo(
+          "#tag-cor",
+          { scale: 0, opacity: 0, y: 16 },
+          { scale: 1, opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          2.7,
+        );
+        tl.fromTo(
+          "#tag-cidade",
+          { scale: 0, opacity: 0, y: 16 },
+          { scale: 1, opacity: 1, y: 0, duration: 0.5, ease: "power3.out" },
+          2.7 + TAG_STAGGER,
+        );
+
+        window.__timelines["03-placa"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "category": "logo-reveal",
+  "duration_s": 3.5,
+  "fps": 30,
+  "canvas": { "w": 1080, "h": 1920, "aspect": "9:16" },
+  "style": "dark navy premium tech brand sting for a vehicle-damage inspection app; confident settle-in, sky-blue glow bloom (not warm/cream), clean uppercase wordmark, calm authoritative pacing suited to Reels/Stories",
+  "palette": ["#020617", "#e8f4ff", "#7a9bbf", "#1FB6FF", "#ffb938"],
+  "font": "Inter",
+  "beats": [0.8, 1.25, 1.95],
+  "export": "mp4",
+
+  "asset_needs": [],
+
+  "block": "logo-outro",
+  "customize": {
+    "note": "logo-outro's stock piece-by-piece Figma-mark assembly does not fit a single monolithic brand SVG, so only its structural idioms are reused: radial glow bloom behind the logo, staggered fade/scale text reveal beneath the mark, absolute-canvas layout swapped to a flex hero-frame, and portrait 1080x1920 instead of the block's 1920x1080. Piece-assembly script is not reused.",
+    "logo_entrance": "single scale(0.72->1)+fade+slight y-offset settle, ease power3.out, ~0.7s",
+    "glow": "radial-gradient bloom in #1FB6FF at ~18% opacity, blooms in behind logo as it settles, holds soft",
+    "text_sequence": "product name fades/slides up beneath logo after logo settles; tagline fades in last, smaller + muted color",
+    "hold": "final resolved lockup (logo + name + tagline) holds static for the last ~1s",
+    "palette": ["#020617", "#e8f4ff", "#7a9bbf", "#1FB6FF", "#ffb938"]
+  },
+
+  "content": {
+    "logo": "inline SVG (supplied verbatim in brief, viewBox 0 0 156 156, gradient-fill vehicle-damage icon mark)",
+    "tagline": "Vistoria digital de avarias",
+    "url": null,
+    "product_name": "Danos Aparentes"
+  }
+}

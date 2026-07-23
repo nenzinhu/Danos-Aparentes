@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe LP — Danos Aparentes</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --brand-bg: #f7f3ed;
+            --brand-text: #1a1a1a;
+            --brand-accent: #2f6f4f;
+            --brand-gold: #F7E397;
+            --brand-pink: #efcde5;
+            --brand-lilac: #dfeee5;
+            --brand-lavender: #c7b9ff;
+            --brand-mint: #b0e4da;
+            --brand-font-title: 'Inter Tight', sans-serif;
+            --brand-font-body: 'Inter', sans-serif;
+            --card-shadow: 0 2px 16px rgba(47, 111, 79, .08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--brand-font-body);
+            background: var(--brand-bg);
+            color: var(--brand-text);
+            line-height: 1.65;
+            padding: 0;
+        }
+
+        .page-header { text-align: center; padding: 48px 24px 32px; }
+        .page-header h1 { font-family: var(--brand-font-title); font-size: 2rem; color: #000; margin-bottom: 8px; }
+        .page-header .subtitle { font-size: .95rem; color: #666; max-width: 620px; margin: 0 auto; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+
+        .brand-badge {
+            display: inline-block; padding: 3px 12px; border-radius: 20px; font-weight: 600;
+            font-size: .75rem; letter-spacing: .3px; background: var(--brand-lilac); color: #1f4a35;
+            margin-bottom: 24px;
+        }
+
+        .wireframe-wrap { overflow-x: auto; border-radius: 16px; box-shadow: var(--card-shadow); background: #fff; margin-bottom: 40px; }
+
+        table.wireframe-table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+
+        table.wireframe-table thead th {
+            font-family: var(--brand-font-title); font-weight: 700; font-size: .8rem; text-transform: uppercase;
+            letter-spacing: .4px; padding: 14px 16px; background: var(--brand-accent); color: #fff; text-align: left;
+            position: sticky; top: 0; z-index: 2; white-space: nowrap;
+        }
+        table.wireframe-table thead th:first-child { border-radius: 16px 0 0 0; }
+        table.wireframe-table thead th:last-child { border-radius: 0 16px 0 0; }
+
+        table.wireframe-table tbody td { padding: 14px 16px; border-bottom: 1px solid #f0ebe4; vertical-align: top; }
+        table.wireframe-table tbody tr:last-child td { border-bottom: none; }
+        table.wireframe-table tbody tr:hover { background: #faf8f5; }
+        table.wireframe-table tbody td:first-child { font-weight: 600; font-family: var(--brand-font-title); color: var(--brand-accent); white-space: nowrap; min-width: 140px; }
+        table.wireframe-table tbody td:nth-child(2) { font-weight: 600; color: #666; font-size: .78rem; text-transform: uppercase; letter-spacing: .3px; white-space: nowrap; min-width: 90px; }
+        table.wireframe-table ul { margin: 0; padding-left: 16px; }
+        table.wireframe-table ul li { margin-bottom: 4px; }
+
+        .section-separator td {
+            background: var(--brand-lilac) !important; font-family: var(--brand-font-title) !important; font-weight: 700 !important;
+            color: #1f4a35 !important; font-size: .82rem !important; text-transform: uppercase !important; letter-spacing: .5px !important; padding: 10px 16px !important;
+        }
+
+        .defesa-card { background: #fff; border-radius: 16px; padding: 32px; box-shadow: var(--card-shadow); border-top: 4px solid var(--brand-accent); margin-bottom: 40px; }
+        .defesa-card h2 { font-family: var(--brand-font-title); font-size: 1.2rem; margin-bottom: 20px; color: var(--brand-accent); }
+        .defesa-card h3 { font-family: var(--brand-font-title); font-size: .95rem; margin: 20px 0 8px; color: var(--brand-text); }
+        .defesa-card p, .defesa-card li { font-size: .88rem; line-height: 1.7; }
+        .defesa-card ul { padding-left: 18px; }
+        .defesa-card ul li { margin-bottom: 6px; }
+
+        .tag-framework { display: inline-block; padding: 4px 14px; border-radius: 12px; font-size: .72rem; font-weight: 700; background: var(--brand-accent); color: #fff; letter-spacing: .3px; margin-bottom: 16px; }
+
+        .espectro-card { background: #fff; border-radius: 16px; padding: 32px; box-shadow: var(--card-shadow); margin-bottom: 40px; border-top: 4px solid var(--brand-lavender); }
+        .espectro-card h2 { font-family: var(--brand-font-title); font-size: 1.2rem; margin-bottom: 16px; }
+        .espectro-item { margin-bottom: 14px; }
+        .espectro-item strong { display: block; font-family: var(--brand-font-title); font-size: .82rem; color: #666; text-transform: uppercase; letter-spacing: .3px; margin-bottom: 4px; }
+        .espectro-item p { font-size: .9rem; }
+
+        .page-footer { text-align: center; padding: 24px; font-size: .78rem; color: #999; }
+
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 1.5rem; }
+            table.wireframe-table { font-size: .8rem; }
+        }
+        @media print {
+            body { background: #fff; }
+            .wireframe-wrap, .defesa-card, .espectro-card { box-shadow: none; border: 1px solid #ddd; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="page-header">
+        <h1>Wireframe Landing Page — Danos Aparentes</h1>
+        <p class="subtitle">Wireframe em formato de tabela para landing page de geração de SQLs. Framework
+            <strong>Q.U.E.S.T.</strong> — Vistoria veicular digital com laudo verificável (PWA).
+        </p>
+    </header>
+
+    <div class="container">
+
+        <span class="brand-badge">Danos Aparentes · Vistoria veicular digital</span>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- ESPECTRO DA PROPOSTA DE VALOR              -->
+        <!-- ═══════════════════════════════════════════ -->
+        <div class="espectro-card">
+            <h2>Espectro da Proposta de Valor</h2>
+            <div class="espectro-item">
+                <strong>1. Nível Empresa</strong>
+                <p>Danos Aparentes é a vistoria digital que gera um laudo que "comprova a si mesmo": hash SHA-256, QR Code de verificação, assinatura digital e fotos com GPS/timestamp — funcionando 100% offline. Não depende da palavra do vistoriador nem de sinal no pátio.</p>
+            </div>
+            <div class="espectro-item">
+                <strong>2. Nível Persona (vistoriador, oficina, locadora, frotista, concessionária)</strong>
+                <p>Você troca prancheta, fotos soltas e "risco discutido no balcão" por um laudo pericial gerado em minutos, direto do celular, com prova técnica anexada — mesmo sem internet no pátio.</p>
+            </div>
+            <div class="espectro-item">
+                <strong>3. Nível Produto</strong>
+                <p>Ao contrário de checklists genéricos, a ferramenta usa diagramas SVG por vista do veículo (4 vistas, 6 categorias), consulta automática de placa, hash de integridade e QR Code — feita especificamente para registrar avaria com valor probatório, não para "marcar caixinha".</p>
+            </div>
+            <div class="espectro-item">
+                <strong>4. Nível Aquisição (tráfego orgânico/SEO)</strong>
+                <p>Quem chega buscando "laudo de vistoria digital", "como registrar avaria de veículo" ou "vistoria de locadora sem papel" já está educado sobre o problema. A LP precisa entregar de imediato a resposta técnica específica que a busca implica — comprovação, agilidade e funcionamento offline — sem enrolação.</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- TABELA WIREFRAME                           -->
+        <!-- ═══════════════════════════════════════════ -->
+
+        <div class="wireframe-wrap">
+            <table class="wireframe-table" id="wireframe-danosaparentes">
+                <thead>
+                    <tr>
+                        <th>Seção</th>
+                        <th>Framework</th>
+                        <th>Elemento</th>
+                        <th>Conteúdo</th>
+                        <th>Notas para Designer</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- ── HERO ──────────────── -->
+                    <tr class="section-separator">
+                        <td colspan="5">HERO (abertura e message match com a busca orgânica)</td>
+                    </tr>
+
+                    <tr>
+                        <td>Hero Section</td>
+                        <td>Abertura</td>
+                        <td>Headline (H1)</td>
+                        <td>Um laudo de vistoria que comprova a si mesmo</td>
+                        <td>Fundo claro (papel/prancheta estilizada), tipografia bold. Máx. 2 linhas. Reforçar sensação de "documento oficial".</td>
+                    </tr>
+                    <tr>
+                        <td>Hero Section</td>
+                        <td>Abertura</td>
+                        <td>Subheadline</td>
+                        <td>Marque avarias no diagrama do veículo, tire fotos com GPS e horário, colha assinatura na tela e gere um PDF com hash SHA-256 e QR Code de verificação. Funciona offline e sincroniza sozinho quando a conexão volta.</td>
+                        <td>Texto menor, cor #555. Máx. 3 linhas. Pode acompanhar mockup do laudo em PDF ao lado.</td>
+                    </tr>
+                    <tr>
+                        <td>Hero Section</td>
+                        <td>Abertura</td>
+                        <td>CTA Duplo</td>
+                        <td>Primário: "Testar 7 dias grátis" (vistoriadores e oficinas) · Secundário: "Falar com o time comercial" (locadoras e frotas)</td>
+                        <td>Dois botões lado a lado — primário sólido verde escuro, secundário outline. No mobile, empilhar com primário em cima.</td>
+                    </tr>
+                    <tr>
+                        <td>Hero Section</td>
+                        <td>Abertura</td>
+                        <td>Trust Bar</td>
+                        <td>🔒 Hash SHA-256 · 📶 100% offline · ✍️ Assinatura digital · 🚗 Consulta automática de placa</td>
+                        <td>Barra horizontal com 4 ícones/badges, fundo levemente diferente do hero. Wrap em 2 linhas no mobile.</td>
+                    </tr>
+
+                    <!-- ── QUALIFY ──────────────── -->
+                    <tr class="section-separator">
+                        <td colspan="5">QUALIFY (segmentar os dois públicos logo na entrada)</td>
+                    </tr>
+
+                    <tr>
+                        <td>Qualificação</td>
+                        <td>Qualify</td>
+                        <td>Headline (H2)</td>
+                        <td>Qual é o seu cenário de vistoria?</td>
+                        <td>Fundo neutro claro. Centralizado.</td>
+                    </tr>
+                    <tr>
+                        <td>Qualificação</td>
+                        <td>Qualify</td>
+                        <td>2 Cards de Persona</td>
+                        <td>
+                            <ul>
+                                <li><strong>Vistoriador autônomo ou oficina</strong> — "Faço vistorias avulsas e preciso de agilidade e prova por vistoria." → CTA "Começar grátis"</li>
+                                <li><strong>Locadora, frotista ou concessionária</strong> — "Preciso padronizar vistoria em volume, com marca própria e time treinado." → CTA "Falar com vendas"</li>
+                            </ul>
+                        </td>
+                        <td>2 cards lado a lado com ícone (usuário único vs. frota), cada um levando a uma âncora diferente mais abaixo na página (trial vs. formulário).</td>
+                    </tr>
+
+                    <!-- ── UNDERSTAND ──────────────── -->
+                    <tr class="section-separator">
+                        <td colspan="5">UNDERSTAND (nomear a dor com precisão)</td>
+                    </tr>
+
+                    <tr>
+                        <td>Dor / Problema</td>
+                        <td>Understand</td>
+                        <td>Headline (H2)</td>
+                        <td>Vistoria em papel ainda leva 20 minutos — e termina em discussão</td>
+                        <td>Fundo levemente rosado/neutro para sinalizar "problema". Ícone de prancheta riscada ou relógio.</td>
+                    </tr>
+                    <tr>
+                        <td>Dor / Problema</td>
+                        <td>Understand</td>
+                        <td>Lista de dores (3 cards)</td>
+                        <td>
+                            <ul>
+                                <li>Fotos soltas no celular, sem hora nem local comprovados</li>
+                                <li>"Amassado que já existia" vira discussão no balcão, sem prova</li>
+                                <li>Preenchimento manual de placa/modelo gera erro de cadastro</li>
+                            </ul>
+                        </td>
+                        <td>3 cards com ícone de alerta (vermelho #D90429 só no ícone). Layout em grid 3 colunas, empilha no mobile.</td>
+                    </tr>
+
+                    <!-- ── EDUCATE ──────────────── -->
+                    <tr class="section-separator">
+                        <td colspan="5">EDUCATE (explicar como o produto resolve, com profundidade técnica)</td>
+                    </tr>
+
+                    <tr>
+                        <td>Como funciona</td>
+                        <td>Educate</td>
+                        <td>Headline (H2)</td>
+                        <td>Da vistoria ao laudo verificável, em um fluxo só</td>
+                        <td>Fundo branco. Pode usar layout em etapas numeradas (1 a 5) horizontal ou vertical.</td>
+                    </tr>
+                    <tr>
+                        <td>Como funciona</td>
+                        <td>Educate</td>
+                        <td>Passo a passo (5 etapas)</td>
+                        <td>
+                            <ul>
+                                <li>1. Consulta automática de placa preenche marca, modelo, cor e ano</li>
+                                <li>2. Marque avarias direto no diagrama SVG (4 vistas: frontal, traseira, lateral esq./dir.) — carro, moto, caminhão, van, ônibus ou genérico</li>
+                                <li>3. Anexe fotos com GPS e timestamp automáticos</li>
+                                <li>4. Colha assinatura digital do vistoriador e do cliente na tela</li>
+                                <li>5. Gere o laudo em PDF com hash SHA-256 e QR Code, envie direto pelo WhatsApp</li>
+                            </ul>
+                        </td>
+                        <td>Ilustração ou screenshot do diagrama SVG do veículo com marcações de avaria. Cada etapa com mini-ícone.</td>
+                    </tr>
+                    <tr>
+                        <td>Como funciona</td>
+                        <td>Educate</td>
+                        <td>Bloco de diferencial offline</td>
+                        <td>Sem sinal no pátio? Sem problema. O app funciona 100% offline (dados salvos no aparelho) e sincroniza automaticamente com a nuvem assim que a conexão voltar.</td>
+                        <td>Bloco destacado com ícone de wi-fi cortado → check. Fundo levemente diferente para chamar atenção.</td>
+                    </tr>
+
+                    <!-- ── STIMULATE ──────────────── -->
+                    <tr class="section-separator">
+                        <td colspan="5">STIMULATE (gerar confiança por transparência técnica, não por prova social)</td>
+                    </tr>
+
+                    <tr>
+                        <td>Confiança</td>
+                        <td>Stimulate</td>
+                        <td>Headline (H2)</td>
+                        <td>Um laudo que comprova a si mesmo — sem depender da nossa palavra</td>
+                        <td>Fundo escuro ou contraste forte para dar peso institucional.</td>
+                    </tr>
+                    <tr>
+                        <td>Confiança</td>
+                        <td>Stimulate</td>
+                        <td>Texto de transparência</td>
+                        <td>Ainda não temos histórico público de clientes — o app é novo. O que oferecemos hoje é verificável: cada laudo é protegido por hash SHA-256, QR Code de verificação, assinatura digital e fotos com GPS/timestamp. Você não precisa confiar na nossa palavra — pode conferir tecnicamente.</td>
+                        <td>Texto honesto, sem tentar simular prova social que não existe. Reforçar com selo/ícone de verificação ao lado.</td>
+                    </tr>
+                    <tr>
+                        <td>Confiança</td>
+                        <td>Stimulate</td>
+                        <td>3 badges técnicos</td>
+                        <td>
+                            <ul>
+                                <li>Hash SHA-256 em cada laudo</li>
+                                <li>QR Code de verificação pública</li>
+                                <li>Responsável legal identificado publicamente no site</li>
+                            </ul>
+                        </td>
+                        <td>Badges em cards pequenos, ícone de cadeado/escudo. Fundo neutro claro.</td>
+                    </tr>
+
+                    <!-- ── TRANSITION ──────────────── -->
+                    <tr class="section-separator">
+                        <td colspan="5">TRANSITION (conversão dupla — self-serve e formulário SQL)</td>
+                    </tr>
+
+                    <tr>
+                        <td>Conversão — Self-serve</td>
+                        <td>Transition</td>
+                        <td>Bloco Trial (âncora "#trial")</td>
+                        <td>Headline: "Abra sua primeira vistoria antes de terminar o café" · CTA: "Testar 7 dias grátis" · Reforço: "Sem cartão · 7 dias liberados · Cancele online"</td>
+                        <td>Card claro com botão sólido grande. Sem formulário — leva direto ao cadastro do app (LandingCtaLink).</td>
+                    </tr>
+                    <tr>
+                        <td>Conversão — Corporativo</td>
+                        <td>Transition</td>
+                        <td>Headline do Form (âncora "#form")</td>
+                        <td>Quer padronizar a vistoria da sua frota ou locadora? Fale com o time comercial</td>
+                        <td>Formulário em card com fundo branco, sombra e bordas arredondadas. Ao lado do bloco de trial, ou logo abaixo.</td>
+                    </tr>
+                    <tr>
+                        <td>Conversão — Corporativo</td>
+                        <td>Transition</td>
+                        <td>Campos do Form (Lead Scoring)</td>
+                        <td>
+                            <ul>
+                                <li>Nome completo</li>
+                                <li>E-mail corporativo</li>
+                                <li>WhatsApp com DDD</li>
+                                <li>Nome da empresa</li>
+                                <li>Segmento (dropdown: Locadora / Frotista-transportadora / Concessionária / Vistoriador autônomo / Oficina / Outro)</li>
+                                <li>Tamanho da frota (dropdown: até 10 veículos / 11–50 / 51–200 / 200+)</li>
+                                <li>Principal desafio (dropdown: Padronizar laudo entre unidades / Reduzir tempo de vistoria / Evitar disputa de avaria pré-existente / Substituir papel por digital)</li>
+                            </ul>
+                        </td>
+                        <td>Dropdowns para os campos de scoring — não texto livre. Formulário compacto, labels como placeholder.</td>
+                    </tr>
+                    <tr>
+                        <td>Conversão — Corporativo</td>
+                        <td>Transition</td>
+                        <td>CTA do Form</td>
+                        <td>Quero uma demonstração →</td>
+                        <td>Botão grande, verde escuro, full-width dentro do card.</td>
+                    </tr>
+                    <tr>
+                        <td>Conversão — Corporativo</td>
+                        <td>Transition</td>
+                        <td>Garantia / Trust</td>
+                        <td>🔒 Seus dados são confidenciais. Nosso time responde em até 24h úteis, sem compromisso.</td>
+                        <td>Texto pequeno abaixo do botão, ícone de cadeado, fonte 12px cinza.</td>
+                    </tr>
+
+                    <!-- ── FAQ / OBJEÇÕES ──────────────── -->
+                    <tr class="section-separator">
+                        <td colspan="5">FAQ (quebra de objeções antes do fechamento)</td>
+                    </tr>
+
+                    <tr>
+                        <td>FAQ / Objeções</td>
+                        <td>Reforço</td>
+                        <td>Headline (H2)</td>
+                        <td>Perguntas antes de começar</td>
+                        <td>Fundo neutro claro, acordeão (accordion) para não poluir a página.</td>
+                    </tr>
+                    <tr>
+                        <td>FAQ / Objeções</td>
+                        <td>Reforço</td>
+                        <td>Lista de perguntas (accordion)</td>
+                        <td>
+                            <ul>
+                                <li>Funciona sem internet no pátio? — Sim, 100% offline com sincronização automática.</li>
+                                <li>Quais veículos são suportados? — Carro, moto, caminhão, van, ônibus e categoria genérica, com 4 vistas cada.</li>
+                                <li>Como funciona a consulta de placa? — Preenche automaticamente marca, modelo, cor e ano.</li>
+                                <li>Dá para personalizar com a marca da minha empresa? — Sim, no plano Corporativo o laudo sai com seu logo e identidade.</li>
+                                <li>Preciso de cartão para testar? — Não, o trial de 7 dias é liberado sem cartão.</li>
+                            </ul>
+                        </td>
+                        <td>Accordion simples, uma pergunta aberta por vez. Ícone +/− para expandir.</td>
+                    </tr>
+
+                    <!-- ── FOOTER ───────────────────────── -->
+                    <tr class="section-separator">
+                        <td colspan="5">FOOTER</td>
+                    </tr>
+
+                    <tr>
+                        <td>Footer</td>
+                        <td>—</td>
+                        <td>Informações</td>
+                        <td>Logo Danos Aparentes · Link WhatsApp · Responsável legal (nome e contato, conforme já exposto no site) · "© 2026 Danos Aparentes — Vistoria veicular digital"</td>
+                        <td>Footer minimalista, fundo escuro. Manter transparência institucional já presente no site (responsável legal visível).</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- DEFESA DO WIREFRAME                        -->
+        <!-- ═══════════════════════════════════════════ -->
+
+        <div class="defesa-card">
+            <span class="tag-framework">Q.U.E.S.T.</span>
+            <h2>Defesa do Wireframe: Framework Q.U.E.S.T.</h2>
+
+            <h3>1. Justificativa da Escolha</h3>
+            <p>Q.U.E.S.T. (Qualify, Understand, Educate, Stimulate, Transition) foi escolhido porque o tráfego é orgânico/SEO — o visitante já chega com o problema nomeado na cabeça (buscou o termo), então a LP não precisa "vender a dor do zero" como em AIDA ou PAS; precisa qualificar rápido, aprofundar tecnicamente e confirmar que a solução é a certa.</p>
+            <ul>
+                <li><strong>Qualify logo na entrada</strong> — o produto atende dois públicos com jornadas de compra muito diferentes (self-serve vs. consultivo/SQL). Segmentar cedo evita que o vistoriador autônomo veja um formulário B2B pesado, e que a locadora veja só um botão de "assine agora".</li>
+                <li><strong>Educate como etapa central</strong> — o diferencial real (hash SHA-256, offline, GPS/timestamp, diagramas SVG) é técnico e não óbvio; um público que já pesquisou o termo valoriza profundidade, não só promessa emocional.</li>
+                <li><strong>Stimulate sem prova social falsa</strong> — o produto é novo e a própria TrustSection do site já assume isso. Q.U.E.S.T. permite construir confiança por transparência/verificabilidade técnica em vez de depoimentos inexistentes, o que frameworks centrados em prova social (como AIDA clássico) fariam mal.</li>
+            </ul>
+
+            <h3>2. Adequação ao Contexto</h3>
+            <ul>
+                <li><strong>Nível de consciência:</strong> tráfego orgânico = público morno a quente, já ciente do problema (vistoria em papel, disputa de avaria) e ativamente buscando solução — não precisa de "abertura de olhos", precisa de confirmação técnica rápida.</li>
+                <li><strong>Natureza do produto:</strong> PWA com componente técnico forte (integridade criptográfica, offline-first) e dois modelos de venda simultâneos (self-serve trial + venda consultiva corporativa).</li>
+                <li><strong>Objetivo (SQL):</strong> o formulário de Transition é dedicado ao público Corporativo (locadora/frotista/concessionária), com campos de lead scoring (segmento, tamanho de frota, desafio) que qualificam o SQL antes de chegar ao comercial. O público Pro converte via CTA direto de trial, sem fricção de formulário.</li>
+                <li><strong>Canal:</strong> SEO/orgânico reforça a necessidade de message match — a headline e a seção Educate respondem exatamente ao tipo de busca técnica ("laudo de vistoria digital", "vistoria offline") que trouxe o visitante.</li>
+            </ul>
+
+            <h3>3. Frameworks Descartados</h3>
+            <ul>
+                <li><strong>AIDA</strong> — pressupõe capturar Atenção do zero; tráfego orgânico já chega com atenção e intenção, tornaria a abertura redundante.</li>
+                <li><strong>P.A.S.T.O.R.</strong> — forte em Testemunho (T), que o produto não tem ainda; forçaria prova social inexistente.</li>
+                <li><strong>PAS</strong> — bom para dor única e simples, mas aqui há dois públicos com dores distintas (autônomo vs. frota), exigindo qualificação que o PAS não contempla.</li>
+                <li><strong>ACCA</strong> — foco em construir confiança para público cético é parcialmente coberto, mas sua ênfase em "Ação" genérica não separa os dois funis de conversão (trial vs. formulário) como o Q.U.E.S.T. permite via Transition.</li>
+            </ul>
+
+            <h3>4. Resultado Esperado</h3>
+            <ul>
+                <li><strong>Tempo médio na página:</strong> 2 a 3,5 minutos — público orgânico técnico tende a ler a seção Educate com atenção antes de decidir.</li>
+                <li><strong>Taxa de conversão estimada:</strong> 3–6% para o CTA de trial (self-serve, baixa fricção) e 1,5–3% para o formulário Corporativo (lead scoring reduz volume, mas aumenta qualidade).</li>
+                <li><strong>Qualidade dos leads:</strong> alta no formulário Corporativo — os dropdowns de segmento, tamanho de frota e desafio principal já pré-qualificam o SQL antes do primeiro contato humano.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <footer class="page-footer">
+        <p>Wireframe gerado para Danos Aparentes — uso interno</p>
+    </footer>
+
+</body>
+
+</html>

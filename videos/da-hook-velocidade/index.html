@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #020617;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #020617;
+        font-family: "Montserrat", sans-serif;
+      }
+
+      /* subtle vignette so the dark bg doesn't read flat */
+      .bg-glow {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: radial-gradient(
+          ellipse 900px 900px at 50% 42%,
+          rgba(31, 182, 255, 0.14) 0%,
+          rgba(2, 6, 23, 0) 62%
+        );
+      }
+
+      .scene-content {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        padding: 160px 100px;
+        gap: 56px;
+        box-sizing: border-box;
+      }
+
+      /* ---- ring + value cluster ---- */
+      .ring-wrap {
+        position: relative;
+        width: 720px;
+        height: 720px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .ring-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+
+      .ring-track {
+        fill: none;
+        stroke: #7a9bbf;
+        opacity: 0.16;
+        stroke-width: 20;
+      }
+
+      .ring-progress {
+        fill: none;
+        stroke: #1fb6ff;
+        stroke-width: 20;
+        stroke-linecap: round;
+        filter: drop-shadow(0 0 28px rgba(31, 182, 255, 0.55));
+      }
+
+      .impact-flash {
+        position: absolute;
+        inset: -40px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 185, 56, 0.55) 0%, rgba(255, 185, 56, 0) 68%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .value-cluster {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 14px;
+      }
+
+      .value {
+        color: #e8f4ff;
+        font-weight: 900;
+        font-size: 320px;
+        line-height: 0.85;
+        letter-spacing: -0.03em;
+        font-variant-numeric: tabular-nums;
+        text-shadow: 0 0 60px rgba(31, 182, 255, 0.35);
+        white-space: nowrap;
+      }
+
+      .unit {
+        color: #1fb6ff;
+        font-weight: 700;
+        font-size: 76px;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        padding-bottom: 34px;
+        opacity: 0;
+        white-space: nowrap;
+      }
+
+      /* ---- context line ---- */
+      .context-line {
+        max-width: 780px;
+        text-align: center;
+        color: #7a9bbf;
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 400;
+        font-size: 34px;
+        line-height: 1.5;
+        letter-spacing: 0.01em;
+        opacity: 0;
+      }
+
+      .context-line .accent {
+        color: #e8f4ff;
+      }
+
+      /* ---- brand kicker ---- */
+      .kicker {
+        position: absolute;
+        top: 130px;
+        left: 0;
+        right: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        opacity: 0;
+      }
+
+      .kicker-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #1fb6ff;
+        box-shadow: 0 0 14px rgba(31, 182, 255, 0.7);
+      }
+
+      .kicker-text {
+        color: #7a9bbf;
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 400;
+        font-size: 28px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="4"
+      data-fps="30"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div class="bg-glow"></div>
+
+      <div
+        id="stat-scene"
+        class="clip"
+        data-start="0"
+        data-duration="4"
+        data-track-index="0"
+      >
+        <div class="scene-content">
+          <div id="kicker" class="kicker">
+            <div class="kicker-dot"></div>
+            <div class="kicker-text">Danos Aparentes</div>
+          </div>
+
+          <div class="ring-wrap">
+            <svg class="ring-svg" viewBox="0 0 720 720">
+              <circle class="ring-track" cx="360" cy="360" r="330"></circle>
+              <circle
+                id="ring-progress"
+                class="ring-progress"
+                cx="360"
+                cy="360"
+                r="330"
+                stroke-dasharray="2073.45"
+                stroke-dashoffset="2073.45"
+              ></circle>
+            </svg>
+            <div id="impact-flash" class="impact-flash"></div>
+            <div class="value-cluster">
+              <div id="value" class="value">0</div>
+              <div id="unit" class="unit">MIN</div>
+            </div>
+          </div>
+
+          <div id="context-line" class="context-line">
+            por vistoria completa <span class="accent">—</span> do toque à assinatura
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      const valueEl = document.querySelector("#value");
+      const ringEl = document.querySelector("#ring-progress");
+      const RING_CIRCUMFERENCE = 2073.45; // 2 * PI * 330
+      const TARGET = 5;
+      const countState = { v: 0 };
+
+      function renderValue(v) {
+        const clamped = Math.max(0, Math.min(TARGET, v));
+        valueEl.textContent = String(Math.round(clamped));
+      }
+
+      function renderRing(v) {
+        const progress = Math.max(0, Math.min(1, v / TARGET));
+        const offset = RING_CIRCUMFERENCE * (1 - progress);
+        ringEl.style.strokeDashoffset = String(offset);
+      }
+
+      // seek-safe initial paint
+      renderValue(0);
+      renderRing(0);
+
+      const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.out" } });
+
+      // brand kicker settles in first, fast and quiet
+      gsap.set("#kicker", { autoAlpha: 0, y: -14 });
+      tl.to("#kicker", { autoAlpha: 1, y: 0, duration: 0.32, ease: "power2.out" }, 0);
+
+      // count-up (0 -> 5) drives both the digit and the ring together, same easing/window
+      tl.to(
+        countState,
+        {
+          v: TARGET,
+          duration: 0.95,
+          ease: "power2.out",
+          onUpdate: () => {
+            renderValue(countState.v);
+            renderRing(countState.v);
+          },
+          onComplete: () => {
+            renderValue(TARGET);
+            renderRing(TARGET);
+          },
+        },
+        0.05,
+      );
+
+      // impact beat at landing (~1.05s = 0.05 start + 0.95 count + a hair of anticipation cancels out): amber flash + digit pop
+      gsap.set("#impact-flash", { opacity: 0 });
+      tl.to("#impact-flash", { opacity: 1, duration: 0.1, ease: "none" }, 1.0);
+      tl.to("#impact-flash", { opacity: 0, duration: 0.42, ease: "power2.out" }, 1.1);
+
+      gsap.set("#value", { scale: 1 });
+      tl.to("#value", { scale: 1.07, duration: 0.12, ease: "back.out(2.4)" }, 1.0);
+      tl.to("#value", { scale: 1, duration: 0.18, ease: "power2.out" }, 1.12);
+
+      // unit label fades in after the value lands (value -> meaning)
+      gsap.set("#unit", { autoAlpha: 0, y: 12 });
+      tl.to("#unit", { autoAlpha: 1, y: 0, duration: 0.3, ease: "power2.out" }, 1.05);
+
+      // context line fades in after the number + unit settle, then everything holds
+      gsap.set("#context-line", { autoAlpha: 0, y: 16 });
+      tl.to("#context-line", { autoAlpha: 1, y: 0, duration: 0.4, ease: "power2.out" }, 1.4);
+
+      // explicit hold to the end of the clip: no motion after ~1.8s so the frame reads as settled
+      tl.set({}, {}, 4);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

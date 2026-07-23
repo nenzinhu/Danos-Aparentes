@@ -1,0 +1,214 @@
+<template>
+<div id="root" data-composition-id="05-offline" style="width:1080px;height:1920px;" data-width="1080" data-height="1920" data-duration="9.878">
+  <style>
+    @font-face {
+      font-family: "Outfit";
+      src: url("capture/assets/fonts/1b99372b3eaef0c8-s.p.1gsd1jahc5dg_.woff2") format("woff2");
+      font-weight: 100 900;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "IBM Plex Mono";
+      src: url("capture/assets/fonts/2fe89d53234c61d4-s.1u30mmyq6lnsd.woff2") format("woff2");
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: "IBM Plex Mono";
+      src: url("capture/assets/fonts/a7afbb44bec2bb18-s.1qc6dx89jd2qv.woff2") format("woff2");
+      font-weight: 500;
+      font-style: normal;
+    }
+
+    #root {
+      position: relative;
+      overflow: hidden;
+      container-type: size;
+      font-family: "Outfit", sans-serif;
+    }
+
+    #root .clip { position: absolute; }
+
+    /* full-bleed ground */
+    #bg {
+      inset: 0;
+      background: #020617;
+    }
+
+    /* ---- Scene 1: kicker ---- */
+    #kicker {
+      top: 10cqh;
+      left: 5.5cqw;
+      right: 5.5cqw;
+    }
+    #kicker-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-weight: 500;
+      font-size: 2.8cqw;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #1FB6FF;
+    }
+
+    /* ---- Scene 2: the question (hero, dark register) ---- */
+    #question {
+      top: 23cqh;
+      left: 5.5cqw;
+      right: 5.5cqw;
+      transform-origin: 0% 0%;
+    }
+    #question .line {
+      display: block;
+      font-family: "Outfit", sans-serif;
+      font-weight: 800;
+      font-size: 10.5cqw;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #E8F4FF;
+      text-transform: lowercase;
+    }
+
+    /* ---- Scene 3: signal-lost icon ---- */
+    #wifi-icon {
+      top: 47cqh;
+      left: 5.5cqw;
+      width: 15cqw;
+      height: 15cqw;
+    }
+    .wifi-bar {
+      position: absolute;
+      bottom: 0;
+      width: 2.3cqw;
+      background: #7A9BBF;
+      border-radius: 1px;
+    }
+    .wifi-bar.b1 { left: 0; height: 30%; }
+    .wifi-bar.b2 { left: 3.8cqw; height: 55%; }
+    .wifi-bar.b3 { left: 7.6cqw; height: 80%; }
+    .wifi-bar.b4 { left: 11.4cqw; height: 100%; }
+    #wifi-strike {
+      position: absolute;
+      left: -10%;
+      top: 50%;
+      width: 0%;
+      height: 0.7cqw;
+      background: #1FB6FF;
+      border-radius: 1px;
+      transform: translateY(-50%) rotate(-40deg);
+      transform-origin: left center;
+    }
+
+    /* ---- Scene 4: the answer (payoff, accent color) ---- */
+    #answer {
+      top: 59cqh;
+      left: 5.5cqw;
+      right: 5.5cqw;
+    }
+    #answer-line {
+      display: block;
+      font-family: "Outfit", sans-serif;
+      font-weight: 900;
+      font-size: 9.2cqw;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #1FB6FF;
+      text-transform: lowercase;
+    }
+    #answer-sub {
+      margin-top: 2.4cqh;
+      font-family: "Outfit", sans-serif;
+      font-weight: 400;
+      font-size: 3.6cqw;
+      line-height: 1.5;
+      color: #7A9BBF;
+    }
+  </style>
+
+  <div class="clip" id="bg" data-start="0" data-duration="9.878" data-track-index="0"></div>
+
+  <!-- Scene 1 (0.0-1.0s): kicker -->
+  <div class="clip" id="kicker" data-start="0" data-duration="9.878" data-track-index="1">
+    <div id="kicker-label">sem sinal?</div>
+  </div>
+
+  <!-- Scene 2 (1.0-4.2s): the question lands and holds -->
+  <div class="clip" id="question" data-start="0.9" data-duration="8.978" data-track-index="2">
+    <span class="line">sem sinal</span>
+    <span class="line">no pátio?</span>
+  </div>
+
+  <!-- Scene 3 (4.2-5.2s): transition — signal icon crosses out -->
+  <div class="clip" id="wifi-icon" data-start="4.1" data-duration="5.778" data-track-index="3">
+    <div class="wifi-bar b1"></div>
+    <div class="wifi-bar b2"></div>
+    <div class="wifi-bar b3"></div>
+    <div class="wifi-bar b4"></div>
+    <div id="wifi-strike"></div>
+  </div>
+
+  <!-- Scene 4 (5.2-9.0s): the answer resolves calmly -->
+  <div class="clip" id="answer" data-start="5.2" data-duration="4.678" data-track-index="4">
+    <span id="answer-line">funciona offline.</span>
+    <span id="answer-sub">sincroniza sozinho depois</span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script>
+    window.__timelines = window.__timelines || {};
+    var tl = gsap.timeline({ paused: true });
+
+    /* Scene 1 (0.0-1.0s) — kicker fades in top */
+    tl.fromTo(
+      "#kicker",
+      { opacity: 0, y: -14 },
+      { opacity: 1, y: 0, duration: 0.55, ease: "power2.out" },
+      0.1
+    );
+
+    /* Scene 2 (1.0-4.2s) — the question lands as the hero statement, settles, holds */
+    tl.fromTo(
+      "#question",
+      { opacity: 0, y: 30, scale: 0.92 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "power3.out" },
+      0.9
+    );
+
+    /* Scene 3 (4.2-5.2s) — question settles back / dims; signal icon draws in, then a strike crosses it out (pivot to the answer) */
+    tl.to(
+      "#question",
+      { opacity: 0.32, scale: 0.86, duration: 0.5, ease: "power2.inOut" },
+      4.2
+    );
+    tl.fromTo(
+      "#wifi-icon",
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
+      4.2
+    );
+    tl.fromTo(
+      "#wifi-strike",
+      { width: "0%" },
+      { width: "128%", duration: 0.45, ease: "power2.inOut" },
+      4.65
+    );
+
+    /* Scene 4 (5.2-9.0s) — the answer resolves calmly: headline, then the supporting reassurance line */
+    tl.fromTo(
+      "#answer-line",
+      { opacity: 0, y: 26, scale: 0.94 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: "power3.out" },
+      5.2
+    );
+    tl.fromTo(
+      "#answer-sub",
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+      6.1
+    );
+
+    /* Scene 5 (9.0-9.377959s) — final settle, no exit tween */
+
+    window.__timelines["05-offline"] = tl;
+  </script>
+</div>
+</template>

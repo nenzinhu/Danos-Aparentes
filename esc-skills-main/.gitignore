@@ -1,0 +1,24 @@
+# ─────────────────────────────────────────────
+# Repo público: somente skills/, workflows/,
+# README.md e install.sh são versionados.
+# Todo o resto é ignorado.
+# ─────────────────────────────────────────────
+
+# Ignore everything
+*
+
+# Allow these (and their contents recursively)
+!README.md
+!CONTRIBUTING.md
+!install.sh
+!.gitignore
+!skills/
+!skills/**
+!workflows/
+!workflows/**
+!manifest.json
+!CHANGELOG.md
+!scripts/
+!scripts/**
+!.github/
+!.github/**

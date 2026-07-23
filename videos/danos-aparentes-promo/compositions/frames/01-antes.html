@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Outfit";
+          font-style: normal;
+          font-weight: 100 900;
+          src: url("capture/assets/fonts/b2ea385cb5ae8625-s.1spbknb88wd48.woff2")
+            format("woff2");
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          container-type: size;
+          background: #e8e6dc;
+          font-family: "Outfit", sans-serif;
+          overflow: hidden;
+        }
+
+        .bg-clip {
+          position: absolute;
+          inset: 0;
+          background: #e8e6dc;
+        }
+
+        .stage {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .line {
+          position: absolute;
+          left: 50%;
+          width: 88cqw;
+          text-align: center;
+          color: #141413;
+          font-weight: 600;
+          line-height: 1.25;
+          letter-spacing: -0.02em;
+          transform: translate(-50%, -50%);
+        }
+
+        .line .word {
+          display: inline-block;
+          opacity: 0;
+          margin: 0 0.12em;
+        }
+
+        #line1 {
+          top: 42cqh;
+          font-size: 6.2cqw;
+        }
+
+        #line2 {
+          top: 56cqh;
+          font-size: 6.2cqw;
+        }
+
+        #line3 {
+          top: 70cqh;
+          font-size: 7.6cqw;
+        }
+
+        .underline {
+          position: absolute;
+          left: 50%;
+          top: calc(70cqh + 6.5cqw);
+          height: 4px;
+          width: 0;
+          background: #9e4428;
+          border-radius: 2px;
+          transform: translateX(-50%);
+        }
+      </style>
+
+      <div data-hf-id="hf-ejlk" id="root" data-composition-id="01-antes" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-sr9n" class="clip bg-clip" data-start="0" data-duration="5" data-track-index="0"></div>
+
+        <div data-hf-id="hf-tan6" class="stage">
+          <div data-hf-id="hf-cumn" class="line" id="line1">
+            <span data-hf-id="hf-yark" class="word">Vistoria</span><span data-hf-id="hf-mheu" class="word">no</span><span data-hf-id="hf-5yuz" class="word">papel</span><span data-hf-id="hf-ehkg" class="word">ainda</span><span data-hf-id="hf-ypsz" class="word">leva</span><span data-hf-id="hf-5sg1" class="word">vinte</span><span data-hf-id="hf-ezum" class="word">minutos.</span>
+          </div>
+          <div data-hf-id="hf-46qs" class="line" id="line2">
+            <span data-hf-id="hf-tt0g" class="word">Fotos</span><span data-hf-id="hf-84lv" class="word">soltas.</span>
+          </div>
+          <div data-hf-id="hf-4yel" class="line" id="line3">
+            <span data-hf-id="hf-60wj" class="word">Risco</span><span data-hf-id="hf-h95d" class="word">discutido</span><span data-hf-id="hf-8v8q" class="word">no</span><span data-hf-id="hf-j31f" class="word">balcão.</span>
+          </div>
+          <div data-hf-id="hf-rl4u" class="underline" id="underline"></div>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        (function () {
+          window.__timelines = window.__timelines || {};
+
+          var tl = gsap.timeline({ paused: true });
+
+          var l1words = gsap.utils.toArray("#line1 .word");
+          var l2words = gsap.utils.toArray("#line2 .word");
+          var l3words = gsap.utils.toArray("#line3 .word");
+
+          // Scene 1 (0.0–1.8s): line 1 lands word-by-word, power3 settle.
+          tl.fromTo(
+            l1words,
+            { opacity: 0, y: 18 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.45,
+              ease: "power3.out",
+              stagger: 0.11,
+            },
+            0.0,
+          );
+
+          // Scene 2 (1.8–3.3s): line 1 dims + rises slightly; line 2 punches in beneath.
+          tl.to(
+            "#line1",
+            {
+              opacity: 0.4,
+              y: "-=8",
+              duration: 0.5,
+              ease: "power2.out",
+            },
+            1.8,
+          );
+
+          tl.fromTo(
+            l2words,
+            { opacity: 0, y: 18 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.4,
+              ease: "power3.out",
+              stagger: 0.12,
+            },
+            2.0,
+          );
+
+          // Scene 3 (3.3–5.0s): both prior lines dim further; line 3 lands heaviest, underline draws.
+          tl.to(
+            "#line1",
+            { opacity: 0.2, duration: 0.5, ease: "power2.out" },
+            3.3,
+          );
+          tl.to(
+            "#line2",
+            { opacity: 0.4, y: "-=8", duration: 0.5, ease: "power2.out" },
+            3.3,
+          );
+
+          tl.fromTo(
+            l3words,
+            { opacity: 0, y: 22, scale: 0.94 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.5,
+              ease: "power3.out",
+              stagger: 0.13,
+              transformOrigin: "50% 50%",
+            },
+            3.5,
+          );
+
+          tl.fromTo(
+            "#underline",
+            { width: 0 },
+            { width: "18cqw", duration: 0.6, ease: "power3.out" },
+            4.2,
+          );
+
+          window.__timelines["01-antes"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

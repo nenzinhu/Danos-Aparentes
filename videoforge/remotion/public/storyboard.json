@@ -1,0 +1,187 @@
+{
+  "id": "video-60s.pt",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationInFrames": 1800,
+  "durationSec": 60,
+  "brand": {
+    "name": "Danos Aparentes",
+    "tagline": "Vistoria digital de alta fidelidade",
+    "palette": {
+      "bg": "#020617",
+      "bgGradient": "#0d1f3c",
+      "card": "rgba(10, 20, 40, 0.72)",
+      "primary": "#1FB6FF",
+      "primaryHover": "#72C5EE",
+      "text": "#e8f4ff",
+      "textMuted": "#7a9bbf",
+      "accent": "#22c55e",
+      "danger": "#ef4444"
+    },
+    "fonts": {
+      "headline": "Outfit",
+      "body": "Outfit",
+      "mono": "ui-monospace"
+    },
+    "logo": {
+      "icon": "../public/logo.svg",
+      "full": "../public/brand/logo-full.svg"
+    },
+    "cta": {
+      "primary": "Testar 7 dias grátis",
+      "secondary": "Sem cartão de crédito",
+      "url": "https://danosaparentes.vercel.app/app?mode=signup&utm_source=video&utm_medium=paid_social"
+    }
+  },
+  "shots": [
+    {
+      "id": "01",
+      "title": "Hook emocional",
+      "durationSec": 5,
+      "frames": 150,
+      "slot": "CUT",
+      "vo": "Cada vistoria no papel é tempo perdido, cliente impaciente e laudo que ninguém confia. |",
+      "onscreen": {
+        "kind": "headline",
+        "text": "Laudos que o cliente não contesta"
+      },
+      "flags": [
+        "broll"
+      ],
+      "fromFrame": 0,
+      "toFrame": 149,
+      "voFile": "vo/video-60s.pt/shot-01.mp3"
+    },
+    {
+      "id": "02",
+      "title": "Placa automática",
+      "durationSec": 7,
+      "frames": 210,
+      "slot": "CUT",
+      "vo": "Digite a placa — marca, modelo, cor e município preenchidos na hora. |",
+      "onscreen": {
+        "kind": "step",
+        "text": "01 · Consulte a placa"
+      },
+      "flags": [
+        "brand",
+        "screenshot-ref"
+      ],
+      "fromFrame": 150,
+      "toFrame": 359,
+      "voFile": "vo/video-60s.pt/shot-02.mp3"
+    },
+    {
+      "id": "03",
+      "title": "Marcar danos",
+      "durationSec": 8,
+      "frames": 240,
+      "slot": "CUT",
+      "vo": "Toque na área exata do veículo, escolha o tipo de avaria, tire fotos HD e adicione notas. |",
+      "onscreen": {
+        "kind": "step",
+        "text": "02 · Marque as avarias"
+      },
+      "flags": [
+        "brand"
+      ],
+      "fromFrame": 360,
+      "toFrame": 599,
+      "voFile": "vo/video-60s.pt/shot-03.mp3"
+    },
+    {
+      "id": "04",
+      "title": "Seis veículos",
+      "durationSec": 5,
+      "frames": 150,
+      "slot": "CUT",
+      "vo": "Carro, moto, caminhão, van, ônibus e modelo personalizado. |",
+      "onscreen": {
+        "kind": "grid",
+        "text": "6 tipos de veículo"
+      },
+      "flags": [
+        "brand",
+        "library"
+      ],
+      "fromFrame": 600,
+      "toFrame": 749,
+      "voFile": "vo/video-60s.pt/shot-04.mp3"
+    },
+    {
+      "id": "05",
+      "title": "Assinatura + PDF",
+      "durationSec": 8,
+      "frames": 240,
+      "slot": "CUT",
+      "vo": "Vistoriador e cliente assinam na tela. O PDF sai com hash SHA-256 e QR Code de verificação. |",
+      "onscreen": {
+        "kind": "step",
+        "text": "03 · Assine e envie"
+      },
+      "flags": [
+        "brand",
+        "screenshot-ref"
+      ],
+      "fromFrame": 750,
+      "toFrame": 989,
+      "voFile": "vo/video-60s.pt/shot-05.mp3"
+    },
+    {
+      "id": "06",
+      "title": "WhatsApp",
+      "durationSec": 5,
+      "frames": 150,
+      "slot": "CUT",
+      "vo": "Envie o laudo pelo WhatsApp do cliente em um clique. |",
+      "onscreen": {
+        "kind": "badge",
+        "text": "PDF → WhatsApp"
+      },
+      "flags": [
+        "broll"
+      ],
+      "fromFrame": 990,
+      "toFrame": 1139,
+      "voFile": "vo/video-60s.pt/shot-06.mp3"
+    },
+    {
+      "id": "07",
+      "title": "Offline + sync",
+      "durationSec": 6,
+      "frames": 180,
+      "slot": "CUT",
+      "vo": "Funciona cem por cento offline no pátio. Sincroniza na nuvem quando houver internet. |",
+      "onscreen": {
+        "kind": "bullet",
+        "text": "Offline · Sync automático"
+      },
+      "flags": [
+        "broll"
+      ],
+      "fromFrame": 1140,
+      "toFrame": 1319,
+      "voFile": "vo/video-60s.pt/shot-07.mp3"
+    },
+    {
+      "id": "08",
+      "title": "CTA + prova social",
+      "durationSec": 16,
+      "frames": 480,
+      "slot": "FREEZE",
+      "vo": "Teste sete dias grátis no plano Pro, sem cartão de crédito. Cancele quando quiser. Danos Aparentes — a vistoria digital que o pátio precisa. |",
+      "onscreen": {
+        "kind": "cta",
+        "text": "7 dias grátis · Sem cartão · danosaparentes.vercel.app"
+      },
+      "flags": [
+        "brand",
+        "logo"
+      ],
+      "fromFrame": 1320,
+      "toFrame": 1799,
+      "voFile": "vo/video-60s.pt/shot-08.mp3"
+    }
+  ]
+}

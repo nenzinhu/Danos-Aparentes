@@ -1,0 +1,29 @@
+{
+  "name": "Danos Aparentes",
+  "tagline": "Vistoria digital de alta fidelidade",
+  "palette": {
+    "bg": "#020617",
+    "bgGradient": "#0d1f3c",
+    "card": "rgba(10, 20, 40, 0.72)",
+    "primary": "#1FB6FF",
+    "primaryHover": "#72C5EE",
+    "text": "#e8f4ff",
+    "textMuted": "#7a9bbf",
+    "accent": "#22c55e",
+    "danger": "#ef4444"
+  },
+  "fonts": {
+    "headline": "Outfit",
+    "body": "Outfit",
+    "mono": "ui-monospace"
+  },
+  "logo": {
+    "icon": "../public/logo.svg",
+    "full": "../public/brand/logo-full.svg"
+  },
+  "cta": {
+    "primary": "Testar 7 dias grátis",
+    "secondary": "Sem cartão de crédito",
+    "url": "https://danosaparentes.vercel.app/app?mode=signup&utm_source=video&utm_medium=paid_social"
+  }
+}
