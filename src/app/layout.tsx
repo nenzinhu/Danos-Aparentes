@@ -93,6 +93,8 @@ export const metadata: Metadata = {
   },
 
   // ── Ícones ──────────────────────────────────────────────────
+  // ?v= força o Safari/iOS a buscar de novo em vez de usar o apple-touch-icon
+  // em cache — bump esse valor sempre que o arquivo do ícone mudar.
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml', sizes: '32x32' },
@@ -100,7 +102,7 @@ export const metadata: Metadata = {
       { url: '/favicon.png', type: 'image/png', sizes: '32x32' },
     ],
     shortcut: '/favicon.svg',
-    apple: '/apple-touch-icon.png',
+    apple: [{ url: '/apple-touch-icon.png?v=2', sizes: '180x180', type: 'image/png' }],
   },
 }
 
