@@ -1,13 +1,33 @@
 'use client';
-import { useState } from 'react';
-import { VehicleType } from '../types'
-import Reveal from './Reveal'
+import { useState, useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
+import { VehicleType } from '../types';
+import Reveal from './Reveal';
+import {
+  IconVehicleCar,
+  IconVehicleCar2d,
+  IconVehicleMoto,
+  IconVehicleTruck,
+  IconVehicleVan,
+  IconVehicleBus,
+  IconVehicleMicrobus,
+  IconDamageScratch,
+  IconDamageDent,
+  IconDamageBroken,
+} from './ui/AnimatedIcons';
 
-const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamages: any[] }[] = [
+interface VehicleOption {
+  type: VehicleType;
+  name: string;
+  IconComponent: React.ComponentType<{ className?: string; size?: number }>;
+  mockDamages: any[];
+}
+
+const vehicleOptions: VehicleOption[] = [
   {
     type: 'car',
     name: 'Carro',
-    icon: '🚗',
+    IconComponent: IconVehicleCar,
     mockDamages: [
       {
         id: 'mock-1' as any,
@@ -20,14 +40,14 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
         severity: 'high',
         notes: 'Risco profundo contínuo',
         photos: [],
-        photoNotes: []
-      }
-    ]
+        photoNotes: [],
+      },
+    ],
   },
   {
     type: 'car2d',
     name: 'Carro 2 Portas',
-    icon: '🚙',
+    IconComponent: IconVehicleCar2d,
     mockDamages: [
       {
         id: 'mock-car2d' as any,
@@ -40,14 +60,14 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
         severity: 'medium',
         notes: 'Amassado na porta',
         photos: [],
-        photoNotes: []
-      }
-    ]
+        photoNotes: [],
+      },
+    ],
   },
   {
     type: 'moto',
     name: 'Moto',
-    icon: '🏍️',
+    IconComponent: IconVehicleMoto,
     mockDamages: [
       {
         id: 'mock-2' as any,
@@ -60,14 +80,14 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
         severity: 'medium',
         notes: 'Amassado leve lateral',
         photos: [],
-        photoNotes: []
-      }
-    ]
+        photoNotes: [],
+      },
+    ],
   },
   {
     type: 'truck',
     name: 'Caminhão',
-    icon: '🚚',
+    IconComponent: IconVehicleTruck,
     mockDamages: [
       {
         id: 'mock-3' as any,
@@ -80,14 +100,14 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
         severity: 'low',
         notes: 'Risco superficial na chapa',
         photos: [],
-        photoNotes: []
-      }
-    ]
+        photoNotes: [],
+      },
+    ],
   },
   {
     type: 'van',
     name: 'Utilitário (Van)',
-    icon: '🚐',
+    IconComponent: IconVehicleVan,
     mockDamages: [
       {
         id: 'mock-4' as any,
@@ -100,14 +120,14 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
         severity: 'high',
         notes: 'Vidro trincado',
         photos: [],
-        photoNotes: []
-      }
-    ]
+        photoNotes: [],
+      },
+    ],
   },
   {
     type: 'bus',
     name: 'Ônibus',
-    icon: '🚌',
+    IconComponent: IconVehicleBus,
     mockDamages: [
       {
         id: 'mock-5' as any,
@@ -120,14 +140,14 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
         severity: 'medium',
         notes: 'Risco na pintura perto da roda',
         photos: [],
-        photoNotes: []
-      }
-    ]
+        photoNotes: [],
+      },
+    ],
   },
   {
     type: 'microbus',
     name: 'Micro-ônibus',
-    icon: '🚐',
+    IconComponent: IconVehicleMicrobus,
     mockDamages: [
       {
         id: 'mock-microbus' as any,
@@ -140,11 +160,67 @@ const vehicleOptions: { type: VehicleType; name: string; icon: string; mockDamag
         severity: 'medium',
         notes: 'Risco na lateral',
         photos: [],
-        photoNotes: []
-      }
-    ]
-  }
+        photoNotes: [],
+      },
+    ],
+  },
 ];
+
+function VehicleOptionButton({
+  opt,
+  isActive,
+  onClick,
+}: {
+  opt: VehicleOption;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const el = btnRef.current;
+    if (!el) return;
+    const ctx = gsap.context(() => {
+      el.addEventListener('mouseenter', () => {
+        if (!isActive) {
+          gsap.to(el, { x: 4, scale: 1.01, duration: 0.2, ease: 'power2.out' });
+        }
+      });
+      el.addEventListener('mouseleave', () => {
+        if (!isActive) {
+          gsap.to(el, { x: 0, scale: 1, duration: 0.2, ease: 'power2.out' });
+        }
+      });
+    }, el);
+    return () => ctx.revert();
+  }, [isActive]);
+
+  const IconComp = opt.IconComponent;
+
+  return (
+    <button
+      ref={btnRef}
+      onClick={onClick}
+      className={`w-full px-5 py-4 rounded-xl border flex items-center justify-between text-sm font-bold transition-colors duration-200 outline-none cursor-pointer ${
+        isActive
+          ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20'
+          : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)]'
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <span className="p-2 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+          <IconComp size={22} className={isActive ? 'text-white' : 'text-[var(--text-main)]'} />
+        </span>
+        <span>{opt.name}</span>
+      </div>
+      {isActive && (
+        <span className="text-xs font-bold bg-white/20 px-2 py-0.5 rounded-full uppercase tracking-wider">
+          Ativo
+        </span>
+      )}
+    </button>
+  );
+}
 
 export default function VehicleShowcaseSection() {
   const [activeVehicle, setActiveVehicle] = useState<VehicleType>('car');
@@ -155,53 +231,49 @@ export default function VehicleShowcaseSection() {
         {/* Coluna Esquerda: Seletor de veículos */}
         <div className="lg:col-span-5 space-y-6">
           <Reveal className="space-y-6">
-          <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
-            Suporte a todo tipo de veículo
-          </h2>
-          <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-            O aplicativo oferece diagramas interativos de alta fidelidade desenhados especificamente para cada tipo de veículo. Toque em qualquer parte para abrir as opções de marcação.
-          </p>
+            <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
+              Suporte a todo tipo de veículo
+            </h2>
+            <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+              O aplicativo oferece diagramas interativos de alta fidelidade desenhados especificamente para cada tipo de veículo. Toque em qualquer parte para abrir as opções de marcação.
+            </p>
           </Reveal>
 
-          {/* Botões do Seletor */}
+          {/* Botões do Seletor com SVGs animados GSAP */}
           <div className="flex flex-col gap-2.5 pt-2">
             {vehicleOptions.map((opt) => (
-              <button
+              <VehicleOptionButton
                 key={opt.type}
+                opt={opt}
+                isActive={activeVehicle === opt.type}
                 onClick={() => setActiveVehicle(opt.type)}
-                className={`w-full px-5 py-4 rounded-xl border flex items-center justify-between text-sm font-bold transition-all outline-none ${
-                  activeVehicle === opt.type
-                    ? 'bg-primary border-primary text-white shadow-lg shadow-primary/20'
-                    : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)]'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">{opt.icon}</span>
-                  <span>{opt.name}</span>
-                </div>
-                {activeVehicle === opt.type && (
-                  <span className="text-xs font-bold bg-white/20 px-2 py-0.5 rounded-full uppercase tracking-wider">Ativo</span>
-                )}
-              </button>
+              />
             ))}
           </div>
         </div>
 
         {/* Coluna Direita: Renderizador interativo de SVG */}
         <div className="lg:col-span-7 flex flex-col justify-center items-center relative group min-h-[350px]">
-          <div className="absolute inset-0 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, var(--signal-glow) 0%, transparent 70%)', opacity: 0.5 }} />
+          <div
+            className="absolute inset-0 rounded-full pointer-events-none"
+            style={{
+              background: 'radial-gradient(circle, var(--signal-glow) 0%, transparent 70%)',
+              opacity: 0.5,
+            }}
+          />
           <div className="w-full max-w-[480px] filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] bg-[var(--card-bg)] border border-[var(--card-border)] p-8 rounded-2xl relative backdrop-blur-md">
-
             {/* Etiqueta indicando vista */}
             <div className="absolute top-4 left-4 font-mono-data text-[9px] tracking-[0.18em] text-[var(--signal-bright)] uppercase border border-[var(--sheet-line)] px-2.5 py-1 rounded">
               Vista · Lateral Esq.
             </div>
 
-            {/* Imagem estática do veículo (leve, sem hidratação de SVG) */}
+            {/* Imagem estática do veículo */}
             <div className="py-8">
               <img
                 src={`/vehicles-img/${activeVehicle}.png`}
-                alt={`Diagrama lateral do veículo: ${vehicleOptions.find(o => o.type === activeVehicle)?.name || ''}`}
+                alt={`Diagrama lateral do veículo: ${
+                  vehicleOptions.find((o) => o.type === activeVehicle)?.name || ''
+                }`}
                 loading="lazy"
                 decoding="async"
                 width={828}
@@ -212,7 +284,9 @@ export default function VehicleShowcaseSection() {
 
             {/* Nota simulada explicando a avaria */}
             {(() => {
-              const selectedOpt = vehicleOptions.find(o => o.type === activeVehicle) || vehicleOptions[0];
+              const selectedOpt =
+                vehicleOptions.find((o) => o.type === activeVehicle) || vehicleOptions[0];
+              const damageType = selectedOpt.mockDamages[0].type;
               return (
                 <div className="border-t border-[var(--card-border)]/50 pt-4 mt-4 flex items-center justify-between gap-3 flex-wrap">
                   <div className="flex items-center gap-2">
@@ -222,12 +296,22 @@ export default function VehicleShowcaseSection() {
                     </span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="flex items-center gap-1 text-[10px] font-black uppercase text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
-                      {selectedOpt.mockDamages[0].type === 'broken' ? '💥' : selectedOpt.mockDamages[0].type === 'dent' ? '🔨' : '✏️'}
+                    <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                      {damageType === 'broken' ? (
+                        <IconDamageBroken size={13} className="text-red-400" />
+                      ) : damageType === 'dent' ? (
+                        <IconDamageDent size={13} className="text-orange-400" />
+                      ) : (
+                        <IconDamageScratch size={13} className="text-amber-400" />
+                      )}
                       Tipo: {selectedOpt.mockDamages[0].typeName}
                     </span>
                     <span className="text-[10px] font-black uppercase text-red-500 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">
-                      {selectedOpt.mockDamages[0].severity === 'high' ? 'Grave' : selectedOpt.mockDamages[0].severity === 'medium' ? 'Médio' : 'Leve'}
+                      {selectedOpt.mockDamages[0].severity === 'high'
+                        ? 'Grave'
+                        : selectedOpt.mockDamages[0].severity === 'medium'
+                        ? 'Médio'
+                        : 'Leve'}
                     </span>
                   </div>
                 </div>
