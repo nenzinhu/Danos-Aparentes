@@ -46,7 +46,7 @@ if (args.length > 0) {
   files = args.map((f) => (f.includes('/') || f.includes('\\') ? f : join(migrationsDir, f)))
 } else {
   files = readdirSync(migrationsDir)
-    .filter((f) => /^2026071[4-9]_/.test(f) && f.endsWith('.sql'))
+    .filter((f) => f.endsWith('.sql'))
     .sort()
     .map((f) => join(migrationsDir, f))
 }

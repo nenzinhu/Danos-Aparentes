@@ -26,6 +26,12 @@ create table if not exists vehicle_inspections (
   cnh_category text default '',
   inspector_signature text default '',
   client_signature text default '',
+  status text not null default 'complete',
+  geo_lat double precision,
+  geo_lng double precision,
+  geo_accuracy double precision,
+  geo_address text,
+  geo_captured_at bigint,
   updated_at bigint not null,
   created_at timestamptz not null default now()
 );
