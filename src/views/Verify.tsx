@@ -68,7 +68,7 @@ export default function Verify() {
       const { db } = await import('@/src/lib/db')
       const savedReports = await db.getAllSaved()
       const currentDamages = await db.getAllDamages()
-      const metadata = await db.getMetadata()
+      const metadata = await db.getMeta<any>('vehicle_info')
 
       if (savedReports.length > 0) {
         const latest = savedReports[savedReports.length - 1]
@@ -81,21 +81,22 @@ export default function Verify() {
 
       if (metadata && (metadata.plate || metadata.chassis || currentDamages.length > 0)) {
         const { generatePdf } = await import('@/src/lib/pdf')
-        const info = {
-          plate: metadata.plate || 'ABC1D23',
-          km: metadata.km || '45000',
-          fuel: metadata.fuel || 'Flex',
-          color: metadata.color || 'Prata',
-          brand: metadata.brand || 'Toyota',
-          model: metadata.model || 'Corolla 2.0 Flex',
-          year: metadata.year || '2024',
-          chassis: metadata.chassis || '9BWCA11X08P00000',
-          clientName: metadata.clientName || 'Cliente Exemplo',
-          clientDocument: metadata.clientDocument || '123.456.789-00',
-          inspectorName: metadata.inspectorName || 'Vistoriador Oficial',
-          inspectionDate: metadata.inspectionDate || new Date().toISOString().split('T')[0],
-          inspectionLocation: metadata.inspectionLocation || 'Pátio Central',
-          inspectionType: metadata.inspectionType || 'Entrega',
+        const info: import('@/src/types').VehicleInfo = {
+          owner: metadata?.owner || metadata?.clientName || 'Cliente Exemplo',
+          phone: metadata?.phone || '(11) 99999-9999',
+          brand: metadata?.brand || 'Toyota',
+          plate: metadata?.plate || 'ABC1D23',
+          generalNotes: metadata?.generalNotes || '',
+          interiorNotes: metadata?.interiorNotes || '',
+          interiorPhotos: metadata?.interiorPhotos || [],
+          interiorPhotoNotes: metadata?.interiorPhotoNotes || [],
+          profile: metadata?.profile || 'perito',
+          ref: metadata?.ref || 'OS-1001',
+          color: metadata?.color || 'Prata',
+          vehicleTypeDesc: metadata?.vehicleTypeDesc || metadata?.model || 'Corolla 2.0 Flex',
+          city: metadata?.city || 'São Paulo',
+          state: metadata?.state || 'SP',
+          cpf: metadata?.cpf || '123.456.789-00',
         }
         const companyName = localStorage.getItem('company_name') || record?.company_name || ''
         const companyLogo = localStorage.getItem('company_logo') || ''
@@ -105,26 +106,35 @@ export default function Verify() {
 
       if (record) {
         const { generatePdf } = await import('@/src/lib/pdf')
-        const info = {
-          plate: record.plate || 'ABC1D23',
-          km: '45000',
-          fuel: 'Flex',
-          color: 'Prata',
+        const info: import('@/src/types').VehicleInfo = {
+          owner: 'Cliente Final',
+          phone: '(11) 99999-9999',
           brand: 'Frota',
-          model: 'Veículo Periciado',
-          year: '2025',
-          clientName: 'Cliente Final',
-          clientDocument: '123.456.789-00',
-          inspectorName: 'Vistoriador Pericial',
-          inspectionDate: record.issued_at || new Date().toISOString().split('T')[0],
-          inspectionLocation: record.geo_address || 'Pátio / Local da Vistoria',
-          inspectionType: 'Vistoria de Devolução/Saída',
+          plate: record.plate || 'ABC1D23',
+          generalNotes: 'Vistoria verificada e autenticada via SHA-256',
+          interiorNotes: '',
+          interiorPhotos: [],
+          interiorPhotoNotes: [],
+          profile: 'perito',
+          ref: record.ref || 'OS-2025',
+          color: 'Prata',
+          vehicleTypeDesc: 'Veículo Periciado',
+          city: 'São Paulo',
+          state: 'SP',
+          cpf: '123.456.789-00',
         }
-        const dummyDamages = Array.from({ length: Math.max(1, record.damages_count || 1) }, (_, i) => ({
+        const dummyDamages: import('@/src/types').Damage[] = Array.from({ length: Math.max(1, record.damages_count || 1) }, (_, i) => ({
           id: `damage-${i + 1}`,
-          type: 'risco_leve' as const,
-          part: i === 0 ? 'Porta Dianteira Esquerda' : 'Para-choque Dianteiro',
+          vehicle: 'car-sedan',
+          view: 'lateral-left',
+          partId: i === 0 ? 'porta_de' : 'parachoques_d',
+          partName: i === 0 ? 'Porta Dianteira Esquerda' : 'Para-choque Dianteiro',
+          type: 'risco_leve',
+          typeName: 'Risco Leve',
+          severity: 'low',
           notes: 'Avaria registrada com fotografia pericial no momento da inspeção',
+          photos: [],
+          photoNotes: [],
         }))
         const companyName = localStorage.getItem('company_name') || record.company_name || ''
         const companyLogo = localStorage.getItem('company_logo') || ''
