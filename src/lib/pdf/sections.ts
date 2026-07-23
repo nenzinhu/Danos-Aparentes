@@ -24,7 +24,7 @@ export function buildStatusBadge(damages: Damage[], theme: PdfTheme): string {
   </div>`
 }
 
-export function buildInfoTable(info: VehicleInfo, theme: PdfTheme): string {
+export function buildInfoTable(info: VehicleInfo | Partial<VehicleInfo>, theme: PdfTheme): string {
   function cell(label: string, val: string): string {
     if (!label && !val) {
       return `<td colspan="2" style="border:none;background:transparent;"></td>`
@@ -33,13 +33,13 @@ export function buildInfoTable(info: VehicleInfo, theme: PdfTheme): string {
             <td style="padding:4px 8px;border-bottom:1px solid ${theme.borderLight};font-size:9.5px;font-weight:600;color:${theme.textMain};width:28%;white-space:nowrap;font-family:${theme.fontMain};">${val || '—'}</td>`
   }
   const rows = [
-    [['Proprietário / Cliente', info.owner], ['Marca / Modelo',  info.brand]],
-    [['Telefone',               info.phone], ['Placa',           info.plate]],
-    [['CPF',                    info.cpf || ''], ['Cor',         info.color]],
-    [['CNH',                    info.cnh || ''], ['Categoria CNH', info.cnhCategory || '']],
-    [['Cidade',                info.city],  ['Estado (UF)',      info.state]],
-    [['Tipo / Espécie',   info.vehicleTypeDesc], ['Nº OS / Ref.',          info.ref]],
-    [['Perfil', info.profile ? info.profile.charAt(0).toUpperCase() + info.profile.slice(1) : ''], ['', '']],
+    [['Proprietário / Cliente', info.owner || '—'], ['Marca / Modelo',  info.brand || '—']],
+    [['Telefone',               info.phone || '—'], ['Placa',           info.plate || '—']],
+    [['CPF',                    info.cpf || '—'], ['Cor',         info.color || '—']],
+    [['CNH',                    info.cnh || '—'], ['Categoria CNH', info.cnhCategory || '—']],
+    [['Cidade',                info.city || '—'],  ['Estado (UF)',      info.state || '—']],
+    [['Tipo / Espécie',   info.vehicleTypeDesc || '—'], ['Nº OS / Ref.',          info.ref || '—']],
+    [['Perfil', info.profile ? info.profile.charAt(0).toUpperCase() + info.profile.slice(1) : '—'], ['', '']],
   ]
   const tableRows = rows.map(([a, b]) => `<tr>${cell(a[0], a[1])}${cell(b[0], b[1])}</tr>`).join('')
 
@@ -236,7 +236,7 @@ export function buildPhotoSection(damages: Damage[], theme: PdfTheme): string {
   </div>`
 }
 
-export function buildInteriorSection(info: VehicleInfo, theme: PdfTheme): string {
+export function buildInteriorSection(info: VehicleInfo | Partial<VehicleInfo>, theme: PdfTheme): string {
   const notes = info.interiorNotes || ''
   const photos = info.interiorPhotos || []
   if (!notes && photos.length === 0) return ''
@@ -276,7 +276,7 @@ export function buildInteriorSection(info: VehicleInfo, theme: PdfTheme): string
   </div>`
 }
 
-export function buildSignature(info: VehicleInfo, theme: PdfTheme, dateStr: string): string {
+export function buildSignature(info: VehicleInfo | Partial<VehicleInfo>, theme: PdfTheme, dateStr: string): string {
   const inspectorImg = info.inspectorSignature
     ? `<div style="height:32px;text-align:center;margin-bottom:2px;"><img src="${info.inspectorSignature}" style="max-height:32px;max-width:180px;display:inline-block;vertical-align:bottom;" /></div>`
     : '<div style="height:32px;"></div>'
