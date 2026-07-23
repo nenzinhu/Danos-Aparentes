@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    viewTransition: true,
+    viewTransitions: true,
   },
   images: {
     formats: ['image/avif', 'image/webp'],
