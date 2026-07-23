@@ -54,7 +54,7 @@ interface InspectTabProps {
   onClearAll: () => void
   onClearDamages: () => void
   onAddDamage: (partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => void
-  onAddDamageDetailed?: (partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string) => void
+  onAddDamageDetailed?: (partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string, photoFile?: File) => void
   onRemoveDamageFromPart: (partId: string) => void
   onRemoveDamage: (id: string) => void
   onUpdateDamage: (id: string, patch: Partial<Damage>) => void

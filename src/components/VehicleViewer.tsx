@@ -14,7 +14,7 @@ interface VehicleViewerContextValue {
   viewType: ViewType
   damages: Damage[]
   onAddDamage: (partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => void
-  onAddDamageDetailed?: (partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string) => void
+  onAddDamageDetailed?: (partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string, photoFile?: File) => void
   onRemoveDamageFromPart: (partId: string) => void
   speak: (text: string) => void
   speakHover: (text: string) => void
@@ -50,7 +50,7 @@ interface RootProps {
   viewType: ViewType
   damages: Damage[]
   onAddDamage: (partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => void
-  onAddDamageDetailed?: (partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string) => void
+  onAddDamageDetailed?: (partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string, photoFile?: File) => void
   onRemoveDamageFromPart: (partId: string) => void
   speak: (text: string) => void
   speakHover: (text: string) => void
@@ -284,7 +284,7 @@ const FullscreenOverlay = memo(function FullscreenOverlay() {
 })
 
 const FloatingDamage = memo(function FloatingDamage() {
-  const { selectedPart, setSelectedPart, onAddDamage, onRemoveDamageFromPart, damages, vehicleType } = useVehicleViewer()
+  const { selectedPart, setSelectedPart, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, damages, vehicleType } = useVehicleViewer()
 
   if (!selectedPart) return null
 
@@ -295,8 +295,12 @@ const FloatingDamage = memo(function FloatingDamage() {
       partName={selectedPart.name}
       position={selectedPart.pos}
       currentType={existingDmg?.type}
-      onChoose={(type, typeName, photoFile) => {
-        onAddDamage(selectedPart.id, selectedPart.name, type, typeName, photoFile)
+      onChoose={(type, typeName, severity, notes, photoFile) => {
+        if (onAddDamageDetailed) {
+          onAddDamageDetailed(selectedPart.id, selectedPart.name, type, typeName, severity, notes, photoFile)
+        } else {
+          onAddDamage(selectedPart.id, selectedPart.name, type, typeName, photoFile)
+        }
         setSelectedPart(null)
       }}
       onClear={() => {

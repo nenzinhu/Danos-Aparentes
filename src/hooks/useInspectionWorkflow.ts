@@ -106,16 +106,35 @@ export function useInspectionWorkflow({
     })()
   }, [vehicleType, viewType, addDamage, updateDamage])
 
-  const handleAddDamageDetailed = useCallback((partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string) => {
+  const handleAddDamageDetailed = useCallback((partId: string, partName: string, type: DamageType, typeName: string, severity: Severity, notes: string, photoFile?: File) => {
     playDamageAddedFeedback()
+    const id = createId() as Damage['id']
     addDamage({
-      id: createId() as Damage['id'],
+      id,
       vehicle: vehicleType,
       view: viewType,
       partId, partName, type, typeName, severity, notes,
       photos: [], photoNotes: [],
     })
-  }, [vehicleType, viewType, addDamage])
+
+    if (!photoFile) return
+
+    ;(async () => {
+      startPhotoUploadProgress(1, 'Preparando foto da avaria…')
+      try {
+        updatePhotoUploadProgress({ phase: 'compressing', label: 'Comprimindo imagem…' })
+        const compressedBlob = await compressImage(photoFile, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY)
+        updatePhotoUploadProgress({ phase: 'uploading', current: 0, label: 'Salvando foto localmente…' })
+        const photoRef = await storePhoto(compressedBlob)
+        updatePhotoUploadProgress({ current: 1 })
+        updateDamage(id, { photos: [photoRef], photoNotes: [''] })
+      } catch (error) {
+        console.error('Error compressing image:', error)
+      } finally {
+        finishPhotoUploadProgress()
+      }
+    })()
+  }, [vehicleType, viewType, addDamage, updateDamage])
 
   const handleRemoveDamageFromPart = useCallback((partId: string) => {
     const dmg = viewDamages.find(d => d.partId === partId)

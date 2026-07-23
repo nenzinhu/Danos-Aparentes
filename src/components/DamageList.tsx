@@ -125,9 +125,14 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
                       </span>
                     )}
                   </div>
-                  <div className="text-[0.72rem] text-[var(--text-muted)]">
+                  <div className="text-[0.72rem] text-[var(--text-muted)] truncate">
                     {d.typeName} • <span style={{ color: sevColor }} className="font-bold">{SEV_LABEL[d.severity]}</span> • {VIEW_LABEL[d.view] || d.view}
                   </div>
+                  {d.notes && (
+                    <div className="text-[0.68rem] text-[var(--text-muted)] italic truncate opacity-70 mt-0.5">
+                      "{d.notes}"
+                    </div>
+                  )}
                 </div>
                 {d.photos.length > 0 && (
                   <span className="text-[0.72rem] text-[var(--primary)] bg-sky-500/10 px-1.5 py-0.5 rounded-md font-medium">📷 {d.photos.length}</span>
