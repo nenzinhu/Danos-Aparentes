@@ -2536,7 +2536,7 @@ BLOG_POSTS.unshift(
     cover: {
       gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)',
       emoji: '🧾',
-      image: '/vehicles-img/car.png',
+      image: '/blog-covers/cobranca-avaria-locadora.svg',
     },
     toc: [
       { id: 'resposta-rapida', label: 'Resposta rápida' },
@@ -2723,7 +2723,7 @@ BLOG_POSTS.unshift(
     cover: {
       gradient: 'linear-gradient(135deg,#1e3a5f 0%,#0369a1 45%,#38bdf8 100%)',
       emoji: '🔧',
-      image: '/vehicles-img/car2d.png',
+      image: '/blog-covers/vistoria-orcamento-oficina.svg',
     },
     toc: [
       { id: 'resposta-rapida', label: 'Resposta rápida' },
@@ -3432,7 +3432,7 @@ BLOG_POSTS.push(
     cover: {
       gradient: 'linear-gradient(135deg,#020617 0%,#0f172a 40%,#1e3a5f 70%,#9E4428 100%)',
       emoji: '🛡️',
-      image: '/vehicles-img/car.png',
+      image: '/blog-covers/relatorio-pdf-seguranca.svg',
     },
     toc: [
       { id: 'pilares', label: 'Por que o PDF importa' },
