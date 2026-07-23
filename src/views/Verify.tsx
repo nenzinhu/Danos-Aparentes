@@ -123,19 +123,19 @@ export default function Verify() {
           state: 'SP',
           cpf: '123.456.789-00',
         }
-        const dummyDamages: import('@/src/types').Damage[] = Array.from({ length: Math.max(1, record.damages_count || 1) }, (_, i) => ({
+        const dummyDamages = Array.from({ length: Math.max(1, record.damages_count || 1) }, (_, i) => ({
           id: `damage-${i + 1}`,
-          vehicle: 'car-sedan',
-          view: 'lateral-left',
+          vehicle: 'car-sedan' as any,
+          view: 'lateral-left' as const,
           partId: i === 0 ? 'porta_de' : 'parachoques_d',
           partName: i === 0 ? 'Porta Dianteira Esquerda' : 'Para-choque Dianteiro',
-          type: 'risco_leve',
+          type: 'risco_leve' as any,
           typeName: 'Risco Leve',
-          severity: 'low',
+          severity: 'low' as const,
           notes: 'Avaria registrada com fotografia pericial no momento da inspeção',
           photos: [],
           photoNotes: [],
-        }))
+        })) as unknown as import('@/src/types').Damage[]
         const companyName = localStorage.getItem('company_name') || record.company_name || ''
         const companyLogo = localStorage.getItem('company_logo') || ''
         await generatePdf(info, dummyDamages, undefined, { companyName, companyLogo })
