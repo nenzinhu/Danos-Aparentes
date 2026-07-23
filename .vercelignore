@@ -2,28 +2,28 @@
 # Ignora pastas pesadas e arquivos que não pertencem ao build da web na Vercel
 
 # Agentes, Skills e ferramentas locais
-.agents
-.claude
-.cursor
-esc-skills-main
+/.agents
+/.claude
+/.cursor
+/esc-skills-main
 skills-lock.json
 .claude-skills.json
 
 # Workspaces de vídeo, relatórios e modelos IA
-videoforge
-remotion-danos-aparentes
-videos
-PDF
-damage-model
-outputs
-analysis
-deliverables
-docs
-wireframes
+/videoforge
+/remotion-danos-aparentes
+/videos
+/PDF
+/damage-model
+/outputs
+/analysis
+/deliverables
+/docs
+/wireframes
 
 # Caches e relatórios temporários
-.lighthouse-reports
-.vercel-optimize-run
+/.lighthouse-reports
+/.vercel-optimize-run
 
 # Arquivos avulsos da raiz
 pdf1.pdf

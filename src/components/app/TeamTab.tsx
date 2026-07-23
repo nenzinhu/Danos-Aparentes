@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react'
 import { useTeam, TeamReport } from '@/src/hooks/useTeam'
-import { generatePdf } from '@/src/lib/pdf'
 import { captureSvgs } from '@/src/components/ReportActions'
 import { Damage, VehicleType } from '@/src/types'
 
@@ -49,6 +48,7 @@ export default function TeamTab({ accessToken, onToast }: Props) {
     try {
       const vType = resolveVehicleType(tr.report.vehicleInfo.vehicleTypeDesc, tr.report.damages)
       const svgData = await captureSvgs(vType, tr.report.damages)
+      const { generatePdf } = await import('@/src/lib/pdf')
       await generatePdf(tr.report.vehicleInfo, tr.report.damages, svgData, {})
     } catch (err) {
       console.error('Failed to generate team report PDF:', err)
