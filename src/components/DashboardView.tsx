@@ -1,8 +1,21 @@
 'use client';
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
 import { SavedReport, VehicleType, Severity } from '../types'
 import { resolveVehicleType } from '../lib/vehicleTypeInference'
 import { usePerformanceTelemetry } from '../hooks/usePerformanceTelemetry'
+import {
+  IconChart,
+  IconFolder,
+  IconWarning,
+  IconSparkles,
+  IconCar,
+  IconPin,
+  IconBolt,
+  IconBarChart,
+  IconTrend,
+  IconBulb,
+} from './ui/AnimatedIcons'
 
 
 interface Props {
@@ -38,6 +51,18 @@ function getReportVehicleType(r: SavedReport): VehicleType {
 }
 
 export default function DashboardView({ saved }: Props) {
+  const kpiRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = kpiRef.current
+    if (!el) return
+    const ctx = gsap.context(() => {
+      gsap.fromTo('.dash-kpi-card',
+        { opacity: 0, y: 24, scale: 0.96 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.4)', delay: 0.1 }
+      )
+    }, el)
+    return () => ctx.revert()
+  }, [])
   const { metrics, baseline } = usePerformanceTelemetry()
   // 1. Calculate General KPI Statistics
 
@@ -107,7 +132,9 @@ export default function DashboardView({ saved }: Props) {
   if (saved.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '64px 16px', background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 24, backdropFilter: 'blur(16px)' }}>
-        <div style={{ fontSize: '3rem', marginBottom: 16 }}>📊</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+          <IconChart size={56} className="text-sky-400" />
+        </div>
         <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 8, color: '#f8fafc' }}>Nenhum dado para exibir</h3>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: 400, margin: '0 auto 24px' }}>
           Para visualizar os gráficos e métricas gerenciais, realize e salve sua primeira vistoria localmente.
@@ -126,39 +153,44 @@ export default function DashboardView({ saved }: Props) {
   const maxVehicleCount = Math.max(...Object.values(stats.typeCounts), 1)
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24, animation: 'fadeIn 0.3s ease-out' }}>
+    <div ref={kpiRef} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       
       {/* ── KPI GRID ────────────────────────────────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
         
         {/* Card 1 */}
-        <div style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
+        <div className="dash-kpi-card" style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total de Vistorias</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.totalReports}</div>
-          <div style={{ fontSize: '0.72rem', color: '#10b981' }}>📂 Armazenadas localmente</div>
+          <div style={{ fontSize: '0.72rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <IconFolder size={12} className="text-emerald-400" /> Armazenadas localmente
+          </div>
         </div>
 
         {/* Card 2 */}
-        <div style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
+        <div className="dash-kpi-card" style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Avarias Registradas</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.totalDamages}</div>
-          <div style={{ fontSize: '0.72rem', color: stats.totalDamages > 0 ? '#ef4444' : 'var(--text-muted)' }}>
-            ⚠️ {stats.totalDamages > 0 ? 'Danos aparentes encontrados' : 'Nenhuma avaria'}
+          <div style={{ fontSize: '0.72rem', color: stats.totalDamages > 0 ? '#ef4444' : 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <IconWarning size={12} className={stats.totalDamages > 0 ? 'text-red-400' : 'text-slate-500'} />
+            {stats.totalDamages > 0 ? 'Danos aparentes encontrados' : 'Nenhuma avaria'}
           </div>
         </div>
 
         {/* Card 3 */}
-        <div style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
+        <div className="dash-kpi-card" style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Média Avarias/Laudo</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.avgDamages}</div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Média aritmética geral</div>
         </div>
 
         {/* Card 4 */}
-        <div style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
+        <div className="dash-kpi-card" style={{ background: 'rgba(15,23,42,0.5)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 6, backdropFilter: 'blur(12px)' }}>
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Laudos Sem Avarias</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.cleanReports}</div>
-          <div style={{ fontSize: '0.72rem', color: '#10b981' }}>✨ {stats.cleanReportsPct}% das vistorias limpas</div>
+          <div style={{ fontSize: '0.72rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: 4 }}>
+            <IconSparkles size={12} className="text-emerald-400" /> {stats.cleanReportsPct}% das vistorias limpas
+          </div>
         </div>
 
       </div>
@@ -169,7 +201,9 @@ export default function DashboardView({ saved }: Props) {
         {/* Gravidade Card */}
         <div style={{ background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24, backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
-            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}>⚠️ Gravidade das Avarias</h4>
+            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <IconWarning size={16} className="text-orange-400" /> Gravidade das Avarias
+            </h4>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Distribuição percentual das avarias identificadas</span>
           </div>
 
@@ -222,7 +256,9 @@ export default function DashboardView({ saved }: Props) {
         {/* Tipos de Veículos Card */}
         <div style={{ background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24, backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
-            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}>🚗 Frota Vistoriada</h4>
+            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <IconCar size={16} className="text-sky-400" /> Frota Vistoriada
+            </h4>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Quantidade de vistorias registradas por categoria</span>
           </div>
 
@@ -252,7 +288,9 @@ export default function DashboardView({ saved }: Props) {
       {/* ── TOP DAMAGED PARTS ───────────────────────────────────────────────── */}
       <div style={{ background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24, backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div>
-          <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}>📍 Top 5 Peças com Mais Avarias</h4>
+          <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <IconPin size={16} className="text-amber-400" /> Top 5 Peças com Mais Avarias
+          </h4>
           <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Componentes com maior frequência de incidência de danos</span>
         </div>
 
@@ -283,7 +321,9 @@ export default function DashboardView({ saved }: Props) {
       <div style={{ background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24, backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
           <div>
-            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0 }}>⚡ Telemetria de Desempenho (Tempo Real)</h4>
+            <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <IconBolt size={14} className="text-yellow-400" /> Telemetria de Desempenho (Tempo Real)
+            </h4>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Métricas reais de Core Web Vitals e diagnósticos de renderização</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.72rem', background: metrics.online ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', border: metrics.online ? '1px solid rgba(16,185,129,0.2)' : '1px solid rgba(239,68,68,0.2)', padding: '4px 8px', borderRadius: 8, color: metrics.online ? '#10b981' : '#ef4444' }}>
@@ -377,7 +417,9 @@ export default function DashboardView({ saved }: Props) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, paddingTop: 8 }}>
           {/* Uptime SLO & Health */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, background: 'rgba(0,0,0,0.08)', borderRadius: 12, padding: 16, border: '1px solid rgba(255,255,255,0.02)' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1' }}>📊 Indicadores de Observabilidade (SLO)</span>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <IconBarChart size={12} className="text-sky-400" /> Indicadores de Observabilidade (SLO)
+            </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: '0.72rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Disponibilidade Planejada:</span>
@@ -402,7 +444,9 @@ export default function DashboardView({ saved }: Props) {
 
           {/* Applied Optimization Impacts */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, background: 'rgba(0,0,0,0.08)', borderRadius: 12, padding: 16, border: '1px solid rgba(255,255,255,0.02)' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1' }}>📈 Impacto de Otimizações Aplicadas</span>
+            <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <IconTrend size={12} className="text-emerald-400" /> Impacto de Otimizações Aplicadas
+            </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: '0.7rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--text-muted)' }}>Frictionless Vehicle Selector (CSS calc):</span>
@@ -426,7 +470,10 @@ export default function DashboardView({ saved }: Props) {
 
         {/* Diagnostic Text */}
         <div style={{ background: 'rgba(0,170,255,0.04)', border: '1px solid rgba(0,170,255,0.08)', borderRadius: 12, padding: '12px 16px', fontSize: '0.72rem', color: '#38bdf8', lineHeight: '1.4' }}>
-          💡 <strong>Dica de Performance:</strong> O sistema está rodando em ambiente local. O tempo de renderização (LCP) medido na primeira carga é acelerado pela injeção do CSS Crítico e do script de tema assíncrono no head. Para uma medição pura dos Web Vitals, execute o build de produção (`npm run build`) e acesse em uma janela anônima (sem extensões de terceiros).
+          <span style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+            <IconBulb size={14} className="text-sky-300" />
+            <span><strong>Dica de Performance:</strong> O sistema está rodando em ambiente local. O tempo de renderização (LCP) medido na primeira carga é acelerado pela injeção do CSS Crítico e do script de tema assíncrono no head. Para uma medição pura dos Web Vitals, execute o build de produção (`npm run build`) e acesse em uma janela anônima (sem extensões de terceiros).</span>
+          </span>
         </div>
       </div>
 

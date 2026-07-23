@@ -1,12 +1,13 @@
 'use client';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
 import Reveal from './Reveal';
 import {
   LEGAL_CNPJ,
   LEGAL_COMPANY_NAME,
   LEGAL_CONTACT_EMAIL,
 } from './LegalContent';
-import { IconShieldCheck, IconSignature, IconGps } from './ui/AnimatedIcons';
+import { IconShieldCheck, IconSignature, IconGps, IconDocument, IconShieldCheck as IconCert } from './ui/AnimatedIcons';
 
 const TRUST_ITEMS = [
   {
@@ -30,8 +31,33 @@ const TRUST_ITEMS = [
 ];
 
 /**
- * Motion 2 — scroll reveal único (mesmo sistema da home: Reveal + CSS).
+ * Card de trust com hover GSAP (y:-6, scale:1.02)
  */
+function TrustCard({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ctx = gsap.context(() => {
+      el.addEventListener('mouseenter', () =>
+        gsap.to(el, { y: -6, scale: 1.02, duration: 0.3, ease: 'power2.out' })
+      );
+      el.addEventListener('mouseleave', () =>
+        gsap.to(el, { y: 0, scale: 1, duration: 0.3, ease: 'power2.out' })
+      );
+    }, el);
+    return () => ctx.revert();
+  }, []);
+  return (
+    <div
+      ref={ref}
+      className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group h-full flex flex-col justify-between"
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function TrustSection() {
   return (
     <section className="w-full max-w-6xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-4 text-left">
@@ -55,11 +81,7 @@ export default function TrustSection() {
             key={item.k}
             delay={idx * 70}
           >
-            <motion.div
-              whileHover={{ y: -6, scale: 1.02 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group h-full flex flex-col justify-between"
-            >
+            <TrustCard>
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-mono-data text-[10px] uppercase tracking-widest text-[var(--signal-bright)]">
@@ -72,7 +94,7 @@ export default function TrustSection() {
                 <h3 className="font-display text-xl font-semibold uppercase tracking-tight text-[var(--text-main)] mb-2">{item.title}</h3>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
               </div>
-            </motion.div>
+            </TrustCard>
           </Reveal>
         ))}
       </div>
@@ -89,7 +111,7 @@ export default function TrustSection() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-lg border border-sky-500/30 bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 transition-all"
           >
-            📄 PDF 1 · Laudo de Vistoria
+            <IconDocument size={14} className="text-sky-400" /> PDF 1 · Laudo de Vistoria
           </a>
           <a
             href="/exemplos/modelo-verificacao-autenticidade.pdf"
@@ -97,7 +119,7 @@ export default function TrustSection() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 transition-all"
           >
-            🛡️ PDF 2 · Certificado de Autenticidade
+            <IconShieldCheck size={14} className="text-emerald-400" /> PDF 2 · Certificado de Autenticidade
           </a>
         </div>
       </Reveal>
