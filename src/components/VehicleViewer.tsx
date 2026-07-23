@@ -129,7 +129,7 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
     selectedPart, setSelectedPart, orbitDir, containerRef, targetRef
   } = useVehicleViewer()
 
-  const VehicleComp = vehicleRegistry[vehicleType][viewType]
+  const VehicleComp = vehicleRegistry[vehicleType]?.[viewType] || vehicleRegistry['car']?.[viewType] || vehicleRegistry['car']['lateral-left']
 
   const handlePartClick = useCallback((id: string, name: string) => {
     speak(name)
