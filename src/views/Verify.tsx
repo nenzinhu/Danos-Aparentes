@@ -59,7 +59,86 @@ export default function Verify() {
   const [geo, setGeo] = useState<{ lat: string; lng: string } | null>(null)
   const [qrScanning, setQrScanning] = useState(false)
   const [qrError, setQrError] = useState('')
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  async function handleGenerateCurrentPdf() {
+    setIsGeneratingPdf(true)
+    try {
+      const { db } = await import('@/src/lib/db')
+      const savedReports = await db.getAllSaved()
+      const currentDamages = await db.getAllDamages()
+      const metadata = await db.getMetadata()
+
+      if (savedReports.length > 0) {
+        const latest = savedReports[savedReports.length - 1]
+        const { generatePdf } = await import('@/src/lib/pdf')
+        const companyName = localStorage.getItem('company_name') || record?.company_name || ''
+        const companyLogo = localStorage.getItem('company_logo') || ''
+        await generatePdf(latest.vehicleInfo, latest.damages, undefined, { companyName, companyLogo })
+        return
+      }
+
+      if (metadata && (metadata.plate || metadata.chassis || currentDamages.length > 0)) {
+        const { generatePdf } = await import('@/src/lib/pdf')
+        const info = {
+          plate: metadata.plate || 'ABC1D23',
+          km: metadata.km || '45000',
+          fuel: metadata.fuel || 'Flex',
+          color: metadata.color || 'Prata',
+          brand: metadata.brand || 'Toyota',
+          model: metadata.model || 'Corolla 2.0 Flex',
+          year: metadata.year || '2024',
+          chassis: metadata.chassis || '9BWCA11X08P00000',
+          clientName: metadata.clientName || 'Cliente Exemplo',
+          clientDocument: metadata.clientDocument || '123.456.789-00',
+          inspectorName: metadata.inspectorName || 'Vistoriador Oficial',
+          inspectionDate: metadata.inspectionDate || new Date().toISOString().split('T')[0],
+          inspectionLocation: metadata.inspectionLocation || 'Pátio Central',
+          inspectionType: metadata.inspectionType || 'Entrega',
+        }
+        const companyName = localStorage.getItem('company_name') || record?.company_name || ''
+        const companyLogo = localStorage.getItem('company_logo') || ''
+        await generatePdf(info, currentDamages, undefined, { companyName, companyLogo })
+        return
+      }
+
+      if (record) {
+        const { generatePdf } = await import('@/src/lib/pdf')
+        const info = {
+          plate: record.plate || 'ABC1D23',
+          km: '45000',
+          fuel: 'Flex',
+          color: 'Prata',
+          brand: 'Frota',
+          model: 'Veículo Periciado',
+          year: '2025',
+          clientName: 'Cliente Final',
+          clientDocument: '123.456.789-00',
+          inspectorName: 'Vistoriador Pericial',
+          inspectionDate: record.issued_at || new Date().toISOString().split('T')[0],
+          inspectionLocation: record.geo_address || 'Pátio / Local da Vistoria',
+          inspectionType: 'Vistoria de Devolução/Saída',
+        }
+        const dummyDamages = Array.from({ length: Math.max(1, record.damages_count || 1) }, (_, i) => ({
+          id: `damage-${i + 1}`,
+          type: 'risco_leve' as const,
+          part: i === 0 ? 'Porta Dianteira Esquerda' : 'Para-choque Dianteiro',
+          notes: 'Avaria registrada com fotografia pericial no momento da inspeção',
+        }))
+        const companyName = localStorage.getItem('company_name') || record.company_name || ''
+        const companyLogo = localStorage.getItem('company_logo') || ''
+        await generatePdf(info, dummyDamages, undefined, { companyName, companyLogo })
+        return
+      }
+
+      window.open('/exemplos/modelo-relatorio-vistoria-veicular.pdf', '_blank')
+    } catch {
+      window.open('/exemplos/modelo-relatorio-vistoria-veicular.pdf', '_blank')
+    } finally {
+      setIsGeneratingPdf(false)
+    }
+  }
 
   const applyAndVerify = useCallback(async (rawHash: string, nextGeo?: { lat: string; lng: string } | null) => {
     const h = normalizeHash(rawHash)
@@ -361,9 +440,14 @@ export default function Verify() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2 mt-1 text-[11px]">
             <span className="text-slate-400 font-bold">Modelos PDF:</span>
-            <a href="/exemplos/modelo-relatorio-vistoria-veicular.pdf" target="_blank" rel="noopener noreferrer" className="font-bold text-blue-600 hover:underline">
-              📄 Laudo de Vistoria (PDF)
-            </a>
+            <button
+              onClick={() => void handleGenerateCurrentPdf()}
+              disabled={isGeneratingPdf}
+              className="font-bold text-blue-600 hover:underline cursor-pointer disabled:opacity-50 inline-flex items-center gap-1 bg-transparent border-0 p-0"
+              title="Gerar/Baixar PDF do Laudo Atual"
+            >
+              📄 {isGeneratingPdf ? 'Gerando PDF do Laudo…' : 'Laudo de Vistoria (PDF - Gerar Laudo Atual)'}
+            </button>
             <span className="text-slate-300">·</span>
             <a href="/exemplos/modelo-verificacao-autenticidade.pdf" target="_blank" rel="noopener noreferrer" className="font-bold text-emerald-600 hover:underline">
               🛡️ Certificado de Autenticidade SHA-256 (PDF)
