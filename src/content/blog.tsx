@@ -91,6 +91,103 @@ function RecursosLaudo() {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'vistoria-foto-gps-hash-sha256-eliminar-contestacoes',
+    title: 'Vistoria com Foto GPS e Hash SHA-256: Como Grandes Frotas Eliminam 100% das Contestações',
+    excerpt:
+      'Descubra como o registro visual de avarias com localização GPS, carimbo de data/hora e selação digital SHA-256 encerra disputas judiciais e protege a margem financeira da sua empresa.',
+    category: 'Tecnologia',
+    tags: ['vistoria digital', 'avarias', 'foto com gps', 'hash sha256', 'frota', 'locadora', 'laudo pericial'],
+    date: '2026-07-23',
+    readingMinutes: 5,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#0284c7 0%,#0369a1 45%,#0f172a 100%)',
+      emoji: '🛡️',
+      image: '/publicidade/Gemini_Generated_Image_zc2bqlzc2bqlzc2b.png',
+    },
+    toc: [
+      { id: 'blindagem', label: 'A blindagem jurídica do laudo digital' },
+      { id: 'gps-timestamp', label: 'Foto com GPS e timestamp auditável' },
+      { id: 'hash-sha256', label: 'O poder do Hash SHA-256 e QR Code' },
+      { id: 'impacto-financeiro', label: 'Impacto financeiro e redução de prejuízo' },
+    ],
+    howTo: {
+      name: 'Como criar um laudo de vistoria à prova de contestações',
+      steps: [
+        { name: 'Abra a vistoria no smartphone', text: 'Preencha a placa ou utilize a consulta automática para importar marca, modelo e ano.' },
+        { name: 'Marque as avarias no diagrama 2D/3D', text: 'Indique exatamente onde está o risco, amassado ou trinca nas vistas do veículo.' },
+        { name: 'Capture fotos com metadados de GPS', text: 'Anexe fotos em alta definição com horário, data e coordenada geográfica de onde a foto foi tirada.' },
+        { name: 'Colha as assinaturas e sele o PDF', text: 'Colete a assinatura digital na tela e gere o PDF lacrado com Hash SHA-256 e QR Code de validação.' },
+      ],
+    },
+    faq: [
+      {
+        question: 'O laudo de vistoria com foto GPS e Hash SHA-256 tem validade jurídica?',
+        answer: 'Sim! A combinação de metadados imutáveis (coordenada GPS, data e hora) com o selo criptográfico SHA-256 e assinatura digital garante integridade jurídica perante clientes, seguradoras e tribunais.',
+      },
+      {
+        question: 'Como o Danos Aparentes impede que uma foto seja contestada?',
+        answer: 'Cada foto é vinculada diretamente à avaria selecionada no diagrama do veículo. Os metadados de geolocalização e data/hora são gravados e o laudo em PDF recebe uma hash única que pode ser consultada via QR Code.',
+      },
+    ],
+    content: (
+      <>
+        <p>
+          No setor de locação de veículos, gestão de frotas e oficinas, <strong>uma única contestação de avaria pode custar milhares de reais</strong> em reparos não cobrados, perda de tempo em discussões intermináveis e até processos judiciais.
+        </p>
+        <p>
+          A causa raiz do problema é simples: fotos avulsas enviadas no WhatsApp, folhas de papel rasgadas ou pranchetas rasuradas <strong>não possuem validade técnica suficiente</strong> quando o cliente nega ter provocado o dano.
+        </p>
+
+        <div className="my-8 overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black/10">
+          <img
+            src="/publicidade/Gemini_Generated_Image_zc2bqlzc2bqlzc2b.png"
+            alt="Laudo de vistoria digital de alta fidelidade com inteligência visual e proteção de dados"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto object-cover max-h-[480px]"
+          />
+          <p className="px-4 py-3 text-xs leading-relaxed text-[var(--text-muted)]">
+            Vistoria digital moderna: captura visual com localização por GPS, assinatura digital e selo criptográfico que garante a prova pericial da avaria.
+          </p>
+        </div>
+
+        <h2 id="blindagem">A blindagem jurídica do laudo digital</h2>
+        <p>
+          Para que um laudo de vistoria seja <strong>indiscutível</strong>, ele precisa comprovar três elementos fundamentais: <em>o que</em> mudou no veículo, <em>onde</em> o dano ocorreu e <em>quando</em> foi realizado o registro.
+        </p>
+        <ul>
+          <li><strong>Mapeamento visual exato:</strong> A avaria é marcada no diagrama do veículo (frente, teto, traseira, laterais), eliminando termos ambíguos.</li>
+          <li><strong>Vínculo direto com a foto:</strong> A imagem da avaria fica presa ao ponto específico do checklist, sem misturar fotos na galeria do celular.</li>
+          <li><strong>Assinatura digital colhida na tela:</strong> Cliente e vistoriador assinam o aceite presencialmente no dispositivo.</li>
+        </ul>
+
+        <h2 id="gps-timestamp">Foto com GPS e timestamp auditável</h2>
+        <p>
+          Diferente de fotos comuns que podem ser tiradas em outro lugar ou momento, o <strong>Danos Aparentes</strong> registra automaticamente os metadados de geolocalização e data/hora no momento da captura.
+        </p>
+        <p>
+          Isso impede argumentos do tipo &ldquo;essa foto foi tirada depois que eu entreguei o carro&rdquo; ou &ldquo;esse dano foi feito na oficina de vocês&rdquo;. A prova é gerada em tempo real no local da entrega ou devolução.
+        </p>
+
+        <h2 id="hash-sha256">O poder do Hash SHA-256 e QR Code</h2>
+        <p>
+          Após finalizar a vistoria, o sistema gera o laudo em PDF e calcula uma <strong>chave criptográfica SHA-256</strong> (o mesmo padrão de segurança bancária). Se alguém tentar editar o PDF no Photoshop ou alterar um texto, o hash muda e a fraude é revelada na hora.
+        </p>
+        <p>
+          Além disso, o documento conta com um <strong>QR Code de verificação online</strong>. Qualquer pessoa pode escanear o QR Code com a câmera do celular para conferir o laudo original armazenado na nuvem.
+        </p>
+
+        <Cta />
+
+        <h2 id="impacto-financeiro">Impacto financeiro e redução de prejuízo</h2>
+        <p>
+          Empresas que migraram da prancheta para o <strong>Danos Aparentes</strong> relatam uma <strong>redução drástica no custo de avarias não ressarcidas</strong>. O cliente percebe o nível de profissionalismo e rigidez da vistoria na entrada, reduzindo significativamente as tentativas de repassar avarias pré-existentes ou negar danos causados durante a posse do veículo.
+        </p>
+      </>
+    ),
+  },
+  {
     slug: 'como-fazer-laudo-de-vistoria-veicular',
     title: 'Como fazer laudo de vistoria veicular (passo a passo)',
     excerpt:
@@ -499,7 +596,7 @@ BLOG_POSTS.push(
     date: '2026-06-22',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#4338ca 45%,#818cf8 100%)', emoji: '📷', image: '/vehicles-img/car2d.png' },
+    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#4338ca 45%,#818cf8 100%)', emoji: '📷', image: '/publicidade/avaria.jpg' },
     toc: [
       { id: 'porque', label: 'Por que a foto decide' },
       { id: 'enquadramento', label: 'Enquadramento' },
@@ -513,6 +610,19 @@ BLOG_POSTS.push(
           Numa contestação, vence quem tem a prova melhor. E a prova é a foto. Uma imagem mal tirada
           enfraquece um laudo correto; uma bem tirada encerra a discussão.
         </p>
+
+        <div className="my-8 overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black/10">
+          <img
+            src="/publicidade/avaria.jpg"
+            alt="Registro fotográfico detalhado de avaria veicular para laudo de vistoria"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto object-cover"
+          />
+          <p className="px-4 py-3 text-xs leading-relaxed text-[var(--text-muted)]">
+            Registro com nitidez e foco correto: fotografia de avaria que comprova o dano real sem margem para contestação.
+          </p>
+        </div>
 
         <h2 id="porque">Por que a foto decide</h2>
         <p>
@@ -986,7 +1096,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-03',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#3f3f46 0%,#0f766e 45%,#5eead4 100%)', emoji: '📋', image: '/vehicles-img/van.png' },
+    cover: { gradient: 'linear-gradient(135deg,#3f3f46 0%,#0f766e 45%,#5eead4 100%)', emoji: '📋', image: '/publicidade/sem-papel-1200x628.jpg' },
     toc: [
       { id: 'papel', label: 'Por que o papel atrasa' },
       { id: 'digital', label: 'O que muda no fluxo digital' },
@@ -1000,6 +1110,20 @@ BLOG_POSTS.unshift(
           cadeia de retrabalho: ficha física, foto separada, planilha depois, revisão manual e atraso para
           enviar o documento ao cliente.
         </p>
+
+        <div className="my-8 overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black/10">
+          <img
+            src="/publicidade/sem-papel-1200x628.jpg"
+            alt="Vistoria veicular sem papel: do checklist em papel para o laudo digital no smartphone"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto object-cover"
+          />
+          <p className="px-4 py-3 text-xs leading-relaxed text-[var(--text-muted)]">
+            Fim da prancheta e das fichas físicas: migração para o laudo 100% digital com assinatura na tela e PDF automático.
+          </p>
+        </div>
+
         <p>
           Sair da prancheta não é apenas trocar suporte. É trocar um processo fragmentado por um fluxo único.
           No <strong>Danos Aparentes</strong>, isso acontece com marcação visual, fotos e PDF no mesmo caminho.
