@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { compressImage } from '../lib/imageUtils'
 
+import { IconShieldCheck, IconGallery } from './ui/AnimatedIcons'
+
 interface Props {
   isOpen: boolean
   onClose: () => void
@@ -93,7 +95,9 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div>
-            <div style={{ fontWeight: 800, fontSize: '1.05rem', letterSpacing: '-0.01em' }}>⚙️ Identidade da Empresa</div>
+            <div style={{ fontWeight: 800, fontSize: '1.05rem', letterSpacing: '-0.01em', display: 'flex', alignItems: 'center', gap: 8 }}>
+              <IconShieldCheck className="text-sky-400" size={20} /> Identidade da Empresa
+            </div>
             <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: 2 }}>Personalize os PDFs de Vistoria com a sua marca</div>
           </div>
           <button 
@@ -110,7 +114,7 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
           {!hasAccess && (
             <div style={{ background: 'rgba(234,179,8,0.08)', border: '1px solid rgba(234,179,8,0.2)', borderRadius: 12, padding: '14px 16px', marginBottom: 20 }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                <span style={{ fontSize: '1.1rem', marginTop: -1 }}>🔒</span>
+                <span style={{ fontSize: '1.1rem', marginTop: -1 }}><IconShieldCheck className="text-amber-400" size={18} /></span>
                 <div>
                   <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#facc15', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Recurso Premium (Vistoria PRO)</div>
                   <p style={{ fontSize: '0.78rem', color: '#e2e8f0', marginTop: 4, lineHeight: 1.4 }}>
@@ -146,9 +150,9 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  style={{ background: 'rgba(56,189,248,0.08)', border: '1px dashed rgba(56,189,248,0.3)', borderRadius: 10, padding: '16px 20px', color: '#38bdf8', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', flex: 1, textAlign: 'center', transition: 'all 0.2s', fontFamily: 'Outfit, sans-serif' }}
+                  style={{ background: 'rgba(56,189,248,0.08)', border: '1px dashed rgba(56,189,248,0.3)', borderRadius: 10, padding: '16px 20px', color: '#38bdf8', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', flex: 1, textAlign: 'center', transition: 'all 0.2s', fontFamily: 'Outfit, sans-serif', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
                 >
-                  📁 Carregar Logo (JPG, PNG, SVG)
+                  <IconGallery size={18} /> Carregar Logo (JPG, PNG, SVG)
                 </button>
                 <input 
                   ref={fileInputRef}

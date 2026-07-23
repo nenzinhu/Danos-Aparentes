@@ -51,10 +51,12 @@ function dateBucket(ts: number): string {
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
-const CLOUD_BADGE: Record<CloudState, { icon: string; text: string; color: string; bg: string; border: string }> = {
-  cloud:   { icon: '☁️', text: 'Na nuvem', color: '#38bdf8', bg: 'rgba(56,189,248,0.1)',  border: 'rgba(56,189,248,0.25)' },
-  pending: { icon: '⏳', text: 'Pendente', color: '#fbbf24', bg: 'rgba(251,191,36,0.1)',  border: 'rgba(251,191,36,0.25)' },
-  local:   { icon: '📴', text: 'Local',    color: '#94a3b8', bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.25)' },
+import { IconCheck, IconDocument } from './ui/AnimatedIcons'
+
+const CLOUD_BADGE: Record<CloudState, { icon: React.ReactNode; text: string; color: string; bg: string; border: string }> = {
+  cloud:   { icon: <IconCheck size={12} className="text-sky-400" />, text: 'Na nuvem', color: '#38bdf8', bg: 'rgba(56,189,248,0.1)',  border: 'rgba(56,189,248,0.25)' },
+  pending: { icon: <span className="animate-spin text-[10px]">⏳</span>, text: 'Pendente', color: '#fbbf24', bg: 'rgba(251,191,36,0.1)',  border: 'rgba(251,191,36,0.25)' },
+  local:   { icon: <IconDocument size={12} className="text-slate-400" />, text: 'Local',    color: '#94a3b8', bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.25)' },
 }
 
 function CloudBadge({ state }: { state: CloudState }) {
@@ -69,7 +71,7 @@ function CloudBadge({ state }: { state: CloudState }) {
         borderRadius: 999, padding: '2px 8px', lineHeight: 1.4,
       }}
     >
-      <span aria-hidden="true">{b.icon}</span> {b.text}
+      <span aria-hidden="true" className="flex items-center">{b.icon}</span> {b.text}
     </span>
   )
 }
