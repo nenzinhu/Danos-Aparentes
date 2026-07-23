@@ -244,16 +244,27 @@ export default function PdfPreviewSection() {
             </div>
           </div>
 
-          {/* Abrir o PDF real do modelo */}
-          <a
-            href={MODEL.file}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-full border border-[var(--card-border)] text-[var(--text-main)] hover:border-primary/50 hover:text-primary transition-colors focus-visible:ring-2 ring-[var(--primary)] outline-none"
-          >
-            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
-            Abrir modelo · Relatório de Vistoria Veicular
-          </a>
+          {/* Abrir os dois PDFs reais do modelo */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+            <a
+              href={MODEL.file}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl border border-sky-500/30 bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 hover:border-sky-500/50 transition-all shadow-md focus-visible:ring-2 ring-[var(--primary)] outline-none"
+            >
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+              PDF 1 · Relatório de Vistoria
+            </a>
+            <a
+              href="/exemplos/modelo-verificacao-autenticidade.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all shadow-md focus-visible:ring-2 ring-emerald-500 outline-none"
+            >
+              <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+              PDF 2 · Certificado de Autenticidade
+            </a>
+          </div>
         </div>
 
         {/* Coluna Direita: Informações explicativas */}

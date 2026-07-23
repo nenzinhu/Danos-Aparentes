@@ -77,6 +77,31 @@ export default function TrustSection() {
         ))}
       </div>
 
+      {/* Acesso rápido aos 2 modelos em PDF: Laudo + Certificado de Autenticidade */}
+      <Reveal delay={180} className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <span className="text-xs font-bold font-mono-data text-[var(--text-muted)] uppercase tracking-wider">
+          Exemplos em PDF para baixar:
+        </span>
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <a
+            href="/exemplos/modelo-relatorio-vistoria-veicular.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-lg border border-sky-500/30 bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 transition-all"
+          >
+            📄 PDF 1 · Laudo de Vistoria
+          </a>
+          <a
+            href="/exemplos/modelo-verificacao-autenticidade.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 transition-all"
+          >
+            🛡️ PDF 2 · Certificado de Autenticidade
+          </a>
+        </div>
+      </Reveal>
+
       <Reveal delay={220} className="glass-card mt-8 p-6 sm:p-8 border border-[var(--card-border)]/50 flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
         <div className="shrink-0 grid place-items-center w-12 h-12 rounded-full border border-[var(--sheet-line)] font-mono-data text-lg text-[var(--signal-bright)]">
           DA

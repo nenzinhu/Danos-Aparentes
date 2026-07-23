@@ -355,10 +355,20 @@ export default function Verify() {
           </div>
         </div>
 
-        <div className="bg-slate-50 p-4 text-center border-t border-slate-100">
+        <div className="bg-slate-50 p-4 text-center border-t border-slate-100 flex flex-col items-center gap-2">
           <p className="text-[9px] text-slate-400 uppercase font-bold tracking-[0.1em]">
             Este documento é uma representação digital de validade pública garantida por tecnologia de hashing.
           </p>
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-1 text-[11px]">
+            <span className="text-slate-400 font-bold">Modelos PDF:</span>
+            <a href="/exemplos/modelo-relatorio-vistoria-veicular.pdf" target="_blank" rel="noopener noreferrer" className="font-bold text-blue-600 hover:underline">
+              📄 Laudo de Vistoria (PDF)
+            </a>
+            <span className="text-slate-300">·</span>
+            <a href="/exemplos/modelo-verificacao-autenticidade.pdf" target="_blank" rel="noopener noreferrer" className="font-bold text-emerald-600 hover:underline">
+              🛡️ Certificado de Autenticidade SHA-256 (PDF)
+            </a>
+          </div>
         </div>
       </div>
     </div>
