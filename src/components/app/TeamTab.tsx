@@ -187,7 +187,7 @@ export default function TeamTab({ accessToken, onToast }: Props) {
                               </span>
                               {d.notes && (
                                 <p className="margin-0 text-[10px] text-[var(--text-muted)] italic truncate">
-                                  "{d.notes}"
+                                  &quot;{d.notes}&quot;
                                 </p>
                               )}
                             </div>

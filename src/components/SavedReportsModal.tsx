@@ -105,12 +105,13 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
   // Limpa o estado quando o modal fecha
   useEffect(() => {
     if (!isOpen) {
-      setActiveReportIndex(-1)
-      setExpandedReportIds(new Set())
+      const timer = setTimeout(() => {
+        setActiveReportIndex(-1)
+        setExpandedReportIds(new Set())
+      }, 0)
+      return () => clearTimeout(timer)
     }
   }, [isOpen])
-
-  if (!isOpen) return null
 
   const cloudStateOf = (id: string): CloudState => {
     if (!supabaseEnabled) return 'local'
@@ -206,13 +207,16 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
 
   // Scroll active report into view
   useEffect(() => {
+    if (!isOpen) return
     if (activeReportIndex >= 0) {
       const activeEl = document.querySelector(`[data-report-index="${activeReportIndex}"]`)
       if (activeEl) {
         activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
       }
     }
-  }, [activeReportIndex])
+  }, [isOpen, activeReportIndex])
+
+  if (!isOpen) return null
 
   // Agrupa por data só quando a ordenação é por data; senão, lista plana
   const isDateSort = sortKey === 'recent' || sortKey === 'old'
@@ -527,7 +531,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                       )}
                       {d.notes && (
                         <p style={{ margin: '2px 0 0 0', color: 'var(--text-muted)', fontSize: '0.68rem', fontStyle: 'italic', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          "{d.notes}"
+                          &quot;{d.notes}&quot;
                         </p>
                       )}
                     </div>
