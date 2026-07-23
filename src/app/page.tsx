@@ -257,8 +257,8 @@ export default function LandingPage() {
       `}} />
 
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0">
-        <div aria-hidden="true" className="absolute top-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full" style={{ background: 'radial-gradient(circle, rgba(0,170,255,0.07) 0%, transparent 70%)' }} />
-        <div aria-hidden="true" className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full" style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)' }} />
+        <div aria-hidden="true" className="bg-glow-orb bg-glow-orb-1 absolute top-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full" style={{ background: 'radial-gradient(circle, rgba(0,170,255,0.18) 0%, transparent 70%)' }} />
+        <div aria-hidden="true" className="bg-glow-orb bg-glow-orb-2 absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full" style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%)' }} />
       </div>
 
       {/* Grid Overlay */}
@@ -296,8 +296,8 @@ export default function LandingPage() {
       </header>
 
       {/* Main Content — Prancha de Vistoria */}
-      <main className="flex-1 flex items-center justify-center px-4 sm:px-8 py-6 z-10 relative">
-        <div className="sheet-frame max-w-7xl w-full">
+      <main className="gsap-hero-container flex-1 flex items-center justify-center px-4 sm:px-8 py-6 z-10 relative">
+        <div className="gsap-hero-3d sheet-frame max-w-7xl w-full">
           <span aria-hidden="true" className="crop-tr" />
           <span aria-hidden="true" className="crop-br" />
 
@@ -433,7 +433,7 @@ export default function LandingPage() {
               <motion.div
                 whileHover={{ y: -6, scale: 1.02 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group h-full"
+                className="spotlight-card gsap-card glass-card p-8 border border-[var(--card-border)]/50 hover:border-[var(--sheet-line)] hover:shadow-[0_8px_30px_-12px_var(--signal-glow)] transition-colors duration-300 relative group h-full"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 group-hover:scale-110 transition-transform duration-300">

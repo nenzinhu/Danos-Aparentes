@@ -144,8 +144,9 @@ export default function PdfPreviewSection() {
                   </span>
                 </div>
 
-                {/* Container da Imagem com Efeito Hover */}
-                <div className="relative w-full aspect-[1/1.41] bg-slate-900/50 overflow-hidden flex items-center justify-center p-2">
+                {/* Container da Imagem com Efeito Hover e Scanner Laser */}
+                <div className="pdf-scan-container relative w-full aspect-[1/1.41] bg-slate-900/50 overflow-hidden flex items-center justify-center p-2">
+                  <div className="pdf-scan-line" />
                   <img
                     src={page.src}
                     alt={page.title}

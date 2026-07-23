@@ -870,3 +870,76 @@ html.light .theme-segment .theme-segment-active {
     animation-duration: 0s !important;
   }
 }
+
+/* ============================================================
+   GSAP HIGH-TECH ANIMATION STYLES (Cyberpunk Pericial)
+   ============================================================ */
+
+/* 1. Spotlight Cursor Glow nos Cards */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(56, 189, 248, 0.15),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* 2. 3D Hero Container */
+.gsap-hero-3d {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* 4. Scanner Laser Pericial */
+.pdf-scan-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.pdf-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #38bdf8 50%, transparent 100%);
+  box-shadow: 0 0 15px #38bdf8, 0 0 30px #0284c7;
+  z-index: 10;
+  pointer-events: none;
+  animation: laserScan 3s ease-in-out infinite alternate;
+}
+
+@keyframes laserScan {
+  0% { top: 0%; opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { top: 98%; opacity: 0.8; }
+}
+
+/* 7. Ambient Background Glow Orbs */
+.bg-glow-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: 0.45;
+  mix-blend-mode: screen;
+}
+
