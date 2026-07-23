@@ -5,6 +5,10 @@ import { getSupabaseUrl, getSupabaseAnonKey } from '@/lib/supabaseEnv'
 import { hasActiveSubscriptionAccess } from '@/src/lib/subscriptionAccess'
 import { supabaseAdmin } from './supabaseAdmin'
 
+if (typeof globalThis.WebSocket === 'undefined') {
+  (globalThis as unknown as Record<string, unknown>).WebSocket = class DummyWebSocket {}
+}
+
 // Valida o JWT (Bearer) ou, em fallback, a sessão nos cookies (@supabase/ssr).
 export async function getUserFromRequest(req: NextRequest): Promise<User | null> {
   const url = getSupabaseUrl()
