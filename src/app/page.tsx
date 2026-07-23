@@ -209,9 +209,12 @@ function TextCarousel() {
   );
 }
 
+import { useGsapScrollAnimations } from '../hooks/useGsapScrollAnimations';
+
 export default function LandingPage() {
   const [darkMode, setDarkMode] = useState(true);
   const reduceMotion = useReducedMotion();
+  useGsapScrollAnimations();
 
   useEffect(() => {
     const saved = localStorage.getItem('darkMode');
