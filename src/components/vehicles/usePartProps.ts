@@ -15,7 +15,7 @@ type PartClickHandler = (id: string, name: string) => void
 export type PartMotion = 'default' | 'pro'
 
 interface UsePartPropsOptions {
-  /** `pro` = GSAP timeline + DrawSVG (preview on car). Default keeps legacy motion. */
+  /** `pro` = GSAP timeline + DrawSVG. Default is pro for all vehicles. */
   motion?: PartMotion
 }
 
@@ -46,9 +46,7 @@ function prepareSvgMotion(el: SVGElement) {
   el.style.transitionProperty = 'fill, stroke, stroke-width, filter'
 }
 
-/**
- * Spring "pop" feedback on tap — legacy path (Framer). Used by non-car vehicles.
- */
+/** Legacy Framer pop — kept for motion: 'default'. */
 function popPart(el: SVGElement) {
   if (typeof window === 'undefined' || reducedMotion()) return
 
@@ -56,9 +54,7 @@ function popPart(el: SVGElement) {
   animate(el, { scale: [1, 1.08, 1] }, { duration: 0.35, ease: [0.34, 1.56, 0.64, 1] })
 }
 
-/**
- * Traces the part outline — legacy DrawSVG-only path.
- */
+/** Legacy DrawSVG-only path. */
 function drawSelection(el: SVGElement) {
   if (typeof window === 'undefined' || reducedMotion()) return
 
@@ -78,10 +74,7 @@ function drawSelection(el: SVGElement) {
   )
 }
 
-/**
- * Professional selection: one timeline for pop + outline draw + settle.
- * Feels like a product inspector, not a CSS :active flash.
- */
+/** Pro selection: one timeline for pop + outline draw + settle. */
 function playProSelection(el: ProEl) {
   if (reducedMotion()) return
 
@@ -101,11 +94,7 @@ function playProSelection(el: ProEl) {
 
   el[PRO_TL_KEY] = tl
 
-  tl.fromTo(
-    el,
-    { scale: 1 },
-    { scale: 1.07, duration: 0.18 },
-  )
+  tl.fromTo(el, { scale: 1 }, { scale: 1.07, duration: 0.18 })
 
   if (strokable.length) {
     tl.fromTo(
@@ -159,7 +148,7 @@ export function usePartProps(
   onPartHover: PartClickHandler,
   options: UsePartPropsOptions = {},
 ) {
-  const motion: PartMotion = options.motion ?? 'default'
+  const motion: PartMotion = options.motion ?? 'pro'
 
   return useCallback((id: string) => {
     const dmg = damages.find(d => d.partId === id)
@@ -173,6 +162,7 @@ export function usePartProps(
     ].filter(Boolean).join(' ')
 
     return {
+      'data-part-id': id,
       className: cls,
       onClick: (e: MouseEvent<SVGElement>) => {
         e.stopPropagation()

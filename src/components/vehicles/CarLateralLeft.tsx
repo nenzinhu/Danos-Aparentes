@@ -10,7 +10,7 @@ export default function CarLateralLeft({
   onPartHover,
   hideWheels = false,
 }: VehicleProps) {
-  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover, { motion: 'pro' })
+  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
 
   return (
     <svg viewBox="0 0 520 220" width="100%">

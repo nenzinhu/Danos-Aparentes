@@ -289,8 +289,15 @@ html.light .blog-cta {
 .damage-tag {
   font-family: var(--font-mono-data), ui-monospace, monospace;
   font-size: 10px;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  line-height: 1.35;
+  display: inline-flex;
+  align-items: center;
+  max-width: min(46vw, 200px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 /* Anel de status da lanterna acesa — respiro suave (transform + opacity). */
 @keyframes torch-halo {

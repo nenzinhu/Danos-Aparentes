@@ -1,69 +1,13 @@
 'use client';
-import { useEffect, useRef } from 'react'
-import gsap from 'gsap'
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
 import { VehicleProps } from '../../types'
 import { usePartProps } from './usePartProps'
 import { FrontalWheelGraphic } from './WheelRim'
 
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(DrawSVGPlugin)
-}
-
 export default function CarFrontal({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {
-  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover, { motion: 'pro' })
-  const svgRef = useRef<SVGSVGElement>(null)
-
-  // One-shot professional entrance: parts rise in, outline draws once.
-  useEffect(() => {
-    const root = svgRef.current
-    if (!root) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    const parts = root.querySelectorAll<SVGElement>('.part')
-    if (!parts.length) return
-
-    const strokable = Array.from(parts).flatMap(part => {
-      if (part.tagName.toLowerCase() === 'g') {
-        return Array.from(part.querySelectorAll<SVGElement>('path, rect, circle, ellipse, polygon'))
-          .filter(t => t.getAttribute('pointer-events') !== 'none')
-      }
-      return [part]
-    })
-
-    const ctx = gsap.context(() => {
-      gsap.set(parts, { transformOrigin: '50% 50%', transformBox: 'fill-box' })
-
-      const tl = gsap.timeline({ defaults: { ease: 'power2.out' } })
-      tl.from(parts, {
-        autoAlpha: 0,
-        y: 10,
-        scale: 0.97,
-        duration: 0.45,
-        stagger: 0.04,
-      })
-
-      if (strokable.length) {
-        tl.fromTo(
-          strokable,
-          { drawSVG: '0%' },
-          {
-            drawSVG: '100%',
-            duration: 0.7,
-            stagger: 0.03,
-            ease: 'power2.inOut',
-            onComplete: () => gsap.set(strokable, { clearProps: 'strokeDasharray,strokeDashoffset' }),
-          },
-          '-=0.25',
-        )
-      }
-    }, root)
-
-    return () => ctx.revert()
-  }, [])
+  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
 
   return (
-    <svg ref={svgRef} viewBox="0 0 400 300" width="100%">
+    <svg viewBox="0 0 400 300" width="100%">
       {/* Sombra projetada */}
       <ellipse cx="200" cy="275" rx="160" ry="12" fill="#000" opacity="0.35" filter="url(#shadow-filter)" />
 

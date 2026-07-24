@@ -6,9 +6,15 @@ import { VehicleType, ViewType, Damage, DamageType, Severity } from '../types'
 import { vehicleRegistry } from './vehicles/registry'
 import { useZoomPan } from '../hooks/useZoomPan'
 import DamageFloat from './DamageFloat'
+import DamageCallouts from './DamageCallouts'
 import VehicleDefs from './vehicles/VehicleDefs'
 import ErrorBoundary from './ErrorBoundary'
-import { Flip, prefersReducedMotion } from '../lib/gsap'
+import { Flip, gsap, prefersReducedMotion } from '../lib/gsap'
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(DrawSVGPlugin)
+}
 
 // --- Types ---
 interface VehicleViewerContextValue {
@@ -130,14 +136,22 @@ const orbitVariants = {
 const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen?: boolean }) {
   const {
     vehicleType, viewType, damages, speak, speakHover,
-    selectedPart, setSelectedPart, orbitDir, containerRef, targetRef
+    selectedPart, setSelectedPart, orbitDir, containerRef, targetRef, scale,
   } = useVehicleViewer()
 
   const VehicleComp = vehicleRegistry[vehicleType]?.[viewType] || vehicleRegistry['car']?.[viewType] || vehicleRegistry['car']['lateral-left']
+  const layoutKey = `${vehicleType}-${viewType}`
+
+  const viewDamages = useMemo(
+    () => damages.filter(d => d.vehicle === vehicleType && d.view === viewType),
+    [damages, vehicleType, viewType],
+  )
 
   const handlePartClick = useCallback((id: string, name: string) => {
     speak(name)
-    const el = document.getElementById(id)
+    const root = containerRef.current
+    const el = root?.querySelector(`[data-part-id="${CSS.escape(id)}"]`)
+      ?? document.querySelector(`[data-part-id="${CSS.escape(id)}"]`)
     const rect = el?.getBoundingClientRect()
     // Posiciona o popup FORA dos limites do veículo (à direita do visualizador,
     // ou à esquerda se não houver espaço), nunca em cima da peça clicada.
@@ -156,14 +170,76 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
     setSelectedPart({ id, name, pos: { x, y } })
   }, [speak, setSelectedPart, containerRef])
 
+  // Professional entrance for every vehicle/view swap (waits for dynamic SVG).
+  useEffect(() => {
+    const root = targetRef.current
+    if (!root || prefersReducedMotion()) return
+
+    let ctx: gsap.Context | null = null
+    let done = false
+
+    const play = () => {
+      if (done) return true
+      const parts = root.querySelectorAll<SVGElement>('.part')
+      if (!parts.length) return false
+      done = true
+
+      const strokable = Array.from(parts).flatMap(part => {
+        if (part.tagName.toLowerCase() === 'g') {
+          return Array.from(part.querySelectorAll<SVGElement>('path, rect, circle, ellipse, polygon'))
+            .filter(t => t.getAttribute('pointer-events') !== 'none')
+        }
+        return [part]
+      })
+
+      ctx = gsap.context(() => {
+        gsap.set(parts, { transformOrigin: '50% 50%', transformBox: 'fill-box' })
+        const tl = gsap.timeline({ defaults: { ease: 'power2.out' } })
+        tl.from(parts, {
+          autoAlpha: 0,
+          y: 10,
+          scale: 0.97,
+          duration: 0.4,
+          stagger: 0.035,
+        })
+        if (strokable.length) {
+          tl.fromTo(
+            strokable,
+            { drawSVG: '0%' },
+            {
+              drawSVG: '100%',
+              duration: 0.65,
+              stagger: 0.025,
+              ease: 'power2.inOut',
+              onComplete: () => gsap.set(strokable, { clearProps: 'strokeDasharray,strokeDashoffset' }),
+            },
+            '-=0.22',
+          )
+        }
+      }, root)
+      return true
+    }
+
+    if (play()) return () => { ctx?.revert() }
+
+    const mo = new MutationObserver(() => {
+      if (play()) mo.disconnect()
+    })
+    mo.observe(root, { childList: true, subtree: true })
+    return () => {
+      mo.disconnect()
+      ctx?.revert()
+    }
+  }, [layoutKey, targetRef])
+
   return (
     <div
       ref={containerRef}
-      className={`overflow-hidden cursor-grab flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] ${isFullscreen ? 'rounded-0 flex-1 min-h-0' : 'rounded-2xl flex-1 min-h-[220px]'}`}
+      className={`relative overflow-hidden cursor-grab flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] ${isFullscreen ? 'rounded-0 flex-1 min-h-0' : 'rounded-2xl flex-1 min-h-[220px]'}`}
     >
       <AnimatePresence mode='wait' custom={orbitDir}>
         <motion.div
-          key={`${vehicleType}-${viewType}`}
+          key={layoutKey}
           custom={orbitDir}
           variants={orbitVariants}
           initial='initial'
@@ -178,7 +254,7 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
             className={isFullscreen ? 'h-full flex items-center justify-center [&>svg]:h-full [&>svg]:w-auto [&>svg]:max-w-full' : ''}
           >
             <VehicleComp
-              damages={damages}
+              damages={viewDamages}
               selectedPartId={selectedPart?.id ?? null}
               onPartClick={handlePartClick}
               onPartHover={(_, name) => speakHover(name)}
@@ -186,6 +262,14 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
           </div>
         </motion.div>
       </AnimatePresence>
+
+      <DamageCallouts
+        containerRef={containerRef}
+        damages={viewDamages}
+        selectedPart={selectedPart ? { id: selectedPart.id, name: selectedPart.name } : null}
+        scale={scale}
+        layoutKey={layoutKey}
+      />
     </div>
   )
 })
