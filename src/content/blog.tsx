@@ -198,7 +198,7 @@ export const BLOG_POSTS: BlogPost[] = [
     updatedDate: '2026-07-12',
     readingMinutes: 7,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '📋', image: '/blog-covers/como-fazer-laudo-vistoria.svg' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '📋', image: '/blog-covers/como-fazer-laudo-vistoria.webp' },
     toc: [
       { id: 'o-que-e', label: 'O que é um laudo de vistoria' },
       { id: 'quando-exigido', label: 'Quando ele é exigido' },
@@ -314,7 +314,7 @@ BLOG_POSTS.push(
     date: '2026-06-27',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#155e2f 0%,#0f766e 45%,#22c55e 100%)', emoji: '🚐', image: '/blog-covers/checklist-devolucao-locadora.svg' },
+    cover: { gradient: 'linear-gradient(135deg,#155e2f 0%,#0f766e 45%,#22c55e 100%)', emoji: '🚐', image: '/blog-covers/checklist-devolucao-locadora.webp' },
     toc: [
       { id: 'por-que', label: 'Por que a devolução é crítica' },
       { id: 'antes', label: 'Antes de começar' },
@@ -596,7 +596,7 @@ BLOG_POSTS.push(
     date: '2026-06-22',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#4338ca 45%,#818cf8 100%)', emoji: '📷', image: '/publicidade/avaria.jpg' },
+    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#4338ca 45%,#818cf8 100%)', emoji: '📷', image: '/blog-covers/como-fotografar-avarias.webp' },
     toc: [
       { id: 'porque', label: 'Por que a foto decide' },
       { id: 'enquadramento', label: 'Enquadramento' },
@@ -613,7 +613,7 @@ BLOG_POSTS.push(
 
         <div className="my-8 overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black/10">
           <img
-            src="/publicidade/avaria.jpg"
+            src="/blog-covers/como-fotografar-avarias.webp"
             alt="Registro fotográfico detalhado de avaria veicular para laudo de vistoria"
             loading="lazy"
             decoding="async"
@@ -1328,7 +1328,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-04',
     readingMinutes: 7,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#ea580c 45%,#fb923c 100%)', emoji: '🧾', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#ea580c 45%,#fb923c 100%)', emoji: '🧾', image: '/blog-covers/avarias-preexistentes.webp' },
     toc: [
       { id: 'prejuizo', label: 'Por que a avaria preexistente vira prejuízo' },
       { id: 'provar', label: 'O que realmente prova' },
@@ -1433,7 +1433,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-03',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#1d4ed8 45%,#60a5fa 100%)', emoji: '🚗', image: '/vehicles-img/car2d.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#1d4ed8 45%,#60a5fa 100%)', emoji: '🚗', image: '/blog-covers/vistoria-entrega-veiculo.webp' },
     toc: [
       { id: 'importancia', label: 'Por que a entrega define a devolução' },
       { id: 'checklist', label: 'Checklist da vistoria de entrega' },
@@ -1843,7 +1843,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-04',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#111827 0%,#0f766e 45%,#34d399 100%)', emoji: '🧩', image: '/vehicles-img/van.png' },
+    cover: { gradient: 'linear-gradient(135deg,#111827 0%,#0f766e 45%,#34d399 100%)', emoji: '🧩', image: '/blog-covers/laudo-white-label-locadoras.webp' },
     toc: [
       { id: 'white-label', label: 'O que é um laudo white-label' },
       { id: 'locadora', label: 'Por que isso importa para locadoras' },
@@ -2536,7 +2536,7 @@ BLOG_POSTS.unshift(
     cover: {
       gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)',
       emoji: '🧾',
-      image: '/blog-covers/cobranca-avaria-locadora.svg',
+      image: '/blog-covers/cobranca-avaria-locadora.webp',
     },
     toc: [
       { id: 'resposta-rapida', label: 'Resposta rápida' },
@@ -2723,7 +2723,7 @@ BLOG_POSTS.unshift(
     cover: {
       gradient: 'linear-gradient(135deg,#1e3a5f 0%,#0369a1 45%,#38bdf8 100%)',
       emoji: '🔧',
-      image: '/blog-covers/vistoria-orcamento-oficina.svg',
+      image: '/blog-covers/vistoria-orcamento-oficina.webp',
     },
     toc: [
       { id: 'resposta-rapida', label: 'Resposta rápida' },
@@ -3042,7 +3042,7 @@ BLOG_POSTS.unshift(
     cover: {
       gradient: 'linear-gradient(135deg,#14532d 0%,#15803d 45%,#86efac 100%)',
       emoji: '🚛',
-      image: '/vehicles-img/van.png',
+      image: '/blog-covers/controle-avarias-frota.webp',
     },
     toc: [
       { id: 'resposta-rapida', label: 'Resposta rápida' },
@@ -3206,7 +3206,7 @@ BLOG_POSTS.push(
     date: '2026-07-13',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '🔍', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '🔍', image: '/blog-covers/amassado-pre-existente-locacao.webp' },
     toc: [
       { id: 'o-problema', label: 'O problema da avaria pré-existente' },
       { id: 'como-provar', label: 'Como provar com a vistoria digital' },
@@ -3263,7 +3263,7 @@ BLOG_POSTS.push(
     date: '2026-07-13',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)', emoji: '🔧', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)', emoji: '🔧', image: '/blog-covers/digitalizar-vistoria-oficina.webp' },
     toc: [
       { id: 'por-que-digitalizar', label: 'Por que digitalizar a vistoria' },
       { id: 'passo-a-passo', label: 'Passo a passo na oficina' },
