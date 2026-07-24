@@ -295,9 +295,9 @@ html.light .blog-cta {
   line-height: 1.35;
   display: inline-flex;
   align-items: center;
-  max-width: min(46vw, 200px);
+  gap: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
+  box-sizing: border-box;
 }
 /* Anel de status da lanterna acesa — respiro suave (transform + opacity). */
 @keyframes torch-halo {
