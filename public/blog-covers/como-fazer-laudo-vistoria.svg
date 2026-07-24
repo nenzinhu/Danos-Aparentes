@@ -1,0 +1,97 @@
+<svg viewBox="0 0 828 352" width="828" height="352" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Passo a passo de como fazer um laudo de vistoria veicular, com checklist numerado e carro com avaria marcada">
+  <defs>
+    <linearGradient id="card3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef6fc"/>
+      <stop offset="1" stop-color="#d7e8f5"/>
+    </linearGradient>
+    <linearGradient id="header3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0c4a6e"/>
+      <stop offset="1" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="badge3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1FB6FF"/>
+      <stop offset="1" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="car3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#0c4a6e"/>
+    </linearGradient>
+    <radialGradient id="glow3" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#38bdf8" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft3" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="420" cy="185" rx="235" ry="150" fill="url(#glow3)"/>
+
+  <!-- Carrinho lateral com avaria marcada, ao fundo à direita -->
+  <g transform="translate(560 205)" opacity="0.92">
+    <ellipse cx="70" cy="66" rx="118" ry="10" fill="#000" opacity="0.28"/>
+    <path d="M4 44 Q10 14 46 8 L150 8 Q170 8 176 30 L180 44 L176 52 Q172 58 162 58 L14 58 Q2 58 2 48 Z" fill="url(#car3)" stroke="#0c4a6e" stroke-width="2"/>
+    <path d="M52 8 L64 -14 L118 -14 L134 8 Z" fill="url(#car3)" stroke="#0c4a6e" stroke-width="2"/>
+    <path d="M60 6 L70 -8 L98 -8 L98 6 Z" fill="#dff4ff" opacity="0.85"/>
+    <path d="M102 6 L102 -8 L114 -8 L124 6 Z" fill="#dff4ff" opacity="0.85"/>
+    <circle cx="38" cy="58" r="16" fill="#0f172a"/>
+    <circle cx="38" cy="58" r="7" fill="#94a3b8"/>
+    <circle cx="146" cy="58" r="16" fill="#0f172a"/>
+    <circle cx="146" cy="58" r="7" fill="#94a3b8"/>
+    <!-- avaria marcada -->
+    <circle cx="70" cy="28" r="17" fill="#ef4444" opacity="0.85"/>
+    <circle cx="70" cy="28" r="17" fill="none" stroke="#fff" stroke-width="2" opacity="0.9"/>
+    <path d="M63 28 L68 33 L78 21" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Cartão de checklist numerado -->
+  <g transform="rotate(-4 400 176)" filter="url(#soft3)">
+    <rect x="278" y="40" width="224" height="288" rx="12" fill="url(#card3)"/>
+    <rect x="278" y="40" width="224" height="46" rx="12" fill="url(#header3)"/>
+    <rect x="278" y="70" width="224" height="16" fill="url(#header3)"/>
+    <text x="298" y="68" font-family="sans-serif" font-weight="800" font-size="14" fill="#ffffff">PASSO A PASSO</text>
+
+    <g font-family="sans-serif" font-size="11.5" fill="#0c4a6e">
+      <g transform="translate(298 108)">
+        <circle cx="9" cy="9" r="9" fill="#0369a1"/>
+        <text x="9" y="13" font-family="sans-serif" font-weight="800" font-size="10" fill="#fff" text-anchor="middle">1</text>
+        <text x="26" y="13">Abrir vistoria e ler a placa</text>
+      </g>
+      <g transform="translate(298 138)">
+        <circle cx="9" cy="9" r="9" fill="#0369a1"/>
+        <text x="9" y="13" font-family="sans-serif" font-weight="800" font-size="10" fill="#fff" text-anchor="middle">2</text>
+        <text x="26" y="13">Marcar avaria no diagrama</text>
+      </g>
+      <g transform="translate(298 168)">
+        <circle cx="9" cy="9" r="9" fill="#0369a1"/>
+        <text x="9" y="13" font-family="sans-serif" font-weight="800" font-size="10" fill="#fff" text-anchor="middle">3</text>
+        <text x="26" y="13">Fotografar com GPS</text>
+      </g>
+      <g transform="translate(298 198)">
+        <circle cx="9" cy="9" r="9" fill="#22c55e"/>
+        <path d="M5 9 L8 12.5 L13.5 5.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="13">Assinar e gerar o PDF</text>
+      </g>
+    </g>
+
+    <line x1="298" y1="224" x2="482" y2="224" stroke="#b9d4ea" stroke-width="1.5"/>
+
+    <g font-family="monospace" font-size="10" fill="#0369a1" opacity="0.85">
+      <text x="298" y="246">LAUDO-2026-0628.pdf</text>
+      <text x="298" y="260">hash · SHA-256 ✓</text>
+    </g>
+
+    <rect x="298" y="278" width="184" height="30" rx="8" fill="#0c4a6e"/>
+    <text x="390" y="297" font-family="sans-serif" font-weight="700" font-size="11" fill="#ffffff" text-anchor="middle">Laudo pronto para envio</text>
+  </g>
+
+  <g transform="translate(492 84)" filter="url(#soft3)">
+    <circle cx="0" cy="0" r="44" fill="url(#badge3)"/>
+    <circle cx="0" cy="0" r="44" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+    <rect x="-15" y="-19" width="30" height="38" rx="4" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <rect x="-7" y="-24" width="14" height="8" rx="2" fill="#ffffff"/>
+    <line x1="-8" y1="-6" x2="8" y2="-6" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
+    <line x1="-8" y1="2" x2="8" y2="2" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M-8 10 L-2 16 L9 4" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

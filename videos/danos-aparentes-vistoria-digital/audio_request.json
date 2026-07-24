@@ -1,0 +1,60 @@
+{
+  "lines": [
+    {
+      "id": "01",
+      "sfx": [
+        "impact-soft (on \"Amassado\" hard-cut)",
+        "riser (leading into the final question)"
+      ]
+    },
+    {
+      "id": "02",
+      "sfx": [
+        "soft whoosh per line entrance",
+        "no impact (agitation reads quieter than the hook)"
+      ]
+    },
+    {
+      "id": "03",
+      "sfx": [
+        "soft chime on the mark's pop-in; low riser under the push-in"
+      ]
+    },
+    {
+      "id": "04",
+      "sfx": [
+        "three soft \"tick\" clicks",
+        "one per card landing"
+      ]
+    },
+    {
+      "id": "05",
+      "sfx": [
+        "three soft \"tick\" clicks matching Frame 4's cadence (continuity)",
+        "soft glow-swell on the final card"
+      ]
+    },
+    {
+      "id": "06",
+      "sfx": [
+        "none (the one silent beat in the video — the calm is the point)"
+      ]
+    },
+    {
+      "id": "07",
+      "sfx": [
+        "soft click + release bloom on the press"
+      ]
+    },
+    {
+      "id": "08",
+      "sfx": [
+        "none (quiet close",
+        "echoes Frame 6's silence)"
+      ]
+    }
+  ],
+  "bgm": {
+    "mode": "none"
+  }
+}

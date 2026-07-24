@@ -1,0 +1,239 @@
+{
+  "files": [
+    {
+      "file": "1b99372b3eaef0c8-s.p.1gsd1jahc5dg_.woff2",
+      "family": "Outfit",
+      "rawFamily": "Outfit Thin",
+      "subfamily": "Regular",
+      "postscript": "Outfit-Thin",
+      "weight": 100,
+      "style": "normal",
+      "variationAxes": [
+        "wght"
+      ],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "2fe89d53234c61d4-s.1u30mmyq6lnsd.woff2",
+      "family": "IBM Plex Mono",
+      "rawFamily": "IBM Plex Mono",
+      "subfamily": "Regular",
+      "postscript": "IBMPlexMono-Regular",
+      "weight": 400,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "34fd6ffea3f110b0-s.3hd5jkugfx254.woff2",
+      "family": "Saira Condensed",
+      "rawFamily": "Saira Condensed Medium",
+      "subfamily": "Regular",
+      "postscript": "SairaCondensed-Medium",
+      "weight": 500,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "59b15b4bcd7b1eb5-s.2vemzm0itqzfy.woff2",
+      "family": "IBM Plex Mono",
+      "rawFamily": "IBM Plex Mono",
+      "subfamily": "Regular",
+      "postscript": "IBMPlexMono-Regular",
+      "weight": 400,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "99e609270109b47d-s.p.40sczeszzbjw1.woff2",
+      "family": "IBM Plex Mono",
+      "rawFamily": "IBM Plex Mono",
+      "subfamily": "Regular",
+      "postscript": "IBMPlexMono-Regular",
+      "weight": 400,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "a7afbb44bec2bb18-s.1qc6dx89jd2qv.woff2",
+      "family": "IBM Plex Mono",
+      "rawFamily": "IBM Plex Mono Medium",
+      "subfamily": "Regular",
+      "postscript": "IBMPlexMono-Medium",
+      "weight": 500,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "aa5902a20f09ee56-s.3icaf0vxshg63.woff2",
+      "family": "Saira Condensed",
+      "rawFamily": "Saira Condensed Medium",
+      "subfamily": "Regular",
+      "postscript": "SairaCondensed-Medium",
+      "weight": 500,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "b2ea385cb5ae8625-s.1spbknb88wd48.woff2",
+      "family": "Outfit",
+      "rawFamily": "Outfit Thin",
+      "subfamily": "Regular",
+      "postscript": "Outfit-Thin",
+      "weight": 100,
+      "style": "normal",
+      "variationAxes": [
+        "wght"
+      ],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "b94cfb34b9e6a2b8-s.p.3-n57bcvaz8oc.woff2",
+      "family": "Saira Condensed",
+      "rawFamily": "Saira Condensed SemiBold",
+      "subfamily": "Regular",
+      "postscript": "SairaCondensed-SemiBold",
+      "weight": 600,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "bcc6c7b97aa3243e-s.p.0-bot13eqj7bq.woff2",
+      "family": "Saira Condensed Condensed",
+      "rawFamily": "Saira Condensed Condensed",
+      "subfamily": "Bold",
+      "postscript": "SairaCondensed-Bold",
+      "weight": 700,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "d0f5eca495bd6f0e-s.2ghbzre0fc5v5.woff2",
+      "family": "Saira Condensed",
+      "rawFamily": "Saira Condensed SemiBold",
+      "subfamily": "Regular",
+      "postscript": "SairaCondensed-SemiBold",
+      "weight": 600,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "e390973e931a41c5-s.0rgnxg2b64rzs.woff2",
+      "family": "IBM Plex Mono",
+      "rawFamily": "IBM Plex Mono",
+      "subfamily": "Regular",
+      "postscript": "IBMPlexMono-Regular",
+      "weight": 400,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "e532fa1b9921e1cd-s.3cb5lpr2l6xud.woff2",
+      "family": "IBM Plex Mono",
+      "rawFamily": "IBM Plex Mono",
+      "subfamily": "Regular",
+      "postscript": "IBMPlexMono-Regular",
+      "weight": 400,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    },
+    {
+      "file": "fad8c11517de0c51-s.3taa34zb7zg2j.woff2",
+      "family": "Saira Condensed Condensed",
+      "rawFamily": "Saira Condensed Condensed",
+      "subfamily": "Bold",
+      "postscript": "SairaCondensed-Bold",
+      "weight": 700,
+      "style": "normal",
+      "variationAxes": [],
+      "identified": true,
+      "isIcon": false
+    }
+  ],
+  "families": [
+    {
+      "family": "IBM Plex Mono",
+      "weights": [
+        400,
+        500
+      ],
+      "variable": false,
+      "fileCount": 6,
+      "files": [
+        "2fe89d53234c61d4-s.1u30mmyq6lnsd.woff2",
+        "59b15b4bcd7b1eb5-s.2vemzm0itqzfy.woff2",
+        "99e609270109b47d-s.p.40sczeszzbjw1.woff2",
+        "a7afbb44bec2bb18-s.1qc6dx89jd2qv.woff2",
+        "e390973e931a41c5-s.0rgnxg2b64rzs.woff2",
+        "e532fa1b9921e1cd-s.3cb5lpr2l6xud.woff2"
+      ]
+    },
+    {
+      "family": "Outfit",
+      "weights": [
+        100
+      ],
+      "variable": true,
+      "fileCount": 2,
+      "files": [
+        "1b99372b3eaef0c8-s.p.1gsd1jahc5dg_.woff2",
+        "b2ea385cb5ae8625-s.1spbknb88wd48.woff2"
+      ]
+    },
+    {
+      "family": "Saira Condensed",
+      "weights": [
+        500,
+        600
+      ],
+      "variable": false,
+      "fileCount": 4,
+      "files": [
+        "34fd6ffea3f110b0-s.3hd5jkugfx254.woff2",
+        "aa5902a20f09ee56-s.3icaf0vxshg63.woff2",
+        "b94cfb34b9e6a2b8-s.p.3-n57bcvaz8oc.woff2",
+        "d0f5eca495bd6f0e-s.2ghbzre0fc5v5.woff2"
+      ]
+    },
+    {
+      "family": "Saira Condensed Condensed",
+      "weights": [
+        700
+      ],
+      "variable": false,
+      "fileCount": 2,
+      "files": [
+        "bcc6c7b97aa3243e-s.p.0-bot13eqj7bq.woff2",
+        "fad8c11517de0c51-s.3taa34zb7zg2j.woff2"
+      ]
+    }
+  ],
+  "unidentified": [],
+  "meta": {
+    "generatedAt": "2026-07-11T22:21:28.814Z",
+    "tool": "fontkit"
+  }
+}

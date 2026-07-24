@@ -1,0 +1,44 @@
+graph TD
+  subgraph Core
+    AppShell[App Shell / Wizard]
+  end
+  subgraph Presentation
+    VehicleViews[Vehicle Views SVG lib]
+    UIKit[UI Kit / Layout / Legal / Analytics]
+    Blog[Blog / Marketing]
+  end
+  subgraph Platform
+    Auth[Auth / Session]
+    SupabaseData[Supabase Data Layer]
+    PWASync[PWA / Offline Photo Sync]
+  end
+  subgraph BackendFeatures
+    Billing[Billing / Stripe]
+    Team[Team Management]
+    AI[AI / Plate Lookup / TTS]
+    CNH[CNH / Doc Scanning]
+    PDF[PDF / Report Gen]
+  end
+
+  AppShell --> VehicleViews
+  AppShell --> Auth
+  AppShell --> Billing
+  AppShell --> Team
+  AppShell --> AI
+  AppShell --> CNH
+  AppShell --> PDF
+  AppShell --> PWASync
+  AppShell --> UIKit
+
+  PDF --> VehicleViews
+  Billing --> Auth
+  Billing --> SupabaseData
+  Team --> Auth
+  Team --> SupabaseData
+  AI --> Auth
+  AI --> SupabaseData
+  Auth --> SupabaseData
+  PWASync --> SupabaseData
+  Blog --> VehicleViews
+  Blog --> UIKit
+  CNH --> PWASync

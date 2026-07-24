@@ -1,0 +1,22 @@
+{
+  "name": "danos-aparentes-videoforge",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio",
+    "render:30s": "remotion render src/index.ts Ad30 out/ad-30s.mp4 --concurrency=1",
+    "build:30s": "node ../scripts/build-storyboard.mjs ../scripts/video-30s.pt.md && npm run render:30s"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.286",
+    "@remotion/media-utils": "^4.0.286",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.286"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}

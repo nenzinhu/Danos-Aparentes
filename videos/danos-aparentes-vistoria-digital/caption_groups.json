@@ -1,0 +1,727 @@
+{
+  "total_duration_s": 45.061,
+  "width": 1920,
+  "height": 1080,
+  "groups": [
+    {
+      "id": "caption-group-0",
+      "frame": 1,
+      "start": 0.179,
+      "end": 0.719,
+      "text": "Risco.",
+      "words": [
+        {
+          "id": "caption-word-0-0",
+          "text": "Risco.",
+          "start": 0.179,
+          "end": 0.599
+        }
+      ]
+    },
+    {
+      "id": "caption-group-1",
+      "frame": 1,
+      "start": 0.979,
+      "end": 1.74,
+      "text": "Amassado.",
+      "words": [
+        {
+          "id": "caption-word-1-0",
+          "text": "Amassado.",
+          "start": 0.979,
+          "end": 1.62
+        }
+      ]
+    },
+    {
+      "id": "caption-group-2",
+      "frame": 1,
+      "start": 2.18,
+      "end": 2.74,
+      "text": "Sempre \"já",
+      "words": [
+        {
+          "id": "caption-word-2-0",
+          "text": "Sempre",
+          "start": 2.18,
+          "end": 2.519
+        },
+        {
+          "id": "caption-word-2-1",
+          "text": "\"já",
+          "start": 2.519,
+          "end": 2.659
+        }
+      ]
+    },
+    {
+      "id": "caption-group-3",
+      "frame": 1,
+      "start": 2.74,
+      "end": 3.36,
+      "text": "estava aí\"?",
+      "words": [
+        {
+          "id": "caption-word-3-0",
+          "text": "estava",
+          "start": 2.74,
+          "end": 3
+        },
+        {
+          "id": "caption-word-3-1",
+          "text": "aí\"?",
+          "start": 3.019,
+          "end": 3.24
+        }
+      ]
+    },
+    {
+      "id": "caption-group-4",
+      "frame": 2,
+      "start": 3.772,
+      "end": 4.952,
+      "text": "Fotos soltas.",
+      "words": [
+        {
+          "id": "caption-word-4-0",
+          "text": "Fotos",
+          "start": 3.772,
+          "end": 4.173
+        },
+        {
+          "id": "caption-word-4-1",
+          "text": "soltas.",
+          "start": 4.252,
+          "end": 4.832
+        }
+      ]
+    },
+    {
+      "id": "caption-group-5",
+      "frame": 2,
+      "start": 5.372,
+      "end": 6.133,
+      "text": "Sem hora,",
+      "words": [
+        {
+          "id": "caption-word-5-0",
+          "text": "Sem",
+          "start": 5.372,
+          "end": 5.692
+        },
+        {
+          "id": "caption-word-5-1",
+          "text": "hora,",
+          "start": 5.812,
+          "end": 6.013
+        }
+      ]
+    },
+    {
+      "id": "caption-group-6",
+      "frame": 2,
+      "start": 6.553,
+      "end": 7.413,
+      "text": "sem local.",
+      "words": [
+        {
+          "id": "caption-word-6-0",
+          "text": "sem",
+          "start": 6.553,
+          "end": 6.752
+        },
+        {
+          "id": "caption-word-6-1",
+          "text": "local.",
+          "start": 6.793,
+          "end": 7.293
+        }
+      ]
+    },
+    {
+      "id": "caption-group-7",
+      "frame": 2,
+      "start": 7.913,
+      "end": 8.632,
+      "text": "Vinte minutos",
+      "words": [
+        {
+          "id": "caption-word-7-0",
+          "text": "Vinte",
+          "start": 7.913,
+          "end": 8.132
+        },
+        {
+          "id": "caption-word-7-1",
+          "text": "minutos",
+          "start": 8.232,
+          "end": 8.612
+        }
+      ]
+    },
+    {
+      "id": "caption-group-8",
+      "frame": 2,
+      "start": 8.632,
+      "end": 9.432,
+      "text": "de papel",
+      "words": [
+        {
+          "id": "caption-word-8-0",
+          "text": "de",
+          "start": 8.632,
+          "end": 8.752
+        },
+        {
+          "id": "caption-word-8-1",
+          "text": "papel",
+          "start": 8.772,
+          "end": 9.312
+        }
+      ]
+    },
+    {
+      "id": "caption-group-9",
+      "frame": 2,
+      "start": 9.812,
+      "end": 10.392,
+      "text": "e ainda",
+      "words": [
+        {
+          "id": "caption-word-9-0",
+          "text": "e",
+          "start": 9.812,
+          "end": 9.892
+        },
+        {
+          "id": "caption-word-9-1",
+          "text": "ainda",
+          "start": 9.973,
+          "end": 10.332
+        }
+      ]
+    },
+    {
+      "id": "caption-group-10",
+      "frame": 2,
+      "start": 10.392,
+      "end": 11.312,
+      "text": "sobra dúvida.",
+      "words": [
+        {
+          "id": "caption-word-10-0",
+          "text": "sobra",
+          "start": 10.392,
+          "end": 10.632
+        },
+        {
+          "id": "caption-word-10-1",
+          "text": "dúvida.",
+          "start": 10.772,
+          "end": 11.192
+        }
+      ]
+    },
+    {
+      "id": "caption-group-11",
+      "frame": 3,
+      "start": 11.805,
+      "end": 12.365,
+      "text": "Chega.",
+      "words": [
+        {
+          "id": "caption-word-11-0",
+          "text": "Chega.",
+          "start": 11.805,
+          "end": 12.245
+        }
+      ]
+    },
+    {
+      "id": "caption-group-12",
+      "frame": 3,
+      "start": 12.625,
+      "end": 13.705,
+      "text": "Danos Aparentes o",
+      "words": [
+        {
+          "id": "caption-word-12-0",
+          "text": "Danos",
+          "start": 12.625,
+          "end": 12.906
+        },
+        {
+          "id": "caption-word-12-1",
+          "text": "Aparentes",
+          "start": 12.945,
+          "end": 13.546
+        },
+        {
+          "id": "caption-word-12-2",
+          "text": "o",
+          "start": 13.605,
+          "end": 13.685
+        }
+      ]
+    },
+    {
+      "id": "caption-group-13",
+      "frame": 3,
+      "start": 13.705,
+      "end": 14.205,
+      "text": "laudo que",
+      "words": [
+        {
+          "id": "caption-word-13-0",
+          "text": "laudo",
+          "start": 13.705,
+          "end": 14.046
+        },
+        {
+          "id": "caption-word-13-1",
+          "text": "que",
+          "start": 14.065,
+          "end": 14.165
+        }
+      ]
+    },
+    {
+      "id": "caption-group-14",
+      "frame": 3,
+      "start": 14.205,
+      "end": 14.725,
+      "text": "comprova a",
+      "words": [
+        {
+          "id": "caption-word-14-0",
+          "text": "comprova",
+          "start": 14.205,
+          "end": 14.605
+        },
+        {
+          "id": "caption-word-14-1",
+          "text": "a",
+          "start": 14.625,
+          "end": 14.705
+        }
+      ]
+    },
+    {
+      "id": "caption-group-15",
+      "frame": 3,
+      "start": 14.725,
+      "end": 15.365,
+      "text": "si mesmo.",
+      "words": [
+        {
+          "id": "caption-word-15-0",
+          "text": "si",
+          "start": 14.725,
+          "end": 14.845
+        },
+        {
+          "id": "caption-word-15-1",
+          "text": "mesmo.",
+          "start": 14.885,
+          "end": 15.245
+        }
+      ]
+    },
+    {
+      "id": "caption-group-16",
+      "frame": 4,
+      "start": 15.662,
+      "end": 17.722,
+      "text": "Placa preenche sozinha.",
+      "words": [
+        {
+          "id": "caption-word-16-0",
+          "text": "Placa",
+          "start": 15.662,
+          "end": 16.062
+        },
+        {
+          "id": "caption-word-16-1",
+          "text": "preenche",
+          "start": 16.182,
+          "end": 16.842
+        },
+        {
+          "id": "caption-word-16-2",
+          "text": "sozinha.",
+          "start": 16.942,
+          "end": 17.602
+        }
+      ]
+    },
+    {
+      "id": "caption-group-17",
+      "frame": 4,
+      "start": 18.402,
+      "end": 19.462,
+      "text": "Toque marca a",
+      "words": [
+        {
+          "id": "caption-word-17-0",
+          "text": "Toque",
+          "start": 18.402,
+          "end": 18.763
+        },
+        {
+          "id": "caption-word-17-1",
+          "text": "marca",
+          "start": 18.802,
+          "end": 19.182
+        },
+        {
+          "id": "caption-word-17-2",
+          "text": "a",
+          "start": 19.322,
+          "end": 19.382
+        }
+      ]
+    },
+    {
+      "id": "caption-group-18",
+      "frame": 4,
+      "start": 19.462,
+      "end": 21.063,
+      "text": "avaria no diagrama.",
+      "words": [
+        {
+          "id": "caption-word-18-0",
+          "text": "avaria",
+          "start": 19.462,
+          "end": 19.923
+        },
+        {
+          "id": "caption-word-18-1",
+          "text": "no",
+          "start": 20.023,
+          "end": 20.162
+        },
+        {
+          "id": "caption-word-18-2",
+          "text": "diagrama.",
+          "start": 20.242,
+          "end": 20.943
+        }
+      ]
+    },
+    {
+      "id": "caption-group-19",
+      "frame": 4,
+      "start": 21.582,
+      "end": 23.482,
+      "text": "Assinatura fecha na tela.",
+      "words": [
+        {
+          "id": "caption-word-19-0",
+          "text": "Assinatura",
+          "start": 21.582,
+          "end": 22.362
+        },
+        {
+          "id": "caption-word-19-1",
+          "text": "fecha",
+          "start": 22.483,
+          "end": 22.802
+        },
+        {
+          "id": "caption-word-19-2",
+          "text": "na",
+          "start": 22.842,
+          "end": 22.902
+        },
+        {
+          "id": "caption-word-19-3",
+          "text": "tela.",
+          "start": 23.023,
+          "end": 23.362
+        }
+      ]
+    },
+    {
+      "id": "caption-group-20",
+      "frame": 5,
+      "start": 23.794,
+      "end": 26.215,
+      "text": "Hash SHA-256.",
+      "words": [
+        {
+          "id": "caption-word-20-0",
+          "text": "Hash",
+          "start": 23.794,
+          "end": 24.134
+        },
+        {
+          "id": "caption-word-20-1",
+          "text": "SHA-256.",
+          "start": 24.194,
+          "end": 26.095
+        }
+      ]
+    },
+    {
+      "id": "caption-group-21",
+      "frame": 5,
+      "start": 26.654,
+      "end": 27.414,
+      "text": "QR Code",
+      "words": [
+        {
+          "id": "caption-word-21-0",
+          "text": "QR",
+          "start": 26.654,
+          "end": 26.934
+        },
+        {
+          "id": "caption-word-21-1",
+          "text": "Code",
+          "start": 27.034,
+          "end": 27.314
+        }
+      ]
+    },
+    {
+      "id": "caption-group-22",
+      "frame": 5,
+      "start": 27.414,
+      "end": 28.494,
+      "text": "de verificação.",
+      "words": [
+        {
+          "id": "caption-word-22-0",
+          "text": "de",
+          "start": 27.414,
+          "end": 27.454
+        },
+        {
+          "id": "caption-word-22-1",
+          "text": "verificação.",
+          "start": 27.554,
+          "end": 28.374
+        }
+      ]
+    },
+    {
+      "id": "caption-group-23",
+      "frame": 5,
+      "start": 28.974,
+      "end": 30.414,
+      "text": "Fotos com GPS",
+      "words": [
+        {
+          "id": "caption-word-23-0",
+          "text": "Fotos",
+          "start": 28.974,
+          "end": 29.374
+        },
+        {
+          "id": "caption-word-23-1",
+          "text": "com",
+          "start": 29.434,
+          "end": 29.535
+        },
+        {
+          "id": "caption-word-23-2",
+          "text": "GPS",
+          "start": 29.634,
+          "end": 30.294
+        }
+      ]
+    },
+    {
+      "id": "caption-group-24",
+      "frame": 5,
+      "start": 30.454,
+      "end": 31.414,
+      "text": "e hora certa.",
+      "words": [
+        {
+          "id": "caption-word-24-0",
+          "text": "e",
+          "start": 30.454,
+          "end": 30.474
+        },
+        {
+          "id": "caption-word-24-1",
+          "text": "hora",
+          "start": 30.575,
+          "end": 30.734
+        },
+        {
+          "id": "caption-word-24-2",
+          "text": "certa.",
+          "start": 30.854,
+          "end": 31.294
+        }
+      ]
+    },
+    {
+      "id": "caption-group-25",
+      "frame": 6,
+      "start": 31.689,
+      "end": 32.89,
+      "text": "Funciona até sem",
+      "words": [
+        {
+          "id": "caption-word-25-0",
+          "text": "Funciona",
+          "start": 31.689,
+          "end": 32.21
+        },
+        {
+          "id": "caption-word-25-1",
+          "text": "até",
+          "start": 32.349,
+          "end": 32.509
+        },
+        {
+          "id": "caption-word-25-2",
+          "text": "sem",
+          "start": 32.65,
+          "end": 32.869
+        }
+      ]
+    },
+    {
+      "id": "caption-group-26",
+      "frame": 6,
+      "start": 32.89,
+      "end": 33.929,
+      "text": "sinal no pátio",
+      "words": [
+        {
+          "id": "caption-word-26-0",
+          "text": "sinal",
+          "start": 32.89,
+          "end": 33.229
+        },
+        {
+          "id": "caption-word-26-1",
+          "text": "no",
+          "start": 33.289,
+          "end": 33.449
+        },
+        {
+          "id": "caption-word-26-2",
+          "text": "pátio",
+          "start": 33.489,
+          "end": 33.829
+        }
+      ]
+    },
+    {
+      "id": "caption-group-27",
+      "frame": 6,
+      "start": 33.929,
+      "end": 35.929,
+      "text": "sincroniza sozinho depois.",
+      "words": [
+        {
+          "id": "caption-word-27-0",
+          "text": "sincroniza",
+          "start": 33.929,
+          "end": 34.53
+        },
+        {
+          "id": "caption-word-27-1",
+          "text": "sozinho",
+          "start": 34.649,
+          "end": 35.149
+        },
+        {
+          "id": "caption-word-27-2",
+          "text": "depois.",
+          "start": 35.189,
+          "end": 35.809
+        }
+      ]
+    },
+    {
+      "id": "caption-group-28",
+      "frame": 7,
+      "start": 36.46,
+      "end": 38.24,
+      "text": "7 dias grátis.",
+      "words": [
+        {
+          "id": "caption-word-28-0",
+          "text": "7",
+          "start": 36.46,
+          "end": 36.841
+        },
+        {
+          "id": "caption-word-28-1",
+          "text": "dias",
+          "start": 37.02,
+          "end": 37.461
+        },
+        {
+          "id": "caption-word-28-2",
+          "text": "grátis.",
+          "start": 37.52,
+          "end": 38.12
+        }
+      ]
+    },
+    {
+      "id": "caption-group-29",
+      "frame": 7,
+      "start": 38.62,
+      "end": 39.62,
+      "text": "Sem cartão.",
+      "words": [
+        {
+          "id": "caption-word-29-0",
+          "text": "Sem",
+          "start": 38.62,
+          "end": 38.821
+        },
+        {
+          "id": "caption-word-29-1",
+          "text": "cartão.",
+          "start": 38.94,
+          "end": 39.5
+        }
+      ]
+    },
+    {
+      "id": "caption-group-30",
+      "frame": 7,
+      "start": 39.94,
+      "end": 40.98,
+      "text": "Teste agora.",
+      "words": [
+        {
+          "id": "caption-word-30-0",
+          "text": "Teste",
+          "start": 39.94,
+          "end": 40.3
+        },
+        {
+          "id": "caption-word-30-1",
+          "text": "agora.",
+          "start": 40.42,
+          "end": 40.86
+        }
+      ]
+    },
+    {
+      "id": "caption-group-31",
+      "frame": 8,
+      "start": 41.354,
+      "end": 44.834,
+      "text": "danosaparentes.com.br",
+      "words": [
+        {
+          "id": "caption-word-31-0",
+          "text": "danosaparentes.com.br",
+          "start": 41.354,
+          "end": 44.714
+        }
+      ]
+    }
+  ]
+}

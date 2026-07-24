@@ -1,0 +1,97 @@
+<svg viewBox="0 0 828 352" width="828" height="352" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Checklist de vistoria de devolução de veículo para locadoras, com van e chave de entrega">
+  <defs>
+    <linearGradient id="card5" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eefcf3"/>
+      <stop offset="1" stop-color="#d3f0dd"/>
+    </linearGradient>
+    <linearGradient id="header5" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#155e2f"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="badge5" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22c55e"/>
+      <stop offset="1" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="van5" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4ade80"/>
+      <stop offset="1" stop-color="#155e2f"/>
+    </linearGradient>
+    <radialGradient id="glow5" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#4ade80" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#4ade80" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft5" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="420" cy="185" rx="235" ry="150" fill="url(#glow5)"/>
+
+  <!-- Van/utilitário ao fundo à direita -->
+  <g transform="translate(552 200)" opacity="0.92">
+    <ellipse cx="76" cy="70" rx="122" ry="10" fill="#000" opacity="0.28"/>
+    <path d="M2 42 L2 20 Q2 6 18 6 L150 6 Q168 6 174 24 L184 42 L184 54 Q184 62 174 62 L14 62 Q2 62 2 50 Z" fill="url(#van5)" stroke="#14432a" stroke-width="2"/>
+    <path d="M14 18 L96 18 L96 42 L10 42 Z" fill="#e4fbe9" opacity="0.85"/>
+    <line x1="55" y1="18" x2="55" y2="42" stroke="#155e2f" stroke-width="2"/>
+    <path d="M104 24 Q108 18 118 18 L140 18 Q150 18 156 28 L162 42 L104 42 Z" fill="#e4fbe9" opacity="0.85"/>
+    <circle cx="42" cy="62" r="17" fill="#0f172a"/>
+    <circle cx="42" cy="62" r="7.5" fill="#94a3b8"/>
+    <circle cx="150" cy="62" r="17" fill="#0f172a"/>
+    <circle cx="150" cy="62" r="7.5" fill="#94a3b8"/>
+  </g>
+
+  <!-- Cartão de checklist de devolução -->
+  <g transform="rotate(4 400 176)" filter="url(#soft5)">
+    <rect x="278" y="40" width="224" height="288" rx="12" fill="url(#card5)"/>
+    <rect x="278" y="40" width="224" height="46" rx="12" fill="url(#header5)"/>
+    <rect x="278" y="70" width="224" height="16" fill="url(#header5)"/>
+    <text x="298" y="68" font-family="sans-serif" font-weight="800" font-size="13" fill="#ffffff">CHECKLIST · DEVOLUÇÃO</text>
+
+    <g font-family="sans-serif" font-size="11.5" fill="#14432a">
+      <g transform="translate(298 108)">
+        <rect x="0" y="0" width="16" height="16" rx="4" fill="#22c55e"/>
+        <path d="M3 8 L7 12 L13 4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="12">Nível de combustível</text>
+      </g>
+      <g transform="translate(298 136)">
+        <rect x="0" y="0" width="16" height="16" rx="4" fill="#22c55e"/>
+        <path d="M3 8 L7 12 L13 4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="12">Pneus, estepe e macaco</text>
+      </g>
+      <g transform="translate(298 164)">
+        <rect x="0" y="0" width="16" height="16" rx="4" fill="#22c55e"/>
+        <path d="M3 8 L7 12 L13 4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="12">Retrovisores e vidros</text>
+      </g>
+      <g transform="translate(298 192)">
+        <rect x="0" y="0" width="16" height="16" rx="4" fill="none" stroke="#c2410c" stroke-width="2"/>
+        <text x="26" y="12">Para-choque traseiro</text>
+      </g>
+    </g>
+
+    <line x1="298" y1="220" x2="482" y2="220" stroke="#a7ddba" stroke-width="1.5"/>
+
+    <g transform="translate(298 232) rotate(-14)">
+      <circle cx="8" cy="8" r="8" fill="none" stroke="#155e2f" stroke-width="3.6"/>
+      <line x1="14" y1="13" x2="34" y2="27" stroke="#155e2f" stroke-width="3.6" stroke-linecap="round"/>
+      <line x1="26" y1="20" x2="30" y2="13" stroke="#155e2f" stroke-width="3.6" stroke-linecap="round"/>
+    </g>
+    <g font-family="monospace" font-size="10" fill="#14432a" opacity="0.85">
+      <text x="342" y="242">retirada</text>
+      <text x="342" y="254">x devolução</text>
+    </g>
+
+    <rect x="298" y="278" width="184" height="30" rx="8" fill="#155e2f"/>
+    <text x="390" y="297" font-family="sans-serif" font-weight="700" font-size="11" fill="#ffffff" text-anchor="middle">Sem prejuízo na baixa</text>
+  </g>
+
+  <!-- Selo com chave de entrega -->
+  <g transform="translate(492 84)" filter="url(#soft5)">
+    <circle cx="0" cy="0" r="44" fill="url(#badge5)"/>
+    <circle cx="0" cy="0" r="44" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+    <circle cx="-14" cy="-6" r="9" fill="none" stroke="#ffffff" stroke-width="3.4"/>
+    <line x1="-7" y1="1" x2="16" y2="24" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"/>
+    <line x1="9" y1="17" x2="15" y2="11" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"/>
+    <line x1="14" y1="22" x2="20" y2="16" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"/>
+  </g>
+</svg>

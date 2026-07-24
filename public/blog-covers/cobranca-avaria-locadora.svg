@@ -1,0 +1,79 @@
+<svg viewBox="0 0 828 352" width="828" height="352" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Laudo de cobrança de avaria na devolução da locadora, com checklist e assinatura">
+  <defs>
+    <linearGradient id="card2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fdf3ea"/>
+      <stop offset="1" stop-color="#f2e0cd"/>
+    </linearGradient>
+    <linearGradient id="clip2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c2d12"/>
+      <stop offset="1" stop-color="#c2410c"/>
+    </linearGradient>
+    <linearGradient id="badge2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fb923c"/>
+      <stop offset="1" stop-color="#c2410c"/>
+    </linearGradient>
+    <radialGradient id="glow2" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fb923c" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#fb923c" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft2" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="410" cy="185" rx="230" ry="150" fill="url(#glow2)"/>
+
+  <g transform="rotate(4 400 180)" filter="url(#soft2)">
+    <rect x="288" y="42" width="224" height="290" rx="12" fill="url(#card2)"/>
+    <rect x="330" y="30" width="140" height="30" rx="8" fill="url(#clip2)"/>
+    <rect x="330" y="30" width="140" height="30" rx="8" fill="none" stroke="#ffffff" stroke-opacity="0.2"/>
+
+    <g font-family="sans-serif" font-weight="700" font-size="13" fill="#7c2d12">
+      <text x="308" y="94">Checklist — devolução</text>
+    </g>
+    <line x1="308" y1="104" x2="492" y2="104" stroke="#e0b088" stroke-width="1.5"/>
+
+    <g font-family="sans-serif" font-size="12" fill="#5c3a20">
+      <g transform="translate(308 118)">
+        <rect x="0" y="0" width="16" height="16" rx="4" fill="#22c55e"/>
+        <path d="M3 8 L7 12 L13 4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="12">Para-choque dianteiro</text>
+      </g>
+      <g transform="translate(308 146)">
+        <rect x="0" y="0" width="16" height="16" rx="4" fill="#22c55e"/>
+        <path d="M3 8 L7 12 L13 4" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="26" y="12">Porta dianteira esq.</text>
+      </g>
+      <g transform="translate(308 174)">
+        <rect x="0" y="0" width="16" height="16" rx="4" fill="none" stroke="#c2410c" stroke-width="2"/>
+        <text x="26" y="12">Retrovisor direito</text>
+      </g>
+    </g>
+
+    <line x1="308" y1="200" x2="492" y2="200" stroke="#e0b088" stroke-width="1.5"/>
+
+    <g transform="translate(308 214) rotate(-18)">
+      <circle cx="8" cy="8" r="9" fill="none" stroke="#c2410c" stroke-width="4"/>
+      <line x1="16" y1="14" x2="40" y2="30" stroke="#c2410c" stroke-width="4" stroke-linecap="round"/>
+      <line x1="30" y1="22" x2="34" y2="14" stroke="#c2410c" stroke-width="4" stroke-linecap="round"/>
+      <line x1="35" y1="26" x2="39" y2="18" stroke="#c2410c" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <g font-family="monospace" font-size="10" fill="#7c2d12" opacity="0.85">
+      <text x="356" y="222">retirada</text>
+      <text x="356" y="234">x devolução</text>
+    </g>
+
+    <path d="M308 262 q30 -18 60 -2 t60 4" fill="none" stroke="#7c2d12" stroke-width="2.2" stroke-linecap="round" opacity="0.7"/>
+    <text x="308" y="286" font-family="monospace" font-size="10" fill="#7c2d12" opacity="0.7">assinado no pátio</text>
+  </g>
+
+  <g transform="translate(492 88)" filter="url(#soft2)">
+    <circle cx="0" cy="0" r="46" fill="url(#badge2)"/>
+    <circle cx="0" cy="0" r="46" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+    <rect x="-16" y="-20" width="32" height="40" rx="4" fill="none" stroke="#ffffff" stroke-width="3"/>
+    <line x1="-9" y1="-10" x2="9" y2="-10" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <line x1="-9" y1="-1" x2="9" y2="-1" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <line x1="-9" y1="8" x2="2" y2="8" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-3 14 L3 20 L14 6" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

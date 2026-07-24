@@ -1,0 +1,131 @@
+{
+  "id": "video-30s.pt",
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "durationInFrames": 900,
+  "durationSec": 30,
+  "brand": {
+    "name": "Danos Aparentes",
+    "tagline": "Vistoria digital de alta fidelidade",
+    "palette": {
+      "bg": "#020617",
+      "bgGradient": "#0d1f3c",
+      "card": "rgba(10, 20, 40, 0.72)",
+      "primary": "#1FB6FF",
+      "primaryHover": "#72C5EE",
+      "text": "#e8f4ff",
+      "textMuted": "#7a9bbf",
+      "accent": "#22c55e",
+      "danger": "#ef4444"
+    },
+    "fonts": {
+      "headline": "Outfit",
+      "body": "Outfit",
+      "mono": "ui-monospace"
+    },
+    "logo": {
+      "icon": "../public/logo.svg",
+      "full": "../public/brand/logo-full.svg"
+    },
+    "cta": {
+      "primary": "Testar 7 dias grátis",
+      "secondary": "Sem cartão de crédito",
+      "url": "https://danosaparentes.vercel.app/app?mode=signup&utm_source=video&utm_medium=paid_social"
+    }
+  },
+  "shots": [
+    {
+      "id": "01",
+      "title": "Hook",
+      "durationSec": 4,
+      "frames": 120,
+      "slot": "CUT",
+      "vo": "Pare de perder tempo com laudos manuais no pátio. |",
+      "onscreen": {
+        "kind": "headline",
+        "text": "Pare de perder tempo"
+      },
+      "flags": [
+        "broll"
+      ],
+      "fromFrame": 0,
+      "toFrame": 119,
+      "voFile": "vo/video-30s.pt/shot-01.mp3"
+    },
+    {
+      "id": "02",
+      "title": "Marcar avaria",
+      "durationSec": 6,
+      "frames": 180,
+      "slot": "CUT",
+      "vo": "Marque cada avaria no modelo digital do veículo e anexe fotos em alta definição. |",
+      "onscreen": {
+        "kind": "step",
+        "text": "02 · Toque para marcar"
+      },
+      "flags": [
+        "brand",
+        "screenshot-ref"
+      ],
+      "fromFrame": 120,
+      "toFrame": 299,
+      "voFile": "vo/video-30s.pt/shot-02.mp3"
+    },
+    {
+      "id": "03",
+      "title": "PDF confiável",
+      "durationSec": 6,
+      "frames": 180,
+      "slot": "CUT",
+      "vo": "O PDF sai com hash de verificação, assinatura digital e QR Code. |",
+      "onscreen": {
+        "kind": "bullet",
+        "text": "SHA-256 · QR Code · Assinatura"
+      },
+      "flags": [
+        "brand"
+      ],
+      "fromFrame": 300,
+      "toFrame": 479,
+      "voFile": "vo/video-30s.pt/shot-03.mp3"
+    },
+    {
+      "id": "04",
+      "title": "Offline",
+      "durationSec": 5,
+      "frames": 150,
+      "slot": "CUT",
+      "vo": "Funciona offline. Sincroniza quando você tiver internet. |",
+      "onscreen": {
+        "kind": "badge",
+        "text": "100% offline"
+      },
+      "flags": [
+        "broll"
+      ],
+      "fromFrame": 480,
+      "toFrame": 629,
+      "voFile": "vo/video-30s.pt/shot-04.mp3"
+    },
+    {
+      "id": "05",
+      "title": "CTA",
+      "durationSec": 9,
+      "frames": 270,
+      "slot": "FREEZE",
+      "vo": "Teste sete dias grátis, sem cartão. Danos Aparentes — vistoria digital. |",
+      "onscreen": {
+        "kind": "cta",
+        "text": "Testar 7 dias grátis"
+      },
+      "flags": [
+        "brand",
+        "logo"
+      ],
+      "fromFrame": 630,
+      "toFrame": 899,
+      "voFile": "vo/video-30s.pt/shot-05.mp3"
+    }
+  ]
+}

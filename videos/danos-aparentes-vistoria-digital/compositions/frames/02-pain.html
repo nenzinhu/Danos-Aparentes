@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>02-pain (sub-composition source — head is discarded at render)</title>
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Outfit";
+          src: url("capture/assets/fonts/b2ea385cb5ae8625-s.1spbknb88wd48.woff2")
+            format("woff2");
+          font-weight: 100 900;
+          font-style: normal;
+          font-display: block;
+        }
+        @font-face {
+          font-family: "IBM Plex Mono";
+          src: url("capture/assets/fonts/e390973e931a41c5-s.0rgnxg2b64rzs.woff2")
+            format("woff2");
+          font-weight: 400;
+          font-style: normal;
+          font-display: block;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1920px;
+          height: 1080px;
+          overflow: hidden;
+          background: #e8e6dc;
+          container-type: size;
+          font-family: "Outfit", sans-serif;
+        }
+
+        .ground {
+          position: absolute;
+          inset: 0;
+          background-color: #e8e6dc;
+          background-image: linear-gradient(rgba(158, 68, 40, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(158, 68, 40, 0.1) 1px, transparent 1px);
+          background-size: 2cqw 2cqw;
+        }
+
+        .hairline {
+          position: absolute;
+          left: 4cqw;
+          right: 4cqw;
+          height: 0.12cqw;
+          background: #141413;
+        }
+        .hairline-top {
+          top: 3cqw;
+        }
+        .hairline-bottom {
+          bottom: 3cqw;
+        }
+
+        .page-chrome {
+          position: absolute;
+          bottom: 3.6cqw;
+          left: 4cqw;
+          right: 4cqw;
+          display: flex;
+          justify-content: space-between;
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 13px;
+          letter-spacing: 0.06em;
+          color: #141413;
+        }
+
+        .beat-stage {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .beat-line {
+          position: relative;
+          text-align: center;
+          font-family: "Outfit", sans-serif;
+          font-weight: 400;
+          line-height: 1;
+          letter-spacing: -0.006em;
+          color: #141413;
+          font-size: 6.8cqw;
+          will-change: transform, opacity, filter;
+        }
+        .beat-word {
+          display: inline-block;
+          will-change: transform, opacity, filter;
+        }
+        .beat-word + .beat-word {
+          margin-left: 0.28em;
+        }
+
+        .final-stage {
+          position: absolute;
+          top: 22.5cqh;
+          left: 4cqw;
+          right: 4cqw;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1.2cqh;
+        }
+        .final-chunk {
+          font-family: "Outfit", sans-serif;
+          font-weight: 400;
+          line-height: 1.05;
+          letter-spacing: -0.004em;
+          color: #141413;
+          font-size: 4.6cqw;
+          max-width: 78cqw;
+          will-change: transform, opacity, filter;
+        }
+        .final-chunk--dash {
+          color: #9e4428;
+        }
+
+        .clip {
+          position: absolute;
+          inset: 0;
+        }
+      </style>
+
+      <div id="root" data-composition-id="02-pain" data-width="1920" data-height="1080">
+        <div
+          class="clip ground-clip"
+          data-start="0"
+          data-duration="6.165"
+          data-track-index="0"
+        >
+          <div class="ground"></div>
+          <div class="hairline hairline-top"></div>
+          <div class="hairline hairline-bottom"></div>
+          <div class="page-chrome">
+            <span>DANOS APARENTES — 02</span>
+            <span>PROCESSO ATUAL</span>
+          </div>
+        </div>
+
+        <div class="clip" id="pain-line-1" data-start="0" data-duration="1.9" data-track-index="1">
+          <div class="beat-stage">
+            <div class="beat-line" id="line1">
+              <span class="beat-word" id="line1-w1">Fotos</span
+              ><span class="beat-word" id="line1-w2">soltas.</span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="clip"
+          id="pain-line-2"
+          data-start="1.55"
+          data-duration="2.0"
+          data-track-index="2"
+        >
+          <div class="beat-stage">
+            <div class="beat-line" id="line2">
+              <span class="beat-word" id="line2-w1">Sem</span
+              ><span class="beat-word" id="line2-w2">hora,</span
+              ><span class="beat-word" id="line2-w3">sem</span
+              ><span class="beat-word" id="line2-w4">local.</span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="clip"
+          id="pain-line-3"
+          data-start="3.25"
+          data-duration="2.915"
+          data-track-index="3"
+        >
+          <div class="final-stage">
+            <div class="final-chunk" id="chunk1">Vinte minutos de papel</div>
+            <div class="final-chunk final-chunk--dash" id="chunk2">
+              — e ainda sobra dúvida.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+      <script>
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+
+        // ---- Scene 1 (0.0–1.6s): "Fotos soltas." per-word staggered fade/blur in ----
+        tl.fromTo(
+          "#line1-w1",
+          { opacity: 0, scale: 1.4, filter: "blur(14px)" },
+          { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.45, ease: "power4.out" },
+          0.0,
+        );
+        tl.fromTo(
+          "#line1-w2",
+          { opacity: 0, y: 26, filter: "blur(10px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.4, ease: "power3.out" },
+          0.14,
+        );
+
+        // ---- Exit: "Fotos soltas." clears via motion-blur fly-off (streak left) ----
+        // Directional SVG-style fake via CSS blur proxy is unnecessary at this scale — a locked
+        // ease/window on transform + filter blur reproduces the same peak-blur-then-gone read.
+        tl.to(
+          "#line1",
+          {
+            x: -220,
+            opacity: 0,
+            filter: "blur(22px)",
+            duration: 0.35,
+            ease: "power4.in",
+          },
+          1.55,
+        );
+
+        // ---- Scene 2 (1.6–3.2s): "Sem hora, sem local." fades/blurs in at the same center ----
+        const l2words = ["#line2-w1", "#line2-w2", "#line2-w3", "#line2-w4"];
+        l2words.forEach((sel, i) => {
+          tl.fromTo(
+            sel,
+            { opacity: 0, filter: "blur(16px)", y: i % 2 === 0 ? 18 : -18 },
+            { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.4, ease: "power3.out" },
+            1.6 + i * 0.08,
+          );
+        });
+
+        // ---- Exit: "Sem hora, sem local." clears via motion-blur fly-off (streak right) ----
+        tl.to(
+          "#line2",
+          {
+            x: 220,
+            opacity: 0,
+            filter: "blur(22px)",
+            duration: 0.35,
+            ease: "power4.in",
+          },
+          3.15,
+        );
+
+        // ---- Scene 3 (3.2–end): final line, two-chunk reveal, left-aligned upper-third ----
+        tl.fromTo(
+          "#chunk1",
+          { opacity: 0, x: -60, filter: "blur(12px)" },
+          { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.5, ease: "power3.out" },
+          3.3,
+        );
+        tl.fromTo(
+          "#chunk2",
+          { opacity: 0, x: -60, filter: "blur(12px)" },
+          { opacity: 1, x: 0, filter: "blur(0px)", duration: 0.5, ease: "power3.out" },
+          3.85,
+        );
+
+        // Held finale: subtle low-amplitude breath on the resolved line (no exit — final beat holds
+        // to the cut). floor (not ceil) so the repeat never overshoots data-duration.
+        const holdStart = 4.5;
+        const cycle = 1.6;
+        const holdDur = 6.165 - holdStart;
+        tl.to(
+          "#chunk1, #chunk2",
+          {
+            y: -2,
+            duration: cycle / 2,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: Math.max(0, Math.floor(holdDur / cycle) - 1),
+          },
+          holdStart,
+        );
+
+        window.__timelines["02-pain"] = tl;
+      </script>
+    </template>
+  </body>
+</html>
