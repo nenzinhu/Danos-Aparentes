@@ -46,6 +46,7 @@ export const metadata: Metadata = {
   // Canonical da home. Páginas internas definem o seu próprio em
   // `alternates.canonical` — sempre adicione um ao criar rota nova.
   alternates: { canonical: '/' },
+  robots: { index: true, follow: true },
   manifest: '/manifest.webmanifest',
   verification: {
     yandex: '63c44acce9c82466',
@@ -62,8 +63,8 @@ export const metadata: Metadata = {
   creator: 'Danos Aparentes',
   publisher: 'Danos Aparentes',
   keywords: [
-    'vistoria veicular', 'danos aparentes', 'laudo de vistoria', 'inspeção de veículo',
-    'avarias veiculares', 'PDF vistoria', 'PWA vistoria', 'software vistoria',
+    'vistoria veicular digital', 'vistoria veicular', 'danos aparentes', 'laudo de vistoria',
+    'inspeção de veículo', 'avarias veiculares', 'PDF vistoria', 'PWA vistoria', 'software vistoria',
   ],
 
   // ── Open Graph ──────────────────────────────────────────────
@@ -88,7 +89,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
-    description: 'Documente avarias veiculares com precisão pericial.',
+    description:
+      'Vistoria veicular digital: marque avarias no diagrama, anexe fotos com GPS e gere o laudo em PDF com hash e QR Code. Teste grátis.',
     images: ['/og-image.jpg'],
   },
 
@@ -154,7 +156,8 @@ export default function RootLayout({
         <meta name="rights" content="Protegido pela Lei 9.610/98 — Lei de Direitos Autorais do Brasil." />
         <meta name="generator" content="Danos Aparentes PWA v1.0" />
         <meta name="application-name" content="Danos Aparentes" />
-        <meta name="robots" content="index, follow" />
+        {/* robots: usar Metadata API (layout/páginas). Não hardcodar
+            index,follow aqui — sobrescreve noindex de /pagamento-pix etc. */}
 
         {/* ── Marca d'água de autoria para indexadores ── */}
         <meta name="dc.creator" content="Danos Aparentes" />

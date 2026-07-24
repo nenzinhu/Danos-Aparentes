@@ -12,6 +12,14 @@ export const metadata: Metadata = {
   description:
     'Conheça a Danos Aparentes: quem criou a plataforma de vistoria digital de avarias veiculares, por que ela existe e como funciona o laudo com hash SHA-256 e QR Code.',
   alternates: { canonical: '/sobre' },
+  openGraph: {
+    title: 'Sobre | Quem Somos — Danos Aparentes',
+    description:
+      'Conheça a Danos Aparentes: quem criou a plataforma de vistoria digital de avarias veiculares e como funciona o laudo com hash e QR Code.',
+    url: '/sobre',
+    type: 'website',
+    images: ['/og-image.jpg'],
+  },
 }
 
 export default function SobrePage() {

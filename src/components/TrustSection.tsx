@@ -121,6 +121,12 @@ export default function TrustSection() {
           >
             <IconShieldCheck size={14} className="text-emerald-400" /> PDF 2 · Certificado de Autenticidade
           </a>
+          <a
+            href="/verify"
+            className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-lg border border-[var(--card-border)] bg-[var(--panel-bg)] text-[var(--text-main)] hover:border-[var(--sheet-line)] transition-all"
+          >
+            Verificar um laudo →
+          </a>
         </div>
       </Reveal>
 

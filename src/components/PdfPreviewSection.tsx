@@ -77,7 +77,7 @@ export default function PdfPreviewSection() {
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
         </div>
         <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] max-w-4xl">
-          Laudo Pericial Inviolável: <span className="text-[var(--signal-bright)]">Transparência Total em 2 Páginas</span>
+          Laudo de vistoria veicular digital: <span className="text-[var(--signal-bright)]">transparência total em 2 páginas</span>
         </h2>
         <p className="text-sm sm:text-base text-[var(--text-muted)] mt-4 max-w-2xl leading-relaxed">
           Veja a estrutura real gerada pelo aplicativo. Documentação técnica aceita por seguradoras, frotistas e locadoras — pronta para envio por WhatsApp ou e-mail.
@@ -150,6 +150,8 @@ export default function PdfPreviewSection() {
                   <img
                     src={page.src}
                     alt={page.title}
+                    width={page.width}
+                    height={page.height}
                     loading="lazy"
                     decoding="async"
                     className="w-full h-full object-contain rounded transition-transform duration-300 group-hover:scale-[1.02]"
