@@ -6,7 +6,7 @@ import { VehicleType, ViewType, Damage, DamageType, Severity } from '../types'
 import { vehicleRegistry } from './vehicles/registry'
 import { useZoomPan } from '../hooks/useZoomPan'
 import DamageFloat from './DamageFloat'
-import DamageCallouts from './DamageCallouts'
+import DamageCallouts, { DamageCalloutLegend } from './DamageCallouts'
 import VehicleDefs from './vehicles/VehicleDefs'
 import ErrorBoundary from './ErrorBoundary'
 import { Flip, gsap, prefersReducedMotion } from '../lib/gsap'
@@ -141,11 +141,34 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
 
   const VehicleComp = vehicleRegistry[vehicleType]?.[viewType] || vehicleRegistry['car']?.[viewType] || vehicleRegistry['car']['lateral-left']
   const layoutKey = `${vehicleType}-${viewType}`
+  const [compact, setCompact] = useState(false)
+
+  // Mobile / narrow SVG: pins on diagram + legend list (avoids jumbled labels).
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)')
+    const update = () => {
+      const narrowMq = mq.matches
+      const narrowBox = (containerRef.current?.clientWidth ?? 0) > 0
+        && (containerRef.current?.clientWidth ?? 999) < 440
+      setCompact(narrowMq || narrowBox)
+    }
+    update()
+    mq.addEventListener('change', update)
+    window.addEventListener('resize', update)
+    return () => {
+      mq.removeEventListener('change', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [containerRef, layoutKey, isFullscreen])
 
   const viewDamages = useMemo(
     () => damages.filter(d => d.vehicle === vehicleType && d.view === viewType),
     [damages, vehicleType, viewType],
   )
+
+  const selectedForCallouts = selectedPart
+    ? { id: selectedPart.id, name: selectedPart.name }
+    : null
 
   const handlePartClick = useCallback((id: string, name: string) => {
     speak(name)
@@ -233,43 +256,53 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
   }, [layoutKey, targetRef])
 
   return (
-    <div
-      ref={containerRef}
-      className={`relative overflow-hidden cursor-grab flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] ${isFullscreen ? 'rounded-0 flex-1 min-h-0' : 'rounded-2xl flex-1 min-h-[220px]'}`}
-    >
-      <AnimatePresence mode='wait' custom={orbitDir}>
-        <motion.div
-          key={layoutKey}
-          custom={orbitDir}
-          variants={orbitVariants}
-          initial='initial'
-          animate='animate'
-          exit='exit'
-          className={`[transform-style:preserve-3d] ${isFullscreen ? 'w-full h-full flex items-center justify-center' : 'w-full'}`}
-        >
-          <div
-            ref={targetRef}
-            id={`container-${vehicleType}-${viewType}`}
-            style={{ width: '100%', transformOrigin: 'center center' }}
-            className={isFullscreen ? 'h-full flex items-center justify-center [&>svg]:h-full [&>svg]:w-auto [&>svg]:max-w-full' : ''}
+    <div className={`flex flex-col ${isFullscreen ? 'flex-1 min-h-0' : ''}`}>
+      <div
+        ref={containerRef}
+        className={`relative overflow-hidden cursor-grab flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] ${isFullscreen ? 'rounded-0 flex-1 min-h-0' : 'rounded-2xl flex-1 min-h-[220px]'}`}
+      >
+        <AnimatePresence mode='wait' custom={orbitDir}>
+          <motion.div
+            key={layoutKey}
+            custom={orbitDir}
+            variants={orbitVariants}
+            initial='initial'
+            animate='animate'
+            exit='exit'
+            className={`[transform-style:preserve-3d] ${isFullscreen ? 'w-full h-full flex items-center justify-center' : 'w-full'}`}
           >
-            <VehicleComp
-              damages={viewDamages}
-              selectedPartId={selectedPart?.id ?? null}
-              onPartClick={handlePartClick}
-              onPartHover={(_, name) => speakHover(name)}
-            />
-          </div>
-        </motion.div>
-      </AnimatePresence>
+            <div
+              ref={targetRef}
+              id={`container-${vehicleType}-${viewType}`}
+              style={{ width: '100%', transformOrigin: 'center center' }}
+              className={isFullscreen ? 'h-full flex items-center justify-center [&>svg]:h-full [&>svg]:w-auto [&>svg]:max-w-full' : ''}
+            >
+              <VehicleComp
+                damages={viewDamages}
+                selectedPartId={selectedPart?.id ?? null}
+                onPartClick={handlePartClick}
+                onPartHover={(_, name) => speakHover(name)}
+              />
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
-      <DamageCallouts
-        containerRef={containerRef}
-        damages={viewDamages}
-        selectedPart={selectedPart ? { id: selectedPart.id, name: selectedPart.name } : null}
-        scale={scale}
-        layoutKey={layoutKey}
-      />
+        <DamageCallouts
+          containerRef={containerRef}
+          damages={viewDamages}
+          selectedPart={selectedForCallouts}
+          scale={scale}
+          layoutKey={layoutKey}
+          compact={compact}
+        />
+      </div>
+
+      {compact ? (
+        <DamageCalloutLegend
+          damages={viewDamages}
+          selectedPart={selectedForCallouts}
+        />
+      ) : null}
     </div>
   )
 })

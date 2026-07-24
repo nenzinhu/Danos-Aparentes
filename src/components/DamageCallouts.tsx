@@ -27,6 +27,11 @@ interface Props {
   scale: number
   /** Remeasure when view/vehicle swaps. */
   layoutKey: string
+  /**
+   * Mobile / narrow: pins only on the SVG; text lives in DamageCalloutLegend
+   * so labels don't smother the smaller diagram.
+   */
+  compact?: boolean
 }
 
 const TYPE_SHORT: Record<DamageType, string> = {
@@ -268,6 +273,7 @@ export function resolveCalloutCollisions(
  * Forensic-style callouts pinned to vehicle parts: anchor + leader + name tag.
  * Selection shows name only; saved damages show name · type.
  * Labels are deconflicted so chips never cover each other.
+ * In compact (mobile) mode: numbered pins only — text goes to DamageCalloutLegend.
  */
 export default function DamageCallouts({
   containerRef,
@@ -275,6 +281,7 @@ export default function DamageCallouts({
   selectedPart,
   scale,
   layoutKey,
+  compact = false,
 }: Props) {
   const [items, setItems] = useState<CalloutItem[]>([])
 
@@ -340,8 +347,14 @@ export default function DamageCallouts({
       }
     }
 
+    // Compact: keep anchors only (no leader geometry to resolve).
+    if (compact) {
+      setItems(next.map(i => ({ ...i, lx: i.ax, ly: i.ay })))
+      return
+    }
+
     setItems(resolveCalloutCollisions(next, cRect.width, cRect.height))
-  }, [containerRef, damages, selectedPart])
+  }, [containerRef, damages, selectedPart, compact])
 
   useLayoutEffect(() => {
     measure()
@@ -365,6 +378,16 @@ export default function DamageCallouts({
 
   if (!items.length) return null
 
+  // Stable index for pin ↔ legend mapping (damages first, then bare selection).
+  const indexByKey = new Map<string, number>()
+  let n = 0
+  for (const d of damages) {
+    if (!indexByKey.has(d.partId)) indexByKey.set(d.partId, ++n)
+  }
+  if (selectedPart && !indexByKey.has(selectedPart.id)) {
+    indexByKey.set(selectedPart.id, ++n)
+  }
+
   return (
     <div
       className="pointer-events-none absolute inset-0 z-20 overflow-visible"
@@ -373,6 +396,40 @@ export default function DamageCallouts({
       <svg className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
         {items.map(item => {
           const tone = TONE[item.tone]
+          const idx = indexByKey.get(item.key) ?? 0
+          if (compact) {
+            return (
+              <g key={`pin-${item.key}`}>
+                <circle
+                  cx={item.ax}
+                  cy={item.ay}
+                  r={11}
+                  fill={tone.fill}
+                  stroke={tone.stroke}
+                  strokeWidth={1.5}
+                />
+                <circle
+                  cx={item.ax}
+                  cy={item.ay}
+                  r={11}
+                  fill="#020617"
+                  fillOpacity={0.55}
+                />
+                <text
+                  x={item.ax}
+                  y={item.ay + 0.5}
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  fill={tone.text}
+                  fontSize="10"
+                  fontWeight="800"
+                  fontFamily="ui-monospace, monospace"
+                >
+                  {idx}
+                </text>
+              </g>
+            )
+          }
           return (
             <g key={`line-${item.key}`}>
               <line
@@ -407,7 +464,7 @@ export default function DamageCallouts({
         })}
       </svg>
 
-      {items.map(item => {
+      {!compact && items.map(item => {
         const tone = TONE[item.tone]
         const transform = item.side === 'right'
           ? 'translate(0, -50%)'
@@ -435,6 +492,86 @@ export default function DamageCallouts({
           </div>
         )
       })}
+    </div>
+  )
+}
+
+interface LegendProps {
+  damages: Damage[]
+  selectedPart: SelectedPart
+}
+
+/**
+ * Mobile legend: readable damage names under the SVG, matched to numbered pins.
+ */
+export function DamageCalloutLegend({ damages, selectedPart }: LegendProps) {
+  const rows: { key: string; index: number; title: string; subtitle?: string; tone: Severity | 'select' }[] = []
+  const seen = new Set<string>()
+
+  damages.forEach((d) => {
+    if (seen.has(d.partId)) return
+    seen.add(d.partId)
+    const isSelected = selectedPart?.id === d.partId
+    rows.push({
+      key: d.partId,
+      index: rows.length + 1,
+      title: d.partName,
+      subtitle: TYPE_SHORT[d.type] ?? d.typeName,
+      tone: isSelected ? 'select' : d.severity,
+    })
+  })
+
+  if (selectedPart && !seen.has(selectedPart.id)) {
+    rows.push({
+      key: selectedPart.id,
+      index: rows.length + 1,
+      title: selectedPart.name,
+      subtitle: 'SELECIONADO',
+      tone: 'select',
+    })
+  }
+
+  if (!rows.length) return null
+
+  return (
+    <div
+      className="mt-2 px-1"
+      role="list"
+      aria-label="Avarias marcadas nesta vista"
+    >
+      <div className="text-[0.65rem] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5 px-0.5">
+        Marcadores ({rows.length})
+      </div>
+      <ul className="flex flex-col gap-1.5 max-h-[132px] overflow-y-auto overscroll-contain pr-0.5">
+        {rows.map(row => {
+          const tone = TONE[row.tone]
+          return (
+            <li
+              key={row.key}
+              role="listitem"
+              className="damage-tag flex items-center gap-2 rounded-lg border px-2 py-1.5"
+              style={{
+                color: tone.text,
+                background: tone.fill,
+                borderColor: tone.border,
+              }}
+            >
+              <span
+                className="shrink-0 inline-flex h-5 w-5 items-center justify-center rounded-full text-[0.65rem] font-black"
+                style={{ background: '#02061799', color: tone.text, border: `1px solid ${tone.border}` }}
+              >
+                {row.index}
+              </span>
+              <span className="min-w-0 flex-1 truncate normal-case tracking-normal text-[0.72rem] font-bold">
+                {row.title}
+                {row.subtitle ? (
+                  <span className="opacity-75 font-semibold"> · {row.subtitle}</span>
+                ) : null}
+              </span>
+            </li>
+          )
+        })}
+      </ul>
     </div>
   )
 }
