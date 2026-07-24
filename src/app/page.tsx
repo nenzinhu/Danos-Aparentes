@@ -27,7 +27,8 @@ import { IconSunMoon, IconSearch, IconCar, IconSignature } from '../components/u
 
 // Data da última revisão de conteúdo/copy da home. Atualize ao editar
 // headline, seções ou schema — reflete no dateModified do SoftwareApplication.
-const HOME_UPDATED_DATE = '2026-07-12'
+const HOME_PUBLISHED_DATE = '2026-01-15'
+const HOME_UPDATED_DATE = '2026-07-24'
 
 // Schema de marca/produto para rich results e Knowledge Graph.
 const LANDING_JSONLD = {
@@ -38,8 +39,9 @@ const LANDING_JSONLD = {
   operatingSystem: 'Web, Android, iOS (PWA)',
   url: 'https://danosaparentes.com.br',
   description:
-    'Aplicativo de vistoria veicular: marque avarias em diagramas do veículo, anexe fotos com GPS e gere laudos em PDF com hash de validação e QR Code.',
+    'Aplicativo de vistoria veicular digital: marque avarias em diagramas do veículo, anexe fotos com GPS e gere laudos em PDF com hash de validação e QR Code.',
   inLanguage: 'pt-BR',
+  datePublished: HOME_PUBLISHED_DATE,
   dateModified: HOME_UPDATED_DATE,
   offers: { '@type': 'Offer', category: 'subscription' },
   publisher: {
@@ -75,15 +77,16 @@ const PRICING_FAQ_JSONLD = {
 const PricingSection = dynamic(() => import('../components/PricingSection'));
 const FAQSection = dynamic(() => import('../components/FAQSection'));
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'));
-const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'), { ssr: false });
+// Blog teaser must SSR so crawlers see internal links to /blog posts.
+const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'));
 const MobileStickyCta = dynamic(() => import('../components/MobileStickyCta'), { ssr: false });
 
 function TextCarousel() {
   const slides = [
     {
-      kicker: 'Laudo que comprova a si mesmo',
+      kicker: 'Vistoria veicular digital',
       description:
-        'Chega de discutir amassado que já existia no carro. Marque avarias no diagrama, prove com foto, GPS e assinatura antes de sair do pátio. Laudo em PDF com hash de segurança e QR Code, pronto pra mandar no WhatsApp.',
+        'Chega de discutir amassado que já existia no carro. Faça a vistoria veicular digital no pátio: marque avarias no diagrama, prove com foto, GPS e assinatura. Laudo em PDF com hash e QR Code, pronto pro WhatsApp.',
     },
     {
       kicker: 'Laudos no WhatsApp que o cliente entende',
@@ -131,7 +134,7 @@ function TextCarousel() {
       {/* Beat 2 — supporting headline, SplitText hands off from the title reveal */}
       {reduceMotion ? (
         <p className="mt-3 text-xl sm:text-2xl lg:text-[2.75rem] tracking-tight font-semibold text-[var(--signal-bright)] leading-tight [text-wrap:balance]">
-          Vistoria digital que prova a si mesma.
+          Vistoria veicular digital que prova a si mesma.
         </p>
       ) : (
         <GsapSplitSubline
@@ -139,7 +142,7 @@ function TextCarousel() {
           delay={650}
           className="mt-3 text-xl sm:text-2xl lg:text-[2.75rem] tracking-tight font-semibold text-[var(--signal-bright)] leading-tight [text-wrap:balance]"
         >
-          Vistoria digital que prova a si mesma.
+          Vistoria veicular digital que prova a si mesma.
         </GsapSplitSubline>
       )}
 
@@ -473,13 +476,14 @@ export default function LandingPage() {
           </div>
           <div className="flex gap-8 flex-wrap justify-center">
             <a href="/sobre" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Sobre</a>
+            <a href="/planos" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Planos</a>
             <a href="/locadoras" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Locadoras</a>
             <a href="/oficinas" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Oficinas</a>
             <a href="/seguradoras" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Seguradoras</a>
             <a href="/frotas" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Frotas</a>
             <a href="/demo" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Demonstração</a>
             <a href="/verify" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Verificar Laudo</a>
-            <a href="/blog" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Blog</a>
+            <a href="/blog" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Guias de vistoria veicular</a>
             <a href="/faq" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">FAQ</a>
             <a href="/privacidade" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Privacidade</a>
             <a href="/termos" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Termos de Uso</a>

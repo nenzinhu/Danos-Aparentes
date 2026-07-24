@@ -62,8 +62,8 @@ export const metadata: Metadata = {
   creator: 'Danos Aparentes',
   publisher: 'Danos Aparentes',
   keywords: [
-    'vistoria veicular', 'danos aparentes', 'laudo de vistoria', 'inspeção de veículo',
-    'avarias veiculares', 'PDF vistoria', 'PWA vistoria', 'software vistoria',
+    'vistoria veicular digital', 'vistoria veicular', 'danos aparentes', 'laudo de vistoria',
+    'inspeção de veículo', 'avarias veiculares', 'PDF vistoria', 'PWA vistoria', 'software vistoria',
   ],
 
   // ── Open Graph ──────────────────────────────────────────────
@@ -88,7 +88,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
-    description: 'Documente avarias veiculares com precisão pericial.',
+    description:
+      'Vistoria veicular digital: marque avarias no diagrama, anexe fotos com GPS e gere o laudo em PDF com hash e QR Code. Teste grátis.',
     images: ['/og-image.jpg'],
   },
 

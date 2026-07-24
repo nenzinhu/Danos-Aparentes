@@ -28,7 +28,7 @@ export default function BlogTeaserSection() {
           href="/blog"
           className="shrink-0 inline-flex items-center gap-2 text-sm font-bold text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors"
         >
-          Ver todos →
+          Ver guias de vistoria veicular →
         </Link>
       </div>
 
