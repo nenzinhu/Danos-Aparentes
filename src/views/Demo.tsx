@@ -34,9 +34,11 @@ export default function Demo() {
         </Link>
       </header>
 
-      <p className='text-center text-slate-400 text-sm mb-4 shrink-0 font-medium'>
+      <h1 className='sr-only'>Demonstração — Vistoria Digital de Avarias Veiculares | Danos Aparentes</h1>
+
+      <h2 className='text-center text-slate-400 text-sm mb-4 shrink-0 font-medium'>
         Clique nas peças do carro para marcar uma avaria
-      </p>
+      </h2>
 
       <div className='flex-1 min-h-0 grid place-items-center'>
         <div className='w-full max-w-4xl glass-card p-8 aspect-video flex items-center justify-center'>

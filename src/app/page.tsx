@@ -472,6 +472,7 @@ export default function LandingPage() {
             <span className="hidden md:inline">Vistoria Digital de Alta Fidelidade</span>
           </div>
           <div className="flex gap-8 flex-wrap justify-center">
+            <a href="/sobre" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Sobre</a>
             <a href="/locadoras" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Locadoras</a>
             <a href="/oficinas" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Oficinas</a>
             <a href="/seguradoras" className="hover:text-[var(--text-main)] transition-colors focus-visible:outline-white">Para Seguradoras</a>

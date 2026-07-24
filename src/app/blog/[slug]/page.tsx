@@ -62,6 +62,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
     keywords: post.tags.join(', '),
     image: `${SITE_URL}${post.cover.image || '/og-image.jpg'}`,
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['.blog-speakable-title'],
+    },
   }
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
@@ -116,7 +120,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         {/* Cabeçalho do artigo */}
         <header className="mb-8">
-          <h1 className="font-display text-3xl lg:text-4xl font-bold leading-[1.05] tracking-tight">{post.title}</h1>
+          <h1 className="blog-speakable-title font-display text-3xl lg:text-4xl font-bold leading-[1.05] tracking-tight">{post.title}</h1>
           <div className="flex flex-wrap items-center gap-3 mt-4 text-[0.7rem] font-mono-data uppercase tracking-wider text-[var(--text-muted)]">
             <span>{post.author.name}</span>
             <span aria-hidden="true">·</span>

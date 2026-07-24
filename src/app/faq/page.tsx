@@ -29,6 +29,10 @@ export const metadata: Metadata = {
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
+  speakable: {
+    '@type': 'SpeakableSpecification',
+    cssSelector: ['.faq-speakable-title', '.faq-speakable-intro'],
+  },
   mainEntity: FAQ_PLAIN.map(f => ({
     '@type': 'Question',
     name: f.question,
@@ -55,8 +59,8 @@ export default function FaqPage() {
           <span className="inline-flex items-center gap-2 text-[0.7rem] font-extrabold tracking-[0.14em] uppercase text-[var(--signal)] mb-3">
             Central de Ajuda
           </span>
-          <h1 className="text-2xl font-extrabold mb-1">Perguntas Frequentes</h1>
-          <p className="text-sm text-[var(--text-muted)]">
+          <h1 className="faq-speakable-title text-2xl font-extrabold mb-1">Perguntas Frequentes</h1>
+          <p className="faq-speakable-intro text-sm text-[var(--text-muted)]">
             Tudo sobre vistorias, laudos, assinatura e uso do app em campo.
           </p>
         </header>

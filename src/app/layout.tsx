@@ -174,6 +174,19 @@ export default function RootLayout({
               logo: `${SITE_URL}/logo-full.png`,
               description:
                 'Plataforma de vistoria digital de avarias veiculares: marque os danos no diagrama do veículo, anexe fotos e gere laudos em PDF com QR Code de verificação.',
+              founder: {
+                '@type': 'Person',
+                name: 'Jeferson',
+                jobTitle: 'Proprietário',
+              },
+              contactPoint: {
+                '@type': 'ContactPoint',
+                email: 'suporte@danosaparentes.com.br',
+                telephone: '+5548992032348',
+                contactType: 'customer support',
+                areaServed: 'BR',
+                availableLanguage: ['Portuguese'],
+              },
             }),
           }}
         />

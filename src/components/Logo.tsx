@@ -9,6 +9,13 @@ interface Props {
   showText?: boolean
   variant?: 'icon' | 'full'
   className?: string
+  /**
+   * Text color class for "Danos Aparentes". Defaults to the theme variable —
+   * override on surfaces with a fixed (non-theme-reactive) background, e.g.
+   * a card that stays dark in both light and dark mode, so the name doesn't
+   * go dark-on-dark when the theme variable flips for light mode.
+   */
+  textClassName?: string
 }
 
 export default function Logo({
@@ -16,6 +23,7 @@ export default function Logo({
   showText = true,
   variant = 'icon',
   className,
+  textClassName = 'text-[var(--text-main)]',
 }: Props) {
   const displayText = showText && variant !== 'full'
   const hoverRef = useRef<HTMLElement | HTMLDivElement>(null)
@@ -67,7 +75,7 @@ export default function Logo({
         <GsapLetterScanText
           text="Danos Aparentes"
           fontSize={size * 0.45}
-          className="font-outfit font-extrabold text-[var(--text-main)] tracking-wider"
+          className={`font-outfit font-extrabold tracking-wider ${textClassName}`}
         />
       )}
     </div>

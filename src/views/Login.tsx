@@ -60,7 +60,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
       <div className="w-full max-w-md bg-slate-900/60 border border-slate-800 rounded-3xl p-8 backdrop-blur-2xl shadow-2xl relative z-10">
         <div className="flex justify-center mb-8">
           <div className="p-3 bg-slate-800/50 rounded-2xl border border-slate-700/50 shadow-inner">
-            <Logo size={42} />
+            <Logo size={42} textClassName="text-slate-100" />
           </div>
         </div>
 
