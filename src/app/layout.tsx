@@ -46,6 +46,7 @@ export const metadata: Metadata = {
   // Canonical da home. Páginas internas definem o seu próprio em
   // `alternates.canonical` — sempre adicione um ao criar rota nova.
   alternates: { canonical: '/' },
+  robots: { index: true, follow: true },
   manifest: '/manifest.webmanifest',
   verification: {
     yandex: '63c44acce9c82466',
@@ -155,7 +156,8 @@ export default function RootLayout({
         <meta name="rights" content="Protegido pela Lei 9.610/98 — Lei de Direitos Autorais do Brasil." />
         <meta name="generator" content="Danos Aparentes PWA v1.0" />
         <meta name="application-name" content="Danos Aparentes" />
-        <meta name="robots" content="index, follow" />
+        {/* robots: usar Metadata API (layout/páginas). Não hardcodar
+            index,follow aqui — sobrescreve noindex de /pagamento-pix etc. */}
 
         {/* ── Marca d'água de autoria para indexadores ── */}
         <meta name="dc.creator" content="Danos Aparentes" />
