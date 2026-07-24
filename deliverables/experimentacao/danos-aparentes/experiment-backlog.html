@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backlog de Experimentação — Danos Aparentes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f3ed;
+      --surface: #ffffff;
+      --text: #1a1a18;
+      --muted: #5c5a54;
+      --accent: #864df9;
+      --accent-light: #ede5ff;
+      --accent-dark: #6b2fd4;
+      --border: #e8e2d8;
+      --roar-red: #dc2626;
+      --roar-yellow: #ca8a04;
+      --roar-green: #16a34a;
+      --shadow: 0 4px 24px rgba(26, 26, 24, 0.06);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow);
+    }
+
+    .header a.logo {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .header .meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Inter Tight', sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .roar-banner {
+      background: linear-gradient(135deg, #fef2f2 0%, #fff7ed 100%);
+      border: 2px solid var(--roar-red);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .roar-banner h2 {
+      color: var(--roar-red);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .roar-banner p { font-size: 0.875rem; color: #7f1d1d; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      color: var(--accent-dark);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      padding: 0.65rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tr:hover td { background: #faf8f5; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-roar { background: #fef2f2; color: var(--roar-red); }
+    .badge-top { background: var(--accent); color: #fff; }
+    .badge-high { background: #fef3c7; color: #92400e; }
+    .badge-med { background: #ecfdf5; color: #065f46; }
+    .badge-low { background: #f3f4f6; color: #4b5563; }
+    .badge-unknown { background: #fff7ed; color: #9a3412; }
+
+    .exp-card {
+      border-left: 4px solid var(--accent);
+      position: relative;
+    }
+
+    .exp-card.top-1 { border-left-color: #864df9; }
+    .exp-card.top-2 { border-left-color: #a78bfa; }
+    .exp-card.top-3 { border-left-color: #c4b5fd; }
+
+    .exp-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .exp-id {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .exp-title {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      margin: 0.25rem 0 0.5rem;
+    }
+
+    .pipe-score {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      font-weight: 700;
+      font-size: 1.25rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      min-width: 3rem;
+      text-align: center;
+    }
+
+    .hypothesis {
+      background: #faf8f5;
+      border-radius: 10px;
+      padding: 1rem 1.15rem;
+      font-size: 0.875rem;
+      font-style: italic;
+      border-left: 3px solid var(--accent);
+      margin: 1rem 0;
+      color: #3d3b36;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 5px;
+      background: var(--bg);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 700px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .header { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .header .meta { text-align: center; }
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.8rem;
+    }
+
+    .timeline-bar {
+      flex: 1;
+      height: 28px;
+      background: var(--accent-light);
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timeline-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #a78bfa);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding-left: 0.75rem;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.7rem;
+      white-space: nowrap;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    .footer a { color: var(--accent); font-weight: 600; }
+
+    .lift-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .lift-item {
+      text-align: center;
+      padding: 0.75rem;
+      border-radius: 10px;
+      font-size: 0.75rem;
+    }
+
+    .lift-up { background: #ecfdf5; color: #065f46; }
+    .lift-down { background: #fef2f2; color: #991b1b; }
+    .lift-neutral { background: #f3f4f6; color: #4b5563; }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.4rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <a class="logo" href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-experimentation-engine&utm_content=header-logo">gui.marketing</a>
+  <div class="meta">
+    <div><strong>Danos Aparentes</strong> · Experimentação CRO</div>
+    <div>2026-07-16 · Ciclo 1 · Re-think</div>
+  </div>
+</header>
+
+<main class="container">
+  <h1>Backlog de Experimentação</h1>
+  <p class="subtitle">
+    <a href="https://danosaparentes.com.br" target="_blank" rel="noopener">danosaparentes.com.br</a> —
+    KPI: PIX pago / assinatura ativada · Ticket Pro R$ 49,90/mês
+  </p>
+
+  <div class="roar-banner">
+    <h2>🔴 Gate ROAR: Re-think</h2>
+    <p>
+      <strong>Conversões/mês: DESCONHECIDO</strong> (assumido &lt; 100) →
+      <strong>NÃO fazer testes A/B.</strong>
+      Usar before/after, heurística e usabilidade.
+      Reavaliar gate quando GA4 confirmar ≥ 100 conversões/mês na página-alvo.
+    </p>
+  </div>
+
+  <!-- Assumptions -->
+  <div class="card">
+    <h2>Premissas</h2>
+    <table>
+      <thead>
+        <tr><th>Campo</th><th>Valor</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Páginas-alvo</td><td><code>/</code>, <code>/planos</code>, <code>/pagamento-pix</code></td><td><span class="badge badge-med">OK</span></td></tr>
+        <tr><td>Tráfego / baseline CR</td><td>Desconhecido</td><td><span class="badge badge-unknown">Verificar GA4</span></td></tr>
+        <tr><td>Conversões/mês</td><td>&lt; 100 (estimado)</td><td><span class="badge badge-roar">Re-think</span></td></tr>
+        <tr><td>Ferramenta</td><td>Nenhuma — manual / before-after</td><td><span class="badge badge-med">OK</span></td></tr>
+        <tr><td>Tracking PIX</td><td>GA4 + pixels — eventos PIX a validar</td><td><span class="badge badge-unknown">Verificar</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Heuristic summary -->
+  <div class="card">
+    <h2>Diagnóstico Heurístico (7 Níveis + LIFT)</h2>
+    <table>
+      <thead>
+        <tr><th>Nível</th><th>Achado principal</th><th>Severidade</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 Relevância</td><td>Hero empurra trial; PIX em aba secundária</td><td><span class="badge badge-med">Média</span></td></tr>
+        <tr><td>2 Confiança</td><td>Admite ausência de clientes públicos</td><td><span class="badge badge-roar">Alta</span></td></tr>
+        <tr><td>3 Orientação</td><td>PIX exige navegação extra + login</td><td><span class="badge badge-med">Média</span></td></tr>
+        <tr><td>4 Estímulo</td><td>Sem urgência nem benefício prepay</td><td><span class="badge badge-low">Baixa-Média</span></td></tr>
+        <tr><td>5 Segurança</td><td>Selo Stripe; PIX é Mercado Pago</td><td><span class="badge badge-med">Média</span></td></tr>
+        <tr><td>6 Conveniência</td><td>3+ passos até QR PIX</td><td><span class="badge badge-roar">Alta</span></td></tr>
+        <tr><td>7 Confirmação</td><td>Auto-refresh OK; next steps mínimos</td><td><span class="badge badge-low">Baixa</span></td></tr>
+      </tbody>
+    </table>
+    <div class="lift-grid">
+      <div class="lift-item lift-up">↑ Proposta de valor<br>↑ Relevância</div>
+      <div class="lift-item lift-down">↓ Ansiedade<br>↓ Distração<br>↓ Clareza</div>
+      <div class="lift-item lift-neutral">→ Urgência fraca</div>
+    </div>
+  </div>
+
+  <!-- Priority table -->
+  <div class="card">
+    <h2>Backlog Priorizado</h2>
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">Todos (8)</button>
+      <button class="filter-btn" data-filter="top">Top 3</button>
+      <button class="filter-btn" data-filter="quick">Quick wins</button>
+    </div>
+    <table id="priority-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>ID</th>
+          <th>Experimento</th>
+          <th>Método</th>
+          <th>PIPE</th>
+          <th>Esforço</th>
+          <th>Impacto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-tier="top quick" data-id="EXP-DA-001">
+          <td>1</td>
+          <td><strong>EXP-DA-001</strong></td>
+          <td>Fluxo PIX com retorno pós-login</td>
+          <td>Before/After + Usabilidade</td>
+          <td><strong>4.0</strong></td>
+          <td>Médio</td>
+          <td><span class="badge badge-roar">Alto</span></td>
+        </tr>
+        <tr data-tier="top quick" data-id="EXP-DA-002">
+          <td>2</td>
+          <td><strong>EXP-DA-002</strong></td>
+          <td>Redução de ansiedade pré-QR PIX</td>
+          <td>Comparação períodos</td>
+          <td><strong>3.8</strong></td>
+          <td>Baixo</td>
+          <td><span class="badge badge-high">Médio-Alto</span></td>
+        </tr>
+        <tr data-tier="top quick" data-id="EXP-DA-003">
+          <td>3</td>
+          <td><strong>EXP-DA-003</strong></td>
+          <td>Trial default + PIX explícito</td>
+          <td>Comparação períodos</td>
+          <td><strong>3.5</strong></td>
+          <td>Baixo</td>
+          <td><span class="badge badge-high">Médio</span></td>
+        </tr>
+        <tr data-tier="quick" data-id="EXP-DA-004">
+          <td>4</td>
+          <td>EXP-DA-004</td>
+          <td>Ancoragem prepay 3/6/12 meses</td>
+          <td>Before/After</td>
+          <td>3.3</td>
+          <td>Baixo</td>
+          <td><span class="badge badge-med">Médio</span></td>
+        </tr>
+        <tr data-tier="" data-id="EXP-DA-005">
+          <td>5</td>
+          <td>EXP-DA-005</td>
+          <td>Prova social substitutiva (laudo demo)</td>
+          <td>5s test + períodos</td>
+          <td>3.3</td>
+          <td>Médio</td>
+          <td><span class="badge badge-high">Médio</span></td>
+        </tr>
+        <tr data-tier="quick" data-id="EXP-DA-006">
+          <td>6</td>
+          <td>EXP-DA-006</td>
+          <td>Selos MP + Stripe alinhados</td>
+          <td>Before/After</td>
+          <td>3.0</td>
+          <td>Baixo</td>
+          <td><span class="badge badge-med">Médio</span></td>
+        </tr>
+        <tr data-tier="quick" data-id="EXP-DA-007">
+          <td>7</td>
+          <td>EXP-DA-007</td>
+          <td>CTA "Pagar com PIX" no hero</td>
+          <td>Comparação períodos</td>
+          <td>3.0</td>
+          <td>Baixo</td>
+          <td><span class="badge badge-med">Médio</span></td>
+        </tr>
+        <tr data-tier="quick" data-id="EXP-DA-008">
+          <td>8</td>
+          <td>EXP-DA-008</td>
+          <td>Remover distração Corporativo no PIX</td>
+          <td>Before/After</td>
+          <td>2.8</td>
+          <td>Baixo</td>
+          <td><span class="badge badge-low">Baixo-Médio</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Timeline -->
+  <div class="card">
+    <h2>Timeline — 6 semanas (Re-think)</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <span style="width:5rem;font-weight:600">S1–2</span>
+        <div class="timeline-bar"><div class="timeline-fill" style="width:33%">Tracking PIX + baseline</div></div>
+      </div>
+      <div class="timeline-item">
+        <span style="width:5rem;font-weight:600">S2</span>
+        <div class="timeline-bar"><div class="timeline-fill" style="width:50%">EXP-001 + EXP-002</div></div>
+      </div>
+      <div class="timeline-item">
+        <span style="width:5rem;font-weight:600">S3–4</span>
+        <div class="timeline-bar"><div class="timeline-fill" style="width:66%">Medir 14 dias "depois"</div></div>
+      </div>
+      <div class="timeline-item">
+        <span style="width:5rem;font-weight:600">S4–5</span>
+        <div class="timeline-bar"><div class="timeline-fill" style="width:83%">EXP-003, 006 + usabilidade</div></div>
+      </div>
+      <div class="timeline-item">
+        <span style="width:5rem;font-weight:600">S6</span>
+        <div class="timeline-bar"><div class="timeline-fill" style="width:100%">Documentar → Ciclo 2</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top 3 detail cards -->
+  <h2 style="margin: 2rem 0 1rem; font-size: 1.35rem;">Top 3 — Próximo Sprint</h2>
+
+  <div class="card exp-card top-1" data-exp="EXP-DA-001">
+    <div class="exp-header">
+      <div>
+        <span class="badge badge-top">#1 Próximo sprint</span>
+        <div class="exp-id">EXP-DA-001</div>
+        <div class="exp-title">Fluxo PIX com retorno pós-login</div>
+        <span class="tag">/planos → /pagamento-pix</span>
+        <span class="tag">Before/After + Usabilidade</span>
+      </div>
+      <div class="pipe-score">4.0</div>
+    </div>
+    <div class="hypothesis">
+      Se implementarmos signup/login com redirect automático para <code>/pagamento-pix?duration={N}</code> preservando a seleção de meses, entre usuários que clicam "Pagar com PIX" sem sessão, então a taxa de cobrança PIX gerada aumentará, porque a fricção de re-navegação pós-login (Nível 6) viola cognitive ease (Kahneman).
+    </div>
+    <p><strong>Implementação:</strong> Link PIX → <code>/app?mode=signup&returnTo=/pagamento-pix?duration=N</code> → redirect pós-auth.</p>
+    <p style="margin-top:0.5rem"><strong>Behavioral science:</strong> MECLABS fricção (2×) · Cognitive ease · Fluência = confiança</p>
+    <div class="tags">
+      <span class="tag">Esforço: Médio</span>
+      <span class="tag">Impacto: Alto</span>
+      <span class="tag">Power: 1 (Re-think)</span>
+    </div>
+  </div>
+
+  <div class="card exp-card top-2" data-exp="EXP-DA-002">
+    <div class="exp-header">
+      <div>
+        <span class="badge badge-top">#2 Próximo sprint</span>
+        <div class="exp-id">EXP-DA-002</div>
+        <div class="exp-title">Redução de ansiedade pré-QR PIX</div>
+        <span class="tag">/pagamento-pix</span>
+        <span class="tag">Comparação de períodos</span>
+      </div>
+      <div class="pipe-score">3.8</div>
+    </div>
+    <div class="hypothesis">
+      Se adicionarmos faixa de confiança acima do botão "Gerar PIX" (selo Mercado Pago, pagamento seguro, link trial alternativo), entre visitantes autenticados, então cliques em "Gerar PIX" aumentarão, porque reduzimos ansiedade (LIFT ↓) e aplicamos loss aversion ao oferecer trial sem perder o usuário.
+    </div>
+    <p><strong>Implementação:</strong> Bloco trust acima do CTA + micro-copy cancelamento.</p>
+    <div class="tags">
+      <span class="tag">Esforço: Baixo</span>
+      <span class="tag">Impacto: Médio-Alto</span>
+      <span class="tag">LIFT: ↓ Ansiedade</span>
+    </div>
+  </div>
+
+  <div class="card exp-card top-3" data-exp="EXP-DA-003">
+    <div class="exp-header">
+      <div>
+        <span class="badge badge-top">#3 Próximo sprint</span>
+        <div class="exp-id">EXP-DA-003</div>
+        <div class="exp-title">Trial como default; PIX explícito no funil</div>
+        <span class="tag">/planos</span>
+        <span class="tag">Comparação de períodos</span>
+      </div>
+      <div class="pipe-score">3.5</div>
+    </div>
+    <div class="hypothesis">
+      Se mantivermos Cartão/Trial como default mas adicionarmos link visível "Prefere PIX? Pague agora sem cartão" abaixo do CTA, entre visitantes de /planos, então inícios de checkout PIX aumentarão sem reduzir trials, porque segmentamos por preferência de pagamento (default effect + choice architecture).
+    </div>
+    <p><strong>Implementação:</strong> Link secundário abaixo do CTA trial em PricingCards.</p>
+    <div class="tags">
+      <span class="tag">Esforço: Baixo</span>
+      <span class="tag">Impacto: Médio</span>
+      <span class="tag">Default effect</span>
+    </div>
+  </div>
+
+  <!-- Tracking -->
+  <div class="card">
+    <h2>Tracking necessário (antes de medir)</h2>
+    <table>
+      <thead><tr><th>Evento</th><th>Onde</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><code>pix_cta_click</code></td><td>/planos, /</td><td><span class="badge badge-unknown">Criar</span></td></tr>
+        <tr><td><code>pix_page_view</code></td><td>/pagamento-pix</td><td><span class="badge badge-unknown">Verificar</span></td></tr>
+        <tr><td><code>pix_qr_generated</code></td><td>API create-pix-charge OK</td><td><span class="badge badge-unknown">Criar</span></td></tr>
+        <tr><td><code>pix_payment_confirmed</code></td><td>Webhook MP → active_pix</td><td><span class="badge badge-unknown">Verificar</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer class="footer">
+  Gerado por <a href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-experimentation-engine&utm_content=footer">gui.marketing Experimentation Engine</a>
+  · Danos Aparentes · 2026-07-16
+</footer>
+
+<script>
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('#priority-table tbody tr').forEach(row => {
+        if (filter === 'all') {
+          row.classList.remove('hidden');
+        } else if (filter === 'top') {
+          row.classList.toggle('hidden', !row.dataset.tier.includes('top'));
+        } else if (filter === 'quick') {
+          row.classList.toggle('hidden', !row.dataset.tier.includes('quick'));
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
