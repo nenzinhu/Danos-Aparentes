@@ -6,7 +6,6 @@ import { FrontalWheelGraphic } from './WheelRim'
 export default function CarFrontal({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {
   const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
 
-
   return (
     <svg viewBox="0 0 400 300" width="100%">
       {/* Sombra projetada */}

@@ -289,8 +289,15 @@ html.light .blog-cta {
 .damage-tag {
   font-family: var(--font-mono-data), ui-monospace, monospace;
   font-size: 10px;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  line-height: 1.35;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 /* Anel de status da lanterna acesa — respiro suave (transform + opacity). */
 @keyframes torch-halo {
@@ -414,6 +421,19 @@ body > * { position: relative; z-index: 1; }
   stroke-width: 1.2;
   transform-origin: center;
   transform-box: fill-box;
+}
+
+/* Car preview: GSAP owns transform — keep CSS transitions on paint props only. */
+.part.part-pro-motion {
+  transition:
+    fill 0.28s ease,
+    stroke 0.28s ease,
+    stroke-width 0.28s ease,
+    filter 0.28s ease;
+}
+
+.part.part-pro-motion:active {
+  transform: none;
 }
 
 .part.wheel-part {
