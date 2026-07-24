@@ -416,6 +416,19 @@ body > * { position: relative; z-index: 1; }
   transform-box: fill-box;
 }
 
+/* Car preview: GSAP owns transform — keep CSS transitions on paint props only. */
+.part.part-pro-motion {
+  transition:
+    fill 0.28s ease,
+    stroke 0.28s ease,
+    stroke-width 0.28s ease,
+    filter 0.28s ease;
+}
+
+.part.part-pro-motion:active {
+  transform: none;
+}
+
 .part.wheel-part {
   fill: transparent !important;
   stroke: transparent;

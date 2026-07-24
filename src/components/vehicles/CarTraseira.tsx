@@ -4,7 +4,7 @@ import { usePartProps } from './usePartProps'
 import { FrontalWheelGraphic } from './WheelRim'
 
 export default function CarTraseira({ damages, selectedPartId, onPartClick, onPartHover }: VehicleProps) {
-  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover)
+  const partProps = usePartProps(damages, selectedPartId, onPartClick, onPartHover, { motion: 'pro' })
 
 
   return (
