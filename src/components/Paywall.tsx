@@ -52,13 +52,19 @@ export default function Paywall({ status, onSignOut }: Props) {
         <div className="rounded-2xl border border-[var(--primary)]/25 bg-[var(--bg-main)]/60 px-4 py-4 mb-5 text-left">
           <p className="text-[10px] font-black uppercase tracking-wider text-[var(--primary)]">A partir de</p>
           <p className="text-2xl font-black text-[var(--primary)] mt-1">{STARTING_FROM}<span className="text-sm font-bold text-[var(--text-muted)]">/mês</span></p>
-          <p className="text-[11px] text-[var(--text-muted)] mt-1">Starter (20 laudos/mês) ou Pro (80 laudos/mês) · PIX: 1, 3, 6 ou 12 meses</p>
+          <p className="text-[11px] text-[var(--text-muted)] mt-1">Starter (20 laudos/mês) ou Pro (80 laudos/mês) · Cartão (Stripe) ou PIX</p>
         </div>
 
         <div className="flex flex-col gap-2.5">
           <Link
-            href="/pagamento-pix?duration=1"
+            href="/pagamento-cartao?plan=starter&autostart=1"
             className="block w-full rounded-xl bg-[var(--primary)] text-[var(--bg-main)] font-extrabold text-sm py-3.5 no-underline"
+          >
+            Assinar com cartão
+          </Link>
+          <Link
+            href="/pagamento-pix?duration=1&plan=starter"
+            className="block w-full rounded-xl border border-[var(--card-border)] text-[var(--text-main)] font-bold text-sm py-3 no-underline"
             onClick={() => trackPixCtaClick({ source: 'paywall', duration_months: 1, value: 29.9, currency: 'BRL' })}
           >
             Pagar com PIX

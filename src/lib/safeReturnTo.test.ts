@@ -6,6 +6,12 @@ describe('getSafeReturnTo', () => {
     expect(getSafeReturnTo('/pagamento-pix?duration=3')).toBe('/pagamento-pix?duration=3')
   })
 
+  it('allows pagamento-cartao with plan query', () => {
+    expect(getSafeReturnTo('/pagamento-cartao?plan=starter&autostart=1')).toBe(
+      '/pagamento-cartao?plan=starter&autostart=1',
+    )
+  })
+
   it('allows planos and app paths', () => {
     expect(getSafeReturnTo('/planos')).toBe('/planos')
     expect(getSafeReturnTo('/app')).toBe('/app')

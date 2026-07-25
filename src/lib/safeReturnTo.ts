@@ -1,5 +1,5 @@
 /** Internal paths allowed as post-auth redirect targets (open redirect protection). */
-const ALLOWED_PREFIXES = ['/pagamento-pix', '/app', '/planos'] as const
+const ALLOWED_PREFIXES = ['/pagamento-pix', '/pagamento-cartao', '/app', '/planos'] as const
 
 const DEFAULT_RETURN = '/app'
 

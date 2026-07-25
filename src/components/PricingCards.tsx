@@ -459,9 +459,12 @@ function PlanCard({
 
         {paymentMethod === 'cartao' ? (
           <>
-            <LandingCtaLink className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}>
-              Testar 7 dias grátis
-            </LandingCtaLink>
+            <Link
+              href={`/pagamento-cartao?plan=${planId}&autostart=1`}
+              className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}
+            >
+              Assinar com cartão · {formatPrice(basePrice)}/mês
+            </Link>
             <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
               <Link
                 href={`/pagamento-pix?duration=1&plan=${planId}`}
@@ -470,6 +473,11 @@ function PlanCard({
               >
                 Prefere PIX? Pague agora sem cartão
               </Link>
+            </p>
+            <p className="text-center text-[11px] text-[var(--text-muted)] mt-2">
+              <LandingCtaLink className="font-bold text-[var(--primary)] hover:underline">
+                Ou testar 7 dias grátis sem cartão
+              </LandingCtaLink>
             </p>
             <p className="text-center text-[11px] text-[var(--text-muted)] mt-2">
               Cancele quando quiser, sem multa e sem burocracia.
