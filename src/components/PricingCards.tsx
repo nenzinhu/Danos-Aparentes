@@ -15,8 +15,19 @@ type PaymentMethod = 'cartao' | 'pix';
 const STARTER_BASE_PRICE = 29.9;
 const PRO_BASE_PRICE = 49.9;
 
+const CORP_TIERS = [
+  { name: 'Start', users: 'até 5 usuários', price: 'R$ 299' },
+  { name: 'Growth', users: 'até 15 usuários', price: 'R$ 699' },
+  { name: 'Enterprise', users: '15+ · API · SLA', price: 'a partir de R$ 1.490' },
+] as const;
+
 function formatPrice(value: number) {
   return `R$ ${value.toFixed(2).replace('.', ',')}`;
+}
+
+function formatPerLaudo(basePrice: number, laudosLimit: number) {
+  const per = basePrice / laudosLimit;
+  return `R$ ${per.toFixed(2).replace('.', ',')}`;
 }
 
 // Cartões de plano (Starter + Pro + Corporativo) — usados na home (resumo) e em
@@ -103,7 +114,7 @@ export default function PricingCards() {
         cardRef={starterRef}
         name="Starter"
         planId="starter"
-        tagline="Para quem está começando ou faz vistorias esporádicas."
+        tagline="Porta de entrada — vistorias esporádicas sem compromisso grande."
         basePrice={STARTER_BASE_PRICE}
         laudosLimit={20}
         popular={false}
@@ -122,21 +133,22 @@ export default function PricingCards() {
         glowRef={proGlowRef}
         name="Pro"
         planId="pro"
-        tagline="Perfeito para vistoriadores autônomos e oficinas com volume maior."
+        tagline="4× mais laudos que o Starter por menos de 2× o preço — com a sua marca."
         basePrice={PRO_BASE_PRICE}
         laudosLimit={80}
         popular
+        highlightNote="Mais escolhido: laudo com logo e nome da empresa"
         features={[
           'Até 80 laudos em PDF por mês',
           'Tudo do plano Starter incluído',
-          'Personalização de marca própria (Nome e Logotipo)',
+          'Personalização de marca própria (nome e logotipo no PDF)',
           'Acesso ao painel de estatísticas e dashboard',
           'Modelos de layout de PDF adicionais',
           'Suporte com prioridade',
         ]}
       />
 
-      {/* Plano Corporativo */}
+      {/* Plano Corporativo — faixas âncora para não negociar do zero */}
       <div
         ref={corpRef}
         className="glass-card flex flex-col justify-between p-8 relative overflow-hidden group border border-[var(--card-border)]/50 hover:border-[var(--primary)]/20 transition-all duration-300"
@@ -148,23 +160,39 @@ export default function PricingCards() {
         />
         <div>
           <h3 className="text-xl font-extrabold text-[var(--text-main)] tracking-wide">Corporativo</h3>
-          <p className="text-xs text-[var(--text-muted)] mt-1">Para grandes frotistas, locadoras e concessionárias.</p>
+          <p className="text-xs text-[var(--text-muted)] mt-1">
+            Padronize a vistoria em todas as bases — frota, locadora e rede.
+          </p>
 
           <div className="my-6 min-h-[92px] flex flex-col justify-center">
-            <span className="text-3xl font-black text-[var(--text-main)] tracking-tight">Consulte agora mesmo</span>
-            <span className="text-sm text-[var(--text-muted)] block mt-1">Laudos ilimitados · planos personalizados por volume</span>
+            <span className="text-3xl font-black text-[var(--text-main)] tracking-tight">A partir de R$ 299</span>
+            <span className="text-sm text-[var(--text-muted)] block mt-1">/ mês · laudos ilimitados · por volume de usuários</span>
           </div>
 
-          <ul className="space-y-3 border-t border-[var(--card-border)]/40 pt-6">
+          <ul className="space-y-2.5 border-t border-[var(--card-border)]/40 pt-5 mb-5">
+            {CORP_TIERS.map((tier) => (
+              <li
+                key={tier.name}
+                className="flex items-center justify-between gap-3 text-xs rounded-lg border border-[var(--card-border)]/50 bg-[var(--bg-main)]/40 px-3 py-2.5"
+              >
+                <span>
+                  <span className="font-extrabold text-[var(--text-main)]">{tier.name}</span>
+                  <span className="text-[var(--text-muted)] block mt-0.5">{tier.users}</span>
+                </span>
+                <span className="font-black text-[var(--primary)] whitespace-nowrap shrink-0">{tier.price}</span>
+              </li>
+            ))}
+          </ul>
+
+          <ul className="space-y-3 border-t border-[var(--card-border)]/40 pt-5">
             {[
               'Laudos em PDF ilimitados',
-              'Tudo do Plano Pro incluído',
-              'Acesso para múltiplos vistoriadores e usuários',
-              'Painel de gestão centralizado de equipes e laudos',
-              'Estatísticas consolidadas por filial e vistoriador',
-              'Integração via API com seu sistema ERP/CRM',
-              'Customizações avançadas sob medida',
-              'Suporte prioritário 24/7 com gerente de conta',
+              'Tudo do Plano Pro incluído (marca no PDF)',
+              'Múltiplos vistoriadores e usuários',
+              'Painel centralizado de equipes e laudos',
+              'Estatísticas por filial e vistoriador',
+              'Integração via API (faixa Enterprise)',
+              'Suporte prioritário com gerente de conta',
             ].map((feat) => (
               <li key={feat} className="flex items-start gap-3 text-xs text-[var(--text-main)]">
                 <span className="text-[var(--signal-bright)] mt-0.5">✓</span>
@@ -176,15 +204,17 @@ export default function PricingCards() {
 
         <div className="mt-8">
           <a
-            href={whatsappLink('Olá! Gostaria de saber mais sobre o plano Corporativo (Empresas) do app Danos Aparentes.')}
+            href={whatsappLink(
+              'Olá! Quero o plano Corporativo do Danos Aparentes. Interesse nas faixas: Start R$ 299 (até 5), Growth R$ 699 (até 15) ou Enterprise a partir de R$ 1.490.',
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className={buttonVariants({ variant: 'secondary', size: 'md', className: 'w-full' })}
           >
-            Consulte agora mesmo
+            Falar sobre Corporativo
           </a>
           <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
-            Preço sob consulta porque varia por volume e integrações — resposta em minutos.
+            Faixas publicadas — fechamos volume e integrações em minutos no WhatsApp.
           </p>
           <p className="text-center text-[11px] mt-1.5">
             <Link href="/locadoras" className="font-bold text-[var(--primary)] hover:underline">
@@ -207,6 +237,7 @@ function PlanCard({
   laudosLimit,
   popular,
   features,
+  highlightNote,
 }: {
   cardRef?: React.Ref<HTMLDivElement>;
   glowRef?: React.RefObject<HTMLDivElement | null>;
@@ -217,6 +248,7 @@ function PlanCard({
   laudosLimit: number;
   popular: boolean;
   features: string[];
+  highlightNote?: string;
 }) {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cartao');
   const [durationMonths, setDurationMonths] = useState<number>(1);
@@ -224,6 +256,7 @@ function PlanCard({
   const price = paymentMethod === 'pix' ? basePrice * durationMonths : basePrice;
   const priceLabel = formatPrice(price);
   const perDay = basePrice / 30;
+  const perLaudo = formatPerLaudo(basePrice, laudosLimit);
 
   return (
     <div ref={cardRef} className="relative">
@@ -257,8 +290,13 @@ function PlanCard({
             {paymentMethod === 'pix' ? `/ ${durationMonths} mês${durationMonths > 1 ? 'es' : ''}` : '/ mês'}
           </span>
           <p className="text-[11px] text-[var(--text-muted)] mt-2 font-semibold">
-            ≈ {formatPrice(perDay)}/dia · até {laudosLimit} laudos em PDF por mês
+            ≈ {formatPrice(perDay)}/dia · até {laudosLimit} laudos/mês · ≈ {perLaudo}/laudo
           </p>
+          {highlightNote && (
+            <p className="text-[11px] text-[var(--signal-bright)] mt-1.5 font-bold leading-snug">
+              {highlightNote}
+            </p>
+          )}
         </div>
 
         <ul className="space-y-3 border-t border-[var(--card-border)]/40 pt-6">
