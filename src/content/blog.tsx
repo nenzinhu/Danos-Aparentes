@@ -91,6 +91,197 @@ function RecursosLaudo() {
 
 export const BLOG_POSTS: BlogPost[] = [
   {
+    slug: 'laudo-sem-danos-aparentes',
+    title: 'Laudo sem danos aparentes: por que o veículo “zerado” ainda precisa de prova',
+    excerpt:
+      '“Sem avarias” também é evidência. Veja por que o laudo vazio bem feito protege locadora, frota e oficina — e como emitir um PDF verificável mesmo sem marcar nenhuma peça.',
+    category: 'Vistoria',
+    tags: [
+      'laudo sem danos',
+      'sem danos aparentes',
+      'vistoria digital',
+      'locadora',
+      'frota',
+      'prova documental',
+    ],
+    date: '2026-07-24',
+    readingMinutes: 6,
+    author: { name: 'Jeferson', role: 'Vistoria digital' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#0f172a 0%,#0369a1 50%,#22c55e 100%)',
+      emoji: '✅',
+      image: '/blog-covers/como-fazer-laudo-vistoria.webp',
+    },
+    toc: [
+      { id: 'por-que', label: 'Por que “sem danos” também precisa de laudo' },
+      { id: 'o-que-provar', label: 'O que o laudo vazio precisa provar' },
+      { id: 'passo-a-passo', label: 'Como emitir sem marcar avarias' },
+      { id: 'erros', label: 'Erros que invalidam o “zerado”' },
+      { id: 'quando', label: 'Quando isso resolve disputa' },
+    ],
+    howTo: {
+      name: 'Como emitir um laudo sem danos aparentes',
+      steps: [
+        {
+          name: 'Identifique o veículo e o momento',
+          text: 'Placa, marca/modelo, KM, data/hora e se é entrega, devolução ou inspeção de rotina.',
+        },
+        {
+          name: 'Percorra as 4 vistas mesmo sem avaria',
+          text: 'Frente, laterais e traseira — confirme visualmente que não há risco, amassado ou trinca aparente.',
+        },
+        {
+          name: 'Registre fotos de contexto (opcional, recomendado)',
+          text: 'Pelo menos uma foto aberta por lado sob boa luz, para provar o estado geral do veículo.',
+        },
+        {
+          name: 'Declare “sem danos aparentes” e assine',
+          text: 'Feche o laudo sem peças marcadas, colha assinaturas e gere o PDF com hash e QR de verificação.',
+        },
+      ],
+    },
+    faq: [
+      {
+        question: 'Preciso de laudo se o veículo não tem nenhum dano?',
+        answer:
+          'Sim. O laudo sem danos aparentes documenta o estado zerado numa data e hora específicas. Sem isso, qualquer avaria posterior vira discussão sobre “já estava assim”.',
+      },
+      {
+        question: 'Laudo vazio tem valor numa contestação?',
+        answer:
+          'Tem, se identificar o veículo, o momento da vistoria, quem vistoriou e estiver selado (assinatura, hash e verificação). “Não anotei nada” no papel não prova o estado zerado.',
+      },
+      {
+        question: 'Dá para gerar laudo sem marcar peças no Danos Aparentes?',
+        answer:
+          'Sim. Você percorre o diagrama, deixa sem avarias e ainda assim assina e exporta o PDF verificável — útil na entrega de locadora e na inspeção de frota.',
+      },
+      {
+        question: 'Preciso fotografar mesmo sem avaria?',
+        answer:
+          'Não é obrigatório, mas fotos de contexto por vista reforçam a prova do estado geral. Em devolução de locadora, isso reduz margem para “sumiu um risco que já existia”.',
+      },
+    ],
+    content: (
+      <>
+        <p>
+          Na pressa do pátio, muita equipe só gera laudo quando acha dano. O problema: o momento em que o
+          carro está <strong>sem danos aparentes</strong> também precisa de prova. Sem documento de
+          entrega “zerado”, qualquer risco na devolução vira “já estava aí”.
+        </p>
+        <p>
+          Este artigo mostra por que o laudo vazio bem feito é evidência, o que ele precisa conter e como
+          emitir no fluxo digital — inclusive no Danos Aparentes, onde você pode{' '}
+          <strong>assinar e gerar o PDF mesmo sem marcar nenhuma peça</strong>.
+        </p>
+
+        <h2 id="por-que">Por que “sem danos” também precisa de laudo</h2>
+        <p>
+          A cobrança de avaria depende de <strong>comparação</strong>: estado na entrada versus estado na
+          saída. Se a entrada não existe (ou é só um visto na prancheta), você não compara — você discute.
+        </p>
+        <ul>
+          <li>
+            <strong>Locadora:</strong> entrega sem laudo = devolução frágil (
+            <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</a>).
+          </li>
+          <li>
+            <strong>Frota:</strong> saída da base sem registro = prejuízo absorvido na volta (
+            <a href="/blog/controle-avarias-frota-entrada-saida">entrada e saída de frota</a>).
+          </li>
+          <li>
+            <strong>Oficina / seminovos:</strong> “recebi limpo” sem prova = cliente questiona o orçamento.
+          </li>
+        </ul>
+
+        <h2 id="o-que-provar">O que o laudo vazio precisa provar</h2>
+        <p>Não basta escrever “OK” no papel. Um laudo sem danos aparentes sólido responde:</p>
+        <ul>
+          <li>
+            <strong>Qual veículo</strong> — placa, marca/modelo, cor, KM.
+          </li>
+          <li>
+            <strong>Quando</strong> — data e hora da vistoria.
+          </li>
+          <li>
+            <strong>Quem</strong> — vistoriador e, quando couber, cliente/responsável com assinatura.
+          </li>
+          <li>
+            <strong>O quê foi inspecionado</strong> — percurso das vistas (frente, laterais, traseira),
+            mesmo sem marcar peça.
+          </li>
+          <li>
+            <strong>Integridade</strong> — documento que não dá para editar depois sem deixar rastro (
+            <a href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash</a>).
+          </li>
+        </ul>
+
+        <Cta />
+
+        <h2 id="passo-a-passo">Como emitir sem marcar avarias</h2>
+        <ol>
+          <li>
+            <strong>Identifique o veículo e o momento</strong> — placa, marca/modelo, KM, data/hora e se é
+            entrega, devolução ou inspeção de rotina.
+          </li>
+          <li>
+            <strong>Percorra as 4 vistas mesmo sem avaria</strong> — frente, laterais e traseira; confirme
+            visualmente que não há risco, amassado ou trinca aparente (
+            <a href="/blog/vistoria-nas-4-vistas-do-veiculo">4 vistas do veículo</a>).
+          </li>
+          <li>
+            <strong>Registre fotos de contexto (recomendado)</strong> — uma foto aberta por lado sob boa
+            luz (
+            <a href="/blog/como-fotografar-avarias">como fotografar avarias</a>).
+          </li>
+          <li>
+            <strong>Declare “sem danos aparentes” e assine</strong> — feche sem peças marcadas, colha
+            assinaturas e gere o PDF com hash e QR.
+          </li>
+        </ol>
+        <p>
+          No app, a mensagem de apoio deixa isso explícito: você pode seguir para o laudo mesmo com{' '}
+          <em>nenhuma avaria registrada</em>. O “zerado” deixa de ser ausência de processo e vira
+          registro.
+        </p>
+
+        <h2 id="erros">Erros que invalidam o “zerado”</h2>
+        <ul>
+          <li>
+            <strong>Só um visto na prancheta</strong> — sem identificação completa nem fotos de contexto.
+          </li>
+          <li>
+            <strong>Vistoria só na devolução</strong> — sem baseline de entrega para comparar.
+          </li>
+          <li>
+            <strong>Fotos soltas no WhatsApp</strong> — sem vínculo com data, vista e responsável.
+          </li>
+          <li>
+            <strong>PDF editável sem selo</strong> — qualquer alteração posterior derruba a confiança (
+            <a href="/blog/vistoria-sem-papel">vistoria sem papel</a>).
+          </li>
+        </ul>
+
+        <h2 id="quando">Quando isso resolve disputa</h2>
+        <p>
+          Cenário clássico: na devolução aparece um risco no para-lama. Com laudo de entrega{' '}
+          <strong>sem danos aparentes</strong> (assinado e verificável), a conversa muda de “você não
+          provou” para “na entrada estava zerado; este dano é novo”.
+        </p>
+        <p>
+          Para cobrar com método, combine este laudo com o fluxo de{' '}
+          <a href="/blog/cobranca-avaria-devolucao-locadora">cobrança de avaria na devolução</a> e, se
+          precisar argumentar pré-existência no sentido inverso, veja{' '}
+          <a href="/blog/como-provar-amassado-pre-existente-locacao">amassado pré-existente</a>.
+        </p>
+        <p>
+          Quer padronizar entrega e devolução na rede? Veja o fluxo para{' '}
+          <a href="/locadoras">locadoras</a> ou teste o laudo digital em minutos.
+        </p>
+      </>
+    ),
+  },
+  {
     slug: 'vistoria-foto-gps-hash-sha256-eliminar-contestacoes',
     title: 'Vistoria com Foto GPS e Hash SHA-256: Como Grandes Frotas Eliminam 100% das Contestações',
     excerpt:
