@@ -184,12 +184,27 @@ export default function FrotasPage() {
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-[var(--text-muted)] mt-8">
-            Quer entender como funciona a vistoria sem internet?{' '}
-            <Link href="/blog/vistoria-de-frota-sem-internet" className="font-bold text-[var(--primary)] hover:underline">
-              Veja a explicação completa no blog
-            </Link>
-          </p>
+          <div className="mt-10 max-w-2xl mx-auto">
+            <p className="text-center text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-3">
+              Leia também
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs">
+              {[
+                ['vistoria-de-frota-padronizar-equipe', 'Vistoria de frota: como padronizar a equipe'],
+                ['como-padronizar-equipe-de-vistoria-e-acabar-com-o-retrabalho', 'Como padronizar a equipe e acabar com o retrabalho'],
+                ['como-reduzir-prejuizo-com-avarias-na-frota', 'Como reduzir prejuízo com avarias na frota'],
+                ['plano-corporativo-gestao-de-equipe-vistoriadores', 'Plano Corporativo: gerenciar a equipe em um só lugar'],
+                ['controle-avarias-frota-entrada-saida', 'Controle de avarias na frota: entrada, saída e histórico'],
+                ['vistoria-de-frota-sem-internet', 'Vistoria de frota sem internet: como funciona'],
+              ].map(([slug, title]) => (
+                <li key={slug}>
+                  <Link href={`/blog/${slug}`} className="text-[var(--text-muted)] hover:text-[var(--primary)] hover:underline">
+                    {title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <FrotasFinalCta />

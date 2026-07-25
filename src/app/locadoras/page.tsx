@@ -190,12 +190,27 @@ export default function LocadorasPage() {
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-[var(--text-muted)] mt-8">
-            Quer ver como padronizar a devolução de veículos passo a passo?{' '}
-            <Link href="/blog/checklist-vistoria-devolucao-locadora" className="font-bold text-[var(--primary)] hover:underline">
-              Veja o checklist completo no blog
-            </Link>
-          </p>
+          <div className="mt-10 max-w-2xl mx-auto">
+            <p className="text-center text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-3">
+              Leia também
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs">
+              {[
+                ['checklist-vistoria-devolucao-locadora', 'Checklist de vistoria de devolução de veículo para locadoras'],
+                ['avarias-preexistentes-como-provar', 'Avarias preexistentes: como provar que o dano já estava no veículo'],
+                ['laudo-white-label-para-locadoras', 'Laudo white-label para locadoras'],
+                ['checklist-de-avarias-sem-dor-de-cabeca', 'Checklist de avarias sem dor de cabeça'],
+                ['cobranca-avaria-devolucao-locadora', 'Como cobrar avaria na devolução sem perder a discussão'],
+                ['como-provar-amassado-pre-existente-locacao', 'Como provar que um amassado já existia antes da locação'],
+              ].map(([slug, title]) => (
+                <li key={slug}>
+                  <Link href={`/blog/${slug}`} className="text-[var(--text-muted)] hover:text-[var(--primary)] hover:underline">
+                    {title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         {/* CTA final */}

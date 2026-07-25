@@ -184,12 +184,25 @@ export default function SeguradorasPage() {
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-[var(--text-muted)] mt-8">
-            Quer entender como funciona o QR Code de verificação?{' '}
-            <Link href="/blog/laudo-de-avaria-com-qr-code" className="font-bold text-[var(--primary)] hover:underline">
-              Veja a explicação completa no blog
-            </Link>
-          </p>
+          <div className="mt-10 max-w-2xl mx-auto">
+            <p className="text-center text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-3">
+              Leia também
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs">
+              {[
+                ['laudo-de-avarias-para-sinistro', 'Laudo de avarias para sinistro: como documentar para o seguro'],
+                ['laudo-de-avaria-com-qr-code', 'Laudo de avaria com QR Code: o que é e para que serve'],
+                ['laudo-de-vistoria-para-despachantes', 'Laudo de vistoria para despachantes'],
+                ['qr-code-e-hash-no-laudo-de-avarias', 'QR Code e hash no laudo: a prova que seguradora não contesta'],
+              ].map(([slug, title]) => (
+                <li key={slug}>
+                  <Link href={`/blog/${slug}`} className="text-[var(--text-muted)] hover:text-[var(--primary)] hover:underline">
+                    {title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <SeguradorasFinalCta />

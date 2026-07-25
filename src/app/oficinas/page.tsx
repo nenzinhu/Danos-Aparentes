@@ -184,12 +184,25 @@ export default function OficinasPage() {
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-[var(--text-muted)] mt-8">
-            Quer ver o passo a passo completo do laudo?{' '}
-            <Link href="/blog/como-digitalizar-a-vistoria-da-sua-oficina" className="font-bold text-[var(--primary)] hover:underline">
-              Veja o guia completo no blog
-            </Link>
-          </p>
+          <div className="mt-10 max-w-2xl mx-auto">
+            <p className="text-center text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-3">
+              Leia também
+            </p>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs">
+              {[
+                ['vistoria-antes-do-orcamento-oficina', 'Vistoria antes do orçamento: como a oficina evita briga na entrega'],
+                ['como-digitalizar-a-vistoria-da-sua-oficina', 'Como digitalizar a vistoria da sua oficina'],
+                ['como-fazer-laudo-de-vistoria-veicular', 'Como fazer laudo de vistoria veicular (passo a passo)'],
+                ['como-fotografar-avarias', 'Como fotografar avarias à prova de contestação'],
+              ].map(([slug, title]) => (
+                <li key={slug}>
+                  <Link href={`/blog/${slug}`} className="text-[var(--text-muted)] hover:text-[var(--primary)] hover:underline">
+                    {title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
         <OficinasFinalCta />
