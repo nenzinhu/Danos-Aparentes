@@ -3,12 +3,13 @@ import React, { useRef, useState } from 'react';
 import Link from 'next/link';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LandingCtaLink from './LandingCtaLink';
 import { buttonVariants } from './ui/Button';
 import { trackPixCtaClick } from '@/src/lib/analytics/events';
 import { whatsappLink } from '../lib/whatsapp';
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 type PaymentMethod = 'cartao' | 'pix';
 
@@ -33,11 +34,8 @@ function formatPerLaudo(basePrice: number, laudosLimit: number) {
 // Cartões de plano (Starter + Pro + Corporativo) — usados na home (resumo) e em
 // /planos (página completa). Conteúdo único, sem duplicar entre os dois.
 //
-// Cada plano tem uma personalidade de entrada diferente, pensada pra reforçar
-// o posicionamento: Starter é neutro (não deve competir visualmente pelo
-// olhar), Pro chama atenção com escala + brilho pulsante (é o "Mais
-// Popular"), Corporativo entra de forma firme e sólida (sem overshoot) pra
-// passar segurança/robustez — coerente com "grandes frotistas, locadoras".
+// Animações distintas (fromTo + ScrollTrigger — evita card invisível após remount):
+// Starter = entrada lateral suave | Pro = pop + brilho | Corporativo = slide firme + barra.
 export default function PricingCards() {
   const containerRef = useRef<HTMLDivElement>(null);
   const starterRef = useRef<HTMLDivElement>(null);
@@ -45,69 +43,157 @@ export default function PricingCards() {
   const proGlowRef = useRef<HTMLDivElement>(null);
   const corpRef = useRef<HTMLDivElement>(null);
   const corpBarRef = useRef<HTMLDivElement>(null);
+  const corpTierRefs = useRef<(HTMLLIElement | null)[]>([]);
 
-  useGSAP(() => {
-    const mm = gsap.matchMedia();
+  useGSAP(
+    () => {
+      const starter = starterRef.current;
+      const pro = proRef.current;
+      const corp = corpRef.current;
+      const glow = proGlowRef.current;
+      const bar = corpBarRef.current;
+      const root = containerRef.current;
+      if (!starter || !pro || !corp || !root) return;
 
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
-      const tl = gsap.timeline();
+      const cards = [starter, pro, corp];
+      const mm = gsap.matchMedia();
 
-      // Starter: entrada suave, tom neutro — só fade + leve subida, sem
-      // escala nem overshoot, pra não competir com o card Pro ao lado.
-      tl.from(starterRef.current, {
-        autoAlpha: 0,
-        y: 20,
-        duration: 0.65,
-        ease: 'power2.out',
-      }, 0);
+      // Sempre garantir visibilidade se o usuário prefere menos movimento
+      // ou se um remount matar a timeline no meio (bug clássico do .from).
+      const showAll = () => {
+        gsap.set(cards, { autoAlpha: 1, x: 0, y: 0, scale: 1, clearProps: 'transform' });
+        if (glow) gsap.set(glow, { autoAlpha: 0.55, scale: 1 });
+        if (bar) gsap.set(bar, { scaleX: 1, transformOrigin: 'left center' });
+        const tiers = corpTierRefs.current.filter(Boolean);
+        if (tiers.length) gsap.set(tiers, { autoAlpha: 1, y: 0 });
+      };
 
-      // Pro: entrada com leve destaque de escala (overshoot sutil) — depois
-      // assenta e mantém um brilho pulsante contínuo por trás do card.
-      tl.from(proRef.current, {
-        autoAlpha: 0,
-        y: 20,
-        scale: 0.94,
-        duration: 0.65,
-        ease: 'back.out(1.7)',
-      }, 0.12);
-
-      gsap.to(proGlowRef.current, {
-        autoAlpha: 1,
-        scale: 1.04,
-        duration: 1.8,
-        delay: 1,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
+      mm.add('(prefers-reduced-motion: reduce)', () => {
+        showAll();
       });
 
-      // Corporativo: entrada firme e sólida — mais lenta, sem bounce
-      // (power4.out desacelera de forma decisiva, sem oscilar), transmitindo
-      // estabilidade. Uma barra de destaque "trava" por baixo do cabeçalho
-      // logo em seguida, reforçando a ideia de compromisso/segurança.
-      tl.from(corpRef.current, {
-        autoAlpha: 0,
-        y: 20,
-        scale: 0.98,
-        duration: 0.85,
-        ease: 'power4.out',
-      }, 0.24);
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        gsap.set(starter, { autoAlpha: 0, x: -36, y: 8 });
+        gsap.set(pro, { autoAlpha: 0, y: 32, scale: 0.9 });
+        gsap.set(corp, { autoAlpha: 0, x: 36, y: 8 });
+        if (glow) gsap.set(glow, { autoAlpha: 0, scale: 0.92 });
+        if (bar) gsap.set(bar, { scaleX: 0, transformOrigin: 'left center' });
+        const tiers = corpTierRefs.current.filter(Boolean) as HTMLLIElement[];
+        if (tiers.length) gsap.set(tiers, { autoAlpha: 0, y: 10 });
 
-      tl.fromTo(corpBarRef.current, {
-        scaleX: 0,
-      }, {
-        scaleX: 1,
-        transformOrigin: 'left center',
-        duration: 0.5,
-        ease: 'power3.out',
-      }, 0.95);
+        const failSafe = gsap.delayedCall(2.8, showAll);
 
-      return () => { tl.kill(); };
-    });
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: root,
+            start: 'top 85%',
+            once: true,
+          },
+          defaults: { ease: 'power3.out' },
+          onComplete: () => {
+            failSafe.kill();
+            gsap.set(cards, { autoAlpha: 1, x: 0, y: 0, scale: 1 });
+          },
+        });
 
-    return () => mm.revert();
-  }, { scope: containerRef });
+        // Starter — lateral esquerda, neutro, sem overshoot
+        tl.to(
+          starter,
+          {
+            autoAlpha: 1,
+            x: 0,
+            y: 0,
+            duration: 0.7,
+            ease: 'power2.out',
+          },
+          0,
+        );
 
+        // Pro — sobe com pop (plano âncora) + glow pulsante
+        tl.to(
+          pro,
+          {
+            autoAlpha: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.75,
+            ease: 'back.out(1.7)',
+          },
+          0.14,
+        );
+
+        if (glow) {
+          tl.to(
+            glow,
+            {
+              autoAlpha: 0.7,
+              scale: 1,
+              duration: 0.5,
+              ease: 'power2.out',
+            },
+            0.35,
+          );
+          gsap.to(glow, {
+            autoAlpha: 1,
+            scale: 1.05,
+            duration: 1.8,
+            delay: 1.1,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+          });
+        }
+
+        // Corporativo — lateral direita, firme; barra + faixas em cascata
+        tl.to(
+          corp,
+          {
+            autoAlpha: 1,
+            x: 0,
+            y: 0,
+            duration: 0.8,
+            ease: 'power4.out',
+          },
+          0.26,
+        );
+
+        if (bar) {
+          tl.to(
+            bar,
+            {
+              scaleX: 1,
+              duration: 0.45,
+              ease: 'power3.out',
+            },
+            0.55,
+          );
+        }
+
+        if (tiers.length) {
+          tl.to(
+            tiers,
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.4,
+              stagger: 0.08,
+              ease: 'power2.out',
+            },
+            0.65,
+          );
+        }
+
+        return () => {
+          failSafe.kill();
+          tl.kill();
+          showAll();
+        };
+      });
+
+      return () => mm.revert();
+    },
+    { scope: containerRef },
+  );
   return (
     <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
       <PlanCard
@@ -170,9 +256,12 @@ export default function PricingCards() {
           </div>
 
           <ul className="space-y-2.5 border-t border-[var(--card-border)]/40 pt-5 mb-5">
-            {CORP_TIERS.map((tier) => (
+            {CORP_TIERS.map((tier, i) => (
               <li
                 key={tier.name}
+                ref={(el) => {
+                  corpTierRefs.current[i] = el;
+                }}
                 className="flex items-center justify-between gap-3 text-xs rounded-lg border border-[var(--card-border)]/50 bg-[var(--bg-main)]/40 px-3 py-2.5"
               >
                 <span>
