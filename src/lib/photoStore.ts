@@ -141,6 +141,11 @@ export async function resolvePhotoUrl(ref: string): Promise<string> {
       }
     }
 
+    // Offline e sem cache local: não tenta assinar URL (chamada de rede que
+    // travaria/demoraria o export do PDF). Melhor devolver vazio (ícone de
+    // imagem quebrada no laudo) do que travar a geração inteira.
+    if (!navigator.onLine) return ''
+
     return getStorageSignedUrl(path)
   }
 

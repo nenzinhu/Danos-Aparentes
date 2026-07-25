@@ -298,6 +298,10 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
     } else {
       const url = URL.createObjectURL(blob)
       window.open(url, '_blank')
+      // Revoga depois de um tempo generoso — a aba aberta precisa terminar de
+      // carregar o PDF antes que a URL seja invalidada (sem isso, cada export
+      // vazava um object URL até o reload da página).
+      setTimeout(() => URL.revokeObjectURL(url), 60_000)
     }
   }
 
