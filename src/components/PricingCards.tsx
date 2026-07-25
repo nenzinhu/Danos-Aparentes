@@ -410,7 +410,7 @@ function PlanCard({
             role="tab"
             aria-selected={paymentMethod === 'cartao'}
             onClick={() => setPaymentMethod('cartao')}
-            className={`text-xs font-bold py-2 rounded-md transition-colors ${
+            className={`min-h-11 sm:min-h-9 text-xs font-bold py-2 rounded-md transition-colors ${
               paymentMethod === 'cartao'
                 ? 'bg-[var(--primary)] text-[var(--bg-main)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
@@ -423,7 +423,7 @@ function PlanCard({
             role="tab"
             aria-selected={paymentMethod === 'pix'}
             onClick={() => setPaymentMethod('pix')}
-            className={`text-xs font-bold py-2 rounded-md transition-colors ${
+            className={`min-h-11 sm:min-h-9 text-xs font-bold py-2 rounded-md transition-colors ${
               paymentMethod === 'pix'
                 ? 'bg-[var(--primary)] text-[var(--bg-main)]'
                 : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
@@ -444,7 +444,7 @@ function PlanCard({
                   key={m}
                   type="button"
                   onClick={() => setDurationMonths(m)}
-                  className={`rounded-lg border py-2 text-xs font-bold transition-colors ${
+                  className={`min-h-11 sm:min-h-9 rounded-lg border py-2 text-xs font-bold transition-colors ${
                     durationMonths === m
                       ? 'border-[var(--primary)] bg-[var(--primary)]/15 text-[var(--primary)]'
                       : 'border-[var(--card-border)] text-[var(--text-muted)]'

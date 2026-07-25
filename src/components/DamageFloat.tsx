@@ -203,7 +203,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
             onClick={() => setStep(1)}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full flex items-center gap-2 mb-3 px-2 py-1.5 rounded-lg bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[0.72rem] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)] transition-colors cursor-pointer"
+            className="min-h-11 sm:min-h-9 w-full flex items-center gap-2 mb-3 px-2 py-1.5 rounded-lg bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[0.72rem] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)] transition-colors cursor-pointer"
           >
             <IconArrowLeft size={14} className="text-[var(--text-muted)] shrink-0" />
             {(() => {
@@ -224,7 +224,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
                   onClick={() => setSeverity(s.value)}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className={`py-2 rounded-lg text-[0.72rem] font-extrabold border transition-all cursor-pointer ${
+                  className={`min-h-11 sm:min-h-9 py-2 rounded-lg text-[0.72rem] font-extrabold border transition-all cursor-pointer ${
                     severity === s.value
                       ? `${s.bg} ${s.border} ${s.color}`
                       : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)]'
@@ -273,7 +273,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => { if (fileRef.current) { fileRef.current.removeAttribute('capture'); fileRef.current.setAttribute('capture', 'environment'); fileRef.current.click() } }}
-                  className="flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-sky-500/30 bg-sky-500/5 text-sky-400 text-[0.72rem] font-bold hover:bg-sky-500/10 transition-colors cursor-pointer"
+                  className="min-h-11 sm:min-h-9 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-sky-500/30 bg-sky-500/5 text-sky-400 text-[0.72rem] font-bold hover:bg-sky-500/10 transition-colors cursor-pointer"
                 >
                   <IconCamera size={15} />
                   <span>Câmera</span>
@@ -283,7 +283,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => { if (fileRef.current) { fileRef.current.removeAttribute('capture'); fileRef.current.click() } }}
-                  className="flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-[0.72rem] font-bold hover:bg-emerald-500/10 transition-colors cursor-pointer"
+                  className="min-h-11 sm:min-h-9 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-[0.72rem] font-bold hover:bg-emerald-500/10 transition-colors cursor-pointer"
                 >
                   <IconGallery size={15} />
                   <span>Galeria</span>

@@ -259,7 +259,7 @@ function PagamentoPixContent() {
                   key={p}
                   type="button"
                   onClick={() => selectPlan(p)}
-                  className={`rounded-xl border py-2.5 text-xs font-bold transition-colors ${
+                  className={`min-h-11 rounded-xl border py-2.5 text-xs font-bold transition-colors ${
                     selected
                       ? 'border-[var(--primary)] bg-[var(--primary)]/15 text-[var(--primary)]'
                       : 'border-[var(--card-border)] text-[var(--text-muted)] hover:border-[var(--primary)]/40'
@@ -282,7 +282,7 @@ function PagamentoPixContent() {
                   key={m}
                   type="button"
                   onClick={() => selectDuration(m)}
-                  className={`rounded-xl border py-2.5 text-xs font-bold transition-colors ${
+                  className={`min-h-11 rounded-xl border py-2.5 text-xs font-bold transition-colors ${
                     selected
                       ? 'border-[var(--primary)] bg-[var(--primary)]/15 text-[var(--primary)]'
                       : 'border-[var(--card-border)] text-[var(--text-muted)] hover:border-[var(--primary)]/40'
