@@ -4,6 +4,7 @@ import Link from 'next/link'
 import type { SubscriptionStatus } from '../hooks/useSubscription'
 import { trackPixCtaClick } from '@/src/lib/analytics/events'
 import { LEGAL_CONTACT_EMAIL } from './LegalContent'
+import { whatsappLink } from '../lib/whatsapp'
 
 interface Props {
   status: SubscriptionStatus
@@ -69,8 +70,16 @@ export default function Paywall({ status, onSignOut }: Props) {
             Ver planos e opções
           </Link>
           <a
-            href={`mailto:${LEGAL_CONTACT_EMAIL}?subject=${encodeURIComponent('[Suporte] Assinatura / Plano PRO')}`}
+            href={whatsappLink('Olá! Gostaria de saber mais sobre o plano Corporativo (Empresas) do app Danos Aparentes.')}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] underline mt-1"
+          >
+            Precisa de mais de um vistoriador? Fale sobre o plano Corporativo
+          </a>
+          <a
+            href={`mailto:${LEGAL_CONTACT_EMAIL}?subject=${encodeURIComponent('[Suporte] Assinatura / Plano PRO')}`}
+            className="text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] underline"
           >
             Falar com o suporte
           </a>
