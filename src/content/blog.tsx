@@ -380,9 +380,9 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     slug: 'como-fazer-laudo-de-vistoria-veicular',
-    title: 'Como fazer laudo de vistoria veicular (passo a passo)',
+    title: 'Como Fazer Laudo de Vistoria Veicular (Passo a Passo)',
     excerpt:
-      'Guia prático: o que precisa constar no laudo, fotos que sustentam cobrança e o passo a passo para emitir um PDF com prova, assinatura e validação — sem retrabalho.',
+      'O guia definitivo do laudo de vistoria veicular: fotos que provam o dano e PDF com validade — para locadoras, oficinas, seguradoras e estacionamentos que não podem perder uma disputa por avaria.',
     category: 'Vistoria',
     tags: ['laudo de vistoria', 'avarias', 'checklist', 'locadora', 'seguradora'],
     date: '2026-06-28',
@@ -569,9 +569,9 @@ BLOG_POSTS.push(
   },
   {
     slug: 'laudo-cautelar-vs-laudo-de-avarias',
-    title: 'Laudo cautelar ou de avarias? Diferença e quando usar',
+    title: 'Laudo Cautelar x Laudo de Avarias: Qual Vale Mais?',
     excerpt:
-      'Cautelar não é o mesmo que laudo de avarias. Veja a diferença em linguagem clara e escolha o documento certo — sem pagar o errado nem perder a prova na devolução.',
+      'Confundir os dois custa caro pra locadoras, seguradoras e oficinas. Veja a diferença real, quando cada um vale, e não pague pelo laudo errado nem perca a prova na devolução.',
     category: 'Laudo',
     tags: ['laudo cautelar', 'laudo de avarias', 'vistoria', 'documentação'],
     date: '2026-06-26',
@@ -633,9 +633,9 @@ BLOG_POSTS.push(
 BLOG_POSTS.push(
   {
     slug: 'vistoria-de-moto',
-    title: 'Vistoria de moto: tanque amassado passa? O que checar',
+    title: 'Vistoria de Moto: Tanque Amassado Passa? (Resposta Direta)',
     excerpt:
-      'Tanque amassado, risco e peça torta: o que costuma passar ou travar na vistoria de moto, o checklist por área e como registrar no laudo sem discussão depois.',
+      'Tanque amassado, risco, peça torta: o que passa e o que trava na vistoria de moto. Checklist por área pronto pra locadoras, oficinas e seguradoras registrarem sem discussão depois.',
     category: 'Vistoria',
     tags: ['vistoria de moto', 'motocicleta', 'tanque amassado', 'laudo', 'avarias'],
     date: '2026-06-25',
@@ -688,9 +688,9 @@ BLOG_POSTS.push(
   },
   {
     slug: 'vistoria-de-caminhao',
-    title: 'Vistoria de caminhão: checklist de avarias que funciona',
+    title: 'Vistoria de Caminhão: o Checklist que Não Deixa Peça pra Trás',
     excerpt:
-      'Cabine, baú, chassi e eixos: o roteiro para não esquecer peça no pátio e sair com laudo claro — pronto para frota, locadora ou sinistro.',
+      'Cabine, baú, chassi e eixos — o roteiro que frotas, locadoras e seguradoras usam pra sair do pátio com laudo completo, sem discussão na entrega nem no sinistro.',
     category: 'Vistoria',
     tags: ['vistoria de caminhão', 'frota', 'laudo', 'avarias'],
     date: '2026-06-24',
@@ -732,9 +732,9 @@ BLOG_POSTS.push(
   },
   {
     slug: 'vistoria-de-onibus',
-    title: 'Vistoria de ônibus: roteiro de avarias sem furar peça',
+    title: 'Vistoria de Ônibus: Roteiro Completo Sem Furar Nenhuma Peça',
     excerpt:
-      'Carroceria longa, janelas e interior: o que inspecionar num ônibus, como registrar cada dano e fechar um laudo comparável entre entrega e devolução.',
+      'Carroceria longa, janelas e interior — o roteiro que locadoras e frotas de ônibus usam pra comparar entrada e devolução sem deixar nenhuma avaria passar batido.',
     category: 'Vistoria',
     tags: ['vistoria de ônibus', 'frota', 'laudo', 'avarias'],
     date: '2026-06-23',
@@ -2055,9 +2055,9 @@ BLOG_POSTS.unshift(
   },
   {
     slug: 'qr-code-e-hash-no-laudo-de-avarias',
-    title: 'QR Code e hash no laudo de avarias: por que isso reforça a validade',
+    title: 'QR Code e Hash no Laudo: a Prova que Seguradora Não Contesta',
     excerpt:
-      'Entenda como o Danos Aparentes usa QR Code e hash no laudo para reforçar autenticidade, consulta do original e mais segurança na comprovação das avarias.',
+      'Entenda como o QR Code e o hash SHA-256 blindam o laudo de avarias contra fraude e contestação — o detalhe técnico que faz seguradoras, locadoras e oficinas confiarem no documento.',
     category: 'Validade',
     tags: ['qr code', 'hash', 'validade do laudo', 'laudo de avarias', 'danos aparentes'],
     date: '2026-07-04',
@@ -2392,9 +2392,9 @@ BLOG_POSTS.unshift(
   },
   {
     slug: 'vistoria-de-seminovos-para-concessionarias',
-    title: 'Inspeção de seminovos: laudo de entrada na concessionária',
+    title: 'Inspeção de Seminovos: o Laudo que Protege a Revenda',
     excerpt:
-      'Como funciona a inspeção de carros seminovos na concessionária: registre o estado na entrada, evite disputa na revenda e proteja a negociação com laudo fotográfico.',
+      'Como concessionárias e revendedoras registram o estado real do seminovo na entrada — e evitam disputa com o cliente na hora de vender. Passo a passo com fotos e laudo.',
     category: 'Vistoria',
     tags: ['seminovos', 'concessionária', 'revenda', 'avaliação de carro usado', 'laudo', 'inspeção'],
     date: '2026-07-06',
