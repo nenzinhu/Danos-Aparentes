@@ -1,51 +1,72 @@
-'use client';
-import Link from 'next/link';
-import LandingCtaLink from './LandingCtaLink';
-import { buttonVariants } from './ui/Button';
-import { whatsappLink } from '../lib/whatsapp';
+'use client'
 
-const WHATSAPP_MESSAGE = 'Olá! Gostaria de saber mais sobre o sistema de vistoria para locadora/frota do Danos Aparentes.'
+import Link from 'next/link'
+import LandingCtaLink from './LandingCtaLink'
+import { buttonVariants } from './ui/Button'
+import { whatsappLink } from '../lib/whatsapp'
 
-function WhatsappButton({ className }: { className: string }) {
-  return (
-    <a
-      href={whatsappLink(WHATSAPP_MESSAGE)}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={className}
-    >
-      Falar com o time comercial
-    </a>
-  );
-}
+const WHATSAPP_CORP_MESSAGE =
+  'Olá! Quero falar sobre o plano Corporativo do Danos Aparentes para a minha locadora.'
 
 export function LocadorasHeroCtas() {
   return (
-    <div className="flex flex-wrap gap-4 justify-center mt-7">
-      <WhatsappButton className={buttonVariants({ variant: 'primary', size: 'md' })} />
-      <LandingCtaLink className={buttonVariants({ variant: 'secondary', size: 'md' })}>
-        Testar o plano Pro grátis
+    <div className="flex flex-wrap gap-3 sm:gap-4 justify-center mt-8">
+      <LandingCtaLink
+        id="locadoras-hero-cta"
+        className={buttonVariants({ variant: 'primary', size: 'lg' })}
+      >
+        Começar 7 dias grátis — sem cartão
       </LandingCtaLink>
+      <a href="#demo" className={buttonVariants({ variant: 'secondary', size: 'lg' })}>
+        Ver um laudo real com QR
+      </a>
     </div>
-  );
+  )
+}
+
+export function LocadorasNavCta() {
+  return (
+    <a href="#form" className={buttonVariants({ variant: 'primary', size: 'sm' })}>
+      Trial 7 dias →
+    </a>
+  )
 }
 
 export function LocadorasPlanosLink() {
   return (
     <Link href="/planos" className={buttonVariants({ variant: 'secondary', size: 'md' })}>
-      Ver planos e preços →
+      Ver detalhes dos planos →
     </Link>
-  );
+  )
+}
+
+export function LocadorasOfferCta() {
+  return (
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+      <a href="#form" className={buttonVariants({ variant: 'primary', size: 'lg' })}>
+        Quero testar na minha locadora
+      </a>
+      <a
+        href={whatsappLink(WHATSAPP_CORP_MESSAGE)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={buttonVariants({ variant: 'secondary', size: 'md' })}
+      >
+        Corporativo no WhatsApp
+      </a>
+    </div>
+  )
 }
 
 export function LocadorasFinalCta() {
   return (
-    <div className="max-w-md mx-auto mt-16 text-center glass-card p-8">
-      <h2 className="text-lg font-bold mb-1.5">Pronto para padronizar a vistoria da sua frota?</h2>
-      <p className="text-sm text-[var(--text-muted)] mb-5">
-        Resposta em minutos pelo WhatsApp, sem compromisso.
+    <div className="max-w-md mx-auto mt-4 text-center">
+      <LandingCtaLink className={buttonVariants({ variant: 'primary', size: 'lg', className: 'w-full sm:w-auto' })}>
+        Quero meu trial de 7 dias
+      </LandingCtaLink>
+      <p className="text-[11px] text-[var(--text-muted)] mt-3 leading-relaxed">
+        Ou preencha o formulário acima — sem cartão no trial.
       </p>
-      <WhatsappButton className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })} />
     </div>
-  );
+  )
 }

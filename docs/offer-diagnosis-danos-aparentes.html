@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Offer Diagnosis — Danos Aparentes | gui.marketing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7f3ed;
+      --surface: #ffffff;
+      --ink: #1a1523;
+      --muted: #5c5668;
+      --line: #e6dfd4;
+      --accent: #864df9;
+      --accent-soft: #f0e8ff;
+      --green: #1a7f4b;
+      --green-bg: #e6f5ee;
+      --yellow: #a67c00;
+      --yellow-bg: #fff6db;
+      --red: #c0392b;
+      --red-bg: #fdecea;
+      --bar-low: #e74c3c;
+      --bar-mid: #f1c40f;
+      --bar-high: #27ae60;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    h1, h2, h3, .display {
+      font-family: "Inter Tight", Inter, sans-serif;
+      letter-spacing: -0.02em;
+    }
+    a { color: var(--accent); }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 24px 20px 64px; }
+    header.top {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 16px 0 28px; border-bottom: 1px solid var(--line); margin-bottom: 28px;
+    }
+    header.top .logo {
+      font-weight: 800; font-size: 1.05rem; color: var(--ink); text-decoration: none;
+    }
+    header.top .logo span { color: var(--accent); }
+    header.top .meta { font-size: 12px; color: var(--muted); text-align: right; }
+    .hero h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); margin: 0 0 8px; }
+    .hero .sub { color: var(--muted); margin: 0 0 20px; }
+    .verdict {
+      display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch;
+      background: var(--yellow-bg); border: 1px solid #f0d98a;
+      border-radius: 14px; padding: 20px 22px; margin-bottom: 28px;
+    }
+    .verdict .badge {
+      font-weight: 800; font-size: 0.85rem; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--yellow);
+    }
+    .verdict .score {
+      font-size: 2.4rem; font-weight: 800; line-height: 1; color: var(--ink);
+    }
+    .verdict .score small { font-size: 1rem; font-weight: 600; color: var(--muted); }
+    .exec {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 14px; padding: 20px 22px; margin-bottom: 32px;
+    }
+    .exec h2 { margin: 0 0 12px; font-size: 1.15rem; }
+    .exec ul { margin: 0; padding-left: 1.15rem; }
+    .exec li { margin-bottom: 8px; }
+    .exec li:last-child { margin-bottom: 0; }
+    section { margin-bottom: 36px; }
+    section > h2 { font-size: 1.25rem; margin: 0 0 16px; }
+    .radar {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 14px; padding: 22px; margin-bottom: 28px;
+    }
+    .dim-row {
+      display: grid; grid-template-columns: minmax(140px, 200px) 1fr 48px;
+      gap: 10px; align-items: center; margin-bottom: 12px;
+    }
+    .dim-row .label { font-size: 13px; font-weight: 600; }
+    .track {
+      height: 10px; background: #eee8df; border-radius: 999px; overflow: hidden;
+    }
+    .fill { height: 100%; border-radius: 999px; }
+    .fill.low { background: var(--bar-low); }
+    .fill.mid { background: var(--bar-mid); }
+    .fill.high { background: var(--bar-high); }
+    .pts { font-size: 13px; font-weight: 700; text-align: right; color: var(--muted); }
+    .cards {
+      display: grid; grid-template-columns: 1fr; gap: 14px;
+    }
+    @media (min-width: 720px) {
+      .cards { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 14px; padding: 16px 18px;
+    }
+    .card .top {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 8px; margin-bottom: 8px;
+    }
+    .card h3 { margin: 0; font-size: 0.98rem; }
+    .note {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 42px; padding: 2px 8px; border-radius: 999px;
+      font-size: 12px; font-weight: 800;
+    }
+    .note.low { background: var(--red-bg); color: var(--red); }
+    .note.mid { background: var(--yellow-bg); color: var(--yellow); }
+    .note.high { background: var(--green-bg); color: var(--green); }
+    .card p { margin: 0 0 8px; font-size: 13.5px; color: var(--muted); }
+    .card p:last-child { margin-bottom: 0; }
+    .card .rec {
+      margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line);
+      font-size: 13px; color: var(--ink);
+    }
+    .card .rec strong { color: var(--accent); }
+    .table-wrap {
+      overflow-x: auto; background: var(--surface); border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+    table {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+    }
+    th, td {
+      text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th { background: var(--accent-soft); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+    tr:last-child td { border-bottom: none; }
+    .tag {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 7px; border-radius: 6px; background: #eee8df; color: var(--muted);
+    }
+    .tag.h { background: var(--yellow-bg); color: var(--yellow); }
+    .recs { display: grid; gap: 12px; }
+    .rec-item {
+      background: var(--surface); border-left: 4px solid var(--accent);
+      border-radius: 0 12px 12px 0; padding: 14px 16px;
+      border-top: 1px solid var(--line); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    }
+    .rec-item h3 { margin: 0 0 6px; font-size: 0.95rem; }
+    .rec-item p { margin: 0 0 6px; font-size: 13.5px; color: var(--muted); }
+    .angles {
+      display: grid; gap: 12px;
+    }
+    @media (min-width: 720px) {
+      .angles { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .angle {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 14px; padding: 16px;
+    }
+    .angle .n {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--accent); margin-bottom: 6px;
+    }
+    .angle h3 { margin: 0 0 8px; font-size: 0.95rem; }
+    .angle p { margin: 0; font-size: 13px; color: var(--muted); }
+    .next {
+      background: var(--accent-soft); border-radius: 14px; padding: 18px 20px;
+    }
+    .next ol { margin: 8px 0 0; padding-left: 1.2rem; }
+    .next li { margin-bottom: 6px; }
+    footer {
+      margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line);
+      font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap;
+      justify-content: space-between; gap: 12px;
+    }
+    footer a { font-weight: 600; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .gap-note {
+      font-size: 12.5px; color: var(--muted); background: #fff;
+      border: 1px dashed var(--line); border-radius: 10px; padding: 12px 14px; margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <a class="logo display" href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-offer-diagnosis&utm_content=header-logo" target="_blank" rel="noopener">
+        gui<span>.marketing</span>
+      </a>
+      <div class="meta">
+        Offer Diagnosis<br />
+        2026-07-25 · Etapa 0 /esc-start
+      </div>
+    </header>
+
+    <div class="hero">
+      <h1>Offer Diagnosis — Danos Aparentes</h1>
+      <p class="sub">SaaS de vistoria veicular digital · danosaparentes.com.br · Fundador: Jeferson</p>
+    </div>
+
+    <div class="verdict">
+      <div style="flex:1;min-width:200px">
+        <div class="badge">⚠️ Oferta precisa de ajuste</div>
+        <p style="margin:10px 0 0;font-size:14px;color:var(--muted)">
+          Pipeline pode avançar com ressalvas. Não escalar Corporativo/mid-market sem prova social.
+          VoC B2B insuficiente — hipóteses marcadas.
+        </p>
+      </div>
+      <div style="text-align:right">
+        <div class="score">106 <small>/ 150</small></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">Faixa 90–119</div>
+      </div>
+    </div>
+
+    <div class="exec">
+      <h2>Resumo executivo</h2>
+      <ul>
+        <li><strong>Força:</strong> promessa clara (“já estava assim”) + mecanismo verificável (hash SHA-256, QR, GPS, assinatura, offline, white-label).</li>
+        <li><strong>Preço SME:</strong> Starter R$ 29,90 (20) / Pro R$ 49,90 (80 + marca) + 7 dias grátis sem cartão — risco baixo para Sistema 1.</li>
+        <li><strong>Gap crítico:</strong> prova social 2/5 — zero cases/depoimentos; landings admitem app novo.</li>
+        <li><strong>Corporativo:</strong> R$ 299 / 699 / a partir de R$ 1.490 exige confiança que o site ainda não entrega.</li>
+        <li><strong>Ops:</strong> PIX ativo; Stripe cartão depende de Price IDs live na Vercel.</li>
+      </ul>
+    </div>
+
+    <section class="radar">
+      <h2>Score por dimensão</h2>
+      <div class="dim-row">
+        <div class="label">Clareza da Promessa</div>
+        <div class="track"><div class="fill high" style="width:80%"></div></div>
+        <div class="pts">4×5=20</div>
+      </div>
+      <div class="dim-row">
+        <div class="label">Especificidade</div>
+        <div class="track"><div class="fill high" style="width:80%"></div></div>
+        <div class="pts">4×4=16</div>
+      </div>
+      <div class="dim-row">
+        <div class="label">Prova e Credibilidade</div>
+        <div class="track"><div class="fill low" style="width:40%"></div></div>
+        <div class="pts">2×4=8</div>
+      </div>
+      <div class="dim-row">
+        <div class="label">Mecanismo Único</div>
+        <div class="track"><div class="fill high" style="width:80%"></div></div>
+        <div class="pts">4×4=16</div>
+      </div>
+      <div class="dim-row">
+        <div class="label">Risco Percebido</div>
+        <div class="track"><div class="fill mid" style="width:60%"></div></div>
+        <div class="pts">3×3=9</div>
+      </div>
+      <div class="dim-row">
+        <div class="label">Objeções Mapeadas</div>
+        <div class="track"><div class="fill high" style="width:80%"></div></div>
+        <div class="pts">4×3=12</div>
+      </div>
+      <div class="dim-row">
+        <div class="label">Diferenciais Reais</div>
+        <div class="track"><div class="fill high" style="width:80%"></div></div>
+        <div class="pts">4×4=16</div>
+      </div>
+      <div class="dim-row">
+        <div class="label">Ângulo de Aquisição</div>
+        <div class="track"><div class="fill mid" style="width:60%"></div></div>
+        <div class="pts">3×3=9</div>
+      </div>
+      <p class="gap-note">
+        Barras: 1–2 vermelho · 3 amarelo · 4–5 verde. Score ponderado MECLABS/LIFT (máx. 150).
+        Cruzado com <code>message-mining-danos-aparentes.md</code> — ~13 verbatims públicos; 0 VoC comprador B2B.
+      </p>
+    </section>
+
+    <section>
+      <h2>8 dimensões</h2>
+      <div class="cards">
+        <article class="card">
+          <div class="top"><h3>1. Clareza da Promessa</h3><span class="note high">4/5</span></div>
+          <p>“Chega de discutir amassado que já existia” + laudo com hash/QR é Sistema 1 para locadora. Diluição multi-ICP na home impede 5.</p>
+          <div class="rec"><strong>Manter</strong> headline de dor; unificar wedge em ads.</div>
+        </article>
+        <article class="card">
+          <div class="top"><h3>2. Especificidade</h3><span class="note high">4/5</span></div>
+          <p>Preços, quotas, SHA-256, offline, white-label e faixas Corp são concretos. Outcomes de negócio ainda sem número.</p>
+          <div class="rec"><strong>Não inventar</strong> % de redução de disputa até ter case.</div>
+        </article>
+        <article class="card">
+          <div class="top"><h3>3. Prova e Credibilidade</h3><span class="note low">2/5</span></div>
+          <p>Zero depoimentos. Demo PDF/QR prova o produto; ConJur/TJDFT prova o problema — não o SaaS. Blog “empresas relatam” é anti-prova.</p>
+          <div class="rec"><strong>P1:</strong> 3 laudos demo + cases ou bloco honesto “app novo”.</div>
+        </article>
+        <article class="card">
+          <div class="top"><h3>4. Mecanismo Único</h3><span class="note high">4/5</span></div>
+          <p>Cadeia diagrama → GPS → assinatura dual → hash+QR (+ offline) é explicável ao chefe. Subcategoria: laudo que se verifica.</p>
+          <div class="rec"><strong>Manter</strong> como valor central; não diluir com feature soup.</div>
+        </article>
+        <article class="card">
+          <div class="top"><h3>5. Risco Percebido</h3><span class="note mid">3/5</span></div>
+          <p>SME: trial 7 dias sem cartão + cancelar no portal + PIX. Corp R$299–1490+ sem POC/cases. Stripe live incompleto.</p>
+          <div class="rec"><strong>P3:</strong> piloto Corp + Price IDs Stripe.</div>
+        </article>
+        <article class="card">
+          <div class="top"><h3>6. Objeções Mapeadas</h3><span class="note high">4/5</span></div>
+          <p>FAQ (validade jurídica com nuance, offline, preço, white-label, ERP) está maduro. Falta CRM/calls de vendas reais.</p>
+          <div class="rec"><strong>Coletar</strong> 5–8 discovery calls (mining §7).</div>
+        </article>
+        <article class="card">
+          <div class="top"><h3>7. Diferenciais Reais</h3><span class="note high">4/5</span></div>
+          <p>Hash+QR, GPS, assinatura no ato, offline, white-label são verificáveis — não “qualidade e preço”. Evitar absolutos “100%”.</p>
+          <div class="rec"><strong>Foco:</strong> integridade + comparação entrega×devolução.</div>
+        </article>
+        <article class="card">
+          <div class="top"><h3>8. Ângulo de Aquisição</h3><span class="note mid">3/5</span></div>
+          <p>Ângulo “já estava assim” é o mais forte (Problem-Aware). Ainda hipótese no ICP B2B; “por que agora” fraco.</p>
+          <div class="rec"><strong>P2:</strong> 1 wedge pago = locadoras/devolução.</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Recomendações priorizadas</h2>
+      <div class="recs">
+        <div class="rec-item">
+          <h3>P1 — Prova (↑v, ↓a)</h3>
+          <p>Laudos demo com QR + 1–3 betas com logo ou bloco honesto. Remover claims sem fonte. Impacto máximo na conversão mid-market.</p>
+        </div>
+        <div class="rec-item">
+          <h3>P2 — Ângulo único em ads (↑m)</h3>
+          <p>Tráfego pago só no wedge locadora/devolução. Oficinas/seguradoras em orgânico. Citar ConJur com fonte — não como depoimento de cliente.</p>
+        </div>
+        <div class="rec-item">
+          <h3>P3 — Risco Corporativo + checkout (↓a, ↓f)</h3>
+          <p>POC/piloto publicado; ativar Stripe Price IDs live; PIX como caminho feliz até lá.</p>
+        </div>
+        <div class="rec-item">
+          <h3>P4 — Outcome mensurável (↑v)</h3>
+          <p>Após calls: 1 número real (tempo de laudo, assinatura dual, etc.). Até lá, ancorar só em R$/laudo já publicado.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Mapa de objeções</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Objeção</th>
+              <th>Tipo</th>
+              <th>Resposta estratégica</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Laudo tem validade jurídica?</td>
+              <td><span class="tag">Confiança</span></td>
+              <td>Registro documental forte (hash, QR, GPS, assinaturas). Valor probatório depende do contrato — sem absolutos.</td>
+            </tr>
+            <tr>
+              <td>WhatsApp / só devolução basta?</td>
+              <td><span class="tag">Comparação</span></td>
+              <td>Sem vistoria de entrada, cobrança cai (ConJur). Oferta = par entrega×devolução.</td>
+            </tr>
+            <tr>
+              <td>Vistoria depois, sem o cliente</td>
+              <td><span class="tag">Risco</span></td>
+              <td>Assinatura na tela no ato + laudo selado no mesmo momento.</td>
+            </tr>
+            <tr>
+              <td>Treinar equipe / complexidade</td>
+              <td><span class="tag">Fricção</span></td>
+              <td>Diagrama guia; primeira vistoria em minutos (validar no onboarding).</td>
+            </tr>
+            <tr>
+              <td>Preço / Corporativo</td>
+              <td><span class="tag">Preço</span></td>
+              <td>Starter/Pro transparentes; Corp com faixas + WhatsApp.</td>
+            </tr>
+            <tr>
+              <td>Pátio sem sinal</td>
+              <td><span class="tag">Operacional</span></td>
+              <td>Offline 100% + sync — demoar.</td>
+            </tr>
+            <tr>
+              <td>Sem cases / marca nova</td>
+              <td><span class="tag h">Hipótese</span></td>
+              <td>PDF demo + QR + honestidade “app novo”; coletar 3 cases.</td>
+            </tr>
+            <tr>
+              <td>Integra ERP?</td>
+              <td><span class="tag h">Hipótese</span></td>
+              <td>API na faixa Enterprise; discovery — não overpromise no Starter.</td>
+            </tr>
+            <tr>
+              <td>Stripe cartão</td>
+              <td><span class="tag h">Ops</span></td>
+              <td>Priorizar PIX até Price IDs live.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>Ângulos de aquisição</h2>
+      <div class="angles">
+        <div class="angle">
+          <div class="n">Primário</div>
+          <h3>“Já estava assim”</h3>
+          <p>Locadoras / devolução. Prova comparável entrega×devolução. Problem-Aware. Melhor fit ad+LP.</p>
+        </div>
+        <div class="angle">
+          <div class="n">Secundário</div>
+          <h3>“Laudo que se verifica”</h3>
+          <p>Hash quebra se editado + QR público. Seguradoras / jurídico. Sem “à prova de tribunal”.</p>
+        </div>
+        <div class="angle">
+          <div class="n">Terciário</div>
+          <h3>Offline no pátio</h3>
+          <p>Frotas sem sinal. Validar H5 em calls — não como ângulo #1 de marca.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Próximos passos</h2>
+      <div class="next">
+        <ol>
+          <li>Avançar ICP/wireframe/ads <strong>SME</strong> com ângulo #1 + demo QR (sem depoimento fictício).</li>
+          <li>Não escalar Corporativo até P1 (prova).</li>
+          <li>Ativar Stripe live; manter PIX como happy path.</li>
+          <li>5–8 discovery calls + atualizar message mining / este diagnosis.</li>
+        </ol>
+      </div>
+    </section>
+
+    <footer>
+      <div>
+        Deliverable · <code>offer-diagnosis-danos-aparentes</code><br />
+        Markdown: <code>docs/offer-diagnosis-danos-aparentes.md</code>
+      </div>
+      <div>
+        <a href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-offer-diagnosis&utm_content=footer" target="_blank" rel="noopener">gui.marketing</a>
+        · skill guimkt-offer-diagnosis
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

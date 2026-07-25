@@ -13,7 +13,7 @@ const ROUTES: {
 }[] = [
   { path: '', priority: 1.0, changeFrequency: 'weekly', lastModified: '2026-07-24' },
   { path: '/planos', priority: 0.9, changeFrequency: 'weekly', lastModified: '2026-07-12' },
-  { path: '/locadoras', priority: 0.9, changeFrequency: 'weekly', lastModified: '2026-07-12' },
+  { path: '/locadoras', priority: 0.9, changeFrequency: 'weekly', lastModified: '2026-07-25' },
   { path: '/oficinas', priority: 0.9, changeFrequency: 'weekly', lastModified: '2026-07-12' },
   { path: '/seguradoras', priority: 0.9, changeFrequency: 'weekly', lastModified: '2026-07-12' },
   { path: '/frotas', priority: 0.9, changeFrequency: 'weekly', lastModified: '2026-07-12' },

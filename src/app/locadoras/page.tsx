@@ -1,66 +1,121 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
-import { LocadorasHeroCtas, LocadorasPlanosLink, LocadorasFinalCta } from '@/src/components/LocadorasCtas'
+import {
+  LocadorasHeroCtas,
+  LocadorasNavCta,
+  LocadorasPlanosLink,
+  LocadorasOfferCta,
+  LocadorasFinalCta,
+} from '@/src/components/LocadorasCtas'
+import LocadorasTrialForm from '@/src/components/LocadorasTrialForm'
 import { BlogVideo } from '@/src/components/blog/BlogVideo'
 import ChatSupportWidget from '@/src/components/ChatSupportWidget'
+import { whatsappLink } from '@/src/lib/whatsapp'
 
-const TITLE = 'Sistema de Vistoria Veicular para Locadora | Danos Aparentes'
+const TITLE = 'Vistoria digital para locadoras | Prova na devolução | Danos Aparentes'
 const DESCRIPTION =
-  'Sistema de vistoria digital para locadoras e frotistas: checklist padronizado entre vistoriadores, laudo com hash e QR Code, funciona offline e sai com a marca da sua empresa.'
+  'Chega de discutir amassado que já existia. Vistoria na retirada e na devolução: diagrama, foto com GPS, assinatura e PDF com hash SHA-256 + QR. 7 dias grátis sem cartão.'
 
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: '/locadoras' },
-  openGraph: { title: TITLE, description: DESCRIPTION, url: '/locadoras', type: 'website', images: ['/og-image.jpg'] },
-  twitter: { card: 'summary_large_image', title: TITLE, description: DESCRIPTION, images: ['/og-image.jpg'] },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: '/locadoras',
+    type: 'website',
+    images: ['/og-image.jpg'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/og-image.jpg'],
+  },
 }
 
-const PAIN_POINTS = [
+const PAIN_CARDS = [
   {
-    title: 'Cada vistoriador registra do seu jeito',
-    desc: 'Sem um checklist padronizado, a devolução de um veículo vira uma prancheta diferente por pessoa — e a locadora perde argumento na hora de cobrar avaria.',
+    title: '“Já estava assim.”',
+    desc: 'Cliente nega dano novo. Sem laudo de retirada no mesmo padrão, você discute — não compara.',
   },
   {
-    title: 'Fotos soltas, sem hora nem local',
-    desc: 'Sem GPS e timestamp automáticos, uma foto solta no celular não prova quando o dano apareceu — só gera discussão no balcão.',
+    title: 'Foto no WhatsApp / vistoria só na devolução',
+    desc: 'Sem par entrega×devolução, o ônus da prova fica frágil.',
   },
   {
-    title: 'Sem visão consolidada da frota',
-    desc: 'Cada vistoriador com sua planilha ou papel torna impossível enxergar, em um único lugar, quantas avarias a frota acumulou no mês.',
+    title: 'Cada vistoriador, um jeito',
+    desc: 'Prancheta diferente por pessoa = laudos incomparáveis entre filiais.',
   },
-]
+] as const
 
-const FEATURES = [
-  { title: 'Checklist padronizado entre vistoriadores', desc: 'Todo mundo segue o mesmo diagrama por vista do veículo (frontal, traseira, laterais) — sem depender da experiência individual de cada vistoriador.' },
-  { title: 'Funciona 100% offline', desc: 'Sem sinal no pátio? A vistoria continua normalmente e sincroniza sozinha assim que a conexão voltar.' },
-  { title: 'Laudo com hash SHA-256 e QR Code', desc: 'Cada laudo comprova a si mesmo — reduz a disputa de "avaria que já existia" na devolução.' },
-  { title: 'Marca própria no laudo (white-label)', desc: 'O PDF sai com a logo e o nome da sua locadora ou concessionária, não com uma marca genérica.' },
-  { title: 'Gestão centralizada de equipe', desc: 'Múltiplos vistoriadores, painel consolidado por filial e por vistoriador, no plano Corporativo.' },
-  { title: 'Envio direto por WhatsApp', desc: 'O laudo em PDF vai pro cliente com 1 clique, no mesmo momento da devolução.' },
-]
+const STEPS = [
+  {
+    n: '01',
+    title: 'Marque no diagrama',
+    desc: 'Mesma peça, mesma vista, entre vistoriadores.',
+  },
+  {
+    n: '02',
+    title: 'Foto com GPS + timestamp',
+    desc: 'Bloqueia o argumento “essa foto foi depois”.',
+  },
+  {
+    n: '03',
+    title: 'Assinatura na tela, no ato',
+    desc: 'Vistoriador + cliente — não “12 dias depois”.',
+  },
+  {
+    n: '04',
+    title: 'PDF selado',
+    desc: 'Hash SHA-256 + QR público. Se editar o PDF, o hash quebra.',
+  },
+] as const
+
+const PLANS = [
+  {
+    name: 'Starter',
+    price: 'R$ 29,90/mês',
+    detail: '20 laudos · ≈ R$ 1,50/laudo · Ideal para testar o fluxo na devolução.',
+  },
+  {
+    name: 'Pro',
+    price: 'R$ 49,90/mês',
+    detail: '80 laudos · white-label (logo no PDF) · ≈ R$ 0,62/laudo.',
+  },
+  {
+    name: 'Corporativo',
+    price: 'a partir de R$ 299/mês',
+    detail: 'Multi-usuário · piloto sob conversa · sem case inventado para fechar. WhatsApp.',
+  },
+] as const
 
 const FAQ: { q: string; a: string }[] = [
   {
-    q: 'Quanto custa um sistema de vistoria para locadora?',
-    a: 'Varia por volume de vistorias, número de vistoriadores e integrações (ERP/CRM) — por isso o plano Corporativo é sob consulta, com resposta em minutos pelo WhatsApp.',
+    q: 'O laudo tem validade jurídica?',
+    a: 'Registro documental forte (hash, QR, GPS, assinaturas). Valor probatório depende do contrato e do seu jurídico — não prometemos sentença ganha.',
   },
   {
-    q: 'Quanto tempo leva para colocar a equipe pra usar?',
-    a: 'Cada vistoriador cria a conta e já consegue registrar a primeira vistoria em minutos — não exige treinamento longo, o diagrama do veículo guia o processo.',
+    q: 'Foto no WhatsApp na devolução não basta?',
+    a: 'Sem vistoria de entrada comparável, a cobrança fica frágil (ver ConJur). Nossa oferta é o par retirada×devolução no mesmo padrão.',
   },
   {
-    q: 'Dá para integrar com o sistema que já usamos?',
-    a: 'O plano Corporativo inclui integração via API com ERP/CRM. Fale com o time comercial para avaliar o seu caso específico.',
+    q: 'Vocês têm cases / depoimentos?',
+    a: 'Ainda não públicos. App novo. Oferecemos laudo demo + trial — sem inventar.',
   },
   {
-    q: 'Funciona para qualquer tipo de veículo da frota?',
-    a: 'Sim — carro, moto, caminhão, van, ônibus e um modelo genérico, cada um com diagramas próprios em 4 vistas.',
+    q: 'Funciona no pátio sem internet?',
+    a: 'Sim — PWA offline + sync quando voltar o sinal.',
   },
   {
-    q: 'O laudo tem força para cobrar avaria não declarada na devolução?',
-    a: 'O laudo sai com hash SHA-256, QR Code de verificação, GPS e assinaturas digitais do vistoriador e do cliente — um registro documental forte para comparar a retirada com a devolução. O valor probatório específico depende do contrato e do aceite das partes.',
+    q: 'Precisa treinar a equipe?',
+    a: 'O diagrama guia o fluxo; a primeira vistoria costuma ser em minutos.',
+  },
+  {
+    q: 'Já tenho laudo cautelar.',
+    a: 'Cautelar ≠ laudo de avarias aparentes na entrega/devolução. São finalidades diferentes.',
   },
 ]
 
@@ -74,113 +129,319 @@ const faqJsonLd = {
   })),
 }
 
+const TRUST_BAR = [
+  'Hash SHA-256 + QR público',
+  'Offline no pátio',
+  '7 dias grátis sem cartão',
+  'App novo — sem depoimentos inventados',
+] as const
+
+const CONJUR_URL =
+  'https://www.conjur.com.br/2024-mar-07/sem-vistoria-previa-locadora-nao-pode-cobrar-multa-por-dano-em-veiculo/'
+const TJDFT_URL =
+  'https://www.tjdft.jus.br/institucional/imprensa/noticias/2022/janeiro/locadora-e-condenada-a-devolver-valores-pagos-indevidamente'
+
 export default function LocadorasPage() {
   return (
-    <main className="min-h-screen w-full flex flex-col items-center px-4 py-12 font-outfit text-[var(--text-main)]">
+    <main className="min-h-screen w-full flex flex-col items-center font-outfit text-[var(--text-main)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      <div className="w-full max-w-5xl">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors mb-6"
-        >
-          ← Voltar
-        </Link>
+      {/* NAV */}
+      <nav className="w-full sticky top-0 z-40 border-b border-[var(--card-border)]/40 bg-[var(--bg-main)]/90 backdrop-blur-md">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+          <Link href="/" className="flex items-center gap-2.5 min-w-0 group">
+            <img src="/brand/logo-icon.svg" alt="" width={36} height={36} className="shrink-0" />
+            <span className="font-display text-lg sm:text-xl font-bold uppercase tracking-tight truncate group-hover:opacity-90">
+              Danos Aparentes
+            </span>
+          </Link>
+          <LocadorasNavCta />
+        </div>
+      </nav>
 
-        {/* Hero */}
-        <header className="text-center mb-12 flex flex-col items-center">
-          <span className="inline-flex items-center gap-2 text-[0.7rem] font-extrabold tracking-[0.18em] uppercase text-[var(--signal-bright)] mb-3">
+      <div className="w-full max-w-5xl px-4 py-10 sm:py-14">
+        {/* HERO — P */}
+        <header className="relative text-center mb-16 sm:mb-20 flex flex-col items-center overflow-hidden rounded-2xl border border-[var(--card-border)]/40 px-4 py-12 sm:py-16 bg-[var(--panel-bg)]">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-24 -right-16 w-72 h-72 rounded-full opacity-20 blur-3xl"
+            style={{ background: 'var(--primary)' }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -bottom-20 -left-20 w-64 h-64 rounded-full opacity-15 blur-3xl bg-[var(--signal-bright)]"
+          />
+
+          <div className="relative flex flex-col items-center gap-3 mb-5">
+            <img src="/brand/logo-icon.svg" alt="" width={56} height={56} />
+            <p className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-tight">
+              Danos Aparentes
+            </p>
+          </div>
+
+          <span className="relative inline-flex items-center gap-2 text-[0.7rem] font-extrabold tracking-[0.18em] uppercase text-[var(--signal-bright)] mb-4">
             <span aria-hidden="true" className="w-5 h-px bg-[var(--sheet-line)]" />
-            Locadoras e Frotistas
+            Para locadoras · prova na devolução
           </span>
-          <h1 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95]">
-            Sistema de vistoria veicular para locadora
+
+          <h1 className="relative font-display text-4xl sm:text-5xl lg:text-[3.25rem] font-bold uppercase tracking-tight leading-[0.95] max-w-3xl [text-wrap:balance]">
+            Chega de discutir amassado que já existia no carro.
           </h1>
-          <p className="text-sm text-[var(--text-muted)] mt-3 max-w-lg">
-            Padronize a vistoria entre todos os vistoriadores da sua frota, com laudo que comprova a si
-            mesmo — sem discutir avaria não declarada na devolução.
+
+          <p className="relative text-sm sm:text-base text-[var(--text-muted)] mt-5 max-w-2xl leading-relaxed">
+            Vistoria digital na retirada e na devolução: diagrama, foto com GPS, assinatura na tela e
+            PDF com hash SHA-256 + QR — prova no ato, não discussão no balcão.
           </p>
-          <LocadorasHeroCtas />
+
+          <div className="relative">
+            <LocadorasHeroCtas />
+          </div>
+
+          <ul className="relative mt-8 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-mono-data uppercase tracking-wider text-[var(--text-muted)] max-w-2xl">
+            {TRUST_BAR.map((t, i) => (
+              <li key={t} className="inline-flex items-center gap-2">
+                {i > 0 && (
+                  <span aria-hidden="true" className="hidden sm:inline text-[var(--card-border)]">
+                    ·
+                  </span>
+                )}
+                <span aria-hidden="true" className="text-[var(--signal-bright)]">
+                  ✓
+                </span>
+                {t}
+              </li>
+            ))}
+          </ul>
         </header>
 
-        <section className="mt-12 text-center">
-          <h2 className="font-display text-2xl font-bold tracking-tight mb-2">
-            Vistoria digital para locadora em poucos segundos
+        {/* AMPLIFY — A */}
+        <section className="mb-16 sm:mb-20" aria-labelledby="amplify-heading">
+          <h2
+            id="amplify-heading"
+            className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center mb-8 max-w-3xl mx-auto leading-snug"
+          >
+            Sem vistoria de entrada comparável, a cobrança de avaria vira discussão — e às vezes,
+            processo.
           </h2>
-          <p className="text-sm text-[var(--text-muted)] max-w-lg mx-auto mb-2">
-            Evite discussões por riscos na devolução. Faça a vistoria digital rápida no celular e
-            saia com laudo pronto para cobrar o que é da frota.
-          </p>
-          <BlogVideo
-            src="/videos/vistoria-digital-tour.mp4"
-            poster="/videos/vistoria-digital-tour-poster.jpg"
-            title="Vistoria digital para locadoras — Danos Aparentes"
-            description="Evite discussões por riscos. Faça a vistoria digital rápida no celular e registre avarias com prova na devolução."
-            duration="PT58S"
-            uploadDate="2026-07-13"
-            caption="Veja como funciona na prática"
-          />
-        </section>
 
-        {/* Dor */}
-        <section className="mt-16">
-          <h2 className="font-display text-2xl font-bold tracking-tight text-center mb-8">
-            O que acontece sem um processo padronizado
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {PAIN_POINTS.map(item => (
-              <div key={item.title} className="glass-card p-6 border border-[var(--card-border)]/50">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            {PAIN_CARDS.map(item => (
+              <div
+                key={item.title}
+                className="glass-card p-6 border border-[var(--card-border)]/50"
+              >
                 <h3 className="text-sm font-bold text-[var(--text-main)] mb-2">{item.title}</h3>
                 <p className="text-xs text-[var(--text-muted)] leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
+
+          <blockquote className="glass-card p-6 sm:p-8 border border-[var(--card-border)]/50 max-w-3xl mx-auto">
+            <p className="text-sm sm:text-[0.95rem] text-[var(--text-main)] leading-relaxed italic">
+              “A ausência de uma checagem feita pela locadora antes da entrega do veículo ao cliente
+              impossibilita que se faça a necessária comparação entre o estado do carro antes e
+              depois da locação.”
+            </p>
+            <footer className="mt-4 space-y-1">
+              <p className="font-mono-data text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
+                Prova do problema no mercado — não é cliente Danos Aparentes. Fonte:{' '}
+                <a
+                  href={CONJUR_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--primary)] hover:underline"
+                >
+                  ConJur, 07/03/2024
+                </a>
+              </p>
+            </footer>
+          </blockquote>
         </section>
 
-        {/* Solução / recursos */}
-        <section className="mt-16">
-          <h2 className="font-display text-2xl font-bold tracking-tight text-center mb-8">
-            O que muda com a vistoria digital padronizada
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {FEATURES.map(item => (
-              <div key={item.title} className="flex items-start gap-3">
-                <span className="text-[var(--signal-bright)] text-base mt-0.5">✓</span>
+        {/* SOLUTION — S */}
+        <section className="mb-16 sm:mb-20" aria-labelledby="solution-heading">
+          <div className="text-center mb-10">
+            <h2
+              id="solution-heading"
+              className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight"
+            >
+              Laudo de avarias aparentes que prova a si mesmo.
+            </h2>
+            <p className="text-sm text-[var(--text-muted)] mt-3 max-w-xl mx-auto">
+              Mesmo padrão na retirada e na devolução. Em minutos, no celular — inclusive sem sinal.
+            </p>
+          </div>
+
+          <ol className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
+            {STEPS.map(step => (
+              <li
+                key={step.n}
+                className="flex gap-4 p-5 rounded-xl border border-[var(--card-border)]/40 bg-[var(--panel-bg)]"
+              >
+                <span className="font-mono-data text-xs text-[var(--signal-bright)] font-bold shrink-0 pt-0.5">
+                  {step.n}
+                </span>
                 <div>
-                  <h3 className="text-sm font-bold text-[var(--text-main)]">{item.title}</h3>
-                  <p className="text-xs text-[var(--text-muted)] mt-1 leading-relaxed">{item.desc}</p>
+                  <h3 className="text-sm font-bold text-[var(--text-main)]">{step.title}</h3>
+                  <p className="text-xs text-[var(--text-muted)] mt-1 leading-relaxed">{step.desc}</p>
                 </div>
-              </div>
+              </li>
             ))}
+          </ol>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto mb-12 text-center">
+            <div className="rounded-xl border border-[var(--card-border)]/40 p-5 opacity-80">
+              <p className="font-mono-data text-[10px] uppercase tracking-wider text-[var(--text-muted)] mb-2">
+                Antes
+              </p>
+              <p className="text-sm font-semibold text-[var(--text-main)]">
+                Prancheta / WhatsApp / PDF editável
+              </p>
+            </div>
+            <div className="rounded-xl border border-[var(--primary)]/35 bg-[var(--primary)]/5 p-5">
+              <p className="font-mono-data text-[10px] uppercase tracking-wider text-[var(--primary)] mb-2">
+                Depois
+              </p>
+              <p className="text-sm font-semibold text-[var(--text-main)]">
+                Laudo verificável (mecanismo) — sem claim de ROI de cliente
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center">
+            <h3 className="font-display text-xl font-bold tracking-tight mb-2">
+              Vistoria digital para locadora em poucos segundos
+            </h3>
+            <p className="text-sm text-[var(--text-muted)] max-w-lg mx-auto mb-2">
+              Veja o fluxo no celular: diagrama, foto e laudo pronto para a devolução.
+            </p>
+            <BlogVideo
+              src="/videos/vistoria-digital-tour.mp4"
+              poster="/videos/vistoria-digital-tour-poster.jpg"
+              title="Vistoria digital para locadoras — Danos Aparentes"
+              description="Evite discussões por riscos. Faça a vistoria digital rápida no celular e registre avarias com prova na devolução."
+              duration="PT58S"
+              uploadDate="2026-07-13"
+              caption="Veja como funciona na prática"
+            />
           </div>
         </section>
 
-        {/* Prova: laudo real gerado pelo app, com marca própria */}
-        <section className="mt-16 text-center">
-          <h2 className="font-display text-2xl font-bold tracking-tight mb-2">
-            Com a marca da sua locadora, não a nossa
-          </h2>
-          <p className="text-sm text-[var(--text-muted)] max-w-lg mx-auto mb-2">
-            Ainda não temos histórico público de clientes — o app é novo. Em vez de depoimento, veja o
-            laudo real gerado pelo app: a logo do topo é configurável para a sua empresa.
-          </p>
-          <LaudoSheet />
+        {/* TRANSFORM / PROVA — T* */}
+        <section id="demo" className="mb-16 sm:mb-20 scroll-mt-24" aria-labelledby="prova-heading">
+          <div className="text-center mb-10">
+            <h2
+              id="prova-heading"
+              className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight"
+            >
+              Prova do que existe hoje — sem cases inventados.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div className="glass-card p-6 sm:p-8 border border-[var(--card-border)]/50 text-center">
+              <h3 className="text-base font-bold mb-2">Escaneie o QR deste laudo demo</h3>
+              <p className="text-xs text-[var(--text-muted)] mb-4 leading-relaxed">
+                Confira o hash. É a prova do mecanismo — não um depoimento.
+              </p>
+              <LaudoSheet />
+              <a
+                href="/verify"
+                className={
+                  'inline-flex mt-2 ' +
+                  'text-sm font-bold text-[var(--primary)] hover:underline'
+                }
+              >
+                Abrir verificação pública →
+              </a>
+            </div>
+
+            <div className="glass-card p-6 sm:p-8 border border-[var(--card-border)]/50">
+              <h3 className="text-base font-bold mb-2">Como a Justiça trata falta de vistoria prévia</h3>
+              <ul className="space-y-4 mt-4 text-xs text-[var(--text-muted)] leading-relaxed">
+                <li>
+                  <a
+                    href={CONJUR_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-[var(--text-main)] hover:text-[var(--primary)]"
+                  >
+                    ConJur, 07/03/2024
+                  </a>
+                  {' — '}
+                  ausência de checagem prévia impossibilita comparação antes×depois.
+                </li>
+                <li>
+                  <a
+                    href={TJDFT_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-bold text-[var(--text-main)] hover:text-[var(--primary)]"
+                  >
+                    TJDFT, 26/01/2022
+                  </a>
+                  {' — '}
+                  cobrança após vistoria que “não constatou avaria” / imputação unilateral.
+                </li>
+              </ul>
+              <p className="font-mono-data text-[10px] uppercase tracking-wider text-[var(--text-muted)] mt-5">
+                Prova do problema no mercado — não são clientes Danos Aparentes.
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-[var(--card-border)]/50 bg-[var(--panel-bg)] p-6 sm:p-8 text-center max-w-2xl mx-auto">
+            <p className="text-sm text-[var(--text-main)] leading-relaxed">
+              <strong>App novo.</strong> Ainda não temos histórico público de clientes. Preferimos
+              trial + laudo verificável a depoimento falso.
+            </p>
+          </div>
         </section>
 
-        {/* Ponte para preços e blog relacionado */}
-        <section className="mt-16 max-w-2xl mx-auto text-center glass-card p-8">
-          <h2 className="text-lg font-bold mb-1.5">Starter ou Pro para vistoriador autônomo, Corporativo para frota</h2>
-          <p className="text-sm text-[var(--text-muted)] mb-5">
-            Se for só você ou uma oficina pequena, o Starter (20 laudos/mês) ou o Pro (80 laudos/mês) já
-            cobrem. Para múltiplos vistoriadores, filiais, integrações e laudos ilimitados, o Corporativo é sob consulta.
+        {/* OFFER — O */}
+        <section id="planos" className="mb-16 sm:mb-20 scroll-mt-24" aria-labelledby="offer-heading">
+          <div className="text-center mb-10">
+            <h2
+              id="offer-heading"
+              className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight"
+            >
+              Comece pelo plano que cabe no volume da sua base.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {PLANS.map(plan => (
+              <div
+                key={plan.name}
+                className="glass-card p-6 border border-[var(--card-border)]/50 flex flex-col"
+              >
+                <h3 className="font-display text-xl font-bold uppercase tracking-tight">{plan.name}</h3>
+                <p className="text-lg font-extrabold text-[var(--primary)] mt-2">{plan.price}</p>
+                <p className="text-xs text-[var(--text-muted)] mt-3 leading-relaxed flex-1">
+                  {plan.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-center text-xs text-[var(--text-muted)] mt-6">
+            7 dias grátis <strong className="text-[var(--text-main)]">sem cartão</strong>. Cancele no
+            portal. PIX disponível no SME.
           </p>
-          <LocadorasPlanosLink />
+
+          <div className="flex flex-col items-center gap-4 mt-2">
+            <LocadorasOfferCta />
+            <LocadorasPlanosLink />
+          </div>
         </section>
 
         {/* FAQ */}
-        <div className="max-w-2xl mx-auto mt-16">
-          <h2 className="font-display text-2xl font-bold tracking-tight text-center mb-8">
-            Perguntas de quem gerencia frota
+        <section className="mb-16 sm:mb-20 max-w-2xl mx-auto" aria-labelledby="faq-heading">
+          <h2
+            id="faq-heading"
+            className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center mb-8"
+          >
+            Perguntas que locadoras fazem antes de testar
           </h2>
           <div className="flex flex-col gap-6">
             {FAQ.map(({ q, a }) => (
@@ -190,31 +451,95 @@ export default function LocadorasPage() {
               </div>
             ))}
           </div>
-          <div className="mt-10 max-w-2xl mx-auto">
+
+          <div className="mt-10">
             <p className="text-center text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-3">
               Leia também
             </p>
             <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-xs">
               {[
-                ['checklist-vistoria-devolucao-locadora', 'Checklist de vistoria de devolução de veículo para locadoras'],
-                ['avarias-preexistentes-como-provar', 'Avarias preexistentes: como provar que o dano já estava no veículo'],
+                [
+                  'checklist-vistoria-devolucao-locadora',
+                  'Checklist de vistoria de devolução de veículo para locadoras',
+                ],
+                [
+                  'avarias-preexistentes-como-provar',
+                  'Avarias preexistentes: como provar que o dano já estava no veículo',
+                ],
                 ['laudo-white-label-para-locadoras', 'Laudo white-label para locadoras'],
-                ['checklist-de-avarias-sem-dor-de-cabeca', 'Checklist de avarias sem dor de cabeça'],
-                ['cobranca-avaria-devolucao-locadora', 'Como cobrar avaria na devolução sem perder a discussão'],
-                ['como-provar-amassado-pre-existente-locacao', 'Como provar que um amassado já existia antes da locação'],
+                [
+                  'cobranca-avaria-devolucao-locadora',
+                  'Como cobrar avaria na devolução sem perder a discussão',
+                ],
+                [
+                  'como-provar-amassado-pre-existente-locacao',
+                  'Como provar que um amassado já existia antes da locação',
+                ],
               ].map(([slug, title]) => (
                 <li key={slug}>
-                  <Link href={`/blog/${slug}`} className="text-[var(--text-muted)] hover:text-[var(--primary)] hover:underline">
+                  <Link
+                    href={`/blog/${slug}`}
+                    className="text-[var(--text-muted)] hover:text-[var(--primary)] hover:underline"
+                  >
                     {title}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-        </div>
+        </section>
 
-        {/* CTA final */}
-        <LocadorasFinalCta />
+        {/* FORM — R */}
+        <section
+          id="form"
+          className="mb-16 sm:mb-20 scroll-mt-24 max-w-lg mx-auto"
+          aria-labelledby="form-heading"
+        >
+          <div className="glass-card p-6 sm:p-8 border border-[var(--card-border)]/50">
+            <div className="text-center mb-6">
+              <h2 id="form-heading" className="font-display text-2xl font-bold tracking-tight">
+                Ative 7 dias grátis e faça a primeira vistoria na sua base
+              </h2>
+              <p className="text-sm text-[var(--text-muted)] mt-2">
+                Sem cartão. Sem depoimento inventado. Só o fluxo na sua devolução.
+              </p>
+            </div>
+            <LocadorasTrialForm />
+            <div className="mt-6 pt-6 border-t border-[var(--card-border)]/40">
+              <LocadorasFinalCta />
+            </div>
+          </div>
+        </section>
+
+        {/* FOOTER (page-local) */}
+        <footer className="border-t border-[var(--card-border)]/30 pt-8 pb-4 text-center text-[10px] font-bold tracking-widest text-[var(--text-muted)] uppercase">
+          <p className="font-display text-base tracking-tight text-[var(--text-main)] mb-3 normal-case">
+            Danos Aparentes
+          </p>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-4 normal-case tracking-normal font-semibold text-xs">
+            <Link href="/planos" className="hover:text-[var(--text-main)]">
+              Planos
+            </Link>
+            <Link href="/privacidade" className="hover:text-[var(--text-main)]">
+              Privacidade
+            </Link>
+            <Link href="/verify" className="hover:text-[var(--text-main)]">
+              Verificar laudo
+            </Link>
+            <a
+              href={whatsappLink('Olá! Vim da página para locadoras.')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[var(--text-main)]"
+            >
+              WhatsApp
+            </a>
+            <Link href="/" className="hover:text-[var(--text-main)]">
+              danosaparentes.com.br
+            </Link>
+          </div>
+          <p>© 2026 Danos Aparentes</p>
+        </footer>
       </div>
 
       <ChatSupportWidget segment="locadoras" />
