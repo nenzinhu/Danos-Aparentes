@@ -109,6 +109,7 @@ export default function PricingCards() {
 
 function PlanCard({
   name,
+  planId,
   tagline,
   basePrice,
   laudosLimit,
@@ -116,6 +117,7 @@ function PlanCard({
   features,
 }: {
   name: string;
+  planId: 'starter' | 'pro';
   tagline: string;
   basePrice: number;
   laudosLimit: number;
@@ -232,7 +234,7 @@ function PlanCard({
             </LandingCtaLink>
             <p className="text-center text-[11px] text-[var(--text-muted)] mt-3">
               <Link
-                href="/pagamento-pix?duration=1"
+                href={`/pagamento-pix?duration=1&plan=${planId}`}
                 className="font-bold text-[var(--primary)] hover:underline"
                 onClick={() => trackPixCtaClick({ source: 'trial_link', duration_months: 1 })}
               >
@@ -246,7 +248,7 @@ function PlanCard({
         ) : (
           <>
             <Link
-              href={`/pagamento-pix?duration=${durationMonths}`}
+              href={`/pagamento-pix?duration=${durationMonths}&plan=${planId}`}
               className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full' })}
               onClick={() =>
                 trackPixCtaClick({
