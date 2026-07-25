@@ -17,15 +17,15 @@ interface Props {
 const EXIT_DURATION_MS = 200
 
 const SEV: { value: Severity; label: string; color: string; bg: string; border: string }[] = [
-  { value: 'low',    label: 'Leve',  color: 'text-slate-400',  bg: 'bg-slate-400/10',  border: 'border-slate-400/40' },
-  { value: 'medium', label: 'Média', color: 'text-orange-400', bg: 'bg-orange-400/10', border: 'border-orange-400/40' },
-  { value: 'high',   label: 'Grave', color: 'text-red-500',    bg: 'bg-red-500/10',    border: 'border-red-500/40' },
+  { value: 'low',    label: 'Leve',  color: 'text-slate-600',  bg: 'bg-slate-500/15',  border: 'border-slate-500/45' },
+  { value: 'medium', label: 'Média', color: 'text-orange-600', bg: 'bg-orange-500/15', border: 'border-orange-500/45' },
+  { value: 'high',   label: 'Grave', color: 'text-red-600',    bg: 'bg-red-500/15',    border: 'border-red-500/45' },
 ]
 
 const TYPES: { type: DamageType; label: string; Icon: typeof IconScratchDamage; color: string; bg: string; border: string }[] = [
-  { type: 'scratch', label: 'Risco / Arranhado',    Icon: IconScratchDamage, color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/30' },
-  { type: 'dent',    label: 'Amassado / Deformado', Icon: IconDentDamage,    color: 'text-orange-500', bg: 'bg-orange-500/10', border: 'border-orange-500/30' },
-  { type: 'broken',  label: 'Quebrado / Trincado',  Icon: IconBrokenDamage,  color: 'text-red-500',    bg: 'bg-red-500/10',    border: 'border-red-500/30' },
+  { type: 'scratch', label: 'Risco / Arranhado',    Icon: IconScratchDamage, color: 'text-amber-600', bg: 'bg-amber-500/15', border: 'border-amber-500/40' },
+  { type: 'dent',    label: 'Amassado / Deformado', Icon: IconDentDamage,    color: 'text-orange-600', bg: 'bg-orange-500/15', border: 'border-orange-500/40' },
+  { type: 'broken',  label: 'Quebrado / Trincado',  Icon: IconBrokenDamage,  color: 'text-red-600',    bg: 'bg-red-500/15',    border: 'border-red-500/40' },
 ]
 
 export default function DamageFloat({ partName, position, currentType, onChoose, onClear, onClose }: Props) {
@@ -113,8 +113,8 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       }`
 
   const containerStyle = isMobile
-    ? { background: 'var(--card-bg)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
-    : { left, top, background: 'var(--card-bg)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
+    ? { background: 'var(--card-bg-solid)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
+    : { left, top, background: 'var(--card-bg-solid)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
 
   return (
     <div
@@ -166,15 +166,15 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
                   whileTap={{ scale: 0.95 }}
                   className={`relative flex flex-col items-center gap-1 p-1.5 rounded-xl border font-outfit text-xs font-bold transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? `${t.bg} ${t.border} ${t.color} ring-2 ring-[var(--primary)]`
+                      ? `${t.bg} ${t.border} text-[var(--text-main)] ring-2 ring-[var(--primary)]`
                       : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)]'
                   }`}
                 >
-                  <span className="absolute top-1 left-1.5 text-[0.6rem] font-black text-[var(--text-muted)] opacity-50">{i + 1}</span>
+                  <span className="absolute top-1 left-1.5 text-[0.6rem] font-black text-[var(--text-muted)] opacity-70">{i + 1}</span>
                   <div className={`h-10 sm:h-8 flex items-center justify-center transition-transform duration-200 ${isActive ? 'scale-110' : 'hover:scale-110'} ${t.color}`}>
                     <t.Icon size={32} className="h-10 sm:h-8 w-auto" />
                   </div>
-                  <span className="text-[0.7rem] sm:text-[0.6rem] tracking-tight leading-tight text-center">{t.label}</span>
+                  <span className="text-[0.7rem] sm:text-[0.6rem] tracking-tight leading-tight text-center text-[var(--text-main)]">{t.label}</span>
                   {isActive && (
                     <span className="text-[0.55rem] uppercase font-black tracking-widest text-[var(--primary)] mt-0.5 animate-bounce">Ativo</span>
                   )}
@@ -203,7 +203,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
             onClick={() => setStep(1)}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full flex items-center gap-2 mb-3 px-2 py-1.5 rounded-lg bg-white/5 border border-white/8 text-[0.72rem] text-[var(--text-muted)] hover:bg-white/10 transition-colors cursor-pointer"
+            className="w-full flex items-center gap-2 mb-3 px-2 py-1.5 rounded-lg bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[0.72rem] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)] transition-colors cursor-pointer"
           >
             <IconArrowLeft size={14} className="text-[var(--text-muted)] shrink-0" />
             {(() => {
@@ -227,7 +227,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
                   className={`py-2 rounded-lg text-[0.72rem] font-extrabold border transition-all cursor-pointer ${
                     severity === s.value
                       ? `${s.bg} ${s.border} ${s.color}`
-                      : 'bg-white/[0.03] border-white/[0.08] text-[var(--text-muted)] hover:border-white/20'
+                      : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)]'
                   }`}
                 >
                   {s.label}

@@ -42,28 +42,28 @@ const TYPE_SHORT: Record<DamageType, string> = {
 
 const TONE: Record<Severity | 'select', { stroke: string; fill: string; text: string; border: string }> = {
   select: {
-    stroke: '#67e8f9',
-    fill: 'rgba(34, 211, 238, 0.18)',
-    text: '#a5f3fc',
-    border: 'rgba(103, 232, 249, 0.55)',
+    stroke: 'var(--damage-select-stroke)',
+    fill: 'var(--damage-select-fill)',
+    text: 'var(--damage-select-text)',
+    border: 'var(--damage-select-border)',
   },
   low: {
-    stroke: '#94a3b8',
-    fill: 'rgba(148, 163, 184, 0.16)',
-    text: '#cbd5e1',
-    border: 'rgba(148, 163, 184, 0.5)',
+    stroke: 'var(--damage-low-stroke)',
+    fill: 'var(--damage-low-fill)',
+    text: 'var(--damage-low-text)',
+    border: 'var(--damage-low-border)',
   },
   medium: {
-    stroke: '#fb923c',
-    fill: 'rgba(249, 115, 22, 0.16)',
-    text: '#fdba74',
-    border: 'rgba(251, 146, 60, 0.55)',
+    stroke: 'var(--damage-medium-stroke)',
+    fill: 'var(--damage-medium-fill)',
+    text: 'var(--damage-medium-text)',
+    border: 'var(--damage-medium-border)',
   },
   high: {
-    stroke: '#f87171',
-    fill: 'rgba(239, 68, 68, 0.18)',
-    text: '#fca5a5',
-    border: 'rgba(248, 113, 113, 0.55)',
+    stroke: 'var(--damage-high-stroke)',
+    fill: 'var(--damage-high-fill)',
+    text: 'var(--damage-high-text)',
+    border: 'var(--damage-high-border)',
   },
 }
 
@@ -420,7 +420,7 @@ export default function DamageCallouts({
                   y={item.ay + 0.5}
                   textAnchor="middle"
                   dominantBaseline="central"
-                  fill={tone.text}
+                  fill="var(--damage-pin-number)"
                   fontSize="10"
                   fontWeight="800"
                   fontFamily="ui-monospace, monospace"
@@ -480,14 +480,14 @@ export default function DamageCallouts({
               width: item.w,
               minHeight: item.h,
               color: tone.text,
-              background: 'color-mix(in srgb, var(--card-bg, #0f172a) 78%, transparent)',
+              background: 'var(--damage-tag-bg)',
               borderColor: tone.border,
-              boxShadow: `0 0 12px ${tone.stroke}33`,
+              boxShadow: `0 0 12px color-mix(in srgb, ${tone.stroke} 20%, transparent)`,
             }}
           >
             <span className="truncate">{item.title}</span>
             {item.subtitle ? (
-              <span className="opacity-80 shrink-0"> · {item.subtitle}</span>
+              <span className="opacity-90 shrink-0"> · {item.subtitle}</span>
             ) : null}
           </div>
         )
@@ -558,14 +558,14 @@ export function DamageCalloutLegend({ damages, selectedPart }: LegendProps) {
             >
               <span
                 className="shrink-0 inline-flex h-5 w-5 items-center justify-center rounded-full text-[0.65rem] font-black"
-                style={{ background: '#02061799', color: tone.text, border: `1px solid ${tone.border}` }}
+                style={{ background: '#02061799', color: 'var(--damage-pin-number)', border: `1px solid ${tone.border}` }}
               >
                 {row.index}
               </span>
               <span className="min-w-0 flex-1 truncate normal-case tracking-normal text-[0.72rem] font-bold">
                 {row.title}
                 {row.subtitle ? (
-                  <span className="opacity-75 font-semibold"> · {row.subtitle}</span>
+                  <span className="opacity-90 font-semibold"> · {row.subtitle}</span>
                 ) : null}
               </span>
             </li>

@@ -78,6 +78,26 @@
   --signal-glow: rgba(245, 166, 35, 0.35);
   --sheet-line: rgba(245, 166, 35, 0.5);
 
+  /* Etiquetas de avaria (callouts) — contraste no tema escuro */
+  --damage-select-stroke: #67e8f9;
+  --damage-select-fill: rgba(34, 211, 238, 0.22);
+  --damage-select-text: #ecfeff;
+  --damage-select-border: rgba(103, 232, 249, 0.55);
+  --damage-low-stroke: #94a3b8;
+  --damage-low-fill: rgba(148, 163, 184, 0.2);
+  --damage-low-text: #e2e8f0;
+  --damage-low-border: rgba(148, 163, 184, 0.5);
+  --damage-medium-stroke: #fb923c;
+  --damage-medium-fill: rgba(249, 115, 22, 0.2);
+  --damage-medium-text: #ffedd5;
+  --damage-medium-border: rgba(251, 146, 60, 0.55);
+  --damage-high-stroke: #f87171;
+  --damage-high-fill: rgba(239, 68, 68, 0.22);
+  --damage-high-text: #fee2e2;
+  --damage-high-border: rgba(248, 113, 113, 0.55);
+  --damage-tag-bg: color-mix(in srgb, var(--card-bg-solid) 90%, transparent);
+  --damage-pin-number: #ecfeff;
+
   /* View Transition Variables */
   --duration-exit: 150ms;
   --duration-enter: 210ms;
@@ -225,6 +245,26 @@ html.light {
   --signal-bright: #8a5508;
   --signal-glow: rgba(138, 85, 8, 0.22);
   --sheet-line: rgba(138, 85, 8, 0.5);
+
+  /* Callouts legíveis sobre o diagrama no modo claro */
+  --damage-select-stroke: #0e7490;
+  --damage-select-fill: rgba(14, 116, 144, 0.16);
+  --damage-select-text: #0f172a;
+  --damage-select-border: rgba(14, 116, 144, 0.5);
+  --damage-low-stroke: #475569;
+  --damage-low-fill: rgba(71, 85, 105, 0.14);
+  --damage-low-text: #1e293b;
+  --damage-low-border: rgba(71, 85, 105, 0.4);
+  --damage-medium-stroke: #c2410c;
+  --damage-medium-fill: rgba(194, 65, 12, 0.14);
+  --damage-medium-text: #7c2d12;
+  --damage-medium-border: rgba(194, 65, 12, 0.45);
+  --damage-high-stroke: #b91c1c;
+  --damage-high-fill: rgba(185, 28, 28, 0.14);
+  --damage-high-text: #7f1d1d;
+  --damage-high-border: rgba(185, 28, 28, 0.45);
+  --damage-tag-bg: color-mix(in srgb, var(--card-bg-solid) 94%, #ffffff);
+  --damage-pin-number: #ffffff;
 }
 
 /* ── Tipografia de papéis ──────────────────────────────────────
@@ -298,6 +338,15 @@ html.light .blog-cta {
   gap: 0;
   overflow: hidden;
   box-sizing: border-box;
+}
+html.light .damage-tag {
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+html.light .damage-tag span {
+  opacity: 1;
 }
 /* Anel de status da lanterna acesa — respiro suave (transform + opacity). */
 @keyframes torch-halo {
