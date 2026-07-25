@@ -46,8 +46,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: session.url });
   } catch (err) {
     console.error('Erro ao criar sessão de checkout:', err);
+    const stripeMessage = err instanceof Error ? err.message : '';
+    const testLiveMismatch =
+      stripeMessage.includes('test mode') && stripeMessage.includes('live mode');
     return NextResponse.json(
-      { error: 'Erro ao criar sessão de checkout. Tente novamente em alguns instantes.' },
+      {
+        error: testLiveMismatch
+          ? 'Configuração Stripe inconsistente: o Price ID está em modo teste, mas a chave da API é live. Crie o preço no Dashboard Live e atualize STRIPE_PRICE_ID_STARTER / STRIPE_PRICE_ID na Vercel.'
+          : 'Erro ao criar sessão de checkout. Tente novamente em alguns instantes.',
+      },
       { status: 500 },
     );
   }
