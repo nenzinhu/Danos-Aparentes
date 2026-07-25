@@ -98,7 +98,11 @@ export async function POST(req: NextRequest) {
 
   const durationRaw = Number(req.nextUrl.searchParams.get('duration') ?? '1')
   const duration = Number.isFinite(durationRaw) && durationRaw > 0 ? Math.min(Math.floor(durationRaw), 24) : 1
-  const amountCents = 4990 * duration
+
+  const planParam = req.nextUrl.searchParams.get('plan')
+  const plan: 'starter' | 'pro' = planParam === 'starter' ? 'starter' : 'pro'
+  const unitPriceCents = plan === 'starter' ? 2990 : 4990
+  const amountCents = unitPriceCents * duration
 
   let chargeId: string
   let qrCode: string | undefined
@@ -108,7 +112,7 @@ export async function POST(req: NextRequest) {
     if (provider === 'asaas') {
       const charge = await createAsaasPixCharge(amountCents, user.email, {
         customerName: user.email.split('@')[0],
-        description: `Assinatura Danos Aparentes (${duration} mês${duration > 1 ? 'es' : ''})`,
+        description: `Assinatura Danos Aparentes · Plano ${plan === 'starter' ? 'Starter' : 'Pro'} (${duration} mês${duration > 1 ? 'es' : ''})`,
         externalReference: user.id,
       })
       chargeId = charge.id
@@ -175,11 +179,13 @@ export async function POST(req: NextRequest) {
   const updatePayload: {
     pix_charge_id: string
     pending_months: number
+    pending_plan_tier: string
     updated_at: string
     status?: 'pending_pix'
   } = {
     pix_charge_id: chargeId,
     pending_months: duration,
+    pending_plan_tier: plan,
     updated_at: new Date().toISOString(),
   }
   if (!hasAccess) {

@@ -169,10 +169,10 @@ export default function LocadorasPage() {
 
         {/* Ponte para preços e blog relacionado */}
         <section className="mt-16 max-w-2xl mx-auto text-center glass-card p-8">
-          <h2 className="text-lg font-bold mb-1.5">Pro para vistoriador autônomo, Corporativo para frota</h2>
+          <h2 className="text-lg font-bold mb-1.5">Starter ou Pro para vistoriador autônomo, Corporativo para frota</h2>
           <p className="text-sm text-[var(--text-muted)] mb-5">
-            Se for só você ou uma oficina pequena, o plano Pro (R$ 49,90/mês) já cobre. Para múltiplos
-            vistoriadores, filiais e integrações, o Corporativo é sob consulta.
+            Se for só você ou uma oficina pequena, o Starter (20 laudos/mês) ou o Pro (80 laudos/mês) já
+            cobrem. Para múltiplos vistoriadores, filiais, integrações e laudos ilimitados, o Corporativo é sob consulta.
           </p>
           <LocadorasPlanosLink />
         </section>

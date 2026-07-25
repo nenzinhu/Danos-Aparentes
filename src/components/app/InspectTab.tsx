@@ -47,6 +47,7 @@ interface InspectTabProps {
   ttsConfig: TtsConfig
   voices: SpeechSynthesisVoice[]
   hasAccess: boolean
+  accessToken?: string
   onVehicleTypeChange: (type: VehicleType) => void
   onViewTypeChange: (view: ViewType) => void
   onVehicleInfoChange: (info: VehicleInfo) => void
@@ -82,6 +83,7 @@ export default function InspectTab({
   ttsConfig,
   voices,
   hasAccess,
+  accessToken,
   onVehicleTypeChange,
   onViewTypeChange,
   onVehicleInfoChange,
@@ -277,6 +279,7 @@ export default function InspectTab({
               damages={allVehicleDamages}
               onToast={onToast}
               hasAccess={hasAccess}
+              accessToken={accessToken}
             />
           </div>
         </div>

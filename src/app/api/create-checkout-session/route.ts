@@ -10,9 +10,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
   }
 
-  const priceId = process.env.STRIPE_PRICE_ID;
+  const plan = req.nextUrl.searchParams.get('plan') === 'starter' ? 'starter' : 'pro';
+  const priceId = plan === 'starter' ? process.env.STRIPE_PRICE_ID_STARTER : process.env.STRIPE_PRICE_ID;
   if (!priceId) {
-    return NextResponse.json({ error: 'STRIPE_PRICE_ID não configurada' }, { status: 500 });
+    const envVar = plan === 'starter' ? 'STRIPE_PRICE_ID_STARTER' : 'STRIPE_PRICE_ID';
+    return NextResponse.json({ error: `${envVar} não configurada` }, { status: 500 });
   }
 
   if (!supabaseAdmin) {

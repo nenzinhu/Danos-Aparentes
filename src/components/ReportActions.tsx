@@ -14,9 +14,42 @@ interface Props {
   damages: Damage[]
   onToast?: (msg: string) => void
   hasAccess?: boolean
+  accessToken?: string
 }
 
 const ALL_VIEWS: ViewType[] = ['lateral-left', 'lateral-right', 'frontal', 'traseira']
+
+type QuotaCheck = { allowed: boolean; reason?: string; limit?: number | null; planTier?: string }
+
+// Verifica a cota mensal de laudos em PDF (Starter 20 · Pro 80 · Corporativo
+// ilimitado) antes de gerar o arquivo. O app é offline-first — se a chamada
+// falhar por falta de conexão (comum no pátio da oficina), deixamos gerar
+// mesmo assim (fail-open) em vez de travar a vistoria; a cota é reconciliada
+// nas próximas gerações feitas online. Só bloqueia quando o servidor
+// responde de fato que o limite foi atingido.
+async function checkLaudoQuota(accessToken?: string): Promise<QuotaCheck> {
+  if (!accessToken) return { allowed: true }
+  try {
+    const res = await fetch('/api/report-quota', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+    const data = await res.json().catch(() => ({}))
+    if (res.ok) return { allowed: true, limit: data.limit, planTier: data.plan_tier }
+    if (res.status === 403) {
+      return { allowed: false, reason: data.reason, limit: data.limit, planTier: data.plan_tier }
+    }
+    // Erro inesperado do servidor (500 etc.): não bloqueia a geração local.
+    return { allowed: true }
+  } catch {
+    return { allowed: true } // offline: fail-open, ver comentário acima
+  }
+}
+
+function quotaBlockedMessage(check: QuotaCheck): string {
+  const planLabel = check.planTier === 'starter' ? 'Starter' : check.planTier === 'pro' ? 'Pro' : 'atual'
+  return `❌ Limite de ${check.limit ?? ''} laudos do plano ${planLabel} atingido neste mês. Faça upgrade em /planos para continuar.`
+}
 
 export async function captureSvgs(vehicleType: VehicleType, damages: Damage[]): Promise<SvgPdfData> {
   try {
@@ -134,7 +167,7 @@ const DEFAULT_SECTIONS: SectionVisibilityState = {
   showQrCode: true,
 }
 
-export default function ReportActions({ vehicleType, vehicleInfo, damages, onToast, hasAccess }: Props) {
+export default function ReportActions({ vehicleType, vehicleInfo, damages, onToast, hasAccess, accessToken }: Props) {
   const [loading, setLoading] = useState<string | null>(null)
   const [reportHash, setReportHash] = useState<string | null>(null)
   const [showBadgePanel, setShowBadgePanel] = useState(false)
@@ -235,6 +268,11 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
   }
 
   async function handlePdf() {
+    const quota = await checkLaudoQuota(accessToken)
+    if (!quota.allowed) {
+      if (onToast) onToast(quotaBlockedMessage(quota))
+      return
+    }
     const svgData = await captureSvgs(vehicleType, damages)
     const resolvedDamages = await resolveDamagePhotos(damages)
     const resolvedVehicleInfo = { ...vehicleInfo, interiorPhotos: await resolvePhotos(vehicleInfo.interiorPhotos) }
@@ -244,6 +282,11 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
   }
 
   async function whatsappPdf() {
+    const quota = await checkLaudoQuota(accessToken)
+    if (!quota.allowed) {
+      if (onToast) onToast(quotaBlockedMessage(quota))
+      return
+    }
     const svgData = await captureSvgs(vehicleType, damages)
     const resolvedDamages = await resolveDamagePhotos(damages)
     const resolvedVehicleInfo = { ...vehicleInfo, interiorPhotos: await resolvePhotos(vehicleInfo.interiorPhotos) }

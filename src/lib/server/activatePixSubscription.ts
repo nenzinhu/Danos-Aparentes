@@ -17,7 +17,7 @@ export async function activatePixSubscriptionByChargeId(chargeId: string): Promi
 
   const { data: sub, error } = await supabaseAdmin
     .from('subscriptions')
-    .select('user_id, expires_at, pending_months, status')
+    .select('user_id, expires_at, pending_months, status, pending_plan_tier')
     .eq('pix_charge_id', chargeId)
     .maybeSingle()
 
@@ -41,12 +41,22 @@ export async function activatePixSubscriptionByChargeId(chargeId: string): Promi
     Number(extraMonths),
   )
 
+  // Só aceita valores conhecidos de plan_tier vindos de pending_plan_tier —
+  // valor inesperado ou ausente (cobranças criadas antes desta coluna
+  // existir) cai para 'pro', o comportamento anterior.
+  const pendingTier = sub.pending_plan_tier as string | null
+  const planTier = pendingTier === 'starter' || pendingTier === 'pro' || pendingTier === 'corporativo'
+    ? pendingTier
+    : 'pro'
+
   const { data: updated, error: updateError } = await supabaseAdmin
     .from('subscriptions')
     .update({
       status: 'active_pix',
       expires_at: newExpires.toISOString(),
       pending_months: 0,
+      plan_tier: planTier,
+      pending_plan_tier: null,
       updated_at: new Date().toISOString(),
     })
     .eq('pix_charge_id', chargeId)

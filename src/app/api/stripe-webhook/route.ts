@@ -57,11 +57,19 @@ export function mapStripeStatus(status: Stripe.Subscription.Status): 'active' | 
 // Corporativo tem um Price "base" obrigatório + Prices opcionais de inspetor
 // adicional na mesma assinatura, então checamos TODOS os itens, não só o
 // primeiro — a ordem dos line items não é uma garantia confiável.
-export function resolvePlanTier(subscription: Stripe.Subscription): 'pro' | 'corporativo' {
+// Precedência: corporativo > starter > pro (default), caso mais de um Price
+// apareça por engano na mesma assinatura.
+export function resolvePlanTier(subscription: Stripe.Subscription): 'starter' | 'pro' | 'corporativo' {
   const corporateBasePriceId = process.env.STRIPE_PRICE_ID_CORPORATE;
-  if (!corporateBasePriceId) return 'pro';
-  const hasCorporateBase = subscription.items.data.some(item => item.price.id === corporateBasePriceId);
-  return hasCorporateBase ? 'corporativo' : 'pro';
+  const starterPriceId = process.env.STRIPE_PRICE_ID_STARTER;
+
+  if (corporateBasePriceId && subscription.items.data.some(item => item.price.id === corporateBasePriceId)) {
+    return 'corporativo';
+  }
+  if (starterPriceId && subscription.items.data.some(item => item.price.id === starterPriceId)) {
+    return 'starter';
+  }
+  return 'pro';
 }
 
 export async function POST(req: NextRequest) {

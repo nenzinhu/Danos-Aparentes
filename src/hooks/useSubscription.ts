@@ -7,7 +7,8 @@ import {
 } from '../lib/subscriptionAccess'
 
 export type { SubscriptionStatus }
-export type PlanTier = 'pro' | 'corporativo'
+export type PlanTier = 'starter' | 'pro' | 'corporativo'
+export type PurchasablePlan = 'starter' | 'pro'
 
 export interface SubscriptionInfo {
   status: SubscriptionStatus
@@ -115,9 +116,9 @@ export function useSubscription(userId?: string, accessToken?: string) {
     ;(async () => { await refresh() })()
   }, [refresh, userId])
 
-  const startCheckout = useCallback(async () => {
+  const startCheckout = useCallback(async (plan: PurchasablePlan = 'pro') => {
     if (!accessToken) throw new Error('Não autenticado')
-    const res = await fetch('/api/create-checkout-session', {
+    const res = await fetch(`/api/create-checkout-session?plan=${plan}`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${accessToken}` },
     })
@@ -140,12 +141,13 @@ export function useSubscription(userId?: string, accessToken?: string) {
   const startPixCheckout = useCallback(async (
     durationMonths = 1,
     provider: 'mercadopago' | 'asaas' = 'asaas',
+    plan: PurchasablePlan = 'pro',
   ): Promise<{ qrCode: string; copyPaste: string; provider: string }> => {
     if (!accessToken) throw new Error('Não autenticado')
     const months = Number.isFinite(durationMonths) && durationMonths > 0
       ? Math.min(Math.floor(durationMonths), 24)
       : 1
-    const res = await fetch(`/api/create-pix-charge?duration=${months}&provider=${provider}`, {
+    const res = await fetch(`/api/create-pix-charge?duration=${months}&provider=${provider}&plan=${plan}`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${accessToken}` },
     })

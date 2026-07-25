@@ -8,7 +8,7 @@ export const GENERAL_KNOWLEDGE = `
 - QR Code e hash de verificação: cada laudo recebe um hash SHA-256 e um QR Code que leva a uma página pública de verificação. Se o PDF for alterado depois de gerado, o hash não confere mais — isso expõe a adulteração e reduz disputa sobre avaria pré-existente.
 - Funciona 100% offline: a vistoria (fotos, marcações, assinaturas) é salva no aparelho mesmo sem internet, e sincroniza sozinha assim que a conexão voltar.
 - White-label: o PDF sai com a logo e o nome da empresa do cliente no cabeçalho, não com uma marca genérica — configurável no perfil.
-- Planos: Pro custa R$ 49,90/mês — vistorias ilimitadas, laudo personalizado, busca automática de placa. Corporativo é sob consulta, para múltiplos vistoriadores, filiais, painel consolidado e integração via API com ERP/CRM.
+- Planos: Starter custa R$ 29,90/mês (até 20 laudos em PDF por mês), Pro custa R$ 49,90/mês (até 80 laudos em PDF por mês, com laudo personalizado com marca própria e busca automática de placa). Corporativo é sob consulta — "Consulte agora mesmo" —, com laudos ilimitados, para múltiplos vistoriadores, filiais, painel consolidado e integração via API com ERP/CRM.
 - Sem treinamento longo: o diagrama do veículo guia o processo; a primeira vistoria já sai pronta em poucos minutos.
 `.trim()
 

@@ -9,18 +9,35 @@ import { trackPixPaymentConfirmed, trackPixQrGenerated } from '@/src/lib/analyti
 import { whatsappLink } from '@/src/lib/whatsapp'
 import { loginUrlWithReturnTo } from '@/src/lib/safeReturnTo'
 
-const MONTHLY_BRL = 49.9
 const DURATION_OPTIONS = [1, 3, 6, 12] as const
 const PIX_PROVIDER = 'asaas' as const
 
-const PRO_FEATURES = [
-  'Vistorias offline e online ilimitadas',
-  'PDF com Hash SHA-256',
-  'Assinatura digital vistoriador + cliente',
-  'Envio do laudo por WhatsApp',
-  'Consulta automática de placas',
-  'Marca própria (nome e logotipo)',
-]
+type Plan = 'starter' | 'pro'
+
+const PLAN_PRICE: Record<Plan, number> = { starter: 29.9, pro: 49.9 }
+const PLAN_LABEL: Record<Plan, string> = { starter: 'Plano Starter', pro: 'Plano Pro' }
+const PLAN_LAUDOS: Record<Plan, number> = { starter: 20, pro: 80 }
+
+const PLAN_FEATURES: Record<Plan, string[]> = {
+  starter: [
+    'Até 20 laudos em PDF por mês',
+    'Vistorias offline e online',
+    'PDF com Hash SHA-256',
+    'Assinatura digital vistoriador + cliente',
+    'Consulta automática de placas',
+  ],
+  pro: [
+    'Até 80 laudos em PDF por mês',
+    'Tudo do plano Starter incluído',
+    'Envio do laudo por WhatsApp',
+    'Marca própria (nome e logotipo)',
+    'Painel de estatísticas',
+  ],
+}
+
+function isPlan(value: string | null): value is Plan {
+  return value === 'starter' || value === 'pro'
+}
 
 function formatBRL(value: number) {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
@@ -40,6 +57,7 @@ function PagamentoPixContent() {
   )
 
   const [durationMonths, setDurationMonths] = useState(() => parseDuration(searchParams.get('duration')))
+  const [plan, setPlan] = useState<Plan>(() => (isPlan(searchParams.get('plan')) ? searchParams.get('plan') as Plan : 'pro'))
   const [qrCode, setQrCode] = useState<string | null>(null)
   const [copyPaste, setCopyPaste] = useState<string | null>(null)
   const [chargedMonths, setChargedMonths] = useState<number | null>(null)
@@ -53,7 +71,8 @@ function PagamentoPixContent() {
   const expiresAtWhenCharged = useRef<string | null>(null)
   const paymentConfirmedTracked = useRef(false)
 
-  const total = useMemo(() => MONTHLY_BRL * durationMonths, [durationMonths])
+  const monthlyPrice = PLAN_PRICE[plan]
+  const total = useMemo(() => monthlyPrice * durationMonths, [monthlyPrice, durationMonths])
 
   const generate = useCallback(async (months: number) => {
     setGenerating(true)
@@ -65,7 +84,7 @@ function PagamentoPixContent() {
     paymentConfirmedTracked.current = false
     expiresAtWhenCharged.current = subscription?.expiresAt ?? null
     try {
-      const result = await startPixCheckout(months, PIX_PROVIDER)
+      const result = await startPixCheckout(months, PIX_PROVIDER, plan)
       setQrCode(result.qrCode)
       setCopyPaste(result.copyPaste)
       setChargedMonths(months)
@@ -73,7 +92,7 @@ function PagamentoPixContent() {
       trackPixQrGenerated({
         source: 'pagamento-pix',
         duration_months: months,
-        value: MONTHLY_BRL * months,
+        value: monthlyPrice * months,
         currency: 'BRL',
       })
       await refresh()
@@ -83,7 +102,19 @@ function PagamentoPixContent() {
     } finally {
       setGenerating(false)
     }
-  }, [startPixCheckout, refresh, subscription?.expiresAt])
+  }, [startPixCheckout, refresh, subscription?.expiresAt, plan, monthlyPrice])
+
+  function selectPlan(next: Plan) {
+    setPlan(next)
+    if (qrCode) {
+      setQrCode(null)
+      setCopyPaste(null)
+      setChargedMonths(null)
+      setError(null)
+      setAwaitingPix(false)
+      setSawPendingCharge(false)
+    }
+  }
 
   useEffect(() => {
     if (!qrCode || !awaitingPix) return
@@ -143,10 +174,10 @@ function PagamentoPixContent() {
     paymentConfirmedTracked.current = true
     trackPixPaymentConfirmed({
       duration_months: chargedMonths ?? durationMonths,
-      value: MONTHLY_BRL * (chargedMonths ?? durationMonths),
+      value: monthlyPrice * (chargedMonths ?? durationMonths),
       currency: 'BRL',
     })
-  }, [pixJustPaid, chargedMonths, durationMonths])
+  }, [pixJustPaid, chargedMonths, durationMonths, monthlyPrice])
 
   if (authLoading) {
     return (
@@ -209,12 +240,35 @@ function PagamentoPixContent() {
         <section className="rounded-2xl border border-[var(--primary)]/30 bg-[var(--card-bg)] p-5 mb-4 shadow-[0_0_24px_var(--primary-glow)]">
           <div className="flex items-start justify-between gap-3 mb-3">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-wider text-[var(--primary)]">Plano Pro</p>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">Vistoriadores e oficinas</p>
+              <p className="text-[10px] font-black uppercase tracking-wider text-[var(--primary)]">{PLAN_LABEL[plan]}</p>
+              <p className="text-xs text-[var(--text-muted)] mt-0.5">Até {PLAN_LAUDOS[plan]} laudos em PDF por mês</p>
             </div>
             <p className="text-sm font-bold text-[var(--text-muted)] whitespace-nowrap">
-              {formatBRL(MONTHLY_BRL)}/mês
+              {formatBRL(monthlyPrice)}/mês
             </p>
+          </div>
+
+          <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wide mb-2">
+            Qual plano?
+          </p>
+          <div className="grid grid-cols-2 gap-2 mb-4" role="group" aria-label="Escolha do plano">
+            {(['starter', 'pro'] as const).map((p) => {
+              const selected = plan === p
+              return (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => selectPlan(p)}
+                  className={`rounded-xl border py-2.5 text-xs font-bold transition-colors ${
+                    selected
+                      ? 'border-[var(--primary)] bg-[var(--primary)]/15 text-[var(--primary)]'
+                      : 'border-[var(--card-border)] text-[var(--text-muted)] hover:border-[var(--primary)]/40'
+                  }`}
+                >
+                  {p === 'starter' ? 'Starter' : 'Pro'}
+                </button>
+              )
+            })}
           </div>
 
           <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wide mb-2">
@@ -244,12 +298,12 @@ function PagamentoPixContent() {
             <p className="text-[11px] text-[var(--text-muted)]">Total a pagar</p>
             <p className="text-2xl font-black text-[var(--primary)] tracking-tight">{formatBRL(total)}</p>
             <p className="text-[11px] text-[var(--text-muted)] mt-0.5">
-              {durationMonths} {durationMonths === 1 ? 'mês' : 'meses'} × {formatBRL(MONTHLY_BRL)}
+              {durationMonths} {durationMonths === 1 ? 'mês' : 'meses'} × {formatBRL(monthlyPrice)}
             </p>
           </div>
 
           <ul className="space-y-1.5 mb-5">
-            {PRO_FEATURES.map((feat) => (
+            {PLAN_FEATURES[plan].map((feat) => (
               <li key={feat} className="flex items-start gap-2 text-[11px] text-[var(--text-main)]">
                 <span className="text-[var(--signal-bright)] mt-0.5">✓</span>
                 <span>{feat}</span>

@@ -142,6 +142,7 @@ export default function AppMainPage() {
                 ttsConfig={ttsConfig}
                 voices={voices}
                 hasAccess={subscription?.hasAccess ?? false}
+                accessToken={session?.access_token}
                 onVehicleTypeChange={inspection.handleVehicleTypeChange}
                 onViewTypeChange={inspection.handleViewTypeChange}
                 onVehicleInfoChange={inspection.setVehicleInfo}

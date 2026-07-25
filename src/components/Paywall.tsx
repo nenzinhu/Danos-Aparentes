@@ -10,7 +10,7 @@ interface Props {
   onSignOut?: () => void
 }
 
-const MONTHLY = 'R$ 49,90'
+const STARTING_FROM = 'R$ 29,90'
 
 export default function Paywall({ status, onSignOut }: Props) {
   const cardRef = useRef<HTMLDivElement>(null)
@@ -25,7 +25,7 @@ export default function Paywall({ status, onSignOut }: Props) {
 
   const description = status === 'past_due'
     ? `Não conseguimos confirmar o pagamento da sua assinatura. Regularize pelo PIX ou fale com o suporte (${LEGAL_CONTACT_EMAIL}).`
-    : 'Para continuar registrando vistorias e gerando laudos em PDF, assine o Plano Pro. Escolha quantos meses quer pagar agora.'
+    : 'Para continuar registrando vistorias e gerando laudos em PDF, assine o plano Starter ou Pro. Escolha o plano, quantos meses quer pagar agora, ou compare todas as opções.'
 
   return (
     <div
@@ -49,16 +49,16 @@ export default function Paywall({ status, onSignOut }: Props) {
         </p>
 
         <div className="rounded-2xl border border-[var(--primary)]/25 bg-[var(--bg-main)]/60 px-4 py-4 mb-5 text-left">
-          <p className="text-[10px] font-black uppercase tracking-wider text-[var(--primary)]">Plano Pro</p>
-          <p className="text-2xl font-black text-[var(--primary)] mt-1">{MONTHLY}<span className="text-sm font-bold text-[var(--text-muted)]">/mês</span></p>
-          <p className="text-[11px] text-[var(--text-muted)] mt-1">PIX: 1, 3, 6 ou 12 meses · Cartão mensal via Stripe</p>
+          <p className="text-[10px] font-black uppercase tracking-wider text-[var(--primary)]">A partir de</p>
+          <p className="text-2xl font-black text-[var(--primary)] mt-1">{STARTING_FROM}<span className="text-sm font-bold text-[var(--text-muted)]">/mês</span></p>
+          <p className="text-[11px] text-[var(--text-muted)] mt-1">Starter (20 laudos/mês) ou Pro (80 laudos/mês) · PIX: 1, 3, 6 ou 12 meses</p>
         </div>
 
         <div className="flex flex-col gap-2.5">
           <Link
             href="/pagamento-pix?duration=1"
             className="block w-full rounded-xl bg-[var(--primary)] text-[var(--bg-main)] font-extrabold text-sm py-3.5 no-underline"
-            onClick={() => trackPixCtaClick({ source: 'paywall', duration_months: 1, value: 49.9, currency: 'BRL' })}
+            onClick={() => trackPixCtaClick({ source: 'paywall', duration_months: 1, value: 29.9, currency: 'BRL' })}
           >
             Pagar com PIX
           </Link>

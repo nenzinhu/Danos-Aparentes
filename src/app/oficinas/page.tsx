@@ -60,7 +60,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Quanto custa para uma oficina pequena?',
-    a: 'O plano Pro (R$ 49,90/mês) já cobre vistorias ilimitadas, laudo personalizado e busca de placa. Para múltiplas unidades, o Corporativo é sob consulta.',
+    a: 'O plano Starter (R$ 29,90/mês, até 20 laudos) já cobre oficinas com menos movimento. O Pro (R$ 49,90/mês, até 80 laudos) inclui laudo personalizado e busca de placa. Para múltiplas unidades e laudos ilimitados, o Corporativo é sob consulta.',
   },
 ]
 
@@ -164,10 +164,10 @@ export default function OficinasPage() {
         </section>
 
         <section className="mt-16 max-w-2xl mx-auto text-center glass-card p-8">
-          <h2 className="text-lg font-bold mb-1.5">Pro para oficina pequena, Corporativo para rede</h2>
+          <h2 className="text-lg font-bold mb-1.5">Starter ou Pro para oficina pequena, Corporativo para rede</h2>
           <p className="text-sm text-[var(--text-muted)] mb-5">
-            Se for uma oficina só, o plano Pro (R$ 49,90/mês) já cobre. Para múltiplas unidades e
-            integrações, o Corporativo é sob consulta.
+            Se for uma oficina só, o Starter (20 laudos/mês) ou o Pro (80 laudos/mês) já cobrem. Para
+            múltiplas unidades, integrações e laudos ilimitados, o Corporativo é sob consulta.
           </p>
           <OficinasPlanosLink />
         </section>

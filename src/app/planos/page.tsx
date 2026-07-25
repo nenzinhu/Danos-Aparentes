@@ -5,7 +5,7 @@ import PlanosFinalCta from '@/src/components/PlanosFinalCta'
 
 const TITLE = 'Planos e Preços | Danos Aparentes — Laudo de Vistoria Digital'
 const DESCRIPTION =
-  'Plano Pro por R$ 49,90/mês com 7 dias grátis, ou Corporativo sob medida para frotas e locadoras. Veja o que está incluído em cada plano.'
+  'Starter com 20 laudos/mês por R$ 29,90, Pro com 80 laudos/mês por R$ 49,90 — ambos com 7 dias grátis — ou Corporativo sob medida para frotas e locadoras. Veja o que está incluído em cada plano.'
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -17,8 +17,12 @@ export const metadata: Metadata = {
 
 const FAQ: { q: string; a: string }[] = [
   {
-    q: 'R$ 49,90/mês vale a pena pra quem faz poucas vistorias?',
-    a: 'Um único laudo terceirizado já custa perto disso. Com o Pro você tem vistorias ilimitadas no mês — a partir da segunda vistoria, já compensa.',
+    q: 'Qual a diferença entre o Starter e o Pro?',
+    a: 'O Starter inclui até 20 laudos em PDF por mês, ideal para quem está começando ou faz vistorias esporádicas. O Pro inclui até 80 laudos por mês, além de marca própria (nome e logotipo) e painel de estatísticas — feito para quem já tem volume constante.',
+  },
+  {
+    q: 'E se eu ultrapassar o limite de laudos do meu plano?',
+    a: 'Avisamos antes de você chegar ao limite mensal. Você pode fazer upgrade para o plano seguinte a qualquer momento, direto pelo portal de assinatura.',
   },
   {
     q: 'O laudo digital substitui 100% o processo em papel?',
@@ -57,7 +61,7 @@ export default function PlanosPage() {
     <main className="min-h-screen w-full flex flex-col items-center px-4 py-12 font-outfit text-[var(--text-main)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      <div className="w-full max-w-5xl">
+      <div className="w-full max-w-6xl">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors mb-6"
@@ -75,7 +79,7 @@ export default function PlanosPage() {
             Escolha o Plano Ideal
           </h1>
           <p className="text-sm text-[var(--text-muted)] mt-3 max-w-lg">
-            7 dias grátis, sem cartão. Depois, menos de R$ 1,70 por dia no plano Pro — ou fale com a
+            7 dias grátis, sem cartão. Starter com 20 laudos/mês, Pro com 80 laudos/mês — ou fale com a
             gente pra montar um plano Corporativo sob medida.
           </p>
         </header>

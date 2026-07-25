@@ -60,7 +60,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Quanto custa para uma frota pequena começar?',
-    a: 'O plano Pro (R$ 49,90/mês) já cobre vistorias ilimitadas e laudo personalizado. Para múltiplos vistoriadores e integrações, o Corporativo é sob consulta.',
+    a: 'O plano Starter (R$ 29,90/mês, até 20 laudos) ou o Pro (R$ 49,90/mês, até 80 laudos, com laudo personalizado) já cobrem frotas pequenas. Para múltiplos vistoriadores, integrações e laudos ilimitados, o Corporativo é sob consulta.',
   },
 ]
 
@@ -164,10 +164,10 @@ export default function FrotasPage() {
         </section>
 
         <section className="mt-16 max-w-2xl mx-auto text-center glass-card p-8">
-          <h2 className="text-lg font-bold mb-1.5">Pro para frota pequena, Corporativo para frota grande</h2>
+          <h2 className="text-lg font-bold mb-1.5">Starter ou Pro para frota pequena, Corporativo para frota grande</h2>
           <p className="text-sm text-[var(--text-muted)] mb-5">
-            Se forem poucos veículos, o plano Pro (R$ 49,90/mês) já cobre. Para múltiplos
-            vistoriadores, filiais e integrações, o Corporativo é sob consulta.
+            Se forem poucos veículos, o Starter (20 laudos/mês) ou o Pro (80 laudos/mês) já cobrem.
+            Para múltiplos vistoriadores, filiais, integrações e laudos ilimitados, o Corporativo é sob consulta.
           </p>
           <FrotasPlanosLink />
         </section>

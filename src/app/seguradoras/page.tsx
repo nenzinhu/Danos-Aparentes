@@ -60,7 +60,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Quanto custa para uma corretora pequena começar?',
-    a: 'O plano Pro (R$ 49,90/mês) já cobre vistorias ilimitadas e laudo personalizado. Para volume maior e integrações, o Corporativo é sob consulta.',
+    a: 'O plano Starter (R$ 29,90/mês, até 20 laudos) já cobre um volume inicial. O Pro (R$ 49,90/mês, até 80 laudos) inclui laudo personalizado. Para volume maior, integrações e laudos ilimitados, o Corporativo é sob consulta.',
   },
 ]
 
@@ -164,10 +164,10 @@ export default function SeguradorasPage() {
         </section>
 
         <section className="mt-16 max-w-2xl mx-auto text-center glass-card p-8">
-          <h2 className="text-lg font-bold mb-1.5">Pro para corretora autônoma, Corporativo para seguradora</h2>
+          <h2 className="text-lg font-bold mb-1.5">Starter ou Pro para corretora autônoma, Corporativo para seguradora</h2>
           <p className="text-sm text-[var(--text-muted)] mb-5">
-            Se for uma corretora pequena, o plano Pro (R$ 49,90/mês) já cobre. Para volume alto e
-            integração com sistemas próprios, o Corporativo é sob consulta.
+            Se for uma corretora pequena, o Starter (20 laudos/mês) ou o Pro (80 laudos/mês) já cobrem.
+            Para volume alto, integração com sistemas próprios e laudos ilimitados, o Corporativo é sob consulta.
           </p>
           <SeguradorasPlanosLink />
         </section>
