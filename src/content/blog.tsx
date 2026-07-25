@@ -1791,87 +1791,183 @@ BLOG_POSTS.unshift(...RAIN_POSTS)
 BLOG_POSTS.unshift(
   {
     slug: 'laudo-com-logo-da-empresa-no-pdf',
-    title: 'Laudo com logo da empresa no PDF: mais profissional com Danos Aparentes',
+    title: 'Logo e nome da empresa no PDF: laudo com cara de operação profissional',
     excerpt:
-      'Veja como personalizar o laudo com a logo e o nome da sua empresa no Danos Aparentes para entregar um PDF mais profissional, conceitual e alinhado à identidade da sua operação.',
+      'Veja como configurar nome e logotipo no Danos Aparentes e gerar um laudo white-label — organizado, institucional e pronto para entregar ao cliente.',
     category: 'Laudo',
-    tags: ['logo da empresa', 'pdf de vistoria', 'laudo profissional', 'white-label', 'danos aparentes'],
-    date: '2026-07-04',
-    readingMinutes: 5,
+    tags: ['logo da empresa', 'pdf de vistoria', 'laudo profissional', 'white-label', 'marca própria', 'danos aparentes'],
+    date: '2026-07-25',
+    updatedDate: '2026-07-25',
+    readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#111827 0%,#0c4a6e 45%,#38bdf8 100%)', emoji: '🏢', image: '/vehicles-img/car.png' },
+    cover: {
+      gradient: 'linear-gradient(135deg,#111827 0%,#0c4a6e 45%,#38bdf8 100%)',
+      emoji: '🏢',
+      image: '/pdf.png',
+    },
     toc: [
-      { id: 'identidade', label: 'Por que colocar sua logo no laudo' },
-      { id: 'profissional', label: 'O que muda na percepção do cliente' },
-      { id: 'como-funciona', label: 'Como funciona no Danos Aparentes' },
-      { id: 'quando-usar', label: 'Quando isso faz mais diferença' },
+      { id: 'por-que', label: 'Por que logo + nome mudam o laudo' },
+      { id: 'configurar', label: 'Como configurar a identidade' },
+      { id: 'resultado', label: 'Como fica no PDF' },
+      { id: 'quando', label: 'Quando isso faz mais diferença' },
+    ],
+    howTo: {
+      name: 'Como colocar logo e nome da empresa no laudo PDF',
+      steps: [
+        {
+          name: 'Abra Identidade da Empresa',
+          text: 'No app, acesse a configuração de marca para personalizar os PDFs de vistoria.',
+        },
+        {
+          name: 'Preencha o nome e carregue o logotipo',
+          text: 'Informe o nome da empresa e envie a logo (JPG, PNG ou SVG). Ajuste alinhamento e altura.',
+        },
+        {
+          name: 'Escolha a cor da marca',
+          text: 'Selecione a cor primária do PDF para o cabeçalho ficar alinhado à identidade visual.',
+        },
+        {
+          name: 'Salve e gere o laudo',
+          text: 'Salve as alterações e emita a vistoria — o PDF sai com sua marca no topo.',
+        },
+      ],
+    },
+    faq: [
+      {
+        question: 'Consigo colocar a logo da minha empresa no laudo PDF?',
+        answer:
+          'Sim. No Danos Aparentes você configura nome e logotipo na Identidade da Empresa. O PDF sai white-label, com a sua marca no cabeçalho de todos os laudos.',
+      },
+      {
+        question: 'Qual formato de logo é recomendado?',
+        answer:
+          'Imagem horizontal com fundo transparente ou branco (JPG, PNG ou SVG), até 1 MB. Você também define alinhamento (esquerda, centro ou direita) e altura máxima.',
+      },
+      {
+        question: 'A marca aparece em todos os laudos depois de salvar?',
+        answer:
+          'Sim. Depois de salvar a Identidade da Empresa, os PDFs gerados passam a usar nome, logo e cor configurados — sem refazer o layout a cada vistoria.',
+      },
     ],
     content: (
       <>
         <p>
-          Um laudo bem feito não precisa parecer genérico. Quando o PDF sai com a <strong>logo da empresa</strong>
-          {' '}e o <strong>nome no cabeçalho</strong>, a vistoria ganha outra presença: mais profissional,
-          mais organizada e mais alinhada à identidade da sua operação.
+          Um laudo bem feito não precisa parecer genérico. Quando o PDF sai com a{' '}
+          <strong>logo da empresa</strong> e o <strong>nome no cabeçalho</strong>, a vistoria ganha outra
+          presença: mais profissional, mais organizada e alinhada à identidade da sua operação.
         </p>
         <p>
-          Para locadoras, concessionárias, frotas e despachantes, isso faz diferença prática. O cliente
-          recebe um documento com cara de processo oficial, não um arquivo improvisado ou sem assinatura de
-          marca. E, com o <strong>Danos Aparentes</strong>, essa apresentação profissional já sai pronta na rotina.
+          Para locadoras, oficinas, frotas e despachantes, isso faz diferença prática. O cliente recebe um
+          documento com cara de processo oficial — não um arquivo improvisado. No{' '}
+          <strong>Danos Aparentes</strong>, você configura a marca uma vez e todos os laudos saem
+          white-label.
         </p>
 
-        <h2 id="identidade">Por que colocar sua logo no laudo</h2>
+        <h2 id="por-que">Por que logo + nome mudam o laudo</h2>
         <p>
-          O laudo de vistoria é uma extensão da sua operação. Se ele chega ao cliente com identidade visual,
-          ele transmite mais confiança e reforça o posicionamento da empresa em cada entrega, devolução ou
-          inspeção.
+          O laudo é a vitrine do seu método. Cabeçalho com marca transmite organização; PDF sem identidade
+          transmite improviso — mesmo quando o conteúdo técnico está correto.
         </p>
         <ul>
-          <li><strong>Reforça a marca</strong> em um momento importante da jornada do cliente.</li>
-          <li><strong>Deixa o documento mais profissional</strong> do que um PDF genérico.</li>
-          <li><strong>Cria uma apresentação mais conceitual</strong>, com aparência consistente e institucional.</li>
-          <li><strong>Valoriza a operação</strong>, mesmo quando a vistoria precisa ser feita rápido.</li>
+          <li>
+            <strong>Profissionalismo:</strong> o cliente reconhece quem emitiu o documento.
+          </li>
+          <li>
+            <strong>Organização:</strong> padrão visual igual em todas as vistorias e filiais.
+          </li>
+          <li>
+            <strong>Credibilidade:</strong> ajuda em cobrança, aceite e conversa com seguradora.
+          </li>
+          <li>
+            <strong>Marca:</strong> cada PDF reforça a operação, não uma marca genérica.
+          </li>
         </ul>
 
-        <h2 id="profissional">O que muda na percepção do cliente</h2>
+        <h2 id="configurar">Como configurar a identidade</h2>
         <p>
-          Na prática, o cliente entende melhor quando recebe um laudo visualmente organizado, com cabeçalho
-          padronizado e identidade clara. Isso ajuda a reduzir ruído, passa mais segurança e mostra que a
-          vistoria segue um método, não um improviso.
+          Na tela <strong>Identidade da Empresa</strong> você define nome, logotipo, cor primária do PDF,
+          alinhamento e altura da logo — com prévia do cabeçalho antes de salvar.
         </p>
-        <ul>
-          <li><strong>Mais credibilidade</strong> para cobrança e aceite.</li>
-          <li><strong>Mais clareza</strong> sobre quem emitiu o documento.</li>
-          <li><strong>Mais percepção de cuidado</strong> com o processo e com a entrega.</li>
-        </ul>
-
-        <h2 id="como-funciona">Como funciona no Danos Aparentes</h2>
-        <p>
-          No <strong>Danos Aparentes</strong>, o laudo pode sair com a sua <strong>logo</strong> e o{' '}
-          <strong>nome da empresa</strong> no PDF. Isso transforma o relatório em um documento{' '}
-          <em>white-label</em>, com a cara da sua marca.
-        </p>
-
-        <LaudoSheet />
-
-        <p>
-          Além da identidade visual, o documento mantém o que importa na operação: marcação das avarias,
-          fotos, assinaturas, QR Code e hash de validação. Ou seja, não é só bonito: é profissional e útil
-          na rotina.
-        </p>
+        <div className="my-8 overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black/10">
+          <img
+            src="/Nom.png"
+            alt="Configuração Identidade da Empresa: nome, logotipo, cor e alinhamento para o PDF"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto object-contain max-h-[560px] bg-[var(--bg-main)]"
+          />
+          <p className="px-4 py-3 text-xs leading-relaxed text-[var(--text-muted)]">
+            Configuração da marca: nome da empresa, upload da logo, cor do PDF e alinhamento — com prévia
+            do cabeçalho.
+          </p>
+        </div>
+        <ol>
+          <li>
+            <strong>Abra Identidade da Empresa</strong> — personalize os PDFs de vistoria com a sua marca.
+          </li>
+          <li>
+            <strong>Preencha o nome e carregue o logotipo</strong> — JPG, PNG ou SVG; recomendado horizontal
+            com fundo transparente ou branco (máx. 1 MB).
+          </li>
+          <li>
+            <strong>Escolha a cor da marca</strong> — azul, esmeralda, terracota e outras opções para o
+            cabeçalho.
+          </li>
+          <li>
+            <strong>Ajuste alinhamento e altura</strong> — esquerda, centro ou direita; altura máxima em
+            pixels.
+          </li>
+          <li>
+            <strong>Salve as alterações</strong> — a partir daí, os laudos saem com a sua identidade.
+          </li>
+        </ol>
 
         <Cta />
 
-        <h2 id="quando-usar">Quando isso faz mais diferença</h2>
+        <h2 id="resultado">Como fica no PDF</h2>
+        <p>
+          O relatório de vistoria veicular sai com a sua logo e o nome no topo, seguido do diagrama de
+          avarias, resumo estatístico, tabela técnica, assinaturas e verificação digital (QR + hash).
+        </p>
+        <div className="my-8 overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black/10">
+          <img
+            src="/pdf.png"
+            alt="Exemplo de PDF de laudo de vistoria com logo e nome da empresa no cabeçalho"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto object-contain max-h-[640px] bg-white"
+          />
+          <p className="px-4 py-3 text-xs leading-relaxed text-[var(--text-muted)]">
+            Exemplo real de laudo: cabeçalho white-label, diagnóstico visual por peça e detalhamento
+            técnico — pronto para enviar ao cliente.
+          </p>
+        </div>
+        <p>
+          Não é só estética: é o mesmo fluxo de prova (fotos, assinatura, QR) com apresentação
+          institucional. Veja também a{' '}
+          <a href="/#marca-no-pdf">prévia na página inicial</a> e o{' '}
+          <a href="/#laudo">modelo completo do laudo</a>.
+        </p>
+
+        <h2 id="quando">Quando isso faz mais diferença</h2>
         <ul>
-          <li><strong>Locadoras</strong>, que entregam e recebem veículos todos os dias.</li>
-          <li><strong>Concessionárias</strong>, que querem elevar a apresentação da vistoria ao cliente.</li>
-          <li><strong>Frotas corporativas</strong>, que precisam de padronização entre equipes e unidades.</li>
-          <li><strong>Despachantes e prestadores</strong>, que usam o laudo como vitrine do próprio serviço.</li>
+          <li>
+            <strong>Locadoras</strong> — entrega e devolução com a marca da rede em cada PDF.
+          </li>
+          <li>
+            <strong>Oficinas</strong> — orçamento e laudo com a cara da oficina.
+          </li>
+          <li>
+            <strong>Frotas</strong> — padrão único entre bases e vistoriadores.
+          </li>
+          <li>
+            <strong>Despachantes e prestadores</strong> — o laudo vira cartão de visita do serviço.
+          </li>
         </ul>
         <p>
-          Se você quer aprofundar esse lado do documento, vale ler também o{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a> e o
-          artigo sobre <a href="/blog/antes-e-depois-da-vistoria-digital">antes e depois da vistoria digital</a>.
+          Para ir além da marca, combine com o{' '}
+          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">passo a passo do laudo</a> e o guia de{' '}
+          <a href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash</a>.
         </p>
       </>
     ),

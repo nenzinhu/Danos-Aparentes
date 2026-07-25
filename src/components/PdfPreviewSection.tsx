@@ -259,12 +259,20 @@ export default function PdfPreviewSection() {
                 <p className="text-xs font-extrabold uppercase text-[var(--text-main)]">Quer ver seu logotipo neste laudo?</p>
                 <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Personalize o cabeçalho com a sua marca e cores institucionais.</p>
               </div>
-              <a
-                href="/app"
-                className="px-4 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow-lg shadow-[var(--primary)]/20 transition-all shrink-0 cursor-pointer"
-              >
-                Gerar Meu Primeiro Laudo
-              </a>
+              <div className="flex flex-wrap items-center gap-2 shrink-0">
+                <a
+                  href="/#marca-no-pdf"
+                  className="px-4 py-2.5 border border-[var(--card-border)] hover:border-[var(--primary)]/40 text-[var(--text-main)] text-xs font-bold rounded-xl transition-all cursor-pointer"
+                >
+                  Ver exemplo de marca
+                </a>
+                <a
+                  href="/app"
+                  className="px-4 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow-lg shadow-[var(--primary)]/20 transition-all cursor-pointer"
+                >
+                  Gerar Meu Primeiro Laudo
+                </a>
+              </div>
             </div>
           </Reveal>
         </div>

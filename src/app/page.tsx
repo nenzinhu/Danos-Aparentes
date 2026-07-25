@@ -28,7 +28,7 @@ import { IconSunMoon, IconSearch, IconCar, IconSignature } from '../components/u
 // Data da última revisão de conteúdo/copy da home. Atualize ao editar
 // headline, seções ou schema — reflete no dateModified do SoftwareApplication.
 const HOME_PUBLISHED_DATE = '2026-01-15'
-const HOME_UPDATED_DATE = '2026-07-24'
+const HOME_UPDATED_DATE = '2026-07-25'
 
 // Schema de marca/produto para rich results e Knowledge Graph.
 const LANDING_JSONLD = {
@@ -77,6 +77,7 @@ const PRICING_FAQ_JSONLD = {
 const PricingSection = dynamic(() => import('../components/PricingSection'));
 const FAQSection = dynamic(() => import('../components/FAQSection'));
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'));
+const BrandOnPdfSection = dynamic(() => import('../components/BrandOnPdfSection'));
 // Blog teaser must SSR so crawlers see internal links to /blog posts.
 const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'));
 const MobileStickyCta = dynamic(() => import('../components/MobileStickyCta'), { ssr: false });
@@ -438,6 +439,9 @@ export default function LandingPage() {
 
       {/* Segurança e transparência do laudo */}
       <TrustSection />
+
+      {/* Destaque: nome + logo da empresa no PDF */}
+      <BrandOnPdfSection />
 
       {/* Seção Modelo de Laudo PDF (lazy) */}
       <PdfPreviewSection />
