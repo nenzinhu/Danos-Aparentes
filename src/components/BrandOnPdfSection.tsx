@@ -20,25 +20,25 @@ const PRO_LINES = [
 
 /**
  * Destaque na landing: nome + logo da empresa no PDF (white-label).
- * Frames iguais + GSAP: "Seu logo aqui" entra no cabeçalho do laudo.
+ * Parte 2: "Seu logo aqui" no topo do laudo — pulsa, avança e volta em loop.
  */
 export default function BrandOnPdfSection() {
   const rootRef = useRef<HTMLElement>(null)
   const logoChipRef = useRef<HTMLDivElement>(null)
-  const pdfFrameRef = useRef<HTMLDivElement>(null)
+  const logoInnerRef = useRef<HTMLDivElement>(null)
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([])
 
   useGSAP(
     () => {
       const root = rootRef.current
       const chip = logoChipRef.current
-      const pdfFrame = pdfFrameRef.current
-      if (!root || !chip || !pdfFrame) return
+      const inner = logoInnerRef.current
+      if (!root || !chip || !inner) return
 
       const mm = gsap.matchMedia()
 
       mm.add('(prefers-reduced-motion: reduce)', () => {
-        gsap.set(chip, { autoAlpha: 1, x: 0, y: 0, scale: 1, rotate: 0 })
+        gsap.set(chip, { autoAlpha: 1, y: 0, scale: 1 })
         gsap.set('.brand-pdf-copy > *', { autoAlpha: 1, y: 0 })
         gsap.set('.brand-pdf-title-word', { yPercent: 0, autoAlpha: 1 })
         const lines = lineRefs.current.filter(Boolean) as HTMLSpanElement[]
@@ -47,13 +47,7 @@ export default function BrandOnPdfSection() {
       })
 
       mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.set(chip, {
-          autoAlpha: 0,
-          scale: 0.72,
-          x: -120,
-          y: 40,
-          rotate: -6,
-        })
+        gsap.set(chip, { autoAlpha: 0, scale: 0.85, y: 18 })
         gsap.set('.brand-pdf-kicker', { autoAlpha: 0, y: 12 })
         gsap.set('.brand-pdf-title-word', { yPercent: 110, autoAlpha: 0 })
         gsap.set('.brand-pdf-sub', { autoAlpha: 0, y: 16 })
@@ -81,38 +75,55 @@ export default function BrandOnPdfSection() {
             0.1,
           )
           .to('.brand-pdf-sub', { autoAlpha: 1, y: 0, duration: 0.55 }, 0.35)
-
-        // Chip "Seu logo aqui" voa da config e pousa no cabeçalho do PDF
-        tl.to(
-          chip,
-          {
-            autoAlpha: 1,
-            scale: 1.08,
-            x: 0,
-            y: 0,
-            rotate: 0,
-            duration: 0.85,
-            ease: 'power2.out',
-          },
-          0.45,
-        )
           .to(
             chip,
             {
+              autoAlpha: 1,
               scale: 1,
-              duration: 0.45,
-              ease: 'back.out(1.6)',
+              y: 0,
+              duration: 0.7,
+              ease: 'back.out(1.5)',
             },
-            '-=0.2',
+            0.4,
           )
+
+        // Loop: pulsa + vem pra frente + retorna (cabeçalho do PDF)
+        const loop = gsap.timeline({
+          repeat: -1,
+          defaults: { ease: 'sine.inOut' },
+          delay: 1.15,
+        })
+
+        loop
+          .to(chip, {
+            scale: 1.18,
+            y: -14,
+            duration: 1.15,
+          })
           .to(
-            chip,
+            inner,
             {
-              boxShadow: '0 0 0 0 rgba(37, 99, 235, 0)',
-              duration: 0.6,
+              boxShadow: '0 0 40px 10px rgba(37, 99, 235, 0.75)',
+              borderColor: '#60a5fa',
+              duration: 1.15,
             },
-            '-=0.1',
+            0,
           )
+          .to(chip, {
+            scale: 1,
+            y: 0,
+            duration: 1.15,
+          })
+          .to(
+            inner,
+            {
+              boxShadow: '0 0 22px 4px rgba(37, 99, 235, 0.45)',
+              borderColor: '#3b82f6',
+              duration: 1.15,
+            },
+            '<',
+          )
+          .to({}, { duration: 0.35 })
 
         // Frases de profissionalismo em ciclo suave
         const lines = lineRefs.current.filter(Boolean) as HTMLSpanElement[]
@@ -133,14 +144,6 @@ export default function BrandOnPdfSection() {
               )
           }
         }
-
-        // Leve “encaixe” no PDF: escala sutil do frame ao receber a marca
-        tl.fromTo(
-          pdfFrame,
-          { scale: 1 },
-          { scale: 1.015, duration: 0.35, yoyo: true, repeat: 1, ease: 'power1.inOut' },
-          0.9,
-        )
       })
 
       return () => mm.revert()
@@ -232,7 +235,7 @@ export default function BrandOnPdfSection() {
             <span className="text-[11px] text-[var(--text-muted)] font-semibold">Laudo em PDF</span>
           </div>
           <div className="p-3 sm:p-4 flex-1 flex items-center justify-center">
-            <div ref={pdfFrameRef} className={`${FRAME_CLASS} bg-white`}>
+            <div className={`${FRAME_CLASS} bg-white`}>
               <img
                 src="/pdf.png"
                 alt="Exemplo de relatório de vistoria veicular em PDF com logo e nome da empresa no cabeçalho"
@@ -243,32 +246,34 @@ export default function BrandOnPdfSection() {
                 className="absolute inset-0 w-full h-full object-contain object-top p-2"
               />
 
-              {/* Chip GSAP: "Seu logo aqui" pousa no cabeçalho do laudo */}
+              {/* Wrapper fixa o centro; GSAP anima só o chip interno */}
               <div
-                ref={logoChipRef}
-                className="pointer-events-none absolute z-10 left-[8%] top-[7%] sm:left-[10%] sm:top-[8%]"
+                className="pointer-events-none absolute z-10 left-1/2 top-[5%] sm:top-[6%] -translate-x-1/2"
                 aria-hidden="true"
               >
-                <div
-                  className="px-3 py-2 sm:px-4 sm:py-2.5 rounded-md border-2 border-[#3b82f6] bg-[#0b1220]/95 backdrop-blur-sm shadow-[0_0_28px_rgba(37,99,235,0.55)]"
-                  style={{ boxShadow: '0 0 32px 4px rgba(37, 99, 235, 0.55)' }}
-                >
-                  <span
-                    className="block font-display text-[11px] sm:text-sm font-black uppercase tracking-[0.12em] text-transparent"
-                    style={{
-                      WebkitTextStroke: '1.2px #60a5fa',
-                      textShadow: '0 0 12px rgba(96, 165, 250, 0.65)',
-                    }}
+                <div ref={logoChipRef} className="will-change-transform">
+                  <div
+                    ref={logoInnerRef}
+                    className="px-3 py-2 sm:px-4 sm:py-2.5 rounded-md border-2 border-[#3b82f6] bg-[#0b1220]/95 backdrop-blur-sm"
+                    style={{ boxShadow: '0 0 22px 4px rgba(37, 99, 235, 0.45)' }}
                   >
-                    Seu logo aqui
-                  </span>
+                    <span
+                      className="block font-display text-[11px] sm:text-sm font-black uppercase tracking-[0.12em] text-transparent whitespace-nowrap"
+                      style={{
+                        WebkitTextStroke: '1.2px #60a5fa',
+                        textShadow: '0 0 12px rgba(96, 165, 250, 0.65)',
+                      }}
+                    >
+                      Seu logo aqui
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <figcaption className="px-4 py-3 text-[12px] text-[var(--text-muted)] leading-relaxed border-t border-[var(--card-border)]">
-            A marca <strong className="text-[var(--text-main)]">entra no topo do PDF</strong> — diagrama,
-            tabela, assinaturas e QR no mesmo padrão institucional.
+            No topo do PDF, a marca <strong className="text-[var(--text-main)]">pulsa e se destaca</strong>{' '}
+            — como se a logo entrasse no laudo, pronta para a sua identidade.
           </figcaption>
         </figure>
       </div>
