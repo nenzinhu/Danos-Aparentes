@@ -112,13 +112,13 @@ export default function LocadorasPage() {
             saia com laudo pronto para cobrar o que é da frota.
           </p>
           <BlogVideo
-            src="/videos/vistoria-locadoras.mp4"
-            poster="/videos/vistoria-locadoras-poster.jpg"
+            src="/videos/vistoria-digital-tour.mp4"
+            poster="/videos/vistoria-digital-tour-poster.jpg"
             title="Vistoria digital para locadoras — Danos Aparentes"
             description="Evite discussões por riscos. Faça a vistoria digital rápida no celular e registre avarias com prova na devolução."
-            duration="PT8S"
+            duration="PT58S"
             uploadDate="2026-07-13"
-            caption="8 segundos · play quando quiser"
+            caption="Veja como funciona na prática"
           />
         </section>
 

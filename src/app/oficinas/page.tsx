@@ -111,13 +111,13 @@ export default function OficinasPage() {
             para entregar ao cliente.
           </p>
           <BlogVideo
-            src="/videos/vistoria-locadoras.mp4"
-            poster="/videos/vistoria-locadoras-poster.jpg"
+            src="/videos/vistoria-digital-tour.mp4"
+            poster="/videos/vistoria-digital-tour-poster.jpg"
             title="Vistoria digital para oficinas — Danos Aparentes"
             description="Registre o estado do veículo na entrada e na saída, com laudo pronto para entregar ao cliente."
-            duration="PT8S"
+            duration="PT58S"
             uploadDate="2026-07-13"
-            caption="8 segundos · play quando quiser"
+            caption="Veja como funciona na prática"
           />
         </section>
 

@@ -2899,11 +2899,11 @@ BLOG_POSTS.unshift(
         </p>
 
         <BlogVideo
-          src="/videos/vistoria-locadoras.mp4"
-          poster="/videos/vistoria-locadoras-poster.jpg"
+          src="/videos/vistoria-digital-tour.mp4"
+          poster="/videos/vistoria-digital-tour-poster.jpg"
           title="Vistoria digital para locadoras — Danos Aparentes"
           description="No pátio da locadora: mesmo padrão na retirada e na devolução, diagrama com fotos, assinatura na tela e laudo PDF com hash e QR Code — pronto para cobrar o que é da frota."
-          duration="PT60S"
+          duration="PT58S"
           uploadDate="2026-07-13"
           caption="No pátio: mesmo padrão na retirada e na devolução, laudo pronto para cobrar o que é da frota."
         />

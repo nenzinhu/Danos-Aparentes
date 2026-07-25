@@ -111,13 +111,13 @@ export default function SeguradorasPage() {
             qualquer momento.
           </p>
           <BlogVideo
-            src="/videos/vistoria-locadoras.mp4"
-            poster="/videos/vistoria-locadoras-poster.jpg"
+            src="/videos/vistoria-digital-tour.mp4"
+            poster="/videos/vistoria-digital-tour-poster.jpg"
             title="Laudo com QR Code anti-fraude — Danos Aparentes"
             description="Registre o estado do veículo com laudo verificável publicamente, reduzindo disputas de sinistro."
-            duration="PT8S"
+            duration="PT58S"
             uploadDate="2026-07-13"
-            caption="8 segundos · play quando quiser"
+            caption="Veja como funciona na prática"
           />
         </section>
 
