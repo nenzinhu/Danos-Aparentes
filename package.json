@@ -15,6 +15,7 @@
     "check:sync-schema": "node scripts/check-sync-schema.mjs",
     "indexnow": "node scripts/indexnow.mjs",
     "email:config": "node scripts/configure-email.mjs",
+    "prospect:locadoras": "node scripts/email-marketing/buscar-locadoras.mjs",
     "logos": "node scripts/prepare-logos.mjs"
   },
   "dependencies": {
