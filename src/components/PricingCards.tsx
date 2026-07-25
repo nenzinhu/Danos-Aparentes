@@ -66,6 +66,7 @@ export default function PricingCards() {
         if (bar) gsap.set(bar, { scaleX: 1, transformOrigin: 'left center' });
         const tiers = corpTierRefs.current.filter(Boolean);
         if (tiers.length) gsap.set(tiers, { autoAlpha: 1, y: 0 });
+        gsap.set(root.querySelectorAll('.plan-text-anim'), { autoAlpha: 1, y: 0, scale: 1 });
       };
 
       mm.add('(prefers-reduced-motion: reduce)', () => {
@@ -81,7 +82,16 @@ export default function PricingCards() {
         const tiers = corpTierRefs.current.filter(Boolean) as HTMLLIElement[];
         if (tiers.length) gsap.set(tiers, { autoAlpha: 0, y: 10 });
 
-        const failSafe = gsap.delayedCall(2.8, showAll);
+        const textBits = root.querySelectorAll<HTMLElement>('.plan-text-anim');
+        gsap.set(textBits, { autoAlpha: 0, y: 12 });
+        const priceBits = root.querySelectorAll<HTMLElement>('.plan-price-anim');
+        gsap.set(priceBits, { autoAlpha: 0, y: 16, scale: 0.92 });
+        const markBits = root.querySelectorAll<HTMLElement>('.plan-mark-anim');
+        gsap.set(markBits, { autoAlpha: 0, y: 8, scale: 0.96 });
+        const featureBits = root.querySelectorAll<HTMLElement>('.plan-feature-anim');
+        gsap.set(featureBits, { autoAlpha: 0, x: -8 });
+
+        const failSafe = gsap.delayedCall(3.2, showAll);
 
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -93,46 +103,21 @@ export default function PricingCards() {
           onComplete: () => {
             failSafe.kill();
             gsap.set(cards, { autoAlpha: 1, x: 0, y: 0, scale: 1 });
+            gsap.set(textBits, { autoAlpha: 1, y: 0 });
+            gsap.set(priceBits, { autoAlpha: 1, y: 0, scale: 1 });
+            gsap.set(markBits, { autoAlpha: 1, y: 0, scale: 1 });
+            gsap.set(featureBits, { autoAlpha: 1, x: 0 });
           },
         });
 
-        // Starter — lateral esquerda, neutro, sem overshoot
-        tl.to(
-          starter,
-          {
-            autoAlpha: 1,
-            x: 0,
-            y: 0,
-            duration: 0.7,
-            ease: 'power2.out',
-          },
-          0,
-        );
+        // Starter — lateral esquerda, neutro
+        tl.to(starter, { autoAlpha: 1, x: 0, y: 0, duration: 0.7, ease: 'power2.out' }, 0);
 
-        // Pro — sobe com pop (plano âncora) + glow pulsante
-        tl.to(
-          pro,
-          {
-            autoAlpha: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.75,
-            ease: 'back.out(1.7)',
-          },
-          0.14,
-        );
+        // Pro — pop + glow
+        tl.to(pro, { autoAlpha: 1, y: 0, scale: 1, duration: 0.75, ease: 'back.out(1.7)' }, 0.14);
 
         if (glow) {
-          tl.to(
-            glow,
-            {
-              autoAlpha: 0.7,
-              scale: 1,
-              duration: 0.5,
-              ease: 'power2.out',
-            },
-            0.35,
-          );
+          tl.to(glow, { autoAlpha: 0.7, scale: 1, duration: 0.5, ease: 'power2.out' }, 0.35);
           gsap.to(glow, {
             autoAlpha: 1,
             scale: 1.05,
@@ -144,44 +129,46 @@ export default function PricingCards() {
           });
         }
 
-        // Corporativo — lateral direita, firme; barra + faixas em cascata
-        tl.to(
-          corp,
-          {
-            autoAlpha: 1,
-            x: 0,
-            y: 0,
-            duration: 0.8,
-            ease: 'power4.out',
-          },
-          0.26,
-        );
+        // Corporativo — lateral direita + barra + faixas
+        tl.to(corp, { autoAlpha: 1, x: 0, y: 0, duration: 0.8, ease: 'power4.out' }, 0.26);
 
         if (bar) {
-          tl.to(
-            bar,
-            {
-              scaleX: 1,
-              duration: 0.45,
-              ease: 'power3.out',
-            },
-            0.55,
-          );
+          tl.to(bar, { scaleX: 1, duration: 0.45, ease: 'power3.out' }, 0.55);
         }
 
         if (tiers.length) {
-          tl.to(
-            tiers,
-            {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.4,
-              stagger: 0.08,
-              ease: 'power2.out',
-            },
-            0.65,
-          );
+          tl.to(tiers, { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.08, ease: 'power2.out' }, 0.65);
         }
+
+        // Textos internos — preços em destaque, métricas, features
+        tl.to(
+          priceBits,
+          { autoAlpha: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.4)' },
+          0.45,
+        );
+        tl.to(textBits, { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.04 }, 0.55);
+        tl.to(
+          markBits,
+          { autoAlpha: 1, y: 0, scale: 1, duration: 0.45, stagger: 0.08, ease: 'back.out(1.5)' },
+          0.7,
+        );
+        tl.to(
+          featureBits,
+          { autoAlpha: 1, x: 0, duration: 0.35, stagger: 0.035, ease: 'power2.out' },
+          0.75,
+        );
+
+        // Pulso suave nos destaques (R$/laudo, marca, faixas)
+        markBits.forEach((el, i) => {
+          gsap.to(el, {
+            textShadow: '0 0 14px color-mix(in srgb, var(--primary) 40%, transparent)',
+            duration: 1.5,
+            delay: 1.4 + i * 0.12,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+          });
+        });
 
         return () => {
           failSafe.kill();
@@ -245,14 +232,21 @@ export default function PricingCards() {
           className="absolute top-0 left-0 w-full h-[3px] bg-[var(--primary)]"
         />
         <div>
-          <h3 className="text-xl font-extrabold text-[var(--text-main)] tracking-wide">Corporativo</h3>
-          <p className="text-xs text-[var(--text-muted)] mt-1">
+          <h3 className="plan-text-anim text-xl font-extrabold text-[var(--text-main)] tracking-wide">
+            Corporativo
+          </h3>
+          <p className="plan-text-anim text-xs text-[var(--text-muted)] mt-1">
             Padronize a vistoria em todas as bases — frota, locadora e rede.
           </p>
 
           <div className="my-6 min-h-[92px] flex flex-col justify-center">
-            <span className="text-3xl font-black text-[var(--text-main)] tracking-tight">A partir de R$ 299</span>
-            <span className="text-sm text-[var(--text-muted)] block mt-1">/ mês · laudos ilimitados · por volume de usuários</span>
+            <span className="plan-price-anim text-3xl font-black text-[var(--text-main)] tracking-tight">
+              A partir de{' '}
+              <span className="plan-mark-anim text-[var(--primary)]">R$ 299</span>
+            </span>
+            <span className="plan-text-anim text-sm text-[var(--text-muted)] block mt-1">
+              / mês · laudos ilimitados · por volume de usuários
+            </span>
           </div>
 
           <ul className="space-y-2.5 border-t border-[var(--card-border)]/40 pt-5 mb-5">
@@ -268,7 +262,9 @@ export default function PricingCards() {
                   <span className="font-extrabold text-[var(--text-main)]">{tier.name}</span>
                   <span className="text-[var(--text-muted)] block mt-0.5">{tier.users}</span>
                 </span>
-                <span className="font-black text-[var(--primary)] whitespace-nowrap shrink-0">{tier.price}</span>
+                <span className="plan-mark-anim font-black text-[var(--primary)] whitespace-nowrap shrink-0">
+                  {tier.price}
+                </span>
               </li>
             ))}
           </ul>
@@ -283,7 +279,7 @@ export default function PricingCards() {
               'Integração via API (faixa Enterprise)',
               'Suporte prioritário com gerente de conta',
             ].map((feat) => (
-              <li key={feat} className="flex items-start gap-3 text-xs text-[var(--text-main)]">
+              <li key={feat} className="plan-feature-anim flex items-start gap-3 text-xs text-[var(--text-main)]">
                 <span className="text-[var(--signal-bright)] mt-0.5">✓</span>
                 <span>{feat}</span>
               </li>
@@ -370,19 +366,24 @@ function PlanCard({
         )}
 
         <div>
-        <h3 className="text-xl font-extrabold text-[var(--text-main)] tracking-wide">Plano {name}</h3>
-        <p className="text-xs text-[var(--text-muted)] mt-1">{tagline}</p>
+        <h3 className="plan-text-anim text-xl font-extrabold text-[var(--text-main)] tracking-wide">
+          Plano {name}
+        </h3>
+        <p className="plan-text-anim text-xs text-[var(--text-muted)] mt-1">{tagline}</p>
 
         <div className="my-6 min-h-[92px]">
-          <div className="text-4xl font-black text-[var(--primary)] tracking-tight">{priceLabel}</div>
-          <span className="text-sm text-[var(--text-muted)] ml-1">
+          <div className="plan-price-anim text-4xl font-black text-[var(--primary)] tracking-tight">
+            {priceLabel}
+          </div>
+          <span className="plan-text-anim text-sm text-[var(--text-muted)] ml-1">
             {paymentMethod === 'pix' ? `/ ${durationMonths} mês${durationMonths > 1 ? 'es' : ''}` : '/ mês'}
           </span>
-          <p className="text-[11px] text-[var(--text-muted)] mt-2 font-semibold">
-            ≈ {formatPrice(perDay)}/dia · até {laudosLimit} laudos/mês · ≈ {perLaudo}/laudo
+          <p className="plan-text-anim text-[11px] text-[var(--text-muted)] mt-2 font-semibold">
+            ≈ {formatPrice(perDay)}/dia · até {laudosLimit} laudos/mês · ≈{' '}
+            <span className="plan-mark-anim text-[var(--text-main)] font-extrabold">{perLaudo}/laudo</span>
           </p>
           {highlightNote && (
-            <p className="text-[11px] text-[var(--signal-bright)] mt-1.5 font-bold leading-snug">
+            <p className="plan-mark-anim text-[11px] text-[var(--signal-bright)] mt-1.5 font-bold leading-snug">
               {highlightNote}
             </p>
           )}
@@ -390,7 +391,7 @@ function PlanCard({
 
         <ul className="space-y-3 border-t border-[var(--card-border)]/40 pt-6">
           {features.map((feat) => (
-            <li key={feat} className="flex items-start gap-3 text-xs text-[var(--text-main)]">
+            <li key={feat} className="plan-feature-anim flex items-start gap-3 text-xs text-[var(--text-main)]">
               <span className="text-[var(--signal-bright)] mt-0.5">✓</span>
               <span>{feat}</span>
             </li>
