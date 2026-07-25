@@ -6,7 +6,7 @@ import LandingCtaLink from './LandingCtaLink'
 
 /**
  * Destaque na landing: nome + logo da empresa no PDF (white-label).
- * Usa os exemplos reais em /Nom.png (configuração) e /pdf.png (laudo gerado).
+ * Usa os exemplos reais em /nom.png (configuração) e /pdf.png (laudo gerado).
  */
 export default function BrandOnPdfSection() {
   return (
@@ -41,7 +41,7 @@ export default function BrandOnPdfSection() {
             </div>
             <div className="p-3 sm:p-4 bg-[var(--bg-main)]/40 flex-1 flex items-center justify-center">
               <img
-                src="/Nom.png"
+                src="/nom.png"
                 alt="Tela Identidade da Empresa: nome, logotipo, cor da marca e alinhamento no PDF"
                 width={960}
                 height={720}

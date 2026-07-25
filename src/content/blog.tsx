@@ -1890,7 +1890,7 @@ BLOG_POSTS.unshift(
         </p>
         <div className="my-8 overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black/10">
           <img
-            src="/Nom.png"
+            src="/nom.png"
             alt="Configuração Identidade da Empresa: nome, logotipo, cor e alinhamento para o PDF"
             loading="lazy"
             decoding="async"
