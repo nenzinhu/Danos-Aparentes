@@ -1,10 +1,14 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Link from 'next/link';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import LandingCtaLink from './LandingCtaLink';
 import { buttonVariants } from './ui/Button';
 import { trackPixCtaClick } from '@/src/lib/analytics/events';
 import { whatsappLink } from '../lib/whatsapp';
+
+gsap.registerPlugin(useGSAP);
 
 type PaymentMethod = 'cartao' | 'pix';
 
@@ -17,10 +21,86 @@ function formatPrice(value: number) {
 
 // Cartões de plano (Starter + Pro + Corporativo) — usados na home (resumo) e em
 // /planos (página completa). Conteúdo único, sem duplicar entre os dois.
+//
+// Cada plano tem uma personalidade de entrada diferente, pensada pra reforçar
+// o posicionamento: Starter é neutro (não deve competir visualmente pelo
+// olhar), Pro chama atenção com escala + brilho pulsante (é o "Mais
+// Popular"), Corporativo entra de forma firme e sólida (sem overshoot) pra
+// passar segurança/robustez — coerente com "grandes frotistas, locadoras".
 export default function PricingCards() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const starterRef = useRef<HTMLDivElement>(null);
+  const proRef = useRef<HTMLDivElement>(null);
+  const proGlowRef = useRef<HTMLDivElement>(null);
+  const corpRef = useRef<HTMLDivElement>(null);
+  const corpBarRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const tl = gsap.timeline();
+
+      // Starter: entrada suave, tom neutro — só fade + leve subida, sem
+      // escala nem overshoot, pra não competir com o card Pro ao lado.
+      tl.from(starterRef.current, {
+        autoAlpha: 0,
+        y: 20,
+        duration: 0.65,
+        ease: 'power2.out',
+      }, 0);
+
+      // Pro: entrada com leve destaque de escala (overshoot sutil) — depois
+      // assenta e mantém um brilho pulsante contínuo por trás do card.
+      tl.from(proRef.current, {
+        autoAlpha: 0,
+        y: 20,
+        scale: 0.94,
+        duration: 0.65,
+        ease: 'back.out(1.7)',
+      }, 0.12);
+
+      gsap.to(proGlowRef.current, {
+        autoAlpha: 1,
+        scale: 1.04,
+        duration: 1.8,
+        delay: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      });
+
+      // Corporativo: entrada firme e sólida — mais lenta, sem bounce
+      // (power4.out desacelera de forma decisiva, sem oscilar), transmitindo
+      // estabilidade. Uma barra de destaque "trava" por baixo do cabeçalho
+      // logo em seguida, reforçando a ideia de compromisso/segurança.
+      tl.from(corpRef.current, {
+        autoAlpha: 0,
+        y: 20,
+        scale: 0.98,
+        duration: 0.85,
+        ease: 'power4.out',
+      }, 0.24);
+
+      tl.fromTo(corpBarRef.current, {
+        scaleX: 0,
+      }, {
+        scaleX: 1,
+        transformOrigin: 'left center',
+        duration: 0.5,
+        ease: 'power3.out',
+      }, 0.95);
+
+      return () => { tl.kill(); };
+    });
+
+    return () => mm.revert();
+  }, { scope: containerRef });
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
+    <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
       <PlanCard
+        cardRef={starterRef}
         name="Starter"
         planId="starter"
         tagline="Para quem está começando ou faz vistorias esporádicas."
@@ -38,6 +118,8 @@ export default function PricingCards() {
       />
 
       <PlanCard
+        cardRef={proRef}
+        glowRef={proGlowRef}
         name="Pro"
         planId="pro"
         tagline="Perfeito para vistoriadores autônomos e oficinas com volume maior."
@@ -55,7 +137,15 @@ export default function PricingCards() {
       />
 
       {/* Plano Corporativo */}
-      <div className="glass-card flex flex-col justify-between p-8 relative overflow-hidden group border border-[var(--card-border)]/50 hover:border-[var(--primary)]/20 transition-all duration-300">
+      <div
+        ref={corpRef}
+        className="glass-card flex flex-col justify-between p-8 relative overflow-hidden group border border-[var(--card-border)]/50 hover:border-[var(--primary)]/20 transition-all duration-300"
+      >
+        <div
+          ref={corpBarRef}
+          aria-hidden
+          className="absolute top-0 left-0 w-full h-[3px] bg-[var(--primary)]"
+        />
         <div>
           <h3 className="text-xl font-extrabold text-[var(--text-main)] tracking-wide">Corporativo</h3>
           <p className="text-xs text-[var(--text-muted)] mt-1">Para grandes frotistas, locadoras e concessionárias.</p>
@@ -108,6 +198,8 @@ export default function PricingCards() {
 }
 
 function PlanCard({
+  cardRef,
+  glowRef,
   name,
   planId,
   tagline,
@@ -116,6 +208,8 @@ function PlanCard({
   popular,
   features,
 }: {
+  cardRef?: React.Ref<HTMLDivElement>;
+  glowRef?: React.RefObject<HTMLDivElement | null>;
   name: string;
   planId: 'starter' | 'pro';
   tagline: string;
@@ -132,20 +226,28 @@ function PlanCard({
   const perDay = basePrice / 30;
 
   return (
-    <div
-      className={`glass-card flex flex-col justify-between p-8 relative overflow-hidden group border transition-all duration-300 ${
-        popular
-          ? 'border-[var(--primary)]/20 hover:border-[var(--primary)]/40 shadow-[0_0_30px_var(--primary-glow)]'
-          : 'border-[var(--card-border)]/50 hover:border-[var(--primary)]/20'
-      }`}
-    >
-      {popular && (
-        <div className="absolute top-0 right-0 bg-[var(--primary)] text-[var(--bg-main)] text-[10px] font-black tracking-wider uppercase px-4 py-1.5 rounded-bl-xl">
-          Mais Popular
-        </div>
+    <div ref={cardRef} className="relative">
+      {glowRef && (
+        <div
+          ref={glowRef}
+          aria-hidden
+          className="absolute -inset-3 rounded-3xl bg-[var(--primary)] blur-2xl opacity-0 -z-10 pointer-events-none"
+        />
       )}
+      <div
+        className={`glass-card flex flex-col justify-between p-8 relative overflow-hidden group border transition-all duration-300 h-full ${
+          popular
+            ? 'border-[var(--primary)]/20 hover:border-[var(--primary)]/40 shadow-[0_0_30px_var(--primary-glow)]'
+            : 'border-[var(--card-border)]/50 hover:border-[var(--primary)]/20'
+        }`}
+      >
+        {popular && (
+          <div className="absolute top-0 right-0 bg-[var(--primary)] text-[var(--bg-main)] text-[10px] font-black tracking-wider uppercase px-4 py-1.5 rounded-bl-xl">
+            Mais Popular
+          </div>
+        )}
 
-      <div>
+        <div>
         <h3 className="text-xl font-extrabold text-[var(--text-main)] tracking-wide">Plano {name}</h3>
         <p className="text-xs text-[var(--text-muted)] mt-1">{tagline}</p>
 
@@ -266,6 +368,7 @@ function PlanCard({
             </p>
           </>
         )}
+        </div>
       </div>
     </div>
   );
