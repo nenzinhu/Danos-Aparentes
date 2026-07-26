@@ -7,8 +7,17 @@ Danos Aparentes é desenvolvido e operado por Jeferson da Silva, em Florianópol
 ## Produto
 
 - [Página inicial](https://danosaparentes.com.br/): Visão geral do produto — vistoria offline-first, diagramas por vista do veículo (frontal, traseira, laterais), consulta automática de placa, laudo em PDF com hash e QR Code.
-- [Planos](https://danosaparentes.com.br/planos): Preços e comparação entre o plano Pro (vistoriadores autônomos e oficinas) e o plano Corporativo (locadoras, frotistas e concessionárias), com FAQ de objeções.
+- [Planos](https://danosaparentes.com.br/planos): Preços — Starter R$ 29,90/mês (20 laudos), Pro R$ 49,90/mês (80 laudos + marca no PDF), Corporativo a partir de R$ 299/mês (Start/Growth/Enterprise); 7 dias grátis sem cartão; FAQ de objeções.
+- [Preços (markdown)](https://danosaparentes.com.br/pricing.md): Tabela machine-readable dos planos e limites (espelho de /planos).
 - [Perguntas frequentes](https://danosaparentes.com.br/faq): Central de dúvidas sobre uso offline, GPS, assinatura digital, dados e conta.
+- [Sobre](https://danosaparentes.com.br/sobre): Quem opera o produto e posicionamento.
+
+## Por segmento
+
+- [Locadoras](https://danosaparentes.com.br/locadoras): Wedge principal — prova na retirada×devolução; diagrama, GPS, assinatura, PDF com hash/QR; trial sem cartão.
+- [Oficinas](https://danosaparentes.com.br/oficinas): Laudo de entrada/saída com marca própria.
+- [Frotas](https://danosaparentes.com.br/frotas): Padronização multi-vistoriador e offline no pátio.
+- [Seguradoras](https://danosaparentes.com.br/seguradoras): Registro de avarias aparentes e documento verificável.
 
 ## Guias — como fazer laudo e vistoria
 
@@ -46,6 +55,7 @@ Danos Aparentes é desenvolvido e operado por Jeferson da Silva, em Florianópol
 ## Trust
 
 - [Segurança do laudo (hash, assinatura, GPS)](https://danosaparentes.com.br/#seguranca): Explicação técnica de como cada laudo comprova sua própria integridade.
+- [Verificação pública de laudo](https://danosaparentes.com.br/verify): Conferência de hash/QR.
 - [Política de Privacidade](https://danosaparentes.com.br/privacidade)
 - [Termos de Uso](https://danosaparentes.com.br/termos)
 - [Suporte](https://danosaparentes.com.br/suporte)

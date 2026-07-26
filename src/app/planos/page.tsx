@@ -5,7 +5,7 @@ import PlanosFinalCta from '@/src/components/PlanosFinalCta'
 
 const TITLE = 'Planos e Preços | Danos Aparentes — Laudo de Vistoria Digital'
 const DESCRIPTION =
-  'Starter com 20 laudos/mês por R$ 29,90, Pro com 80 laudos/mês por R$ 49,90 — ambos com 7 dias grátis — ou Corporativo sob medida para frotas e locadoras. Veja o que está incluído em cada plano.'
+  'Starter R$ 29,90/mês (20 laudos), Pro R$ 49,90/mês (80 laudos) — 7 dias grátis — e Corporativo Start R$ 299, Growth R$ 699 ou Enterprise a partir de R$ 1.490. Veja o que está incluído em cada plano.'
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -42,7 +42,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Quanto custa o plano Corporativo?',
-    a: 'Varia por volume de vistorias, número de usuários e integrações (ERP/CRM), por isso é sob consulta — mas a resposta é rápida, em minutos, pelo WhatsApp.',
+    a: 'Há três faixas publicadas: Corporativo Start R$ 299/mês (até 5 usuários, laudos ilimitados), Growth R$ 699/mês (até 15 usuários) e Enterprise a partir de R$ 1.490/mês (15+, API e SLA). Volume customizado ou integrações além dessas faixas fecha em minutos pelo WhatsApp.',
   },
 ]
 
@@ -79,8 +79,8 @@ export default function PlanosPage() {
             Escolha o Plano Ideal
           </h1>
           <p className="text-sm text-[var(--text-muted)] mt-3 max-w-lg">
-            7 dias grátis, sem cartão. Starter com 20 laudos/mês, Pro com 80 laudos/mês — ou fale com a
-            gente pra montar um plano Corporativo sob medida.
+            7 dias grátis, sem cartão. Starter R$ 29,90 (20 laudos/mês), Pro R$ 49,90 (80 laudos/mês) —
+            Corporativo Start R$ 299, Growth R$ 699 ou Enterprise a partir de R$ 1.490.
           </p>
         </header>
 

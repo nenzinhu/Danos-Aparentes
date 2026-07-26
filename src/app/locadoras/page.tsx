@@ -218,11 +218,17 @@ export default function LocadorasPage() {
         <section className="mb-16 sm:mb-20" aria-labelledby="amplify-heading">
           <h2
             id="amplify-heading"
-            className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center mb-8 max-w-3xl mx-auto leading-snug"
+            className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-center mb-4 max-w-3xl mx-auto leading-snug"
           >
             Sem vistoria de entrada comparável, a cobrança de avaria vira discussão — e às vezes,
             processo.
           </h2>
+          <p className="text-sm sm:text-[0.95rem] text-[var(--text-muted)] text-center max-w-2xl mx-auto mb-8 leading-relaxed">
+            Sem vistoria de entrada no mesmo padrão da devolução, a locadora não compara o estado do
+            carro antes e depois. A cobrança de avaria vira discussão — e fontes como ConJur e TJDFT
+            mostram que a ausência de checagem prévia impede essa comparação. A cobrança cai por falta
+            de prova documental do par retirada×devolução, não por falta de “case” inventado.
+          </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
             {PAIN_CARDS.map(item => (
@@ -267,8 +273,14 @@ export default function LocadorasPage() {
             >
               Laudo de avarias aparentes que prova a si mesmo.
             </h2>
-            <p className="text-sm text-[var(--text-muted)] mt-3 max-w-xl mx-auto">
-              Mesmo padrão na retirada e na devolução. Em minutos, no celular — inclusive sem sinal.
+            <p className="text-sm sm:text-[0.95rem] text-[var(--text-muted)] mt-4 max-w-2xl mx-auto leading-relaxed">
+              Um laudo de avarias aparentes verificável compara retirada e devolução no mesmo padrão:
+              diagrama de peças, foto com GPS e timestamp, assinaturas na tela e PDF com hash SHA-256 +
+              QR público. Assim você prova o que já era pré-existente versus o que surgiu na locação. Se
+              o PDF for editado, o hash quebra — prova de mecanismo, não depoimento inventado.
+            </p>
+            <p className="text-xs text-[var(--text-muted)] mt-3 max-w-xl mx-auto">
+              Em minutos, no celular — inclusive sem sinal. Trial de 7 dias sem cartão.
             </p>
           </div>
 
@@ -336,6 +348,12 @@ export default function LocadorasPage() {
             >
               Prova do que existe hoje — sem cases inventados.
             </h2>
+            <p className="text-sm sm:text-[0.95rem] text-[var(--text-muted)] mt-4 max-w-2xl mx-auto leading-relaxed">
+              Checklist de devolução útil é o par com a vistoria de retirada: mesmas peças no diagrama,
+              mesmas fotos com GPS, mesmas assinaturas no ato. O PDF sai com hash SHA-256 e QR público —
+              qualquer edição quebra o hash. Escaneie o laudo demo abaixo para ver o mecanismo. App novo:
+              sem depoimentos, NPS ou “X clientes” inventados.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
