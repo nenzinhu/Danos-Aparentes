@@ -138,138 +138,164 @@ const TERMS: Section[] = [
 
 const PRIVACY: Section[] = [
   {
-    title: '1. Controlador e Contato',
+    title: 'Resumo em linguagem simples',
     blocks: [
       {
         kind: 'p',
-        html: `O <strong>${LEGAL_COMPANY_NAME}</strong> (CNPJ <strong>${LEGAL_CNPJ}</strong>) atua como controlador dos dados tratados no aplicativo, nos termos da Lei Geral de Proteção de Dados (Lei nº 13.709/2018 - LGPD). Para exercer seus direitos ou esclarecer dúvidas sobre privacidade, entre em contato pelo e-mail <strong>${LEGAL_CONTACT_EMAIL}</strong>.`,
+        html:
+          'Esta política explica, em detalhe, como o <strong>Danos Aparentes</strong> trata dados pessoais dentro do fluxo de vistoria veicular: o que fica só no seu celular (offline), o que sobe para a nuvem quando a sincronização está ativa, e quais escolhas você tem sobre isso. Se você só quer o resumo: fotos e avarias ficam sob controle do vistoriador que as registrou; não vendemos nem compartilhamos esses dados com seguradoras, anunciantes ou bases de histórico veicular; e você pode pedir a exclusão dos seus dados a qualquer momento pelo e-mail no rodapé desta página.',
       },
     ],
   },
   {
-    title: '2. Dados que Coletamos',
+    title: 'Quem é o controlador dos dados',
     blocks: [
       {
         kind: 'p',
-        html: 'Coletamos as informações inseridas pelo vistoriador para a elaboração do laudo, tais como:',
+        html: `O <strong>${LEGAL_COMPANY_NAME}</strong> (CNPJ <strong>${LEGAL_CNPJ}</strong>) atua como controlador dos dados tratados no aplicativo, nos termos da Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD). Nas vistorias feitas por conta de terceiros (ex.: uma locadora usando o app com a própria marca), a locadora atua como controladora do dado do cliente final, e o Danos Aparentes como operador da infraestrutura técnica. Para exercer seus direitos ou esclarecer dúvidas, escreva para <strong>${LEGAL_CONTACT_EMAIL}</strong>.`,
+      },
+    ],
+  },
+  {
+    title: 'O que exatamente é registrado numa vistoria',
+    blocks: [
+      {
+        kind: 'p',
+        html: 'Cada vistoria gera os seguintes tipos de dado, sempre inseridos manualmente pelo vistoriador no momento da inspeção:',
       },
       {
         kind: 'ul',
         items: [
-          'Dados do veículo: placa, chassi, marca, modelo e características;',
-          'Dados de contato do proprietário: nome e telefone;',
-          'Assinaturas digitais coletadas em tela;',
-          'Fotos das avarias e observações técnicas;',
-          'Dados de cadastro e de conta (quando você cria uma conta).',
+          'Identificação do veículo: placa, marca, modelo, cor e, quando informado, chassi;',
+          'Identificação do proprietário/cliente: nome, telefone e, em alguns fluxos, CPF/CNH;',
+          'Marcações de avaria: peça clicada no diagrama SVG, tipo de dano (risco, amassado, quebrado) e grau de severidade;',
+          'Fotografias das avarias e, quando ativado, coordenadas de GPS do local da vistoria;',
+          'Assinatura digital do vistoriador e do responsável, capturada na tela por toque ou mouse;',
+          'Observações em texto livre, incluindo transcrições geradas por reconhecimento de voz quando você usa esse recurso.',
         ],
       },
     ],
   },
   {
-    title: '3. Finalidade do Tratamento',
+    title: 'Para que cada dado é usado',
     blocks: [
       {
         kind: 'p',
         html:
-          'Os dados são tratados exclusivamente para: gerar o laudo técnico em PDF, manter o histórico de vistorias, viabilizar o funcionamento da conta e da assinatura, e oferecer suporte ao usuário.',
+          'Não há uso genérico de "melhorar nossos serviços" escondendo finalidades reais. Cada dado listado acima serve a um propósito específico: compor o laudo técnico em PDF (com hash de verificação e QR Code), manter o histórico de vistorias consultável pelo vistoriador, permitir a conferência pública de autenticidade em <code>/verify</code>, e sustentar o funcionamento da conta e da assinatura.',
       },
     ],
   },
   {
-    title: '4. Base Legal',
+    title: 'Base legal para cada tipo de tratamento',
     blocks: [
       {
         kind: 'p',
         html:
-          'O tratamento fundamenta-se na execução de contrato e em procedimentos preliminares a ele (art. 7º, V da LGPD), no legítimo interesse para a prestação do serviço (art. 7º, IX) e, quando aplicável, no consentimento do titular. Cabe ao vistoriador obter o consentimento do proprietário do veículo para o registro de seus dados.',
+          'Dados de conta e assinatura: execução de contrato (art. 7º, V da LGPD). Dados do veículo e das avarias: legítimo interesse na prestação do serviço de vistoria (art. 7º, IX), já que são o próprio objeto do laudo contratado. Fotos, GPS e assinatura do proprietário: consentimento do titular, que cabe ao vistoriador obter no momento da vistoria — o app não coleta esses dados de forma automática ou oculta.',
       },
     ],
   },
   {
-    title: '5. Fotos e Mídia',
+    title: 'Onde os dados ficam: dispositivo local vs. nuvem',
     blocks: [
       {
         kind: 'p',
         html:
-          'As fotos capturadas pelo aplicativo são processadas e comprimidas localmente no seu dispositivo. Caso a sincronização em nuvem esteja ativa, são transmitidas de forma criptografada para armazenamento seguro, restrito ao usuário responsável pela vistoria.',
+          'O Danos Aparentes é um PWA offline-first: por padrão, toda vistoria — incluindo fotos comprimidas e assinaturas — é gravada primeiro no banco de dados local do navegador (IndexedDB), funcionando mesmo sem internet no pátio ou na oficina. Se a sincronização em nuvem estiver ativa na sua conta, uma fila de sincronização envia esses registros de forma criptografada para o banco de dados do provedor de nuvem contratado, assim que a conexão volta.',
+      },
+      {
+        kind: 'p',
+        html:
+          'Isso tem uma implicação prática: se você limpar o cache do navegador, desinstalar o app ou formatar o dispositivo antes de uma vistoria ser sincronizada, os dados daquele registro local podem se perder — não há uma cópia em nuvem até a sincronização ocorrer.',
       },
     ],
   },
   {
-    title: '6. Armazenamento Local (PWA)',
+    title: 'Com quem não compartilhamos (e com quem sim)',
     blocks: [
       {
         kind: 'p',
         html:
-          'Por ser um aplicativo PWA, muitos rascunhos e dados de vistorias são mantidos no banco de dados local do seu navegador (IndexedDB). A limpeza de cache ou a formatação do navegador pode apagar vistorias locais que ainda não tenham sido sincronizadas.',
+          '<strong>Não vendemos nem compartilhamos</strong> dados de veículos, dados cadastrais de clientes ou fotos de avarias com seguradoras terceiras, corretoras, bases de consulta de histórico veicular ou empresas de marketing. Os dados de uma vistoria pertencem ao vistoriador/empresa responsável por ela.',
+      },
+      {
+        kind: 'p',
+        html:
+          'Compartilhamos dados apenas com operadores estritamente necessários para o serviço funcionar — provedor de hospedagem e banco de dados em nuvem, provedor de e-mail transacional e, quando você opta por integrações de pagamento, o processador de pagamentos — todos sob obrigação contratual de confidencialidade e uso restrito à finalidade contratada.',
       },
     ],
   },
   {
-    title: '7. Compartilhamento de Dados',
+    title: 'Cookies, pixels e métricas de campanha',
     blocks: [
       {
         kind: 'p',
         html:
-          'Nós <strong>não comercializamos nem compartilhamos</strong> dados de veículos, dados cadastrais de clientes ou fotos de avarias com empresas de anúncios, seguradoras terceiras ou bases de histórico veicular. Os dados pertencem ao vistoriador responsável. Eventuais operadores (ex.: provedores de hospedagem e nuvem) tratam dados apenas para viabilizar o serviço, sob obrigação de confidencialidade.',
-      },
-      {
-        kind: 'p',
-        html:
-          'Utilizamos pixels de conversão da Meta (Facebook/Instagram) e TikTok para medir cadastros originados de campanhas publicitárias, somente após seu consentimento.',
+          'No site institucional (fora do app de vistoria), usamos cookies técnicos essenciais e, mediante seu consentimento no banner de cookies, pixels de conversão da Meta (Facebook/Instagram) e do TikTok para medir quantos cadastros vieram de uma campanha específica. Esses pixels não têm acesso às fotos de avarias, laudos ou dados de veículos — eles só enxergam que uma visita virou (ou não) um cadastro.',
       },
     ],
   },
   {
-    title: '8. Segurança',
+    title: 'Segurança',
     blocks: [
       {
         kind: 'p',
         html:
-          'Adotamos medidas técnicas e organizacionais para proteger os dados contra acessos não autorizados, perda ou destruição. Nenhum sistema é totalmente imune a riscos, mas trabalhamos continuamente para mitigá-los.',
+          'Fotos e documentos em trânsito para a nuvem usam conexão criptografada (HTTPS/TLS). O acesso aos dados de cada conta é isolado por regras de segurança em nível de linha no banco de dados (RLS), de forma que uma conta não consegue ler vistorias de outra conta. Nenhum sistema é totalmente imune a incidentes, mas essas camadas reduzem a superfície de exposição em caso de falha.',
       },
     ],
   },
   {
-    title: '9. Seus Direitos (LGPD)',
+    title: 'Seus direitos como titular (LGPD)',
     blocks: [
       {
         kind: 'p',
-        html: 'Como titular de dados, você pode, a qualquer momento, solicitar:',
+        html: 'A qualquer momento, você pode solicitar:',
       },
       {
         kind: 'ul',
         items: [
           'Confirmação da existência de tratamento e acesso aos seus dados;',
           'Correção de dados incompletos, inexatos ou desatualizados;',
-          'Anonimização, bloqueio ou eliminação de dados desnecessários;',
-          'Portabilidade e informação sobre compartilhamento;',
-          'Revogação do consentimento e eliminação dos dados tratados com base nele.',
+          'Anonimização, bloqueio ou eliminação de dados desnecessários ou tratados em desconformidade com a lei;',
+          'Portabilidade dos dados a outro fornecedor, mediante requisição expressa;',
+          'Revogação do consentimento e eliminação dos dados tratados com base nele, quando essa for a base legal aplicável.',
         ],
       },
       {
         kind: 'p',
-        html: `As solicitações podem ser feitas pelo e-mail <strong>${LEGAL_CONTACT_EMAIL}</strong>.`,
+        html: `Pedidos podem ser feitos pelo e-mail <strong>${LEGAL_CONTACT_EMAIL}</strong>. Respondemos em até 15 dias, prazo que pode ser prorrogado uma vez por igual período mediante justificativa, conforme a LGPD.`,
       },
     ],
   },
   {
-    title: '10. Retenção',
+    title: 'Quanto tempo os dados ficam guardados',
     blocks: [
       {
         kind: 'p',
         html:
-          'Os dados são mantidos pelo tempo necessário ao cumprimento das finalidades descritas e das obrigações legais aplicáveis. Após esse período, são eliminados ou anonimizados, salvo hipóteses de guarda obrigatória previstas em lei.',
+          'Vistorias e laudos ficam retidos enquanto a conta estiver ativa, pelo valor probatório que representam para o vistoriador (ex.: disputa sobre uma devolução de veículo). Após o encerramento da conta, os dados são eliminados ou anonimizados em até 12 meses, exceto quando a lei exigir prazo de guarda diferente (ex.: obrigações fiscais sobre dados de cobrança).',
       },
     ],
   },
   {
-    title: '11. Alterações desta Política',
+    title: 'Menores de idade',
     blocks: [
       {
         kind: 'p',
         html:
-          'Esta Política pode ser atualizada periodicamente. Alterações relevantes serão comunicadas no aplicativo, e a data da última atualização será sempre indicada.',
+          'O aplicativo é uma ferramenta profissional, não direcionada a crianças ou adolescentes. Não coletamos intencionalmente dados de menores de 18 anos como titulares do serviço.',
+      },
+    ],
+  },
+  {
+    title: 'Alterações desta política',
+    blocks: [
+      {
+        kind: 'p',
+        html:
+          'Esta Política pode ser atualizada para refletir mudanças no produto (ex.: um novo provedor de nuvem) ou na legislação. Alterações relevantes serão comunicadas dentro do aplicativo, e a data no topo desta página é sempre atualizada quando isso ocorre.',
       },
     ],
   },
