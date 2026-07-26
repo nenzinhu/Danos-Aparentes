@@ -1,0 +1,12 @@
+[h1] Bem-vindo de volta
+[p] Acesse suas vistorias de qualquer lugar
+[label] Email
+[label] Senha
+[button] Esqueceu?
+[button] Entrar na plataforma
+[p] Não tem uma conta?
+[button] Cadastre-se
+[p] Usamos cookies de marketing (Meta e TikTok) para medir cadastros vindos de anúncios.
+[a] Política de Privacidade
+[button] Recusar
+[button] Aceitar

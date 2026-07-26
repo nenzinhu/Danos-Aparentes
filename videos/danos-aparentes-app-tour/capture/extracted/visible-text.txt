@@ -1,0 +1,287 @@
+[a] Testar 7 dias grátis
+[span] Relatório de Vistoria
+[span] 2026-0628
+[span] Placa
+[span] MKT4322
+[span] Grau leve · 2 avarias
+[span] Danos
+[span] Aparentes
+[p] Digite a placa e preencha os dados sozinho
+[p] Digite a placa e o aplicativo preenche automaticamente a marca, modelo, cor e ano do veículo. Rápido, prático e sem erros de digitação no pátio.
+[a] Testar 7 dias grátis
+[span] Sem cartão
+[span] 7 dias liberados
+[span] Cancele online
+[dt] Saída
+[dd] Laudo PDF
+[dd] hash 0DF20434…
+[dt] Prova
+[dd] Fotos HD
+[dd] galeria + QR
+[dt] Rede
+[dd] Offline
+[dd] 100% no pátio
+[div] Suporte a todo tipo de veículo
+[div] O aplicativo oferece diagramas interativos de alta fidelidade desenhados especificamente
+[div] para cada tipo de veículo. Toque em qualquer parte para abrir as opções de marcação.
+[span] Vista · Lateral Esq.
+[span] avaria
+[button] Carro
+[button] Carro 2 Portas
+[button] Moto
+[button] Caminhão
+[button] Utilitário (Van)
+[button] Ônibus
+[button] Micro-ônibus
+[div] eixo de referência
+[span] Avaria Detectada:
+[span] Porta Dianteira Esquerda
+[span] Tipo:
+[span] Risco
+[span] Grave
+[span] Leve
+[span] Média
+[span] Grave
+[div] Fluxo de Trabalho
+[span] placa
+[span] laudo
+[span] assinado
+[span] passos
+[p] O que no papel leva 20 minutos, você faz no pátio em poucos toques, com prova fotográfica e PDF pronto para enviar.
+[h3] Consulte a Placa
+[p] Insira a placa do veículo e deixe o sistema preencher automaticamente marca, modelo, ano de fabricação, cor e município.
+[h3] Toque para Marcar Avarias
+[p] Selecione o modelo do veículo e toque na área exata do SVG clicável. Aponte o tipo de avaria (risco, amassado, quebrado), adicione fotos HD e notas.
+[h3] Assine e Envie o Laudo
+[p] Vistoriador e cliente assinam digitalmente na tela do celular. O laudo em PDF inviolável com hash SHA-256 é gerado e enviado por WhatsApp.
+[div] Como funciona em 60s
+[h2] Do papel ao laudo
+[span] em poucos toques
+[p] Veja a diferença: prancheta e redigitação de um lado; marcação no diagrama, assinatura na tela e PDF com hash e QR Code do outro — inclusive offline.
+[a] Testar 7 dias grátis
+[p] 58 segundos · play quando quiser
+[div] Segurança do Laudo
+[h2] Um laudo que
+[span] comprova a si mesmo
+[p] Ainda não temos histórico público de clientes — o app é novo. O que oferecemos hoje é verificável: confira como cada laudo é protegido tecnicamente, sem depender da nossa palavra.
+[span] Integridade
+[h3] Hash SHA-256 em cada laudo
+[p] Todo PDF gerado carrega um código único de verificação. Qualquer alteração no documento após a emissão invalida o hash — o laudo comprova a si mesmo.
+[span] Autenticação
+[h3] Assinatura digital na tela
+[p] Vistoriador e cliente assinam com o dedo, no próprio celular, no momento da vistoria. Sem impressão, sem "assino depois".
+[span] Rastreabilidade
+[h3] Fotos com GPS e timestamp
+[p] Cada foto anexada guarda local e horário de captura, reforçando que o registro foi feito no pátio, na hora da vistoria.
+[span] Exemplos em PDF para baixar:
+[a] PDF 1 · Laudo de Vistoria
+[a] PDF 2 · Certificado de Autenticidade
+[a] Verificar um laudo →
+[p] Quem responde por este produto
+[strong] Danos Aparentes
+[p] — CNPJ
+[p] 68.088.839/0001-67
+[a] suporte@danosaparentes.com.br
+[span] : profissionalismo em cada entrega
+[span] Organização que o cliente percebe
+[span] 01 · Configuração
+[span] Identidade da Empresa
+[figcaption] Defina
+[strong] nome
+[strong] logo
+[figcaption] , cor e alinhamento. A prévia do cabeçalho atualiza na hora.
+[span] 02 · Resultado
+[span] Laudo em PDF
+[figcaption] No topo do PDF, a marca
+[strong] pulsa e se destaca
+[figcaption] — como se a logo entrasse no laudo, pronta para a sua identidade.
+[a] Personalizar meu laudo →
+[a] Ler o guia: logo e nome no PDF →
+[div] Modelo Oficial de Laudo
+[h2] Laudo de vistoria veicular digital:
+[span] transparência total em 2 páginas
+[p] Veja a estrutura real gerada pelo aplicativo. Documentação técnica aceita por seguradoras, frotistas e locadoras — pronta para envio por WhatsApp ou e-mail.
+[button] Ver 2 Páginas Lado a Lado
+[button] Página 1 · Laudo & Diagrama
+[button] Página 2 · Evidências & QR Code
+[span] PÁG.
+[span] Laudo Principal
+[span] 🔍 Ampliar
+[span] Clique para expandir em HD
+[h4] Laudo Pericial & Diagrama de Avarias
+[p] Dados do veículo, mapa vetorial com apontamento dos danos e tabela pericial detalhada.
+[span] PÁG.
+[span] Evidências & Hash SHA-256
+[span] 🔍 Ampliar
+[span] Clique para expandir em HD
+[h4] Anexo Fotográfico & Validação Digital
+[p] Fotos em alta resolução do dano com coordenadas GPS, carimbo de data/hora e QR Code.
+[a] Baixar Modelo PDF 1 (Relatório Pericial)
+[a] Baixar Modelo PDF 2 (Certificado de Autenticidade)
+[span] Por que este laudo transforma sua operação?
+[h3] Chega de Discussões:
+[span] Prova Pericial Irrefutável
+[h3] na Mão do Cliente
+[p] O relatório do
+[strong] Danos Aparentes
+[p] substitui as antigas planilhas e fichas de papel por um certificado digital de alto padrão. Cada laudo é gerado em segundos e traz tudo o que você precisa para respaldar cobranças e proteger seu patrimônio.
+[h4] Mapeamento Visual por Diagrama Interativo
+[p] Identificação cirúrgica de cada avaria (riscos, amassados, quebras) marcada diretamente na área vetorial do veículo. Impossível haver ambiguidade sobre onde o dano ocorreu.
+[h4] Fotos HD com Carimbo Temporal e GPS Inalterável
+[p] Cada imagem anexada recebe automaticamente marca d’água com data, hora exata e coordenadas geográficas de onde a vistoria foi realizada, garantindo veracidade absoluta.
+[h4] Assinatura Criptográfica SHA-256 e QR Code
+[p] Garantia total contra adulterações. O QR Code permite que clientes, parceiros e seguradoras validem a autenticidade do laudo original na nuvem em qualquer smartphone.
+[h4] Coleta de Assinatura Digital na Tela
+[p] Vistoriador e cliente assinam diretamente no celular antes da entrega ou devolução do veículo, formalizando a concordância mútua sem imprimir uma única folha de papel.
+[h4] Envio Instantâneo via WhatsApp em PDF
+[p] Assim que finalizado, o laudo em PDF de alta qualidade é formatado e pode ser enviado com um único toque diretamente no WhatsApp do cliente.
+[p] Quer ver seu logotipo neste laudo?
+[p] Personalize o cabeçalho com a sua marca e cores institucionais.
+[a] Ver exemplo de marca
+[a] Gerar Meu Primeiro Laudo
+[span] Do blog
+[h2] Guias de vistoria e laudo
+[p] Conteúdo direto para quem registra avarias no pátio: laudos, checklists e boas práticas que evitam contestação.
+[a] Ver guias de vistoria veicular →
+[span] Locadora
+[h3] Como cobrar avaria na devolução da locadora sem perder a discussão
+[div] min ·
+[div] 13 de julho de 2026
+[span] Oficina
+[h3] Vistoria antes do orçamento: como a oficina evita briga na entrega
+[div] min ·
+[div] 13 de julho de 2026
+[span] Despachante
+[h3] Laudo de vistoria para despachantes: rápido no celular, sem redigitar
+[div] min ·
+[div] 13 de julho de 2026
+[span] Planos
+[span] vistoria
+[span] veicular
+[span] digital
+[span] 7 dias grátis
+[p] , sem cartão. Depois,
+[span] menos de R$ 1,70 por dia
+[p] no plano
+[span] Pro
+[h3] Plano
+[h3] Starter
+[p] Porta de entrada — vistorias esporádicas sem compromisso grande.
+[div] R$ 29,90
+[span] / mês
+[p] R$ 1,00
+[p] /dia · até
+[p] laudos/mês · ≈
+[span] R$ 1,49
+[span] /laudo
+[span] Até 20 laudos em PDF por mês
+[span] Vistorias offline e online
+[span] PDF profissional com Hash SHA-256 de segurança
+[span] Assinatura digital na tela do vistoriador e cliente
+[span] Consulta automática de placas integrada
+[span] Envio do laudo direto por WhatsApp com 1 clique
+[button] Cartão
+[button] PIX
+[a] Assinar com cartão ·
+[a] R$ 29,90
+[a] /mês
+[a] Prefere PIX? Pague agora sem cartão
+[a] Ou testar 7 dias grátis sem cartão
+[p] Cancele quando quiser, sem multa e sem burocracia.
+[div] Mais Popular
+[h3] Plano
+[h3] Pro
+[p] 4× mais laudos que o Starter por menos de 2× o preço — com a sua marca.
+[div] R$ 49,90
+[span] / mês
+[p] R$ 1,66
+[p] /dia · até
+[p] laudos/mês · ≈
+[span] R$ 0,62
+[span] /laudo
+[p] Mais escolhido: laudo com logo e nome da empresa
+[span] Até 80 laudos em PDF por mês
+[span] Tudo do plano Starter incluído
+[span] Personalização de marca própria (nome e logotipo no PDF)
+[span] Acesso ao painel de estatísticas e dashboard
+[span] Modelos de layout de PDF adicionais
+[span] Suporte com prioridade
+[button] Cartão
+[button] PIX
+[a] Assinar com cartão ·
+[a] R$ 49,90
+[a] /mês
+[a] Prefere PIX? Pague agora sem cartão
+[a] Ou testar 7 dias grátis sem cartão
+[p] Cancele quando quiser, sem multa e sem burocracia.
+[h3] Corporativo
+[p] Padronize a vistoria em todas as bases — frota, locadora e rede.
+[span] A partir de
+[span] R$ 299
+[span] / mês · laudos ilimitados · por volume de usuários
+[span] Start
+[span] até 5 usuários
+[span] R$ 299
+[span] Growth
+[span] até 15 usuários
+[span] R$ 699
+[span] Enterprise
+[span] 15+ · API · SLA
+[span] a partir de R$ 1.490
+[span] Laudos em PDF ilimitados
+[span] Tudo do Plano Pro incluído (marca no PDF)
+[span] Múltiplos vistoriadores e usuários
+[span] Painel centralizado de equipes e laudos
+[span] Estatísticas por filial e vistoriador
+[span] Integração via API (faixa Enterprise)
+[span] Suporte prioritário com gerente de conta
+[a] Falar sobre Corporativo
+[p] Faixas publicadas — fechamos volume e integrações em minutos no WhatsApp.
+[a] Veja como funciona para locadoras e frotas →
+[a] Ver todos os detalhes e perguntas frequentes sobre os planos →
+[h2] Central de Ajuda
+[p] Saiba mais sobre como funciona o sistema Danos Aparentes
+[span] Qual o valor da assinatura do aplicativo?
+[p] Starter R$ 29,90/mês (até 20 laudos, ≈ R$ 1,50/laudo) e Pro R$ 49,90/mês (até 80 laudos, ≈ R$ 0,62/laudo, com marca própria no PDF). Corporativo a partir de R$ 299/mês (Start até 5 usuários), Growth R$ 699 (até 15) e Enterprise a partir de R$ 1.490 — laudos ilimitados e multi-usuário.
+[span] O que é o hash do PDF e a assinatura digital?
+[p] O hash é um código de segurança único (SHA-256) gerado para cada PDF que comprova que o documento não foi alterado. Além disso, o laudo possui um sistema de assinatura digital na tela, onde o vistoriador e o cliente assinam diretamente no celular.
+[span] Preciso de internet para fazer as vistorias?
+[p] Não! O aplicativo foi desenvolvido para funcionar 100% offline. Você pode fazer a vistoria, marcar as avarias, tirar fotos e colher assinaturas em locais sem sinal. Os dados são salvos localmente e sincronizados na nuvem assim que houver internet.
+[span] Como funciona a consulta de placas?
+[p] Ao inserir a placa do veículo, o sistema realiza uma consulta automática e preenche de forma instantânea a marca, modelo, ano, cor e município do veículo, agilizando o processo de vistoria.
+[span] Consigo personalizar o relatório com meu logotipo?
+[p] Sim! Usuários do plano Vistoria PRO podem configurar o nome da empresa e carregar seu próprio logotipo, que aparecerá de forma elegante no cabeçalho de todos os laudos gerados.
+[span] Quais são os tipos de veículos suportados?
+[p] O aplicativo suporta a inspeção interativa em 6 categorias de veículos: Carro, Moto, Caminhão, Utilitário (Van), Ônibus e um modelo Genérico/Customizável, todos com 4 vistas em SVG clicáveis.
+[span] Como posso enviar o laudo para o cliente?
+[p] Você pode exportar o laudo como um arquivo PDF profissional, gerar um relatório em formato de texto para copiar/enviar por e-mail ou mandar o PDF diretamente pelo WhatsApp do cliente.
+[div] Próxima Vistoria
+[h2] Sua próxima avaria pode virar
+[span] laudo em 1 minuto.
+[p] Sem cartão, sem instalação complicada. Abra a primeira vistoria agora e veja o laudo pronto antes de terminar o café.
+[span] Testar 7 dias grátis
+[span] Sem cartão
+[span] 7 dias liberados
+[span] Cancele online
+[a] Testar 7 dias grátis
+[strong] Danos Aparentes
+[p] 68.088.839/0001-67
+[strong] Contato:
+[a] suporte@danosaparentes.com.br
+[strong] Aviso de Isenção:
+[p] A consulta de dados cadastrais de veículos por meio da placa é realizada de forma estritamente privada por meio de APIs parceiras para fins de preenchimento automatizado de checklist, não possuindo qualquer vínculo, representação ou convênio com o DETRAN, Denatran, órgãos governamentais ou entidades públicas.
+[span] © 2026 Danos Aparentes
+[span] Vistoria Digital de Alta Fidelidade
+[a] Para Locadoras
+[a] Para Oficinas
+[a] Para Seguradoras
+[a] Para Frotas
+[a] Demonstração
+[a] Verificar Laudo
+[a] Guias de vistoria veicular
+[a] Privacidade
+[a] Termos de Uso
+[p] Usamos cookies de marketing (Meta e TikTok) para medir cadastros vindos de anúncios.
+[a] Política de Privacidade
+[button] Recusar
+[button] Aceitar

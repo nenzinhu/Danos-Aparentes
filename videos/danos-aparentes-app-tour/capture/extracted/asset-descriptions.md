@@ -1,0 +1,64 @@
+# Asset Descriptions
+
+⚠️  GEMINI_API_KEY not set — descriptions below are catalog-derived (alt text, headings, section context, filename) instead of Vision-generated. To get richer Vision descriptions on the next capture, set GEMINI_API_KEY (or GOOGLE_API_KEY) and re-run.
+
+The `logo-<hash>.svg` filename prefix is a structural hint (DOM said this SVG was inside a `<header>`, home-link `<a>`, or had an aria-label matching the page brand). To pick the actual brand logo without Vision, open the `logo-*` candidates in a previewer or rasterize them with `sharp` before referencing — composing a fake logo ships off-brand in the final video.
+
+- vistoria-digital-promo.mp4 — [video] 58 segundos · play quando quiser, ~1080×1920
+- anexo-fotogrfico-validao-digital.png — 37KB, anexo fotogrfico validao digital
+- danosaparentes.png — 60KB, danosaparentes
+- favicon.svg — 4KB, favicon
+- gsap-hero-3d-sheet-frame.png — 68KB, gsap hero 3d sheet frame
+- guias-de-vistoria-e-laudo.webp — 82KB, guias de vistoria e laudo
+- hero-11.png — 75KB, hero 11
+- laudo-pericial-diagrama-de-avarias.png — 910KB, laudo pericial diagrama de avarias
+- logo-9e0da798.svg — 1KB, logo 9e0da798
+- logo-a8f6c36e.svg — 3KB, logo a8f6c36e
+- logo-ae98810f.svg — 2KB, logo ae98810f
+- logo-c484a69d.svg — 1KB, logo c484a69d
+- logo-cac8c39e.svg — 2KB, logo cac8c39e
+- logo-e30d1795.svg — 2KB, logo e30d1795
+- logo-fb51cf70.svg — 3KB, logo fb51cf70
+- max-w-7xl-mx-auto.png — 1494KB, max w 7xl mx auto
+- moto.png — 97KB, section: "Danos Aparentes", above fold
+- og-image.jpg — 41KB, og image
+- svg-a7718462.svg — 5KB, svg a7718462
+- tela-identidade-da-empresa-nome-logotipo.png — 71KB, tela identidade da empresa nome logotipo
+- truck.png — 47KB, section: "Danos Aparentes", above fold
+- vistoria-digital-promo-poster.jpg — 39KB, vistoria digital promo poster
+- vistoria-orcamento-oficina.webp — 64KB, section: "Guias de vistoria e laudo"
+- svgs/logo-68b14448.svg — logo 68b14448
+- svgs/logo-934ceb7a.svg — logo 934ceb7a
+- svgs/svg-075c90a3.svg — svg 075c90a3
+- svgs/svg-2d0b79a8.svg — svg 2d0b79a8
+- svgs/svg-346caa9c.svg — svg 346caa9c
+- svgs/svg-3e01c65b.svg — svg 3e01c65b
+- svgs/svg-5381ceb9.svg — svg 5381ceb9
+- svgs/svg-5ed422b4.svg — svg 5ed422b4
+- svgs/svg-63d8eddd.svg — svg 63d8eddd
+- svgs/svg-796a0863.svg — svg 796a0863
+- svgs/svg-86ee1ee1.svg — svg 86ee1ee1
+- svgs/svg-922af994.svg — svg 922af994
+- svgs/svg-9a06ac3b.svg — svg 9a06ac3b
+- svgs/svg-9c1ceb5a.svg — svg 9c1ceb5a
+- svgs/svg-9d9b3a3a-2.svg — svg 9d9b3a3a 2
+- svgs/svg-9d9b3a3a.svg — svg 9d9b3a3a
+- svgs/svg-9f2fb205.svg — svg 9f2fb205
+- svgs/svg-ac1ba93e.svg — svg ac1ba93e
+- svgs/svg-ac685bc3.svg — svg ac685bc3
+- svgs/svg-f461d2fc-2.svg — svg f461d2fc 2
+- svgs/svg-f461d2fc.svg — svg f461d2fc
+- fonts/1b99372b3eaef0c8-s.p.1gsd1jahc5dg_.woff2 — font file
+- fonts/2fe89d53234c61d4-s.1u30mmyq6lnsd.woff2 — font file
+- fonts/34fd6ffea3f110b0-s.3hd5jkugfx254.woff2 — font file
+- fonts/59b15b4bcd7b1eb5-s.2vemzm0itqzfy.woff2 — font file
+- fonts/99e609270109b47d-s.p.40sczeszzbjw1.woff2 — font file
+- fonts/a7afbb44bec2bb18-s.1qc6dx89jd2qv.woff2 — font file
+- fonts/aa5902a20f09ee56-s.3icaf0vxshg63.woff2 — font file
+- fonts/b2ea385cb5ae8625-s.1spbknb88wd48.woff2 — font file
+- fonts/b94cfb34b9e6a2b8-s.p.3-n57bcvaz8oc.woff2 — font file
+- fonts/bcc6c7b97aa3243e-s.p.0-bot13eqj7bq.woff2 — font file
+- fonts/d0f5eca495bd6f0e-s.2ghbzre0fc5v5.woff2 — font file
+- fonts/e390973e931a41c5-s.0rgnxg2b64rzs.woff2 — font file
+- fonts/e532fa1b9921e1cd-s.3cb5lpr2l6xud.woff2 — font file
+- fonts/fad8c11517de0c51-s.3taa34zb7zg2j.woff2 — font file
