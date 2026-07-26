@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getCategories, getPostsByCategorySlug } from '@/src/content/blog'
+import { getCategories, getCategoryDescription, getPostsByCategorySlug } from '@/src/content/blog'
 import { BlogPostCard } from '@/src/components/BlogPostCard'
 
 const SITE_URL = 'https://danosaparentes.com.br'
@@ -20,7 +20,7 @@ export async function generateMetadata({
   if (posts.length === 0) return {}
   const categoryName = posts[0].category
   const title = `Artigos sobre ${categoryName} | Blog Danos Aparentes`
-  const description = `Guias de vistoria e laudo de avarias sobre ${categoryName.toLowerCase()}.`
+  const description = getCategoryDescription(categoryName)
   const url = `/blog/categoria/${categoria}`
   return {
     title,
@@ -70,6 +70,9 @@ export default async function BlogCategoryPage({
           <h1 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95]">
             {categoryName}
           </h1>
+          <p className="mt-4 max-w-2xl text-sm text-[var(--text-muted)] leading-relaxed">
+            {getCategoryDescription(categoryName)}
+          </p>
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

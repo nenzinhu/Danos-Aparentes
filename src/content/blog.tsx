@@ -3909,6 +3909,34 @@ export function getCategories(): { name: string; slug: string }[] {
   return Array.from(seen, ([name, slug]) => ({ name, slug }))
 }
 
+// Um parágrafo único por categoria — a página de categoria antes só listava
+// os mesmos cards que já aparecem em /blog (título + data), sem nenhum texto
+// próprio. Categorias com 1-2 posts ficavam praticamente idênticas ao post
+// individual, o que o Google trata como conteúdo fino/duplicado e evita
+// rastrear. Cada descrição aqui é específica do assunto da categoria — não um
+// template genérico repetido.
+const CATEGORY_DESCRIPTIONS: Record<string, string> = {
+  Vistoria: 'Como registrar avarias com precisão no diagrama do veículo — do clique na peça até o laudo em PDF, cobrindo os fluxos de retirada, devolução e conferência que o vistoriador enfrenta no dia a dia.',
+  Tecnologia: 'O que está por trás do app: PWA offline-first, geração de PDF no navegador, hash de integridade e as decisões técnicas que permitem vistoriar sem depender de internet no pátio.',
+  Locadora: 'Estratégias e recursos pensados para locadoras de veículos — do laudo com marca própria (white-label) à padronização de vistorias entre unidades e equipes de uma frota de aluguel.',
+  Laudo: 'Estrutura, validade e apresentação do laudo de vistoria: o que precisa constar, como fica no PDF gerado e como isso protege a operação em disputas com o cliente.',
+  'Boas práticas': 'Rotinas recomendadas para quem vistoria veículos com frequência — o que checar, o que registrar e os erros mais comuns que enfraquecem um laudo na hora de uma contestação.',
+  Frota: 'Gestão de vistoria em escala: como locadoras, frotistas e transportadoras padronizam o registro de avarias quando o volume de veículos torna o processo manual inviável.',
+  Seguro: 'A relação entre o laudo de vistoria e o processo de sinistro — o que seguradoras e peritos esperam ver documentado para agilizar (ou não travar) uma análise.',
+  Operação: 'O lado prático de rodar vistorias no campo: tempo de preenchimento, uso sob sol ou chuva, e como o fluxo do app foi desenhado para não atrapalhar a operação.',
+  Comparativo: 'Comparações diretas entre modelos de laudo, formatos de PDF e abordagens de vistoria, para ajudar a escolher o que melhor se encaixa na sua operação.',
+  Produtividade: 'Como reduzir o tempo gasto em cada vistoria — atalhos, automações e ajustes de fluxo que cortam retrabalho sem abrir mão do rigor técnico do laudo.',
+  Validade: 'O que dá validade jurídica e prática a um laudo de vistoria — hash de integridade, QR Code de verificação e o que muda quando o documento precisa ser contestado.',
+  Profissionalismo: 'Como a apresentação do laudo (marca, identidade visual, estrutura do PDF) influencia a percepção do cliente sobre a seriedade da operação.',
+  Acessibilidade: 'Uso do app em condições reais de campo — digitação por voz, interface para telas pequenas e outros ajustes que facilitam a vistoria para quem trabalha fora do escritório.',
+  Oficina: 'Vistoria aplicada à rotina de oficinas — orçamento, retrabalho e como um laudo digital evita divergência entre o que foi combinado e o que foi entregue.',
+  Despachante: 'Onde a vistoria digital cruza com processos de despachante — documentação de avarias em transferências, regularizações e outros trâmites veiculares.',
+}
+
+export function getCategoryDescription(name: string): string {
+  return CATEGORY_DESCRIPTIONS[name] || `Artigos sobre ${name.toLowerCase()} relacionados à vistoria digital de avarias veiculares.`
+}
+
 export function getPostsByCategorySlug(slug: string): BlogPost[] {
   return BLOG_POSTS.filter(p => categorySlug(p.category) === slug)
 }
