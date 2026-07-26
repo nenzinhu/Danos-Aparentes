@@ -38,12 +38,22 @@ alto para o ganho nesta fase.
 ### Regra de ativação do gesto
 
 O arrastar horizontal só é interpretado como "trocar de vista" quando
-`scale === 1` (zoom no padrão). Nesse estado, fazer pan não tem utilidade —
+`scale` estiver a menos de `0.01` de `1` (zoom no padrão, com tolerância
+para a deriva de ponto flutuante do `onWheel`/pinch — ver "Nota de
+implementação" abaixo). Nesse estado, fazer pan não tem utilidade —
 não há nada fora da viewport pra revelar — então o gesto fica livre para
 significar outra coisa.
 
-Quando `scale > 1`, o comportamento atual de pan é mantido **sem nenhuma
-mudança**.
+Quando `scale > 1` (fora da tolerância), o comportamento atual de pan é
+mantido **sem nenhuma mudança**.
+
+**Nota de implementação:** a checagem usa `Math.abs(scale - 1) < 0.01` em
+vez de igualdade estrita. Motivo: `onWheel` acumula `scale` por subtrações
+de ponto flutuante (`s - e.deltaY * 0.001`), então voltar ao "100%" via
+scroll raramente resulta no valor exato `1` (ex.: `0.9999999...` ou
+`1.0000001...`). Com igualdade estrita, esse resíduo impedia o swipe de
+disparar mesmo com o zoom visualmente em 100% — bug encontrado e corrigido
+durante a implementação.
 
 ### Threshold e direção
 

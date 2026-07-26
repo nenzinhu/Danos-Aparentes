@@ -26,6 +26,7 @@ interface VehicleViewerContextValue {
   onRemoveDamageFromPart: (partId: string) => void
   speak: (text: string) => void
   speakHover: (text: string) => void
+  onViewTypeChange?: (v: ViewType) => void
 
   // State
   fullscreen: boolean
@@ -63,17 +64,28 @@ interface RootProps {
   onRemoveDamageFromPart: (partId: string) => void
   speak: (text: string) => void
   speakHover: (text: string) => void
+  onViewTypeChange?: (v: ViewType) => void
 }
 
 const VIEW_ORDER: ViewType[] = ['lateral-left', 'frontal', 'lateral-right', 'traseira']
 
 function RootComponent({
-  children, vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover
+  children, vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover, onViewTypeChange
 }: RootProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const targetRef = useRef<HTMLDivElement>(null)
   const flipStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null)
-  const { scale, reset, zoomIn, zoomOut } = useZoomPan(containerRef, targetRef)
+
+  // Drag-to-rotate: swipe on the vehicle at 100% zoom advances/retreats through
+  // VIEW_ORDER (see docs/superpowers/specs/2026-07-26-drag-to-rotate-vehicle-viewer-design.md).
+  const handleHorizontalSwipe = useCallback((direction: 1 | -1) => {
+    if (!onViewTypeChange) return
+    const idx = VIEW_ORDER.indexOf(viewType)
+    const next = VIEW_ORDER[(idx + direction + VIEW_ORDER.length) % VIEW_ORDER.length]
+    onViewTypeChange(next)
+  }, [viewType, onViewTypeChange])
+
+  const { scale, reset, zoomIn, zoomOut } = useZoomPan(containerRef, targetRef, handleHorizontalSwipe)
   const [selectedPart, setSelectedPart] = useState<{ id: string; name: string; pos: { x: number; y: number } } | null>(null)
   const [fullscreen, setFullscreen] = useState(false)
 
@@ -424,7 +436,7 @@ const FullscreenOverlay = memo(function FullscreenOverlay() {
       </ErrorBoundary>
 
       <div className='mt-1.5 text-[0.72rem] text-sky-200/50 text-center shrink-0'>
-        Clique em uma peça para registrar avaria • ESC para sair • Scroll para zoom
+        Clique em uma peça para registrar avaria • Arraste para girar • ESC para sair • Scroll para zoom
       </div>
     </div>,
     document.body
@@ -480,7 +492,7 @@ export default function LegacyVehicleViewer(props: RootProps) {
       <FloatingDamage />
       <FullscreenOverlay />
       <div className='mt-1.5 text-[0.72rem] text-[var(--text-muted)] text-center'>
-        Clique em uma peça para registrar avaria • Scroll ou pinch para zoom
+        Clique em uma peça para registrar avaria • Arraste para girar • Scroll ou pinch para zoom
       </div>
     </Root>
   )

@@ -1,9 +1,28 @@
 'use client';
 import { useRef, useState, useEffect, useCallback, RefObject } from 'react'
 
+/**
+ * Pure gesture classifier for drag-to-rotate (extracted for unit testing
+ * without DOM/React — see docs/superpowers/specs/2026-07-26-drag-to-rotate-vehicle-viewer-design.md).
+ * Returns the swipe direction once the accumulated drag from gesture start
+ * crosses the threshold and is predominantly horizontal, otherwise null.
+ */
+export function detectHorizontalSwipe(
+  totalDx: number,
+  totalDy: number,
+  containerWidth: number,
+): 1 | -1 | null {
+  const threshold = Math.min(60, containerWidth * 0.25)
+  if (Math.abs(totalDx) > threshold && Math.abs(totalDx) > Math.abs(totalDy) * 1.5) {
+    return totalDx < 0 ? 1 : -1
+  }
+  return null
+}
+
 export function useZoomPan(
   containerRef: RefObject<HTMLDivElement | null>,
-  targetRef: RefObject<HTMLDivElement | null>
+  targetRef: RefObject<HTMLDivElement | null>,
+  onHorizontalSwipe?: (direction: 1 | -1) => void
 ) {
   const [scale, setScale] = useState(1)
   const offsetRef = useRef({ x: 0, y: 0 })
@@ -11,6 +30,11 @@ export function useZoomPan(
   const dragging = useRef(false)
   const last = useRef({ x: 0, y: 0 })
   const pinchDist = useRef<number | null>(null)
+  // Drag-to-rotate: only active near scale===1 (see docs/superpowers/specs/2026-07-26-drag-to-rotate-vehicle-viewer-design.md).
+  // A tolerance (not strict equality) absorbs float drift from the wheel/pinch handlers below.
+  const gestureStart = useRef({ x: 0, y: 0 })
+  const swipeFired = useRef(false)
+  const isAtDefaultZoom = () => Math.abs(scaleRef.current - 1) < 0.01
   const applyTransform = useCallback(() => {
     const target = targetRef.current;
     if (target) {
@@ -50,10 +74,18 @@ export function useZoomPan(
       if ((e.target as HTMLElement).closest('button')) return
       dragging.current = true
       last.current = { x: e.clientX, y: e.clientY }
+      gestureStart.current = { x: e.clientX, y: e.clientY }
+      swipeFired.current = false
     }
 
     function onMouseMove(e: MouseEvent) {
       if (!dragging.current) return
+
+      if (isAtDefaultZoom()) {
+        maybeFireSwipe(e.clientX, e.clientY)
+        return
+      }
+
       offsetRef.current = {
         x: offsetRef.current.x + e.clientX - last.current.x,
         y: offsetRef.current.y + e.clientY - last.current.y
@@ -63,6 +95,17 @@ export function useZoomPan(
     }
 
     function onMouseUp() { dragging.current = false }
+
+    function maybeFireSwipe(clientX: number, clientY: number) {
+      if (!onHorizontalSwipe || swipeFired.current) return
+      const totalDx = clientX - gestureStart.current.x
+      const totalDy = clientY - gestureStart.current.y
+      const direction = detectHorizontalSwipe(totalDx, totalDy, containerRef.current?.clientWidth ?? 0)
+      if (direction !== null) {
+        swipeFired.current = true
+        onHorizontalSwipe(direction)
+      }
+    }
 
     function onTouchStart(e: TouchEvent) {
       if ((e.target as HTMLElement).closest('button')) return
@@ -74,6 +117,8 @@ export function useZoomPan(
       } else if (e.touches.length === 1) {
         dragging.current = true
         last.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+        gestureStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+        swipeFired.current = false
       }
     }
 
@@ -87,6 +132,10 @@ export function useZoomPan(
         setScale(s => Math.min(4, Math.max(0.5, s * (dist / pinchDist.current!))))
         pinchDist.current = dist
       } else if (e.touches.length === 1 && dragging.current) {
+        if (isAtDefaultZoom()) {
+          maybeFireSwipe(e.touches[0].clientX, e.touches[0].clientY)
+          return
+        }
         offsetRef.current = {
           x: offsetRef.current.x + e.touches[0].clientX - last.current.x,
           y: offsetRef.current.y + e.touches[0].clientY - last.current.y
@@ -115,7 +164,7 @@ export function useZoomPan(
       el.removeEventListener('touchmove', onTouchMove)
       el.removeEventListener('touchend', onTouchEnd)
     }
-  }, [containerRef, applyTransform])
+  }, [containerRef, applyTransform, onHorizontalSwipe])
 
   return { scale, reset, zoomIn, zoomOut }
 }

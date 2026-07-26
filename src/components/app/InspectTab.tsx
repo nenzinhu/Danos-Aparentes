@@ -221,6 +221,7 @@ export default function InspectTab({
               onRemoveDamageFromPart={onRemoveDamageFromPart}
               speak={speak}
               speakHover={speakHover}
+              onViewTypeChange={onViewTypeChange}
             >
               <VehicleViewer.Controls />
               <ErrorBoundary>
@@ -231,7 +232,7 @@ export default function InspectTab({
               <VehicleViewer.FloatingDamage />
               <VehicleViewer.FullscreenOverlay />
               <div className="mt-1.5 text-[0.72rem] text-[var(--text-muted)] text-center">
-                Clique em uma peça para registrar avaria • Scroll ou pinch para zoom
+                Clique em uma peça para registrar avaria • Arraste para girar • Scroll ou pinch para zoom
               </div>
             </VehicleViewer.Root>
             <div className="mt-8 pt-6 border-t border-[var(--panel-border)]">
