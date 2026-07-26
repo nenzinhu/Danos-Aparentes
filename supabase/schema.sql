@@ -149,6 +149,11 @@ alter table report_hashes add column if not exists geo_address text;
 -- embutível para reforçar de quem é o laudo (adicionada após a criação original).
 alter table report_hashes add column if not exists company_name text default '';
 
+-- Logo da empresa (data URL, já comprimido no upload) exibido junto do nome
+-- na página /verify. Antes só o nome era salvo — a verificação pública nunca
+-- mostrava o logo, mesmo quando o laudo original tinha um configurado.
+alter table report_hashes add column if not exists company_logo text default '';
+
 -- Versionamento visível do laudo: report_key agrupa reemissões do MESMO laudo
 -- (placa + Nº OS normalizados, calculado no cliente em registerHash) e version
 -- é o número sequencial dentro desse grupo. Sem isso, reemitir um laudo com

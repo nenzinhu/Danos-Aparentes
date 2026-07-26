@@ -25,7 +25,7 @@ export async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgDat
   const theme = resolveTheme(pdfTheme)
 
   const hash = await computeHash(info, damages, ts)
-  await registerHash(hash, info, damages, date, settings?.companyName)
+  await registerHash(hash, info, damages, date, settings?.companyName, settings?.companyLogo)
 
   const geo = info.geo
   const geoQuery = geo ? `&lat=${geo.lat}&lng=${geo.lng}` : ''

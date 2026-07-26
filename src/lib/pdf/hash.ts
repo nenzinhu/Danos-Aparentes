@@ -63,7 +63,7 @@ export async function computeHash(info: VehicleInfo, damages: Damage[], ts: numb
 }
 
 /** Registra o hash no Supabase para a página /verify conferir depois */
-export async function registerHash(hash: string, info: VehicleInfo, damages: Damage[], date: string, companyName?: string) {
+export async function registerHash(hash: string, info: VehicleInfo, damages: Damage[], date: string, companyName?: string, companyLogo?: string) {
   if (!supabaseEnabled || !supabase || hash === 'N/D') return
   try {
     const { data: { session } } = await supabase.auth.getSession()
@@ -87,6 +87,7 @@ export async function registerHash(hash: string, info: VehicleInfo, damages: Dam
       geo_accuracy: info.geo?.accuracy ?? null,
       geo_address: info.geo?.address ?? null,
       company_name: companyName || '',
+      company_logo: companyLogo || '',
       report_key: reportKey,
       version,
     })
