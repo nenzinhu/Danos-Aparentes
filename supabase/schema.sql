@@ -149,6 +149,16 @@ alter table report_hashes add column if not exists geo_address text;
 -- embutível para reforçar de quem é o laudo (adicionada após a criação original).
 alter table report_hashes add column if not exists company_name text default '';
 
+-- Versionamento visível do laudo: report_key agrupa reemissões do MESMO laudo
+-- (placa + Nº OS normalizados, calculado no cliente em registerHash) e version
+-- é o número sequencial dentro desse grupo. Sem isso, reemitir um laudo com
+-- correção criava um hash novo sem nenhum vínculo com o anterior — o cliente
+-- final não tinha como saber se estava vendo a versão mais recente ou uma
+-- versão já substituída (risco jurídico/de fraude apontado pela perícia).
+alter table report_hashes add column if not exists report_key text default '';
+alter table report_hashes add column if not exists version int default 1;
+create index if not exists report_hashes_report_key_idx on report_hashes (report_key, version);
+
 alter table report_hashes enable row level security;
 
 -- Qualquer pessoa pode consultar um hash específico (é assim que a verificação

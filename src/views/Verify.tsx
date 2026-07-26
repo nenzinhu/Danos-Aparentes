@@ -14,6 +14,15 @@ interface HashRecord {
   geo_accuracy?: number | null
   geo_address?: string | null
   company_name?: string | null
+  report_key?: string | null
+  version?: number | null
+}
+
+interface VersionInfo {
+  version: number
+  total: number
+  latestHash: string
+  isLatest: boolean
 }
 
 type Status = 'loading' | 'valid' | 'not_found' | 'no_hash' | 'offline' | 'error'
@@ -60,6 +69,7 @@ export default function Verify() {
   const [qrScanning, setQrScanning] = useState(false)
   const [qrError, setQrError] = useState('')
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
+  const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   async function handleGenerateCurrentPdf() {
@@ -172,6 +182,7 @@ export default function Verify() {
 
     setHash(h)
     setRecord(null)
+    setVersionInfo(null)
 
     if (!supabaseEnabled || !supabase) {
       setStatus('offline')
@@ -190,8 +201,26 @@ export default function Verify() {
         setStatus('not_found')
         return
       }
-      setRecord(data as HashRecord)
+      const rec = data as HashRecord
+      setRecord(rec)
       setStatus('valid')
+
+      if (rec.report_key) {
+        const { data: siblings } = await supabase
+          .from('report_hashes')
+          .select('hash, version')
+          .eq('report_key', rec.report_key)
+          .order('version', { ascending: true })
+        if (siblings && siblings.length > 0) {
+          const latest = siblings[siblings.length - 1] as { hash: string; version: number }
+          setVersionInfo({
+            version: rec.version || 1,
+            total: siblings.length,
+            latestHash: latest.hash,
+            isLatest: latest.hash === rec.hash,
+          })
+        }
+      }
     } catch {
       setStatus('error')
     }
@@ -375,6 +404,32 @@ export default function Verify() {
             </div>
           )}
 
+          {/* Versão do laudo — visível sempre que houver mais de uma reemissão
+              para a mesma placa + OS, para que quem verifica saiba se está
+              olhando o documento mais recente ou uma versão já substituída. */}
+          {status === 'valid' && versionInfo && versionInfo.total > 1 && (
+            versionInfo.isLatest ? (
+              <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 flex items-center justify-between gap-4">
+                <p className="text-xs font-bold text-emerald-800">
+                  ✓ Versão {versionInfo.version} de {versionInfo.total} — esta é a versão mais recente deste laudo.
+                </p>
+              </div>
+            ) : (
+              <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 flex flex-col gap-2">
+                <p className="text-xs font-bold text-amber-800">
+                  ⚠️ Versão {versionInfo.version} de {versionInfo.total} — este laudo foi substituído por uma versão mais recente.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => void applyAndVerify(versionInfo.latestHash)}
+                  className="self-start text-xs font-black uppercase tracking-wider text-amber-900 underline hover:no-underline"
+                >
+                  Ver a versão mais recente →
+                </button>
+              </div>
+            )
+          )}
+
           {/* Data Section */}
           {status === 'valid' && record && (
             <div className="space-y-4">
@@ -385,6 +440,7 @@ export default function Verify() {
                 <Row label="Danos Registrados" value={String(record.damages_count)} />
                 <Row label="Data de Emissão" value={record.issued_at || 'NÃO INFORMADA'} />
                 {record.company_name && <Row label="Empresa Emissora" value={record.company_name} />}
+                {versionInfo && <Row label="Versão do Laudo" value={`${versionInfo.version} de ${versionInfo.total}`} />}
               </div>
             </div>
           )}

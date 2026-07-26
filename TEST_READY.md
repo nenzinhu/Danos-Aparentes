@@ -30,8 +30,10 @@ All three files below now exist under `src/lib/pdf/__tests__/` and pass under `n
 | `pdfCore.test.ts` | `hash.ts` (SHA-256 determinism/tamper sensitivity, QR data URL), `theme.ts` (`resolveTheme` for all 6 static themes + fallback, `pillBadge`, `sectionTitle`) | 13 |
 | `pdfPhotosAndSections.test.ts` | `sections.ts` — status badge severity escalation, damage summary counts, damage table rows/empty state, info table + custom fields, photo gallery chunking/captions, interior section, signature block | 21 |
 | `pdfPaginationAndEdgeCases.test.ts` | `html.ts` `buildFullHtml` — zero damages, 15+ damages, zero/12+ photos, 1000+ char notes, UTF-8/emoji preservation, logo vs. company-name fallback, 6-theme matrix, 50-damage perf budget | 19 |
+| `render.test.ts` | `render.ts` — filename from plate (+ "sem-placa" fallback), hash passthrough, html2pdf options wiring, `generatePdfBlob` returns a Blob without calling `save()`, aspect-fit-to-A4 math (wide vs. tall canvas), `buildBadgeSnippet` URL construction | 9 |
+| `reportVersioning.test.ts` | `hash.ts` `buildReportKey` — plate+ref normalization/stability, empty-key fallback, distinct keys per plate | 5 |
 
-**Total: 53 tests, all passing.** Combined with the rest of the suite: `npm test` → 142 tests / 16 files passing.
+**Total: 67 tests, all passing.** Combined with the rest of the suite: `npm test` → 159 tests / 19 files passing.
 
 ## 2. What is NOT covered / does not exist yet
 
@@ -44,9 +46,10 @@ All three files below now exist under `src/lib/pdf/__tests__/` and pass under `n
   `pdfPaginationAndEdgeCases.test.ts` — "does NOT escape HTML in free-text fields"). Low practical risk today
   since the HTML is only ever rendered client-side into a PDF from the inspector's own input, not served back
   as live HTML to other users — but worth hardening before any feature that echoes these fields elsewhere.
-- `render.ts` (`generatePdf`, `generatePdfBlob`, `renderSinglePage`, `renderMultiPage`) is still untested —
-  it depends on `html2pdf.js`/`html2canvas` DOM rendering, which needs a browser-like test environment
-  (jsdom/playwright), not the current `node` vitest environment. Out of scope for this pass.
+- `render.ts`'s actual browser rendering (`html2pdf.js`/`html2canvas` DOM/Canvas output) is still untested —
+  `render.test.ts` mocks both modules and covers the orchestration logic (filenames, option wiring, the
+  aspect-fit math, save vs. blob output) but not real pixel output. Real rendering needs a browser-like test
+  environment (jsdom-with-canvas, or Playwright), not the current `node` vitest environment.
 
 ## 3. Running the tests
 

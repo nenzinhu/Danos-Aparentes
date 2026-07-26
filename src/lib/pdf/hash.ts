@@ -1,6 +1,20 @@
 import QRCode from 'qrcode'
 import { Damage, VehicleInfo } from '../../types'
 import { supabase, supabaseEnabled } from '../supabase'
+import { normalizePlate } from '../reportComparison'
+
+/**
+ * Chave que agrupa reemissões do MESMO laudo (placa + Nº OS normalizados).
+ * Sem placa e sem ref não há como saber se dois laudos são a "mesma vistoria"
+ * reemitida — nesse caso cada hash fica isolado (report_key vazia), igual ao
+ * comportamento anterior a essa versão.
+ */
+export function buildReportKey(info: Pick<VehicleInfo, 'plate' | 'ref'>): string {
+  const plate = normalizePlate(info.plate || '')
+  const ref = (info.ref || '').trim().toUpperCase()
+  if (!plate && !ref) return ''
+  return `${plate}::${ref}`
+}
 
 /** QR Code de verificação do laudo (PDF) — bundled via pacote `qrcode`. */
 export async function generateQrDataUrl(text: string): Promise<string> {
@@ -54,6 +68,17 @@ export async function registerHash(hash: string, info: VehicleInfo, damages: Dam
   try {
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) return
+
+    const reportKey = buildReportKey(info)
+    let version = 1
+    if (reportKey) {
+      const { count } = await supabase
+        .from('report_hashes')
+        .select('hash', { count: 'exact', head: true })
+        .eq('report_key', reportKey)
+      version = (count ?? 0) + 1
+    }
+
     await supabase.from('report_hashes').insert({
       hash, user_id: session.user.id, plate: info.plate || '',
       ref: info.ref || '', issued_at: date, damages_count: damages.length,
@@ -62,6 +87,8 @@ export async function registerHash(hash: string, info: VehicleInfo, damages: Dam
       geo_accuracy: info.geo?.accuracy ?? null,
       geo_address: info.geo?.address ?? null,
       company_name: companyName || '',
+      report_key: reportKey,
+      version,
     })
   } catch { /* best-effort — não bloqueia a geração do PDF */ }
 }

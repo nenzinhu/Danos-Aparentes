@@ -8,7 +8,38 @@ import Link from 'next/link'
 
 export default function Demo() {
   const [damages, setDamages] = useState<Damage[]>([])
+  const [generatingSample, setGeneratingSample] = useState(false)
   const { speak, speakHover } = useTts()
+
+  async function handleDownloadSample() {
+    if (damages.length === 0 || generatingSample) return
+    setGeneratingSample(true)
+    try {
+      const { generatePdf } = await import('../lib/pdf')
+      const info: import('../types').VehicleInfo = {
+        owner: 'Cliente Exemplo',
+        phone: '',
+        brand: 'Veículo de demonstração',
+        plate: '' as import('../types').VehicleInfo['plate'],
+        generalNotes: '',
+        interiorNotes: '',
+        interiorPhotos: [],
+        interiorPhotoNotes: [],
+        profile: '',
+        ref: '',
+        color: '',
+        vehicleTypeDesc: '',
+        city: '',
+        state: '',
+      }
+      // Amostra pública, sem login: nenhuma chamada ao Supabase é feita (o
+      // hash é calculado localmente e registerHash() só grava se houver
+      // sessão autenticada — aqui não há, então é puramente um PDF local).
+      await generatePdf(info, damages, undefined, { watermark: 'AMOSTRA' })
+    } finally {
+      setGeneratingSample(false)
+    }
+  }
 
   function handleAddDamage(partId: string, partName: string, type: DamageType, typeName: string) {
     const newDamage: Damage = {
@@ -58,6 +89,18 @@ export default function Demo() {
           </VehicleViewer.Root>
         </div>
       </div>
+
+      {damages.length > 0 && (
+        <div className='flex justify-center shrink-0 mt-3'>
+          <button
+            onClick={handleDownloadSample}
+            disabled={generatingSample}
+            className='bg-primary/10 border border-primary/40 text-primary font-bold text-xs px-5 py-2.5 rounded-lg hover:bg-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+          >
+            {generatingSample ? 'Gerando PDF...' : '📥 Baixar PDF de amostra (grátis, sem cadastro)'}
+          </button>
+        </div>
+      )}
 
       <footer className='flex items-center justify-center gap-4 shrink-0 mt-4 flex-wrap'>
         <span className='text-xs font-bold text-slate-500 tracking-widest uppercase'>

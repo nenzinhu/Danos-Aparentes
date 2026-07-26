@@ -108,6 +108,18 @@ describe('buildFullHtml — boundary scenarios', () => {
     const { html } = await buildFullHtml(makeVehicleInfo(), [], undefined, { companyName: 'Oficina Central' })
     expect(html).toContain('Oficina Central')
   })
+
+  it('renders a diagonal watermark overlay when settings.watermark is set', async () => {
+    const { html } = await buildFullHtml(makeVehicleInfo(), [], undefined, { watermark: 'AMOSTRA' })
+    expect(html).toContain('AMOSTRA')
+    expect(html).toContain('rotate(-32deg)')
+    expect(html).toContain('pointer-events:none')
+  })
+
+  it('omits the watermark overlay entirely when not set', async () => {
+    const { html } = await buildFullHtml(makeVehicleInfo(), [])
+    expect(html).not.toContain('rotate(-32deg)')
+  })
 })
 
 describe('buildFullHtml — theme matrix', () => {

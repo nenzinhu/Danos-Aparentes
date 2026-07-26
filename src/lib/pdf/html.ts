@@ -78,7 +78,10 @@ export async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgDat
 </style>
 </head>
 <body class="theme-${pdfTheme}" style="background:${theme.bgMain};">
-<div class="page-container theme-${pdfTheme}" style="width:794px;background:${theme.bgMain};color:${theme.textMain};font-family:${theme.fontMain};">
+<div class="page-container theme-${pdfTheme}" style="width:794px;background:${theme.bgMain};color:${theme.textMain};font-family:${theme.fontMain};position:relative;">
+  ${settings?.watermark ? `<div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:none;z-index:999;">
+    <span style="font-size:110px;font-weight:900;letter-spacing:0.05em;color:${theme.accentColor};opacity:0.14;transform:rotate(-32deg);white-space:nowrap;font-family:${theme.fontTitle};text-transform:uppercase;">${settings.watermark}</span>
+  </div>` : ''}
 
   <!-- ══ CABEÇALHO ══════════════════════════════════════════════════════ -->
   <div class="pdf-header" style="background:${theme.headerBg};padding:13px 24px 10px;">
