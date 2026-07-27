@@ -327,10 +327,10 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
   }, [layoutKey, targetRef])
 
   return (
-    <div className={`flex flex-col ${isFullscreen ? 'flex-1 min-h-0' : ''}`}>
+    <div className={`flex flex-col ${isFullscreen ? 'h-full min-h-0' : ''}`}>
       <div
         ref={setContainerNode}
-        className={`relative overflow-hidden cursor-grab touch-none flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] ${isFullscreen ? 'rounded-0 flex-1 min-h-0' : 'rounded-2xl flex-1 min-h-[220px]'} ${outlineMode ? `va-outline${isFullscreen ? ' va-outline--fs' : ''}` : ''}`}
+        className={`relative overflow-hidden cursor-grab touch-none flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] ${isFullscreen ? 'rounded-xl flex-1 min-h-0 bg-slate-950/40 border border-white/[0.06]' : 'rounded-2xl flex-1 min-h-[220px]'} ${outlineMode ? `va-outline${isFullscreen ? ' va-outline--fs' : ''}` : ''}`}
       >
         <AnimatePresence mode='wait' custom={orbitDir}>
           <motion.div
@@ -340,13 +340,13 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
             initial='initial'
             animate='animate'
             exit='exit'
-            className={`[transform-style:preserve-3d] ${isFullscreen ? 'w-full h-full flex items-center justify-center' : 'w-full'}`}
+            className={`[transform-style:preserve-3d] ${isFullscreen ? 'w-[92%] h-[88%] max-w-full max-h-full flex items-center justify-center' : 'w-full'}`}
           >
             <div
               ref={setTargetNode}
               id={`container-${vehicleType}-${viewType}`}
               style={{ width: '100%', transformOrigin: 'center center' }}
-              className={isFullscreen ? 'h-full flex items-center justify-center [&>svg]:h-full [&>svg]:w-auto [&>svg]:max-w-full' : ''}
+              className={isFullscreen ? 'h-full w-full flex items-center justify-center [&>svg]:h-full [&>svg]:w-auto [&>svg]:max-w-full [&>svg]:max-h-full' : ''}
             >
               {/* Suspense must live below AnimatePresence, not above it: if a lazy
                   VehicleComp suspends while the previous view is still exiting,
@@ -512,43 +512,59 @@ const FullscreenOverlay = memo(function FullscreenOverlay() {
   if (!fullscreen) return null
 
   return createPortal(
-    <div className='fixed inset-0 z-[9999] bg-[#020617] flex flex-col p-4 select-none animate-in fade-in duration-300'>
-      <VehicleDefs />
-      <div className='flex items-center justify-between mb-2 shrink-0'>
-        <div className='font-extrabold text-base text-[#e8f4ff] flex items-center gap-2'>
-          <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='#00aaff' strokeWidth='2.5'><path d='M8 3H5a2 2 0 00-2 2v3'/><path d='M21 8V5a2 2 0 00-2-2h-3'/><path d='M3 16v3a2 2 0 002 2h3'/><path d='M16 21h3a2 2 0 002-2v-3'/></svg>
-          Inspeção Visual — Tela Cheia
+    <div
+      className='fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-5 select-none animate-in fade-in duration-200'
+      role='dialog'
+      aria-modal='true'
+      aria-label='Inspeção Visual'
+    >
+      <button
+        type='button'
+        aria-label='Fechar inspeção'
+        className='absolute inset-0 bg-slate-950/65 backdrop-blur-[3px] border-0 cursor-pointer'
+        onClick={() => setFullscreen(false)}
+      />
+
+      <div className='relative z-10 flex flex-col w-full max-w-[min(860px,94vw)] h-[min(640px,86dvh)] rounded-2xl border border-white/12 bg-[#020617] shadow-[0_24px_80px_rgba(0,0,0,0.55)] overflow-hidden'>
+        <VehicleDefs />
+        <div className='flex items-center justify-between gap-2 px-3 pt-3 pb-2 shrink-0 flex-wrap'>
+          <div className='font-extrabold text-sm sm:text-base text-[#e8f4ff] flex items-center gap-2 min-w-0'>
+            <svg width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='#00aaff' strokeWidth='2.5' className='shrink-0'><path d='M8 3H5a2 2 0 00-2 2v3'/><path d='M21 8V5a2 2 0 00-2-2h-3'/><path d='M3 16v3a2 2 0 002 2h3'/><path d='M16 21h3a2 2 0 002-2v-3'/></svg>
+            <span className='truncate'>Inspeção Visual</span>
+          </div>
+          <Controls variant='header' />
         </div>
-        <Controls variant='header' />
-      </div>
 
-      <div className='flex justify-end mb-2 shrink-0'>
-        {damages.length === 0 ? (
-          <div className='text-[0.72rem] text-sky-400/35 font-outfit italic'>
-            Nenhuma avaria registrada nesta vista
-          </div>
-        ) : (
-          <div className='flex gap-1.5 flex-wrap justify-end max-h-[72px] overflow-y-auto'>
-            {damages.map((d, i) => (
-              <div key={d.id ?? i} className='flex items-center gap-1.5 bg-red-500/15 border border-red-500/40 rounded-lg px-2.5 py-1 text-[0.72rem] font-bold text-red-400 font-outfit whitespace-nowrap'>
-                <svg width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
-                  <path d='M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z'/>
-                </svg>
-                {d.partName} · {d.typeName}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+        <div className='flex justify-end px-3 mb-1.5 shrink-0'>
+          {damages.length === 0 ? (
+            <div className='text-[0.7rem] text-sky-400/35 font-outfit italic'>
+              Nenhuma avaria registrada nesta vista
+            </div>
+          ) : (
+            <div className='flex gap-1.5 flex-wrap justify-end max-h-[56px] overflow-y-auto'>
+              {damages.map((d, i) => (
+                <div key={d.id ?? i} className='flex items-center gap-1.5 bg-red-500/15 border border-red-500/40 rounded-lg px-2 py-0.5 text-[0.7rem] font-bold text-red-400 font-outfit whitespace-nowrap'>
+                  <svg width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
+                    <path d='M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z'/>
+                  </svg>
+                  {d.partName} · {d.typeName}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-      <ErrorBoundary>
-        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-sky-500/50 italic text-xs animate-pulse min-h-[220px]">Carregando visualizador…</div>}>
-          <Viewport isFullscreen />
-        </Suspense>
-      </ErrorBoundary>
+        <div className='flex-1 min-h-0 px-3 pb-1'>
+          <ErrorBoundary>
+            <Suspense fallback={<div className="h-full flex items-center justify-center text-sky-500/50 italic text-xs animate-pulse min-h-[180px]">Carregando visualizador…</div>}>
+              <Viewport isFullscreen />
+            </Suspense>
+          </ErrorBoundary>
+        </div>
 
-      <div className='mt-1.5 text-[0.72rem] text-sky-200/50 text-center shrink-0'>
-        Clique em uma peça para registrar avaria • Arraste para girar • ESC para sair • Scroll para zoom
+        <div className='px-3 py-2 text-[0.68rem] text-sky-200/45 text-center shrink-0 border-t border-white/5'>
+          Clique numa peça · Arraste para girar · ESC ou fundo para sair · Scroll para zoom
+        </div>
       </div>
     </div>,
     document.body
