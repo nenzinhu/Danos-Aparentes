@@ -1,45 +1,32 @@
 'use client'
-import React, { Suspense } from 'react'
+import React, { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { useAuth } from '@/src/hooks/useAuth'
+import { useAuth, hasSupabaseAuthCookieHint } from '@/src/hooks/useAuth'
 import { supabaseEnabled } from '@/src/lib/supabase'
 import Login from '@/src/views/Login'
+import AppLoadingShell from '@/src/components/app/AppLoadingShell'
 
 /**
- * Entrada leve de /app: visitantes sem sessão veem o Login sem baixar o shell
- * autenticado (InspectTab, veículos, sync, etc.). Isso corta a demora no mobile
- * ao tocar "Entrar" na landing — o painel de email/senha aparece assim que o
- * chunk fino + getSession terminam, em vez de esperar o bundle inteiro do app.
+ * Entrada de /app otimizada para mobile "Entrar":
+ * - Visitantes sem cookie de sessão veem o formulário email/senha imediatamente
+ *   (não esperam INITIAL_SESSION).
+ * - Shell autenticado só baixa depois que há sessão.
+ * - loading.tsx + este shell dão feedback instantâneo na navegação.
  */
 const AuthenticatedApp = dynamic(() => import('@/src/components/app/AuthenticatedApp'), {
-  loading: () => (
-    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex items-center justify-center">
-      Carregando…
-    </div>
-  ),
+  loading: () => <AppLoadingShell />,
 })
-
-function AuthBootScreen() {
-  return (
-    <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex items-center justify-center">
-      Carregando…
-    </div>
-  )
-}
 
 export default function AppMainPage() {
   const { session, loading: authLoading, signIn, signUp, resetPassword } = useAuth()
+  const [likelyAuthed] = useState(() => hasSupabaseAuthCookieHint())
 
-  if (supabaseEnabled && authLoading) {
-    return <AuthBootScreen />
+  if (supabaseEnabled && authLoading && likelyAuthed) {
+    return <AppLoadingShell />
   }
 
   if (supabaseEnabled && !session) {
-    return (
-      <Suspense fallback={<AuthBootScreen />}>
-        <Login onSignIn={signIn} onSignUp={signUp} onResetPassword={resetPassword} />
-      </Suspense>
-    )
+    return <Login onSignIn={signIn} onSignUp={signUp} onResetPassword={resetPassword} />
   }
 
   return <AuthenticatedApp />

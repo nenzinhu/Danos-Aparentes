@@ -97,11 +97,7 @@ export default function AppAuthGate({
   }
 
   if (supabaseEnabled && !session) {
-    return (
-      <Suspense fallback={<div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex items-center justify-center">Carregando…</div>}>
-        <Login onSignIn={onSignIn} onSignUp={onSignUp} onResetPassword={onResetPassword} />
-      </Suspense>
-    )
+    return <Login onSignIn={onSignIn} onSignUp={onSignUp} onResetPassword={onResetPassword} />
   }
 
   if (supabaseEnabled && session && subscription && !subscription.hasAccess) {

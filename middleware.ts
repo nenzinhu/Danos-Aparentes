@@ -7,9 +7,13 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Exclui estáticos e assets — só rotas que precisam de cookie de sessão.
-     */
-    '/((?!_next/static|_next/image|favicon.ico|icons/|vendor/|videos/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|mp4|js|css|woff2?)$).*)',
+    // Só rotas que precisam de cookie de sessão — marketing pages não
+    // pagam getUser() no edge (acelera o tap em Entrar a partir da home).
+    '/app/:path*',
+    '/api/:path*',
+    '/pagamento-pix',
+    '/pagamento-cartao',
+    '/historico/:path*',
+    '/assinar/:path*',
   ],
 }

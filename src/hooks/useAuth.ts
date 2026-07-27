@@ -1,7 +1,20 @@
-'use client';
+'use client'
 import { useState, useEffect } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase, supabaseEnabled } from '../lib/supabase'
+
+/**
+ * True when the browser already has a Supabase auth cookie.
+ * Used to decide whether to show Login immediately (guest) vs a spinner
+ * (likely returning session) before INITIAL_SESSION resolves.
+ */
+export function hasSupabaseAuthCookieHint(): boolean {
+  if (typeof document === 'undefined') return false
+  return document.cookie.split(';').some((part) => {
+    const name = part.trim().split('=')[0] ?? ''
+    return name.startsWith('sb-') && name.includes('auth-token')
+  })
+}
 
 export function useAuth() {
   const [session, setSession] = useState<Session | null>(null)
@@ -9,12 +22,11 @@ export function useAuth() {
 
   useEffect(() => {
     if (!supabase) return
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setLoading(false)
-    })
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, s) => {
+    // Single INITIAL_SESSION event — avoids getSession()+listener double work
+    // on cold /app entry (noticeable on mobile networks).
+    const { data: listener } = supabase.auth.onAuthStateChange((event, s) => {
       setSession(s)
+      if (event === 'INITIAL_SESSION') setLoading(false)
     })
     return () => listener.subscription.unsubscribe()
   }, [])

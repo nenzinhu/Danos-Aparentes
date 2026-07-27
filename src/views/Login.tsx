@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Logo from '../components/Logo'
 import GsapAuthTabs from '../components/GsapAuthTabs'
 import GsapAuthPanel from '../components/GsapAuthPanel'
@@ -17,8 +17,9 @@ type Mode = 'login' | 'signup' | 'reset'
 
 export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const returnTo = getSafeReturnTo(searchParams.get('returnTo'))
+  // Read query from window — avoids useSearchParams Suspense that delayed the
+  // email/password panel on mobile Entrar.
+  const [returnTo, setReturnTo] = useState('/app')
   const [mode, setMode] = useState<Mode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,7 +27,11 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
   const [info, setInfo] = useState('')
   const [busy, setBusy] = useState(false)
 
-  useEffect(() => { if (searchParams.get('mode') === 'signup') { const id = setTimeout(() => setMode('signup'), 0); return () => clearTimeout(id); } }, [searchParams])
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setReturnTo(getSafeReturnTo(params.get('returnTo')))
+    if (params.get('mode') === 'signup') setMode('signup')
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

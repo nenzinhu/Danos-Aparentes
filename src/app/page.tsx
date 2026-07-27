@@ -1,7 +1,6 @@
 "use client";
 import { DirectionalTransition } from './DirectionalTransition'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import IntroVideo from '../components/IntroVideo'
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
@@ -17,6 +16,7 @@ import TrustSection from '../components/TrustSection';
 import FinalCtaSection from '../components/FinalCtaSection';
 import LandingPromoVideo from '../components/LandingPromoVideo';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
+import AppRoutePrefetch from '../components/AppRoutePrefetch';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   heroSpecCellVariant,
@@ -219,7 +219,6 @@ import { useGsapScrollAnimations } from '../hooks/useGsapScrollAnimations';
 export default function LandingPage() {
   const [darkMode, setDarkMode] = useState(true);
   const reduceMotion = useReducedMotion();
-  const router = useRouter();
   useGsapScrollAnimations();
 
   useEffect(() => {
@@ -227,12 +226,6 @@ export default function LandingPage() {
     const isDark = saved !== null ? saved !== 'false' : window.matchMedia('(prefers-color-scheme: dark)').matches;
     setDarkMode(isDark);
   }, []);
-
-  // Prefetch the light /app entry (Login) so mobile "Entrar" does not wait on
-  // first tap to start downloading the auth chunk.
-  useEffect(() => {
-    router.prefetch('/app');
-  }, [router]);
 
   const toggleDarkMode = () => {
     const nextDark = !darkMode;
@@ -256,6 +249,7 @@ export default function LandingPage() {
 
   return (
     <DirectionalTransition>
+      <AppRoutePrefetch />
       <div className="min-h-screen w-full bg-[var(--bg-main)] text-[var(--text-main)] transition-colors duration-300 font-outfit overflow-y-auto flex flex-col relative selection:bg-primary selection:text-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(LANDING_JSONLD) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PRICING_FAQ_JSONLD) }} />
@@ -295,7 +289,10 @@ export default function LandingPage() {
           <a href="#faq" onClick={scrollToFaq} className="gsap-header-item hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             FAQ
           </a>
-          <Link href="/app" transitionTypes={['nav-forward']} className="gsap-header-item inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
+          {/* Sem nav-forward: View Transitions congelam a landing até /app pintar,
+              o que no mobile parece "Entrar não responde". Prefetch + loading.tsx
+              dão feedback imediato; a animação de slide fica nos CTAs de signup. */}
+          <Link href="/app" prefetch className="gsap-header-item inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
             Entrar
           </Link>
           <button
