@@ -294,7 +294,10 @@ export default function LandingPage() {
           <a href="#faq" onClick={scrollToFaq} className="gsap-header-item hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             FAQ
           </a>
-          <Link href="/app" prefetch transitionTypes={['nav-forward']} className="gsap-header-item inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
+          {/* Sem nav-forward: View Transitions congelam a landing até /app pintar,
+              o que no mobile parece "Entrar não responde". Prefetch + loading.tsx
+              dão feedback imediato. */}
+          <Link href="/app" prefetch className="gsap-header-item inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
             Entrar
           </Link>
           <button

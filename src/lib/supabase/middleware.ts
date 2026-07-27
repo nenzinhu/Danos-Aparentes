@@ -2,9 +2,18 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { getSupabaseAnonKey, getSupabaseUrl } from '@/lib/supabaseEnv'
 
+function hasAuthCookie(request: NextRequest): boolean {
+  return request.cookies.getAll().some(
+    (c) => c.name.startsWith('sb-') && c.name.includes('auth-token'),
+  )
+}
+
 /**
  * Renova tokens de sessão nos cookies da request/response.
  * Login fica embutido em /app — não redireciona; só sincroniza cookies.
+ *
+ * Guests (sem cookie sb-*-auth-token) pulam getUser() — evita round-trip
+ * ao Auth server no caminho quente Entrar → painel email/senha no mobile.
  */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
@@ -12,6 +21,9 @@ export async function updateSession(request: NextRequest) {
   const url = getSupabaseUrl()
   const anonKey = getSupabaseAnonKey()
   if (!url || !anonKey) return supabaseResponse
+
+  // Fast path for unauthenticated visitors tapping "Entrar".
+  if (!hasAuthCookie(request)) return supabaseResponse
 
   const supabase = createServerClient(url, anonKey, {
     cookies: {

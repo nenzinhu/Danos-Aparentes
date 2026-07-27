@@ -28,6 +28,7 @@ export default function LandingCtaLink({ id, className, style, children, transit
     <Link
       id={id}
       href={href}
+      prefetch
       transitionTypes={transitionTypes as never}
       onClick={() => trackLead()}
       className={className}
