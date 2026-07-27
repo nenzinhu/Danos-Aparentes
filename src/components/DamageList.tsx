@@ -2,8 +2,8 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Damage, Severity, ViewType } from '../types'
-import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '../lib/imageUtils'
-import { storePhoto, deletePhotoRef } from '../lib/photoStore'
+import { storePhotoEvidence } from '../lib/photoEvidence'
+import { deletePhotoRef } from '../lib/photoStore'
 import {
   finishPhotoUploadProgress,
   startPhotoUploadProgress,
@@ -42,20 +42,19 @@ export default function DamageList({ damages, onRemove, onUpdate, previousReport
     try {
       updatePhotoUploadProgress({
         phase: 'compressing',
-        label: 'Comprimindo imagem…',
+        label: 'Preservando original e otimizando…',
       })
-      const compressedBlob = await compressImage(file, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY)
+      const { optimizedRef } = await storePhotoEvidence(file, { damageId: id })
       updatePhotoUploadProgress({
         phase: 'uploading',
         current: 0,
         label: 'Salvando foto localmente…',
       })
-      const photoRef = await storePhoto(compressedBlob)
       updatePhotoUploadProgress({ current: 1 })
       const dmg = damages.find(d => d.id === id)
       if (!dmg) return
       onUpdate(id, {
-        photos: [...dmg.photos, photoRef],
+        photos: [...dmg.photos, optimizedRef],
         photoNotes: [...(dmg.photoNotes ?? []), ''],
       })
     } catch (error) {

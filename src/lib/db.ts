@@ -1,5 +1,6 @@
 const DB_NAME = 'avarias-pwa'
-const DB_VERSION = 5
+/** v6: photo_evidence store for ORIGINAL bytes (FASE 4). */
+const DB_VERSION = 6
 
 export interface SyncQueueItem {
   qid: number
@@ -17,6 +18,35 @@ export interface PhotoRecord {
   mimeType: string
   createdAt: number
   storagePath?: string
+  /** FASE 4: link to photo_evidence.id (original bytes). */
+  originalEvidenceId?: string
+  role?: 'optimized' | 'legacy'
+}
+
+export type PhotoGps = {
+  lat: number
+  lng: number
+  accuracy?: number | null
+}
+
+/** ORIGINAL photo bytes + evidence metadata (never overwritten by compress). */
+export interface PhotoEvidenceRecord {
+  id: string
+  blob: Blob
+  mimeType: string
+  byteSize: number
+  sha256: string
+  optimizedPhotoId: string
+  optimizedSha256?: string
+  width?: number | null
+  height?: number | null
+  capturedAt: number
+  createdAt: number
+  inspectionId?: string | null
+  damageId?: string | null
+  userId?: string | null
+  device?: string | null
+  gps?: PhotoGps | null
 }
 
 function openDB(): Promise<IDBDatabase> {
@@ -41,6 +71,19 @@ function openDB(): Promise<IDBDatabase> {
       }
       if (!photoStore.indexNames.contains('storagePath')) {
         photoStore.createIndex('storagePath', 'storagePath', { unique: false })
+      }
+
+      let evidenceStore: IDBObjectStore
+      if (!db.objectStoreNames.contains('photo_evidence')) {
+        evidenceStore = db.createObjectStore('photo_evidence', { keyPath: 'id' })
+      } else {
+        evidenceStore = req.transaction!.objectStore('photo_evidence')
+      }
+      if (!evidenceStore.indexNames.contains('optimizedPhotoId')) {
+        evidenceStore.createIndex('optimizedPhotoId', 'optimizedPhotoId', { unique: false })
+      }
+      if (!evidenceStore.indexNames.contains('inspectionId')) {
+        evidenceStore.createIndex('inspectionId', 'inspectionId', { unique: false })
       }
     }
     req.onsuccess = () => resolve(req.result)
@@ -141,5 +184,25 @@ export const db = {
   },
   async deletePhoto(id: string) {
     return tx('damage_photos', 'readwrite', s => s.delete(id))
+  },
+
+  async putPhotoEvidence(record: PhotoEvidenceRecord) {
+    return tx('photo_evidence', 'readwrite', s => s.put(record))
+  },
+  async getPhotoEvidence(id: string): Promise<PhotoEvidenceRecord | undefined> {
+    return tx<PhotoEvidenceRecord | undefined>('photo_evidence', 'readonly', s => s.get(id))
+  },
+  async getPhotoEvidenceByOptimizedId(optimizedPhotoId: string): Promise<PhotoEvidenceRecord | undefined> {
+    const database = await openDB()
+    return new Promise((resolve, reject) => {
+      const t = database.transaction('photo_evidence', 'readonly')
+      const idx = t.objectStore('photo_evidence').index('optimizedPhotoId')
+      const req = idx.get(optimizedPhotoId)
+      req.onsuccess = () => resolve(req.result as PhotoEvidenceRecord | undefined)
+      req.onerror = () => reject(req.error)
+    })
+  },
+  async deletePhotoEvidence(id: string) {
+    return tx('photo_evidence', 'readwrite', s => s.delete(id))
   },
 }

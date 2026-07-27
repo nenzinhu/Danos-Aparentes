@@ -19,7 +19,7 @@ export interface Damage {
   typeName: string
   severity: Severity
   notes: string
-  photos: string[]  // blob:{id} | storage:{path} | data:... (legado)
+  photos: string[]  // blob:{id} optimized | storage:{path} | data:... (legado); original in photo_evidence
   photoNotes: string[]  // parallel array: caption/tag for each photo
 }
 

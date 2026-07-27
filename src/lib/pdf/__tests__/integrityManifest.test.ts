@@ -79,6 +79,12 @@ describe('hashDataUrlOrRef', () => {
     const h = await hashDataUrlOrRef('storage:user/photo.jpg')
     expect(h).toBe(await sha256Hex('storage:user/photo.jpg'))
   })
+
+  it('prefers FASE 4 original SHA-256 over ref string', async () => {
+    const original = await sha256Hex(new Uint8Array([1, 2, 3]))
+    const h = await hashDataUrlOrRef('blob:optimized-id', original)
+    expect(h).toBe(original)
+  })
 })
 
 describe('buildIntegrityManifest', () => {
@@ -106,6 +112,25 @@ describe('buildIntegrityManifest', () => {
     expect(b.photos_hash).not.toBe(a.photos_hash)
     expect(b.final_hash).not.toBe(a.final_hash)
     expect(b.damages_hash).toBe(a.damages_hash)
+  })
+
+  it('uses originalPhotoHashes for blob refs (FASE 4)', async () => {
+    const info = makeVehicleInfo({ interiorPhotos: [] })
+    const ref = 'blob:opt-display'
+    const originalSha = await sha256Hex(new Uint8Array([42, 42, 42]))
+    const without = await buildIntegrityManifest({
+      info, damages: [makeDamage({ photos: [ref] })], ts: TS, issuedAt: ISSUED,
+    })
+    const withOriginal = await buildIntegrityManifest({
+      info,
+      damages: [makeDamage({ photos: [ref] })],
+      ts: TS,
+      issuedAt: ISSUED,
+      originalPhotoHashes: { [ref]: originalSha },
+    })
+    expect(withOriginal.photo_hashes[0]).toBe(originalSha)
+    expect(withOriginal.photos_hash).not.toBe(without.photos_hash)
+    expect(withOriginal.final_hash).not.toBe(without.final_hash)
   })
 
   it('changes damages_hash and final_hash when severity changes', async () => {

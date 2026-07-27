@@ -2,8 +2,7 @@
 import { useState, useCallback, useMemo } from 'react'
 import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity, SavedReport, InspectionStatus } from '@/src/types'
 import { createId } from '@/src/lib/id'
-import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '@/src/lib/imageUtils'
-import { storePhoto } from '@/src/lib/photoStore'
+import { storePhotoEvidence } from '@/src/lib/photoEvidence'
 import { playDamageAddedFeedback } from '@/src/lib/feedback'
 import { buildPreviousReportSummary, type PreviousReportSummary } from '@/src/lib/reportComparison'
 import {
@@ -95,12 +94,11 @@ export function useInspectionWorkflow({
     ;(async () => {
       startPhotoUploadProgress(1, 'Preparando foto da avaria…')
       try {
-        updatePhotoUploadProgress({ phase: 'compressing', label: 'Comprimindo imagem…' })
-        const compressedBlob = await compressImage(photoFile, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY)
+        updatePhotoUploadProgress({ phase: 'compressing', label: 'Preservando original e otimizando…' })
+        const { optimizedRef } = await storePhotoEvidence(photoFile, { damageId: id })
         updatePhotoUploadProgress({ phase: 'uploading', current: 0, label: 'Salvando foto localmente…' })
-        const photoRef = await storePhoto(compressedBlob)
         updatePhotoUploadProgress({ current: 1 })
-        updateDamage(id, { photos: [photoRef], photoNotes: [''] })
+        updateDamage(id, { photos: [optimizedRef], photoNotes: [''] })
       } catch (error) {
         console.error('Error compressing image:', error)
       } finally {
@@ -125,12 +123,11 @@ export function useInspectionWorkflow({
     ;(async () => {
       startPhotoUploadProgress(1, 'Preparando foto da avaria…')
       try {
-        updatePhotoUploadProgress({ phase: 'compressing', label: 'Comprimindo imagem…' })
-        const compressedBlob = await compressImage(photoFile, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY)
+        updatePhotoUploadProgress({ phase: 'compressing', label: 'Preservando original e otimizando…' })
+        const { optimizedRef } = await storePhotoEvidence(photoFile, { damageId: id })
         updatePhotoUploadProgress({ phase: 'uploading', current: 0, label: 'Salvando foto localmente…' })
-        const photoRef = await storePhoto(compressedBlob)
         updatePhotoUploadProgress({ current: 1 })
-        updateDamage(id, { photos: [photoRef], photoNotes: [''] })
+        updateDamage(id, { photos: [optimizedRef], photoNotes: [''] })
       } catch (error) {
         console.error('Error compressing image:', error)
       } finally {

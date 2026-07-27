@@ -154,7 +154,15 @@ export async function resolvePhotoUrl(ref: string): Promise<string> {
 
 export async function deletePhotoRef(ref: string): Promise<void> {
   if (isPhotoRef(ref)) {
-    await db.deletePhoto(ref.slice(PHOTO_REF_PREFIX.length))
+    const id = ref.slice(PHOTO_REF_PREFIX.length)
+    // Best-effort: also drop linked ORIGINAL evidence (FASE 4).
+    try {
+      const { deleteEvidenceForOptimizedId } = await import('./photoEvidence')
+      await deleteEvidenceForOptimizedId(id)
+    } catch {
+      /* ignore — evidence store may be unavailable on old DBs mid-upgrade */
+    }
+    await db.deletePhoto(id)
   }
 }
 

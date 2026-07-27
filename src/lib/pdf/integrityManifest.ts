@@ -43,11 +43,18 @@ export async function sha256Hex(data: string | ArrayBuffer | Uint8Array): Promis
 
 /**
  * Hash a photo reference.
+ * - If `preferredOriginalSha256` is set (FASE 4 evidence), use it (hash of ORIGINAL bytes).
  * - `data:image/...;base64,...` → decode and SHA-256 the raw bytes
  * - otherwise (`blob:`, `storage:`, URL) → SHA-256 of the UTF-8 ref string
- *   (limitation: content behind the ref is not hashed at emit time)
+ *   (limitation: content behind the ref is not hashed at emit time unless evidence exists)
  */
-export async function hashDataUrlOrRef(photo: string): Promise<string> {
+export async function hashDataUrlOrRef(
+  photo: string,
+  preferredOriginalSha256?: string | null,
+): Promise<string> {
+  if (preferredOriginalSha256 && /^[0-9a-f]{64}$/i.test(preferredOriginalSha256)) {
+    return preferredOriginalSha256.toLowerCase()
+  }
   const m = /^data:[^;]+;base64,(.+)$/s.exec(photo)
   if (m) {
     const binary = atob(m[1])
@@ -166,6 +173,8 @@ export async function buildIntegrityManifest(args: {
   issuedAt: string
   pdfBytes?: ArrayBuffer | Uint8Array | null
   inspectionId?: string
+  /** FASE 4: display ref → SHA-256 of ORIGINAL bytes when dual-stored. */
+  originalPhotoHashes?: Record<string, string>
 }): Promise<IntegrityManifest> {
   const { info, damages, ts, issuedAt } = args
 
@@ -178,7 +187,8 @@ export async function buildIntegrityManifest(args: {
   const photoRefs = collectPhotoRefs(info, damages)
   const photo_hashes: string[] = []
   for (const ref of photoRefs) {
-    photo_hashes.push(await hashDataUrlOrRef(ref))
+    const preferred = args.originalPhotoHashes?.[ref] ?? null
+    photo_hashes.push(await hashDataUrlOrRef(ref, preferred))
   }
   const photos_hash = await sha256Hex(photo_hashes.join('\n'))
 

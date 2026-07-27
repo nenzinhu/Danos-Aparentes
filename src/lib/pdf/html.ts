@@ -1,6 +1,7 @@
 import { Damage, VehicleInfo } from '../../types'
 import { computeHash, generateQrDataUrl, registerHash } from './hash'
 import { buildIntegrityManifest } from './integrityManifest'
+import { collectOriginalPhotoHashes } from '../photoEvidence'
 import {
   buildDamageTable,
   buildInfoTable,
@@ -32,10 +33,22 @@ export async function buildFullHtml(
 
   // v1 QR /verify PK — unchanged
   const hash = await computeHash(info, damages, ts)
+  // Prefer ORIGINAL byte hashes when FASE 4 evidence exists
+  const photoRefs = [
+    ...damages.flatMap((d) => d.photos || []),
+    ...(info.interiorPhotos || []),
+  ]
+  let originalPhotoHashes: Record<string, string> = {}
+  try {
+    originalPhotoHashes = await collectOriginalPhotoHashes(photoRefs)
+  } catch {
+    /* IndexedDB unavailable in some render contexts — fall back to ref hashing */
+  }
   // v2 layered integrity (no PDF bytes yet — filled later via registerIntegrityPdfHash)
   const manifest = await buildIntegrityManifest({
     info, damages, ts, issuedAt: date, pdfBytes: null,
     inspectionId: settings?.inspectionId || settings?.publicCode,
+    originalPhotoHashes,
   })
   if (!settings?.skipHashRegister) {
     await registerHash(hash, info, damages, date, settings?.companyName, settings?.companyLogo, manifest, {

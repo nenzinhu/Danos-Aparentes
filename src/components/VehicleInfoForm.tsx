@@ -5,8 +5,8 @@ import Button from './ui/Button'
 import WizardStepper from './WizardStepper'
 import type { WizardStep } from './wizardTypes'
 import { IconDocument } from './ui/AnimatedIcons'
-import { compressImage, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY } from '../lib/imageUtils'
-import { storePhoto, deletePhotoRef } from '../lib/photoStore'
+import { storePhotoEvidence } from '../lib/photoEvidence'
+import { deletePhotoRef } from '../lib/photoStore'
 import {
   finishPhotoUploadProgress,
   startPhotoUploadProgress,
@@ -163,14 +163,13 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
     setInteriorCompressing(true)
     startPhotoUploadProgress(1, 'Preparando foto do interior…')
     try {
-      updatePhotoUploadProgress({ phase: 'compressing', label: 'Comprimindo imagem…' })
-      const compressedBlob = await compressImage(file, LOCAL_PHOTO_MAX_WIDTH, LOCAL_PHOTO_QUALITY)
+      updatePhotoUploadProgress({ phase: 'compressing', label: 'Preservando original e otimizando…' })
+      const { optimizedRef } = await storePhotoEvidence(file)
       updatePhotoUploadProgress({ phase: 'uploading', current: 0, label: 'Salvando foto localmente…' })
-      const photoRef = await storePhoto(compressedBlob)
       updatePhotoUploadProgress({ current: 1 })
       onChange({
         ...info,
-        interiorPhotos: [...info.interiorPhotos, photoRef],
+        interiorPhotos: [...info.interiorPhotos, optimizedRef],
         interiorPhotoNotes: [...(info.interiorPhotoNotes ?? []), ''],
       })
     } catch (error) {

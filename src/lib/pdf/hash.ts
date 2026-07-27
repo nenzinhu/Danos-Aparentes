@@ -1,6 +1,7 @@
 import QRCode from 'qrcode'
 import { Damage, VehicleInfo } from '../../types'
 import { appendAuditEvent } from '../audit/auditLog'
+import { collectOriginalPhotoHashes } from '../photoEvidence'
 import { supabase, supabaseEnabled } from '../supabase'
 import { normalizePlate } from '../reportComparison'
 import { buildIntegrityManifest, type IntegrityManifest } from './integrityManifest'
@@ -179,6 +180,17 @@ export async function registerIntegrityPdfHash(
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) return
 
+    const photoRefs = [
+      ...args.damages.flatMap((d) => d.photos || []),
+      ...(args.info.interiorPhotos || []),
+    ]
+    let originalPhotoHashes: Record<string, string> = {}
+    try {
+      originalPhotoHashes = await collectOriginalPhotoHashes(photoRefs)
+    } catch {
+      /* fall back */
+    }
+
     const manifest = await buildIntegrityManifest({
       info: args.info,
       damages: args.damages,
@@ -186,6 +198,7 @@ export async function registerIntegrityPdfHash(
       issuedAt: args.issuedAt,
       pdfBytes,
       inspectionId: args.inspectionId,
+      originalPhotoHashes,
     })
 
     await supabase
