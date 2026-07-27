@@ -5,11 +5,24 @@
 
 export type AppRole = 'solo' | 'owner' | 'inspector'
 
-export type Permission = 'issue' | 'review' | 'verify' | 'export_lgpd' | 'view_team_reports'
+export type Permission =
+  | 'issue'
+  | 'review'
+  | 'verify'
+  | 'export_lgpd'
+  | 'view_team_reports'
+  | 'view_audit_dashboard'
 
 const ROLE_PERMISSIONS: Record<AppRole, ReadonlySet<Permission>> = {
-  solo: new Set(['issue', 'review', 'verify', 'export_lgpd']),
-  owner: new Set(['issue', 'review', 'verify', 'export_lgpd', 'view_team_reports']),
+  solo: new Set(['issue', 'review', 'verify', 'export_lgpd', 'view_audit_dashboard']),
+  owner: new Set([
+    'issue',
+    'review',
+    'verify',
+    'export_lgpd',
+    'view_team_reports',
+    'view_audit_dashboard',
+  ]),
   /** Corporativo inspector: vistoria + emissão própria; revisão fica com o gestor. */
   inspector: new Set(['issue', 'verify', 'export_lgpd']),
 }

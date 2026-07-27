@@ -24,6 +24,15 @@ describe('rbac', () => {
   it('owner can review team reports and export LGPD', () => {
     expect(canReviewReport('owner', 'owner-1', 'inspector-9')).toBe(true)
     expect(canExportLgpdForReport('owner', 'owner-1', 'inspector-9')).toBe(true)
+    expect(roleHasPermission('owner', 'view_audit_dashboard')).toBe(true)
+  })
+
+  it('solo can view own audit dashboard', () => {
+    expect(roleHasPermission('solo', 'view_audit_dashboard')).toBe(true)
+  })
+
+  it('inspector cannot view org audit dashboard', () => {
+    expect(roleHasPermission('inspector', 'view_audit_dashboard')).toBe(false)
   })
 
   it('inspector exports LGPD only for own reports', () => {

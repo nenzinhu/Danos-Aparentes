@@ -19,6 +19,7 @@ import AppShellOverlays from '@/src/components/app/AppShellOverlays'
 import InspectTab from '@/src/components/app/InspectTab'
 import TeamTab from '@/src/components/app/TeamTab'
 import PhotoUploadProgressBar from '@/src/components/PhotoUploadProgressBar'
+import { useTenantContext } from '@/src/hooks/useTenantContext'
 
 function formatSyncFailureToast(dropped: DroppedSyncItem[]): string {
   const first = dropped[0]
@@ -68,6 +69,7 @@ export default function AppMainPage() {
     showToast: shell.showToast,
   })
 
+  const { role: tenantRole } = useTenantContext(session?.user.id)
   const [reviewStale, setReviewStale] = useState(false)
 
   const activeSaved = useMemo(
@@ -211,9 +213,17 @@ export default function AppMainPage() {
 
           <main className="w-full max-w-7xl px-4 flex flex-col gap-6 mt-4">
             {shell.activeTab === 'dashboard' ? (
-              <DashboardView saved={saved} />
+              <DashboardView
+                saved={saved}
+                accessToken={session?.access_token}
+                showAuditDashboard={tenantRole === 'solo' || tenantRole === 'owner'}
+              />
             ) : shell.activeTab === 'team' ? (
-              <TeamTab accessToken={session?.access_token} onToast={shell.showToast} />
+              <TeamTab
+                accessToken={session?.access_token}
+                onToast={shell.showToast}
+                showAuditDashboard={tenantRole === 'owner'}
+              />
             ) : (
               <InspectTab
                 vehicleType={inspection.vehicleType}

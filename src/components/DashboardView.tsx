@@ -18,8 +18,12 @@ import {
 } from './ui/AnimatedIcons'
 
 
+import AuditDashboard from './AuditDashboard'
+
 interface Props {
   saved: SavedReport[]
+  accessToken?: string
+  showAuditDashboard?: boolean
 }
 
 const VEHICLE_NAME: Record<VehicleType, string> = {
@@ -50,7 +54,7 @@ function getReportVehicleType(r: SavedReport): VehicleType {
   return resolveVehicleType(r.vehicleInfo.vehicleTypeDesc, r.damages)
 }
 
-export default function DashboardView({ saved }: Props) {
+export default function DashboardView({ saved, accessToken, showAuditDashboard }: Props) {
   const kpiRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = kpiRef.current
@@ -476,6 +480,10 @@ export default function DashboardView({ saved }: Props) {
           </span>
         </div>
       </div>
+
+      {showAuditDashboard && (
+        <AuditDashboard accessToken={accessToken} enabled={Boolean(accessToken)} />
+      )}
 
     </div>
   )

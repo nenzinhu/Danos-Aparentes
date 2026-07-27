@@ -6,14 +6,16 @@ import { Damage, VehicleType } from '@/src/types'
 
 import { motion } from 'framer-motion'
 import { resolveVehicleType } from '@/src/lib/vehicleTypeInference'
+import AuditDashboard from '@/src/components/AuditDashboard'
 import { IconTeam, IconDocument, IconCheck, IconSparkles } from '../ui/AnimatedIcons'
 
 interface Props {
   accessToken?: string
   onToast: (msg: string) => void
+  showAuditDashboard?: boolean
 }
 
-export default function TeamTab({ accessToken, onToast }: Props) {
+export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Props) {
   const { members, reports, loading, error, inviteMember } = useTeam(accessToken)
   const [email, setEmail] = useState('')
   const [inviteUrl, setInviteUrl] = useState<string | null>(null)
@@ -217,6 +219,10 @@ export default function TeamTab({ accessToken, onToast }: Props) {
           })}
         </div>
       </div>
+
+      {showAuditDashboard && (
+        <AuditDashboard accessToken={accessToken} enabled={Boolean(accessToken)} />
+      )}
     </div>
   )
 }

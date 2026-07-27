@@ -10,6 +10,7 @@ import {
   type PublicVerifyOutcome,
 } from '../lib/verify/publicVerify'
 import { comparePdfUpload, hashPdfBytes } from '../lib/verify/pdfUploadVerify'
+import { logPublicVerifyAudit } from '../lib/verify/logVerifyAudit'
 
 interface HashRecord {
   hash: string
@@ -166,6 +167,9 @@ export default function Verify() {
         const o = resolveVerifyOutcome({ found: false })
         setOutcome(o)
         setStatus(o)
+        if (h) {
+          void logPublicVerifyAudit({ hash: h, outcome: o, method: 'lookup' })
+        }
         return
       }
 
@@ -210,6 +214,12 @@ export default function Verify() {
       })
       setOutcome(o)
       setStatus(o === 'integrity_confirmed' ? 'valid' : o)
+      void logPublicVerifyAudit({
+        hash: rec.hash,
+        outcome: o,
+        inspection_id: rec.inspection_id,
+        method: 'lookup',
+      })
     } catch {
       setStatus('error')
     }
@@ -352,8 +362,19 @@ export default function Verify() {
       if (data) {
         setRecord(data)
         setHash(data.hash)
+        void logPublicVerifyAudit({
+          hash: data.hash,
+          outcome: o,
+          inspection_id: data.inspection_id,
+          method: 'pdf_upload',
+        })
       } else {
         setHash(pdfHash.slice(0, 32).toUpperCase())
+        void logPublicVerifyAudit({
+          hash: pdfHash.slice(0, 32).toUpperCase(),
+          outcome: o,
+          method: 'pdf_upload',
+        })
       }
     } catch {
       setPdfError('Não foi possível verificar o PDF. Tente novamente.')
