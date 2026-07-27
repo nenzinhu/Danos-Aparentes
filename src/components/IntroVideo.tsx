@@ -44,7 +44,15 @@ export default function IntroVideo() {
     // 3. Exit fade
     .to(containerRef.current, { opacity: 0, duration: 0.35, ease: 'power2.inOut', onStart: () => setPhase('fading') });
 
+    // O overlay só desmonta no onComplete da timeline, que depende do ticker
+    // do GSAP (requestAnimationFrame). Numa aba carregada em segundo plano os
+    // frames não chegam, a timeline não termina e o splash — full-screen e com
+    // z-index 99999 — fica cobrindo a página inteira. Esta rede de segurança
+    // encerra o splash mesmo que a animação nunca rode.
+    const safety = window.setTimeout(() => setPhase('done'), 2500);
+
     return () => {
+      window.clearTimeout(safety);
       tl.kill();
     };
   }, []);

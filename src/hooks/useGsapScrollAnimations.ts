@@ -7,6 +7,8 @@ export function useGsapScrollAnimations() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    let headerSafetyTimeout: number | undefined;
+
     const ctx = gsap.context(() => {
 
       // --- 1. SPOTLIGHT CURSOR GLOW NOS CARDS (.spotlight-card / .gsap-card) ---
@@ -171,13 +173,39 @@ export function useGsapScrollAnimations() {
       });
 
       // --- 8. ENTRADA DO HEADER (.gsap-header-item) ---
-      gsap.from('.gsap-header-item', {
-        opacity: 0,
-        y: -14,
-        duration: 0.6,
-        stagger: 0.08,
-        ease: 'power3.out',
-      });
+      // gsap.from() grava opacity:0 no DOM na hora e só devolve a visibilidade
+      // quando o ticker (requestAnimationFrame) roda. Se a aba carrega em
+      // segundo plano — comum no mobile, quando o usuário abre o link e troca
+      // de app — os frames não chegam e o header inteiro (inclusive o
+      // "Entrar") fica apagado. Daí o estado final explícito, o respeito ao
+      // prefers-reduced-motion e a rede de segurança abaixo.
+      const headerItems = gsap.utils.toArray<HTMLElement>('.gsap-header-item');
+      if (headerItems.length > 0) {
+        const revealHeader = () => {
+          gsap.set(headerItems, { clearProps: 'opacity,transform' });
+        };
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          revealHeader();
+        } else {
+          const headerTween = gsap.fromTo(
+            headerItems,
+            { opacity: 0, y: -14 },
+            { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' }
+          );
+
+          headerSafetyTimeout = window.setTimeout(() => {
+            if (headerTween.progress() < 1) {
+              headerTween.kill();
+              revealHeader();
+            }
+          }, 2000);
+
+          headerTween.eventCallback('onComplete', () => {
+            window.clearTimeout(headerSafetyTimeout);
+          });
+        }
+      }
 
       // --- 9. PROFUNDIDADE NO MOBILE (.gsap-depth-item) ---
       // Hover/tilt/spotlight acima não existem no toque; no mobile, esses
@@ -204,6 +232,7 @@ export function useGsapScrollAnimations() {
     });
 
     return () => {
+      window.clearTimeout(headerSafetyTimeout);
       ctx.revert();
     };
   }, []);
