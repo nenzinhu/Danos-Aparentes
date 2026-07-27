@@ -93,24 +93,30 @@ function RootComponent({
 
   const prevViewRef = useRef<ViewType>(viewType)
   const prevVehicleRef = useRef<VehicleType>(vehicleType)
-  const [orbitDir, setOrbitDir] = useState(1)
+  const orbitDirRef = useRef(1)
 
-  useEffect(() => {
-    if (vehicleType !== prevVehicleRef.current) {
-      setOrbitDir(1)
-      prevVehicleRef.current = vehicleType
-      prevViewRef.current = viewType
-      return
-    }
+  // Computed synchronously during render (not in a useEffect) so it's never
+  // stale when AnimatePresence reads `custom` for the exit animation on this
+  // same render. A useEffect here would run one render behind: the exit
+  // variant would compute against the PREVIOUS transition's orbitDir, which
+  // for some VIEW_ORDER pairs happens to numerically equal the entrance
+  // pose (opacity:0, rotateY:90deg) — a degenerate animation that
+  // Framer Motion never signals as complete, permanently stalling
+  // AnimatePresence mode="wait".
+  if (vehicleType !== prevVehicleRef.current) {
+    orbitDirRef.current = 1
+    prevVehicleRef.current = vehicleType
+    prevViewRef.current = viewType
+  } else if (viewType !== prevViewRef.current) {
     const prev = VIEW_ORDER.indexOf(prevViewRef.current)
     const next = VIEW_ORDER.indexOf(viewType)
-    if (prev === next) return
     let diff = next - prev
     if (diff > 2) diff -= 4
     if (diff < -2) diff += 4
-    setOrbitDir(diff >= 0 ? 1 : -1)
+    orbitDirRef.current = diff >= 0 ? 1 : -1
     prevViewRef.current = viewType
-  }, [viewType, vehicleType])
+  }
+  const orbitDir = orbitDirRef.current
 
   const contextValue = useMemo(() => ({
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
@@ -292,12 +298,19 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
               style={{ width: '100%', transformOrigin: 'center center' }}
               className={isFullscreen ? 'h-full flex items-center justify-center [&>svg]:h-full [&>svg]:w-auto [&>svg]:max-w-full' : ''}
             >
-              <VehicleComp
-                damages={viewDamages}
-                selectedPartId={selectedPart?.id ?? null}
-                onPartClick={handlePartClick}
-                onPartHover={(_, name) => speakHover(name)}
-              />
+              {/* Suspense must live below AnimatePresence, not above it: if a lazy
+                  VehicleComp suspends while the previous view is still exiting,
+                  a Suspense boundary that wraps AnimatePresence unmounts the
+                  exiting element mid-animation, so onExitComplete never fires
+                  and mode="wait" hangs forever. */}
+              <Suspense fallback={null}>
+                <VehicleComp
+                  damages={viewDamages}
+                  selectedPartId={selectedPart?.id ?? null}
+                  onPartClick={handlePartClick}
+                  onPartHover={(_, name) => speakHover(name)}
+                />
+              </Suspense>
             </div>
           </motion.div>
         </AnimatePresence>
