@@ -24,6 +24,9 @@ interface Props {
   supersedesHash?: string
   onIssued?: (hash: string) => void
   reviewedAt?: number
+  isReviewed?: boolean
+  onConfirmReview?: () => void | Promise<void>
+  onClearReview?: () => void | Promise<void>
 }
 
 const ALL_VIEWS: ViewType[] = ['lateral-left', 'lateral-right', 'frontal', 'traseira']
@@ -197,7 +200,7 @@ const DEFAULT_SECTIONS: SectionVisibilityState = {
 export default function ReportActions({
   vehicleType, vehicleInfo, damages, onToast, hasAccess, accessToken,
   inspectionId, publicCode, laudoVersion, correctionReason, supersedesHash, onIssued,
-  reviewedAt,
+  reviewedAt, isReviewed, onConfirmReview, onClearReview,
 }: Props) {
   const [loading, setLoading] = useState<string | null>(null)
   const [reportHash, setReportHash] = useState<string | null>(null)

@@ -8,8 +8,10 @@ import { createId } from '../lib/id'
 import { appendAuditEvent } from '../lib/audit/auditLog'
 import {
   assertCanIssue,
+  assertCanMutateInspectionFields,
   clearReview,
   computeReviewContentHash,
+  isReviewed,
   markAsReviewed,
 } from '../lib/pdf/reviewGate'
 import {

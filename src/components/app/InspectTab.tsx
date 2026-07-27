@@ -80,6 +80,9 @@ interface InspectTabProps {
   reviewBusy?: boolean
   onCompleteReview?: (notes: string) => void | Promise<void>
   onReopenReview?: () => void | Promise<void>
+  isReviewed?: boolean
+  onConfirmReview?: () => void | Promise<void>
+  onClearReview?: () => void | Promise<void>
 }
 
 export default function InspectTab({
@@ -128,6 +131,9 @@ export default function InspectTab({
   reviewBusy,
   onCompleteReview,
   onReopenReview,
+  isReviewed,
+  onConfirmReview,
+  onClearReview,
 }: InspectTabProps) {
   const [section, setSection] = useState<InspectSection>('dados')
 
@@ -324,6 +330,9 @@ export default function InspectTab({
               supersedesHash={supersedesHash}
               onIssued={onIssued}
               reviewedAt={reviewedAt}
+              isReviewed={isReviewed}
+              onConfirmReview={onConfirmReview}
+              onClearReview={onClearReview}
             />
           </div>
         </div>
