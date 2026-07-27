@@ -22,6 +22,7 @@ interface Props {
 export default function GsapAuthTabs({ tabs, active, onChange }: Props) {
   const listRef = useRef<HTMLDivElement | null>(null);
   const pillRef = useRef<HTMLSpanElement | null>(null);
+  const isFirstPosition = useRef(true);
 
   useEffect(() => {
     const list = listRef.current;
@@ -32,9 +33,12 @@ export default function GsapAuthTabs({ tabs, active, onChange }: Props) {
     if (!activeBtn) return;
 
     const target = { x: activeBtn.offsetLeft, width: activeBtn.offsetWidth };
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Snap on first layout so mobile doesn't flash a zero-width pill before the
+    // slide runs; animate only on later tab changes.
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || isFirstPosition.current) {
       gsap.set(pill, target);
+      isFirstPosition.current = false;
       return;
     }
 

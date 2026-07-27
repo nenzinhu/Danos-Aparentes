@@ -1,6 +1,7 @@
 "use client";
 import { DirectionalTransition } from './DirectionalTransition'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import IntroVideo from '../components/IntroVideo'
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
@@ -218,6 +219,7 @@ import { useGsapScrollAnimations } from '../hooks/useGsapScrollAnimations';
 export default function LandingPage() {
   const [darkMode, setDarkMode] = useState(true);
   const reduceMotion = useReducedMotion();
+  const router = useRouter();
   useGsapScrollAnimations();
 
   useEffect(() => {
@@ -225,6 +227,12 @@ export default function LandingPage() {
     const isDark = saved !== null ? saved !== 'false' : window.matchMedia('(prefers-color-scheme: dark)').matches;
     setDarkMode(isDark);
   }, []);
+
+  // Prefetch the light /app entry (Login) so mobile "Entrar" does not wait on
+  // first tap to start downloading the auth chunk.
+  useEffect(() => {
+    router.prefetch('/app');
+  }, [router]);
 
   const toggleDarkMode = () => {
     const nextDark = !darkMode;
