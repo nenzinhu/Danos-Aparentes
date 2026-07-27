@@ -416,9 +416,9 @@ const Controls = memo(function Controls({ variant = 'floating' }: { variant?: 'f
   if (variant === 'header') {
     return (
       <div className='flex gap-1.5 items-center'>
-        <button onClick={zoomOut} className={`${btnBase} px-3 py-1.5 text-[0.85rem]`}>−</button>
-        <span onClick={reset} className={`${btnBase} px-3 py-1.5 text-[0.75rem] cursor-pointer`}>{Math.round(scale * 100)}%</span>
-        <button onClick={zoomIn} className={`${btnBase} px-3 py-1.5 text-[0.85rem]`}>+</button>
+        <button disabled={panLocked} onClick={zoomOut} className={`${btnBase} px-3 py-1.5 text-[0.85rem] ${panLocked ? 'opacity-40 cursor-not-allowed' : ''}`}>−</button>
+        <span onClick={reset} title={panLocked ? 'Zoom travado junto com o cadeado' : undefined} className={`${btnBase} px-3 py-1.5 text-[0.75rem] cursor-pointer ${panLocked ? 'opacity-40' : ''}`}>{Math.round(scale * 100)}%</span>
+        <button disabled={panLocked} onClick={zoomIn} className={`${btnBase} px-3 py-1.5 text-[0.85rem] ${panLocked ? 'opacity-40 cursor-not-allowed' : ''}`}>+</button>
         <button onClick={reset} className={`${btnBase} px-2.5 py-1.5`}>↺</button>
         <button
           onClick={() => setPanLocked(!panLocked)}
@@ -449,9 +449,9 @@ const Controls = memo(function Controls({ variant = 'floating' }: { variant?: 'f
 
   return (
     <div className='absolute top-2.5 right-2.5 z-10 flex gap-1 items-center'>
-      <button onClick={zoomOut} className={`${btnBase} px-2.5 py-1 text-[0.85rem]`}>−</button>
-      <span onClick={reset} className={`${btnBase} px-2.5 py-1 text-[0.75rem] cursor-pointer`}>{Math.round(scale * 100)}%</span>
-      <button onClick={zoomIn} className={`${btnBase} px-2.5 py-1 text-[0.85rem]`}>+</button>
+      <button disabled={panLocked} onClick={zoomOut} className={`${btnBase} px-2.5 py-1 text-[0.85rem] ${panLocked ? 'opacity-40 cursor-not-allowed' : ''}`}>−</button>
+      <span onClick={reset} title={panLocked ? 'Zoom travado junto com o cadeado' : undefined} className={`${btnBase} px-2.5 py-1 text-[0.75rem] cursor-pointer ${panLocked ? 'opacity-40' : ''}`}>{Math.round(scale * 100)}%</span>
+      <button disabled={panLocked} onClick={zoomIn} className={`${btnBase} px-2.5 py-1 text-[0.85rem] ${panLocked ? 'opacity-40 cursor-not-allowed' : ''}`}>+</button>
       <button onClick={reset} className={`${btnBase} px-2 py-1 text-[0.75rem]`}>↺</button>
       <button
         onClick={() => setPanLocked(!panLocked)}

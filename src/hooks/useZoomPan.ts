@@ -61,14 +61,21 @@ export function useZoomPan(
 
   function reset() {
     offsetRef.current = { x: 0, y: 0 }
+    if (panLockedRef.current) {
+      // Locked: re-center is fine, but the zoom % itself stays put.
+      applyTransform()
+      return
+    }
     setScale(1)
   }
 
   function zoomIn() {
+    if (panLockedRef.current) return
     setScale(s => Math.min(4, s + 0.2))
   }
 
   function zoomOut() {
+    if (panLockedRef.current) return
     setScale(s => Math.max(0.5, s - 0.2))
   }
 
@@ -78,6 +85,7 @@ export function useZoomPan(
 
     function onWheel(e: WheelEvent) {
       e.preventDefault()
+      if (panLockedRef.current) return
       setScale(s => Math.min(4, Math.max(0.5, s - e.deltaY * 0.001)))
     }
 
@@ -137,6 +145,7 @@ export function useZoomPan(
     function onTouchMove(e: TouchEvent) {
       if (e.touches.length === 2 && pinchDist.current !== null) {
         e.preventDefault()
+        if (panLockedRef.current) return
         const dist = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
