@@ -230,6 +230,7 @@ export default function AppMainPage() {
                 voices={voices}
                 hasAccess={subscription?.hasAccess ?? false}
                 accessToken={session?.access_token}
+                userId={session?.user.id}
                 onVehicleTypeChange={inspection.handleVehicleTypeChange}
                 onViewTypeChange={inspection.handleViewTypeChange}
                 onVehicleInfoChange={inspection.setVehicleInfo}
@@ -281,6 +282,7 @@ export default function AppMainPage() {
             onDeleteReport={handleDeleteReport}
             hasAccess={subscription?.hasAccess ?? false}
             accessToken={session?.access_token}
+            userId={session?.user.id}
             settingsModal={shell.settingsModal}
             onCloseSettingsModal={() => shell.setSettingsModal(false)}
             termsOpen={shell.termsOpen}

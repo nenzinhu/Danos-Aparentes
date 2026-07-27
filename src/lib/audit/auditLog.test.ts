@@ -154,6 +154,9 @@ describe('appendAuditEvent (mocked supabase)', () => {
   beforeEach(() => {
     vi.resetModules()
     vi.clearAllMocks()
+    vi.doMock('../tenant/resolveTenant', () => ({
+      resolveTenantId: async () => null,
+    }))
     vi.doMock('../supabase', () => ({
       supabaseEnabled: true,
       supabase: {
@@ -164,6 +167,7 @@ describe('appendAuditEvent (mocked supabase)', () => {
             order: () => terminal,
             limit: () => terminal,
             maybeSingle: maybeSingleMock,
+            contains: () => terminal,
           }
           return {
             insert: insertMock,

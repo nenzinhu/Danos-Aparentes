@@ -12,6 +12,8 @@ import TtsSettings from '@/src/components/TtsSettings'
 import ReportActions from '@/src/components/ReportActions'
 import InspectionReviewPanel from '@/src/components/InspectionReviewPanel'
 import InspectionAuditTimeline from '@/src/components/InspectionAuditTimeline'
+import { useTenantContext } from '@/src/hooks/useTenantContext'
+import { canReviewReport } from '@/src/lib/auth/rbac'
 import { TtsConfig } from '@/src/types'
 import { ClearAllIcon } from './ClearAllIcon'
 import { VEHICLE_NAME, VIEW_NAME } from './constants'
@@ -50,6 +52,7 @@ interface InspectTabProps {
   voices: SpeechSynthesisVoice[]
   hasAccess: boolean
   accessToken?: string
+  userId?: string
   onVehicleTypeChange: (type: VehicleType) => void
   onViewTypeChange: (view: ViewType) => void
   onVehicleInfoChange: (info: VehicleInfo) => void
@@ -101,6 +104,7 @@ export default function InspectTab({
   voices,
   hasAccess,
   accessToken,
+  userId,
   onVehicleTypeChange,
   onViewTypeChange,
   onVehicleInfoChange,
@@ -137,6 +141,8 @@ export default function InspectTab({
   onClearReview,
 }: InspectTabProps) {
   const [section, setSection] = useState<InspectSection>('dados')
+  const { role } = useTenantContext(userId)
+  const mayReview = userId ? canReviewReport(role, userId, userId) : true
 
   const handleWizardComplete = useCallback(() => {
     onWizardComplete()
@@ -307,7 +313,7 @@ export default function InspectTab({
           </div>
 
           <div className="mt-6 pt-6 border-t border-[var(--panel-border)]">
-            {onCompleteReview && onReopenReview && (
+            {mayReview && onCompleteReview && onReopenReview && (
               <InspectionReviewPanel
                 reviewedAt={reviewedAt}
                 reviewNotes={reviewNotes}
@@ -334,6 +340,7 @@ export default function InspectTab({
               isReviewed={isReviewed}
               onConfirmReview={onConfirmReview}
               onClearReview={onClearReview}
+              userId={userId}
             />
             <InspectionAuditTimeline
               inspectionId={inspectionId}

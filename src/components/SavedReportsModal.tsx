@@ -10,6 +10,8 @@ import { db } from '../lib/db'
 import { supabaseEnabled } from '../lib/supabase'
 import { isIssuedLocked } from '../lib/pdf/reportIssuance'
 import { subjectExportToJson } from '../lib/lgpd/subjectExport'
+import { canExportLgpdForReport } from '../lib/auth/rbac'
+import { useTenantContext } from '../hooks/useTenantContext'
 
 function SaveIcon({ size = 16 }: { size?: number }) {
   return (
@@ -39,6 +41,7 @@ interface Props {
   onDelete: (id: string) => void
   hasAccess?: boolean
   accessToken?: string
+  userId?: string
 }
 
 // Cabeçalho do grupo: "Hoje", "Ontem" ou "Mês de Ano"
@@ -79,7 +82,8 @@ function CloudBadge({ state }: { state: CloudState }) {
   )
 }
 
-export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLoad, onCreateCorrection, onDelete, hasAccess, accessToken }: Props) {
+export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLoad, onCreateCorrection, onDelete, hasAccess, accessToken, userId }: Props) {
+  const { role } = useTenantContext(userId)
   const [searchQuery, setSearchQuery] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>('recent')
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set())
@@ -313,6 +317,10 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
   }
 
   const handleExportSubjectData = (r: SavedReport) => {
+    if (userId && !canExportLgpdForReport(role, userId, userId)) {
+      alert('Exportação LGPD não permitida para este perfil.')
+      return
+    }
     try {
       const json = subjectExportToJson(r)
       const blob = new Blob([json], { type: 'application/json;charset=utf-8' })

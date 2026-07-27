@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin';
-import { getUserFromRequest } from '@/src/lib/server/auth';
+import { requirePermission } from '@/src/lib/server/rbac';
 import { hasActiveSubscriptionAccess } from '@/src/lib/subscriptionAccess';
 
 const STORAGE_REF_PREFIX = 'storage:';
@@ -50,16 +50,14 @@ function mapInspection(insp: Record<string, unknown>, damages: Record<string, un
 }
 
 export async function GET(req: NextRequest) {
-  const user = await getUserFromRequest(req);
-  if (!user) {
-    return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
-  }
+  const authz = await requirePermission(req, 'view_team_reports');
+  if (authz instanceof NextResponse) return authz;
 
   if (!supabaseAdmin) {
     return NextResponse.json({ error: 'Supabase não configurado' }, { status: 500 });
   }
 
-  if (!(await isCorporate(user.id))) {
+  if (!(await isCorporate(authz.userId))) {
     return NextResponse.json({ error: 'Recurso disponível apenas no plano Corporativo' }, { status: 403 });
   }
 
@@ -67,11 +65,15 @@ export async function GET(req: NextRequest) {
     const { data: company } = await supabaseAdmin
       .from('companies')
       .select('id')
-      .eq('owner_id', user.id)
+      .eq('owner_id', authz.userId)
       .maybeSingle();
 
     if (!company) {
       return NextResponse.json({ members: [], reports: [] });
+    }
+
+    if (authz.tenantId && authz.tenantId !== company.id) {
+      return NextResponse.json({ error: 'Escopo de tenant inválido' }, { status: 403 });
     }
 
     const { data: members, error: membersError } = await supabaseAdmin
@@ -91,7 +93,8 @@ export async function GET(req: NextRequest) {
       const { data: inspections, error: inspError } = await supabaseAdmin
         .from('vehicle_inspections')
         .select('*')
-        .in('user_id', acceptedUserIds);
+        .in('user_id', acceptedUserIds)
+        .eq('tenant_id', company.id);
       if (inspError) throw inspError;
 
       const { data: damages, error: dmgError } = await supabaseAdmin

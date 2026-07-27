@@ -2,6 +2,8 @@
 import { Damage, VehicleInfo } from '../../types'
 import { appendAuditEvent } from '../audit/auditLog'
 import { collectOriginalPhotoHashes } from '../photoEvidence'
+import { hashRegisterIdempotencyKey } from '../sync/idempotency'
+import { resolveTenantId } from '../tenant/resolveTenant'
 import { supabase, supabaseEnabled } from '../supabase'
 import { normalizePlate } from '../reportComparison'
 import { buildIntegrityManifest, type IntegrityManifest } from './integrityManifest'
@@ -91,6 +93,14 @@ export async function registerHash(
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) return
 
+    const { data: existingHash } = await supabase
+      .from('report_hashes')
+      .select('hash')
+      .eq('hash', hash)
+      .maybeSingle()
+    if (existingHash?.hash) return
+
+    const tenantId = await resolveTenantId(session.user.id)
     const reportKey = buildReportKey(info)
     let version = 1
     if (reportKey) {
@@ -105,7 +115,7 @@ export async function registerHash(
     }
 
     const row: Record<string, unknown> = {
-      hash, user_id: session.user.id, plate: info.plate || '',
+      hash, user_id: session.user.id, tenant_id: tenantId, plate: info.plate || '',
       ref: info.ref || '', issued_at: date, damages_count: damages.length,
       geo_lat: info.geo?.lat ?? null,
       geo_lng: info.geo?.lng ?? null,
@@ -131,6 +141,8 @@ export async function registerHash(
     void appendAuditEvent({
       event_type: 'hash_generation',
       inspection_id: meta?.inspectionId || null,
+      tenant_id: tenantId,
+      idempotency_key: hashRegisterIdempotencyKey(hash, meta?.inspectionId),
       metadata: {
         hash,
         report_key: reportKey,

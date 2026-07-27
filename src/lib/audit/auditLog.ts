@@ -1,6 +1,7 @@
 import { createId } from '../id'
 import { sha256Hex } from '../pdf/integrityManifest'
 import { supabase, supabaseEnabled } from '../supabase'
+import { resolveTenantId } from '../tenant/resolveTenant'
 
 /** Known / reserved event types. New types may be appended without migration. */
 export const AUDIT_EVENT_TYPES = [
@@ -144,6 +145,21 @@ function clientUserAgent(): string | null {
   return navigator.userAgent || null
 }
 
+async function auditIdempotencyKeyExists(
+  inspectionId: string | null,
+  idempotencyKey: string,
+): Promise<boolean> {
+  if (!supabase) return false
+  let q = supabase
+    .from('audit_log')
+    .select('event_id')
+    .contains('metadata', { idempotency_key: idempotencyKey })
+    .limit(1)
+  q = inspectionId ? q.eq('inspection_id', inspectionId) : q.is('inspection_id', null)
+  const { data } = await q.maybeSingle()
+  return Boolean(data?.event_id)
+}
+
 async function fetchPreviousEventHash(inspectionId: string | null): Promise<string> {
   if (!supabase) return ''
   let q = supabase.from('audit_log').select('event_hash')
@@ -169,6 +185,8 @@ export type AppendAuditEventArgs = {
   ip?: string | null
   user_agent?: string | null
   device_id?: string | null
+  /** FASE 14: skip insert when the same key already exists for this inspection. */
+  idempotency_key?: string
 }
 
 /**
@@ -183,10 +201,19 @@ export async function appendAuditEvent(args: AppendAuditEventArgs): Promise<Audi
 
     const userId = session.user.id
     const inspectionId = args.inspection_id ?? null
+    if (args.idempotency_key) {
+      const dup = await auditIdempotencyKeyExists(inspectionId, args.idempotency_key)
+      if (dup) return null
+    }
+    const tenantId = args.tenant_id !== undefined
+      ? args.tenant_id
+      : await resolveTenantId(userId)
     const previous = await fetchPreviousEventHash(inspectionId)
+    const metadata = { ...(args.metadata ?? {}) }
+    if (args.idempotency_key) metadata.idempotency_key = args.idempotency_key
     const payload = buildEventPayload({
       inspection_id: inspectionId,
-      tenant_id: args.tenant_id ?? null,
+      tenant_id: tenantId,
       user_id: userId,
       actor_id: args.actor_id || userId,
       actor_type: args.actor_type ?? 'user',
@@ -194,7 +221,7 @@ export async function appendAuditEvent(args: AppendAuditEventArgs): Promise<Audi
       ip: args.ip ?? null,
       user_agent: args.user_agent ?? clientUserAgent(),
       device_id: args.device_id ?? null,
-      metadata: args.metadata ?? {},
+      metadata,
       previous_event_hash: previous,
     })
     const event_hash = await computeEventHash(payload)

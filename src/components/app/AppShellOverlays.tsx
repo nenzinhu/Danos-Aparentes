@@ -20,6 +20,7 @@ interface AppShellOverlaysProps {
   onDeleteReport: (id: string) => Promise<void>
   hasAccess: boolean
   accessToken?: string
+  userId?: string
   settingsModal: boolean
   onCloseSettingsModal: () => void
   termsOpen: boolean
@@ -50,6 +51,7 @@ export default function AppShellOverlays({
   onDeleteReport,
   hasAccess,
   accessToken,
+  userId,
   settingsModal,
   onCloseSettingsModal,
   termsOpen,
@@ -81,6 +83,7 @@ export default function AppShellOverlays({
         onDelete={onDeleteReport}
         hasAccess={hasAccess}
         accessToken={accessToken}
+        userId={userId}
       />
 
       <CompanySettingsModal

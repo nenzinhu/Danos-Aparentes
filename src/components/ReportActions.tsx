@@ -6,6 +6,8 @@ import { generatePdf, generatePdfBlob, buildBadgeSnippet, SvgPdfData } from '../
 import { copyReport, downloadTxt, sendWhatsApp } from '../lib/report'
 import { resolveDamagePhotos, resolvePhotos } from '../lib/photoStore'
 import { appendAuditEvent } from '../lib/audit/auditLog'
+import { canReviewReport } from '../lib/auth/rbac'
+import { useTenantContext } from '../hooks/useTenantContext'
 import { staticVehicleRegistry } from './vehicles/staticRegistry'
 import VehicleDefs from './vehicles/VehicleDefs'
 
@@ -27,6 +29,7 @@ interface Props {
   isReviewed?: boolean
   onConfirmReview?: () => void | Promise<void>
   onClearReview?: () => void | Promise<void>
+  userId?: string
 }
 
 const ALL_VIEWS: ViewType[] = ['lateral-left', 'lateral-right', 'frontal', 'traseira']
@@ -200,8 +203,10 @@ const DEFAULT_SECTIONS: SectionVisibilityState = {
 export default function ReportActions({
   vehicleType, vehicleInfo, damages, onToast, hasAccess, accessToken,
   inspectionId, publicCode, laudoVersion, correctionReason, supersedesHash, onIssued,
-  reviewedAt, isReviewed, onConfirmReview, onClearReview,
+  reviewedAt, isReviewed, onConfirmReview, onClearReview, userId,
 }: Props) {
+  const { role } = useTenantContext(userId)
+  const mayReview = userId ? canReviewReport(role, userId, userId) : true
   const [loading, setLoading] = useState<string | null>(null)
   const [reportHash, setReportHash] = useState<string | null>(null)
   const [showBadgePanel, setShowBadgePanel] = useState(false)
@@ -358,7 +363,7 @@ export default function ReportActions({
         <span>Exportar Relatório</span>
       </div>
 
-      {onConfirmReview && (
+      {onConfirmReview && mayReview && (
         <div
           className={`rounded-xl p-3 border ${
             isReviewed

@@ -7,13 +7,16 @@ import { deleteInspectionPhotos } from './photoStorage'
 import { mapRemoteInspection } from './reportMapping'
 import { appendAuditEvent } from './audit/auditLog'
 import { isIssuedLocked } from './pdf/reportIssuance'
+import { resolveTenantId } from './tenant/resolveTenant'
+import { syncUpsertIdempotencyKey } from './sync/idempotency'
 
-function inspectionRow(r: SavedReport, userId: string) {
+function inspectionRow(r: SavedReport, userId: string, tenantId: string | null) {
   const v = r.vehicleInfo
   const geo = v.geo
   return {
     id: r.id,
     user_id: userId,
+    tenant_id: tenantId,
     vehicle_type: r.vehicleType ?? r.damages[0]?.vehicle ?? 'car',
     owner: v.owner, phone: v.phone, brand: v.brand, plate: v.plate,
     general_notes: v.generalNotes, profile: v.profile, ref: v.ref, color: v.color,
@@ -128,7 +131,10 @@ async function pushReport(report: SavedReport, userId: string) {
     vehicleInfo: { ...report.vehicleInfo, interiorPhotos: localInteriorPhotos },
   }
 
-  const { error: e1 } = await supabase.from('vehicle_inspections').upsert(inspectionRow(reportForSync, userId))
+  const tenantId = await resolveTenantId(userId)
+  const { error: e1 } = await supabase
+    .from('vehicle_inspections')
+    .upsert(inspectionRow(reportForSync, userId, tenantId))
   if (e1) throw e1
   const rows = damageRows(reportForSync, userId)
   if (rows.length > 0) {
@@ -139,6 +145,8 @@ async function pushReport(report: SavedReport, userId: string) {
   void appendAuditEvent({
     event_type: 'change',
     inspection_id: report.id,
+    tenant_id: tenantId,
+    idempotency_key: syncUpsertIdempotencyKey(report.id, report.savedAt),
     metadata: {
       status: report.status ?? 'complete',
       damages_count: report.damages.length,

@@ -7,6 +7,12 @@ import { supabaseEnabled } from '../lib/supabase'
 import { createId } from '../lib/id'
 import { appendAuditEvent } from '../lib/audit/auditLog'
 import {
+  canExportLgpdForReport,
+  canIssueReport,
+  canReviewReport,
+} from '../lib/auth/rbac'
+import { resolveTenantContext } from '../lib/tenant/resolveTenant'
+import {
   assertCanIssue,
   assertCanMutateInspectionFields,
   clearReview,
@@ -153,6 +159,11 @@ export function useSavedReports(userId?: string) {
     reviewerId: string,
     notes?: string,
   ) {
+    const { role } = await resolveTenantContext(reviewerId)
+    const reportOwnerId = userId || reviewerId
+    if (!canReviewReport(role, reviewerId, reportOwnerId)) {
+      throw new Error('Somente o gestor da equipe pode confirmar revisão deste laudo')
+    }
     const all = await db.getAllSaved()
     const existing = all.find(r => r.id === id)
     const base: SavedReport = existing ?? {
@@ -207,6 +218,12 @@ export function useSavedReports(userId?: string) {
     const all = await db.getAllSaved()
     const existing = all.find(r => r.id === id)
     if (!existing) return null
+    if (userId) {
+      const { role } = await resolveTenantContext(userId)
+      if (!canIssueReport(role)) {
+        throw new Error('Permissão negada para emitir laudo')
+      }
+    }
     if (existing.status === 'issued') return existing
     const contentHash = await computeReviewContentHash(
       existing.vehicleInfo,

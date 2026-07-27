@@ -1,6 +1,7 @@
 import { Damage, Severity, VehicleInfo, ViewType } from '../../types'
 import { SEV_BG, SEV_COLOR, SEV_LABEL, VIEW_LABEL, pillBadge, sectionTitle, type PdfTheme } from './theme'
 import type { SvgPdfData } from './types'
+import { PDF_SIGNATURE_CAPTION } from './disclaimer'
 
 export function buildStatusBadge(damages: Damage[], theme: PdfTheme): string {
   const hasHigh = damages.some(d => d.severity === 'high')
@@ -304,6 +305,7 @@ export function buildSignature(info: VehicleInfo | Partial<VehicleInfo>, theme: 
           </td>
         </tr>
       </table>
+      <p style="font-size:6.5px;color:${theme.textMuted};font-family:${theme.fontMain};text-align:center;margin-top:4px;line-height:1.35;">${PDF_SIGNATURE_CAPTION}</p>
     </div>
   </div>`
 }

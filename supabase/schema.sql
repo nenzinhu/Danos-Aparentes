@@ -32,6 +32,7 @@ create table if not exists vehicle_inspections (
   geo_accuracy double precision,
   geo_address text,
   geo_captured_at bigint,
+  tenant_id uuid,
   public_code text default '',
   laudo_version int default 1,
   parent_inspection_id text,
@@ -222,6 +223,7 @@ create policy "delete_own_damages" on damages
 create table if not exists report_hashes (
   hash text primary key,
   user_id uuid references auth.users(id) on delete set null,
+  tenant_id uuid,
   plate text default '',
   ref text default '',
   issued_at text default '',

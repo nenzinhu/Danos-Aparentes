@@ -14,6 +14,7 @@ import {
 } from './sections'
 import { resolveTheme, sectionTitle } from './theme'
 import type { PdfSettings, SvgPdfData } from './types'
+import { buildPdfDisclaimerHtml } from './disclaimer'
 
 export async function buildFullHtml(
   info: VehicleInfo,
@@ -202,6 +203,7 @@ export async function buildFullHtml(
           <p style="font-size:8px;color:${theme.textMuted};font-weight:700;font-family:${theme.fontTitle};margin-bottom:2px;">Danos Aparentes • Vistoria Veicular</p>
           <p style="font-size:7.5px;color:${theme.textMuted};font-family:${theme.fontMain};">Placa: <strong style="color:${theme.textMain};">${plate}</strong> • OS: <strong style="color:${theme.textMain};">${osRef}</strong> • ${damages.length} avaria${damages.length !== 1 ? 's' : ''}</p>
           <p style="font-size:7.5px;color:${theme.textMuted};font-family:${theme.fontMain};margin-top:2px;">${date}</p>
+          ${buildPdfDisclaimerHtml(theme.textMuted, theme.fontMain)}
         </td>
       </tr>
     </table>

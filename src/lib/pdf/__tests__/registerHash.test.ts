@@ -8,16 +8,41 @@ import type { Damage, DamageId, Plate, VehicleInfo } from '../../../types'
 
 const insertMock = vi.fn(async () => ({ error: null }))
 const selectCountMock = vi.fn(async () => ({ count: 0 }))
+const maybeSingleMock = vi.fn(async () => ({ data: null }))
 
 vi.mock('../../supabase', () => ({
   supabaseEnabled: true,
   supabase: {
     auth: { getSession: async () => ({ data: { session: { user: { id: 'user-1' } } } }) },
     from: (table: string) => {
+      if (table === 'companies') {
+        return { select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: null }) }) }) }
+      }
+      if (table === 'team_members') {
+        return {
+          select: () => ({
+            eq: () => ({
+              eq: () => ({ maybeSingle: async () => ({ data: null }) }),
+            }),
+          }),
+        }
+      }
       if (table !== 'report_hashes') throw new Error(`unexpected table ${table}`)
+      const chain = {
+        eq: (_col: string, _val: unknown) => chain,
+        maybeSingle: maybeSingleMock,
+        then: (
+          resolve: (v: { count: number }) => void,
+          reject?: (e: unknown) => void,
+        ) => {
+          void selectCountMock()
+            .then((r) => resolve({ count: r.count ?? 0 }))
+            .catch((e) => reject?.(e))
+        },
+      }
       return {
         insert: insertMock,
-        select: () => ({ eq: selectCountMock }),
+        select: () => chain,
       }
     },
   },
