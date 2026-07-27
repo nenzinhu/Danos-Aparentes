@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { DamageType, Severity } from '../types'
 import { IconEraser, IconCamera, IconGallery, IconCheck, IconArrowLeft } from './ui/AnimatedIcons'
 import { IconScratchDamage, IconDentDamage, IconBrokenDamage } from './ui/DamageTypeIcons'
+import { compressImage, fileToDataUrl } from '../lib/imageUtils'
 
 interface Props {
   partName: string
@@ -28,6 +29,12 @@ const TYPES: { type: DamageType; label: string; Icon: typeof IconScratchDamage; 
   { type: 'broken',  label: 'Quebrado / Trincado',  Icon: IconBrokenDamage,  color: 'text-red-600',    bg: 'bg-red-500/15',    border: 'border-red-500/40' },
 ]
 
+type AiClassifyState =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'done'; type: DamageType; severity: Severity; description: string }
+  | { status: 'error' }
+
 export default function DamageFloat({ partName, position, currentType, onChoose, onClear, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -41,6 +48,8 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
   const [notes, setNotes] = useState('')
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+  const [aiState, setAiState] = useState<AiClassifyState>({ status: 'idle' })
+  const [notesTouched, setNotesTouched] = useState(false)
 
   const closeThen = (action: () => void) => {
     if (isClosing) return
@@ -65,6 +74,36 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
     setPhotoFile(file)
     const url = URL.createObjectURL(file)
     setPhotoPreview(url)
+    void classifyWithAi(file)
+  }
+
+  async function classifyWithAi(file: File) {
+    setAiState({ status: 'loading' })
+    try {
+      const compressed = await compressImage(file)
+      const dataUrl = await fileToDataUrl(compressed)
+      const res = await fetch('/api/damage-classify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photo: dataUrl, partName }),
+      })
+      if (!res.ok) {
+        setAiState({ status: 'error' })
+        return
+      }
+      const data = await res.json() as { type: DamageType; severity: Severity; description: string }
+      setAiState({ status: 'done', type: data.type, severity: data.severity, description: data.description })
+      setSeverity(data.severity)
+      if (!notesTouched) setNotes(data.description)
+    } catch {
+      setAiState({ status: 'error' })
+    }
+  }
+
+  function applyAiType() {
+    if (aiState.status !== 'done') return
+    const match = TYPES.find(t => t.type === aiState.type)
+    if (match) setChosenType({ type: match.type, label: match.label })
   }
 
   // cleanup object URL
@@ -241,7 +280,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
             <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Observação <span className="normal-case font-normal opacity-60">(opcional)</span></div>
             <textarea
               value={notes}
-              onChange={e => setNotes(e.target.value)}
+              onChange={e => { setNotes(e.target.value); setNotesTouched(true) }}
               placeholder="Ex.: Arranhão profundo na lateral…"
               rows={2}
               className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-2 py-1.5 text-[var(--input-color)] text-[0.78rem] font-outfit resize-none outline-none focus:border-sky-500/50 transition-colors"
@@ -262,7 +301,7 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
               <div className="relative">
                 <img src={photoPreview} alt="preview" className="w-full h-20 object-cover rounded-lg border border-white/10" />
                 <button
-                  onClick={() => { setPhotoFile(null); setPhotoPreview(null) }}
+                  onClick={() => { setPhotoFile(null); setPhotoPreview(null); setAiState({ status: 'idle' }) }}
                   className="absolute -top-1.5 -right-1.5 bg-black/80 hover:bg-red-600 rounded-full text-white w-5 h-5 text-[0.65rem] flex items-center justify-center font-black transition-colors"
                 >✕</button>
               </div>
@@ -288,6 +327,36 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
                   <IconGallery size={15} />
                   <span>Galeria</span>
                 </motion.button>
+              </div>
+            )}
+
+            {aiState.status === 'loading' && (
+              <div className="mt-2 flex items-center gap-1.5 text-[0.7rem] font-bold text-sky-400">
+                <span className="h-2.5 w-2.5 rounded-full border-2 border-sky-400/40 border-t-sky-400 animate-spin" />
+                🤖 Analisando foto com IA…
+              </div>
+            )}
+            {aiState.status === 'error' && (
+              <div className="mt-2 text-[0.7rem] font-bold text-[var(--text-muted)]">
+                🤖 Não foi possível analisar a foto agora. Preencha manualmente.
+              </div>
+            )}
+            {aiState.status === 'done' && chosenType && aiState.type !== chosenType.type && (
+              <div className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-sky-500/30 bg-sky-500/10 px-2 py-1.5">
+                <span className="text-[0.68rem] font-bold text-sky-400">
+                  🤖 IA sugere: {TYPES.find(t => t.type === aiState.type)?.label}
+                </span>
+                <button
+                  onClick={applyAiType}
+                  className="shrink-0 text-[0.65rem] font-black uppercase tracking-wide text-sky-400 underline underline-offset-2 cursor-pointer"
+                >
+                  Usar
+                </button>
+              </div>
+            )}
+            {aiState.status === 'done' && chosenType && aiState.type === chosenType.type && (
+              <div className="mt-2 text-[0.68rem] font-bold text-emerald-400">
+                🤖 Severidade e descrição preenchidas pela IA
               </div>
             )}
           </div>
