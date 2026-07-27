@@ -37,6 +37,8 @@ interface VehicleViewerContextValue {
   orbitDir: number
   outlineMode: boolean
   setOutlineMode: (f: boolean) => void
+  panLocked: boolean
+  setPanLocked: (f: boolean) => void
 
   // Zoom/Pan
   scale: number
@@ -119,7 +121,8 @@ function RootComponent({
   // and the fullscreen overlay both mount a Viewport sharing this same ref,
   // so without this the listeners stay stuck on whichever one existed when
   // the effect first ran and dragging silently does nothing in fullscreen.
-  const { scale, reset, zoomIn, zoomOut } = useZoomPan(containerRef, targetRef, handleHorizontalSwipe, fullscreen)
+  const [panLocked, setPanLocked] = useState(false)
+  const { scale, reset, zoomIn, zoomOut } = useZoomPan(containerRef, targetRef, handleHorizontalSwipe, fullscreen, panLocked)
   const [outlineMode, setOutlineMode] = useState(false)
 
   const prevViewRef = useRef<ViewType>(viewType)
@@ -152,11 +155,11 @@ function RootComponent({
   const contextValue = useMemo(() => ({
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
     accessToken,
-    fullscreen, setFullscreen, selectedPart, setSelectedPart, orbitDir, outlineMode, setOutlineMode,
+    fullscreen, setFullscreen, selectedPart, setSelectedPart, orbitDir, outlineMode, setOutlineMode, panLocked, setPanLocked,
     scale, zoomIn, zoomOut, reset, containerRef, targetRef, baseContainerRef, baseTargetRef, flipStateRef
   }), [
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
-    accessToken, fullscreen, selectedPart, orbitDir, outlineMode, scale, zoomIn, zoomOut, reset
+    accessToken, fullscreen, selectedPart, orbitDir, outlineMode, panLocked, scale, zoomIn, zoomOut, reset
   ])
 
   return (
@@ -384,8 +387,22 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
 
 const btnBase = 'bg-slate-900/85 border border-white/10 rounded-lg text-[#e8f4ff] font-outfit font-bold cursor-pointer transition-all hover:bg-slate-800'
 
+function LockIcon({ locked }: { locked: boolean }) {
+  return locked ? (
+    <svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
+      <rect x='4' y='11' width='16' height='10' rx='2' />
+      <path d='M8 11V7a4 4 0 018 0v4' />
+    </svg>
+  ) : (
+    <svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'>
+      <rect x='4' y='11' width='16' height='10' rx='2' />
+      <path d='M8 11V7a4 4 0 017.75-1.4' />
+    </svg>
+  )
+}
+
 const Controls = memo(function Controls({ variant = 'floating' }: { variant?: 'floating' | 'header' }) {
-  const { zoomIn, zoomOut, reset, scale, setFullscreen, containerRef, flipStateRef, outlineMode, setOutlineMode } = useVehicleViewer()
+  const { zoomIn, zoomOut, reset, scale, setFullscreen, containerRef, flipStateRef, outlineMode, setOutlineMode, panLocked, setPanLocked } = useVehicleViewer()
 
   const openFullscreen = useCallback(() => {
     // Snapshot the small viewport's bounds/position now, while it's still the
@@ -403,6 +420,14 @@ const Controls = memo(function Controls({ variant = 'floating' }: { variant?: 'f
         <span onClick={reset} className={`${btnBase} px-3 py-1.5 text-[0.75rem] cursor-pointer`}>{Math.round(scale * 100)}%</span>
         <button onClick={zoomIn} className={`${btnBase} px-3 py-1.5 text-[0.85rem]`}>+</button>
         <button onClick={reset} className={`${btnBase} px-2.5 py-1.5`}>↺</button>
+        <button
+          onClick={() => setPanLocked(!panLocked)}
+          title={panLocked ? 'Diagrama fixo — clique para destravar o arrastar' : 'Fixar diagrama (impede arrastar, só girar de vista continua)'}
+          aria-pressed={panLocked}
+          className={`${btnBase} px-2.5 py-1.5 flex items-center gap-1 ${panLocked ? 'bg-amber-500/25 border-amber-400/50 text-amber-300' : ''}`}
+        >
+          <LockIcon locked={panLocked} />
+        </button>
         <button
           onClick={() => setOutlineMode(!outlineMode)}
           title='Ver só o contorno, sem cores'
@@ -428,6 +453,14 @@ const Controls = memo(function Controls({ variant = 'floating' }: { variant?: 'f
       <span onClick={reset} className={`${btnBase} px-2.5 py-1 text-[0.75rem] cursor-pointer`}>{Math.round(scale * 100)}%</span>
       <button onClick={zoomIn} className={`${btnBase} px-2.5 py-1 text-[0.85rem]`}>+</button>
       <button onClick={reset} className={`${btnBase} px-2 py-1 text-[0.75rem]`}>↺</button>
+      <button
+        onClick={() => setPanLocked(!panLocked)}
+        title={panLocked ? 'Diagrama fixo — clique para destravar o arrastar' : 'Fixar diagrama (impede arrastar, só girar de vista continua)'}
+        aria-pressed={panLocked}
+        className={`${btnBase} px-2 py-1 flex items-center gap-1 ${panLocked ? 'bg-amber-500/25 border-amber-400/50 text-amber-300' : ''}`}
+      >
+        <LockIcon locked={panLocked} />
+      </button>
       <button
         onClick={() => setOutlineMode(!outlineMode)}
         title='Ver só o contorno, sem cores'

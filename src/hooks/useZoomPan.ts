@@ -27,7 +27,12 @@ export function useZoomPan(
    * DOM node containerRef.current points to right now. Needed whenever the
    * ref can end up attached to a different element than the one the
    * gesture effect originally bound to. */
-  rebindKey?: unknown
+  rebindKey?: unknown,
+  /** When true, a drag never pans/offsets the vehicle — it's always treated
+   * as a view-swipe attempt instead, regardless of zoom level. Lets people
+   * rotate through views with a flick of the finger without ever nudging
+   * the diagram out of place. */
+  panLocked?: boolean
 ) {
   const [scale, setScale] = useState(1)
   const offsetRef = useRef({ x: 0, y: 0 })
@@ -35,6 +40,8 @@ export function useZoomPan(
   const dragging = useRef(false)
   const last = useRef({ x: 0, y: 0 })
   const pinchDist = useRef<number | null>(null)
+  const panLockedRef = useRef(!!panLocked)
+  useEffect(() => { panLockedRef.current = !!panLocked }, [panLocked])
   // Drag-to-rotate: only active near scale===1 (see docs/superpowers/specs/2026-07-26-drag-to-rotate-vehicle-viewer-design.md).
   // A tolerance (not strict equality) absorbs float drift from the wheel/pinch handlers below.
   const gestureStart = useRef({ x: 0, y: 0 })
@@ -86,7 +93,7 @@ export function useZoomPan(
     function onMouseMove(e: MouseEvent) {
       if (!dragging.current) return
 
-      if (isAtDefaultZoom()) {
+      if (panLockedRef.current || isAtDefaultZoom()) {
         maybeFireSwipe(e.clientX, e.clientY)
         return
       }
@@ -141,7 +148,7 @@ export function useZoomPan(
         // started on the diagram — otherwise the slightest vertical finger
         // drift hands the gesture to the page instead of the vehicle.
         e.preventDefault()
-        if (isAtDefaultZoom()) {
+        if (panLockedRef.current || isAtDefaultZoom()) {
           maybeFireSwipe(e.touches[0].clientX, e.touches[0].clientY)
           return
         }
