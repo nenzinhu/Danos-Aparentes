@@ -222,6 +222,7 @@ export default function InspectTab({
               speak={speak}
               speakHover={speakHover}
               onViewTypeChange={onViewTypeChange}
+              accessToken={accessToken}
             >
               <VehicleViewer.Controls />
               <ErrorBoundary>

@@ -10,6 +10,7 @@ interface Props {
   partName: string
   position: { x: number; y: number }
   currentType?: DamageType
+  accessToken?: string
   onChoose: (type: DamageType, typeName: string, severity: Severity, notes: string, photoFile?: File) => void
   onClear: () => void
   onClose: () => void
@@ -34,8 +35,9 @@ type AiClassifyState =
   | { status: 'loading' }
   | { status: 'done'; type: DamageType; severity: Severity; description: string }
   | { status: 'error' }
+  | { status: 'auth-required' }
 
-export default function DamageFloat({ partName, position, currentType, onChoose, onClear, onClose }: Props) {
+export default function DamageFloat({ partName, position, currentType, accessToken, onChoose, onClear, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const [isMobile, setIsMobile] = useState(false)
@@ -84,9 +86,16 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
       const dataUrl = await fileToDataUrl(compressed)
       const res = await fetch('/api/damage-classify', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+        },
         body: JSON.stringify({ photo: dataUrl, partName }),
       })
+      if (res.status === 401 || res.status === 403) {
+        setAiState({ status: 'auth-required' })
+        return
+      }
       if (!res.ok) {
         setAiState({ status: 'error' })
         return
@@ -339,6 +348,15 @@ export default function DamageFloat({ partName, position, currentType, onChoose,
             {aiState.status === 'error' && (
               <div className="mt-2 text-[0.7rem] font-bold text-[var(--text-muted)]">
                 🤖 Não foi possível analisar a foto agora. Preencha manualmente.
+              </div>
+            )}
+            {aiState.status === 'auth-required' && (
+              <div className="mt-2 text-[0.7rem] font-bold text-amber-500">
+                🤖 Classificação por IA é um recurso do plano pago —{' '}
+                <a href="/planos" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+                  faça login/upgrade em /planos
+                </a>{' '}
+                para ativar. Preencha manualmente por enquanto.
               </div>
             )}
             {aiState.status === 'done' && chosenType && aiState.type !== chosenType.type && (

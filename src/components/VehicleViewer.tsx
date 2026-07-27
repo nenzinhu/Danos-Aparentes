@@ -27,6 +27,7 @@ interface VehicleViewerContextValue {
   speak: (text: string) => void
   speakHover: (text: string) => void
   onViewTypeChange?: (v: ViewType) => void
+  accessToken?: string
 
   // State
   fullscreen: boolean
@@ -65,12 +66,13 @@ interface RootProps {
   speak: (text: string) => void
   speakHover: (text: string) => void
   onViewTypeChange?: (v: ViewType) => void
+  accessToken?: string
 }
 
 const VIEW_ORDER: ViewType[] = ['lateral-left', 'frontal', 'lateral-right', 'traseira']
 
 function RootComponent({
-  children, vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover, onViewTypeChange
+  children, vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover, onViewTypeChange, accessToken
 }: RootProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const targetRef = useRef<HTMLDivElement>(null)
@@ -112,11 +114,12 @@ function RootComponent({
 
   const contextValue = useMemo(() => ({
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
+    accessToken,
     fullscreen, setFullscreen, selectedPart, setSelectedPart, orbitDir,
     scale, zoomIn, zoomOut, reset, containerRef, targetRef, flipStateRef
   }), [
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
-    fullscreen, selectedPart, orbitDir, scale, zoomIn, zoomOut, reset
+    accessToken, fullscreen, selectedPart, orbitDir, scale, zoomIn, zoomOut, reset
   ])
 
   return (
@@ -444,7 +447,7 @@ const FullscreenOverlay = memo(function FullscreenOverlay() {
 })
 
 const FloatingDamage = memo(function FloatingDamage() {
-  const { selectedPart, setSelectedPart, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, damages, vehicleType } = useVehicleViewer()
+  const { selectedPart, setSelectedPart, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, damages, vehicleType, accessToken } = useVehicleViewer()
 
   if (!selectedPart) return null
 
@@ -455,6 +458,7 @@ const FloatingDamage = memo(function FloatingDamage() {
       partName={selectedPart.name}
       position={selectedPart.pos}
       currentType={existingDmg?.type}
+      accessToken={accessToken}
       onChoose={(type, typeName, severity, notes, photoFile) => {
         if (onAddDamageDetailed) {
           onAddDamageDetailed(selectedPart.id, selectedPart.name, type, typeName, severity, notes, photoFile)
