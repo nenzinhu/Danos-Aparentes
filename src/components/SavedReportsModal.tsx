@@ -9,6 +9,7 @@ import { VehicleIconSvg } from './VehicleSelector'
 import { db } from '../lib/db'
 import { supabaseEnabled } from '../lib/supabase'
 import { isIssuedLocked } from '../lib/pdf/reportIssuance'
+import { subjectExportToJson } from '../lib/lgpd/subjectExport'
 
 function SaveIcon({ size = 16 }: { size?: number }) {
   return (
@@ -311,6 +312,22 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
     }
   }
 
+  const handleExportSubjectData = (r: SavedReport) => {
+    try {
+      const json = subjectExportToJson(r)
+      const blob = new Blob([json], { type: 'application/json;charset=utf-8' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `lgpd-export-${(r.publicCode || r.id).replace(/[^\w-]+/g, '_')}.json`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (e) {
+      console.error('Failed to export subject data:', e)
+      alert('Não foi possível exportar os dados pessoais desta vistoria.')
+    }
+  }
+
   const handleCreateCorrection = async (r: SavedReport) => {
     if (!onCreateCorrection) return
     const reason = window.prompt(
@@ -549,6 +566,23 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                 {correctingId === r.id ? '⏳' : '📝 Correção'}
               </button>
             )}
+            <button
+              onClick={() => handleExportSubjectData(r)}
+              title="Exportar pacote técnico de dados pessoais (acesso/portabilidade)"
+              style={{
+                background: 'rgba(148,163,184,0.12)',
+                border: '1px solid rgba(148,163,184,0.3)',
+                borderRadius: 8,
+                padding: '5px 8px',
+                color: '#94a3b8',
+                cursor: 'pointer',
+                fontFamily: 'Outfit,sans-serif',
+                fontWeight: 700,
+                fontSize: '0.72rem',
+              }}
+            >
+              LGPD
+            </button>
             <button
               onClick={() => onDelete(r.id)}
               disabled={isIssuedLocked(r.status)}

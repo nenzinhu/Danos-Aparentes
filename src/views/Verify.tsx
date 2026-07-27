@@ -9,6 +9,7 @@ import {
   resolveVerifyOutcome,
   type PublicVerifyOutcome,
 } from '../lib/verify/publicVerify'
+import { comparePdfUpload, hashPdfBytes } from '../lib/verify/pdfUploadVerify'
 
 interface HashRecord {
   hash: string
@@ -89,9 +90,12 @@ export default function Verify() {
   const [geo, setGeo] = useState<{ lat: string; lng: string } | null>(null)
   const [qrScanning, setQrScanning] = useState(false)
   const [qrError, setQrError] = useState('')
+  const [pdfScanning, setPdfScanning] = useState(false)
+  const [pdfError, setPdfError] = useState('')
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null)
   const [outcome, setOutcome] = useState<PublicVerifyOutcome | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const pdfInputRef = useRef<HTMLInputElement>(null)
 
   const applyAndVerify = useCallback(async (rawHash: string, nextGeo?: { lat: string; lng: string } | null) => {
     const raw = rawHash.trim()
@@ -258,6 +262,108 @@ export default function Verify() {
     }
   }
 
+  async function handlePdfUpload(file: File | undefined) {
+    if (!file) return
+    setPdfError('')
+    setPdfScanning(true)
+    setRecord(null)
+    setVersionInfo(null)
+    setOutcome(null)
+
+    try {
+      if (!file.type.includes('pdf') && !file.name.toLowerCase().endsWith('.pdf')) {
+        setPdfError('Envie um arquivo PDF do laudo.')
+        return
+      }
+      if (!supabaseEnabled || !supabase) {
+        setStatus('offline')
+        return
+      }
+
+      const buf = await file.arrayBuffer()
+      const pdfHash = await hashPdfBytes(buf)
+
+      const byPdf = await supabase
+        .from('report_hashes')
+        .select('*')
+        .filter('integrity_manifest->>pdf_hash', 'eq', pdfHash)
+        .limit(1)
+        .maybeSingle()
+
+      let matchedBy: 'pdf_hash' | 'typed_hash' | 'none' = 'none'
+      let data = (byPdf.data as HashRecord | null) || null
+      if (data) matchedBy = 'pdf_hash'
+
+      if (!data && inputHash.trim()) {
+        const typed = inputHash.trim()
+        const byCode = isPublicCodeQuery(typed)
+        const key = byCode ? normalizePublicCode(typed) : normalizeHash(typed)
+        const res = byCode
+          ? await supabase.from('report_hashes').select('*').eq('public_code', key).order('version', { ascending: false }).limit(1).maybeSingle()
+          : await supabase.from('report_hashes').select('*').eq('hash', key).maybeSingle()
+        data = (res.data as HashRecord | null) || null
+        if (data) matchedBy = 'typed_hash'
+      }
+
+      let inspectionStatus: string | null = null
+      let isSupersededVersion = false
+      if (data?.inspection_id) {
+        const { data: insp } = await supabase
+          .from('vehicle_inspections')
+          .select('status')
+          .eq('id', data.inspection_id)
+          .maybeSingle()
+        inspectionStatus = (insp?.status as string) || null
+      }
+      if (data?.report_key) {
+        const { data: siblings } = await supabase
+          .from('report_hashes')
+          .select('hash, version')
+          .eq('report_key', data.report_key)
+          .order('version', { ascending: true })
+        if (siblings && siblings.length > 1) {
+          const latest = siblings[siblings.length - 1] as { hash: string; version: number }
+          isSupersededVersion = latest.hash !== data.hash
+          setVersionInfo({
+            version: data.version || 1,
+            total: siblings.length,
+            latestHash: latest.hash,
+            isLatest: latest.hash === data.hash,
+          })
+        }
+      }
+
+      const o = comparePdfUpload({
+        uploadedPdfHash: pdfHash,
+        record: data
+          ? {
+              hash: data.hash,
+              final_hash: (data as HashRecord & { final_hash?: string }).final_hash,
+              integrity_manifest: (data as HashRecord & { integrity_manifest?: { pdf_hash?: string } }).integrity_manifest,
+              inspection_status: inspectionStatus,
+              is_superseded_version: isSupersededVersion,
+            }
+          : null,
+        matchedBy,
+      })
+
+      setOutcome(o)
+      setStatus(o === 'integrity_confirmed' ? 'valid' : o)
+      if (data) {
+        setRecord(data)
+        setHash(data.hash)
+      } else {
+        setHash(pdfHash.slice(0, 32).toUpperCase())
+      }
+    } catch {
+      setPdfError('Não foi possível verificar o PDF. Tente novamente.')
+      setStatus('error')
+    } finally {
+      setPdfScanning(false)
+      if (pdfInputRef.current) pdfInputRef.current.value = ''
+    }
+  }
+
   const presentation = outcome ? presentVerifyOutcome(outcome) : null
 
   const ICONS: Record<string, { icon: string; bg: string; text: string; border: string; title: string; desc: string }> = {
@@ -311,7 +417,7 @@ export default function Verify() {
   }
 
   const view = ICONS[status] || ICONS.error
-  const isBusy = status === 'loading' || qrScanning
+  const isBusy = status === 'loading' || qrScanning || pdfScanning
   const showForm =
     status === 'no_hash' ||
     status === 'not_found' ||
@@ -417,6 +523,42 @@ export default function Verify() {
                 {qrError && (
                   <p className="text-[11px] font-bold text-rose-600 leading-relaxed" role="alert">
                     {qrError}
+                  </p>
+                )}
+              </div>
+
+              <div className="relative flex items-center gap-3">
+                <div className="flex-1 h-px bg-slate-200" />
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">ou</span>
+                <div className="flex-1 h-px bg-slate-200" />
+              </div>
+
+              <div className="space-y-3">
+                <label htmlFor="pdf-upload" className="block text-xs font-bold text-slate-400 uppercase tracking-widest">
+                  Enviar o PDF do laudo
+                </label>
+                <input
+                  ref={pdfInputRef}
+                  id="pdf-upload"
+                  type="file"
+                  accept="application/pdf,.pdf"
+                  className="sr-only"
+                  onChange={(e) => void handlePdfUpload(e.target.files?.[0])}
+                />
+                <button
+                  type="button"
+                  disabled={isBusy}
+                  onClick={() => pdfInputRef.current?.click()}
+                  className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-800 text-xs font-black uppercase tracking-wider transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {pdfScanning ? 'Calculando SHA-256 do PDF…' : '📄 Escolher arquivo PDF'}
+                </button>
+                <p className="text-[11px] text-slate-400 leading-relaxed">
+                  O sistema calcula o hash do arquivo e compara com o registro. Qualquer alteração no PDF invalida a integridade.
+                </p>
+                {pdfError && (
+                  <p className="text-[11px] font-bold text-rose-600 leading-relaxed" role="alert">
+                    {pdfError}
                   </p>
                 )}
               </div>

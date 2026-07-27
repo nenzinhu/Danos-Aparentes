@@ -11,6 +11,7 @@ import FinalizePanel from '@/src/components/FinalizePanel'
 import TtsSettings from '@/src/components/TtsSettings'
 import ReportActions from '@/src/components/ReportActions'
 import InspectionReviewPanel from '@/src/components/InspectionReviewPanel'
+import InspectionAuditTimeline from '@/src/components/InspectionAuditTimeline'
 import { TtsConfig } from '@/src/types'
 import { ClearAllIcon } from './ClearAllIcon'
 import { VEHICLE_NAME, VIEW_NAME } from './constants'
@@ -333,6 +334,10 @@ export default function InspectTab({
               isReviewed={isReviewed}
               onConfirmReview={onConfirmReview}
               onClearReview={onClearReview}
+            />
+            <InspectionAuditTimeline
+              inspectionId={inspectionId}
+              issued={Boolean(publicCode)}
             />
           </div>
         </div>
