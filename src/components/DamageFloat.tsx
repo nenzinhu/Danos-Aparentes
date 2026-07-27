@@ -30,10 +30,54 @@ const SEV: { value: Severity; label: string; color: string; bg: string; border: 
   { value: 'high',   label: 'Grave', color: 'text-red-600',    bg: 'bg-red-500/15',    border: 'border-red-500/45' },
 ]
 
-const TYPES: { type: DamageType; label: string; Icon: typeof IconScratchDamage; color: string; bg: string; border: string }[] = [
-  { type: 'scratch', label: 'Risco / Arranhado',    Icon: IconScratchDamage, color: 'text-amber-600', bg: 'bg-amber-500/15', border: 'border-amber-500/40' },
-  { type: 'dent',    label: 'Amassado / Deformado', Icon: IconDentDamage,    color: 'text-orange-600', bg: 'bg-orange-500/15', border: 'border-orange-500/40' },
-  { type: 'broken',  label: 'Quebrado / Trincado',  Icon: IconBrokenDamage,  color: 'text-red-600',    bg: 'bg-red-500/15',    border: 'border-red-500/40' },
+const TYPES: {
+  type: DamageType
+  label: string
+  short: string
+  hint: string
+  Icon: typeof IconScratchDamage
+  color: string
+  accent: string
+  bg: string
+  border: string
+  well: string
+}[] = [
+  {
+    type: 'scratch',
+    label: 'Risco / Arranhado',
+    short: 'Risco',
+    hint: 'Arranhado · abrasão',
+    Icon: IconScratchDamage,
+    color: 'text-amber-500',
+    accent: 'bg-amber-500',
+    bg: 'bg-amber-500/12',
+    border: 'border-amber-500/45',
+    well: 'bg-amber-500/10 ring-amber-500/25',
+  },
+  {
+    type: 'dent',
+    label: 'Amassado / Deformado',
+    short: 'Amassado',
+    hint: 'Deformado · impacto',
+    Icon: IconDentDamage,
+    color: 'text-orange-500',
+    accent: 'bg-orange-500',
+    bg: 'bg-orange-500/12',
+    border: 'border-orange-500/45',
+    well: 'bg-orange-500/10 ring-orange-500/25',
+  },
+  {
+    type: 'broken',
+    label: 'Quebrado / Trincado',
+    short: 'Quebrado',
+    hint: 'Trincado · fratura',
+    Icon: IconBrokenDamage,
+    color: 'text-red-500',
+    accent: 'bg-red-500',
+    bg: 'bg-red-500/12',
+    border: 'border-red-500/45',
+    well: 'bg-red-500/10 ring-red-500/25',
+  },
 ]
 
 type AiClassifyState =
@@ -278,15 +322,15 @@ export default function DamageFloat({ partName, position, currentType, accessTok
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, onClose])
 
-  const floatW = 248
+  const floatW = 280
   const left = Math.max(8, Math.min(position.x, window.innerWidth - floatW))
-  const top  = Math.max(8, Math.min(position.y, window.innerHeight - 340))
+  const top  = Math.max(8, Math.min(position.y, window.innerHeight - 380))
 
   const containerClass = isMobile
     ? `fixed z-[10000] left-0 right-0 bottom-0 w-full p-4 pb-[max(1rem,env(safe-area-inset-bottom))] rounded-t-2xl border-t backdrop-blur-xl shadow-2xl motion-reduce:animate-none duration-300 ${
         isClosing ? 'animate-out fade-out slide-out-to-bottom-4 duration-200' : 'animate-in fade-in slide-in-from-bottom-4'
       }`
-    : `fixed z-[10000] w-[248px] p-3 rounded-2xl border backdrop-blur-xl shadow-2xl motion-reduce:animate-none duration-300 ${
+    : `fixed z-[10000] w-[280px] p-3.5 rounded-2xl border backdrop-blur-xl shadow-2xl motion-reduce:animate-none duration-300 ${
         isClosing ? 'animate-out fade-out zoom-out-95 duration-200' : 'animate-in fade-in zoom-in-95 transition-all'
       }`
 
@@ -332,34 +376,54 @@ export default function DamageFloat({ partName, position, currentType, accessTok
       {/* ── STEP 1: escolher tipo ── */}
       {step === 1 && (
         <>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="flex flex-col gap-2" role="listbox" aria-label="Tipos de avaria">
             {TYPES.map((t, i) => {
               const isActive = currentType === t.type
               return (
                 <motion.button
                   key={t.type}
+                  role="option"
+                  aria-selected={isActive}
                   onClick={() => handlePickType(t.type, t.label)}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05, duration: 0.22, ease: 'easeOut' }}
+                  whileHover={{ x: 2 }}
+                  whileTap={{ scale: 0.985 }}
                   aria-keyshortcuts={String(i + 1)}
-                  className={`relative flex flex-col items-center justify-center gap-1.5 min-h-[88px] sm:min-h-[76px] px-1.5 pt-5 pb-2 rounded-xl border-2 font-outfit text-xs font-bold transition-all duration-200 cursor-pointer focus-visible:ring-2 ring-[var(--primary)] outline-none ${
+                  className={`group relative flex items-center gap-3 min-h-[56px] sm:min-h-[52px] w-full overflow-hidden rounded-xl border-2 pl-0 pr-3 font-outfit text-left transition-colors duration-200 cursor-pointer focus-visible:ring-2 ring-[var(--primary)] outline-none ${
                     isActive
-                      ? `${t.bg} ${t.border} text-[var(--text-main)] shadow-[inset_0_0_0_1px_var(--primary)]`
-                      : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] hover:border-[var(--text-muted)]/40'
+                      ? `${t.bg} ${t.border} text-[var(--text-main)]`
+                      : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] hover:border-[var(--text-muted)]/35'
                   }`}
                 >
-                  <span className="absolute top-1.5 left-1/2 -translate-x-1/2 rounded-md border border-[var(--btn-secondary-border)] bg-[var(--card-bg-solid)] px-1.5 py-px font-mono-data text-[0.58rem] font-semibold tracking-wide text-[var(--text-muted)] tabular-nums">
-                    [{i + 1}]
-                  </span>
-                  <div className={`flex items-center justify-center transition-transform duration-200 ${isActive ? 'scale-105' : ''} ${t.color}`}>
-                    <t.Icon size={40} className="h-11 sm:h-10 w-auto" />
+                  <span
+                    aria-hidden="true"
+                    className={`absolute inset-y-0 left-0 w-1 ${isActive ? t.accent : 'bg-transparent group-hover:bg-[var(--text-muted)]/25'} transition-colors`}
+                  />
+                  <div
+                    className={`ml-3 flex h-11 w-11 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-lg ring-1 ${t.well} ${t.color} transition-transform duration-200 ${isActive ? 'scale-105' : 'group-hover:scale-[1.03]'}`}
+                  >
+                    <t.Icon size={36} animated={isActive} className="h-9 w-auto" />
                   </div>
-                  <span className="text-[0.68rem] sm:text-[0.62rem] tracking-tight leading-tight text-center text-[var(--text-main)] px-0.5">
-                    {t.label}
-                  </span>
-                  {isActive && (
-                    <span className="text-[0.55rem] uppercase font-black tracking-widest text-[var(--primary)]">Ativo</span>
-                  )}
+                  <div className="min-w-0 flex-1 py-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[0.88rem] sm:text-[0.82rem] font-extrabold tracking-tight text-[var(--text-main)] leading-none">
+                        {t.short}
+                      </span>
+                      {isActive && (
+                        <span className="rounded px-1.5 py-0.5 text-[0.55rem] uppercase font-black tracking-widest text-[var(--primary)] bg-[var(--primary)]/10">
+                          Ativo
+                        </span>
+                      )}
+                    </div>
+                    <span className="mt-1 block text-[0.68rem] sm:text-[0.62rem] font-medium leading-tight text-[var(--text-muted)]">
+                      {t.hint}
+                    </span>
+                  </div>
+                  <kbd className="hidden sm:inline-flex shrink-0 items-center justify-center rounded-md border border-[var(--btn-secondary-border)] bg-[var(--card-bg-solid)] px-1.5 min-w-[1.4rem] h-6 font-mono-data text-[0.58rem] font-semibold text-[var(--text-muted)] tabular-nums opacity-70 group-hover:opacity-100 transition-opacity">
+                    {i + 1}
+                  </kbd>
                 </motion.button>
               )
             })}
@@ -367,9 +431,12 @@ export default function DamageFloat({ partName, position, currentType, accessTok
 
           <motion.button
             onClick={() => closeThen(onClear)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.18, duration: 0.2 }}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            className="mt-3.5 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border font-outfit text-xs font-bold transition-all duration-200 cursor-pointer bg-transparent hover:bg-[var(--btn-secondary-hover)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
+            className="mt-3 w-full flex items-center justify-center gap-2 min-h-11 px-4 py-2.5 rounded-xl border border-dashed font-outfit text-xs font-bold transition-all duration-200 cursor-pointer bg-transparent hover:bg-[var(--btn-secondary-hover)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
           >
             <IconEraser className="text-[var(--text-muted)]" size={15} />
             <span>Sem avaria / Limpar</span>

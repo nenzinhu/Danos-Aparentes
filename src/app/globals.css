@@ -1132,3 +1132,45 @@ html.light .va-outline.va-outline--fs [id^="container-"] svg .part :is(path, cir
   mix-blend-mode: screen;
 }
 
+/* 8. Damage type icons (DamageFloat picker) */
+@keyframes damage-scratch-sheen {
+  0%, 100% { opacity: 0.85; }
+  50% { opacity: 1; }
+}
+@keyframes damage-dent-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.97); opacity: 0.88; }
+}
+@keyframes damage-chip-float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-1.5px, 1px) rotate(-4deg); }
+}
+
+.damage-icon {
+  display: block;
+  overflow: visible;
+}
+
+.damage-icon--live.damage-icon--scratch .damage-icon__mark {
+  animation: damage-scratch-sheen 1.6s ease-in-out infinite;
+}
+
+.damage-icon--live.damage-icon--dent .damage-icon__mark {
+  transform-origin: 40px 26px;
+  animation: damage-dent-pulse 1.8s ease-in-out infinite;
+}
+
+.damage-icon--live.damage-icon--broken .damage-icon__chip {
+  transform-origin: 12px 24px;
+  animation: damage-chip-float 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .damage-icon--live.damage-icon--scratch .damage-icon__mark,
+  .damage-icon--live.damage-icon--dent .damage-icon__mark,
+  .damage-icon--live.damage-icon--broken .damage-icon__chip {
+    animation: none;
+  }
+}
+
+
