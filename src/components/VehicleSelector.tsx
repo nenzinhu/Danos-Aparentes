@@ -6,7 +6,7 @@ export const VEHICLES: { id: VehicleType; label: string; shortLabel: string; ico
   { id: 'car', label: 'Carro 4P', shortLabel: '4P', icon: '/icons/vehicles/car.svg' },
   { id: 'car2d', label: 'Carro 2/3P', shortLabel: '2/3P', icon: '/icons/vehicles/car2d.svg' },
   { id: 'moto', label: 'Moto', shortLabel: 'Moto', icon: '/icons/vehicles/moto.svg' },
-  { id: 'motoneta', label: 'Motoneta', shortLabel: 'Motoneta', icon: '/icons/vehicles/moto.svg' },
+  { id: 'motoneta', label: 'Motoneta', shortLabel: 'Motoneta', icon: '/icons/vehicles/motoneta.svg' },
   { id: 'truck', label: 'Caminhão', shortLabel: 'Caminhão', icon: '/icons/vehicles/truck.svg' },
   { id: 'bus', label: 'Ônibus', shortLabel: 'Ônibus', icon: '/icons/vehicles/bus.svg' },
   { id: 'microbus', label: 'Micro-ônibus', shortLabel: 'Micro', icon: '/icons/vehicles/microbus.svg' },

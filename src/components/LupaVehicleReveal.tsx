@@ -26,7 +26,7 @@ export const SELECTOR_VEHICLES: Vehicle[] = [
   { src: '/icons/vehicles/car.svg', label: 'Carro 4P' },
   { src: '/icons/vehicles/car2d.svg', label: 'Carro 2/3P' },
   { src: '/icons/vehicles/moto.svg', label: 'Moto' },
-  { src: '/icons/vehicles/moto.svg', label: 'Motoneta' },
+  { src: '/icons/vehicles/motoneta.svg', label: 'Motoneta' },
   { src: '/icons/vehicles/truck.svg', label: 'Caminhão' },
   { src: '/icons/vehicles/bus.svg', label: 'Ônibus' },
   { src: '/icons/vehicles/microbus.svg', label: 'Micro-ônibus' },
