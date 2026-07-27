@@ -22,7 +22,12 @@ export function detectHorizontalSwipe(
 export function useZoomPan(
   containerRef: RefObject<HTMLDivElement | null>,
   targetRef: RefObject<HTMLDivElement | null>,
-  onHorizontalSwipe?: (direction: 1 | -1) => void
+  onHorizontalSwipe?: (direction: 1 | -1) => void,
+  /** Bump this (e.g. a fullscreen toggle) to rebind listeners to whatever
+   * DOM node containerRef.current points to right now. Needed whenever the
+   * ref can end up attached to a different element than the one the
+   * gesture effect originally bound to. */
+  rebindKey?: unknown
 ) {
   const [scale, setScale] = useState(1)
   const offsetRef = useRef({ x: 0, y: 0 })
@@ -132,6 +137,10 @@ export function useZoomPan(
         setScale(s => Math.min(4, Math.max(0.5, s * (dist / pinchDist.current!))))
         pinchDist.current = dist
       } else if (e.touches.length === 1 && dragging.current) {
+        // Always suppress the browser's native scroll/pan for a drag that
+        // started on the diagram — otherwise the slightest vertical finger
+        // drift hands the gesture to the page instead of the vehicle.
+        e.preventDefault()
         if (isAtDefaultZoom()) {
           maybeFireSwipe(e.touches[0].clientX, e.touches[0].clientY)
           return
@@ -164,7 +173,7 @@ export function useZoomPan(
       el.removeEventListener('touchmove', onTouchMove)
       el.removeEventListener('touchend', onTouchEnd)
     }
-  }, [containerRef, applyTransform, onHorizontalSwipe])
+  }, [containerRef, applyTransform, onHorizontalSwipe, rebindKey])
 
   return { scale, reset, zoomIn, zoomOut }
 }

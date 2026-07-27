@@ -1002,6 +1002,49 @@ html.light .theme-segment .theme-segment-active {
   100% { top: 98%; opacity: 0.8; }
 }
 
+/* 8. Vehicle diagram outline mode — strips every SVG fill/gradient down to a
+   transparent, line-only render. Works on every vehicle/view because it
+   targets shape elements generically rather than per-vehicle classes. */
+.va-outline [id^="container-"] svg :is(path, circle, ellipse, rect, polygon, line) {
+  fill: none !important;
+  stroke: var(--outline-ink, #0f172a) !important;
+  stroke-width: 1.4px !important;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Every vehicle SVG already marks purely cosmetic detail (bolts, engine fins,
+   chrome shine, tread grooves...) with pointer-events="none" — the same flag
+   usePartProps uses to exclude them from click handling and draw-in
+   animations. Reuse it here: hide that detail entirely in outline mode so
+   only the clickable .part boundaries remain, instead of drowning them in
+   decorative linework. */
+.va-outline [id^="container-"] svg [pointer-events="none"],
+.va-outline [id^="container-"] svg [pointer-events="none"] * {
+  display: none !important;
+}
+
+.va-outline [id^="container-"] svg ellipse:first-child {
+  /* Ground-contact shadow ellipse: keep it faint instead of a bold outline. */
+  display: block !important;
+  opacity: 0.25 !important;
+}
+
+/* fill:none shrinks a path's default click-hit area down to just its stroke
+   line (SVG's default pointer-events: visiblePainted only hit-tests actually
+   painted pixels). Force the full shape geometry to stay clickable so
+   tapping anywhere inside a part still registers, not just on its edge. */
+.va-outline [id^="container-"] svg .part,
+.va-outline [id^="container-"] svg .part * {
+  pointer-events: visible !important;
+}
+
+html.light .va-outline { --outline-ink: #0f172a; }
+html.dark .va-outline,
+.va-outline { --outline-ink: #e2e8f0; }
+
 /* 7. Ambient Background Glow Orbs */
 .bg-glow-orb {
   position: absolute;

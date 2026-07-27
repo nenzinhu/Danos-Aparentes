@@ -1,5 +1,5 @@
 'use client';
-import React, { createContext, useContext, useRef, useState, useEffect, useCallback, useMemo, memo, Suspense } from 'react'
+import React, { createContext, useContext, useRef, useState, useEffect, useLayoutEffect, useCallback, useMemo, memo, Suspense } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { VehicleType, ViewType, Damage, DamageType, Severity } from '../types'
@@ -35,6 +35,8 @@ interface VehicleViewerContextValue {
   selectedPart: { id: string; name: string; pos: { x: number; y: number } } | null
   setSelectedPart: (p: { id: string; name: string; pos: { x: number; y: number } } | null) => void
   orbitDir: number
+  outlineMode: boolean
+  setOutlineMode: (f: boolean) => void
 
   // Zoom/Pan
   scale: number
@@ -43,6 +45,11 @@ interface VehicleViewerContextValue {
   reset: () => void
   containerRef: React.RefObject<HTMLDivElement | null>
   targetRef: React.RefObject<HTMLDivElement | null>
+  /** Always the small (non-fullscreen) viewport's nodes — a fallback so
+   * `containerRef`/`targetRef` can be restored to it once the fullscreen
+   * Viewport instance unmounts and nulls out the ref it was sharing. */
+  baseContainerRef: React.RefObject<HTMLDivElement | null>
+  baseTargetRef: React.RefObject<HTMLDivElement | null>
   flipStateRef: React.RefObject<ReturnType<typeof Flip.getState> | null>
 }
 
@@ -76,6 +83,8 @@ function RootComponent({
 }: RootProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const targetRef = useRef<HTMLDivElement>(null)
+  const baseContainerRef = useRef<HTMLDivElement>(null)
+  const baseTargetRef = useRef<HTMLDivElement>(null)
   const flipStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null)
 
   // Drag-to-rotate: swipe on the vehicle at 100% zoom advances/retreats through
@@ -87,9 +96,31 @@ function RootComponent({
     onViewTypeChange(next)
   }, [viewType, onViewTypeChange])
 
-  const { scale, reset, zoomIn, zoomOut } = useZoomPan(containerRef, targetRef, handleHorizontalSwipe)
   const [selectedPart, setSelectedPart] = useState<{ id: string; name: string; pos: { x: number; y: number } } | null>(null)
   const [fullscreen, setFullscreen] = useState(false)
+
+  // The fullscreen Viewport mounts and unmounts on top of the small one,
+  // both sharing containerRef/targetRef. When it unmounts, React nulls out
+  // whatever it last set those to — even though the small viewport is still
+  // mounted and its node is still perfectly valid, just parked in
+  // baseContainerRef/baseTargetRef. Restore the shared refs to it here.
+  // useLayoutEffect (not useEffect) so this runs before useZoomPan's own
+  // rebind effect below sees the ref, regardless of hook declaration order —
+  // React flushes all layout effects before any passive effect.
+  useLayoutEffect(() => {
+    if (!fullscreen) {
+      containerRef.current = baseContainerRef.current
+      targetRef.current = baseTargetRef.current
+    }
+  }, [fullscreen])
+
+  // `fullscreen` forces the pan/zoom/drag listeners to rebind to whichever
+  // DOM node containerRef.current points to right now. The small viewport
+  // and the fullscreen overlay both mount a Viewport sharing this same ref,
+  // so without this the listeners stay stuck on whichever one existed when
+  // the effect first ran and dragging silently does nothing in fullscreen.
+  const { scale, reset, zoomIn, zoomOut } = useZoomPan(containerRef, targetRef, handleHorizontalSwipe, fullscreen)
+  const [outlineMode, setOutlineMode] = useState(false)
 
   const prevViewRef = useRef<ViewType>(viewType)
   const prevVehicleRef = useRef<VehicleType>(vehicleType)
@@ -121,11 +152,11 @@ function RootComponent({
   const contextValue = useMemo(() => ({
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
     accessToken,
-    fullscreen, setFullscreen, selectedPart, setSelectedPart, orbitDir,
-    scale, zoomIn, zoomOut, reset, containerRef, targetRef, flipStateRef
+    fullscreen, setFullscreen, selectedPart, setSelectedPart, orbitDir, outlineMode, setOutlineMode,
+    scale, zoomIn, zoomOut, reset, containerRef, targetRef, baseContainerRef, baseTargetRef, flipStateRef
   }), [
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
-    accessToken, fullscreen, selectedPart, orbitDir, scale, zoomIn, zoomOut, reset
+    accessToken, fullscreen, selectedPart, orbitDir, outlineMode, scale, zoomIn, zoomOut, reset
   ])
 
   return (
@@ -157,12 +188,28 @@ const orbitVariants = {
 const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen?: boolean }) {
   const {
     vehicleType, viewType, damages, speak, speakHover,
-    selectedPart, setSelectedPart, orbitDir, containerRef, targetRef, scale,
+    selectedPart, setSelectedPart, orbitDir, containerRef, targetRef,
+    baseContainerRef, baseTargetRef, scale, outlineMode,
   } = useVehicleViewer()
 
   const VehicleComp = vehicleRegistry[vehicleType]?.[viewType] || vehicleRegistry['car']?.[viewType] || vehicleRegistry['car']['lateral-left']
   const layoutKey = `${vehicleType}-${viewType}`
   const [compact, setCompact] = useState(false)
+
+  // The shared containerRef/targetRef always track whichever Viewport
+  // instance (small or fullscreen) is currently interactive. Only the small
+  // instance also records into base*Ref, so it can be restored once the
+  // fullscreen instance unmounts and nulls the shared refs out (see the
+  // useLayoutEffect in RootComponent).
+  const setContainerNode = useCallback((node: HTMLDivElement | null) => {
+    containerRef.current = node
+    if (!isFullscreen) baseContainerRef.current = node
+  }, [containerRef, baseContainerRef, isFullscreen])
+
+  const setTargetNode = useCallback((node: HTMLDivElement | null) => {
+    targetRef.current = node
+    if (!isFullscreen) baseTargetRef.current = node
+  }, [targetRef, baseTargetRef, isFullscreen])
 
   // Mobile / narrow SVG: pins on diagram + legend list (avoids jumbled labels).
   useEffect(() => {
@@ -279,8 +326,8 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
   return (
     <div className={`flex flex-col ${isFullscreen ? 'flex-1 min-h-0' : ''}`}>
       <div
-        ref={containerRef}
-        className={`relative overflow-hidden cursor-grab flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] ${isFullscreen ? 'rounded-0 flex-1 min-h-0' : 'rounded-2xl flex-1 min-h-[220px]'}`}
+        ref={setContainerNode}
+        className={`relative overflow-hidden cursor-grab touch-none flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] ${isFullscreen ? 'rounded-0 flex-1 min-h-0' : 'rounded-2xl flex-1 min-h-[220px]'} ${outlineMode ? 'va-outline' : ''}`}
       >
         <AnimatePresence mode='wait' custom={orbitDir}>
           <motion.div
@@ -293,7 +340,7 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
             className={`[transform-style:preserve-3d] ${isFullscreen ? 'w-full h-full flex items-center justify-center' : 'w-full'}`}
           >
             <div
-              ref={targetRef}
+              ref={setTargetNode}
               id={`container-${vehicleType}-${viewType}`}
               style={{ width: '100%', transformOrigin: 'center center' }}
               className={isFullscreen ? 'h-full flex items-center justify-center [&>svg]:h-full [&>svg]:w-auto [&>svg]:max-w-full' : ''}
@@ -338,7 +385,7 @@ const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen
 const btnBase = 'bg-slate-900/85 border border-white/10 rounded-lg text-[#e8f4ff] font-outfit font-bold cursor-pointer transition-all hover:bg-slate-800'
 
 const Controls = memo(function Controls({ variant = 'floating' }: { variant?: 'floating' | 'header' }) {
-  const { zoomIn, zoomOut, reset, scale, setFullscreen, containerRef, flipStateRef } = useVehicleViewer()
+  const { zoomIn, zoomOut, reset, scale, setFullscreen, containerRef, flipStateRef, outlineMode, setOutlineMode } = useVehicleViewer()
 
   const openFullscreen = useCallback(() => {
     // Snapshot the small viewport's bounds/position now, while it's still the
@@ -357,6 +404,14 @@ const Controls = memo(function Controls({ variant = 'floating' }: { variant?: 'f
         <button onClick={zoomIn} className={`${btnBase} px-3 py-1.5 text-[0.85rem]`}>+</button>
         <button onClick={reset} className={`${btnBase} px-2.5 py-1.5`}>↺</button>
         <button
+          onClick={() => setOutlineMode(!outlineMode)}
+          title='Ver só o contorno, sem cores'
+          aria-pressed={outlineMode}
+          className={`${btnBase} px-3 py-1.5 text-[0.75rem] ${outlineMode ? 'bg-sky-500/25 border-sky-400/50 text-sky-300' : ''}`}
+        >
+          ◇ Contorno
+        </button>
+        <button
           onClick={() => setFullscreen(false)}
           className={`${btnBase} px-3.5 py-1.5 text-[0.85rem] bg-red-500/20 border-red-500/40 text-red-500 flex items-center gap-1.5 hover:bg-red-500/30`}
         >
@@ -373,6 +428,14 @@ const Controls = memo(function Controls({ variant = 'floating' }: { variant?: 'f
       <span onClick={reset} className={`${btnBase} px-2.5 py-1 text-[0.75rem] cursor-pointer`}>{Math.round(scale * 100)}%</span>
       <button onClick={zoomIn} className={`${btnBase} px-2.5 py-1 text-[0.85rem]`}>+</button>
       <button onClick={reset} className={`${btnBase} px-2 py-1 text-[0.75rem]`}>↺</button>
+      <button
+        onClick={() => setOutlineMode(!outlineMode)}
+        title='Ver só o contorno, sem cores'
+        aria-pressed={outlineMode}
+        className={`${btnBase} px-2 py-1 text-[0.75rem] ${outlineMode ? 'bg-sky-500/25 border-sky-400/50 text-sky-300' : ''}`}
+      >
+        ◇ Contorno
+      </button>
       <button
         onClick={openFullscreen}
         title='Tela cheia'
