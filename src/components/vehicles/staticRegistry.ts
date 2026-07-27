@@ -14,6 +14,11 @@ import MotoLateralRight from './MotoLateralRight'
 import MotoFrontal from './MotoFrontal'
 import MotoTraseira from './MotoTraseira'
 
+import MotonetaLateralLeft from './MotonetaLateralLeft'
+import MotonetaLateralRight from './MotonetaLateralRight'
+import MotonetaFrontal from './MotonetaFrontal'
+import MotonetaTraseira from './MotonetaTraseira'
+
 import TruckLateralLeft from './TruckLateralLeft'
 import TruckLateralRight from './TruckLateralRight'
 import TruckFrontal from './TruckFrontal'
@@ -59,10 +64,10 @@ export const staticVehicleRegistry: Record<VehicleType, Record<ViewType, Compone
     'traseira': MotoTraseira,
   },
   motoneta: {
-    'lateral-left': MotoLateralLeft,
-    'lateral-right': MotoLateralRight,
-    'frontal': MotoFrontal,
-    'traseira': MotoTraseira,
+    'lateral-left': MotonetaLateralLeft,
+    'lateral-right': MotonetaLateralRight,
+    'frontal': MotonetaFrontal,
+    'traseira': MotonetaTraseira,
   },
   truck: {
     'lateral-left': TruckLateralLeft,
