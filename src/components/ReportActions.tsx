@@ -1,10 +1,11 @@
-'use client';
+﻿'use client';
 import { useState, createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { Damage, VehicleInfo, VehicleType, ViewType } from '../types'
 import { generatePdf, generatePdfBlob, buildBadgeSnippet, SvgPdfData } from '../lib/pdf'
 import { copyReport, downloadTxt, sendWhatsApp } from '../lib/report'
 import { resolveDamagePhotos, resolvePhotos } from '../lib/photoStore'
+import { appendAuditEvent } from '../lib/audit/auditLog'
 import { staticVehicleRegistry } from './vehicles/staticRegistry'
 import VehicleDefs from './vehicles/VehicleDefs'
 
@@ -15,25 +16,44 @@ interface Props {
   onToast?: (msg: string) => void
   hasAccess?: boolean
   accessToken?: string
-  /** Active SavedReport id — marks cloud/local as issued after PDF register. */
+  /** Active SavedReport id â€” marks cloud/local as issued after PDF register. */
   inspectionId?: string | null
   publicCode?: string
   laudoVersion?: number
   correctionReason?: string
   supersedesHash?: string
   onIssued?: (hash: string) => void
+  reviewedAt?: number
 }
 
 const ALL_VIEWS: ViewType[] = ['lateral-left', 'lateral-right', 'frontal', 'traseira']
 
 type QuotaCheck = { allowed: boolean; reason?: string; limit?: number | null; planTier?: string }
 
-// Verifica a cota mensal de laudos em PDF (Starter 20 · Pro 80 · Corporativo
-// ilimitado) antes de gerar o arquivo. O app é offline-first — se a chamada
-// falhar por falta de conexão (comum no pátio da oficina), deixamos gerar
-// mesmo assim (fail-open) em vez de travar a vistoria; a cota é reconciliada
-// nas próximas gerações feitas online. Só bloqueia quando o servidor
+// Verifica a cota mensal de laudos em PDF (Starter 20 Â· Pro 80 Â· Corporativo
+// ilimitado) antes de gerar o arquivo. O app Ã© offline-first â€” se a chamada
+// falhar por falta de conexÃ£o (comum no pÃ¡tio da oficina), deixamos gerar
+// mesmo assim (fail-open) em vez de travar a vistoria; a cota Ã© reconciliada
+// nas prÃ³ximas geraÃ§Ãµes feitas online. SÃ³ bloqueia quando o servidor
 // responde de fato que o limite foi atingido.
+
+async function blockExportWithoutReview(
+  reviewedAt: number | undefined,
+  inspectionId: string | null | undefined,
+  onToast?: (msg: string) => void,
+): Promise<boolean> {
+  if (typeof reviewedAt === 'number' && reviewedAt > 0) return true
+  void appendAuditEvent({
+    event_type: 'issue_blocked_without_review',
+    inspection_id: inspectionId || null,
+    metadata: { surface: 'report_actions' },
+  })
+  if (onToast) {
+    onToast('Conclua a revisÃ£o humana antes de gerar o PDF oficial')
+  }
+  return false
+}
+
 async function checkLaudoQuota(accessToken?: string): Promise<QuotaCheck> {
   if (!accessToken) return { allowed: true }
   try {
@@ -46,16 +66,16 @@ async function checkLaudoQuota(accessToken?: string): Promise<QuotaCheck> {
     if (res.status === 403) {
       return { allowed: false, reason: data.reason, limit: data.limit, planTier: data.plan_tier }
     }
-    // Erro inesperado do servidor (500 etc.): não bloqueia a geração local.
+    // Erro inesperado do servidor (500 etc.): nÃ£o bloqueia a geraÃ§Ã£o local.
     return { allowed: true }
   } catch {
-    return { allowed: true } // offline: fail-open, ver comentário acima
+    return { allowed: true } // offline: fail-open, ver comentÃ¡rio acima
   }
 }
 
 function quotaBlockedMessage(check: QuotaCheck): string {
   const planLabel = check.planTier === 'starter' ? 'Starter' : check.planTier === 'pro' ? 'Pro' : 'atual'
-  return `❌ Limite de ${check.limit ?? ''} laudos do plano ${planLabel} atingido neste mês. Faça upgrade em /planos para continuar.`
+  return `âŒ Limite de ${check.limit ?? ''} laudos do plano ${planLabel} atingido neste mÃªs. FaÃ§a upgrade em /planos para continuar.`
 }
 
 export async function captureSvgs(vehicleType: VehicleType, damages: Damage[]): Promise<SvgPdfData> {
@@ -91,7 +111,7 @@ export async function captureSvgs(vehicleType: VehicleType, damages: Damage[]): 
   }
 }
 
-// ── SVG Icons ────────────────────────────────────────────────────────────────
+// â”€â”€ SVG Icons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function IconWhatsApp() {
   return (
@@ -151,7 +171,7 @@ function IconDamageList() {
   )
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 interface SectionVisibilityState {
   showInfoTable: boolean
   showSvgDiagrams: boolean
@@ -177,6 +197,7 @@ const DEFAULT_SECTIONS: SectionVisibilityState = {
 export default function ReportActions({
   vehicleType, vehicleInfo, damages, onToast, hasAccess, accessToken,
   inspectionId, publicCode, laudoVersion, correctionReason, supersedesHash, onIssued,
+  reviewedAt,
 }: Props) {
   const [loading, setLoading] = useState<string | null>(null)
   const [reportHash, setReportHash] = useState<string | null>(null)
@@ -276,13 +297,14 @@ export default function ReportActions({
       if (successMsg && onToast) onToast(successMsg)
     } catch (e) {
       console.error(e)
-      if (onToast) onToast('❌ Erro ao gerar arquivo')
+      if (onToast) onToast('âŒ Erro ao gerar arquivo')
     } finally {
       setLoading(null)
     }
   }
 
   async function handlePdf() {
+    if (!(await blockExportWithoutReview(reviewedAt, inspectionId, onToast))) return
     const quota = await checkLaudoQuota(accessToken)
     if (!quota.allowed) {
       if (onToast) onToast(quotaBlockedMessage(quota))
@@ -300,6 +322,7 @@ export default function ReportActions({
   }
 
   async function whatsappPdf() {
+    if (!(await blockExportWithoutReview(reviewedAt, inspectionId, onToast))) return
     const quota = await checkLaudoQuota(accessToken)
     if (!quota.allowed) {
       if (onToast) onToast(quotaBlockedMessage(quota))
@@ -316,9 +339,9 @@ export default function ReportActions({
     } else {
       const url = URL.createObjectURL(blob)
       window.open(url, '_blank')
-      // Revoga depois de um tempo generoso — a aba aberta precisa terminar de
+      // Revoga depois de um tempo generoso â€” a aba aberta precisa terminar de
       // carregar o PDF antes que a URL seja invalidada (sem isso, cada export
-      // vazava um object URL até o reload da página).
+      // vazava um object URL atÃ© o reload da pÃ¡gina).
       setTimeout(() => URL.revokeObjectURL(url), 60_000)
     }
   }
@@ -332,6 +355,56 @@ export default function ReportActions({
         <span>Exportar Relatório</span>
       </div>
 
+      {onConfirmReview && (
+        <div
+          className={`rounded-xl p-3 border ${
+            isReviewed
+              ? 'bg-emerald-500/10 border-emerald-500/25'
+              : 'bg-amber-500/10 border-amber-500/25'
+          }`}
+        >
+          <p className="text-[0.78rem] font-bold text-[var(--text-main)] mb-1">
+            {isReviewed ? 'Revisão confirmada' : 'Revisão humana obrigatória'}
+          </p>
+          <p className="text-[0.72rem] text-[var(--text-muted)] mb-2.5 leading-relaxed">
+            {isReviewed
+              ? 'Conteúdo congelado para emissão. Reabra a revisão se precisar editar avarias ou dados.'
+              : 'Confirme que revisou avarias, fotos, GPS e assinaturas antes de gerar o PDF emitido.'}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {!isReviewed ? (
+              <button
+                type="button"
+                disabled={loading === 'review'}
+                onClick={() =>
+                  void handle('review', async () => {
+                    await onConfirmReview()
+                  }, '✅ Revisão confirmada â€” agora vocÃª pode emitir o PDF')
+                }
+                className="text-xs px-3 py-1.5 rounded-lg font-bold border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 transition-all"
+              >
+                {loading === 'review' ? 'Confirmando…' : 'Confirmar revisão'}
+              </button>
+            ) : (
+              onClearReview && (
+                <button
+                  type="button"
+                  disabled={loading === 'clear-review'}
+                  onClick={() =>
+                    void handle('clear-review', async () => {
+                      await onClearReview()
+                    }, '📝 Revisão reaberta — edite e confirme de novo')
+                  }
+                  className="text-xs px-3 py-1.5 rounded-lg font-bold border border-[var(--panel-border)] bg-transparent text-[var(--text-muted)] hover:bg-white/5 transition-all"
+                >
+                  {loading === 'clear-review' ? 'Reabrindoâ€¦' : 'Reabrir revisÃ£o'}
+                </button>
+              )
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col gap-1.5 mb-1 bg-sky-950/15 border border-sky-500/10 rounded-xl p-2.5">
         <label htmlFor="pdf-theme-select" className="text-[0.7rem] font-bold text-[var(--text-muted)] uppercase tracking-wider">Modelo de Layout PDF</label>
         <select
@@ -340,16 +413,16 @@ export default function ReportActions({
           onChange={(e) => handleThemeChange(e.target.value as 'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante')}
           className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg font-outfit text-[0.82rem] font-medium outline-none focus:border-sky-500/40 transition-all cursor-pointer"
         >
-          <option value="modern">🎨 Modelo Moderno (Padrão)</option>
-          <option value="editorial">📖 Modelo Editorial (Poppins & Lora)</option>
-          <option value="tecnico">🔬 Modelo Técnico / Forense (Mono)</option>
-          <option value="corporativo">🏛️ Modelo Corporativo (Azul & Dourado)</option>
-          <option value="minimalista">⚪ Modelo Minimalista (Preto & Branco)</option>
-          <option value="vibrante">🌈 Modelo Vibrante (Roxo & Rosa)</option>
+          <option value="modern">ðŸŽ¨ Modelo Moderno (PadrÃ£o)</option>
+          <option value="editorial">ðŸ“– Modelo Editorial (Poppins & Lora)</option>
+          <option value="tecnico">ðŸ”¬ Modelo TÃ©cnico / Forense (Mono)</option>
+          <option value="corporativo">ðŸ›ï¸ Modelo Corporativo (Azul & Dourado)</option>
+          <option value="minimalista">âšª Modelo Minimalista (Preto & Branco)</option>
+          <option value="vibrante">ðŸŒˆ Modelo Vibrante (Roxo & Rosa)</option>
         </select>
       </div>
 
-      {/* Accordion das Seções do PDF */}
+      {/* Accordion das SeÃ§Ãµes do PDF */}
       <div className="flex flex-col mb-1 bg-sky-950/15 border border-sky-500/10 rounded-xl overflow-hidden">
         <button
           type="button"
@@ -357,9 +430,9 @@ export default function ReportActions({
           className="w-full flex items-center justify-between px-3 py-2.5 text-[0.8rem] font-bold text-[var(--text-main)] hover:bg-sky-500/5 transition-all text-left"
         >
           <span className="flex items-center gap-2">
-            <span>⚙️</span> Personalizar Seções do PDF
+            <span>âš™ï¸</span> Personalizar SeÃ§Ãµes do PDF
           </span>
-          <span className="text-[0.7rem] text-sky-400">{showSectionsAccordion ? '▲' : '▼'}</span>
+          <span className="text-[0.7rem] text-sky-400">{showSectionsAccordion ? 'â–²' : 'â–¼'}</span>
         </button>
 
         {showSectionsAccordion && (
@@ -396,14 +469,14 @@ export default function ReportActions({
             </div>
 
             {[
-              { key: 'showInfoTable' as const, label: '1. Identificação do Veículo' },
+              { key: 'showInfoTable' as const, label: '1. IdentificaÃ§Ã£o do VeÃ­culo' },
               { key: 'showSvgDiagrams' as const, label: '2. Diagramas / Vistas Periciais' },
-              { key: 'showSummaryStats' as const, label: '3. Resumo Estatístico de Avarias' },
-              { key: 'showDamageTable' as const, label: '4. Detalhamento Técnico' },
-              { key: 'showPhotoGallery' as const, label: '5. Galeria Fotográfica' },
-              { key: 'showInteriorSection' as const, label: '6. Observações do Interior' },
+              { key: 'showSummaryStats' as const, label: '3. Resumo EstatÃ­stico de Avarias' },
+              { key: 'showDamageTable' as const, label: '4. Detalhamento TÃ©cnico' },
+              { key: 'showPhotoGallery' as const, label: '5. Galeria FotogrÃ¡fica' },
+              { key: 'showInteriorSection' as const, label: '6. ObservaÃ§Ãµes do Interior' },
               { key: 'showSignatures' as const, label: '7. Assinaturas (Vistoriador / Resp.)' },
-              { key: 'showQrCode' as const, label: '8. Selo & QR Code de Verificação' },
+              { key: 'showQrCode' as const, label: '8. Selo & QR Code de VerificaÃ§Ã£o' },
             ].map(sec => (
               <label key={sec.key} className="flex items-center gap-2 cursor-pointer text-[0.76rem] text-[var(--text-main)] hover:text-sky-300 transition-colors">
                 <input
@@ -425,7 +498,7 @@ export default function ReportActions({
           disabled={loading !== null}
           className={`${btnBase} bg-green-500/10 border border-green-500/30 text-green-500 hover:bg-green-500/20 disabled:opacity-60`}
         >
-          {loading === 'wp' ? <span className="animate-pulse">⏳</span> : <IconWhatsApp />}
+          {loading === 'wp' ? <span className="animate-pulse">â³</span> : <IconWhatsApp />}
           Enviar via WhatsApp
         </button>
 
@@ -434,28 +507,28 @@ export default function ReportActions({
           disabled={loading !== null}
           className={`${btnBase} bg-green-500/5 border border-green-500/20 text-green-500 hover:bg-green-500/15 disabled:opacity-60`}
         >
-          {loading === 'wp-pdf' ? <span className="animate-pulse">⏳</span> : <IconWhatsAppFull />}
+          {loading === 'wp-pdf' ? <span className="animate-pulse">â³</span> : <IconWhatsAppFull />}
           WhatsApp (PDF)
         </button>
 
         <div className="grid grid-cols-3 gap-2">
           <button
-            onClick={() => handle('pdf', handlePdf, '📄 PDF gerado!')}
+            onClick={() => handle('pdf', handlePdf, 'ðŸ“„ PDF gerado!')}
             disabled={loading !== null}
             title="Gerar PDF Profissional com Mapa de Avarias"
             className={`${btnBase} flex-col justify-center gap-1 bg-gradient-to-br from-emerald-500/15 to-emerald-600/10 border border-emerald-500/35 text-emerald-500 p-2.5 hover:from-emerald-500/20 hover:to-emerald-600/15 disabled:opacity-60`}
           >
-            {loading === 'pdf' ? <span className="text-xl animate-pulse">⏳</span> : <IconPdf />}
+            {loading === 'pdf' ? <span className="text-xl animate-pulse">â³</span> : <IconPdf />}
             <span className="text-[0.72rem]">PDF</span>
           </button>
 
           <button
-            onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, '📋 Copiado!')}
+            onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, 'ðŸ“‹ Copiado!')}
             disabled={loading !== null}
             title="Copiar Relatório"
             className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
           >
-            {loading === 'copy' ? <span className="text-xl animate-pulse">⏳</span> : <IconCopy />}
+            {loading === 'copy' ? <span className="text-xl animate-pulse">â³</span> : <IconCopy />}
             <span className="text-[0.72rem]">Copiar</span>
           </button>
 
@@ -465,7 +538,7 @@ export default function ReportActions({
             title="Bloco de Notas (TXT)"
             className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
           >
-            {loading === 'txt' ? <span className="text-xl animate-pulse">⏳</span> : <IconTxt />}
+            {loading === 'txt' ? <span className="text-xl animate-pulse">â³</span> : <IconTxt />}
             <span className="text-[0.72rem]">TXT</span>
           </button>
         </div>
@@ -473,7 +546,7 @@ export default function ReportActions({
         <button
           onClick={() => setShowBadgePanel(v => !v)}
           disabled={!reportHash}
-          title={reportHash ? 'Selo embutível do laudo' : 'Gere o PDF primeiro para liberar o selo'}
+          title={reportHash ? 'Selo embutÃ­vel do laudo' : 'Gere o PDF primeiro para liberar o selo'}
           className={`${btnBase} bg-sky-500/10 border border-sky-500/30 text-sky-500 hover:bg-sky-500/20 disabled:opacity-40`}
         >
           <IconSeal />
@@ -486,7 +559,7 @@ export default function ReportActions({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/selo-laudo-verificado.svg" alt="Laudo Verificado" width={56} height={56} />
               <p className="text-[0.72rem] text-[var(--text-muted)] leading-snug">
-                Cole este código no site ou anúncio do veículo para exibir o selo de autenticidade.
+                Cole este cÃ³digo no site ou anÃºncio do veÃ­culo para exibir o selo de autenticidade.
               </p>
             </div>
             <textarea
@@ -499,12 +572,12 @@ export default function ReportActions({
             <button
               onClick={() => handle('badge-copy', async () => {
                 await navigator.clipboard.writeText(buildBadgeSnippet(reportHash))
-              }, '📋 Código copiado!')}
+              }, 'ðŸ“‹ CÃ³digo copiado!')}
               disabled={loading !== null}
               className={`${btnBase} justify-center bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
             >
-              {loading === 'badge-copy' ? <span className="animate-pulse">⏳</span> : <IconCopy />}
-              Copiar código
+              {loading === 'badge-copy' ? <span className="animate-pulse">â³</span> : <IconCopy />}
+              Copiar cÃ³digo
             </button>
           </div>
         )}

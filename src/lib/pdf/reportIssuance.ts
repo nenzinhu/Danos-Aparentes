@@ -1,6 +1,7 @@
 import type { Damage, DamageId, InspectionStatus, ReportId, SavedReport, VehicleInfo } from '../../types'
 import { createId } from '../id'
 import { buildReportKey } from './hash'
+import { assertCanIssue } from './reviewGate'
 
 /** Statuses whose inspection snapshot must not be mutated in place. */
 export const LOCKED_STATUSES: readonly InspectionStatus[] = [
@@ -125,12 +126,17 @@ export type MarkIssuedOpts = {
   issuedAt?: number
   /** Prefer stable base already on the report; otherwise derive. */
   publicCodeBase?: string
+  /** Current review content hash — detects stale review. */
+  expectedContentHash?: string
 }
 
 /** Transition complete/draft → issued after a successful PDF hash register. */
 export function markAsIssued(report: SavedReport, opts: MarkIssuedOpts): SavedReport {
   if (isIssuedLocked(report.status) && report.status !== 'issued') {
     throw new Error('Laudo cancelado ou substituído não pode ser reemitido neste registro')
+  }
+  if (report.status !== 'issued') {
+    assertCanIssue(report, opts.expectedContentHash)
   }
   const now = opts.issuedAt ?? Date.now()
   const year = new Date(now).getUTCFullYear()

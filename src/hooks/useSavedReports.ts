@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect, useCallback } from 'react'
 import { SavedReport, VehicleInfo, Damage, VehicleType, InspectionStatus } from '../types'
 import { db } from '../lib/db'
@@ -6,6 +6,12 @@ import { mergeRemoteReports } from '../lib/sync'
 import { supabaseEnabled } from '../lib/supabase'
 import { createId } from '../lib/id'
 import { appendAuditEvent } from '../lib/audit/auditLog'
+import {
+  assertCanIssue,
+  clearReview,
+  computeReviewContentHash,
+  markAsReviewed,
+} from '../lib/pdf/reviewGate'
 import {
   assertCanSaveInspection,
   createCorrectionDraft,
@@ -25,6 +31,10 @@ export type SaveReportOptions = {
   correctedBy?: string
   correctedAt?: number
   issuedHash?: string
+  reviewerId?: string
+  reviewedAt?: number
+  reviewNotes?: string
+  reviewContentHash?: string
 }
 
 export function useSavedReports(userId?: string) {
@@ -59,6 +69,13 @@ export function useSavedReports(userId?: string) {
     const existing = (await db.getAllSaved()).find(r => r.id === id)
     if (existing) {
       assertCanSaveInspection(existing.status, status)
+      if (isReviewed(existing)) {
+        const version = existing.laudoVersion ?? 1
+        const nextHash = await computeReviewContentHash(vehicleInfo, damages, version)
+        if (nextHash !== existing.reviewContentHash) {
+          assertCanMutateInspectionFields(existing)
+        }
+      }
     }
 
     const report: SavedReport = {
@@ -75,6 +92,10 @@ export function useSavedReports(userId?: string) {
       correctedBy: options?.correctedBy ?? existing?.correctedBy,
       correctedAt: options?.correctedAt ?? existing?.correctedAt,
       issuedHash: options?.issuedHash ?? existing?.issuedHash,
+      reviewerId: options?.reviewerId ?? existing?.reviewerId,
+      reviewedAt: options?.reviewedAt ?? existing?.reviewedAt,
+      reviewNotes: options?.reviewNotes ?? existing?.reviewNotes,
+      reviewContentHash: options?.reviewContentHash ?? existing?.reviewContentHash,
     }
     await db.putSaved(report)
     setSaved(prev => {
@@ -99,7 +120,6 @@ export function useSavedReports(userId?: string) {
     }
   }
 
-  /** Clone issued → new complete draft; leaves original untouched until correction is issued. */
   async function createCorrection(original: SavedReport, reason: string, correctedBy?: string) {
     const draft = createCorrectionDraft({
       original,
@@ -123,13 +143,76 @@ export function useSavedReports(userId?: string) {
     return draft
   }
 
-  /** After successful PDF hash: lock local snapshot as issued. */
+  async function markReviewComplete(
+    id: string,
+    vehicleInfo: VehicleInfo,
+    damages: Damage[],
+    vehicleType: VehicleType,
+    reviewerId: string,
+    notes?: string,
+  ) {
+    const all = await db.getAllSaved()
+    const existing = all.find(r => r.id === id)
+    const base: SavedReport = existing ?? {
+      id: id as SavedReport['id'],
+      savedAt: Date.now(),
+      vehicleInfo,
+      damages,
+      vehicleType,
+      status: 'complete',
+    }
+    const version = base.laudoVersion ?? 1
+    const contentHash = await computeReviewContentHash(vehicleInfo, damages, version)
+    const reviewed = markAsReviewed(
+      { ...base, vehicleInfo, damages, vehicleType, status: base.status ?? 'complete' },
+      { reviewerId, contentHash, notes, reviewedAt: Date.now() },
+    )
+    await db.putSaved(reviewed)
+    setSaved(prev => {
+      const without = prev.filter(r => r.id !== id)
+      return [reviewed, ...without]
+    })
+    if (supabaseEnabled) {
+      await db.addToSyncQueue({ type: 'upsert', reportId: reviewed.id, report: reviewed, timestamp: Date.now() })
+    }
+    void appendAuditEvent({
+      event_type: 'review_completed',
+      inspection_id: reviewed.id,
+      metadata: {
+        review_content_hash: contentHash,
+        review_notes: reviewed.reviewNotes || '',
+      },
+    })
+    return reviewed
+  }
+
+  async function clearReviewReport(id: string) {
+    const existing = (await db.getAllSaved()).find(r => r.id === id)
+    if (!existing) return null
+    if (isIssuedLocked(existing.status)) {
+      throw new Error('Laudo emitido não pode reabrir revisão — use correção (nova versão)')
+    }
+    const cleared = clearReview(existing)
+    await db.putSaved(cleared)
+    setSaved(prev => prev.map(r => (r.id === id ? cleared : r)))
+    if (supabaseEnabled) {
+      await db.addToSyncQueue({ type: 'upsert', reportId: cleared.id, report: cleared, timestamp: Date.now() })
+    }
+    return cleared
+  }
+
   async function markReportIssued(id: string, hash: string) {
     const all = await db.getAllSaved()
     const existing = all.find(r => r.id === id)
     if (!existing) return null
     if (existing.status === 'issued') return existing
-    const issued = markAsIssued(existing, { hash })
+    const contentHash = await computeReviewContentHash(
+      existing.vehicleInfo,
+      existing.damages,
+      existing.laudoVersion ?? 1,
+    )
+    assertCanIssue(existing, contentHash)
+    const issued = markAsIssued(existing, { hash, expectedContentHash: contentHash })
     await db.putSaved(issued)
     setSaved(prev => prev.map(r => (r.id === id ? issued : r)))
     if (supabaseEnabled) {
@@ -147,7 +230,6 @@ export function useSavedReports(userId?: string) {
       },
     })
 
-    // If this was a correction, mark parent superseded (previous never deleted).
     if (issued.parentInspectionId) {
       const parent = all.find(r => r.id === issued.parentInspectionId)
       if (parent && parent.status === 'issued') {
@@ -167,5 +249,14 @@ export function useSavedReports(userId?: string) {
     return issued
   }
 
-  return { saved, saveReport, deleteReport, refreshRemote, createCorrection, markReportIssued }
+  return {
+    saved,
+    saveReport,
+    deleteReport,
+    refreshRemote,
+    createCorrection,
+    markReportIssued,
+    markReviewComplete,
+    clearReviewReport,
+  }
 }

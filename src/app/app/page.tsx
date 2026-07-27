@@ -1,5 +1,5 @@
-'use client';
-import React, { useMemo, ViewTransition, useEffect, useRef, useCallback } from 'react'
+﻿'use client';
+import React, { useMemo, ViewTransition, useEffect, useRef, useCallback, useState } from 'react'
 import { DirectionalTransition } from '../DirectionalTransition'
 import { useDamages } from '@/src/hooks/useDamages'
 import { useTts } from '@/src/hooks/useTts'
@@ -10,6 +10,7 @@ import { useSyncStatus, type DroppedSyncItem } from '@/src/lib/sync'
 import { useAppShellState } from '@/src/hooks/useAppShellState'
 import { useInspectionWorkflow } from '@/src/hooks/useInspectionWorkflow'
 import { supabaseEnabled } from '@/src/lib/supabase'
+import { computeReviewContentHash } from '@/src/lib/pdf/reviewGate'
 import Header from '@/src/components/Header'
 import DashboardView from '@/src/components/DashboardView'
 import AppAuthGate from '@/src/components/app/AppAuthGate'
@@ -23,14 +24,14 @@ function formatSyncFailureToast(dropped: DroppedSyncItem[]): string {
   const first = dropped[0]
   const shortId = first.reportId.slice(0, 8)
   const extra = dropped.length > 1 ? ` (+${dropped.length - 1} outro${dropped.length > 2 ? 's' : ''})` : ''
-  return `❌ Falha permanente ao sincronizar laudo ${shortId}${extra}`
+  return `âŒ Falha permanente ao sincronizar laudo ${shortId}${extra}`
 }
 
 export default function AppMainPage() {
   const { session, loading: authLoading, signIn, signUp, signOut, resetPassword } = useAuth()
   const { damages, addDamage, removeDamage, updateDamage, clearDamages } = useDamages()
   const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts(session?.access_token)
-  const { saved, saveReport, deleteReport, refreshRemote, createCorrection, markReportIssued } = useSavedReports(session?.user.id)
+  const { saved, saveReport, deleteReport, refreshRemote, createCorrection, markReportIssued, markReviewComplete, clearReviewReport } = useSavedReports(session?.user.id)
   const { info: subscription, loading: subLoading, openPortal } = useSubscription(session?.user.id, session?.access_token)
   const shell = useAppShellState({ openPortal })
 
@@ -67,11 +68,36 @@ export default function AppMainPage() {
     showToast: shell.showToast,
   })
 
+  const [reviewStale, setReviewStale] = useState(false)
+
   const activeSaved = useMemo(
     () => (inspection.activeReportId ? saved.find(r => r.id === inspection.activeReportId) : undefined),
     [saved, inspection.activeReportId],
   )
 
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      if (!activeSaved?.reviewedAt || !activeSaved.reviewContentHash) {
+        if (!cancelled) setReviewStale(false)
+        return
+      }
+      const hash = await computeReviewContentHash(
+        inspection.vehicleInfo,
+        inspection.allVehicleDamages,
+        activeSaved.laudoVersion ?? 1,
+      )
+      if (!cancelled) setReviewStale(hash !== activeSaved.reviewContentHash)
+    })()
+    return () => { cancelled = true }
+  }, [
+    activeSaved?.reviewedAt,
+    activeSaved?.reviewContentHash,
+    activeSaved?.laudoVersion,
+    inspection.vehicleInfo,
+    inspection.allVehicleDamages,
+  ])
   const headerSubscription = useMemo(
     () => supabaseEnabled && subscription
       ? { status: subscription.status, trialDaysLeft: subscription.trialDaysLeft }
@@ -90,7 +116,7 @@ export default function AppMainPage() {
       inspection.handleLoadCorrection(draft)
       shell.setSavedModal(false)
     } catch (e) {
-      shell.showToast(e instanceof Error ? `❌ ${e.message}` : '❌ Não foi possível criar a correção')
+      shell.showToast(e instanceof Error ? `âŒ ${e.message}` : 'âŒ NÃ£o foi possÃ­vel criar a correÃ§Ã£o')
     }
   }
 
@@ -98,9 +124,46 @@ export default function AppMainPage() {
     try {
       await deleteReport(id)
     } catch (e) {
-      shell.showToast(e instanceof Error ? `❌ ${e.message}` : '❌ Não foi possível excluir')
+      shell.showToast(e instanceof Error ? `âŒ ${e.message}` : 'âŒ NÃ£o foi possÃ­vel excluir')
     }
   }
+
+  const handleConfirmReview = useCallback(async () => {
+    let id = inspection.activeReportId
+    if (!id) {
+      const report = await saveReport(inspection.vehicleInfo, damages, inspection.vehicleType, {
+        status: 'complete',
+      })
+      id = report.id
+      inspection.setActiveReportId(id)
+    } else {
+      await saveReport(inspection.vehicleInfo, damages, inspection.vehicleType, {
+        id,
+        status: 'complete',
+      })
+    }
+    await markReviewComplete(
+      id,
+      inspection.vehicleInfo,
+      damages,
+      inspection.vehicleType,
+      session?.user.id || 'local',
+    )
+  }, [
+    inspection.activeReportId,
+    inspection.vehicleInfo,
+    inspection.vehicleType,
+    inspection.setActiveReportId,
+    damages,
+    saveReport,
+    markReviewComplete,
+    session?.user.id,
+  ])
+
+  const handleClearReview = useCallback(async () => {
+    if (!inspection.activeReportId) return
+    await clearReviewReport(inspection.activeReportId)
+  }, [inspection.activeReportId, clearReviewReport])
 
   return (
     <AppAuthGate
@@ -195,7 +258,15 @@ export default function AppMainPage() {
                     ? saved.find(s => s.id === activeSaved.parentInspectionId)?.issuedHash
                     : undefined
                 }
+                reviewedAt={activeSaved?.reviewedAt}
+                reviewNotes={activeSaved?.reviewNotes}
+                reviewContentStale={reviewStale}
+                onCompleteReview={(notes) => { void inspection.handleReviewComplete(notes) }}
+                onReopenReview={() => { void inspection.handleReopenReview() }}
                 onIssued={(hash) => { void inspection.handleIssued(hash) }}
+                isReviewed={Boolean(activeSaved?.reviewedAt && activeSaved?.reviewContentHash)}
+                onConfirmReview={handleConfirmReview}
+                onClearReview={handleClearReview}
               />
             )}
           </main>

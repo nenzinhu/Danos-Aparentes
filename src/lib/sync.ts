@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+﻿import { useState, useEffect, useCallback, useRef } from 'react'
 import { SavedReport } from '../types'
 import { db, SyncQueueItem } from './db'
 import { supabase, supabaseEnabled } from './supabase'
@@ -40,6 +40,10 @@ function inspectionRow(r: SavedReport, userId: string) {
       ? new Date(r.savedAt).toISOString()
       : null,
     issued_hash: r.issuedHash || '',
+    reviewer_id: r.reviewerId || null,
+    reviewed_at: r.reviewedAt ? new Date(r.reviewedAt).toISOString() : null,
+    review_notes: r.reviewNotes || '',
+    review_content_hash: r.reviewContentHash || '',
     updated_at: r.savedAt,
   }
 }
@@ -64,9 +68,9 @@ async function persistSyncedReport(reportId: string, damages: SavedReport['damag
 }
 
 async function pushReport(report: SavedReport, userId: string) {
-  if (!supabase) throw new Error('Supabase não configurado')
+  if (!supabase) throw new Error('Supabase nÃ£o configurado')
 
-  // issued → superseded: status-only update (content frozen by DB trigger).
+  // issued â†’ superseded: status-only update (content frozen by DB trigger).
   if (report.status === 'superseded') {
     const { error: eSupersede } = await supabase
       .from('vehicle_inspections')
@@ -82,7 +86,7 @@ async function pushReport(report: SavedReport, userId: string) {
     return
   }
 
-  // Already locked on cloud → do not re-upsert content (immutability).
+  // Already locked on cloud â†’ do not re-upsert content (immutability).
   if (isIssuedLocked(report.status)) {
     const { data: remote } = await supabase
       .from('vehicle_inspections')
@@ -97,7 +101,7 @@ async function pushReport(report: SavedReport, userId: string) {
     ) {
       return
     }
-    // else: first sync of issued (cloud still draft/complete) — fall through to upsert
+    // else: first sync of issued (cloud still draft/complete) â€” fall through to upsert
   }
 
   const { remoteDamages, localDamages } = await uploadDamagePhotosForSync(
@@ -142,7 +146,7 @@ async function pushReport(report: SavedReport, userId: string) {
 }
 
 async function deleteRemoteReport(id: string, userId: string) {
-  if (!supabase) throw new Error('Supabase não configurado')
+  if (!supabase) throw new Error('Supabase nÃ£o configurado')
 
   const { data: remote } = await supabase
     .from('vehicle_inspections')
@@ -151,7 +155,7 @@ async function deleteRemoteReport(id: string, userId: string) {
     .eq('user_id', userId)
     .maybeSingle()
   if (isIssuedLocked(remote?.status as import('../types').InspectionStatus | undefined)) {
-    throw new Error('Laudo emitido não pode ser excluído — use correção (nova versão) ou cancele formalmente')
+    throw new Error('Laudo emitido nÃ£o pode ser excluÃ­do â€” use correÃ§Ã£o (nova versÃ£o) ou cancele formalmente')
   }
 
   await deleteInspectionPhotos(userId, id)

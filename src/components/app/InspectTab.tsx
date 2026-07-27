@@ -10,6 +10,7 @@ import VehicleInfoForm from '@/src/components/VehicleInfoForm'
 import FinalizePanel from '@/src/components/FinalizePanel'
 import TtsSettings from '@/src/components/TtsSettings'
 import ReportActions from '@/src/components/ReportActions'
+import InspectionReviewPanel from '@/src/components/InspectionReviewPanel'
 import { TtsConfig } from '@/src/types'
 import { ClearAllIcon } from './ClearAllIcon'
 import { VEHICLE_NAME, VIEW_NAME } from './constants'
@@ -73,6 +74,12 @@ interface InspectTabProps {
   correctionReason?: string
   supersedesHash?: string
   onIssued?: (hash: string) => void
+  reviewedAt?: number
+  reviewNotes?: string
+  reviewContentStale?: boolean
+  reviewBusy?: boolean
+  onCompleteReview?: (notes: string) => void | Promise<void>
+  onReopenReview?: () => void | Promise<void>
 }
 
 export default function InspectTab({
@@ -115,6 +122,12 @@ export default function InspectTab({
   correctionReason,
   supersedesHash,
   onIssued,
+  reviewedAt,
+  reviewNotes,
+  reviewContentStale,
+  reviewBusy,
+  onCompleteReview,
+  onReopenReview,
 }: InspectTabProps) {
   const [section, setSection] = useState<InspectSection>('dados')
 
@@ -287,6 +300,16 @@ export default function InspectTab({
           </div>
 
           <div className="mt-6 pt-6 border-t border-[var(--panel-border)]">
+            {onCompleteReview && onReopenReview && (
+              <InspectionReviewPanel
+                reviewedAt={reviewedAt}
+                reviewNotes={reviewNotes}
+                contentStale={reviewContentStale}
+                busy={reviewBusy}
+                onCompleteReview={onCompleteReview}
+                onReopenReview={onReopenReview}
+              />
+            )}
             <ReportActions
               vehicleType={vehicleType}
               vehicleInfo={vehicleInfo}
@@ -300,6 +323,7 @@ export default function InspectTab({
               correctionReason={correctionReason}
               supersedesHash={supersedesHash}
               onIssued={onIssued}
+              reviewedAt={reviewedAt}
             />
           </div>
         </div>

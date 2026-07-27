@@ -22,6 +22,8 @@ export const AUDIT_EVENT_TYPES = [
   'cancellation',
   'unauthorized_access_attempt',
   'issued_mutation_attempt',
+  'review_completed',
+  'issue_blocked_without_review',
 ] as const
 
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number] | (string & {})

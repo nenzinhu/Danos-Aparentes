@@ -1,4 +1,4 @@
-import QRCode from 'qrcode'
+﻿import QRCode from 'qrcode'
 import { Damage, VehicleInfo } from '../../types'
 import { appendAuditEvent } from '../audit/auditLog'
 import { collectOriginalPhotoHashes } from '../photoEvidence'
@@ -7,10 +7,10 @@ import { normalizePlate } from '../reportComparison'
 import { buildIntegrityManifest, type IntegrityManifest } from './integrityManifest'
 
 /**
- * Chave que agrupa reemissões do MESMO laudo (placa + Nº OS normalizados).
- * Sem placa e sem ref não há como saber se dois laudos são a "mesma vistoria"
- * reemitida — nesse caso cada hash fica isolado (report_key vazia), igual ao
- * comportamento anterior a essa versão.
+ * Chave que agrupa reemissÃµes do MESMO laudo (placa + NÂº OS normalizados).
+ * Sem placa e sem ref nÃ£o hÃ¡ como saber se dois laudos sÃ£o a "mesma vistoria"
+ * reemitida â€” nesse caso cada hash fica isolado (report_key vazia), igual ao
+ * comportamento anterior a essa versÃ£o.
  */
 export function buildReportKey(info: Pick<VehicleInfo, 'plate' | 'ref'>): string {
   const plate = normalizePlate(info.plate || '')
@@ -19,7 +19,7 @@ export function buildReportKey(info: Pick<VehicleInfo, 'plate' | 'ref'>): string
   return `${plate}::${ref}`
 }
 
-/** QR Code de verificação do laudo (PDF) — bundled via pacote `qrcode`. */
+/** QR Code de verificaÃ§Ã£o do laudo (PDF) â€” bundled via pacote `qrcode`. */
 export async function generateQrDataUrl(text: string): Promise<string> {
   try {
     return await QRCode.toDataURL(text, {
@@ -34,8 +34,8 @@ export async function generateQrDataUrl(text: string): Promise<string> {
 
 /**
  * Hash de integridade (SHA-256, primeiros 32 hex).
- * Cobre todo o conteúdo do laudo — qualquer alteração depois de emitido
- * muda o hash e derruba a verificação no /verify.
+ * Cobre todo o conteÃºdo do laudo â€” qualquer alteraÃ§Ã£o depois de emitido
+ * muda o hash e derruba a verificaÃ§Ã£o no /verify.
  */
 export async function computeHash(info: VehicleInfo, damages: Damage[], ts: number): Promise<string> {
   try {
@@ -66,7 +66,7 @@ export async function computeHash(info: VehicleInfo, damages: Damage[], ts: numb
 }
 
 export type RegisterHashMeta = {
-  /** SavedReport / vehicle_inspections id — used to mark issued on cloud. */
+  /** SavedReport / vehicle_inspections id â€” used to mark issued on cloud. */
   inspectionId?: string
   correctionReason?: string
   /** Previous report_hashes.hash this version replaces. */
@@ -75,7 +75,7 @@ export type RegisterHashMeta = {
   laudoVersion?: number
 }
 
-/** Registra o hash no Supabase para a página /verify conferir depois */
+/** Registra o hash no Supabase para a pÃ¡gina /verify conferir depois */
 export async function registerHash(
   hash: string,
   info: VehicleInfo,
@@ -143,6 +143,14 @@ export async function registerHash(
 
     // Mark the inspection as issued (best-effort). DB trigger then freezes content.
     if (meta?.inspectionId) {
+      const { data: inspRow } = await supabase
+        .from('vehicle_inspections')
+        .select('reviewed_at')
+        .eq('id', meta.inspectionId)
+        .eq('user_id', session.user.id)
+        .maybeSingle()
+      if (!inspRow?.reviewed_at) return
+
       await supabase
         .from('vehicle_inspections')
         .update({
@@ -156,8 +164,9 @@ export async function registerHash(
         .eq('id', meta.inspectionId)
         .eq('user_id', session.user.id)
         .in('status', ['draft', 'complete'])
+        .not('reviewed_at', 'is', null)
     }
-  } catch { /* best-effort — não bloqueia a geração do PDF */ }
+  } catch { /* best-effort â€” nÃ£o bloqueia a geraÃ§Ã£o do PDF */ }
 }
 
 /**

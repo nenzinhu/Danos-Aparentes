@@ -11,6 +11,7 @@ import {
   updatePhotoUploadProgress,
 } from '@/src/lib/photoUploadProgress'
 import { EMPTY_INFO } from '@/src/components/app/constants'
+import { IssueBlockedWithoutReviewError } from '@/src/lib/pdf/reviewGate'
 import { isIssuedLocked } from '@/src/lib/pdf/reportIssuance'
 
 interface UseInspectionWorkflowOptions {
@@ -26,6 +27,16 @@ interface UseInspectionWorkflowOptions {
     options?: { id?: string; status?: InspectionStatus },
   ) => Promise<SavedReport>
   markReportIssued?: (id: string, hash: string) => Promise<SavedReport | null>
+  markReviewComplete?: (
+    id: string,
+    vehicleInfo: VehicleInfo,
+    damages: Damage[],
+    vehicleType: VehicleType,
+    reviewerId: string,
+    notes?: string,
+  ) => Promise<SavedReport>
+  clearReviewReport?: (id: string) => Promise<SavedReport | null>
+  userId?: string
   accessToken?: string
   showToast: (msg: string) => void
 }
@@ -38,6 +49,9 @@ export function useInspectionWorkflow({
   clearDamages,
   saveReport,
   markReportIssued,
+  markReviewComplete,
+  clearReviewReport,
+  userId,
   accessToken,
   showToast,
 }: UseInspectionWorkflowOptions) {
@@ -200,6 +214,41 @@ export function useInspectionWorkflow({
     showToast('📝 Correção carregada — edite e emita uma nova versão do laudo')
   }, [clearDamages, addDamage, showToast])
 
+
+  const handleReviewComplete = useCallback(async (notes: string) => {
+    if (!markReviewComplete || !userId) {
+      showToast('Faça login para concluir a revisão')
+      return
+    }
+    try {
+      let id = activeReportId
+      if (!id) {
+        const report = await saveReport(vehicleInfo, damages, vehicleType, { status: 'complete' })
+        id = report.id
+        setActiveReportId(id)
+      } else {
+        await saveReport(vehicleInfo, damages, vehicleType, { id, status: 'complete' })
+      }
+      await markReviewComplete(id, vehicleInfo, damages, vehicleType, userId, notes)
+      showToast('Revisão humana concluída — pode emitir o PDF')
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : 'Não foi possível concluir a revisão')
+    }
+  }, [activeReportId, markReviewComplete, userId, saveReport, vehicleInfo, damages, vehicleType, showToast])
+
+  const handleReopenReview = useCallback(async () => {
+    if (!clearReviewReport || !activeReportId) {
+      showToast('Nenhuma vistoria ativa para reabrir revisão')
+      return
+    }
+    try {
+      await clearReviewReport(activeReportId)
+      showToast('Revisão reaberta — você pode editar a vistoria')
+    } catch (e) {
+      showToast(e instanceof Error ? e.message : 'Não foi possível reabrir a revisão')
+    }
+  }, [activeReportId, clearReviewReport, showToast])
+
   const handleIssued = useCallback(async (hash: string) => {
     if (!markReportIssued || !hash || hash === 'N/D') return
     try {
@@ -208,11 +257,17 @@ export function useInspectionWorkflow({
         const report = await saveReport(vehicleInfo, damages, vehicleType, { status: 'complete' })
         id = report.id
         setActiveReportId(id)
+      } else {
+        await saveReport(vehicleInfo, damages, vehicleType, { id, status: 'complete' })
       }
       await markReportIssued(id, hash)
-      showToast('🔒 Laudo emitido — alterações passam a exigir nova versão')
-    } catch {
-      // best-effort local lock
+      showToast('Laudo emitido — alterações passam a exigir nova versão')
+    } catch (e) {
+      if (e instanceof IssueBlockedWithoutReviewError) {
+        showToast('Conclua a revisão humana antes de emitir o laudo')
+        return
+      }
+      showToast(e instanceof Error ? e.message : 'Não foi possível travar o laudo emitido')
     }
   }, [activeReportId, markReportIssued, saveReport, vehicleInfo, damages, vehicleType, showToast])
 
@@ -251,6 +306,7 @@ export function useInspectionWorkflow({
     formResetToken,
     previousReport,
     activeReportId,
+    setActiveReportId,
     viewDamages,
     allVehicleDamages,
     handlePlateConfirmed,
@@ -261,6 +317,8 @@ export function useInspectionWorkflow({
     handleSaveDraft,
     handleLoad,
     handleLoadCorrection,
+    handleReviewComplete,
+    handleReopenReview,
     handleIssued,
     handleClearAll,
     handleClearDamages,

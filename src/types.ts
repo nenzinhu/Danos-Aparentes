@@ -96,6 +96,10 @@ export interface SavedReport {
   correctedAt?: number
   /** Hash v1 (32 hex) do PDF emitido — chave pública /verify. */
   issuedHash?: string
+  reviewerId?: string
+  reviewedAt?: number
+  reviewNotes?: string
+  reviewContentHash?: string
 }
 
 export interface TtsConfig {

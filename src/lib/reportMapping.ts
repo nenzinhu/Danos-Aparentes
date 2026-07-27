@@ -1,4 +1,4 @@
-import { SavedReport, VehicleType } from '../types'
+﻿import { SavedReport, VehicleType } from '../types'
 import { normalizeRemotePhotoRef } from './photoStorage'
 
 function normalizeDamagePhotos(photos: string[]): string[] {
@@ -20,6 +20,14 @@ export function mapRemoteInspection(insp: Record<string, unknown>, damages: Reco
       ? rawStatus
       : 'complete'
 
+
+  const reviewedAtRaw = insp.reviewed_at
+  let reviewedAt: number | undefined
+  if (typeof reviewedAtRaw === 'number') reviewedAt = reviewedAtRaw
+  else if (typeof reviewedAtRaw === 'string' && reviewedAtRaw) {
+    const parsedReview = Date.parse(reviewedAtRaw)
+    if (!Number.isNaN(parsedReview)) reviewedAt = parsedReview
+  }
   const correctedAtRaw = insp.corrected_at
   let correctedAt: number | undefined
   if (typeof correctedAtRaw === 'number') correctedAt = correctedAtRaw
@@ -41,6 +49,10 @@ export function mapRemoteInspection(insp: Record<string, unknown>, damages: Reco
     correctedBy: insp.corrected_by ? String(insp.corrected_by) : undefined,
     correctedAt,
     issuedHash: (insp.issued_hash as string) || undefined,
+    reviewerId: insp.reviewer_id ? String(insp.reviewer_id) : undefined,
+    reviewedAt,
+    reviewNotes: (insp.review_notes as string) || undefined,
+    reviewContentHash: (insp.review_content_hash as string) || undefined,
     vehicleInfo: {
       owner: insp.owner as string,
       phone: insp.phone as string,

@@ -162,6 +162,9 @@ describe('markAsIssued / markAsSuperseded', () => {
       vehicleInfo: makeInfo(),
       damages: [] as Damage[],
       status: 'complete',
+      reviewerId: 'user-1',
+      reviewedAt: Date.UTC(2026, 6, 26),
+      reviewContentHash: 'reviewhash',
     }
     const issued = markAsIssued(report, {
       hash: 'HASHHASHHASHHASHHASHHASHHASHHASH',
