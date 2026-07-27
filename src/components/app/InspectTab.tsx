@@ -1,6 +1,7 @@
 'use client';
-import React, { Suspense, useState, useCallback } from 'react'
+import React, { Suspense, useState, useCallback, useRef } from 'react'
 import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity } from '@/src/types'
+import ViewPhotoCheck from '@/src/components/ViewPhotoCheck'
 import VehicleSelector, { VehicleIconSvg } from '@/src/components/VehicleSelector'
 import ViewSelector from '@/src/components/ViewSelector'
 import { VehicleViewer } from '@/src/components/VehicleViewer'
@@ -144,6 +145,43 @@ export default function InspectTab({
   const { role } = useTenantContext(userId)
   const mayReview = userId ? canReviewReport(role, userId, userId) : true
 
+  // Verificação da vista por foto (IA): ao trocar a vista do SVG ou sair do
+  // diagrama com avarias marcadas, pede uma foto daquele lado do veículo antes
+  // de seguir. Guarda quantas avarias a vista tinha quando foi verificada/pulada,
+  // para voltar a pedir se o inspetor marcar novas avarias depois.
+  const [viewCheck, setViewCheck] = useState<{ view: ViewType; damages: Damage[]; next: () => void } | null>(null)
+  const checkedViewsRef = useRef<Map<string, number>>(new Map())
+
+  const guardViewExit = useCallback((next: () => void) => {
+    const key = `${vehicleType}:${viewType}`
+    const checkedCount = checkedViewsRef.current.get(key)
+    if (viewDamages.length > 0 && checkedCount !== viewDamages.length) {
+      setViewCheck({ view: viewType, damages: viewDamages, next })
+    } else {
+      next()
+    }
+  }, [vehicleType, viewType, viewDamages])
+
+  const handleGuardedViewChange = useCallback((view: ViewType) => {
+    if (view === viewType) { onViewTypeChange(view); return }
+    guardViewExit(() => onViewTypeChange(view))
+  }, [viewType, onViewTypeChange, guardViewExit])
+
+  const handleSectionSelect = useCallback((id: InspectSection) => {
+    if (id === section || section !== 'diagrama') { setSection(id); return }
+    guardViewExit(() => setSection(id))
+  }, [section, guardViewExit])
+
+  const closeViewCheck = useCallback((proceed: boolean) => {
+    setViewCheck(current => {
+      if (current && proceed) {
+        checkedViewsRef.current.set(`${vehicleType}:${current.view}`, current.damages.length)
+        current.next()
+      }
+      return null
+    })
+  }, [vehicleType])
+
   const handleWizardComplete = useCallback(() => {
     onWizardComplete()
     setSection('diagrama')
@@ -163,7 +201,7 @@ export default function InspectTab({
               type="button"
               role="tab"
               aria-selected={section === id}
-              onClick={() => setSection(id)}
+              onClick={() => handleSectionSelect(id)}
               className={sectionTabClass(section === id)}
             >
               <span className="inline-flex items-center gap-1.5">{icon} {label}</span>
@@ -233,7 +271,7 @@ export default function InspectTab({
             <div className="w-full">
               <VehicleSelector current={vehicleType} onChange={onVehicleTypeChange} />
             </div>
-            <ViewSelector current={viewType} onChange={onViewTypeChange} visited={visitedViews} />
+            <ViewSelector current={viewType} onChange={handleGuardedViewChange} visited={visitedViews} />
           </div>
 
           <div className="glass-card p-6">
@@ -244,7 +282,7 @@ export default function InspectTab({
               </div>
               <button
                 type="button"
-                onClick={() => setSection('finalizar')}
+                onClick={() => guardViewExit(() => setSection('finalizar'))}
                 className="text-xs px-3 py-1.5 rounded-lg font-bold border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition-all"
               >
                 Revisar laudo →
@@ -259,7 +297,7 @@ export default function InspectTab({
               onRemoveDamageFromPart={onRemoveDamageFromPart}
               speak={speak}
               speakHover={speakHover}
-              onViewTypeChange={onViewTypeChange}
+              onViewTypeChange={handleGuardedViewChange}
               accessToken={accessToken}
             >
               <VehicleViewer.Controls />
@@ -348,6 +386,20 @@ export default function InspectTab({
             />
           </div>
         </div>
+      )}
+
+      {viewCheck && (
+        <ViewPhotoCheck
+          vehicleName={VEHICLE_NAME[vehicleType]}
+          view={viewCheck.view}
+          viewName={VIEW_NAME[viewCheck.view]}
+          damages={viewCheck.damages}
+          accessToken={accessToken}
+          onUpdateDamage={onUpdateDamage}
+          onToast={onToast}
+          onDone={() => closeViewCheck(true)}
+          onCancel={() => closeViewCheck(false)}
+        />
       )}
     </>
   )

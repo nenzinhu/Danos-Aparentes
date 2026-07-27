@@ -16,6 +16,7 @@ export async function callGroqVision(
   systemPrompt: string,
   imageDataUrl: string,
   logLabel: string,
+  opts?: { maxTokens?: number },
 ): Promise<{ ok: true; text: string } | { ok: false; status: number; error: string }> {
   const apiKey = getGroqApiKey()
   if (!apiKey) {
@@ -40,7 +41,7 @@ export async function callGroqVision(
         },
       ],
       temperature: 0.2,
-      max_completion_tokens: 512,
+      max_completion_tokens: opts?.maxTokens ?? 512,
       reasoning_effort: 'none',
       response_format: { type: 'json_object' },
     }),
