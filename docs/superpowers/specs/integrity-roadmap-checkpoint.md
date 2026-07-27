@@ -1,30 +1,28 @@
-# Integrity roadmap checkpoint — through FASE 6
+# Integrity roadmap checkpoint — through FASE 8
 
 **Branch:** `cursor/starter-plan-quota`  
 **As of:** 2026-07-27
 
 ## Done
 
-| Fase | What | Known commit |
-|------|------|--------------|
-| 1 | Crypto integrity manifest v2 (SHA-256 layers) | `5e43fbe` (+ type fix `2280665`) |
-| 2 | Issued immutability + laudo versioning | `8a8d10a` |
-| 3 | Append-only AUDIT_LOG hash chain | `df3a2c0` |
-| 4 | Photo evidence ORIGINAL + OPTIMIZED | `500933d` |
-| 5 | AI decision trail (immutable original + Aceitar/Editar/Ignorar) | `b3c2e91` |
-| 6 | Review gate before issue | (this commit) |
+| Fase | What | Notes |
+|------|------|-------|
+| 1 | Crypto integrity manifest v2 | prod |
+| 2 | Issued immutability + versioning | prod |
+| 3 | Audit log hash chain | prod |
+| 4 | Photo ORIGINAL + OPTIMIZED | prod |
+| 5 | AI decision trail | prod |
+| 6 | Review gate before issue | local (`15edd62`) — push/migrate/deploy pending |
+| 7 | SignatureProvider (on-screen + meta) | local WIP — no commit yet |
+| 8 | Public verify outcomes + code lookup | local WIP — no commit yet |
 
 ## Next
 
-- **7** signatures → … through **17** per the integrity plan series
+- **9** PDF upload recompute → then commit/deploy 6–9 (or 6–8 now)
+- **10** Timeline UI → … **17**
 
-## Product rule (non-negotiable)
+## Product rule
 
-- Do **not** claim “validade jurídica garantida”, notarization, or court admissibility.
-- Human selects the part; AI classifies damage type/severity only (suggestion + trail).
-- Integrity hashes fingerprint content — they are not a legal guarantee.
-- Issue requires explicit human review (FASE 6).
-
-## Specs (this folder)
-
-`2026-07-27-integrity-manifest-v2-design.md` · `…-issued-immutability-…` · `…-audit-log-hash-chain-…` · `…-photo-evidence-…` · `…-ai-decision-trail-…` · `…-review-gate-…`
+- No “validade jurídica garantida”
+- Human picks part; AI classifies only
+- On-screen signature ≠ qualified certificate

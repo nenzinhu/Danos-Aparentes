@@ -3,12 +3,17 @@ import { useState, useCallback } from 'react'
 import type { GeoLocation, VehicleInfo } from '../types'
 import SignaturePad from './SignaturePad'
 import Button from './ui/Button'
+import { sealOnScreenSignature, type SignatureRole } from '../lib/signatures'
+import { appendAuditEvent } from '../lib/audit/auditLog'
 
 interface Props {
   info: VehicleInfo
   onChange: (info: VehicleInfo) => void
   showSignatures?: boolean
   showGeo?: boolean
+  /** Optional inspection id for audit trail. */
+  inspectionId?: string | null
+  sessionId?: string
 }
 
 /**
@@ -20,9 +25,16 @@ export default function FinalizePanel({
   onChange,
   showSignatures = true,
   showGeo = true,
+  inspectionId,
+  sessionId,
 }: Props) {
   const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [geoError, setGeoError] = useState('')
+  const [inspectorName, setInspectorName] = useState(info.inspectorSignatureMeta?.signerName || '')
+  const [clientName, setClientName] = useState(info.clientSignatureMeta?.signerName || '')
+  const [inspectorDoc, setInspectorDoc] = useState(info.inspectorSignatureMeta?.signerDocument || '')
+  const [clientDoc, setClientDoc] = useState(info.clientSignatureMeta?.signerDocument || '')
+  const [sigError, setSigError] = useState('')
 
   const set = useCallback((field: keyof VehicleInfo, value: string) => {
     onChange({ ...info, [field]: value })
@@ -77,6 +89,49 @@ export default function FinalizePanel({
     setGeoStatus('idle')
     setGeoError('')
   }, [info, onChange])
+
+  const handleSignatureChange = useCallback(async (role: SignatureRole, dataUrl: string) => {
+    setSigError('')
+    if (!dataUrl) {
+      if (role === 'inspector') {
+        onChange({ ...info, inspectorSignature: '', inspectorSignatureMeta: undefined })
+      } else {
+        onChange({ ...info, clientSignature: '', clientSignatureMeta: undefined })
+      }
+      return
+    }
+
+    const name = role === 'inspector' ? inspectorName : clientName
+    const doc = role === 'inspector' ? inspectorDoc : clientDoc
+    try {
+      const meta = await sealOnScreenSignature({
+        role,
+        imageDataUrl: dataUrl,
+        signerName: name || (role === 'inspector' ? 'Vistoriador' : 'Responsável'),
+        signerDocument: doc || undefined,
+        sessionId,
+      })
+      if (role === 'inspector') {
+        onChange({ ...info, inspectorSignature: dataUrl, inspectorSignatureMeta: meta })
+      } else {
+        onChange({ ...info, clientSignature: dataUrl, clientSignatureMeta: meta })
+      }
+      void appendAuditEvent({
+        event_type: 'signature',
+        inspection_id: inspectionId || null,
+        metadata: {
+          role,
+          provider_id: meta.providerId,
+          content_hash: meta.contentHash,
+          signer_name: meta.signerName,
+        },
+      })
+    } catch (e) {
+      setSigError(e instanceof Error ? e.message : 'Não foi possível registrar a assinatura')
+      if (role === 'inspector') set('inspectorSignature', dataUrl)
+      else set('clientSignature', dataUrl)
+    }
+  }, [info, onChange, inspectorName, clientName, inspectorDoc, clientDoc, sessionId, inspectionId, set])
 
   return (
     <div className="space-y-4">
@@ -156,20 +211,67 @@ export default function FinalizePanel({
       )}
 
       {showSignatures && (
-        <div className="flex flex-wrap gap-4 pt-2 border-t border-white/5">
-          <div className="flex-1 min-w-[220px]">
-            <SignaturePad
-              label="Assinatura do Vistoriador"
-              value={info.inspectorSignature}
-              onChange={val => set('inspectorSignature', val)}
-            />
-          </div>
-          <div className="flex-1 min-w-[220px]">
-            <SignaturePad
-              label="Assinatura do Proprietário / Responsável"
-              value={info.clientSignature}
-              onChange={val => set('clientSignature', val)}
-            />
+        <div className="pt-2 border-t border-white/5 space-y-3">
+          <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed">
+            Assinatura na tela registra nome, horário e hash da imagem para rastreabilidade técnica.
+            Não equivale automaticamente a assinatura qualificada com certificado digital.
+          </p>
+          {sigError && (
+            <p className="text-[0.75rem] text-amber-400 font-semibold" role="alert">{sigError}</p>
+          )}
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 min-w-[220px] space-y-2">
+              <input
+                type="text"
+                value={inspectorName}
+                onChange={(e) => setInspectorName(e.target.value)}
+                placeholder="Nome do vistoriador"
+                className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg text-[0.8rem] outline-none focus:border-sky-500/40"
+              />
+              <input
+                type="text"
+                value={inspectorDoc}
+                onChange={(e) => setInspectorDoc(e.target.value)}
+                placeholder="Documento (opcional)"
+                className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg text-[0.8rem] outline-none focus:border-sky-500/40"
+              />
+              <SignaturePad
+                label="Assinatura do Vistoriador"
+                value={info.inspectorSignature}
+                onChange={(val) => { void handleSignatureChange('inspector', val) }}
+              />
+              {info.inspectorSignatureMeta?.contentHash && (
+                <p className="font-mono text-[0.65rem] text-[var(--text-muted)] truncate">
+                  hash {info.inspectorSignatureMeta.contentHash.slice(0, 16)}…
+                </p>
+              )}
+            </div>
+            <div className="flex-1 min-w-[220px] space-y-2">
+              <input
+                type="text"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                placeholder="Nome do responsável"
+                className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg text-[0.8rem] outline-none focus:border-sky-500/40"
+              />
+              <input
+                type="text"
+                value={clientDoc}
+                onChange={(e) => setClientDoc(e.target.value)}
+                placeholder="Documento (opcional)"
+                className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg text-[0.8rem] outline-none focus:border-sky-500/40"
+              />
+              <SignaturePad
+                label="Assinatura do Proprietário / Responsável"
+                value={info.clientSignature}
+                onChange={(val) => { void handleSignatureChange('client', val) }}
+              />
+              {info.clientSignatureMeta?.contentHash && (
+                <p className="font-mono text-[0.65rem] text-[var(--text-muted)] truncate">
+                  hash {info.clientSignatureMeta.contentHash.slice(0, 16)}…
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}

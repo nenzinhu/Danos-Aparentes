@@ -73,6 +73,8 @@ export function mapRemoteInspection(insp: Record<string, unknown>, damages: Reco
       cnhCategory: (insp.cnh_category as string) || '',
       inspectorSignature: (insp.inspector_signature as string) || '',
       clientSignature: (insp.client_signature as string) || '',
+      inspectorSignatureMeta: (insp.inspector_signature_meta as SavedReport['vehicleInfo']['inspectorSignatureMeta']) || undefined,
+      clientSignatureMeta: (insp.client_signature_meta as SavedReport['vehicleInfo']['clientSignatureMeta']) || undefined,
       ...(hasGeo
         ? {
             geo: {

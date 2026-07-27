@@ -1,6 +1,14 @@
-'use client';
+'use client'
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { supabase, supabaseEnabled } from '../lib/supabase'
+import {
+  isPublicCodeQuery,
+  maskPlate,
+  normalizePublicCode,
+  presentVerifyOutcome,
+  resolveVerifyOutcome,
+  type PublicVerifyOutcome,
+} from '../lib/verify/publicVerify'
 
 interface HashRecord {
   hash: string
@@ -17,6 +25,8 @@ interface HashRecord {
   company_logo?: string | null
   report_key?: string | null
   version?: number | null
+  public_code?: string | null
+  inspection_id?: string | null
 }
 
 interface VersionInfo {
@@ -26,7 +36,7 @@ interface VersionInfo {
   isLatest: boolean
 }
 
-type Status = 'loading' | 'valid' | 'not_found' | 'no_hash' | 'offline' | 'error'
+type Status = 'loading' | 'valid' | 'not_found' | 'no_hash' | 'offline' | 'error' | PublicVerifyOutcome
 
 function normalizeHash(raw: string): string {
   return raw.trim().replace(/[\s-]/g, '').toUpperCase()
@@ -45,8 +55,10 @@ function parseQrPayload(raw: string): { hash: string; lat?: string; lng?: string
       const lng = (url.searchParams.get('lng') || '').trim() || undefined
       return { hash, lat, lng }
     }
+    const code = normalizePublicCode(url.searchParams.get('code') || '')
+    if (code) return { hash: code }
   } catch {
-    /* não é URL — tenta hash puro ou querystring solta */
+    /* não é URL */
   }
 
   const queryMatch = text.match(/[?&]hash=([^&\s#]+)/i)
@@ -54,6 +66,14 @@ function parseQrPayload(raw: string): { hash: string; lat?: string; lng?: string
     const hash = normalizeHash(decodeURIComponent(queryMatch[1]))
     if (hash) return { hash }
   }
+
+  const codeMatch = text.match(/[?&]code=([^&\s#]+)/i)
+  if (codeMatch) {
+    const code = normalizePublicCode(decodeURIComponent(codeMatch[1]))
+    if (code) return { hash: code }
+  }
+
+  if (isPublicCodeQuery(text)) return { hash: normalizePublicCode(text) }
 
   const hash = normalizeHash(text)
   if (/^[A-F0-9]{16,64}$/.test(hash)) return { hash }
@@ -70,10 +90,13 @@ export default function Verify() {
   const [qrScanning, setQrScanning] = useState(false)
   const [qrError, setQrError] = useState('')
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null)
+  const [outcome, setOutcome] = useState<PublicVerifyOutcome | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const applyAndVerify = useCallback(async (rawHash: string, nextGeo?: { lat: string; lng: string } | null) => {
-    const h = normalizeHash(rawHash)
+    const raw = rawHash.trim()
+    const byCode = isPublicCodeQuery(raw)
+    const h = byCode ? normalizePublicCode(raw) : normalizeHash(raw)
     setInputHash(h)
     if (nextGeo?.lat && nextGeo?.lng) setGeo(nextGeo)
 
@@ -81,11 +104,18 @@ export default function Verify() {
       setStatus('no_hash')
       setHash('')
       setRecord(null)
+      setOutcome(null)
       return
     }
 
     const url = new URL(window.location.href)
-    url.searchParams.set('hash', h)
+    if (byCode) {
+      url.searchParams.delete('hash')
+      url.searchParams.set('code', h)
+    } else {
+      url.searchParams.delete('code')
+      url.searchParams.set('hash', h)
+    }
     if (nextGeo?.lat && nextGeo?.lng) {
       url.searchParams.set('lat', nextGeo.lat)
       url.searchParams.set('lng', nextGeo.lng)
@@ -95,6 +125,7 @@ export default function Verify() {
     setHash(h)
     setRecord(null)
     setVersionInfo(null)
+    setOutcome(null)
 
     if (!supabaseEnabled || !supabase) {
       setStatus('offline')
@@ -104,19 +135,41 @@ export default function Verify() {
     setStatus('loading')
 
     try {
-      const { data, error } = await supabase.from('report_hashes').select('*').eq('hash', h).maybeSingle()
-      if (error) {
-        setStatus('error')
-        return
+      let data: HashRecord | null = null
+      if (byCode) {
+        const res = await supabase
+          .from('report_hashes')
+          .select('*')
+          .eq('public_code', h)
+          .order('version', { ascending: false })
+          .limit(1)
+          .maybeSingle()
+        if (res.error) {
+          setStatus('error')
+          return
+        }
+        data = (res.data as HashRecord) || null
+      } else {
+        const res = await supabase.from('report_hashes').select('*').eq('hash', h).maybeSingle()
+        if (res.error) {
+          setStatus('error')
+          return
+        }
+        data = (res.data as HashRecord) || null
       }
-      if (!data) {
-        setStatus('not_found')
-        return
-      }
-      const rec = data as HashRecord
-      setRecord(rec)
-      setStatus('valid')
 
+      if (!data) {
+        const o = resolveVerifyOutcome({ found: false })
+        setOutcome(o)
+        setStatus(o)
+        return
+      }
+
+      const rec = data
+      setRecord(rec)
+      setHash(rec.hash)
+
+      let isSupersededVersion = false
       if (rec.report_key) {
         const { data: siblings } = await supabase
           .from('report_hashes')
@@ -125,14 +178,34 @@ export default function Verify() {
           .order('version', { ascending: true })
         if (siblings && siblings.length > 0) {
           const latest = siblings[siblings.length - 1] as { hash: string; version: number }
-          setVersionInfo({
+          const info = {
             version: rec.version || 1,
             total: siblings.length,
             latestHash: latest.hash,
             isLatest: latest.hash === rec.hash,
-          })
+          }
+          setVersionInfo(info)
+          isSupersededVersion = !info.isLatest && info.total > 1
         }
       }
+
+      let inspectionStatus: string | null = null
+      if (rec.inspection_id) {
+        const { data: insp } = await supabase
+          .from('vehicle_inspections')
+          .select('status')
+          .eq('id', rec.inspection_id)
+          .maybeSingle()
+        inspectionStatus = (insp?.status as string) || null
+      }
+
+      const o = resolveVerifyOutcome({
+        found: true,
+        inspectionStatus,
+        isSupersededVersion,
+      })
+      setOutcome(o)
+      setStatus(o === 'integrity_confirmed' ? 'valid' : o)
     } catch {
       setStatus('error')
     }
@@ -140,8 +213,8 @@ export default function Verify() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    const h = (params.get('hash') || '').trim()
-    setTimeout(() => { setInputHash(normalizeHash(h)); }, 0)
+    const h = (params.get('hash') || params.get('code') || '').trim()
+    setTimeout(() => { setInputHash(h.toUpperCase()); }, 0)
 
     const lat = (params.get('lat') || '').trim()
     const lng = (params.get('lng') || '').trim()
@@ -168,7 +241,7 @@ export default function Verify() {
       const parsed = parseQrPayload(result.getText())
 
       if (!parsed?.hash) {
-        setQrError('QR Code lido, mas não contém um HASH válido do Danos Aparentes.')
+        setQrError('QR Code lido, mas não contém um HASH ou código público válido do Danos Aparentes.')
         return
       }
 
@@ -185,60 +258,91 @@ export default function Verify() {
     }
   }
 
-  const ICONS: Record<Status, { icon: string; bg: string; text: string; border: string; title: string; desc: string }> = {
-    loading:   { 
+  const presentation = outcome ? presentVerifyOutcome(outcome) : null
+
+  const ICONS: Record<string, { icon: string; bg: string; text: string; border: string; title: string; desc: string }> = {
+    loading: {
       icon: '⏳', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200',
-      title: 'VERIFICANDO REGISTRO', desc: 'Aguarde enquanto consultamos a autenticidade deste documento em nossa base de dados digital.' 
+      title: 'VERIFICANDO REGISTRO', desc: 'Aguarde enquanto consultamos o registro técnico deste documento.',
     },
-    valid:     { 
+    valid: {
       icon: '✅', bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200',
-      title: 'DOCUMENTO AUTÊNTICO', desc: 'A integridade deste relatório foi confirmada. As informações abaixo correspondem ao registro original.' 
+      title: presentation?.title || 'INTEGRIDADE CONFIRMADA',
+      desc: presentation?.description || 'A integridade deste relatório foi confirmada no registro de emissão.',
     },
-    not_found: { 
+    integrity_confirmed: {
+      icon: '✅', bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200',
+      title: 'INTEGRIDADE CONFIRMADA',
+      desc: presentVerifyOutcome('integrity_confirmed').description,
+    },
+    integrity_not_confirmed: {
       icon: '❌', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200',
-      title: 'NÃO LOCALIZADO', desc: 'Este código não corresponde a nenhum documento emitido pelo sistema. O PDF pode ser inválido ou adulterado.' 
+      title: 'INTEGRIDADE NÃO CONFIRMADA',
+      desc: presentVerifyOutcome('integrity_not_confirmed').description,
     },
-    no_hash:   { 
+    not_found: {
+      icon: '❌', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200',
+      title: 'DOCUMENTO NÃO ENCONTRADO',
+      desc: presentVerifyOutcome('not_found').description,
+    },
+    cancelled: {
+      icon: '🚫', bg: 'bg-slate-100', text: 'text-slate-800', border: 'border-slate-300',
+      title: 'DOCUMENTO CANCELADO',
+      desc: presentVerifyOutcome('cancelled').description,
+    },
+    superseded_version: {
+      icon: '⚠️', bg: 'bg-amber-50', text: 'text-amber-900', border: 'border-amber-300',
+      title: 'VERSÃO SUPERADA',
+      desc: presentVerifyOutcome('superseded_version').description,
+    },
+    no_hash: {
       icon: '⚠️', bg: 'bg-slate-50', text: 'text-slate-800', border: 'border-slate-200',
-      title: 'INFORME O HASH OU O QR', desc: 'Digite o HASH do laudo ou envie uma foto do QR Code impresso no documento para verificar a autenticidade.' 
+      title: 'INFORME O HASH, CÓDIGO OU O QR',
+      desc: 'Digite o HASH / código público (DA-…) do laudo ou envie uma foto do QR Code impresso no documento.',
     },
-    offline:   { 
+    offline: {
       icon: '⚠️', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200',
-      title: 'SISTEMA INDISPONÍVEL', desc: 'A verificação online não está ativa neste ambiente. Valide o HASH manualmente com a via impressa.' 
+      title: 'SISTEMA INDISPONÍVEL', desc: 'A verificação online não está ativa neste ambiente. Valide o HASH manualmente com a via impressa.',
     },
-    error:     { 
+    error: {
       icon: '⚠️', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200',
-      title: 'ERRO DE CONEXÃO', desc: 'Ocorreu uma falha na comunicação com o servidor de autenticidade. Tente novamente em instantes.' 
+      title: 'ERRO DE CONEXÃO', desc: 'Ocorreu uma falha na comunicação com o servidor de autenticidade. Tente novamente em instantes.',
     },
   }
 
-  const view = ICONS[status]
+  const view = ICONS[status] || ICONS.error
   const isBusy = status === 'loading' || qrScanning
-  const showForm = status === 'no_hash' || status === 'not_found' || status === 'error' || status === 'valid'
-  const canSubmit = !isBusy && !!normalizeHash(inputHash)
+  const showForm =
+    status === 'no_hash' ||
+    status === 'not_found' ||
+    status === 'error' ||
+    status === 'valid' ||
+    status === 'superseded_version' ||
+    status === 'cancelled' ||
+    status === 'integrity_not_confirmed'
+  const canSubmit = !isBusy && !!inputHash.trim()
+  const showDetails = status === 'valid' || status === 'superseded_version' || status === 'cancelled'
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-outfit text-slate-900">
       <div className="w-full max-w-2xl bg-white shadow-xl border border-slate-200 rounded-sm overflow-hidden relative">
-        {/* Document Header */}
         <div className="bg-slate-900 text-white p-8 flex justify-between items-center border-b-4 border-blue-500">
           <div>
             <h1 className="text-xl font-black tracking-tighter italic">DANOS APARENTES</h1>
             <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400">Sistema de Vistoria e Perícia Automotiva</p>
           </div>
           <div className="text-right">
-            <div className="text-[10px] font-bold uppercase text-slate-400">Certificado de Autenticidade</div>
+            <div className="text-[10px] font-bold uppercase text-slate-400">Verificação de Integridade</div>
             <div className="text-sm font-mono tracking-tighter">REF: {record?.ref || '---'}</div>
           </div>
         </div>
 
         <div className="p-8 space-y-8">
-          {/* Status Section */}
           <div className={`${view.bg} ${view.border} border rounded-lg p-6 flex gap-6 items-start transition-all duration-500`}>
             <div className="text-5xl shrink-0">{view.icon}</div>
             <div>
               <h2 className={`text-lg font-black uppercase tracking-tight ${view.text} mb-1`}>{view.title}</h2>
-              {status === 'valid' && (record?.company_name || record?.company_logo) && (
+              {showDetails && (record?.company_name || record?.company_logo) && (
                 <div className="flex items-center gap-2 mb-1">
                   {record.company_logo && (
                     <img src={record.company_logo} alt={record.company_name || 'Logo da empresa'} className="h-6 max-w-[120px] object-contain" />
@@ -252,12 +356,11 @@ export default function Verify() {
             </div>
           </div>
 
-          {/* Manual hash + QR upload */}
           {showForm && (
             <div className="space-y-6">
               <form onSubmit={handleSubmit} className="space-y-3">
                 <label htmlFor="hash-input" className="block text-xs font-bold text-slate-400 uppercase tracking-widest">
-                  Verificar pelo HASH do laudo
+                  Verificar pelo HASH ou código público
                 </label>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <input
@@ -265,7 +368,7 @@ export default function Verify() {
                     type="text"
                     value={inputHash}
                     onChange={(e) => setInputHash(e.target.value.toUpperCase())}
-                    placeholder="Cole ou digite o HASH (ex: EEA9011EA43BCD2177DBB4F6CA639B87)"
+                    placeholder="HASH ou DA-2026-XXXXXX"
                     autoComplete="off"
                     spellCheck={false}
                     inputMode="text"
@@ -280,7 +383,7 @@ export default function Verify() {
                   </button>
                 </div>
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  O HASH aparece no rodapé do PDF, junto ao QR Code. Aceita letras e números; espaços são ignorados.
+                  Aceita HASH do rodapé do PDF, código público DA-… ou foto do QR Code.
                 </p>
               </form>
 
@@ -311,9 +414,6 @@ export default function Verify() {
                 >
                   {qrScanning ? 'Lendo QR Code…' : '📷 Escolher ou tirar foto do QR'}
                 </button>
-                <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Tire uma foto ou envie a imagem do QR Code impresso no laudo. O sistema extrai o HASH automaticamente.
-                </p>
                 {qrError && (
                   <p className="text-[11px] font-bold text-rose-600 leading-relaxed" role="alert">
                     {qrError}
@@ -323,12 +423,9 @@ export default function Verify() {
             </div>
           )}
 
-          {/* Versão do laudo — visível sempre que houver mais de uma reemissão
-              para a mesma placa + OS, para que quem verifica saiba se está
-              olhando o documento mais recente ou uma versão já substituída. */}
-          {status === 'valid' && versionInfo && versionInfo.total > 1 && (
+          {showDetails && versionInfo && versionInfo.total > 1 && (
             versionInfo.isLatest ? (
-              <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 flex items-center justify-between gap-4">
+              <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
                 <p className="text-xs font-bold text-emerald-800">
                   ✓ Versão {versionInfo.version} de {versionInfo.total} — esta é a versão mais recente deste laudo.
                 </p>
@@ -349,28 +446,26 @@ export default function Verify() {
             )
           )}
 
-          {/* Data Section */}
-          {status === 'valid' && record && (
+          {showDetails && record && (
             <div className="space-y-4">
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2">Detalhes do Registro</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-                <Row label="Placa do Veículo" value={record.plate || 'NÃO INFORMADA'} />
+                <Row label="Placa do Veículo" value={maskPlate(record.plate || '')} />
                 <Row label="Referência / OS" value={record.ref || 'NÃO INFORMADA'} />
                 <Row label="Danos Registrados" value={String(record.damages_count)} />
                 <Row label="Data de Emissão" value={record.issued_at || 'NÃO INFORMADA'} />
+                {record.public_code && <Row label="Código Público" value={record.public_code} />}
                 {record.company_name && <Row label="Empresa Emissora" value={record.company_name} />}
                 {versionInfo && <Row label="Versão do Laudo" value={`${versionInfo.version} de ${versionInfo.total}`} />}
               </div>
             </div>
           )}
 
-          {/* Localização da vistoria — prioriza o registro autenticado do banco;
-              cai para os parâmetros do QR Code apenas como exibição. */}
           {(() => {
             const fromDb = !!record && record.geo_lat != null && record.geo_lng != null
             const lat = fromDb ? String(record!.geo_lat) : geo?.lat
             const lng = fromDb ? String(record!.geo_lng) : geo?.lng
-            if (!lat || !lng) return null
+            if (!lat || !lng || !showDetails) return null
             const accuracy = fromDb ? record!.geo_accuracy : null
             const address = fromDb ? record!.geo_address : null
             return (
@@ -400,20 +495,11 @@ export default function Verify() {
             )
           })()}
 
-          {/* Footer Info */}
           <div className="pt-8 border-t border-dashed border-slate-200">
-            <div className="flex flex-col md:flex-row justify-between gap-6 items-end relative">
-              <div className="space-y-3 w-full max-w-sm">
-                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Identificador Digital (HASH)</div>
-                <div className="bg-slate-50 border border-slate-100 p-3 rounded font-mono text-[10px] text-slate-500 break-all leading-relaxed">
-                  {hash || 'NENHUM HASH FORNECIDO PARA VALIDAÇÃO'}
-                </div>
-              </div>
-              
-              <div className="hidden md:block opacity-10 select-none pointer-events-none absolute bottom-0 right-0 rotate-[-12deg]">
-                <div className="border-4 border-slate-900 rounded-full w-32 h-32 flex items-center justify-center font-black text-center p-2 text-slate-900">
-                  LAUDO<br/>VERIFICADO
-                </div>
+            <div className="space-y-3 w-full max-w-sm">
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Identificador Digital (HASH)</div>
+              <div className="bg-slate-50 border border-slate-100 p-3 rounded font-mono text-[10px] text-slate-500 break-all leading-relaxed">
+                {hash || 'NENHUM HASH FORNECIDO PARA VALIDAÇÃO'}
               </div>
             </div>
           </div>

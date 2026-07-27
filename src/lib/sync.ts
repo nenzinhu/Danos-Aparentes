@@ -24,6 +24,8 @@ function inspectionRow(r: SavedReport, userId: string) {
     cnh_category: v.cnhCategory || '',
     inspector_signature: v.inspectorSignature || '',
     client_signature: v.clientSignature || '',
+    inspector_signature_meta: v.inspectorSignatureMeta ?? null,
+    client_signature_meta: v.clientSignatureMeta ?? null,
     status: r.status ?? 'complete',
     geo_lat: geo?.lat ?? null,
     geo_lng: geo?.lng ?? null,

@@ -1,3 +1,5 @@
+import type { SignatureMeta } from './lib/signatures/types'
+
 export type Brand<K, T> = K & { readonly __brand?: T };
 
 export type Plate = Brand<string, 'Plate'>;
@@ -44,6 +46,9 @@ export interface VehicleInfo {
   cnhCategory?: string
   inspectorSignature?: string
   clientSignature?: string
+  /** FASE 7 — sealed metadata for on-screen / future providers (no legal claim). */
+  inspectorSignatureMeta?: SignatureMeta
+  clientSignatureMeta?: SignatureMeta
   customFields?: CustomField[]
   /** Localização GPS capturada no momento/local da vistoria. */
   geo?: GeoLocation

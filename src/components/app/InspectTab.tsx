@@ -302,7 +302,7 @@ export default function InspectTab({
             <p className="text-[0.75rem] text-[var(--text-muted)] mb-4 leading-relaxed">
               Depois de revisar as avarias (ou a ausência delas), capture o GPS do local e colete as assinaturas. Em seguida gere o PDF.
             </p>
-            <FinalizePanel info={vehicleInfo} onChange={onVehicleInfoChange} />
+            <FinalizePanel info={vehicleInfo} onChange={onVehicleInfoChange} inspectionId={inspectionId} />
           </div>
 
           <div className="mt-6 pt-6 border-t border-[var(--panel-border)]">
