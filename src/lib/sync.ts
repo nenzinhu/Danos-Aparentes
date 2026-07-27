@@ -5,6 +5,7 @@ import { supabase, supabaseEnabled } from './supabase'
 import { uploadDamagePhotosForSync, uploadInteriorPhotosForSync, normalizeDamagePhotos, prefetchReportPhotoCache } from './photoStore'
 import { deleteInspectionPhotos } from './photoStorage'
 import { mapRemoteInspection } from './reportMapping'
+import { appendAuditEvent } from './audit/auditLog'
 import { isIssuedLocked } from './pdf/reportIssuance'
 
 function inspectionRow(r: SavedReport, userId: string) {
@@ -129,6 +130,15 @@ async function pushReport(report: SavedReport, userId: string) {
     if (e2) throw e2
   }
   await persistSyncedReport(report.id, localDamages, localReport.vehicleInfo)
+  void appendAuditEvent({
+    event_type: 'change',
+    inspection_id: report.id,
+    metadata: {
+      status: report.status ?? 'complete',
+      damages_count: report.damages.length,
+      source: 'sync_upsert',
+    },
+  })
 }
 
 async function deleteRemoteReport(id: string, userId: string) {

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { DamageType, Severity } from '../types'
 import { IconEraser, IconCamera, IconGallery, IconCheck, IconArrowLeft } from './ui/AnimatedIcons'
 import { IconScratchDamage, IconDentDamage, IconBrokenDamage } from './ui/DamageTypeIcons'
+import { appendAuditEvent } from '../lib/audit/auditLog'
 import { compressImage, fileToDataUrl } from '../lib/imageUtils'
 
 interface Props {
@@ -112,7 +113,18 @@ export default function DamageFloat({ partName, position, currentType, accessTok
   function applyAiType() {
     if (aiState.status !== 'done') return
     const match = TYPES.find(t => t.type === aiState.type)
-    if (match) setChosenType({ type: match.type, label: match.label })
+    if (match) {
+      setChosenType({ type: match.type, label: match.label })
+      void appendAuditEvent({
+        event_type: 'ai_analysis',
+        metadata: {
+          part_name: partName,
+          type: aiState.type,
+          severity: aiState.severity,
+          source: 'damage_float_accept',
+        },
+      })
+    }
   }
 
   // cleanup object URL

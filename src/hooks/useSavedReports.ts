@@ -5,6 +5,7 @@ import { db } from '../lib/db'
 import { mergeRemoteReports } from '../lib/sync'
 import { supabaseEnabled } from '../lib/supabase'
 import { createId } from '../lib/id'
+import { appendAuditEvent } from '../lib/audit/auditLog'
 import {
   assertCanSaveInspection,
   createCorrectionDraft,
@@ -110,6 +111,15 @@ export function useSavedReports(userId?: string) {
     if (supabaseEnabled) {
       await db.addToSyncQueue({ type: 'upsert', reportId: draft.id, report: draft, timestamp: Date.now() })
     }
+    void appendAuditEvent({
+      event_type: 'correction',
+      inspection_id: draft.id,
+      metadata: {
+        parent_inspection_id: original.id,
+        correction_reason: reason,
+        laudo_version: draft.laudoVersion ?? null,
+      },
+    })
     return draft
   }
 
@@ -125,6 +135,17 @@ export function useSavedReports(userId?: string) {
     if (supabaseEnabled) {
       await db.addToSyncQueue({ type: 'upsert', reportId: issued.id, report: issued, timestamp: Date.now() })
     }
+
+    void appendAuditEvent({
+      event_type: 'issuance',
+      inspection_id: issued.id,
+      metadata: {
+        hash,
+        public_code: issued.publicCode || '',
+        laudo_version: issued.laudoVersion ?? null,
+        parent_inspection_id: issued.parentInspectionId || null,
+      },
+    })
 
     // If this was a correction, mark parent superseded (previous never deleted).
     if (issued.parentInspectionId) {

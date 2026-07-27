@@ -1,5 +1,6 @@
 import QRCode from 'qrcode'
 import { Damage, VehicleInfo } from '../../types'
+import { appendAuditEvent } from '../audit/auditLog'
 import { supabase, supabaseEnabled } from '../supabase'
 import { normalizePlate } from '../reportComparison'
 import { buildIntegrityManifest, type IntegrityManifest } from './integrityManifest'
@@ -126,6 +127,19 @@ export async function registerHash(
 
     await supabase.from('report_hashes').insert(row)
 
+    void appendAuditEvent({
+      event_type: 'hash_generation',
+      inspection_id: meta?.inspectionId || null,
+      metadata: {
+        hash,
+        report_key: reportKey,
+        version,
+        public_code: meta?.publicCode || '',
+        integrity_scheme: manifest?.scheme || '',
+        final_hash: manifest?.final_hash || '',
+      },
+    })
+
     // Mark the inspection as issued (best-effort). DB trigger then freezes content.
     if (meta?.inspectionId) {
       await supabase
@@ -183,5 +197,15 @@ export async function registerIntegrityPdfHash(
       })
       .eq('hash', hashV1)
       .eq('user_id', session.user.id)
+
+    void appendAuditEvent({
+      event_type: 'pdf_generation',
+      inspection_id: args.inspectionId || null,
+      metadata: {
+        hash: hashV1,
+        final_hash: manifest.final_hash,
+        pdf_hash: manifest.pdf_hash,
+      },
+    })
   } catch { /* best-effort */ }
 }

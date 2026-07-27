@@ -373,3 +373,82 @@ drop trigger if exists on_auth_user_created_trial on auth.users;
 create trigger on_auth_user_created_trial
   after insert on auth.users
   for each row execute function public.handle_new_user_trial();
+
+-- ─── FASE 3: append-only audit_log (hash chain) ──────────────────────────────
+-- Technical audit trail only — does not claim legal validity.
+create table if not exists public.audit_log (
+  event_id uuid primary key default gen_random_uuid(),
+  inspection_id text,
+  tenant_id uuid,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  actor_id text not null,
+  actor_type text not null default 'user'
+    check (actor_type in ('user', 'system', 'service')),
+  event_type text not null,
+  timestamp timestamptz not null default now(),
+  ip text,
+  user_agent text,
+  device_id text,
+  metadata jsonb not null default '{}'::jsonb,
+  previous_event_hash text not null default '',
+  event_hash text not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists idx_audit_log_inspection_ts
+  on public.audit_log (inspection_id, timestamp asc, event_id asc)
+  where inspection_id is not null;
+
+create index if not exists idx_audit_log_global_ts
+  on public.audit_log (timestamp asc, event_id asc)
+  where inspection_id is null;
+
+create index if not exists idx_audit_log_user_ts
+  on public.audit_log (user_id, timestamp desc);
+
+create index if not exists idx_audit_log_event_type
+  on public.audit_log (event_type);
+
+alter table public.audit_log enable row level security;
+
+drop policy if exists "insert_own_audit_events" on public.audit_log;
+create policy "insert_own_audit_events" on public.audit_log
+  for insert with check (auth.uid() = user_id);
+
+drop policy if exists "select_own_audit_events" on public.audit_log;
+create policy "select_own_audit_events" on public.audit_log
+  for select using (auth.uid() = user_id);
+
+do $$
+begin
+  if exists (
+    select 1 from pg_proc p
+    join pg_namespace n on n.oid = p.pronamespace
+    where n.nspname = 'public' and p.proname = 'is_team_manager_of'
+  ) then
+    execute 'drop policy if exists "manager_select_team_audit_events" on public.audit_log';
+    execute $pol$
+      create policy "manager_select_team_audit_events" on public.audit_log
+        for select using (public.is_team_manager_of(user_id))
+    $pol$;
+  end if;
+end $$;
+
+create or replace function public.prevent_audit_log_mutation()
+returns trigger
+language plpgsql
+as $$
+begin
+  raise exception 'audit_log is append-only — UPDATE/DELETE not allowed';
+end;
+$$;
+
+drop trigger if exists trg_prevent_audit_log_update on public.audit_log;
+create trigger trg_prevent_audit_log_update
+  before update on public.audit_log
+  for each row execute function public.prevent_audit_log_mutation();
+
+drop trigger if exists trg_prevent_audit_log_delete on public.audit_log;
+create trigger trg_prevent_audit_log_delete
+  before delete on public.audit_log
+  for each row execute function public.prevent_audit_log_mutation();
