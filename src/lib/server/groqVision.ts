@@ -3,7 +3,9 @@
  * Modelo: qwen/qwen3.6-27b (multimodal, JSON mode nativo via response_format).
  */
 
-const GROQ_VISION_MODEL = 'qwen/qwen3.6-27b'
+export const GROQ_VISION_MODEL = 'qwen/qwen3.6-27b'
+/** Stable label for trail; bump if prompt/contract changes independently of model id. */
+export const GROQ_VISION_MODEL_VERSION = 'qwen/qwen3.6-27b'
 const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions'
 
 export function getGroqApiKey(): string | null {

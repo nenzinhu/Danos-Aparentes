@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseEnabled } from '@/src/lib/supabase';
 import { getClientIp, getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
-import { callGroqVision, getGroqApiKey } from '@/src/lib/server/groqVision';
+import { callGroqVision, getGroqApiKey, GROQ_VISION_MODEL, GROQ_VISION_MODEL_VERSION } from '@/src/lib/server/groqVision';
 import { parseImageDataUrl } from '@/src/lib/server/geminiVision';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
 
@@ -118,8 +118,17 @@ Se a imagem não mostrar claramente um dano nesta peça, responda {"tipo_dano": 
     const type = TYPE_FROM_PT[parsedResult.tipo_dano || ''] ?? 'scratch';
     const severity = SEVERITY_FROM_PT[parsedResult.severidade || ''] ?? 'low';
     const description = String(parsedResult.descricao || '').slice(0, 500);
+    const analyzedAt = new Date().toISOString();
 
-    return NextResponse.json({ type, severity, description });
+    return NextResponse.json({
+      type,
+      severity,
+      description,
+      confidence: null,
+      model: GROQ_VISION_MODEL,
+      modelVersion: GROQ_VISION_MODEL_VERSION,
+      analyzedAt,
+    });
   } catch (err) {
     console.error('Erro no endpoint de damage-classify:', err);
     return NextResponse.json({ error: 'Não foi possível analisar a foto agora.' }, { status: 500 });

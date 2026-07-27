@@ -4,8 +4,13 @@ import { motion } from 'framer-motion'
 import { DamageType, Severity } from '../types'
 import { IconEraser, IconCamera, IconGallery, IconCheck, IconArrowLeft } from './ui/AnimatedIcons'
 import { IconScratchDamage, IconDentDamage, IconBrokenDamage } from './ui/DamageTypeIcons'
-import { appendAuditEvent } from '../lib/audit/auditLog'
+import {
+  appendAiDecision,
+  recordHumanDecision,
+  type AiOriginalSuggestion,
+} from '../lib/aiDecisions'
 import { compressImage, fileToDataUrl } from '../lib/imageUtils'
+import { supabase, supabaseEnabled } from '../lib/supabase'
 
 interface Props {
   partName: string
@@ -38,6 +43,26 @@ type AiClassifyState =
   | { status: 'error' }
   | { status: 'auth-required' }
 
+type ClassifyApiResponse = {
+  type: DamageType
+  severity: Severity
+  description: string
+  confidence?: number | null
+  model?: string
+  modelVersion?: string
+  analyzedAt?: string
+}
+
+async function currentUserId(): Promise<string> {
+  if (!supabaseEnabled || !supabase) return 'anonymous'
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    return session?.user?.id || 'anonymous'
+  } catch {
+    return 'anonymous'
+  }
+}
+
 export default function DamageFloat({ partName, position, currentType, accessToken, onChoose, onClear, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -53,6 +78,9 @@ export default function DamageFloat({ partName, position, currentType, accessTok
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
   const [aiState, setAiState] = useState<AiClassifyState>({ status: 'idle' })
   const [notesTouched, setNotesTouched] = useState(false)
+  const [editedManually, setEditedManually] = useState(false)
+  const [aiDecisionId, setAiDecisionId] = useState<string | null>(null)
+  const [aiOriginal, setAiOriginal] = useState<AiOriginalSuggestion | null>(null)
 
   const closeThen = (action: () => void) => {
     if (isClosing) return
@@ -68,8 +96,26 @@ export default function DamageFloat({ partName, position, currentType, accessTok
     setStep(2)
   }
 
+  async function persistFinalIfEdited() {
+    if (!aiDecisionId || !aiOriginal || !editedManually || !chosenType) return
+    const decidedBy = await currentUserId()
+    await recordHumanDecision({
+      decisionId: aiDecisionId,
+      original: aiOriginal,
+      decision: {
+        kind: 'edit',
+        type: chosenType.type,
+        severity,
+        description: notes,
+        decidedBy,
+      },
+      partName,
+    })
+  }
+
   function handleConfirm() {
     if (!chosenType) return
+    void persistFinalIfEdited()
     closeThen(() => onChoose(chosenType.type, chosenType.label, severity, notes, photoFile ?? undefined))
   }
 
@@ -77,6 +123,9 @@ export default function DamageFloat({ partName, position, currentType, accessTok
     setPhotoFile(file)
     const url = URL.createObjectURL(file)
     setPhotoPreview(url)
+    setEditedManually(false)
+    setAiDecisionId(null)
+    setAiOriginal(null)
     void classifyWithAi(file)
   }
 
@@ -101,30 +150,98 @@ export default function DamageFloat({ partName, position, currentType, accessTok
         setAiState({ status: 'error' })
         return
       }
-      const data = await res.json() as { type: DamageType; severity: Severity; description: string }
+      const data = await res.json() as ClassifyApiResponse
+      // Do NOT auto-apply severity/notes — Aceitar / Editar / Ignorar decides.
       setAiState({ status: 'done', type: data.type, severity: data.severity, description: data.description })
-      setSeverity(data.severity)
-      if (!notesTouched) setNotes(data.description)
+
+      const suggestion: AiOriginalSuggestion = {
+        type: data.type,
+        severity: data.severity,
+        description: data.description,
+        confidence: data.confidence ?? null,
+        model: data.model || 'unknown',
+        modelVersion: data.modelVersion || data.model || 'unknown',
+        analyzedAt: data.analyzedAt || new Date().toISOString(),
+        rawPayload: { ...data },
+      }
+      setAiOriginal(suggestion)
+      const row = await appendAiDecision({ partName, suggestion })
+      setAiDecisionId(row?.id ?? null)
     } catch {
       setAiState({ status: 'error' })
     }
   }
 
-  function applyAiType() {
-    if (aiState.status !== 'done') return
+  async function handleAcceptSuggestion() {
+    if (aiState.status !== 'done' || !aiOriginal) return
     const match = TYPES.find(t => t.type === aiState.type)
-    if (match) {
-      setChosenType({ type: match.type, label: match.label })
-      void appendAuditEvent({
-        event_type: 'ai_analysis',
-        metadata: {
-          part_name: partName,
-          type: aiState.type,
-          severity: aiState.severity,
-          source: 'damage_float_accept',
+    if (match) setChosenType({ type: match.type, label: match.label })
+    setSeverity(aiState.severity)
+    if (!notesTouched) setNotes(aiState.description)
+    setEditedManually(false)
+    setAiState({ status: 'idle' })
+
+    if (aiDecisionId) {
+      const decidedBy = await currentUserId()
+      await recordHumanDecision({
+        decisionId: aiDecisionId,
+        original: aiOriginal,
+        decision: {
+          kind: 'accept',
+          type: aiOriginal.type,
+          severity: aiOriginal.severity,
+          description: aiOriginal.description,
+          decidedBy,
         },
+        partName,
       })
     }
+  }
+
+  async function handleEditSuggestion() {
+    if (aiState.status !== 'done' || !aiOriginal) return
+    const match = TYPES.find(t => t.type === aiState.type)
+    if (match) setChosenType({ type: match.type, label: match.label })
+    setSeverity(aiState.severity)
+    if (!notesTouched) setNotes(aiState.description)
+    setEditedManually(true)
+
+    if (aiDecisionId) {
+      const decidedBy = await currentUserId()
+      await recordHumanDecision({
+        decisionId: aiDecisionId,
+        original: aiOriginal,
+        decision: {
+          kind: 'edit',
+          type: aiOriginal.type,
+          severity: aiOriginal.severity,
+          description: aiOriginal.description,
+          decidedBy,
+        },
+        partName,
+      })
+    }
+  }
+
+  async function handleIgnoreSuggestion() {
+    if (!aiOriginal) {
+      setAiState({ status: 'idle' })
+      setEditedManually(false)
+      return
+    }
+    if (aiDecisionId) {
+      const decidedBy = await currentUserId()
+      await recordHumanDecision({
+        decisionId: aiDecisionId,
+        original: aiOriginal,
+        decision: { kind: 'ignore', decidedBy },
+        partName,
+      })
+    }
+    setAiState({ status: 'idle' })
+    setEditedManually(false)
+    setAiDecisionId(null)
+    setAiOriginal(null)
   }
 
   // cleanup object URL
@@ -175,6 +292,8 @@ export default function DamageFloat({ partName, position, currentType, accessTok
   const containerStyle = isMobile
     ? { background: 'var(--card-bg-solid)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
     : { left, top, background: 'var(--card-bg-solid)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
+
+  const showSuggestionPanel = aiState.status === 'done' && !editedManually
 
   return (
     <div
@@ -322,7 +441,14 @@ export default function DamageFloat({ partName, position, currentType, accessTok
               <div className="relative">
                 <img src={photoPreview} alt="preview" className="w-full h-20 object-cover rounded-lg border border-white/10" />
                 <button
-                  onClick={() => { setPhotoFile(null); setPhotoPreview(null); setAiState({ status: 'idle' }) }}
+                  onClick={() => {
+                    setPhotoFile(null)
+                    setPhotoPreview(null)
+                    setAiState({ status: 'idle' })
+                    setEditedManually(false)
+                    setAiDecisionId(null)
+                    setAiOriginal(null)
+                  }}
                   className="absolute -top-1.5 -right-1.5 bg-black/80 hover:bg-red-600 rounded-full text-white w-5 h-5 text-[0.65rem] flex items-center justify-center font-black transition-colors"
                 >✕</button>
               </div>
@@ -354,39 +480,64 @@ export default function DamageFloat({ partName, position, currentType, accessTok
             {aiState.status === 'loading' && (
               <div className="mt-2 flex items-center gap-1.5 text-[0.7rem] font-bold text-sky-400">
                 <span className="h-2.5 w-2.5 rounded-full border-2 border-sky-400/40 border-t-sky-400 animate-spin" />
-                🤖 Analisando foto com IA…
+                Analisando foto…
               </div>
             )}
             {aiState.status === 'error' && (
               <div className="mt-2 text-[0.7rem] font-bold text-[var(--text-muted)]">
-                🤖 Não foi possível analisar a foto agora. Preencha manualmente.
+                Não foi possível analisar a foto agora. Preencha manualmente.
               </div>
             )}
             {aiState.status === 'auth-required' && (
               <div className="mt-2 text-[0.7rem] font-bold text-amber-500">
-                🤖 Classificação por IA é um recurso do plano pago —{' '}
+                Classificação por IA é um recurso do plano pago —{' '}
                 <a href="/planos" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
                   faça login/upgrade em /planos
                 </a>{' '}
                 para ativar. Preencha manualmente por enquanto.
               </div>
             )}
-            {aiState.status === 'done' && chosenType && aiState.type !== chosenType.type && (
-              <div className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-sky-500/30 bg-sky-500/10 px-2 py-1.5">
-                <span className="text-[0.68rem] font-bold text-sky-400">
-                  🤖 IA sugere: {TYPES.find(t => t.type === aiState.type)?.label}
-                </span>
-                <button
-                  onClick={applyAiType}
-                  className="shrink-0 text-[0.65rem] font-black uppercase tracking-wide text-sky-400 underline underline-offset-2 cursor-pointer"
-                >
-                  Usar
-                </button>
+            {editedManually && (
+              <div className="mt-2 text-[0.68rem] font-bold text-amber-500">
+                ajustado manualmente
               </div>
             )}
-            {aiState.status === 'done' && chosenType && aiState.type === chosenType.type && (
-              <div className="mt-2 text-[0.68rem] font-bold text-emerald-400">
-                🤖 Severidade e descrição preenchidas pela IA
+            {showSuggestionPanel && (
+              <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-500/10 px-2 py-2 space-y-1.5">
+                <div className="text-[0.65rem] font-bold text-sky-400">
+                  Sugestão — revise antes de confirmar
+                </div>
+                <div className="text-[0.68rem] font-bold text-[var(--text-main)]">
+                  {TYPES.find(t => t.type === aiState.type)?.label}
+                  {' · '}
+                  {SEV.find(s => s.value === aiState.severity)?.label}
+                </div>
+                {aiState.description && (
+                  <p className="text-[0.65rem] text-[var(--text-muted)] leading-snug">{aiState.description}</p>
+                )}
+                <div className="flex flex-wrap gap-1.5 pt-0.5">
+                  <button
+                    type="button"
+                    onClick={() => void handleAcceptSuggestion()}
+                    className="min-h-9 px-2.5 rounded-lg text-[0.65rem] font-black uppercase tracking-wide bg-sky-500/20 border border-sky-500/40 text-sky-400 cursor-pointer"
+                  >
+                    Aceitar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleEditSuggestion()}
+                    className="min-h-9 px-2.5 rounded-lg text-[0.65rem] font-black uppercase tracking-wide bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] cursor-pointer"
+                  >
+                    Editar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleIgnoreSuggestion()}
+                    className="min-h-9 px-2.5 rounded-lg text-[0.65rem] font-bold text-[var(--text-muted)] underline underline-offset-2 cursor-pointer"
+                  >
+                    Ignorar sugestão
+                  </button>
+                </div>
               </div>
             )}
           </div>
