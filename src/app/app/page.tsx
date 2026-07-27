@@ -1,20 +1,18 @@
-﻿'use client';
-import React, { Suspense } from 'react'
+﻿'use client'
+
+import { Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import { useAuth } from '@/src/hooks/useAuth'
 import { supabaseEnabled } from '@/src/lib/supabase'
-import AppLoadingShell from '@/src/components/app/AppLoadingShell'
 import Login from '@/src/views/Login'
+import AppLoadingShell from '@/src/components/app/AppLoadingShell'
 
-// ponytail: heavy app shell (diagrams, sync, TTS, overlays) loads only after auth resolves —
-// unauthenticated mobile visitors skip ~200KB+ parse on first /app paint.
-const AppAuthenticatedShell = dynamic(
-  () => import('@/src/components/app/AppAuthenticatedShell'),
-  { loading: () => <AppLoadingShell /> },
-)
+const AppWorkspace = dynamic(() => import('@/src/components/app/AppWorkspace'), {
+  loading: () => <AppLoadingShell />,
+})
 
-export default function AppMainPage() {
-  const { session, loading, signIn, signUp, signOut, resetPassword } = useAuth()
+export default function AppPage() {
+  const { session, loading, signIn, signUp, resetPassword } = useAuth()
 
   if (supabaseEnabled && loading) {
     return <AppLoadingShell />
@@ -28,7 +26,5 @@ export default function AppMainPage() {
     )
   }
 
-  return (
-    <AppAuthenticatedShell session={session} signOut={signOut} />
-  )
+  return <AppWorkspace />
 }

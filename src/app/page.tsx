@@ -17,6 +17,7 @@ import TrustSection from '../components/TrustSection';
 import FinalCtaSection from '../components/FinalCtaSection';
 import LandingPromoVideo from '../components/LandingPromoVideo';
 import FloatingWhatsAppButton from '../components/FloatingWhatsAppButton';
+import AppRoutePrefetch from '../components/AppRoutePrefetch';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   heroSpecCellVariant,
@@ -255,6 +256,7 @@ export default function LandingPage() {
 
   return (
     <DirectionalTransition>
+      <AppRoutePrefetch />
       <div className="min-h-screen w-full bg-[var(--bg-main)] text-[var(--text-main)] transition-colors duration-300 font-outfit overflow-y-auto flex flex-col relative selection:bg-primary selection:text-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(LANDING_JSONLD) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PRICING_FAQ_JSONLD) }} />
