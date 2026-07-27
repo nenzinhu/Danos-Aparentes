@@ -4,6 +4,7 @@ import Link from 'next/link'
 import IntroVideo from '../components/IntroVideo'
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import { LEGAL_CONTACT_EMAIL, LEGAL_CNPJ, LEGAL_COMPANY_NAME } from '../components/LegalContent';
 import LandingCtaLink from '../components/LandingCtaLink';
 import Reveal from '../components/Reveal';
@@ -217,9 +218,14 @@ function TextCarousel() {
 import { useGsapScrollAnimations } from '../hooks/useGsapScrollAnimations';
 
 export default function LandingPage() {
+  const router = useRouter()
   const [darkMode, setDarkMode] = useState(true);
   const reduceMotion = useReducedMotion();
   useGsapScrollAnimations();
+
+  useEffect(() => {
+    router.prefetch('/app')
+  }, [router])
 
   useEffect(() => {
     const saved = localStorage.getItem('darkMode');
@@ -288,7 +294,7 @@ export default function LandingPage() {
           <a href="#faq" onClick={scrollToFaq} className="gsap-header-item hidden sm:inline text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors outline-none cursor-pointer">
             FAQ
           </a>
-          <Link href="/app" transitionTypes={['nav-forward']} className="gsap-header-item inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
+          <Link href="/app" prefetch transitionTypes={['nav-forward']} className="gsap-header-item inline-flex text-sm font-semibold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-lg outline-none">
             Entrar
           </Link>
           <button

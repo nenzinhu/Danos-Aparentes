@@ -9,12 +9,10 @@ export function useAuth() {
 
   useEffect(() => {
     if (!supabase) return
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setLoading(false)
-    })
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, s) => {
+    // ponytail: single INITIAL_SESSION event avoids getSession()+listener double round-trip on cold /app entry.
+    const { data: listener } = supabase.auth.onAuthStateChange((event, s) => {
       setSession(s)
+      if (event === 'INITIAL_SESSION') setLoading(false)
     })
     return () => listener.subscription.unsubscribe()
   }, [])
