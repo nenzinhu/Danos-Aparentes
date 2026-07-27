@@ -21,6 +21,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
   // email/password panel on mobile Entrar.
   const [returnTo, setReturnTo] = useState('/app')
   const [mode, setMode] = useState<Mode>('login')
+  const [panelDir, setPanelDir] = useState<1 | -1>(1)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -32,6 +33,16 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
     setReturnTo(getSafeReturnTo(params.get('returnTo')))
     if (params.get('mode') === 'signup') setMode('signup')
   }, [])
+
+  function switchMode(next: Mode) {
+    const order: Mode[] = ['login', 'signup', 'reset']
+    const from = order.indexOf(mode)
+    const to = order.indexOf(next)
+    setPanelDir(to >= from ? 1 : -1)
+    setMode(next)
+    setError('')
+    setInfo('')
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -45,12 +56,16 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
       } else if (mode === 'signup') {
         await onSignUp(email, password)
         trackCompleteRegistration()
-        setInfo('Conta criada! Seu teste de 7 dias começou. Verifique seu email se necessário.')
+        setPanelDir(-1)
         setMode('login')
+        setError('')
+        setInfo('Conta criada! Seu teste de 7 dias começou. Verifique seu email se necessário.')
       } else {
         await onResetPassword(email)
-        setInfo('Email de recuperação enviado, se a conta existir.')
+        setPanelDir(-1)
         setMode('login')
+        setError('')
+        setInfo('Email de recuperação enviado, se a conta existir.')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Algo deu errado.')
@@ -75,14 +90,14 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
           <GsapAuthTabs
             tabs={[
               { value: 'login', label: 'Entrar' },
-              { value: 'signup', label: 'Cadastre-se' },
+              { value: 'signup', label: 'Cadastre agora' },
             ]}
             active={mode}
-            onChange={(value) => { setMode(value as Mode); setError(''); setInfo('') }}
+            onChange={(value) => switchMode(value as Mode)}
           />
         )}
 
-        <GsapAuthPanel panelKey={mode}>
+        <GsapAuthPanel panelKey={mode} direction={panelDir}>
           <div className="text-center mb-8">
             <h1 className="text-2xl font-black tracking-tight mb-2">
               {mode === 'login' && 'Bem-vindo de volta'}
@@ -118,7 +133,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
                 {mode === 'login' && (
                   <button
                     type="button"
-                    onClick={() => { setMode('reset'); setError(''); setInfo('') }}
+                    onClick={() => switchMode('reset')}
                     className="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors"
                     aria-label="Esqueceu a senha? Recuperar acesso"
                   >
@@ -166,7 +181,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
         {mode === 'reset' && (
           <nav className="mt-8 pt-6 border-t border-slate-800 flex justify-center text-sm font-medium" aria-label="Alternar modo de autenticação">
             <button
-              onClick={() => { setMode('login'); setError(''); setInfo('') }}
+              onClick={() => switchMode('login')}
               className="text-slate-400 hover:text-slate-300 flex items-center gap-2"
             >
               ← Voltar para o login
