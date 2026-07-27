@@ -1005,14 +1005,69 @@ html.light .theme-segment .theme-segment-active {
 /* 8. Vehicle diagram outline mode — strips every SVG fill/gradient down to a
    transparent, line-only render. Works on every vehicle/view because it
    targets shape elements generically rather than per-vehicle classes. */
+.va-outline {
+  /* Dark (default): bright ink on slate canvas. Light overrides below. */
+  --outline-ink: #f8fafc;
+  --outline-stroke: 2px;
+}
+
+html.light .va-outline {
+  --outline-ink: #0f172a;
+  --outline-stroke: 1.6px;
+}
+
+/* Fullscreen portal paints on #020617 — hairline 1.4px strokes vanish when the
+   SVG fills the screen (CSS px do not grow with the viewBox). Boost weight +
+   ink so part boundaries stay readable. */
+.va-outline.va-outline--fs {
+  --outline-ink: #ffffff;
+  --outline-stroke: 3px;
+}
+
 .va-outline [id^="container-"] svg :is(path, circle, ellipse, rect, polygon, line) {
   fill: none !important;
-  stroke: var(--outline-ink, #0f172a) !important;
-  stroke-width: 1.4px !important;
+  stroke: var(--outline-ink) !important;
+  stroke-width: var(--outline-stroke) !important;
   stroke-linejoin: round;
   stroke-linecap: round;
   filter: none !important;
   opacity: 1 !important;
+}
+
+/* Soft edge glow in dark fullscreen so antialiased strokes don't melt into
+   the near-black canvas. Light mode stays crisp/flat. */
+.va-outline.va-outline--fs [id^="container-"] svg :is(path, circle, ellipse, rect, polygon, line) {
+  filter: drop-shadow(0 0 0.75px rgba(255, 255, 255, 0.7)) !important;
+}
+
+html.light .va-outline.va-outline--fs [id^="container-"] svg :is(path, circle, ellipse, rect, polygon, line) {
+  filter: none !important;
+}
+
+/* Clickable .part boundaries slightly heavier than decorative leftovers. */
+.va-outline [id^="container-"] svg .part:is(path, circle, ellipse, rect, polygon, line),
+.va-outline [id^="container-"] svg .part :is(path, circle, ellipse, rect, polygon, line) {
+  stroke-width: calc(var(--outline-stroke) + 0.5px) !important;
+}
+
+/* Damage / selected fills must stay outline-only in this mode — those rules
+   also use !important fills, so reassert stroke colors for severity. */
+.va-outline [id^="container-"] svg .part.damage-low :is(path, circle, ellipse, rect, polygon, line),
+.va-outline [id^="container-"] svg .part.damage-low:is(path, circle, ellipse, rect, polygon, line) {
+  stroke: #94a3b8 !important;
+}
+.va-outline [id^="container-"] svg .part.damage-medium :is(path, circle, ellipse, rect, polygon, line),
+.va-outline [id^="container-"] svg .part.damage-medium:is(path, circle, ellipse, rect, polygon, line) {
+  stroke: #fb923c !important;
+}
+.va-outline [id^="container-"] svg .part.damage-high :is(path, circle, ellipse, rect, polygon, line),
+.va-outline [id^="container-"] svg .part.damage-high:is(path, circle, ellipse, rect, polygon, line) {
+  stroke: #f87171 !important;
+}
+.va-outline [id^="container-"] svg .part.selected :is(path, circle, ellipse, rect, polygon, line),
+.va-outline [id^="container-"] svg .part.selected:is(path, circle, ellipse, rect, polygon, line) {
+  stroke: #38bdf8 !important;
+  stroke-width: calc(var(--outline-stroke) + 1px) !important;
 }
 
 /* Every vehicle SVG already marks purely cosmetic detail (bolts, engine fins,
@@ -1029,7 +1084,9 @@ html.light .theme-segment .theme-segment-active {
 .va-outline [id^="container-"] svg ellipse:first-child {
   /* Ground-contact shadow ellipse: keep it faint instead of a bold outline. */
   display: block !important;
-  opacity: 0.25 !important;
+  opacity: 0.2 !important;
+  stroke: var(--outline-ink) !important;
+  filter: none !important;
 }
 
 /* fill:none shrinks a path's default click-hit area down to just its stroke
@@ -1040,10 +1097,6 @@ html.light .theme-segment .theme-segment-active {
 .va-outline [id^="container-"] svg .part * {
   pointer-events: visible !important;
 }
-
-html.light .va-outline { --outline-ink: #0f172a; }
-html.dark .va-outline,
-.va-outline { --outline-ink: #e2e8f0; }
 
 /* 7. Ambient Background Glow Orbs */
 .bg-glow-orb {
