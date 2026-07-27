@@ -63,6 +63,16 @@ export async function computeHash(info: VehicleInfo, damages: Damage[], ts: numb
   } catch { return 'N/D' }
 }
 
+export type RegisterHashMeta = {
+  /** SavedReport / vehicle_inspections id — used to mark issued on cloud. */
+  inspectionId?: string
+  correctionReason?: string
+  /** Previous report_hashes.hash this version replaces. */
+  supersedesHash?: string
+  publicCode?: string
+  laudoVersion?: number
+}
+
 /** Registra o hash no Supabase para a página /verify conferir depois */
 export async function registerHash(
   hash: string,
@@ -72,6 +82,7 @@ export async function registerHash(
   companyName?: string,
   companyLogo?: string,
   manifest?: IntegrityManifest,
+  meta?: RegisterHashMeta,
 ) {
   if (!supabaseEnabled || !supabase || hash === 'N/D') return
   try {
@@ -87,6 +98,9 @@ export async function registerHash(
         .eq('report_key', reportKey)
       version = (count ?? 0) + 1
     }
+    if (meta?.laudoVersion && meta.laudoVersion > 0) {
+      version = meta.laudoVersion
+    }
 
     const row: Record<string, unknown> = {
       hash, user_id: session.user.id, plate: info.plate || '',
@@ -99,6 +113,10 @@ export async function registerHash(
       company_logo: companyLogo || '',
       report_key: reportKey,
       version,
+      correction_reason: meta?.correctionReason || '',
+      supersedes_hash: meta?.supersedesHash || '',
+      inspection_id: meta?.inspectionId || '',
+      public_code: meta?.publicCode || '',
     }
     if (manifest) {
       row.integrity_scheme = manifest.scheme
@@ -107,6 +125,23 @@ export async function registerHash(
     }
 
     await supabase.from('report_hashes').insert(row)
+
+    // Mark the inspection as issued (best-effort). DB trigger then freezes content.
+    if (meta?.inspectionId) {
+      await supabase
+        .from('vehicle_inspections')
+        .update({
+          status: 'issued',
+          issued_hash: hash,
+          public_code: meta.publicCode || '',
+          laudo_version: version,
+          issued_at: new Date().toISOString(),
+          correction_reason: meta.correctionReason || '',
+        })
+        .eq('id', meta.inspectionId)
+        .eq('user_id', session.user.id)
+        .in('status', ['draft', 'complete'])
+    }
   } catch { /* best-effort — não bloqueia a geração do PDF */ }
 }
 

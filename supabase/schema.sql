@@ -32,8 +32,18 @@ create table if not exists vehicle_inspections (
   geo_accuracy double precision,
   geo_address text,
   geo_captured_at bigint,
+  public_code text default '',
+  laudo_version int default 1,
+  parent_inspection_id text,
+  correction_reason text default '',
+  corrected_by uuid,
+  corrected_at timestamptz,
+  issued_at timestamptz,
+  issued_hash text default '',
   updated_at bigint not null,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  constraint vehicle_inspections_status_check
+    check (status in ('draft', 'complete', 'issued', 'superseded', 'cancelled'))
 );
 
 create table if not exists damages (
@@ -57,6 +67,90 @@ create table if not exists damages (
 create index if not exists idx_damages_inspection on damages(inspection_id);
 create index if not exists idx_inspections_user on vehicle_inspections(user_id);
 create index if not exists idx_damages_user on damages(user_id);
+
+-- FASE 2 columns (additive for DBs that already had the base table)
+alter table vehicle_inspections add column if not exists public_code text default '';
+alter table vehicle_inspections add column if not exists laudo_version int default 1;
+alter table vehicle_inspections add column if not exists parent_inspection_id text;
+alter table vehicle_inspections add column if not exists correction_reason text default '';
+alter table vehicle_inspections add column if not exists corrected_by uuid;
+alter table vehicle_inspections add column if not exists corrected_at timestamptz;
+alter table vehicle_inspections add column if not exists issued_at timestamptz;
+alter table vehicle_inspections add column if not exists issued_hash text default '';
+
+alter table vehicle_inspections drop constraint if exists vehicle_inspections_status_check;
+alter table vehicle_inspections
+  add constraint vehicle_inspections_status_check
+  check (status in ('draft', 'complete', 'issued', 'superseded', 'cancelled'));
+
+create index if not exists idx_vehicle_inspections_parent
+  on vehicle_inspections (parent_inspection_id)
+  where parent_inspection_id is not null;
+
+-- Immutability triggers (issued / superseded / cancelled snapshots)
+create or replace function public.prevent_issued_inspection_mutation()
+returns trigger
+language plpgsql
+as $$
+begin
+  if old.status in ('issued', 'superseded', 'cancelled') then
+    if old.status = 'issued' and new.status = 'superseded' then
+      if new.owner is distinct from old.owner
+         or new.phone is distinct from old.phone
+         or new.brand is distinct from old.brand
+         or new.plate is distinct from old.plate
+         or new.general_notes is distinct from old.general_notes
+         or new.ref is distinct from old.ref
+         or new.inspector_signature is distinct from old.inspector_signature
+         or new.client_signature is distinct from old.client_signature
+         or new.geo_lat is distinct from old.geo_lat
+         or new.geo_lng is distinct from old.geo_lng
+         or new.issued_hash is distinct from old.issued_hash
+         or new.public_code is distinct from old.public_code
+         or new.laudo_version is distinct from old.laudo_version
+         or new.parent_inspection_id is distinct from old.parent_inspection_id
+      then
+        raise exception 'issued inspection content is immutable (only status→superseded allowed)';
+      end if;
+      return new;
+    end if;
+    raise exception 'inspection status % is immutable — create a correction (new version)', old.status;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_prevent_issued_inspection_mutation on vehicle_inspections;
+create trigger trg_prevent_issued_inspection_mutation
+  before update on vehicle_inspections
+  for each row execute function public.prevent_issued_inspection_mutation();
+
+create or replace function public.prevent_issued_damage_mutation()
+returns trigger
+language plpgsql
+as $$
+declare
+  v_status text;
+  v_inspection_id text;
+begin
+  v_inspection_id := coalesce(new.inspection_id, old.inspection_id);
+  select status into v_status
+    from public.vehicle_inspections
+   where id = v_inspection_id;
+  if v_status in ('issued', 'superseded', 'cancelled') then
+    raise exception 'damages of % inspection % are immutable', v_status, v_inspection_id;
+  end if;
+  if tg_op = 'delete' then
+    return old;
+  end if;
+  return new;
+end;
+$$;
+
+drop trigger if exists trg_prevent_issued_damage_mutation on damages;
+create trigger trg_prevent_issued_damage_mutation
+  before insert or update or delete on damages
+  for each row execute function public.prevent_issued_damage_mutation();
 
 -- Row Level Security: cada usuário só acessa os próprios registros
 alter table vehicle_inspections enable row level security;
@@ -169,6 +263,12 @@ create index if not exists report_hashes_report_key_idx on report_hashes (report
 alter table report_hashes add column if not exists integrity_scheme text default '';
 alter table report_hashes add column if not exists integrity_manifest jsonb;
 alter table report_hashes add column if not exists final_hash text default '';
+
+-- FASE 2: correction lineage on the public verify receipt
+alter table report_hashes add column if not exists correction_reason text default '';
+alter table report_hashes add column if not exists supersedes_hash text default '';
+alter table report_hashes add column if not exists inspection_id text default '';
+alter table report_hashes add column if not exists public_code text default '';
 
 alter table report_hashes enable row level security;
 

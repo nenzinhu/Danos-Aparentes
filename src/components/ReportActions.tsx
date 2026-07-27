@@ -15,6 +15,13 @@ interface Props {
   onToast?: (msg: string) => void
   hasAccess?: boolean
   accessToken?: string
+  /** Active SavedReport id — marks cloud/local as issued after PDF register. */
+  inspectionId?: string | null
+  publicCode?: string
+  laudoVersion?: number
+  correctionReason?: string
+  supersedesHash?: string
+  onIssued?: (hash: string) => void
 }
 
 const ALL_VIEWS: ViewType[] = ['lateral-left', 'lateral-right', 'frontal', 'traseira']
@@ -167,7 +174,10 @@ const DEFAULT_SECTIONS: SectionVisibilityState = {
   showQrCode: true,
 }
 
-export default function ReportActions({ vehicleType, vehicleInfo, damages, onToast, hasAccess, accessToken }: Props) {
+export default function ReportActions({
+  vehicleType, vehicleInfo, damages, onToast, hasAccess, accessToken,
+  inspectionId, publicCode, laudoVersion, correctionReason, supersedesHash, onIssued,
+}: Props) {
   const [loading, setLoading] = useState<string | null>(null)
   const [reportHash, setReportHash] = useState<string | null>(null)
   const [showBadgePanel, setShowBadgePanel] = useState(false)
@@ -244,6 +254,11 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
       logoSettings: { position: logoPosition, height: logoHeight },
       sectionVisibility,
       sections: sectionVisibility,
+      inspectionId: inspectionId || undefined,
+      publicCode,
+      laudoVersion,
+      correctionReason,
+      supersedesHash,
     }
   }
 
@@ -278,7 +293,10 @@ export default function ReportActions({ vehicleType, vehicleInfo, damages, onToa
     const resolvedVehicleInfo = { ...vehicleInfo, interiorPhotos: await resolvePhotos(vehicleInfo.interiorPhotos) }
     const pdfSettings = getResolvedPdfSettings()
     const hash = await generatePdf(resolvedVehicleInfo, resolvedDamages, svgData, pdfSettings)
-    if (hash && hash !== 'N/D') setReportHash(hash)
+    if (hash && hash !== 'N/D') {
+      setReportHash(hash)
+      onIssued?.(hash)
+    }
   }
 
   async function whatsappPdf() {

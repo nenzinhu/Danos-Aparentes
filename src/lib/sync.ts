@@ -5,6 +5,7 @@ import { supabase, supabaseEnabled } from './supabase'
 import { uploadDamagePhotosForSync, uploadInteriorPhotosForSync, normalizeDamagePhotos, prefetchReportPhotoCache } from './photoStore'
 import { deleteInspectionPhotos } from './photoStorage'
 import { mapRemoteInspection } from './reportMapping'
+import { isIssuedLocked } from './pdf/reportIssuance'
 
 function inspectionRow(r: SavedReport, userId: string) {
   const v = r.vehicleInfo
@@ -28,6 +29,16 @@ function inspectionRow(r: SavedReport, userId: string) {
     geo_accuracy: geo?.accuracy ?? null,
     geo_address: geo?.address ?? null,
     geo_captured_at: geo?.capturedAt ?? null,
+    public_code: r.publicCode || '',
+    laudo_version: r.laudoVersion ?? 1,
+    parent_inspection_id: r.parentInspectionId || null,
+    correction_reason: r.correctionReason || '',
+    corrected_by: r.correctedBy || null,
+    corrected_at: r.correctedAt ? new Date(r.correctedAt).toISOString() : null,
+    issued_at: r.status === 'issued' || r.status === 'superseded'
+      ? new Date(r.savedAt).toISOString()
+      : null,
+    issued_hash: r.issuedHash || '',
     updated_at: r.savedAt,
   }
 }
@@ -53,6 +64,40 @@ async function persistSyncedReport(reportId: string, damages: SavedReport['damag
 
 async function pushReport(report: SavedReport, userId: string) {
   if (!supabase) throw new Error('Supabase não configurado')
+
+  // issued → superseded: status-only update (content frozen by DB trigger).
+  if (report.status === 'superseded') {
+    const { error: eSupersede } = await supabase
+      .from('vehicle_inspections')
+      .update({
+        status: 'superseded',
+        updated_at: report.savedAt,
+      })
+      .eq('id', report.id)
+      .eq('user_id', userId)
+      .eq('status', 'issued')
+    if (eSupersede) throw eSupersede
+    await persistSyncedReport(report.id, report.damages, report.vehicleInfo)
+    return
+  }
+
+  // Already locked on cloud → do not re-upsert content (immutability).
+  if (isIssuedLocked(report.status)) {
+    const { data: remote } = await supabase
+      .from('vehicle_inspections')
+      .select('status')
+      .eq('id', report.id)
+      .eq('user_id', userId)
+      .maybeSingle()
+    if (
+      remote?.status === 'issued' ||
+      remote?.status === 'superseded' ||
+      remote?.status === 'cancelled'
+    ) {
+      return
+    }
+    // else: first sync of issued (cloud still draft/complete) — fall through to upsert
+  }
 
   const { remoteDamages, localDamages } = await uploadDamagePhotosForSync(
     report.damages,
@@ -88,6 +133,17 @@ async function pushReport(report: SavedReport, userId: string) {
 
 async function deleteRemoteReport(id: string, userId: string) {
   if (!supabase) throw new Error('Supabase não configurado')
+
+  const { data: remote } = await supabase
+    .from('vehicle_inspections')
+    .select('status')
+    .eq('id', id)
+    .eq('user_id', userId)
+    .maybeSingle()
+  if (isIssuedLocked(remote?.status as import('../types').InspectionStatus | undefined)) {
+    throw new Error('Laudo emitido não pode ser excluído — use correção (nova versão) ou cancele formalmente')
+  }
+
   await deleteInspectionPhotos(userId, id)
   const { error } = await supabase.from('vehicle_inspections').delete().eq('id', id)
   if (error) throw error

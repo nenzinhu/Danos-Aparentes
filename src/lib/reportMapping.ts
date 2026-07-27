@@ -10,12 +10,37 @@ export function mapRemoteInspection(insp: Record<string, unknown>, damages: Reco
   const geoLng = insp.geo_lng as number | null | undefined
   const hasGeo = typeof geoLat === 'number' && typeof geoLng === 'number'
 
+  const rawStatus = insp.status as string | undefined
+  const status: SavedReport['status'] =
+    rawStatus === 'draft' ||
+    rawStatus === 'complete' ||
+    rawStatus === 'issued' ||
+    rawStatus === 'superseded' ||
+    rawStatus === 'cancelled'
+      ? rawStatus
+      : 'complete'
+
+  const correctedAtRaw = insp.corrected_at
+  let correctedAt: number | undefined
+  if (typeof correctedAtRaw === 'number') correctedAt = correctedAtRaw
+  else if (typeof correctedAtRaw === 'string' && correctedAtRaw) {
+    const parsed = Date.parse(correctedAtRaw)
+    if (!Number.isNaN(parsed)) correctedAt = parsed
+  }
+
   return {
     id: insp.id as SavedReport['id'],
     savedAt: insp.updated_at as number,
     syncedAt: insp.updated_at as number,
     vehicleType: (insp.vehicle_type as VehicleType | undefined) ?? undefined,
-    status: (insp.status as SavedReport['status']) === 'draft' ? 'draft' : 'complete',
+    status,
+    publicCode: (insp.public_code as string) || undefined,
+    laudoVersion: typeof insp.laudo_version === 'number' ? insp.laudo_version : undefined,
+    parentInspectionId: (insp.parent_inspection_id as string) || undefined,
+    correctionReason: (insp.correction_reason as string) || undefined,
+    correctedBy: insp.corrected_by ? String(insp.corrected_by) : undefined,
+    correctedAt,
+    issuedHash: (insp.issued_hash as string) || undefined,
     vehicleInfo: {
       owner: insp.owner as string,
       phone: insp.phone as string,

@@ -12,6 +12,7 @@ import {
   updatePhotoUploadProgress,
 } from '@/src/lib/photoUploadProgress'
 import { EMPTY_INFO } from '@/src/components/app/constants'
+import { isIssuedLocked } from '@/src/lib/pdf/reportIssuance'
 
 interface UseInspectionWorkflowOptions {
   damages: Damage[]
@@ -25,6 +26,7 @@ interface UseInspectionWorkflowOptions {
     vehicleType: VehicleType,
     options?: { id?: string; status?: InspectionStatus },
   ) => Promise<SavedReport>
+  markReportIssued?: (id: string, hash: string) => Promise<SavedReport | null>
   accessToken?: string
   showToast: (msg: string) => void
 }
@@ -36,6 +38,7 @@ export function useInspectionWorkflow({
   updateDamage,
   clearDamages,
   saveReport,
+  markReportIssued,
   accessToken,
   showToast,
 }: UseInspectionWorkflowOptions) {
@@ -142,12 +145,20 @@ export function useInspectionWorkflow({
   }, [viewDamages, removeDamage])
 
   const handleSave = useCallback(async () => {
-    const report = await saveReport(vehicleInfo, damages, vehicleType, {
-      id: activeReportId ?? undefined,
-      status: 'complete',
-    })
-    setActiveReportId(report.id)
-    showToast('✅ Vistoria Salva!')
+    if (activeReportId) {
+      // Guard: never overwrite an issued snapshot in place
+      // (createCorrection creates a new id for edits).
+    }
+    try {
+      const report = await saveReport(vehicleInfo, damages, vehicleType, {
+        id: activeReportId ?? undefined,
+        status: 'complete',
+      })
+      setActiveReportId(report.id)
+      showToast('✅ Vistoria Salva!')
+    } catch (e) {
+      showToast(e instanceof Error ? `❌ ${e.message}` : '❌ Não foi possível salvar')
+    }
   }, [vehicleInfo, damages, vehicleType, activeReportId, saveReport, showToast])
 
   const handleSaveDraft = useCallback(async () => {
@@ -155,15 +166,23 @@ export function useInspectionWorkflow({
       showToast('❌ Informe ao menos o cliente ou a placa para salvar a prévia')
       return
     }
-    const report = await saveReport(vehicleInfo, damages, vehicleType, {
-      id: activeReportId ?? undefined,
-      status: 'draft',
-    })
-    setActiveReportId(report.id)
-    showToast('✅ Prévia salva — sincroniza com o celular')
+    try {
+      const report = await saveReport(vehicleInfo, damages, vehicleType, {
+        id: activeReportId ?? undefined,
+        status: 'draft',
+      })
+      setActiveReportId(report.id)
+      showToast('✅ Prévia salva — sincroniza com o celular')
+    } catch (e) {
+      showToast(e instanceof Error ? `❌ ${e.message}` : '❌ Não foi possível salvar a prévia')
+    }
   }, [vehicleInfo, damages, vehicleType, activeReportId, saveReport, showToast])
 
   const handleLoad = useCallback((r: SavedReport) => {
+    if (isIssuedLocked(r.status)) {
+      showToast('🔒 Laudo emitido é imutável — use "Criar correção (nova versão)"')
+      return
+    }
     setVehicleInfo(r.vehicleInfo)
     if (r.vehicleType) setVehicleType(r.vehicleType)
     setActiveReportId(r.id)
@@ -172,6 +191,33 @@ export function useInspectionWorkflow({
     setPreviousReport(null)
     showToast(r.status === 'draft' ? '📂 Prévia carregada — continue a vistoria' : '📂 Vistoria Carregada!')
   }, [clearDamages, addDamage, showToast])
+
+  /** Load a correction draft created from an issued laudo. */
+  const handleLoadCorrection = useCallback((r: SavedReport) => {
+    setVehicleInfo(r.vehicleInfo)
+    if (r.vehicleType) setVehicleType(r.vehicleType)
+    setActiveReportId(r.id)
+    clearDamages()
+    r.damages.forEach(d => addDamage(d))
+    setPreviousReport(null)
+    showToast('📝 Correção carregada — edite e emita uma nova versão do laudo')
+  }, [clearDamages, addDamage, showToast])
+
+  const handleIssued = useCallback(async (hash: string) => {
+    if (!markReportIssued || !hash || hash === 'N/D') return
+    try {
+      let id = activeReportId
+      if (!id) {
+        const report = await saveReport(vehicleInfo, damages, vehicleType, { status: 'complete' })
+        id = report.id
+        setActiveReportId(id)
+      }
+      await markReportIssued(id, hash)
+      showToast('🔒 Laudo emitido — alterações passam a exigir nova versão')
+    } catch {
+      // best-effort local lock
+    }
+  }, [activeReportId, markReportIssued, saveReport, vehicleInfo, damages, vehicleType, showToast])
 
   const handleClearAll = useCallback(() => {
     setVehicleInfo(EMPTY_INFO)
@@ -207,6 +253,7 @@ export function useInspectionWorkflow({
     formCollapsed,
     formResetToken,
     previousReport,
+    activeReportId,
     viewDamages,
     allVehicleDamages,
     handlePlateConfirmed,
@@ -216,6 +263,8 @@ export function useInspectionWorkflow({
     handleSave,
     handleSaveDraft,
     handleLoad,
+    handleLoadCorrection,
+    handleIssued,
     handleClearAll,
     handleClearDamages,
     handleViewTypeChange,

@@ -66,8 +66,14 @@ export interface CustomField {
   value: string
 }
 
-/** draft = prévia cadastral (cliente/veículo) feita no PC; complete = vistoria/laudo. */
-export type InspectionStatus = 'draft' | 'complete'
+/**
+ * draft = prévia cadastral (PC → celular)
+ * complete = vistoria salva, ainda editável
+ * issued = laudo emitido (PDF+hash) — snapshot imutável
+ * superseded = substituído por correção (nova versão)
+ * cancelled = anulado sem substituição
+ */
+export type InspectionStatus = 'draft' | 'complete' | 'issued' | 'superseded' | 'cancelled'
 
 export interface SavedReport {
   id: ReportId
@@ -77,8 +83,19 @@ export interface SavedReport {
   vehicleType?: VehicleType
   /** Timestamp da última sync bem-sucedida com a nuvem (para detectar deletes remotos). */
   syncedAt?: number
-  /** Prévia no computador vs vistoria concluída. Default: complete (legado). */
+  /** Prévia / completa / emitida. Default: complete (legado). */
   status?: InspectionStatus
+  /** Código legível DA-YYYY-XXXXXX[-Rn]. Independente do hash QR. */
+  publicCode?: string
+  /** Versão do laudo no lineage (1 = original). Alinha com report_hashes.version quando emitido. */
+  laudoVersion?: number
+  /** Id da vistoria emitida que esta correção substitui. */
+  parentInspectionId?: string
+  correctionReason?: string
+  correctedBy?: string
+  correctedAt?: number
+  /** Hash v1 (32 hex) do PDF emitido — chave pública /verify. */
+  issuedHash?: string
 }
 
 export interface TtsConfig {

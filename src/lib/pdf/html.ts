@@ -35,8 +35,17 @@ export async function buildFullHtml(
   // v2 layered integrity (no PDF bytes yet — filled later via registerIntegrityPdfHash)
   const manifest = await buildIntegrityManifest({
     info, damages, ts, issuedAt: date, pdfBytes: null,
+    inspectionId: settings?.inspectionId || settings?.publicCode,
   })
-  await registerHash(hash, info, damages, date, settings?.companyName, settings?.companyLogo, manifest)
+  if (!settings?.skipHashRegister) {
+    await registerHash(hash, info, damages, date, settings?.companyName, settings?.companyLogo, manifest, {
+      inspectionId: settings?.inspectionId,
+      correctionReason: settings?.correctionReason,
+      supersedesHash: settings?.supersedesHash,
+      publicCode: settings?.publicCode,
+      laudoVersion: settings?.laudoVersion,
+    })
+  }
 
   const geo = info.geo
   const geoQuery = geo ? `&lat=${geo.lat}&lng=${geo.lng}` : ''

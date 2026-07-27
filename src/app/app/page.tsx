@@ -30,7 +30,7 @@ export default function AppMainPage() {
   const { session, loading: authLoading, signIn, signUp, signOut, resetPassword } = useAuth()
   const { damages, addDamage, removeDamage, updateDamage, clearDamages } = useDamages()
   const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts(session?.access_token)
-  const { saved, saveReport, deleteReport, refreshRemote } = useSavedReports(session?.user.id)
+  const { saved, saveReport, deleteReport, refreshRemote, createCorrection, markReportIssued } = useSavedReports(session?.user.id)
   const { info: subscription, loading: subLoading, openPortal } = useSubscription(session?.user.id, session?.access_token)
   const shell = useAppShellState({ openPortal })
 
@@ -62,9 +62,15 @@ export default function AppMainPage() {
     updateDamage,
     clearDamages,
     saveReport,
+    markReportIssued,
     accessToken: session?.access_token,
     showToast: shell.showToast,
   })
+
+  const activeSaved = useMemo(
+    () => (inspection.activeReportId ? saved.find(r => r.id === inspection.activeReportId) : undefined),
+    [saved, inspection.activeReportId],
+  )
 
   const headerSubscription = useMemo(
     () => supabaseEnabled && subscription
@@ -76,6 +82,24 @@ export default function AppMainPage() {
   const handleLoad = (r: Parameters<typeof inspection.handleLoad>[0]) => {
     inspection.handleLoad(r)
     shell.setSavedModal(false)
+  }
+
+  const handleCreateCorrection = async (r: Parameters<typeof inspection.handleLoad>[0], reason: string) => {
+    try {
+      const draft = await createCorrection(r, reason, session?.user.id)
+      inspection.handleLoadCorrection(draft)
+      shell.setSavedModal(false)
+    } catch (e) {
+      shell.showToast(e instanceof Error ? `❌ ${e.message}` : '❌ Não foi possível criar a correção')
+    }
+  }
+
+  const handleDeleteReport = async (id: string) => {
+    try {
+      await deleteReport(id)
+    } catch (e) {
+      shell.showToast(e instanceof Error ? `❌ ${e.message}` : '❌ Não foi possível excluir')
+    }
   }
 
   return (
@@ -162,6 +186,16 @@ export default function AppMainPage() {
                 speak={speak}
                 speakHover={speakHover}
                 onToast={shell.showToast}
+                inspectionId={inspection.activeReportId}
+                publicCode={activeSaved?.publicCode}
+                laudoVersion={activeSaved?.laudoVersion}
+                correctionReason={activeSaved?.correctionReason}
+                supersedesHash={
+                  activeSaved?.parentInspectionId
+                    ? saved.find(s => s.id === activeSaved.parentInspectionId)?.issuedHash
+                    : undefined
+                }
+                onIssued={(hash) => { void inspection.handleIssued(hash) }}
               />
             )}
           </main>
@@ -172,7 +206,8 @@ export default function AppMainPage() {
             saved={saved}
             onSave={inspection.handleSave}
             onLoad={handleLoad}
-            onDeleteReport={deleteReport}
+            onCreateCorrection={handleCreateCorrection}
+            onDeleteReport={handleDeleteReport}
             hasAccess={subscription?.hasAccess ?? false}
             accessToken={session?.access_token}
             settingsModal={shell.settingsModal}

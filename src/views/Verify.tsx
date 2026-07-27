@@ -421,7 +421,8 @@ export default function Verify() {
 
         <div className="bg-slate-50 p-4 text-center border-t border-slate-100">
           <p className="text-[9px] text-slate-400 uppercase font-bold tracking-[0.1em]">
-            Este documento é uma representação digital de validade pública garantida por tecnologia de hashing.
+            Este registro confirma a integridade técnica do conteúdo via hashing.
+            Não constitui validade jurídica garantida.
           </p>
         </div>
       </div>

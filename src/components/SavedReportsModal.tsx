@@ -8,6 +8,7 @@ import { captureSvgs } from './ReportActions'
 import { VehicleIconSvg } from './VehicleSelector'
 import { db } from '../lib/db'
 import { supabaseEnabled } from '../lib/supabase'
+import { isIssuedLocked } from '../lib/pdf/reportIssuance'
 
 function SaveIcon({ size = 16 }: { size?: number }) {
   return (
@@ -33,6 +34,7 @@ interface Props {
   onClose: () => void
   onSave: () => void
   onLoad: (r: SavedReport) => void
+  onCreateCorrection?: (r: SavedReport, reason: string) => void | Promise<void>
   onDelete: (id: string) => void
   hasAccess?: boolean
   accessToken?: string
@@ -76,7 +78,7 @@ function CloudBadge({ state }: { state: CloudState }) {
   )
 }
 
-export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLoad, onDelete, hasAccess, accessToken }: Props) {
+export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLoad, onCreateCorrection, onDelete, hasAccess, accessToken }: Props) {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>('recent')
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set())
@@ -84,6 +86,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
   const [generatingQrId, setGeneratingQrId] = useState<string | null>(null)
   const [qrModal, setQrModal] = useState<{ plate: string; url: string } | null>(null)
   const [copiedSignatureId, setCopiedSignatureId] = useState<string | null>(null)
+  const [correctingId, setCorrectingId] = useState<string | null>(null)
 
   const [workflowFilter, setWorkflowFilter] = useState<'all' | 'local' | 'cloud' | 'draft'>('all')
   const [expandedReportIds, setExpandedReportIds] = useState<Set<string>>(new Set())
@@ -291,11 +294,38 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
       const companyName = hasAccess ? (localStorage.getItem('company_name') || '') : ''
       const companyLogo = hasAccess ? (localStorage.getItem('company_logo') || '') : ''
       const pdfTheme = (localStorage.getItem('vistoria_pdf_theme') as 'modern' | 'editorial') || 'modern'
-      await generatePdf(r.vehicleInfo, r.damages, svgData, { companyName, companyLogo, pdfTheme })
+      await generatePdf(r.vehicleInfo, r.damages, svgData, {
+        companyName,
+        companyLogo,
+        pdfTheme,
+        // Re-download of issued snapshot must not bump report_hashes.version
+        skipHashRegister: isIssuedLocked(r.status) || Boolean(r.issuedHash),
+        inspectionId: r.id,
+        publicCode: r.publicCode,
+        laudoVersion: r.laudoVersion,
+      })
     } catch (e) {
       console.error('Failed to generate PDF from modal:', e)
     } finally {
       setDownloadingId(null)
+    }
+  }
+
+  const handleCreateCorrection = async (r: SavedReport) => {
+    if (!onCreateCorrection) return
+    const reason = window.prompt(
+      'Motivo da correção (obrigatório). Isso cria uma NOVA versão do laudo; o original permanece.',
+    )
+    if (reason == null) return
+    if (!reason.trim()) {
+      window.alert('Informe o motivo da correção.')
+      return
+    }
+    setCorrectingId(r.id)
+    try {
+      await onCreateCorrection(r, reason.trim())
+    } finally {
+      setCorrectingId(null)
     }
   }
 
@@ -384,6 +414,32 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
                   💻 Prévia
                 </span>
               )}
+              {r.status === 'issued' && (
+                <span
+                  title="Laudo emitido — imutável; correções geram nova versão"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4, flexShrink: 0,
+                    fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit,sans-serif',
+                    color: '#38bdf8', background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.25)',
+                    borderRadius: 999, padding: '2px 8px', lineHeight: 1.4,
+                  }}
+                >
+                  🔒 Emitido{r.publicCode ? ` · ${r.publicCode}` : ''}
+                </span>
+              )}
+              {r.status === 'superseded' && (
+                <span
+                  title="Substituído por uma versão mais recente"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4, flexShrink: 0,
+                    fontSize: '0.66rem', fontWeight: 700, fontFamily: 'Outfit,sans-serif',
+                    color: '#fbbf24', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.25)',
+                    borderRadius: 999, padding: '2px 8px', lineHeight: 1.4,
+                  }}
+                >
+                  ↩️ Substituído{r.publicCode ? ` · ${r.publicCode}` : ''}
+                </span>
+              )}
               <CloudBadge state={cloudStateOf(r.id)} />
             </div>
             <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -455,30 +511,57 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
             </button>
             <button
               onClick={() => onLoad(r)}
+              disabled={isIssuedLocked(r.status)}
+              title={isIssuedLocked(r.status) ? 'Laudo emitido é imutável — use Criar correção' : 'Carregar para editar'}
               style={{
                 background: 'rgba(0,170,255,0.1)',
                 border: '1px solid rgba(0,170,255,0.2)',
                 borderRadius: 8,
                 padding: '5px 10px',
                 color: 'var(--primary)',
-                cursor: 'pointer',
+                cursor: isIssuedLocked(r.status) ? 'not-allowed' : 'pointer',
                 fontFamily: 'Outfit,sans-serif',
                 fontWeight: 700,
-                fontSize: '0.72rem'
+                fontSize: '0.72rem',
+                opacity: isIssuedLocked(r.status) ? 0.45 : 1,
               }}
             >
               Carregar
             </button>
+            {r.status === 'issued' && onCreateCorrection && (
+              <button
+                onClick={() => void handleCreateCorrection(r)}
+                disabled={correctingId !== null}
+                title="Cria uma nova versão editável; o original permanece"
+                style={{
+                  background: 'rgba(251,191,36,0.12)',
+                  border: '1px solid rgba(251,191,36,0.3)',
+                  borderRadius: 8,
+                  padding: '5px 10px',
+                  color: '#fbbf24',
+                  cursor: 'pointer',
+                  fontFamily: 'Outfit,sans-serif',
+                  fontWeight: 700,
+                  fontSize: '0.72rem',
+                  opacity: correctingId !== null && correctingId !== r.id ? 0.5 : 1,
+                }}
+              >
+                {correctingId === r.id ? '⏳' : '📝 Correção'}
+              </button>
+            )}
             <button
               onClick={() => onDelete(r.id)}
+              disabled={isIssuedLocked(r.status)}
+              title={isIssuedLocked(r.status) ? 'Laudo emitido não pode ser excluído' : 'Excluir'}
               style={{
                 background: 'rgba(239,68,68,0.1)',
                 border: '1px solid rgba(239,68,68,0.2)',
                 borderRadius: 8,
                 padding: '5px 8px',
                 color: '#ef4444',
-                cursor: 'pointer',
-                fontSize: '0.72rem'
+                cursor: isIssuedLocked(r.status) ? 'not-allowed' : 'pointer',
+                fontSize: '0.72rem',
+                opacity: isIssuedLocked(r.status) ? 0.45 : 1,
               }}
             >
               🗑️

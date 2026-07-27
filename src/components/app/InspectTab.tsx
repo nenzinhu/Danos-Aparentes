@@ -67,6 +67,12 @@ interface InspectTabProps {
   speak: (text: string) => void
   speakHover: (text: string) => void
   onToast: (msg: string) => void
+  inspectionId?: string | null
+  publicCode?: string
+  laudoVersion?: number
+  correctionReason?: string
+  supersedesHash?: string
+  onIssued?: (hash: string) => void
 }
 
 export default function InspectTab({
@@ -103,6 +109,12 @@ export default function InspectTab({
   speak,
   speakHover,
   onToast,
+  inspectionId,
+  publicCode,
+  laudoVersion,
+  correctionReason,
+  supersedesHash,
+  onIssued,
 }: InspectTabProps) {
   const [section, setSection] = useState<InspectSection>('dados')
 
@@ -282,6 +294,12 @@ export default function InspectTab({
               onToast={onToast}
               hasAccess={hasAccess}
               accessToken={accessToken}
+              inspectionId={inspectionId}
+              publicCode={publicCode}
+              laudoVersion={laudoVersion}
+              correctionReason={correctionReason}
+              supersedesHash={supersedesHash}
+              onIssued={onIssued}
             />
           </div>
         </div>

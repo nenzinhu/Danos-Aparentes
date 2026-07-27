@@ -16,6 +16,7 @@ interface AppShellOverlaysProps {
   saved: SavedReport[]
   onSave: () => Promise<void>
   onLoad: (r: SavedReport) => void
+  onCreateCorrection?: (r: SavedReport, reason: string) => void | Promise<void>
   onDeleteReport: (id: string) => Promise<void>
   hasAccess: boolean
   accessToken?: string
@@ -45,6 +46,7 @@ export default function AppShellOverlays({
   saved,
   onSave,
   onLoad,
+  onCreateCorrection,
   onDeleteReport,
   hasAccess,
   accessToken,
@@ -75,6 +77,7 @@ export default function AppShellOverlays({
         onClose={onCloseSavedModal}
         onSave={onSave}
         onLoad={onLoad}
+        onCreateCorrection={onCreateCorrection}
         onDelete={onDeleteReport}
         hasAccess={hasAccess}
         accessToken={accessToken}

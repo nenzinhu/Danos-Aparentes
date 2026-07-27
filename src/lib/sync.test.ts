@@ -82,16 +82,56 @@ vi.mock('./supabase', () => ({
           },
         }
       }
-      return {
-        select: () => ({
-          eq: async () => ({
-            data: table === 'vehicle_inspections' ? remoteState.inspections : [],
+
+      // Chainable builder that supports both:
+      //   await select().eq()  → { data, error }  (pullRemote)
+      //   await select().eq().eq().maybeSingle()  (issued lock / delete guard)
+      function makeSelectChain() {
+        const state: { filters: Array<[string, unknown]> } = { filters: [] }
+        const api: Record<string, unknown> = {}
+        api.eq = (col: string, val: unknown) => {
+          state.filters.push([col, val])
+          return api
+        }
+        api.maybeSingle = async () => {
+          const idFilter = state.filters.find(([c]) => c === 'id')
+          const list = remoteState.inspections as SavedReport[]
+          const found = idFilter
+            ? list.find(r => r.id === idFilter[1])
+            : list[0]
+          return {
+            data: found ? { status: found.status ?? 'complete', id: found.id } : null,
             error: null,
-          }),
-        }),
+          }
+        }
+        // Thenable: `await select().eq(...)` resolves to { data, error }
+        api.then = (
+          resolve: (v: { data: unknown; error: null }) => void,
+          reject?: (e: unknown) => void,
+        ) => {
+          try {
+            resolve({
+              data: table === 'vehicle_inspections' ? remoteState.inspections : [],
+              error: null,
+            })
+          } catch (e) {
+            reject?.(e)
+          }
+        }
+        return api
+      }
+
+      return {
+        select: () => makeSelectChain(),
         upsert: async () => ({
           error: remoteState.upsertShouldFail ? { message: 'upsert failed' } : null,
         }),
+        update: () => {
+          const api: Record<string, unknown> = {}
+          api.eq = () => api
+          api.then = (resolve: (v: { error: null }) => void) => resolve({ error: null })
+          return api
+        },
         delete: () => ({
           eq: async () => ({ error: null }),
         }),
