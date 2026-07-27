@@ -30,10 +30,54 @@ const SEV: { value: Severity; label: string; color: string; bg: string; border: 
   { value: 'high',   label: 'Grave', color: 'text-red-600',    bg: 'bg-red-500/15',    border: 'border-red-500/45' },
 ]
 
-const TYPES: { type: DamageType; label: string; Icon: typeof IconScratchDamage; color: string; bg: string; border: string }[] = [
-  { type: 'scratch', label: 'Risco / Arranhado',    Icon: IconScratchDamage, color: 'text-amber-600', bg: 'bg-amber-500/15', border: 'border-amber-500/40' },
-  { type: 'dent',    label: 'Amassado / Deformado', Icon: IconDentDamage,    color: 'text-orange-600', bg: 'bg-orange-500/15', border: 'border-orange-500/40' },
-  { type: 'broken',  label: 'Quebrado / Trincado',  Icon: IconBrokenDamage,  color: 'text-red-600',    bg: 'bg-red-500/15',    border: 'border-red-500/40' },
+const TYPES: {
+  type: DamageType
+  label: string
+  short: string
+  hint: string
+  Icon: typeof IconScratchDamage
+  color: string
+  accent: string
+  bg: string
+  border: string
+  well: string
+}[] = [
+  {
+    type: 'scratch',
+    label: 'Risco / Arranhado',
+    short: 'Risco',
+    hint: 'Arranhado · abrasão',
+    Icon: IconScratchDamage,
+    color: 'text-amber-600',
+    accent: 'bg-amber-500',
+    bg: 'bg-amber-500/15',
+    border: 'border-amber-500/40',
+    well: 'bg-amber-500/10 ring-amber-500/25',
+  },
+  {
+    type: 'dent',
+    label: 'Amassado / Deformado',
+    short: 'Amassado',
+    hint: 'Deformado · impacto',
+    Icon: IconDentDamage,
+    color: 'text-orange-600',
+    accent: 'bg-orange-500',
+    bg: 'bg-orange-500/15',
+    border: 'border-orange-500/40',
+    well: 'bg-orange-500/10 ring-orange-500/25',
+  },
+  {
+    type: 'broken',
+    label: 'Quebrado / Trincado',
+    short: 'Quebrado',
+    hint: 'Trincado · fratura',
+    Icon: IconBrokenDamage,
+    color: 'text-red-600',
+    accent: 'bg-red-500',
+    bg: 'bg-red-500/15',
+    border: 'border-red-500/40',
+    well: 'bg-red-500/10 ring-red-500/25',
+  },
 ]
 
 type AiClassifyState =
@@ -63,7 +107,7 @@ async function currentUserId(): Promise<string> {
   }
 }
 
-export default function DamageFloat({ partName, position, currentType, accessToken, onChoose, onClear, onClose }: Props) {
+export default function DamageFloat({ partName, currentType, accessToken, onChoose, onClear, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const [isMobile, setIsMobile] = useState(false)
@@ -278,21 +322,26 @@ export default function DamageFloat({ partName, position, currentType, accessTok
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, onClose])
 
-  const floatW = 248
-  const left = Math.max(8, Math.min(position.x, window.innerWidth - floatW))
-  const top  = Math.max(8, Math.min(position.y, window.innerHeight - 340))
-
+  // Desktop: float fixed at vertical middle of the right edge (ignore click pos).
+  // Mobile: bottom sheet — keeps the diagram free.
   const containerClass = isMobile
-    ? `fixed z-[10000] left-0 right-0 bottom-0 w-full p-4 pb-[max(1rem,env(safe-area-inset-bottom))] rounded-t-2xl border-t backdrop-blur-xl shadow-2xl motion-reduce:animate-none duration-300 ${
+    ? `fixed z-[10000] left-0 right-0 bottom-0 w-full p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] rounded-t-2xl border-t backdrop-blur-xl shadow-2xl motion-reduce:animate-none duration-300 ${
         isClosing ? 'animate-out fade-out slide-out-to-bottom-4 duration-200' : 'animate-in fade-in slide-in-from-bottom-4'
       }`
-    : `fixed z-[10000] w-[248px] p-3 rounded-2xl border backdrop-blur-xl shadow-2xl motion-reduce:animate-none duration-300 ${
-        isClosing ? 'animate-out fade-out zoom-out-95 duration-200' : 'animate-in fade-in zoom-in-95 transition-all'
+    : `fixed z-[10000] w-[220px] p-2.5 rounded-2xl border backdrop-blur-xl shadow-2xl motion-reduce:animate-none duration-300 ${
+        isClosing ? 'animate-out fade-out zoom-out-95 duration-200' : 'animate-in fade-in slide-in-from-right-4 zoom-in-95'
       }`
 
   const containerStyle = isMobile
     ? { background: 'var(--card-bg-solid)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
-    : { left, top, background: 'var(--card-bg-solid)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }
+    : {
+        right: 16,
+        top: '50%',
+        transform: isClosing ? 'translateY(-50%) scale(0.95)' : 'translateY(-50%)',
+        background: 'var(--card-bg-solid)',
+        borderColor: 'var(--card-border)',
+        boxShadow: 'var(--glass-shadow)',
+      }
 
   const showSuggestionPanel = aiState.status === 'done' && !editedManually
 
@@ -307,59 +356,79 @@ export default function DamageFloat({ partName, position, currentType, accessTok
       style={containerStyle}
     >
       {isMobile && (
-        <div aria-hidden="true" className="mx-auto mb-2.5 h-1 w-10 rounded-full bg-[var(--text-muted)]/40" />
+        <div aria-hidden="true" className="mx-auto mb-2 h-1 w-10 rounded-full bg-[var(--text-muted)]/40" />
       )}
 
-      {/* Header: subtle category + emphasized part name */}
-      <div className="flex justify-between items-start gap-2 mb-3">
+      {/* Header compacto */}
+      <div className="flex justify-between items-center gap-2 mb-2">
         <div className="min-w-0 flex-1">
-          <div className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-[var(--text-muted)] opacity-80">
+          <div className="text-[0.58rem] font-bold uppercase tracking-[0.14em] text-[var(--text-muted)] opacity-80">
             Tipo de avaria
           </div>
-          <div className="mt-0.5 font-outfit font-extrabold text-[0.95rem] leading-tight text-[var(--text-main)] truncate">
+          <div className="font-outfit font-extrabold text-[0.84rem] leading-tight text-[var(--text-main)] truncate">
             {partName}
           </div>
         </div>
         <button
           onClick={handleClose}
           aria-label="Fechar"
-          className="shrink-0 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] rounded-lg w-7 h-7 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer focus-visible:ring-2 ring-[var(--primary)] outline-none"
+          className="shrink-0 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] hover:bg-[var(--btn-secondary-hover)] text-[var(--text-muted)] hover:text-[var(--text-main)] rounded-lg w-6 h-6 flex items-center justify-center text-[0.65rem] font-bold transition-colors cursor-pointer focus-visible:ring-2 ring-[var(--primary)] outline-none"
         >
           ✕
         </button>
       </div>
 
-      {/* ── STEP 1: escolher tipo ── */}
+      {/* ── STEP 1: escolher tipo (lista compacta) ── */}
       {step === 1 && (
         <>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="flex flex-col gap-1.5" role="listbox" aria-label="Tipos de avaria">
             {TYPES.map((t, i) => {
               const isActive = currentType === t.type
               return (
                 <motion.button
                   key={t.type}
+                  role="option"
+                  aria-selected={isActive}
                   onClick={() => handlePickType(t.type, t.label)}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.04, duration: 0.2, ease: 'easeOut' }}
+                  whileHover={{ x: 2 }}
+                  whileTap={{ scale: 0.985 }}
                   aria-keyshortcuts={String(i + 1)}
-                  className={`relative flex flex-col items-center justify-center gap-1.5 min-h-[88px] sm:min-h-[76px] px-1.5 pt-5 pb-2 rounded-xl border-2 font-outfit text-xs font-bold transition-all duration-200 cursor-pointer focus-visible:ring-2 ring-[var(--primary)] outline-none ${
+                  className={`group relative flex items-center gap-2 min-h-[44px] w-full overflow-hidden rounded-xl border pl-0 pr-2 font-outfit text-left transition-colors duration-200 cursor-pointer focus-visible:ring-2 ring-[var(--primary)] outline-none ${
                     isActive
-                      ? `${t.bg} ${t.border} text-[var(--text-main)] shadow-[inset_0_0_0_1px_var(--primary)]`
-                      : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] hover:border-[var(--text-muted)]/40'
+                      ? `${t.bg} ${t.border} text-[var(--text-main)]`
+                      : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] hover:border-[var(--text-muted)]/35'
                   }`}
                 >
-                  <span className="absolute top-1.5 left-1/2 -translate-x-1/2 rounded-md border border-[var(--btn-secondary-border)] bg-[var(--card-bg-solid)] px-1.5 py-px font-mono-data text-[0.58rem] font-semibold tracking-wide text-[var(--text-muted)] tabular-nums">
-                    [{i + 1}]
-                  </span>
-                  <div className={`flex items-center justify-center transition-transform duration-200 ${isActive ? 'scale-105' : ''} ${t.color}`}>
-                    <t.Icon size={40} className="h-11 sm:h-10 w-auto" />
+                  <span
+                    aria-hidden="true"
+                    className={`absolute inset-y-0 left-0 w-0.5 ${isActive ? t.accent : 'bg-transparent group-hover:bg-[var(--text-muted)]/25'} transition-colors`}
+                  />
+                  <div
+                    className={`ml-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ring-1 ${t.well} ${t.color} transition-transform duration-200 ${isActive ? 'scale-105' : 'group-hover:scale-[1.03]'}`}
+                  >
+                    <t.Icon size={30} animated={isActive} className="h-7 w-auto" />
                   </div>
-                  <span className="text-[0.68rem] sm:text-[0.62rem] tracking-tight leading-tight text-center text-[var(--text-main)] px-0.5">
-                    {t.label}
-                  </span>
-                  {isActive && (
-                    <span className="text-[0.55rem] uppercase font-black tracking-widest text-[var(--primary)]">Ativo</span>
-                  )}
+                  <div className="min-w-0 flex-1 py-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[0.78rem] font-extrabold tracking-tight text-[var(--text-main)] leading-none">
+                        {t.short}
+                      </span>
+                      <span className="rounded border border-[var(--btn-secondary-border)] bg-[var(--card-bg-solid)] px-1 py-px font-mono-data text-[0.52rem] font-semibold text-[var(--text-muted)] tabular-nums">
+                        {i + 1}
+                      </span>
+                      {isActive && (
+                        <span className="rounded px-1 py-px text-[0.5rem] uppercase font-black tracking-widest text-[var(--primary)] bg-[var(--primary)]/10">
+                          Ativo
+                        </span>
+                      )}
+                    </div>
+                    <span className="mt-0.5 block text-[0.58rem] font-medium leading-tight text-[var(--text-muted)] truncate">
+                      {t.hint}
+                    </span>
+                  </div>
                 </motion.button>
               )
             })}
@@ -369,9 +438,9 @@ export default function DamageFloat({ partName, position, currentType, accessTok
             onClick={() => closeThen(onClear)}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            className="mt-3.5 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border font-outfit text-xs font-bold transition-all duration-200 cursor-pointer bg-transparent hover:bg-[var(--btn-secondary-hover)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
+            className="mt-2 w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border font-outfit text-[0.7rem] font-bold transition-all duration-200 cursor-pointer bg-transparent hover:bg-[var(--btn-secondary-hover)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
           >
-            <IconEraser className="text-[var(--text-muted)]" size={15} />
+            <IconEraser className="text-[var(--text-muted)]" size={13} />
             <span>Sem avaria / Limpar</span>
           </motion.button>
         </>
@@ -385,20 +454,20 @@ export default function DamageFloat({ partName, position, currentType, accessTok
             onClick={() => setStep(1)}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            className="min-h-11 sm:min-h-9 w-full flex items-center gap-2 mb-3 px-2 py-1.5 rounded-lg bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[0.72rem] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)] transition-colors cursor-pointer"
+            className="min-h-9 w-full flex items-center gap-2 mb-2 px-2 py-1.5 rounded-lg bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[0.7rem] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)] transition-colors cursor-pointer"
           >
-            <IconArrowLeft size={14} className="text-[var(--text-muted)] shrink-0" />
+            <IconArrowLeft size={13} className="text-[var(--text-muted)] shrink-0" />
             {(() => {
               const t = TYPES.find(t => t.type === chosenType.type)
-              return t ? <t.Icon size={16} className={`h-4 w-auto shrink-0 ${t.color}`} /> : null
+              return t ? <t.Icon size={18} animated className={`h-4 w-auto shrink-0 ${t.color}`} /> : null
             })()}
-            <span className="font-bold text-[var(--text-main)]">{chosenType.label}</span>
-            <span className="ml-auto opacity-50 text-[10px]">alterar</span>
+            <span className="font-bold text-[var(--text-main)] truncate">{chosenType.label}</span>
+            <span className="ml-auto opacity-50 text-[10px] shrink-0">alterar</span>
           </motion.button>
 
           {/* Severidade */}
-          <div className="mb-2.5">
-            <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Grau do dano</div>
+          <div className="mb-2">
+            <div className="text-[0.58rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Grau</div>
             <div className="grid grid-cols-3 gap-1">
               {SEV.map(s => (
                 <motion.button
@@ -406,7 +475,7 @@ export default function DamageFloat({ partName, position, currentType, accessTok
                   onClick={() => setSeverity(s.value)}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className={`min-h-11 sm:min-h-9 py-2 rounded-lg text-[0.72rem] font-extrabold border transition-all cursor-pointer ${
+                  className={`min-h-9 py-1.5 rounded-lg text-[0.68rem] font-extrabold border transition-all cursor-pointer ${
                     severity === s.value
                       ? `${s.bg} ${s.border} ${s.color}`
                       : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)]'
@@ -419,20 +488,20 @@ export default function DamageFloat({ partName, position, currentType, accessTok
           </div>
 
           {/* Nota */}
-          <div className="mb-2.5">
-            <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Observação <span className="normal-case font-normal opacity-60">(opcional)</span></div>
+          <div className="mb-2">
+            <div className="text-[0.58rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Obs. <span className="normal-case font-normal opacity-60">(opc.)</span></div>
             <textarea
               value={notes}
               onChange={e => { setNotes(e.target.value); setNotesTouched(true) }}
-              placeholder="Ex.: Arranhão profundo na lateral…"
+              placeholder="Ex.: Arranhão profundo…"
               rows={2}
-              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-2 py-1.5 text-[var(--input-color)] text-[0.78rem] font-outfit resize-none outline-none focus:border-sky-500/50 transition-colors"
+              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-2 py-1.5 text-[var(--input-color)] text-[0.72rem] font-outfit resize-none outline-none focus:border-sky-500/50 transition-colors"
             />
           </div>
 
           {/* Foto */}
-          <div className="mb-3">
-            <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Foto <span className="normal-case font-normal opacity-60">(opcional)</span></div>
+          <div className="mb-2.5">
+            <div className="text-[0.58rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Foto <span className="normal-case font-normal opacity-60">(opc.)</span></div>
             <input
               ref={fileRef}
               type="file"
@@ -442,7 +511,7 @@ export default function DamageFloat({ partName, position, currentType, accessTok
             />
             {photoPreview ? (
               <div className="relative">
-                <img src={photoPreview} alt="preview" className="w-full h-20 object-cover rounded-lg border border-white/10" />
+                <img src={photoPreview} alt="preview" className="w-full h-16 object-cover rounded-lg border border-white/10" />
                 <button
                   onClick={() => {
                     setPhotoFile(null)
@@ -456,15 +525,15 @@ export default function DamageFloat({ partName, position, currentType, accessTok
                 >✕</button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-1.5">
+              <div className="grid grid-cols-2 gap-1">
                 <motion.button
                   type="button"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => { if (fileRef.current) { fileRef.current.removeAttribute('capture'); fileRef.current.setAttribute('capture', 'environment'); fileRef.current.click() } }}
-                  className="min-h-11 sm:min-h-9 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-sky-500/30 bg-sky-500/5 text-sky-400 text-[0.72rem] font-bold hover:bg-sky-500/10 transition-colors cursor-pointer"
+                  className="min-h-9 flex items-center justify-center gap-1 py-1.5 rounded-lg border border-dashed border-sky-500/30 bg-sky-500/5 text-sky-400 text-[0.68rem] font-bold hover:bg-sky-500/10 transition-colors cursor-pointer"
                 >
-                  <IconCamera size={15} />
+                  <IconCamera size={14} />
                   <span>Câmera</span>
                 </motion.button>
                 <motion.button
@@ -472,27 +541,27 @@ export default function DamageFloat({ partName, position, currentType, accessTok
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => { if (fileRef.current) { fileRef.current.removeAttribute('capture'); fileRef.current.click() } }}
-                  className="min-h-11 sm:min-h-9 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-[0.72rem] font-bold hover:bg-emerald-500/10 transition-colors cursor-pointer"
+                  className="min-h-9 flex items-center justify-center gap-1 py-1.5 rounded-lg border border-dashed border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-[0.68rem] font-bold hover:bg-emerald-500/10 transition-colors cursor-pointer"
                 >
-                  <IconGallery size={15} />
+                  <IconGallery size={14} />
                   <span>Galeria</span>
                 </motion.button>
               </div>
             )}
 
             {aiState.status === 'loading' && (
-              <div className="mt-2 flex items-center gap-1.5 text-[0.7rem] font-bold text-sky-400">
+              <div className="mt-1.5 flex items-center gap-1.5 text-[0.65rem] font-bold text-sky-400">
                 <span className="h-2.5 w-2.5 rounded-full border-2 border-sky-400/40 border-t-sky-400 animate-spin" />
                 Analisando foto…
               </div>
             )}
             {aiState.status === 'error' && (
-              <div className="mt-2 text-[0.7rem] font-bold text-[var(--text-muted)]">
+              <div className="mt-1.5 text-[0.65rem] font-bold text-[var(--text-muted)]">
                 Não foi possível analisar a foto agora. Preencha manualmente.
               </div>
             )}
             {aiState.status === 'auth-required' && (
-              <div className="mt-2 text-[0.7rem] font-bold text-amber-500">
+              <div className="mt-1.5 text-[0.65rem] font-bold text-amber-500">
                 Classificação por IA é um recurso do plano pago —{' '}
                 <a href="/planos" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
                   faça login/upgrade em /planos
@@ -501,44 +570,44 @@ export default function DamageFloat({ partName, position, currentType, accessTok
               </div>
             )}
             {editedManually && (
-              <div className="mt-2 text-[0.68rem] font-bold text-amber-500">
+              <div className="mt-1.5 text-[0.62rem] font-bold text-amber-500">
                 ajustado manualmente
               </div>
             )}
             {showSuggestionPanel && (
-              <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-500/10 px-2 py-2 space-y-1.5">
-                <div className="text-[0.65rem] font-bold text-sky-400">
+              <div className="mt-1.5 rounded-lg border border-sky-500/30 bg-sky-500/10 px-2 py-1.5 space-y-1">
+                <div className="text-[0.58rem] font-bold text-sky-400">
                   Sugestão — revise antes de confirmar
                 </div>
-                <div className="text-[0.68rem] font-bold text-[var(--text-main)]">
+                <div className="text-[0.65rem] font-bold text-[var(--text-main)]">
                   {TYPES.find(t => t.type === aiState.type)?.label}
                   {' · '}
                   {SEV.find(s => s.value === aiState.severity)?.label}
                 </div>
                 {aiState.description && (
-                  <p className="text-[0.65rem] text-[var(--text-muted)] leading-snug">{aiState.description}</p>
+                  <p className="text-[0.6rem] text-[var(--text-muted)] leading-snug">{aiState.description}</p>
                 )}
-                <div className="flex flex-wrap gap-1.5 pt-0.5">
+                <div className="flex flex-wrap gap-1 pt-0.5">
                   <button
                     type="button"
                     onClick={() => void handleAcceptSuggestion()}
-                    className="min-h-9 px-2.5 rounded-lg text-[0.65rem] font-black uppercase tracking-wide bg-sky-500/20 border border-sky-500/40 text-sky-400 cursor-pointer"
+                    className="min-h-8 px-2 rounded-lg text-[0.58rem] font-black uppercase tracking-wide bg-sky-500/20 border border-sky-500/40 text-sky-400 cursor-pointer"
                   >
                     Aceitar
                   </button>
                   <button
                     type="button"
                     onClick={() => void handleEditSuggestion()}
-                    className="min-h-9 px-2.5 rounded-lg text-[0.65rem] font-black uppercase tracking-wide bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] cursor-pointer"
+                    className="min-h-8 px-2 rounded-lg text-[0.58rem] font-black uppercase tracking-wide bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] cursor-pointer"
                   >
                     Editar
                   </button>
                   <button
                     type="button"
                     onClick={() => void handleIgnoreSuggestion()}
-                    className="min-h-9 px-2.5 rounded-lg text-[0.65rem] font-bold text-[var(--text-muted)] underline underline-offset-2 cursor-pointer"
+                    className="min-h-8 px-2 rounded-lg text-[0.58rem] font-bold text-[var(--text-muted)] underline underline-offset-2 cursor-pointer"
                   >
-                    Ignorar sugestão
+                    Ignorar
                   </button>
                 </div>
               </div>
@@ -550,10 +619,10 @@ export default function DamageFloat({ partName, position, currentType, accessTok
             onClick={handleConfirm}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border font-outfit text-sm font-black transition-all duration-200 cursor-pointer bg-sky-500/15 hover:bg-sky-500/25 border-sky-500/40 hover:border-sky-500/60 text-sky-400"
+            className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl border font-outfit text-[0.8rem] font-black transition-all duration-200 cursor-pointer bg-sky-500/15 hover:bg-sky-500/25 border-sky-500/40 hover:border-sky-500/60 text-sky-400"
           >
-            <IconCheck size={18} />
-            <span>Confirmar avaria</span>
+            <IconCheck size={16} />
+            <span>Confirmar</span>
           </motion.button>
         </>
       )}
