@@ -2,6 +2,7 @@ import QRCode from 'qrcode'
 import { Damage, VehicleInfo } from '../../types'
 import { supabase, supabaseEnabled } from '../supabase'
 import { normalizePlate } from '../reportComparison'
+import { buildIntegrityManifest, type IntegrityManifest } from './integrityManifest'
 
 /**
  * Chave que agrupa reemissões do MESMO laudo (placa + Nº OS normalizados).
@@ -63,7 +64,15 @@ export async function computeHash(info: VehicleInfo, damages: Damage[], ts: numb
 }
 
 /** Registra o hash no Supabase para a página /verify conferir depois */
-export async function registerHash(hash: string, info: VehicleInfo, damages: Damage[], date: string, companyName?: string, companyLogo?: string) {
+export async function registerHash(
+  hash: string,
+  info: VehicleInfo,
+  damages: Damage[],
+  date: string,
+  companyName?: string,
+  companyLogo?: string,
+  manifest?: IntegrityManifest,
+) {
   if (!supabaseEnabled || !supabase || hash === 'N/D') return
   try {
     const { data: { session } } = await supabase.auth.getSession()
@@ -79,7 +88,7 @@ export async function registerHash(hash: string, info: VehicleInfo, damages: Dam
       version = (count ?? 0) + 1
     }
 
-    await supabase.from('report_hashes').insert({
+    const row: Record<string, unknown> = {
       hash, user_id: session.user.id, plate: info.plate || '',
       ref: info.ref || '', issued_at: date, damages_count: damages.length,
       geo_lat: info.geo?.lat ?? null,
@@ -90,6 +99,54 @@ export async function registerHash(hash: string, info: VehicleInfo, damages: Dam
       company_logo: companyLogo || '',
       report_key: reportKey,
       version,
-    })
+    }
+    if (manifest) {
+      row.integrity_scheme = manifest.scheme
+      row.integrity_manifest = manifest
+      row.final_hash = manifest.final_hash
+    }
+
+    await supabase.from('report_hashes').insert(row)
   } catch { /* best-effort — não bloqueia a geração do PDF */ }
+}
+
+/**
+ * After PDF bytes exist, recompute integrity-v2 with pdf_hash and update the
+ * row keyed by the public v1 hash. Best-effort; no-op without auth/session.
+ */
+export async function registerIntegrityPdfHash(
+  hashV1: string,
+  pdfBytes: ArrayBuffer | Uint8Array,
+  args: {
+    info: VehicleInfo
+    damages: Damage[]
+    ts: number
+    issuedAt: string
+    inspectionId?: string
+  },
+): Promise<void> {
+  if (!supabaseEnabled || !supabase || !hashV1 || hashV1 === 'N/D') return
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) return
+
+    const manifest = await buildIntegrityManifest({
+      info: args.info,
+      damages: args.damages,
+      ts: args.ts,
+      issuedAt: args.issuedAt,
+      pdfBytes,
+      inspectionId: args.inspectionId,
+    })
+
+    await supabase
+      .from('report_hashes')
+      .update({
+        integrity_scheme: manifest.scheme,
+        integrity_manifest: manifest,
+        final_hash: manifest.final_hash,
+      })
+      .eq('hash', hashV1)
+      .eq('user_id', session.user.id)
+  } catch { /* best-effort */ }
 }

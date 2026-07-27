@@ -1,5 +1,6 @@
 import { Damage, VehicleInfo } from '../../types'
 import { computeHash, generateQrDataUrl, registerHash } from './hash'
+import { buildIntegrityManifest } from './integrityManifest'
 import {
   buildDamageTable,
   buildInfoTable,
@@ -13,7 +14,12 @@ import {
 import { resolveTheme, sectionTitle } from './theme'
 import type { PdfSettings, SvgPdfData } from './types'
 
-export async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings): Promise<{ html: string; hash: string }> {
+export async function buildFullHtml(
+  info: VehicleInfo,
+  damages: Damage[],
+  svgData?: SvgPdfData,
+  settings?: PdfSettings,
+): Promise<{ html: string; hash: string; ts: number; issuedAt: string }> {
   const ts   = Date.now()
   const date = new Date(ts).toLocaleString('pt-BR', { dateStyle: 'long', timeStyle: 'short' })
   const signatureDate = new Date(ts).toLocaleDateString('pt-BR')
@@ -24,8 +30,13 @@ export async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgDat
   const isEditorial = pdfTheme === 'editorial'
   const theme = resolveTheme(pdfTheme)
 
+  // v1 QR /verify PK — unchanged
   const hash = await computeHash(info, damages, ts)
-  await registerHash(hash, info, damages, date, settings?.companyName, settings?.companyLogo)
+  // v2 layered integrity (no PDF bytes yet — filled later via registerIntegrityPdfHash)
+  const manifest = await buildIntegrityManifest({
+    info, damages, ts, issuedAt: date, pdfBytes: null,
+  })
+  await registerHash(hash, info, damages, date, settings?.companyName, settings?.companyLogo, manifest)
 
   const geo = info.geo
   const geoQuery = geo ? `&lat=${geo.lat}&lng=${geo.lng}` : ''
@@ -177,5 +188,5 @@ export async function buildFullHtml(info: VehicleInfo, damages: Damage[], svgDat
 </div>
 </body>
 </html>`
-  return { html, hash }
+  return { html, hash, ts, issuedAt: date }
 }

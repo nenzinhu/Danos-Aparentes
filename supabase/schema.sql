@@ -164,6 +164,12 @@ alter table report_hashes add column if not exists report_key text default '';
 alter table report_hashes add column if not exists version int default 1;
 create index if not exists report_hashes_report_key_idx on report_hashes (report_key, version);
 
+-- Integrity-v2: layered SHA-256 manifest (final_hash = 64 hex). v1 `hash` PK
+-- (32 hex, QR /verify) stays the public lookup key.
+alter table report_hashes add column if not exists integrity_scheme text default '';
+alter table report_hashes add column if not exists integrity_manifest jsonb;
+alter table report_hashes add column if not exists final_hash text default '';
+
 alter table report_hashes enable row level security;
 
 -- Qualquer pessoa pode consultar um hash específico (é assim que a verificação
@@ -176,6 +182,13 @@ create policy "select_any_hash" on report_hashes
 drop policy if exists "insert_own_hash" on report_hashes;
 create policy "insert_own_hash" on report_hashes
   for insert with check (auth.uid() = user_id);
+
+-- Autor pode atualizar o próprio registro (ex.: preencher pdf_hash após gerar o PDF).
+drop policy if exists "update_own_hash" on report_hashes;
+create policy "update_own_hash" on report_hashes
+  for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
 
 -- Storage: bucket privado para fotos das avarias (acesso via download/signed URL + RLS)
 insert into storage.buckets (id, name, public)

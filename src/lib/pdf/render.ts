@@ -1,4 +1,5 @@
 import { Damage, VehicleInfo } from '../../types'
+import { registerIntegrityPdfHash } from './hash'
 import { buildFullHtml } from './html'
 import type { PdfSettings, SvgPdfData } from './types'
 
@@ -54,8 +55,12 @@ export async function generatePdf(info: VehicleInfo, damages: Damage[], svgData?
     await (window as any).document.fonts.ready;
   }
   const filename = `vistoria-${info.plate || 'sem-placa'}.pdf`
-  const { html, hash } = await buildFullHtml(info, damages, svgData, settings)
+  const { html, hash, ts, issuedAt } = await buildFullHtml(info, damages, svgData, settings)
   const pdf = await renderSinglePage(html, filename)
+  try {
+    const pdfBytes = pdf.output('arraybuffer') as ArrayBuffer
+    await registerIntegrityPdfHash(hash, pdfBytes, { info, damages, ts, issuedAt })
+  } catch { /* best-effort — PDF save must not fail */ }
   pdf.save(filename)
   return hash
 }
@@ -65,8 +70,12 @@ export async function generatePdfBlob(info: VehicleInfo, damages: Damage[], svgD
     await (window as any).document.fonts.ready;
   }
   const filename = `vistoria-${info.plate || 'sem-placa'}.pdf`
-  const { html } = await buildFullHtml(info, damages, svgData, settings)
+  const { html, hash, ts, issuedAt } = await buildFullHtml(info, damages, svgData, settings)
   const pdf = await renderSinglePage(html, filename)
+  try {
+    const pdfBytes = pdf.output('arraybuffer') as ArrayBuffer
+    await registerIntegrityPdfHash(hash, pdfBytes, { info, damages, ts, issuedAt })
+  } catch { /* best-effort */ }
   return pdf.output('blob')
 }
 
