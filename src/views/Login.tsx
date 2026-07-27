@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Logo from '../components/Logo'
+import GsapAuthTabs from '../components/GsapAuthTabs'
+import GsapAuthPanel from '../components/GsapAuthPanel'
 import { trackCompleteRegistration } from '@/src/lib/analytics/pixels'
 import { getSafeReturnTo } from '@/src/lib/safeReturnTo'
 
@@ -64,20 +66,32 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
           </div>
         </div>
 
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-black tracking-tight mb-2">
-            {mode === 'login' && 'Bem-vindo de volta'}
-            {mode === 'signup' && 'Começar agora'}
-            {mode === 'reset' && 'Recuperar acesso'}
-          </h1>
-          <p className="text-slate-400 text-sm font-medium">
-            {mode === 'login' && 'Acesse suas vistorias de qualquer lugar'}
-            {mode === 'signup' && 'Crie sua conta em poucos segundos'}
-            {mode === 'reset' && 'Enviaremos as instruções por email'}
-          </p>
-        </div>
+        {mode !== 'reset' && (
+          <GsapAuthTabs
+            tabs={[
+              { value: 'login', label: 'Entrar' },
+              { value: 'signup', label: 'Cadastre-se' },
+            ]}
+            active={mode}
+            onChange={(value) => { setMode(value as Mode); setError(''); setInfo('') }}
+          />
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-4" aria-label="Formulário de autenticação">
+        <GsapAuthPanel panelKey={mode}>
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-black tracking-tight mb-2">
+              {mode === 'login' && 'Bem-vindo de volta'}
+              {mode === 'signup' && 'Começar agora'}
+              {mode === 'reset' && 'Recuperar acesso'}
+            </h1>
+            <p className="text-slate-400 text-sm font-medium">
+              {mode === 'login' && 'Acesse suas vistorias de qualquer lugar'}
+              {mode === 'signup' && 'Crie sua conta em poucos segundos'}
+              {mode === 'reset' && 'Enviaremos as instruções por email'}
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4" aria-label="Formulário de autenticação">
           <div className="space-y-1.5">
             <label htmlFor="login-email" className="text-xs font-bold uppercase tracking-wider text-slate-500 ml-1">Email</label>
             <input
@@ -144,26 +158,17 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
           </button>
         </form>
 
-        <nav className="mt-8 pt-6 border-t border-slate-800 flex justify-center text-sm font-medium" aria-label="Alternar modo de autenticação">
-          {mode === 'login' ? (
-            <p className="text-slate-400">
-              Não tem uma conta?{' '}
-              <button
-                onClick={() => { setMode('signup'); setError(''); setInfo('') }}
-                className="text-blue-400 hover:text-blue-300 font-bold"
-              >
-                Cadastre-se
-              </button>
-            </p>
-          ) : (
+        {mode === 'reset' && (
+          <nav className="mt-8 pt-6 border-t border-slate-800 flex justify-center text-sm font-medium" aria-label="Alternar modo de autenticação">
             <button
               onClick={() => { setMode('login'); setError(''); setInfo('') }}
               className="text-slate-400 hover:text-slate-300 flex items-center gap-2"
             >
               ← Voltar para o login
             </button>
-          )}
-        </nav>
+          </nav>
+        )}
+        </GsapAuthPanel>
       </div>
     </main>
   )

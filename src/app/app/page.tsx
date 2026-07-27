@@ -1,5 +1,6 @@
 'use client';
 import React, { useMemo, ViewTransition, useEffect, useRef, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import { DirectionalTransition } from '../DirectionalTransition'
 import { useDamages } from '@/src/hooks/useDamages'
 import { useTts } from '@/src/hooks/useTts'
@@ -11,13 +12,21 @@ import { useAppShellState } from '@/src/hooks/useAppShellState'
 import { useInspectionWorkflow } from '@/src/hooks/useInspectionWorkflow'
 import { supabaseEnabled } from '@/src/lib/supabase'
 import Header from '@/src/components/Header'
-import DashboardView from '@/src/components/DashboardView'
 import AppAuthGate from '@/src/components/app/AppAuthGate'
 import AppTabBar from '@/src/components/app/AppTabBar'
 import AppShellOverlays from '@/src/components/app/AppShellOverlays'
 import InspectTab from '@/src/components/app/InspectTab'
-import TeamTab from '@/src/components/app/TeamTab'
 import PhotoUploadProgressBar from '@/src/components/PhotoUploadProgressBar'
+
+// Dashboard e Team só renderizam quando o usuário troca de aba — separá-los do
+// bundle inicial de /app encurta o JS que precisa carregar/compilar antes da
+// transição de entrada aparecer (aba padrão ao abrir o app é "inspect").
+const DashboardView = dynamic(() => import('@/src/components/DashboardView'), {
+  loading: () => <div className="flex-1 flex items-center justify-center text-[var(--text-muted)] py-16">Carregando…</div>,
+})
+const TeamTab = dynamic(() => import('@/src/components/app/TeamTab'), {
+  loading: () => <div className="flex-1 flex items-center justify-center text-[var(--text-muted)] py-16">Carregando…</div>,
+})
 
 function formatSyncFailureToast(dropped: DroppedSyncItem[]): string {
   const first = dropped[0]
