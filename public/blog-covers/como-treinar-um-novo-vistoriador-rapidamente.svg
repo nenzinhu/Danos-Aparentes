@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 828 352" width="828" height="352" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Treinar novo vistoriador com checklist e roteiro prático">
+  <defs>
+    <linearGradient id="card-Treinarnovov" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff7ed"/><stop offset="1" stop-color="#ffedd5"/>
+    </linearGradient>
+    <linearGradient id="header-Treinarnovov" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#422006"/><stop offset="1" stop-color="#ea580c"/>
+    </linearGradient>
+    <linearGradient id="badge-Treinarnovov" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fb923c"/><stop offset="1" stop-color="#ea580c"/>
+    </linearGradient>
+    <radialGradient id="glow-Treinarnovov" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#fdba74" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#fdba74" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft-Treinarnovov" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <ellipse cx="414" cy="185" rx="230" ry="150" fill="url(#glow-Treinarnovov)"/>
+  
+  <g transform="rotate(-3 411 181)" filter="url(#soft-Treinarnovov)">
+    <path d="M310 46 H478 L522 90 V306 A10 10 0 0 1 512 316 H310 A10 10 0 0 1 300 306 V56 A10 10 0 0 1 310 46 Z" fill="url(#card-Treinarnovov)"/>
+    <path d="M478 46 V80 A10 10 0 0 0 488 90 H522 Z" fill="#c3cede"/>
+    <rect x="300" y="46" width="222" height="40" rx="10" fill="url(#header-Treinarnovov)"/>
+    <rect x="300" y="66" width="222" height="20" fill="url(#header-Treinarnovov)"/>
+    <text x="322" y="72" font-family="sans-serif" font-weight="800" font-size="12" fill="#fff">ROTEIRO · NOVO VISTORIADOR</text>
+    <rect x="322" y="112" width="178" height="7" rx="3.5" fill="#94a3b8"/>
+<rect x="322" y="130" width="150" height="7" rx="3.5" fill="#94a3b8"/>
+<rect x="322" y="148" width="164" height="7" rx="3.5" fill="#94a3b8"/>
+<rect x="322" y="166" width="110" height="7" rx="3.5" fill="#94a3b8"/>
+    <line x1="322" y1="242" x2="500" y2="242" stroke="#c3cede" stroke-width="1.5"/>
+    <text x="322" y="264" font-family="monospace" font-size="10" fill="#1e3a5f" opacity="0.85">padrão da equipe</text>
+  </g>
+  <g transform="translate(505 96)" filter="url(#soft-Treinarnovov)">
+    <circle cx="0" cy="0" r="44" fill="url(#badge-Treinarnovov)"/>
+    <circle cx="0" cy="0" r="44" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+    <path d="M-12 -8 L12 -8 L8 10 L0 16 L-8 10 Z" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/><rect x="-14" y="-18" width="28" height="8" rx="2" fill="#fff"/>
+  </g>
+</svg>

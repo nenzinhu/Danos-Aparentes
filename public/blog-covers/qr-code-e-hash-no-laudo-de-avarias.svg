@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 828 352" width="828" height="352" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="QR Code e hash SHA-256 no laudo de avarias">
+  <defs>
+    <linearGradient id="card-QRCodeehashS" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3f6fb"/><stop offset="1" stop-color="#dde5f0"/>
+    </linearGradient>
+    <linearGradient id="header-QRCodeehashS" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#111827"/><stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="badge-QRCodeehashS" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <radialGradient id="glow-QRCodeehashS" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#93c5fd" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#93c5fd" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft-QRCodeehashS" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <ellipse cx="414" cy="185" rx="230" ry="150" fill="url(#glow-QRCodeehashS)"/>
+  
+  <g transform="rotate(-5 411 181)" filter="url(#soft-QRCodeehashS)">
+    <path d="M310 46 H478 L522 90 V306 A10 10 0 0 1 512 316 H310 A10 10 0 0 1 300 306 V56 A10 10 0 0 1 310 46 Z" fill="url(#card-QRCodeehashS)"/>
+    <path d="M478 46 V80 A10 10 0 0 0 488 90 H522 Z" fill="#c3cede"/>
+    <rect x="300" y="46" width="222" height="40" rx="10" fill="url(#header-QRCodeehashS)"/>
+    <rect x="300" y="66" width="222" height="20" fill="url(#header-QRCodeehashS)"/>
+    <text x="322" y="72" font-family="sans-serif" font-weight="800" font-size="12" fill="#fff">LAUDO VERIFICÁVEL</text>
+    <rect x="322" y="112" width="178" height="7" rx="3.5" fill="#94a3b8"/>
+<rect x="322" y="130" width="150" height="7" rx="3.5" fill="#94a3b8"/>
+<rect x="322" y="148" width="164" height="7" rx="3.5" fill="#94a3b8"/>
+    <line x1="322" y1="242" x2="500" y2="242" stroke="#c3cede" stroke-width="1.5"/>
+    <text x="322" y="264" font-family="monospace" font-size="10" fill="#1e3a5f" opacity="0.85">SHA-256 · 0DF2…CE90</text>
+  </g>
+  <g transform="translate(322 254) scale(1)">
+    <rect x="0" y="0" width="46" height="46" rx="4" fill="#0f172a"/>
+    <g fill="#f3f6fb">
+      <rect x="5" y="5" width="10" height="10"/><rect x="31" y="5" width="10" height="10"/>
+      <rect x="5" y="31" width="10" height="10"/><rect x="19" y="19" width="10" height="10"/>
+      <rect x="33" y="19" width="4" height="4"/><rect x="19" y="33" width="4" height="4"/>
+      <rect x="27" y="33" width="4" height="10"/><rect x="35" y="35" width="6" height="6"/>
+    </g>
+  </g>
+  <g transform="translate(500 92)" filter="url(#soft-QRCodeehashS)">
+    <circle cx="0" cy="0" r="46" fill="url(#badge-QRCodeehashS)"/>
+    <circle cx="0" cy="0" r="46" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+    <path d="M0 -22 L20 -13 V4 C20 18 10 27 0 30 C-10 27 -20 18 -20 4 V-13 Z" fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"/><path d="M-9 1 L-2 9 L11 -8" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
