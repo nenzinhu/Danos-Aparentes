@@ -2,11 +2,29 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import LegalContent from '@/src/components/LegalContent'
 
+const TITLE = 'Política de Privacidade | Danos Aparentes'
+const DESCRIPTION =
+  'Política de Privacidade do Danos Aparentes — como tratamos seus dados conforme a LGPD (Lei nº 13.709/2018).'
+
 export const metadata: Metadata = {
-  title: 'Política de Privacidade | Danos Aparentes',
-  description:
-    'Política de Privacidade do Danos Aparentes — como tratamos seus dados conforme a LGPD (Lei nº 13.709/2018).',
+  title: TITLE,
+  description: DESCRIPTION,
+  // Canonical + og:url iguais — evita GSC "canônico diferente da home"
+  // (og:url herdado do layout raiz apontava para /).
   alternates: { canonical: '/privacidade' },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: '/privacidade',
+    type: 'website',
+    images: ['/og-image.jpg'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/og-image.jpg'],
+  },
 }
 
 export default function PrivacidadePage() {
