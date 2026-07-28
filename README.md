@@ -2,6 +2,8 @@
 
 O **Danos Aparentes** é um aplicativo web progressivo (PWA) de vistoria veicular interativo projetado para vistoriadores, oficinas, peritos e locadoras. Ele permite registrar danos na lataria de veículos clicando diretamente sobre representações visuais em mapas técnicos (SVG), gerar laudos em PDF profissionais de página única e sincronizar os dados na nuvem de forma offline-first.
 
+> **Documentação completa do produto:** [`docs/produto-completo.md`](docs/produto-completo.md) — fluxo de vistoria, PDF, planos, IA, auditoria, SEO e histórico de entregas.
+
 ---
 
 ## 🌟 Recursos Principais
