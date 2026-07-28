@@ -1287,7 +1287,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-03',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#3f3f46 0%,#0f766e 45%,#5eead4 100%)', emoji: '📋', image: '/publicidade/sem-papel-1200x628.jpg' },
+    cover: { gradient: 'linear-gradient(135deg,#3f3f46 0%,#0f766e 45%,#5eead4 100%)', emoji: '📋', image: '/blog-covers/vistoria-sem-papel.webp' },
     toc: [
       { id: 'papel', label: 'Por que o papel atrasa' },
       { id: 'digital', label: 'O que muda no fluxo digital' },
@@ -3172,7 +3172,7 @@ BLOG_POSTS.unshift(
     cover: {
       gradient: 'linear-gradient(135deg,#312e81 0%,#4f46e5 45%,#a5b4fc 100%)',
       emoji: '📄',
-      image: '/blog-covers/laudo-vistoria-despachantes.svg',
+      image: '/blog-covers/laudo-de-vistoria-para-despachantes.webp',
     },
     toc: [
       { id: 'resposta-rapida', label: 'Resposta rápida' },
@@ -3719,7 +3719,7 @@ BLOG_POSTS.push(
     cover: {
       gradient: 'linear-gradient(135deg,#020617 0%,#0f172a 40%,#1e3a5f 70%,#9E4428 100%)',
       emoji: '🛡️',
-      image: '/blog-covers/relatorio-pdf-seguranca.svg',
+      image: '/blog-covers/relatorio-pdf-oficial-com-seguranca-maxima.webp',
     },
     toc: [
       { id: 'pilares', label: 'Por que o PDF importa' },
