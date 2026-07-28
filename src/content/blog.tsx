@@ -110,7 +110,7 @@ export const BLOG_POSTS: BlogPost[] = [
     cover: {
       gradient: 'linear-gradient(135deg,#0f172a 0%,#0369a1 50%,#22c55e 100%)',
       emoji: '✅',
-      image: '/blog-covers/como-fazer-laudo-vistoria.webp',
+      image: '/blog-covers/laudo-sem-danos-aparentes.webp',
     },
     toc: [
       { id: 'por-que', label: 'Por que “sem danos” também precisa de laudo' },
@@ -294,7 +294,7 @@ export const BLOG_POSTS: BlogPost[] = [
     cover: {
       gradient: 'linear-gradient(135deg,#0284c7 0%,#0369a1 45%,#0f172a 100%)',
       emoji: '🛡️',
-      image: '/publicidade/Gemini_Generated_Image_zc2bqlzc2bqlzc2b.png',
+      image: '/blog-covers/vistoria-foto-gps-hash-sha256-eliminar-contestacoes.webp',
     },
     toc: [
       { id: 'blindagem', label: 'A blindagem jurídica do laudo digital' },
@@ -389,7 +389,7 @@ export const BLOG_POSTS: BlogPost[] = [
     updatedDate: '2026-07-12',
     readingMinutes: 7,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '📋', image: '/blog-covers/como-fazer-laudo-vistoria.webp' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '📋', image: '/blog-covers/como-fazer-laudo-de-vistoria-veicular.webp' },
     toc: [
       { id: 'o-que-e', label: 'O que é um laudo de vistoria' },
       { id: 'quando-exigido', label: 'Quando ele é exigido' },
@@ -578,7 +578,7 @@ BLOG_POSTS.push(
     updatedDate: '2026-07-12',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#3b1d6e 0%,#5b21b6 45%,#a855f7 100%)', emoji: '⚖️', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#3b1d6e 0%,#5b21b6 45%,#a855f7 100%)', emoji: '⚖️', image: '/blog-covers/laudo-cautelar-vs-laudo-de-avarias.webp' },
     toc: [
       { id: 'cautelar', label: 'O que é o laudo cautelar' },
       { id: 'avarias', label: 'O que é o laudo de avarias' },
@@ -642,7 +642,7 @@ BLOG_POSTS.push(
     updatedDate: '2026-07-12',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#7f1d1d 0%,#b91c1c 45%,#f87171 100%)', emoji: '🏍️', image: '/vehicles-img/moto.png' },
+    cover: { gradient: 'linear-gradient(135deg,#7f1d1d 0%,#b91c1c 45%,#f87171 100%)', emoji: '🏍️', image: '/blog-covers/vistoria-de-moto.webp' },
     toc: [
       { id: 'tanque', label: 'Tanque amassado passa?' },
       { id: 'pontos', label: 'Pontos críticos da moto' },
@@ -697,7 +697,7 @@ BLOG_POSTS.push(
     updatedDate: '2026-07-12',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0e7490 45%,#22d3ee 100%)', emoji: '🚚', image: '/vehicles-img/truck.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0e7490 45%,#22d3ee 100%)', emoji: '🚚', image: '/blog-covers/vistoria-de-caminhao.webp' },
     toc: [
       { id: 'pontos', label: 'O que inspecionar' },
       { id: 'perfil', label: 'Perfil e campos' },
@@ -741,7 +741,7 @@ BLOG_POSTS.push(
     updatedDate: '2026-07-12',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#155e2f 0%,#047857 45%,#34d399 100%)', emoji: '🚌', image: '/vehicles-img/bus.png' },
+    cover: { gradient: 'linear-gradient(135deg,#155e2f 0%,#047857 45%,#34d399 100%)', emoji: '🚌', image: '/blog-covers/vistoria-de-onibus.webp' },
     toc: [
       { id: 'pontos', label: 'O que inspecionar' },
       { id: 'perfil', label: 'Perfil e campos' },
@@ -867,7 +867,7 @@ BLOG_POSTS.push(
     date: '2026-06-21',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)', emoji: '🚐', image: '/vehicles-img/microbus.png' },
+    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)', emoji: '🚐', image: '/blog-covers/vistoria-de-frota-padronizar-equipe.webp' },
     toc: [
       { id: 'porque', label: 'Por que padronizar' },
       { id: 'padrao', label: 'Defina um padrão único' },
@@ -917,7 +917,7 @@ BLOG_POSTS.push(
     date: '2026-06-20',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0f3d3e 0%,#0d9488 45%,#5eead4 100%)', emoji: '🛡️', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0f3d3e 0%,#0d9488 45%,#5eead4 100%)', emoji: '🛡️', image: '/blog-covers/laudo-de-avarias-para-sinistro.webp' },
     toc: [
       { id: 'espera', label: 'O que a seguradora espera' },
       { id: 'documentar', label: 'Como documentar' },
@@ -968,7 +968,7 @@ const RAIN_POSTS: BlogPost[] = [
     date: '2026-07-04',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#334155 45%,#64748b 100%)', emoji: '🌧️', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#334155 45%,#64748b 100%)', emoji: '🌧️', image: '/blog-covers/vistoria-na-chuva-sem-retrabalho.webp' },
     toc: [
       { id: 'caos', label: 'Por que a chuva bagunça a vistoria' },
       { id: 'problema', label: 'O que se perde no fluxo manual' },
@@ -1060,7 +1060,7 @@ const RAIN_POSTS: BlogPost[] = [
     updatedDate: '2026-07-12',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0f766e 45%,#22c55e 100%)', emoji: '📱', image: '/vehicles-img/car2d.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0f766e 45%,#22c55e 100%)', emoji: '📱', image: '/blog-covers/antes-e-depois-da-vistoria-digital.webp' },
     toc: [
       { id: 'antes', label: 'Como funciona o antes' },
       { id: 'depois', label: 'Como funciona o depois' },
@@ -1142,7 +1142,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-04',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#1e293b 0%,#2563eb 45%,#93c5fd 100%)', emoji: '⌨️', image: '/vehicles-img/car2d.png' },
+    cover: { gradient: 'linear-gradient(135deg,#1e293b 0%,#2563eb 45%,#93c5fd 100%)', emoji: '⌨️', image: '/blog-covers/como-eliminar-redigitacao-na-vistoria-veicular.webp' },
     toc: [
       { id: 'tempo', label: 'Onde o tempo é perdido' },
       { id: 'fluxo', label: 'Como eliminar a redigitação' },
@@ -1217,7 +1217,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-04',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#7f1d1d 0%,#dc2626 45%,#fca5a5 100%)', emoji: '⚠️', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#7f1d1d 0%,#dc2626 45%,#fca5a5 100%)', emoji: '⚠️', image: '/blog-covers/erros-de-transcricao-na-vistoria.webp' },
     toc: [
       { id: 'porque', label: 'Por que os erros acontecem' },
       { id: 'tipos', label: 'Erros mais comuns no laudo' },
@@ -1371,7 +1371,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-03',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fdba74 100%)', emoji: '👥', image: '/vehicles-img/microbus.png' },
+    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fdba74 100%)', emoji: '👥', image: '/blog-covers/como-padronizar-equipe-de-vistoria-e-acabar-com-o-retrabalho.webp' },
     toc: [
       { id: 'cada-um', label: 'O custo do cada um faz de um jeito' },
       { id: 'padrao', label: 'O que precisa estar padronizado' },
@@ -1437,7 +1437,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-02',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#15803d 45%,#86efac 100%)', emoji: '⏱️', image: '/vehicles-img/truck.png' },
+    cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#15803d 45%,#86efac 100%)', emoji: '⏱️', image: '/blog-covers/como-fazer-mais-vistorias-por-dia.webp' },
     toc: [
       { id: 'gargalo', label: 'Onde está o gargalo' },
       { id: 'ganhos', label: 'Ganhos rápidos de produtividade' },
@@ -1709,7 +1709,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-02',
     readingMinutes: 7,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#16a34a 45%,#86efac 100%)', emoji: '📉', image: '/vehicles-img/van.png' },
+    cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#16a34a 45%,#86efac 100%)', emoji: '📉', image: '/blog-covers/como-reduzir-prejuizo-com-avarias-na-frota.webp' },
     toc: [
       { id: 'onde', label: 'Onde o prejuízo nasce' },
       { id: 'controle', label: 'Controles que reduzem perda' },
@@ -1803,7 +1803,7 @@ BLOG_POSTS.unshift(
     cover: {
       gradient: 'linear-gradient(135deg,#111827 0%,#0c4a6e 45%,#38bdf8 100%)',
       emoji: '🏢',
-      image: '/pdf.png',
+      image: '/blog-covers/laudo-com-logo-da-empresa-no-pdf.webp',
     },
     toc: [
       { id: 'por-que', label: 'Por que logo + nome mudam o laudo' },
@@ -1985,7 +1985,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-04',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0c4a6e 45%,#38bdf8 100%)', emoji: '✍️', image: '/vehicles-img/car2d.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0c4a6e 45%,#38bdf8 100%)', emoji: '✍️', image: '/blog-covers/laudo-de-vistoria-com-assinatura-digital.webp' },
     toc: [
       { id: 'importancia', label: 'Por que a assinatura muda o laudo' },
       { id: 'como-funciona', label: 'Como funciona no Danos Aparentes' },
@@ -2063,7 +2063,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-04',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#111827 0%,#1d4ed8 45%,#60a5fa 100%)', emoji: '🔐', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#111827 0%,#1d4ed8 45%,#60a5fa 100%)', emoji: '🔐', image: '/blog-covers/qr-code-e-hash-no-laudo-de-avarias.webp' },
     toc: [
       { id: 'o-que-fazem', label: 'O que QR Code e hash fazem' },
       { id: 'original', label: 'Como ajudam a consultar o original' },
@@ -2204,7 +2204,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-04',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0369a1 45%,#7dd3fc 100%)', emoji: '📄', image: '/vehicles-img/microbus.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0369a1 45%,#7dd3fc 100%)', emoji: '📄', image: '/blog-covers/como-entregar-um-pdf-de-vistoria-mais-profissional.webp' },
     toc: [
       { id: 'aparencia', label: 'Por que a aparência do PDF importa' },
       { id: 'elementos', label: 'O que deixa o laudo mais profissional' },
@@ -2273,7 +2273,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-06',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0891b2 45%,#67e8f9 100%)', emoji: '🪪', image: '/vehicles-img/car2d.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0f172a 0%,#0891b2 45%,#67e8f9 100%)', emoji: '🪪', image: '/blog-covers/scanner-de-cnh-autofill-nome-cpf.webp' },
     toc: [
       { id: 'como-funciona', label: 'Como funciona o scanner' },
       { id: 'o-que-e-lido', label: 'O que é lido automaticamente' },
@@ -2338,7 +2338,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-06',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#4f46e5 45%,#a5b4fc 100%)', emoji: '👥', image: '/vehicles-img/truck.png' },
+    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#4f46e5 45%,#a5b4fc 100%)', emoji: '👥', image: '/blog-covers/plano-corporativo-gestao-de-equipe-vistoriadores.webp' },
     toc: [
       { id: 'problema', label: 'O problema de não ter visibilidade da equipe' },
       { id: 'como-funciona', label: 'Como funciona o Plano Corporativo' },
@@ -2401,7 +2401,7 @@ BLOG_POSTS.unshift(
     updatedDate: '2026-07-12',
     readingMinutes: 6,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#052e16 0%,#16a34a 45%,#bbf7d0 100%)', emoji: '🚗', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#052e16 0%,#16a34a 45%,#bbf7d0 100%)', emoji: '🚗', image: '/blog-covers/vistoria-de-seminovos-para-concessionarias.webp' },
     toc: [
       { id: 'porque', label: 'Por que documentar a entrada do seminovo' },
       { id: 'o-que-vistoriar', label: 'O que vistoriar na entrada' },
@@ -2461,7 +2461,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-06',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#422006 0%,#ea580c 45%,#fed7aa 100%)', emoji: '🎓', image: '/vehicles-img/moto.png' },
+    cover: { gradient: 'linear-gradient(135deg,#422006 0%,#ea580c 45%,#fed7aa 100%)', emoji: '🎓', image: '/blog-covers/como-treinar-um-novo-vistoriador-rapidamente.webp' },
     toc: [
       { id: 'desafio', label: 'O desafio de treinar rápido' },
       { id: 'o-que-ensinar', label: 'O que ensinar primeiro' },
@@ -2519,7 +2519,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-06',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#7c3aed 45%,#c4b5fd 100%)', emoji: '🔊', image: '/vehicles-img/car2d.png' },
+    cover: { gradient: 'linear-gradient(135deg,#1e1b4b 0%,#7c3aed 45%,#c4b5fd 100%)', emoji: '🔊', image: '/blog-covers/vistoria-por-voz-nome-da-peca-ao-clicar.webp' },
     toc: [
       { id: 'como-funciona', label: 'Como funciona a leitura por voz' },
       { id: 'vozes', label: 'As 8 vozes disponíveis' },
@@ -2586,7 +2586,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-06',
     readingMinutes: 4,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#052e2b 0%,#0d9488 45%,#5eead4 100%)', emoji: '🔎', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#052e2b 0%,#0d9488 45%,#5eead4 100%)', emoji: '🔎', image: '/blog-covers/consulta-automatica-de-placa.webp' },
     toc: [
       { id: 'problema', label: 'O problema de digitar tudo na mão' },
       { id: 'como-funciona', label: 'Como funciona a busca por placa' },
@@ -2643,7 +2643,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-06',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#312e81 0%,#6366f1 45%,#c7d2fe 100%)', emoji: '🎨', image: '/vehicles-img/car2d.png' },
+    cover: { gradient: 'linear-gradient(135deg,#312e81 0%,#6366f1 45%,#c7d2fe 100%)', emoji: '🎨', image: '/blog-covers/6-modelos-de-pdf-para-o-laudo-de-vistoria.webp' },
     toc: [
       { id: 'porque-modelos', label: 'Por que ter mais de um modelo de PDF' },
       { id: 'os-6-modelos', label: 'Os 6 modelos disponíveis' },
@@ -2704,7 +2704,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-06',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0284c7 45%,#7dd3fc 100%)', emoji: '✅', image: '/vehicles-img/car2d.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0284c7 45%,#7dd3fc 100%)', emoji: '✅', image: '/blog-covers/checklist-de-avarias-sem-dor-de-cabeca.webp' },
     toc: [
       { id: 'dor-de-cabeca', label: 'A dor de cabeça do checklist tradicional' },
       { id: 'fluxo', label: 'Como fica o fluxo no Danos Aparentes' },
@@ -2766,7 +2766,7 @@ BLOG_POSTS.unshift(
     date: '2026-07-07',
     readingMinutes: 4,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '🚗', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '🚗', image: '/blog-covers/vistoria-nas-4-vistas-do-veiculo.webp' },
     toc: [
       { id: 'as-4-vistas', label: 'As 4 vistas do veículo' },
       { id: 'fotos-por-avaria', label: 'Uma foto por avaria' },
@@ -3606,7 +3606,7 @@ BLOG_POSTS.push(
     date: '2026-07-13',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#1e293b 0%,#334155 45%,#64748b 100%)', emoji: '🔐', image: '/vehicles-img/car.png' },
+    cover: { gradient: 'linear-gradient(135deg,#1e293b 0%,#334155 45%,#64748b 100%)', emoji: '🔐', image: '/blog-covers/laudo-de-avaria-com-qr-code.webp' },
     toc: [
       { id: 'o-que-e', label: 'O que é o QR Code do laudo' },
       { id: 'como-funciona', label: 'Como funciona a verificação' },
@@ -3663,7 +3663,7 @@ BLOG_POSTS.push(
     date: '2026-07-13',
     readingMinutes: 5,
     author: { name: 'Jeferson', role: 'Vistoria digital' },
-    cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#166534 45%,#4ade80 100%)', emoji: '📡', image: '/vehicles-img/truck.png' },
+    cover: { gradient: 'linear-gradient(135deg,#14532d 0%,#166534 45%,#4ade80 100%)', emoji: '📡', image: '/blog-covers/vistoria-de-frota-sem-internet.webp' },
     toc: [
       { id: 'o-desafio', label: 'O desafio do pátio sem sinal' },
       { id: 'como-funciona', label: 'Como funciona o modo offline' },

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 828 352" width="828" height="352" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reduzir prejuízo com avarias na frota com controle e prova">
+  <defs>
+    <linearGradient id="card-Reduzirpreju" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0fdf4"/><stop offset="1" stop-color="#dcfce7"/>
+    </linearGradient>
+    <linearGradient id="header-Reduzirpreju" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#14532d"/><stop offset="1" stop-color="#16a34a"/>
+    </linearGradient>
+    <linearGradient id="badge-Reduzirpreju" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4ade80"/><stop offset="1" stop-color="#16a34a"/>
+    </linearGradient>
+    <radialGradient id="glow-Reduzirpreju" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#86efac" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#86efac" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft-Reduzirpreju" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <ellipse cx="414" cy="185" rx="230" ry="150" fill="url(#glow-Reduzirpreju)"/>
+  
+      <g transform="rotate(-4 360 180)" filter="url(#soft-Reduzirpreju)">
+        <rect x="250" y="90" width="220" height="160" rx="12" fill="url(#card-Reduzirpreju)"/>
+        <polyline points="280,210 320,170 350,185 390,130 430,150" fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <text x="360" y="120" font-family="sans-serif" font-weight="800" font-size="12" fill="#14532d" text-anchor="middle">Prejuízo ↓</text>
+      </g>
+</svg>
