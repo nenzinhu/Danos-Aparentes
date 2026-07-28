@@ -6,7 +6,7 @@ import { BlogPostCard } from '@/src/components/BlogPostCard'
 
 const TITLE = 'Blog | Danos Aparentes'
 const DESCRIPTION =
-  'Guias práticos de vistoria veicular, laudos de avarias, checklists e boas práticas para locadoras, seguradoras, despachantes e concessionárias.'
+  'Blog de vistoria veicular: laudos de avarias, checklists e guias práticos para locadoras, frotas, oficinas, seguradoras e despachantes. Leia e aplique.'
 
 export const metadata: Metadata = {
   title: TITLE,

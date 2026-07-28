@@ -94,7 +94,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: 'laudo-sem-danos-aparentes',
     title: 'Laudo sem danos aparentes: por que o veículo “zerado” ainda precisa de prova',
     excerpt:
-      '“Sem avarias” também é evidência. Veja por que o laudo vazio bem feito protege locadora, frota e oficina — e como emitir um PDF verificável mesmo sem marcar nenhuma peça.',
+      'Laudo sem danos aparentes também é prova. Veja por que o PDF “zerado” protege locadora e frota — e como emitir com hash SHA-256 e QR Code verificável.',
     category: 'Vistoria',
     tags: [
       'laudo sem danos',
@@ -285,7 +285,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: 'vistoria-foto-gps-hash-sha256-eliminar-contestacoes',
     title: 'Vistoria com Foto GPS e Hash SHA-256: Como Grandes Frotas Eliminam 100% das Contestações',
     excerpt:
-      'Descubra como o registro visual de avarias com localização GPS, carimbo de data/hora e selação digital SHA-256 encerra disputas judiciais e protege a margem financeira da sua empresa.',
+      'Vistoria com foto, GPS e hash SHA-256: como frotas encerram contestações. Registre avarias com prova digital e PDF verificável por QR Code. Guia prático.',
     category: 'Tecnologia',
     tags: ['vistoria digital', 'avarias', 'foto com gps', 'hash sha256', 'frota', 'locadora', 'laudo pericial'],
     date: '2026-07-23',
@@ -382,7 +382,7 @@ export const BLOG_POSTS: BlogPost[] = [
     slug: 'como-fazer-laudo-de-vistoria-veicular',
     title: 'Como Fazer Laudo de Vistoria Veicular (Passo a Passo)',
     excerpt:
-      'O guia definitivo do laudo de vistoria veicular: fotos que provam o dano e PDF com validade — para locadoras, oficinas, seguradoras e estacionamentos que não podem perder uma disputa por avaria.',
+      'Como fazer laudo de vistoria veicular passo a passo: fotos que provam o dano e PDF com hash — guia para locadoras, oficinas e seguradoras. Do pátio ao PDF.',
     category: 'Vistoria',
     tags: ['laudo de vistoria', 'avarias', 'checklist', 'locadora', 'seguradora'],
     date: '2026-06-28',
@@ -499,7 +499,7 @@ BLOG_POSTS.push(
     slug: 'checklist-vistoria-devolucao-locadora',
     title: 'Checklist de vistoria de devolução de veículo para locadoras',
     excerpt:
-      'O roteiro completo para receber um carro de volta sem prejuízo: o que conferir, como fotografar e como provar quais danos são novos.',
+      'Checklist de vistoria de devolução para locadoras: o que conferir, como fotografar e como provar quais danos são novos. Roteiro pronto para usar no pátio.',
     category: 'Locadora',
     tags: ['locadora', 'frota', 'devolução', 'checklist', 'vistoria'],
     date: '2026-06-27',
@@ -571,7 +571,7 @@ BLOG_POSTS.push(
     slug: 'laudo-cautelar-vs-laudo-de-avarias',
     title: 'Laudo Cautelar x Laudo de Avarias: Qual Vale Mais?',
     excerpt:
-      'Confundir os dois custa caro pra locadoras, seguradoras e oficinas. Veja a diferença real, quando cada um vale, e não pague pelo laudo errado nem perca a prova na devolução.',
+      'Laudo cautelar x laudo de avarias: diferença real, quando cada um vale e como não pagar pelo documento errado — nem perder a prova na devolução. Guia claro.',
     category: 'Laudo',
     tags: ['laudo cautelar', 'laudo de avarias', 'vistoria', 'documentação'],
     date: '2026-06-26',
@@ -635,7 +635,7 @@ BLOG_POSTS.push(
     slug: 'vistoria-de-moto',
     title: 'Vistoria de Moto: Tanque Amassado Passa? (Resposta Direta)',
     excerpt:
-      'Tanque amassado, risco, peça torta: o que passa e o que trava na vistoria de moto. Checklist por área pronto pra locadoras, oficinas e seguradoras registrarem sem discussão depois.',
+      'Vistoria de moto: tanque amassado passa? Checklist por área para locadoras, oficinas e seguradoras registrarem avarias sem discussão depois. Guia completo.',
     category: 'Vistoria',
     tags: ['vistoria de moto', 'motocicleta', 'tanque amassado', 'laudo', 'avarias'],
     date: '2026-06-25',
@@ -690,7 +690,7 @@ BLOG_POSTS.push(
     slug: 'vistoria-de-caminhao',
     title: 'Vistoria de Caminhão: o Checklist que Não Deixa Peça pra Trás',
     excerpt:
-      'Cabine, baú, chassi e eixos — o roteiro que frotas, locadoras e seguradoras usam pra sair do pátio com laudo completo, sem discussão na entrega nem no sinistro.',
+      'Vistoria de caminhão: checklist de cabine, baú, chassi e eixos. Roteiro para frotas e locadoras saírem do pátio com laudo completo, comparável e assinável.',
     category: 'Vistoria',
     tags: ['vistoria de caminhão', 'frota', 'laudo', 'avarias'],
     date: '2026-06-24',
@@ -734,7 +734,7 @@ BLOG_POSTS.push(
     slug: 'vistoria-de-onibus',
     title: 'Vistoria de Ônibus: Roteiro Completo Sem Furar Nenhuma Peça',
     excerpt:
-      'Carroceria longa, janelas e interior — o roteiro que locadoras e frotas de ônibus usam pra comparar entrada e devolução sem deixar nenhuma avaria passar batido.',
+      'Vistoria de ônibus: roteiro de carroceria, janelas e interior. Compare entrada e devolução sem deixar avaria passar batido — laudo completo e auditável.',
     category: 'Vistoria',
     tags: ['vistoria de ônibus', 'frota', 'laudo', 'avarias'],
     date: '2026-06-23',
@@ -781,7 +781,7 @@ BLOG_POSTS.push(
     slug: 'como-fotografar-avarias',
     title: 'Como fotografar avarias à prova de contestação',
     excerpt:
-      'A foto certa é o que segura a cobrança. Veja enquadramento, luz, escala e os metadados (data, hora, GPS) que tornam o registro indiscutível.',
+      'Como fotografar avarias à prova de contestação: enquadramento, luz, escala e metadados (data, hora, GPS) que sustentam a cobrança no laudo. Guia prático.',
     category: 'Boas práticas',
     tags: ['fotografia', 'avarias', 'vistoria', 'prova'],
     date: '2026-06-22',
@@ -861,7 +861,7 @@ BLOG_POSTS.push(
     slug: 'vistoria-de-frota-padronizar-equipe',
     title: 'Vistoria de frota: como padronizar a equipe',
     excerpt:
-      'Quando cada um vistoria de um jeito, a cobrança falha. Veja como definir um padrão único — ordem, campos e laudo — e treinar a equipe para registros consistentes.',
+      'Vistoria de frota: como padronizar a equipe com ordem, campos e laudo únicos — para registros consistentes e cobrança que segura na contestação. Veja como.',
     category: 'Frota',
     tags: ['frota', 'padronização', 'equipe', 'vistoria'],
     date: '2026-06-21',
@@ -911,7 +911,7 @@ BLOG_POSTS.push(
     slug: 'laudo-de-avarias-para-sinistro',
     title: 'Laudo de avarias para sinistro: como documentar para o seguro',
     excerpt:
-      'Um sinistro mal documentado vira dor de cabeça com a seguradora. Veja o que registrar, como fotografar e como emitir um laudo com validação por hash e QR Code.',
+      'Laudo de avarias para sinistro: o que registrar, como fotografar e como emitir PDF com hash e QR Code — documentação que a seguradora confia. Passo a passo.',
     category: 'Seguro',
     tags: ['sinistro', 'seguro', 'laudo de avarias', 'documentação'],
     date: '2026-06-20',
@@ -962,7 +962,7 @@ const RAIN_POSTS: BlogPost[] = [
     slug: 'vistoria-na-chuva-sem-retrabalho',
     title: 'Vistoria na chuva: como evitar papel molhado, erro e retrabalho',
     excerpt:
-      'Chuva, papel e celular pessoal formam uma combinação ruim para a vistoria. Veja como o Danos Aparentes ajuda a evitar perda de informação, fotos soltas e redigitação quando o pátio vira um caos.',
+      'Vistoria na chuva sem papel molhado nem retrabalho: registre no celular, anexe fotos e gere o laudo digital mesmo com o pátio molhado. Sem carbonada molhada.',
     category: 'Operação',
     tags: ['vistoria na chuva', 'retrabalho', 'prancheta', 'laudo digital', 'frota'],
     date: '2026-07-04',
@@ -1053,7 +1053,7 @@ const RAIN_POSTS: BlogPost[] = [
     slug: 'antes-e-depois-da-vistoria-digital',
     title: 'Antes e depois da vistoria digital: o que muda na prática',
     excerpt:
-      'Do papel molhado ao laudo pronto no celular: veja a diferença prática entre uma vistoria manual e o fluxo digital do Danos Aparentes, com marcação visual, fotos organizadas e PDF imediato.',
+      'Antes e depois da vistoria digital: do papel ao laudo no celular — marcação visual, fotos organizadas e PDF imediato com prova de integridade. Veja a diferença.',
     category: 'Comparativo',
     tags: ['antes e depois', 'vistoria digital', 'prancheta', 'laudo veicular', 'produtividade'],
     date: '2026-07-04',
@@ -1136,7 +1136,7 @@ BLOG_POSTS.unshift(
     slug: 'como-eliminar-redigitacao-na-vistoria-veicular',
     title: 'Como eliminar a redigitação na vistoria veicular',
     excerpt:
-      'Se a vistoria começa no papel e termina no escritório, sua operação perde tempo duas vezes. Veja como o Danos Aparentes ajuda a eliminar a redigitação e transformar o laudo em um fluxo único, do pátio ao PDF.',
+      'Como eliminar a redigitação na vistoria veicular: um só fluxo do pátio ao PDF, sem papel no escritório e sem digitar placa, danos e fotos de novo. Guia prático.',
     category: 'Operação',
     tags: ['redigitação', 'vistoria veicular', 'laudo digital', 'produtividade', 'frota'],
     date: '2026-07-04',
@@ -1211,7 +1211,7 @@ BLOG_POSTS.unshift(
     slug: 'erros-de-transcricao-na-vistoria',
     title: 'Erros de transcrição na vistoria: como evitar no laudo',
     excerpt:
-      'Placa errada, foto trocada, observação incompleta. Veja por que a transcrição manual enfraquece o laudo e como o Danos Aparentes ajuda a reduzir falhas antes que virem contestação ou retrabalho.',
+      'Erros de transcrição na vistoria enfraquecem o laudo. Veja como evitar placa errada, foto trocada e observação incompleta antes da contestação. Do pátio ao PDF.',
     category: 'Boas práticas',
     tags: ['erros de transcrição', 'laudo de vistoria', 'retrabalho', 'vistoria digital', 'laudo'],
     date: '2026-07-04',
@@ -1281,7 +1281,7 @@ BLOG_POSTS.unshift(
     slug: 'vistoria-sem-papel',
     title: 'Vistoria sem papel: como sair da prancheta para o laudo digital',
     excerpt:
-      'Prancheta, folha carbonada e planilha já não dão conta da vistoria moderna. Veja como migrar com o Danos Aparentes para um processo sem papel, com fotos, assinatura e PDF no mesmo fluxo.',
+      'Vistoria sem papel: saia da prancheta para o laudo digital com fotos, assinatura na tela e PDF no mesmo fluxo — sem carbonada nem planilha. Migre com método.',
     category: 'Operação',
     tags: ['vistoria sem papel', 'prancheta', 'laudo digital', 'checklist digital', 'frota'],
     date: '2026-07-03',
@@ -1365,7 +1365,7 @@ BLOG_POSTS.unshift(
     slug: 'como-padronizar-equipe-de-vistoria-e-acabar-com-o-retrabalho',
     title: 'Como padronizar a equipe de vistoria e acabar com o retrabalho',
     excerpt:
-      'Quando cada vistoriador registra de um jeito, a operação perde consistência e velocidade. Veja como o Danos Aparentes ajuda a padronizar a equipe para reduzir retrabalho e produzir laudos comparáveis.',
+      'Como padronizar a equipe de vistoria e acabar com o retrabalho: laudos comparáveis, mesmo padrão operacional e menos falha na cobrança de danos. Guia da equipe.',
     category: 'Frota',
     tags: ['padronizar equipe de vistoria', 'retrabalho', 'frota', 'processo operacional', 'laudo'],
     date: '2026-07-03',
@@ -1431,7 +1431,7 @@ BLOG_POSTS.unshift(
     slug: 'como-fazer-mais-vistorias-por-dia',
     title: 'Como fazer mais vistorias por dia sem aumentar a equipe',
     excerpt:
-      'O gargalo da vistoria nem sempre está no pátio. Muitas vezes está no retrabalho depois. Veja como ganhar escala com o Danos Aparentes, menos redigitação e mais padrão operacional.',
+      'Como fazer mais vistorias por dia sem aumentar a equipe: menos retrabalho, menos redigitação e mais padrão no pátio — do registro ao PDF final. Escala real.',
     category: 'Produtividade',
     tags: ['mais vistorias por dia', 'produtividade', 'equipe de vistoria', 'frota', 'operação'],
     date: '2026-07-02',
@@ -1513,7 +1513,7 @@ BLOG_POSTS.unshift(
     slug: 'avarias-preexistentes-como-provar',
     title: 'Avarias preexistentes: como provar que o dano já estava no veículo',
     excerpt:
-      'Quando o cliente diz que o risco ou amassado já existia, só a prova encerra a discussão. Veja como o Danos Aparentes ajuda a registrar avarias preexistentes de forma clara, comparável e incontestável.',
+      'Avarias preexistentes: como provar que o dano já estava no veículo com fotos, diagrama e laudo comparável — e encerrar a discussão com o cliente. Prova clara.',
     category: 'Locadora',
     tags: ['avarias preexistentes', 'vistoria veicular', 'locadora', 'frota', 'laudo de avarias'],
     date: '2026-07-04',
@@ -1618,7 +1618,7 @@ BLOG_POSTS.unshift(
     slug: 'vistoria-entrega-veiculo',
     title: 'Vistoria de entrega de veículo: como evitar discussões na devolução',
     excerpt:
-      'A devolução só é tranquila quando a entrega foi bem registrada. Veja como o Danos Aparentes ajuda a fazer uma vistoria de entrega comparável, assinada e pronta para sustentar cobranças de danos novos.',
+      'Vistoria de entrega de veículo: registre bem na saída para evitar discussão na devolução. Laudo assinável, fotos por avaria e prova digital. Compare depois.',
     category: 'Vistoria',
     tags: ['vistoria de entrega', 'devolução de veículo', 'locadora', 'frota', 'laudo veicular'],
     date: '2026-07-03',
@@ -1703,7 +1703,7 @@ BLOG_POSTS.unshift(
     slug: 'como-reduzir-prejuizo-com-avarias-na-frota',
     title: 'Como reduzir prejuízo com avarias na frota',
     excerpt:
-      'Pequenos danos ignorados, registros inconsistentes e cobranças mal sustentadas corroem a margem da operação. Veja como o Danos Aparentes ajuda a reduzir prejuízo com processo, padrão e prova digital.',
+      'Como reduzir prejuízo com avarias na frota: padrão de registro, prova digital e cobrança sustentada — sem dano “esquecido” no pátio ou no laudo. Veja o método.',
     category: 'Frota',
     tags: ['avarias na frota', 'gestão de frota', 'prejuízo operacional', 'vistoria', 'controle de danos'],
     date: '2026-07-02',
@@ -1793,7 +1793,7 @@ BLOG_POSTS.unshift(
     slug: 'laudo-com-logo-da-empresa-no-pdf',
     title: 'Logo e nome da empresa no PDF: laudo com cara de operação profissional',
     excerpt:
-      'Veja como configurar nome e logotipo no Danos Aparentes e gerar um laudo white-label — organizado, institucional e pronto para entregar ao cliente.',
+      'Logo e nome da empresa no PDF: configure o laudo white-label no Danos Aparentes e entregue um documento com cara institucional da sua operação. Em minutos.',
     category: 'Laudo',
     tags: ['logo da empresa', 'pdf de vistoria', 'laudo profissional', 'white-label', 'marca própria', 'danos aparentes'],
     date: '2026-07-25',
@@ -1979,7 +1979,7 @@ BLOG_POSTS.unshift(
     slug: 'laudo-de-vistoria-com-assinatura-digital',
     title: 'Laudo de vistoria com assinatura digital: mais segurança com Danos Aparentes',
     excerpt:
-      'Veja como o Danos Aparentes usa assinatura digital no laudo para deixar o aceite mais claro, profissional e difícil de contestar na rotina da vistoria.',
+      'Laudo de vistoria com assinatura digital: aceite na tela, mais clareza e menos contestação na rotina de locadoras, oficinas e frotas. Fluxo do pátio ao PDF.',
     category: 'Validade',
     tags: ['assinatura digital', 'laudo de vistoria', 'validade do laudo', 'danos aparentes', 'prova digital'],
     date: '2026-07-04',
@@ -2057,7 +2057,7 @@ BLOG_POSTS.unshift(
     slug: 'qr-code-e-hash-no-laudo-de-avarias',
     title: 'QR Code e Hash no Laudo: a Prova que Seguradora Não Contesta',
     excerpt:
-      'Entenda como o QR Code e o hash SHA-256 blindam o laudo de avarias contra fraude e contestação — o detalhe técnico que faz seguradoras, locadoras e oficinas confiarem no documento.',
+      'QR Code e hash SHA-256 no laudo de avarias: a prova que dificulta fraude e dá confiança a seguradoras, locadoras e oficinas na contestação. Entenda o selo.',
     category: 'Validade',
     tags: ['qr code', 'hash', 'validade do laudo', 'laudo de avarias', 'danos aparentes'],
     date: '2026-07-04',
@@ -2124,7 +2124,7 @@ BLOG_POSTS.unshift(
     slug: 'laudo-white-label-para-locadoras',
     title: 'Laudo white-label para locadoras: mais marca e profissionalismo com Danos Aparentes',
     excerpt:
-      'Entenda como o Danos Aparentes permite gerar um laudo white-label para locadoras, com logo, nome da empresa e apresentação mais profissional no PDF.',
+      'Laudo white-label para locadoras: PDF com logo, nome da empresa e cara profissional — pronto para o cliente e para sustentar cobrança de avarias. Configure já.',
     category: 'Profissionalismo',
     tags: ['white-label', 'locadoras', 'laudo profissional', 'logo da empresa', 'danos aparentes'],
     date: '2026-07-04',
@@ -2198,7 +2198,7 @@ BLOG_POSTS.unshift(
     slug: 'como-entregar-um-pdf-de-vistoria-mais-profissional',
     title: 'Como entregar um PDF de vistoria mais profissional com Danos Aparentes',
     excerpt:
-      'Veja como o Danos Aparentes ajuda sua operação a entregar um PDF de vistoria mais profissional, claro e conceitual, com melhor percepção para o cliente.',
+      'Como entregar um PDF de vistoria mais profissional: laudo claro, marca da empresa e prova digital (hash/QR) que cliente e seguradora confiam. Guia prático.',
     category: 'Profissionalismo',
     tags: ['pdf profissional', 'laudo de vistoria', 'danos aparentes', 'apresentação do laudo', 'white-label'],
     date: '2026-07-04',
@@ -2267,7 +2267,7 @@ BLOG_POSTS.unshift(
     slug: 'scanner-de-cnh-autofill-nome-cpf',
     title: 'Scanner de CNH: como o Danos Aparentes preenche nome e CPF sozinho',
     excerpt:
-      'Escanear o código de barras da CNH já elimina a digitação do número de habilitação. Agora o Danos Aparentes vai além e preenche também o nome do cliente e o CPF, direto do documento, offline e sem custo extra.',
+      'Scanner de CNH: preencha nome e CPF sozinho a partir do código de barras — offline, sem digitar e sem custo extra na vistoria veicular do pátio. Mais rápido.',
     category: 'Produtividade',
     tags: ['CNH', 'autofill', 'redigitação', 'produtividade', 'laudo digital'],
     date: '2026-07-06',
@@ -2332,7 +2332,7 @@ BLOG_POSTS.unshift(
     slug: 'plano-corporativo-gestao-de-equipe-vistoriadores',
     title: 'Plano Corporativo: como gerenciar uma equipe de vistoriadores em um só lugar',
     excerpt:
-      'Frotas e locadoras com mais de um inspetor precisam enxergar o trabalho de toda a equipe, não só o próprio. Veja como o Plano Corporativo do Danos Aparentes centraliza os laudos de todos os vistoriadores.',
+      'Plano Corporativo: gerencie a equipe de vistoriadores num só lugar. Centralize laudos de frotas e locadoras com vários inspetores e um só padrão. Veja como.',
     category: 'Frota',
     tags: ['plano corporativo', 'gestão de equipe', 'frota', 'locadora', 'vistoriadores'],
     date: '2026-07-06',
@@ -2394,7 +2394,7 @@ BLOG_POSTS.unshift(
     slug: 'vistoria-de-seminovos-para-concessionarias',
     title: 'Inspeção de Seminovos: o Laudo que Protege a Revenda',
     excerpt:
-      'Como concessionárias e revendedoras registram o estado real do seminovo na entrada — e evitam disputa com o cliente na hora de vender. Passo a passo com fotos e laudo.',
+      'Inspeção de seminovos para concessionárias: registre o estado real na entrada e evite disputa na venda com fotos vinculadas e laudo profissional. Passo a passo.',
     category: 'Vistoria',
     tags: ['seminovos', 'concessionária', 'revenda', 'avaliação de carro usado', 'laudo', 'inspeção'],
     date: '2026-07-06',
@@ -2455,7 +2455,7 @@ BLOG_POSTS.unshift(
     slug: 'como-treinar-um-novo-vistoriador-rapidamente',
     title: 'Como treinar um novo vistoriador rapidamente',
     excerpt:
-      'Contratar é fácil. Treinar alguém pra fazer laudo no mesmo padrão da equipe, rápido, é o desafio. Veja o que ensinar primeiro e como o Danos Aparentes reduz o tempo de rampa de um vistoriador novo.',
+      'Como treinar um novo vistoriador rapidamente: o que ensinar primeiro e como padronizar o laudo sem alongar o tempo de rampa da equipe no pátio. Roteiro prático.',
     category: 'Boas práticas',
     tags: ['treinamento', 'onboarding', 'vistoriador', 'equipe', 'padronização'],
     date: '2026-07-06',
@@ -2513,7 +2513,7 @@ BLOG_POSTS.unshift(
     slug: 'vistoria-por-voz-nome-da-peca-ao-clicar',
     title: 'Vistoria por voz: o app fala o nome da peça ao clicar, com 8 vozes à escolha',
     excerpt:
-      'Ao abrir o diagrama do veículo, cada peça é anunciada em voz natural assim que o vistoriador clica ou passa o dedo. São 8 vozes em português (4 femininas e 4 masculinas) para escolher a que mais combina com a operação.',
+      'Vistoria por voz: o app fala o nome da peça ao clicar, com 8 vozes em português. Menos erro no diagrama e mais velocidade na vistoria do pátio. Ative no app.',
     category: 'Acessibilidade',
     tags: ['voz', 'text-to-speech', 'acessibilidade', 'diagrama do veículo', 'produtividade'],
     date: '2026-07-06',
@@ -2580,7 +2580,7 @@ BLOG_POSTS.unshift(
     slug: 'consulta-automatica-de-placa',
     title: 'Digite a placa e o resto se preenche sozinho',
     excerpt:
-      'Marca, modelo, cor e cidade de emplacamento não precisam ser digitados um por um. No Danos Aparentes, basta digitar a placa e o sistema busca os dados do veículo automaticamente.',
+      'Consulta automática de placa: digite a placa e preencha marca, modelo, cor e cidade sozinho — menos digitação e menos erro na vistoria veicular do pátio.',
     category: 'Produtividade',
     tags: ['consulta de placa', 'autofill', 'produtividade', 'checklist', 'vistoria digital'],
     date: '2026-07-06',
@@ -2637,7 +2637,7 @@ BLOG_POSTS.unshift(
     slug: '6-modelos-de-pdf-para-o-laudo-de-vistoria',
     title: '6 modelos de PDF para o laudo de vistoria: qual combina com sua operação',
     excerpt:
-      'Moderno, editorial, técnico, corporativo, minimalista ou vibrante — o Danos Aparentes oferece 6 layouts de PDF diferentes, para o laudo ter a cara da sua empresa, não a cara de um sistema genérico.',
+      '6 modelos de PDF para o laudo de vistoria: moderno, editorial, técnico, corporativo, minimalista ou vibrante — escolha o layout da sua marca. Compare e use.',
     category: 'Profissionalismo',
     tags: ['modelos de pdf', 'laudo de vistoria', 'personalização', 'branding', 'danos aparentes'],
     date: '2026-07-06',
@@ -2698,7 +2698,7 @@ BLOG_POSTS.unshift(
     slug: 'checklist-de-avarias-sem-dor-de-cabeca',
     title: 'Checklist de avarias sem dor de cabeça: do toque na tela ao laudo pronto',
     excerpt:
-      'Marcar avaria não precisa ser complicado. Aponte no SVG do veículo, ouça a confirmação por voz, anexe a foto e pronto — sem formulário longo, sem discussão na entrega ou devolução.',
+      'Checklist de avarias sem dor de cabeça: toque no diagrama, anexe foto e gere o laudo — sem formulário longo nem discussão na entrega ou devolução. Fluxo curto.',
     category: 'Locadora',
     tags: ['checklist', 'svg interativo', 'confirmação por voz', 'entrada e devolução', 'sem dor de cabeça'],
     date: '2026-07-06',
@@ -2760,7 +2760,7 @@ BLOG_POSTS.unshift(
     slug: 'vistoria-nas-4-vistas-do-veiculo',
     title: 'Como a vistoria cobre as 4 vistas do veículo (com fotos por avaria)',
     excerpt:
-      'Veja como o app guia a vistoria pelas 4 vistas do veículo — lateral esquerda, lateral direita, frontal e traseira — e como cada avaria pode levar suas próprias fotos.',
+      'Vistoria nas 4 vistas do veículo: laterais, frente e traseira com fotos por avaria. Guia prático para um laudo completo, claro e comparável. Veja o fluxo.',
     category: 'Vistoria',
     tags: ['diagrama do veículo', 'avarias', 'fotos', 'vistoria'],
     date: '2026-07-07',
@@ -2808,7 +2808,7 @@ BLOG_POSTS.unshift(
     slug: 'cobranca-avaria-devolucao-locadora',
     title: 'Como cobrar avaria na devolução da locadora sem perder a discussão',
     excerpt:
-      'Cliente nega o dano, cada vistoriador faz de um jeito e a cobrança fica fraca. Veja como comparar retirada × devolução no mesmo padrão, com laudo assinável, QR/hash e PDF no WhatsApp — com a marca da locadora.',
+      'Como cobrar avaria na devolução da locadora: compare retirada × devolução, laudo com QR/hash e PDF no WhatsApp — com a marca da sua empresa. Cobrança firme.',
     category: 'Locadora',
     tags: [
       'cobrança de avaria',
@@ -2995,7 +2995,7 @@ BLOG_POSTS.unshift(
     slug: 'vistoria-antes-do-orcamento-oficina',
     title: 'Vistoria antes do orçamento: como a oficina evita briga na entrega',
     excerpt:
-      'Orçamento contestado, foto solta no WhatsApp e cliente dizendo que “não era assim”. Veja como registrar o estado do carro com diagrama, foto e aceite na entrada — e entregar um laudo profissional.',
+      'Vistoria antes do orçamento na oficina: registre o estado na entrada com diagrama e fotos — e evite briga na entrega do serviço e do orçamento. Prova na mão.',
     category: 'Oficina',
     tags: [
       'oficina mecânica',
@@ -3157,7 +3157,7 @@ BLOG_POSTS.unshift(
     slug: 'laudo-de-vistoria-para-despachantes',
     title: 'Laudo de vistoria para despachantes: rápido no celular, sem redigitar',
     excerpt:
-      'Volume alto, retrabalho e laudo incompleto atrasam o cliente. Veja como emitir laudo no celular com padrão único, cara de processo (hash/QR) e envio imediato para cliente ou parceiro.',
+      'Laudo de vistoria para despachantes: emita no celular, sem redigitar, com hash/QR e envio imediato para cliente ou parceiro — volume alto sem atraso no balcão.',
     category: 'Despachante',
     tags: [
       'despachante',
@@ -3314,7 +3314,7 @@ BLOG_POSTS.unshift(
     slug: 'controle-avarias-frota-entrada-saida',
     title: 'Controle de avarias na frota: entrada, saída e histórico auditável',
     excerpt:
-      'Sinistro interno, briga motorista × oficina e gestor sem visão. Veja como registrar toda saída/entrada com o mesmo padrão, reduzir disputa e ter histórico da frota — com laudo white-label da empresa.',
+      'Controle de avarias na frota: registre entrada e saída no mesmo padrão, reduza disputa e tenha histórico auditável com laudo white-label. Visão para o gestor.',
     category: 'Frota',
     tags: [
       'controle de frota',
@@ -3487,7 +3487,7 @@ BLOG_POSTS.push(
     slug: 'como-provar-amassado-pre-existente-locacao',
     title: 'Como provar que um amassado no carro já existia antes da locação',
     excerpt:
-      'Sem vistoria de entrada bem documentada, é a palavra do cliente contra a da locadora. Veja como um laudo com foto, GPS e hash resolve essa disputa.',
+      'Como provar amassado pré-existente na locação: laudo de entrada com foto, GPS e hash — a prova que encerra a palavra do cliente contra a locadora. Veja como.',
     category: 'Locadora',
     tags: ['locadora', 'avarias', 'laudo de vistoria', 'checklist'],
     date: '2026-07-13',
@@ -3544,7 +3544,7 @@ BLOG_POSTS.push(
     slug: 'como-digitalizar-a-vistoria-da-sua-oficina',
     title: 'Como digitalizar a vistoria da sua oficina',
     excerpt:
-      'Troque a prancheta de papel por um laudo digital em minutos: diagrama do veículo, fotos com GPS, assinatura na tela e PDF com a marca da sua oficina.',
+      'Como digitalizar a vistoria da oficina: diagrama do veículo, fotos com GPS, assinatura na tela e PDF com a marca da sua empresa em poucos minutos. Comece já.',
     category: 'Vistoria',
     tags: ['oficina', 'laudo de vistoria', 'checklist', 'avarias'],
     date: '2026-07-13',
@@ -3600,7 +3600,7 @@ BLOG_POSTS.push(
     slug: 'laudo-de-avaria-com-qr-code',
     title: 'Laudo de avaria com QR Code: o que é e para que serve',
     excerpt:
-      'Entenda como o QR Code de verificação e o hash SHA-256 tornam um laudo de vistoria à prova de adulteração — e por que isso importa para seguradoras.',
+      'Laudo de avaria com QR Code e hash SHA-256: o que é, para que serve e por que seguradoras confiam no documento verificável e à prova de adulteração. Entenda.',
     category: 'Seguro',
     tags: ['seguradora', 'laudo de vistoria', 'avarias'],
     date: '2026-07-13',
@@ -3657,7 +3657,7 @@ BLOG_POSTS.push(
     slug: 'vistoria-de-frota-sem-internet',
     title: 'Vistoria de frota sem internet: como funciona',
     excerpt:
-      'Pátios e galpões sem sinal não são desculpa para vistoria em papel. Veja como registrar avarias offline e sincronizar tudo automaticamente depois.',
+      'Vistoria de frota sem internet: registre avarias offline no pátio ou galpão e sincronize o laudo automaticamente quando o sinal voltar — sem voltar ao papel.',
     category: 'Frota',
     tags: ['frota', 'laudo de vistoria', 'checklist', 'avarias'],
     date: '2026-07-13',
@@ -3702,7 +3702,7 @@ BLOG_POSTS.push(
     slug: 'relatorio-pdf-oficial-com-seguranca-maxima',
     title: 'Relatório oficial em PDF com segurança máxima: hash, QR Code e identidade da empresa',
     excerpt:
-      'Como o Danos Aparentes gera um laudo em PDF com logo institucional, hash exclusivo e QR Code de validação — para auditorias rápidas em campo e zero fraude no documento do sinistro.',
+      'Relatório PDF oficial com hash, QR Code e logo da empresa: laudo verificável para auditoria em campo e menos fraude no documento do sinistro. Segurança máxima.',
     category: 'Validade',
     tags: [
       'pdf de vistoria',
@@ -3916,21 +3916,21 @@ export function getCategories(): { name: string; slug: string }[] {
 // rastrear. Cada descrição aqui é específica do assunto da categoria — não um
 // template genérico repetido.
 const CATEGORY_DESCRIPTIONS: Record<string, string> = {
-  Vistoria: 'Como registrar avarias com precisão no diagrama do veículo — do clique na peça até o laudo em PDF, cobrindo os fluxos de retirada, devolução e conferência que o vistoriador enfrenta no dia a dia.',
-  Tecnologia: 'O que está por trás do app: PWA offline-first, geração de PDF no navegador, hash de integridade e as decisões técnicas que permitem vistoriar sem depender de internet no pátio.',
-  Locadora: 'Estratégias e recursos pensados para locadoras de veículos — do laudo com marca própria (white-label) à padronização de vistorias entre unidades e equipes de uma frota de aluguel.',
-  Laudo: 'Estrutura, validade e apresentação do laudo de vistoria: o que precisa constar, como fica no PDF gerado e como isso protege a operação em disputas com o cliente.',
-  'Boas práticas': 'Rotinas recomendadas para quem vistoria veículos com frequência — o que checar, o que registrar e os erros mais comuns que enfraquecem um laudo na hora de uma contestação.',
-  Frota: 'Gestão de vistoria em escala: como locadoras, frotistas e transportadoras padronizam o registro de avarias quando o volume de veículos torna o processo manual inviável.',
-  Seguro: 'A relação entre o laudo de vistoria e o processo de sinistro — o que seguradoras e peritos esperam ver documentado para agilizar (ou não travar) uma análise.',
-  Operação: 'O lado prático de rodar vistorias no campo: tempo de preenchimento, uso sob sol ou chuva, e como o fluxo do app foi desenhado para não atrapalhar a operação.',
-  Comparativo: 'Comparações diretas entre modelos de laudo, formatos de PDF e abordagens de vistoria, para ajudar a escolher o que melhor se encaixa na sua operação.',
-  Produtividade: 'Como reduzir o tempo gasto em cada vistoria — atalhos, automações e ajustes de fluxo que cortam retrabalho sem abrir mão do rigor técnico do laudo.',
-  Validade: 'O que dá validade jurídica e prática a um laudo de vistoria — hash de integridade, QR Code de verificação e o que muda quando o documento precisa ser contestado.',
-  Profissionalismo: 'Como a apresentação do laudo (marca, identidade visual, estrutura do PDF) influencia a percepção do cliente sobre a seriedade da operação.',
-  Acessibilidade: 'Uso do app em condições reais de campo — digitação por voz, interface para telas pequenas e outros ajustes que facilitam a vistoria para quem trabalha fora do escritório.',
-  Oficina: 'Vistoria aplicada à rotina de oficinas — orçamento, retrabalho e como um laudo digital evita divergência entre o que foi combinado e o que foi entregue.',
-  Despachante: 'Onde a vistoria digital cruza com processos de despachante — documentação de avarias em transferências, regularizações e outros trâmites veiculares.',
+  Vistoria: 'Como registrar avarias no diagrama do veículo — do clique na peça ao laudo em PDF. Guias de retirada, devolução e conferência no pátio. Leia os artigos.',
+  Tecnologia: 'Tecnologia da vistoria digital: PWA offline, PDF no navegador, hash de integridade e decisões técnicas para vistoriar sem internet no pátio. Veja os artigos.',
+  Locadora: 'Vistoria para locadoras: laudo white-label, padrão entre unidades e cobrança de avarias na devolução. Artigos práticos para frota de aluguel. Confira.',
+  Laudo: 'Laudo de vistoria: o que precisa constar, como fica no PDF e como protege a operação em disputa com o cliente. Guias sobre validade e apresentação. Leia.',
+  'Boas práticas': 'Boas práticas de vistoria veicular: o que checar, o que registrar e erros que enfraquecem o laudo na contestação. Rotinas para quem vistoria todo dia.',
+  Frota: 'Vistoria de frota em escala: padronize o registro de avarias em locadoras, frotistas e transportadoras — sem processo manual inviável. Veja os guias aqui.',
+  Seguro: 'Laudo de vistoria e sinistro: o que seguradoras e peritos esperam documentado para agilizar a análise. Artigos sobre prova, hash e QR Code. Confira já.',
+  Operação: 'Operação de vistoria no campo: tempo de preenchimento, uso sob sol ou chuva e fluxo no app sem atrapalhar o pátio. Artigos práticos para o dia a dia real.',
+  Comparativo: 'Comparativos de laudo, formatos de PDF e abordagens de vistoria — para escolher o que melhor se encaixa na sua operação. Artigos lado a lado. Leia já.',
+  Produtividade: 'Produtividade na vistoria: atalhos, automações e ajustes de fluxo que cortam retrabalho sem abrir mão do rigor do laudo. Faça mais vistorias por dia já.',
+  Validade: 'Validade do laudo de vistoria: hash de integridade, QR Code de verificação e o que muda quando o documento precisa ser contestado. Entenda a prova digital.',
+  Profissionalismo: 'Profissionalismo no laudo: marca, identidade visual e estrutura do PDF que influenciam a percepção do cliente sobre a seriedade da operação. Veja os guias.',
+  Acessibilidade: 'Acessibilidade na vistoria: digitação por voz, telas pequenas e ajustes para quem trabalha no campo fora do escritório. Artigos sobre uso real. Leia já.',
+  Oficina: 'Vistoria na oficina: orçamento, retrabalho e laudo digital para evitar divergência entre o combinado e o entregue. Artigos para a rotina da funilaria.',
+  Despachante: 'Vistoria digital para despachantes: documentação de avarias em transferências, regularizações e trâmites veiculares. Laudo no celular, sem redigitar. Guia.',
 }
 
 export function getCategoryDescription(name: string): string {
