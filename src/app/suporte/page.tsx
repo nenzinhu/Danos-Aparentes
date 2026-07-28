@@ -2,11 +2,29 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import SupportForm from '@/src/components/SupportForm'
 
+const TITLE = 'Suporte | Danos Aparentes'
+const DESCRIPTION =
+  'Fale com o suporte do Danos Aparentes. Tire dúvidas, relate problemas técnicos, envie sugestões ou trate de assuntos financeiros e de assinatura.'
+
 export const metadata: Metadata = {
-  title: 'Suporte | Danos Aparentes',
-  description:
-    'Fale com o suporte do Danos Aparentes. Tire dúvidas, relate problemas técnicos, envie sugestões ou trate de assuntos financeiros e de assinatura.',
+  title: TITLE,
+  description: DESCRIPTION,
+  // Canonical + og:url iguais — sem isso o layout raiz herdava og:url da home
+  // e o GSC reportava "Google escolheu canônico diferente" para /suporte.
   alternates: { canonical: '/suporte' },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: '/suporte',
+    type: 'website',
+    images: ['/og-image.jpg'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/og-image.jpg'],
+  },
 }
 
 export default function SuportePage() {

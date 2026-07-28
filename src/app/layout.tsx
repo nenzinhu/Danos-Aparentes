@@ -68,10 +68,21 @@ export const metadata: Metadata = {
   ],
 
   // ── Open Graph ──────────────────────────────────────────────
+  // NÃO definir `url` aqui: em Next.js o openGraph do layout raiz é
+  // herdado pelas páginas filhas. Se `url` for a home, rotas como
+  // /suporte e /privacidade ficam com canonical próprio + og:url=/ —
+  // o GSC classifica como "Google escolheu canônico diferente".
+  // Cada página define o próprio `openGraph.url` (ou herda só title/
+  // description/images). A home usa `alternates.canonical: '/'`.
+  // ── Open Graph ──────────────────────────────────────────────
+  // `url: '/'` vale para a home (page.tsx é client e não exporta metadata).
+  // Páginas internas DEVEM sobrescrever `openGraph.url` junto com o
+  // canonical — senão o GSC vê canônico próprio + og:url=/ e reporta
+  // "Google escolheu canônico diferente" (caso /suporte e /privacidade).
   openGraph: {
     title: 'Danos Aparentes — Vistoria Digital de Avarias Veiculares',
     description: 'Vistoria veicular digital: marque avarias no diagrama do veículo, anexe fotos com GPS e gere o laudo em PDF com hash e QR Code. Teste grátis.',
-    url: SITE_URL,
+    url: '/',
     siteName: 'Danos Aparentes',
     images: [
       {

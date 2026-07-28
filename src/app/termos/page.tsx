@@ -2,11 +2,28 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import LegalContent from '@/src/components/LegalContent'
 
+const TITLE = 'Termos de Uso | Danos Aparentes'
+const DESCRIPTION =
+  'Termos de Uso do aplicativo Danos Aparentes — vistoria digital de avarias veiculares.'
+
 export const metadata: Metadata = {
-  title: 'Termos de Uso | Danos Aparentes',
-  description:
-    'Termos de Uso do aplicativo Danos Aparentes — vistoria digital de avarias veiculares.',
+  title: TITLE,
+  description: DESCRIPTION,
+  // Mesmo padrão de /suporte e /privacidade: og:url alinhado ao canonical.
   alternates: { canonical: '/termos' },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: '/termos',
+    type: 'website',
+    images: ['/og-image.jpg'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/og-image.jpg'],
+  },
 }
 
 export default function TermosPage() {
