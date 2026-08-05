@@ -1,0 +1,262 @@
+[
+  {
+    "text": "Bateu",
+    "start": 0.3,
+    "end": 0.778
+  },
+  {
+    "text": "o",
+    "start": 0.778,
+    "end": 0.97
+  },
+  {
+    "text": "carro?",
+    "start": 0.97,
+    "end": 1.448
+  },
+  {
+    "text": "Prova",
+    "start": 1.448,
+    "end": 1.926
+  },
+  {
+    "text": "que",
+    "start": 1.926,
+    "end": 2.213
+  },
+  {
+    "text": "ja",
+    "start": 2.213,
+    "end": 2.404
+  },
+  {
+    "text": "tava",
+    "start": 2.404,
+    "end": 2.787
+  },
+  {
+    "text": "assim.",
+    "start": 2.787,
+    "end": 3.265
+  },
+  {
+    "text": "Consulta",
+    "start": 4.465,
+    "end": 5.172
+  },
+  {
+    "text": "a",
+    "start": 5.172,
+    "end": 5.348
+  },
+  {
+    "text": "placa,",
+    "start": 5.348,
+    "end": 5.79
+  },
+  {
+    "text": "os",
+    "start": 5.79,
+    "end": 5.967
+  },
+  {
+    "text": "dados",
+    "start": 5.967,
+    "end": 6.408
+  },
+  {
+    "text": "do",
+    "start": 6.408,
+    "end": 6.585
+  },
+  {
+    "text": "carro",
+    "start": 6.585,
+    "end": 7.026
+  },
+  {
+    "text": "aparecem",
+    "start": 7.026,
+    "end": 7.733
+  },
+  {
+    "text": "na",
+    "start": 7.733,
+    "end": 7.91
+  },
+  {
+    "text": "hora.",
+    "start": 7.91,
+    "end": 8.263
+  },
+  {
+    "text": "Marca",
+    "start": 9.963,
+    "end": 10.416
+  },
+  {
+    "text": "a",
+    "start": 10.416,
+    "end": 10.598
+  },
+  {
+    "text": "avaria",
+    "start": 10.598,
+    "end": 11.142
+  },
+  {
+    "text": "direto",
+    "start": 11.142,
+    "end": 11.686
+  },
+  {
+    "text": "no",
+    "start": 11.686,
+    "end": 11.867
+  },
+  {
+    "text": "diagrama",
+    "start": 11.867,
+    "end": 12.592
+  },
+  {
+    "text": "do",
+    "start": 12.592,
+    "end": 12.774
+  },
+  {
+    "text": "carro.",
+    "start": 12.774,
+    "end": 13.227
+  },
+  {
+    "text": "E",
+    "start": 15.927,
+    "end": 16.109
+  },
+  {
+    "text": "o",
+    "start": 16.109,
+    "end": 16.291
+  },
+  {
+    "text": "laudo",
+    "start": 16.291,
+    "end": 16.746
+  },
+  {
+    "text": "sai",
+    "start": 16.746,
+    "end": 17.018
+  },
+  {
+    "text": "em",
+    "start": 17.018,
+    "end": 17.2
+  },
+  {
+    "text": "pe-de-efe,",
+    "start": 17.2,
+    "end": 17.837
+  },
+  {
+    "text": "com",
+    "start": 17.837,
+    "end": 18.11
+  },
+  {
+    "text": "hash",
+    "start": 18.11,
+    "end": 18.474
+  },
+  {
+    "text": "e",
+    "start": 18.474,
+    "end": 18.655
+  },
+  {
+    "text": "codigo",
+    "start": 18.655,
+    "end": 19.201
+  },
+  {
+    "text": "Q",
+    "start": 19.201,
+    "end": 19.383
+  },
+  {
+    "text": "R.",
+    "start": 19.383,
+    "end": 19.565
+  },
+  {
+    "text": "Nao",
+    "start": 19.565,
+    "end": 19.838
+  },
+  {
+    "text": "da",
+    "start": 19.838,
+    "end": 20.02
+  },
+  {
+    "text": "pra",
+    "start": 20.02,
+    "end": 20.292
+  },
+  {
+    "text": "contestar.",
+    "start": 20.292,
+    "end": 21.111
+  },
+  {
+    "text": "Manda",
+    "start": 22.611,
+    "end": 23.042
+  },
+  {
+    "text": "no",
+    "start": 23.042,
+    "end": 23.214
+  },
+  {
+    "text": "Uots-epp.",
+    "start": 23.214,
+    "end": 23.817
+  },
+  {
+    "text": "Prova",
+    "start": 23.817,
+    "end": 24.247
+  },
+  {
+    "text": "em",
+    "start": 24.247,
+    "end": 24.419
+  },
+  {
+    "text": "minutos,",
+    "start": 24.419,
+    "end": 25.022
+  },
+  {
+    "text": "sem",
+    "start": 25.022,
+    "end": 25.28
+  },
+  {
+    "text": "discussao.",
+    "start": 25.28,
+    "end": 26.055
+  },
+  {
+    "text": "Danos",
+    "start": 26.055,
+    "end": 26.486
+  },
+  {
+    "text": "Aparentes.",
+    "start": 26.486,
+    "end": 27.261
+  }
+]

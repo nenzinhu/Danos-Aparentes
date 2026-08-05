@@ -1,0 +1,1342 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   GOVERNANÇA DO DESIGN SYSTEM — Danos Aparentes
+   Leia antes de adicionar cor ou forma nova.
+
+   COR — sistema de dois acentos (não misturar papéis):
+     • --primary (azul)  = AÇÃO interativa: CTAs, seleção ativa, links.
+     • --signal  (âmbar) = ESTRUTURA e DADOS: rótulos, eyebrows,
+                            marcadores, valores mono, molduras.
+     • --severity-low/medium/high = SEMÂNTICO de avaria, só para gravidade.
+     Nunca usar âmbar em botão de ação, nem azul em rótulo estrutural.
+
+   FORMA — escala de raio (mapa para classes Tailwind):
+     • --radius-pill    9999px  -> rounded-full   (botões redondos, pílulas, dots)
+     • --radius-card    20px     -> rounded-2xl    (cards, .glass-card)
+     • --radius-control 12px     -> rounded-xl     (botões/CTAs, inputs grandes)
+     • --radius-chip    6px      -> rounded / rounded-lg (chips, badges, etiquetas)
+     Não introduzir rounded-3xl nem raios fora desta escala.
+   ============================================================ */
+
+:root {
+  /* Escala de raio (referência; o mapa para Tailwind está no comentário acima) */
+  --radius-pill: 9999px;
+  --radius-card: 20px;
+  --radius-control: 12px;
+  --radius-chip: 6px;
+
+  color-scheme: dark;
+  --bg-main: #020617;
+  --bg-gradient: radial-gradient(ellipse 120% 80% at 50% -10%, #0d1f3c 0%, #060d1a 50%, #020408 100%);
+  --card-bg: rgba(10, 20, 40, 0.72);
+  --card-bg-solid: rgba(12, 22, 42, 0.96);
+  --card-border: rgba(148, 163, 184, 0.12);
+  --glass-shadow: 0 4px 24px 0 rgba(0,0,0,0.45), 0 0 0 1px rgba(148,163,184,0.06);
+  --elevation-hover: 0 8px 32px 0 rgba(0,0,0,0.5), 0 0 0 1px rgba(31,182,255,0.12);
+  --text-main: #e8f4ff;
+  --text-muted: #9bb4d0;
+  --primary: #1FB6FF;
+  --primary-hover: #72C5EE;
+  --primary-glow: rgba(31, 182, 255, 0.4);
+  --color-clean: #1e3a5a;
+  --color-hover: #2a4f7a;
+  --severity-low: #94a3b8;
+  --severity-medium: #f97316;
+  --severity-high: #ef4444;
+  --whatsapp-color: #22c55e;
+  --whatsapp-hover: #16a34a;
+  --input-bg: rgba(5,15,35,0.75);
+  --input-border: rgba(0,170,255,0.15);
+  --input-color: #e8f4ff;
+  --panel-bg: rgba(5,15,30,0.5);
+  --panel-border: rgba(0,170,255,0.05);
+  --tooltip-bg: rgba(5,15,35,0.92);
+  --tooltip-border: rgba(0,170,255,0.25);
+  --tooltip-color: #e8f4ff;
+  --part-stroke: rgba(56, 189, 248, 0.28);
+  --btn-secondary-bg: rgba(0,170,255,0.07);
+  --btn-secondary-border: rgba(0,170,255,0.18);
+  --btn-secondary-hover: rgba(0,170,255,0.14);
+  --scrollbar-track: rgba(0,0,0,0.2);
+  --scrollbar-thumb: rgba(0,170,255,0.18);
+  --neon-blue: #00aaff;
+  --neon-cyan: #00d4ff;
+  --neon-purple: #7c3aed;
+  --neon-glow-sm: 0 0 12px rgba(0,170,255,0.5);
+  --neon-glow-lg: 0 0 30px rgba(0,170,255,0.3), 0 0 60px rgba(0,170,255,0.1);
+  --grid-color: rgba(0, 170, 255, 0.03);
+  --header-title-gradient: linear-gradient(135deg, #ffffff 0%, #bfdbfe 50%, #38bdf8 100%);
+  --primary-btn-gradient: linear-gradient(135deg, var(--primary) 0%, #72C5EE 100%);
+  --primary-badge-text: var(--primary);
+  --elevenlabs-badge: #4ade80;
+
+  /* Sinalização — acento âmbar derivado das cores de severidade da vistoria */
+  --signal: #f5a623;
+  --signal-bright: #ffb938;
+  --signal-glow: rgba(245, 166, 35, 0.35);
+  --sheet-line: rgba(245, 166, 35, 0.5);
+
+  /* Etiquetas de avaria (callouts) — contraste no tema escuro */
+  --damage-select-stroke: #67e8f9;
+  --damage-select-fill: rgba(34, 211, 238, 0.22);
+  --damage-select-text: #ecfeff;
+  --damage-select-border: rgba(103, 232, 249, 0.55);
+  --damage-low-stroke: #94a3b8;
+  --damage-low-fill: rgba(148, 163, 184, 0.2);
+  --damage-low-text: #e2e8f0;
+  --damage-low-border: rgba(148, 163, 184, 0.5);
+  --damage-medium-stroke: #fb923c;
+  --damage-medium-fill: rgba(249, 115, 22, 0.2);
+  --damage-medium-text: #ffedd5;
+  --damage-medium-border: rgba(251, 146, 60, 0.55);
+  --damage-high-stroke: #f87171;
+  --damage-high-fill: rgba(239, 68, 68, 0.22);
+  --damage-high-text: #fee2e2;
+  --damage-high-border: rgba(248, 113, 113, 0.55);
+  --damage-tag-bg: color-mix(in srgb, var(--card-bg-solid) 90%, transparent);
+  --damage-pin-number: #ecfeff;
+
+  /* View Transition Variables */
+  --duration-exit: 150ms;
+  --duration-enter: 210ms;
+  --duration-move: 400ms;
+}
+
+/* View Transition Keyframes */
+@keyframes fade {
+  from { filter: blur(3px); opacity: 0; }
+  to { filter: blur(0); opacity: 1; }
+}
+
+@keyframes slide {
+  from { translate: var(--slide-offset); }
+  to { translate: 0; }
+}
+
+@keyframes slide-y {
+  from { transform: translateY(var(--slide-y-offset, 10px)); }
+  to { transform: translateY(0); }
+}
+
+/* Fade */
+::view-transition-old(.fade-out) {
+  animation: var(--duration-exit) ease-in fade reverse;
+}
+::view-transition-new(.fade-in) {
+  animation: var(--duration-enter) ease-out var(--duration-exit) both fade;
+}
+
+/* Slide (Vertical) */
+::view-transition-old(.slide-down) {
+  animation:
+    var(--duration-exit) ease-out both fade reverse,
+    var(--duration-exit) ease-out both slide-y reverse;
+}
+::view-transition-new(.slide-up) {
+  animation:
+    var(--duration-enter) ease-in var(--duration-exit) both fade,
+    var(--duration-move) ease-in both slide-y;
+}
+
+/* Directional Navigation */
+::view-transition-old(.nav-forward) {
+  --slide-offset: -60px;
+  animation:
+    var(--duration-exit) ease-in both fade reverse,
+    var(--duration-move) ease-in-out both slide reverse;
+}
+::view-transition-new(.nav-forward) {
+  --slide-offset: 60px;
+  animation:
+    var(--duration-enter) ease-out var(--duration-exit) both fade,
+    var(--duration-move) ease-in-out both slide;
+}
+
+::view-transition-old(.nav-back) {
+  --slide-offset: 60px;
+  animation:
+    var(--duration-exit) ease-in both fade reverse,
+    var(--duration-move) ease-in-out both slide reverse;
+}
+::view-transition-new(.nav-back) {
+  --slide-offset: -60px;
+  animation:
+    var(--duration-enter) ease-out var(--duration-exit) both fade,
+    var(--duration-move) ease-in-out both slide;
+}
+
+/* Shared Element Morph */
+::view-transition-group(.morph) {
+  animation-duration: var(--duration-move);
+}
+
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+
+@keyframes via-blur {
+  30% { filter: blur(3px); }
+}
+
+/* Persistent Element Isolation */
+::view-transition-group(persistent-nav) {
+  animation: none;
+  z-index: 100;
+}
+
+::view-transition-old(persistent-nav) {
+  display: none;
+}
+::view-transition-new(persistent-nav) {
+  animation: none;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Skip link — WCAG 2.4.1 */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 100000;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  background: var(--primary);
+  color: var(--bg-main);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 1rem;
+  outline: 3px solid var(--signal-bright, var(--primary));
+  outline-offset: 3px;
+}
+
+
+html.light {
+  color-scheme: light;
+  --bg-main: #faf9f5;
+  --bg-gradient: radial-gradient(ellipse 120% 80% at 50% -10%, #faf9f5 0%, #e8e6dc 70%, #d8d6cc 100%);
+  --card-bg: rgba(232, 230, 220, 0.85);
+  --card-bg-solid: rgba(238, 236, 227, 0.97);
+  --card-border: rgba(176, 174, 165, 0.35);
+  --glass-shadow: 0 8px 40px 0 rgba(20, 20, 19, 0.06), 0 0 0 1px rgba(176, 174, 165, 0.15);
+  --text-main: #141413;
+  --text-muted: #44433f;
+  --primary: #9e4428;
+  --primary-hover: #85361e;
+  --primary-glow: rgba(158, 68, 40, 0.35);
+  /* Severidade no tema claro: as cores do tema escuro ficam entre 2.4:1 e 3.6:1
+     sobre #faf9f5. Estes tons mantêm a mesma leitura (cinza / laranja / vermelho)
+     com >=4.5:1 tanto no fundo quanto sobre o card. */
+  --severity-low: #556072;
+  --severity-medium: #b1360a;
+  --severity-high: #c81e1e;
+  --neon-blue: #6a9bcc;
+  --neon-cyan: #788c5d;
+  --neon-glow-sm: 0 0 10px rgba(217, 119, 87, 0.25);
+  --color-clean: #e8e6dc;
+  --color-hover: #b0aea5;
+  --input-bg: #faf9f5;
+  --input-border: #b0aea5;
+  --input-color: #141413;
+  --panel-bg: rgba(232, 230, 220, 0.4);
+  --panel-border: rgba(176, 174, 165, 0.2);
+  --tooltip-bg: #faf9f5;
+  --tooltip-border: #b0aea5;
+  --tooltip-color: #141413;
+  --part-stroke: #b0aea5;
+  --btn-secondary-bg: rgba(176, 174, 165, 0.12);
+  --btn-secondary-border: rgba(176, 174, 165, 0.28);
+  --btn-secondary-hover: rgba(176, 174, 165, 0.2);
+  --scrollbar-track: rgba(232, 230, 220, 0.4);
+  --scrollbar-thumb: rgba(176, 174, 165, 0.5);
+  --grid-color: rgba(217, 119, 87, 0.035);
+  --header-title-gradient: linear-gradient(135deg, #141413 0%, #d97757 100%);
+  --primary-btn-gradient: linear-gradient(135deg, var(--primary) 0%, #a34b30 100%);
+  --primary-badge-text: #a34b30;
+  --elevenlabs-badge: #065f46;
+  --signal: #b06d12;
+  --signal-bright: #8a5508;
+  --signal-glow: rgba(138, 85, 8, 0.22);
+  --sheet-line: rgba(138, 85, 8, 0.5);
+
+  /* Callouts legíveis sobre o diagrama no modo claro */
+  --damage-select-stroke: #0e7490;
+  --damage-select-fill: rgba(14, 116, 144, 0.16);
+  --damage-select-text: #0f172a;
+  --damage-select-border: rgba(14, 116, 144, 0.5);
+  --damage-low-stroke: #475569;
+  --damage-low-fill: rgba(71, 85, 105, 0.14);
+  --damage-low-text: #1e293b;
+  --damage-low-border: rgba(71, 85, 105, 0.4);
+  --damage-medium-stroke: #c2410c;
+  --damage-medium-fill: rgba(194, 65, 12, 0.14);
+  --damage-medium-text: #7c2d12;
+  --damage-medium-border: rgba(194, 65, 12, 0.45);
+  --damage-high-stroke: #b91c1c;
+  --damage-high-fill: rgba(185, 28, 28, 0.14);
+  --damage-high-text: #7f1d1d;
+  --damage-high-border: rgba(185, 28, 28, 0.45);
+  --damage-tag-bg: color-mix(in srgb, var(--card-bg-solid) 94%, #ffffff);
+  --damage-pin-number: #ffffff;
+}
+
+/* ── Tipografia de papéis ──────────────────────────────────────
+   display: Saira Condensed (técnica, condensada)
+   mono-data: IBM Plex Mono (placa, código do laudo, hash) */
+.font-display {
+  font-family: var(--font-display), 'Outfit', sans-serif;
+  letter-spacing: -0.01em;
+}
+.font-mono-data {
+  font-family: var(--font-mono-data), ui-monospace, 'SFMono-Regular', monospace;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+}
+
+/* CTA do blog: superfície escura fixa + texto claro (evita contraste quebrado
+   quando o article aplica [&_p]/[&_h3] ou quando o modo dia deixa --text-* escuros). */
+.blog-cta {
+  color: #f8fafc;
+}
+.blog-cta .blog-cta-eyebrow {
+  color: #fbbf24 !important;
+}
+.blog-cta .blog-cta-title {
+  color: #ffffff !important;
+}
+.blog-cta .blog-cta-body {
+  color: #cbd5e1 !important;
+}
+html.light .blog-cta {
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.12);
+}
+
+/* ── Prancha de vistoria: moldura com marcas de corte ───────── */
+.sheet-frame {
+  position: relative;
+  border: 1px solid var(--card-border);
+  background:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    var(--card-bg);
+  background-size: 28px 28px, 28px 28px, auto;
+}
+.sheet-frame::before,
+.sheet-frame::after,
+.sheet-frame > .crop-tr,
+.sheet-frame > .crop-br {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--sheet-line);
+  border-style: solid;
+  pointer-events: none;
+}
+.sheet-frame::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.sheet-frame::after  { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+.sheet-frame > .crop-br { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+.sheet-frame > .crop-tr { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+/* Etiqueta de avaria com linha-guia (callout pericial) */
+.damage-tag {
+  font-family: var(--font-mono-data), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+html.light .damage-tag {
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+html.light .damage-tag span {
+  opacity: 1;
+}
+/* Anel de status da lanterna acesa — respiro suave (transform + opacity). */
+@keyframes torch-halo {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.35); opacity: 0; }
+}
+.torch-halo {
+  animation: torch-halo 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .torch-halo { animation: none; opacity: 0.4; }
+}
+
+@keyframes signal-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.signal-dot {
+  animation: signal-blink 1.6s steps(2, jump-none) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal-dot { animation: none; }
+}
+
+.bg-primary,
+[style*="var(--primary-btn-gradient)"] {
+  color: #020617 !important;
+}
+
+html.light .bg-primary,
+html.light [style*="var(--primary-btn-gradient)"] {
+  color: #ffffff !important;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Resposta de toque imediata no mobile: remove delay de gesto e flash cinza */
+a, button, [role="button"], input, select, textarea, label {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  font-family: 'Outfit', sans-serif;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Garante que o FOUC critical CSS do layout não “prenda” o body no escuro
+   depois que html.light / tokens do tema já estão ativos. */
+html.light body {
+  background: var(--bg-gradient);
+  color: var(--text-main);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body > * { position: relative; z-index: 1; }
+
+/* Scroll Reveal (transform + opacity only) */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.glass-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .glass-card:hover {
+    box-shadow: var(--elevation-hover);
+  }
+}
+
+/* Tipografia do design system — hierarquia Linear/Stripe */
+.ds-h1 {
+  font-family: Outfit, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+  line-height: 1.25;
+}
+.ds-h2 {
+  font-family: Outfit, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  line-height: 1.3;
+}
+.ds-h3 {
+  font-family: Outfit, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.35;
+}
+.ds-label {
+  font-family: Outfit, sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+.ds-caption {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.ds-body {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-main);
+  line-height: 1.55;
+}
+
+/* KPI premium */
+.ds-kpi {
+  background: var(--card-bg-solid);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 1.25rem 1.35rem;
+  transition: border-color 0.2s ease, box-shadow 0.25s ease;
+}
+.ds-kpi:hover {
+  border-color: rgba(31, 182, 255, 0.22);
+  box-shadow: var(--elevation-hover);
+}
+.ds-kpi-value {
+  font-family: Outfit, sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.ds-kpi-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
+/* Stepper da vistoria */
+.ds-step-rail {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+.ds-step-dot {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.ds-step-dot-active {
+  background: var(--primary);
+  color: #041018;
+  box-shadow: 0 0 0 3px rgba(31, 182, 255, 0.2);
+}
+.ds-step-dot-done {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+.ds-step-dot-idle {
+  background: var(--panel-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--card-border);
+}
+.ds-step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--card-border);
+  margin: 0 0.35rem;
+}
+.ds-step-line-done {
+  background: rgba(34, 197, 94, 0.45);
+}
+
+/* Mini preview do PDF (CSS, não o PDF real) */
+.ds-pdf-preview {
+  background: #f8fafc;
+  color: #0f172a;
+  border-radius: var(--radius-control);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  aspect-ratio: 210 / 297;
+  max-height: 280px;
+  font-family: Outfit, system-ui, sans-serif;
+}
+.ds-pdf-preview-header {
+  background: linear-gradient(135deg, #0c4a6e 0%, #0369a1 100%);
+  color: #fff;
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ds-pdf-preview-body {
+  padding: 0.75rem 0.85rem;
+  font-size: 0.65rem;
+  line-height: 1.45;
+  color: #334155;
+}
+
+@keyframes pulse-neon-stroke {
+  0% { stroke-width: 2; stroke: #22d3ee; filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.5)) brightness(1.05); }
+  50% { stroke-width: 3; stroke: #67e8f9; filter: drop-shadow(0 0 14px rgba(103, 232, 249, 0.85)) brightness(1.18); }
+  100% { stroke-width: 2; stroke: #22d3ee; filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.5)) brightness(1.05); }
+}
+
+.part {
+  cursor: pointer;
+  transition:
+    fill 0.28s ease,
+    stroke 0.28s ease,
+    stroke-width 0.28s ease,
+    filter 0.28s ease,
+    transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  stroke: var(--part-stroke);
+  stroke-width: 1.2;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+/* Car preview: GSAP owns transform — keep CSS transitions on paint props only. */
+.part.part-pro-motion {
+  transition:
+    fill 0.28s ease,
+    stroke 0.28s ease,
+    stroke-width 0.28s ease,
+    filter 0.28s ease;
+}
+
+.part.part-pro-motion:active {
+  transform: none;
+}
+
+.part.wheel-part {
+  fill: transparent !important;
+  stroke: transparent;
+  stroke-width: 0;
+}
+
+.part.wheel-part:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) {
+  fill: rgba(56, 189, 248, 0.14) !important;
+  stroke: #38bdf8;
+  stroke-width: 2;
+}
+
+.part.wheel-part.selected {
+  fill: rgba(34, 211, 238, 0.22) !important;
+}
+
+.part.wheel-part.damage-low {
+  fill: rgba(148, 163, 184, 0.42) !important;
+  stroke: #94a3b8;
+  stroke-width: 2;
+  opacity: 1;
+}
+
+.part.wheel-part.damage-medium {
+  fill: rgba(249, 115, 22, 0.45) !important;
+  stroke: #fb923c;
+  stroke-width: 2;
+  opacity: 1;
+}
+
+.part.wheel-part.damage-high {
+  fill: rgba(239, 68, 68, 0.48) !important;
+  stroke: #f87171;
+  stroke-width: 2.2;
+  opacity: 1;
+}
+
+.part.wheel-part.damage-low,
+.part.wheel-part.damage-medium,
+.part.wheel-part.damage-high {
+  opacity: 1;
+}
+
+.part:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.wheel-part) {
+  fill: url(#metal-hover) !important;
+  filter: brightness(1.12) drop-shadow(0 0 10px rgba(31, 182, 255, 0.5)) saturate(1.12) !important;
+  stroke: #38bdf8;
+  stroke-width: 2;
+}
+
+.part:hover.damage-low,
+.part:hover.damage-medium,
+.part:hover.damage-high {
+  filter: brightness(1.15) drop-shadow(0 0 12px rgba(31, 182, 255, 0.45)) saturate(1.1) !important;
+  stroke: #67e8f9;
+  stroke-width: 2.2;
+}
+
+.part:active {
+  transform: scale(0.97);
+  filter: brightness(0.92) !important;
+}
+
+.part.damage-low {
+  fill: url(#metal-damage-low) !important;
+  filter: drop-shadow(0 0 6px rgba(148, 163, 184, 0.4)) saturate(0.95);
+  stroke: #94a3b8;
+  stroke-width: 1.6;
+  opacity: 1 !important;
+}
+
+.part.damage-medium {
+  fill: url(#metal-damage-medium) !important;
+  filter: drop-shadow(0 0 9px rgba(249, 115, 22, 0.6)) saturate(1.1);
+  stroke: #fb923c;
+  stroke-width: 1.8;
+  opacity: 1 !important;
+}
+
+.part.damage-high {
+  fill: url(#metal-damage-high) !important;
+  filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.7)) saturate(1.12);
+  stroke: #f87171;
+  stroke-width: 2;
+  opacity: 1 !important;
+}
+
+.part.selected {
+  fill: url(#metal-selected) !important;
+  stroke: #67e8f9;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 16px rgba(34, 211, 238, 0.75)) brightness(1.12) !important;
+  animation: pulse-neon-stroke 1.8s ease-in-out infinite;
+}
+
+/* Peças em <g>: estados visuais nos shapes filhos (van, ônibus, etc.) */
+.part.damage-low > :is(path, rect, circle, ellipse, polygon):not([pointer-events="none"]) {
+  fill: url(#metal-damage-low) !important;
+  stroke: #94a3b8;
+  stroke-width: 1.6;
+}
+
+.part.damage-medium > :is(path, rect, circle, ellipse, polygon):not([pointer-events="none"]) {
+  fill: url(#metal-damage-medium) !important;
+  stroke: #fb923c;
+  stroke-width: 1.8;
+}
+
+.part.damage-high > :is(path, rect, circle, ellipse, polygon):not([pointer-events="none"]) {
+  fill: url(#metal-damage-high) !important;
+  stroke: #f87171;
+  stroke-width: 2;
+}
+
+.part.selected > :is(path, rect, circle, ellipse, polygon):not([pointer-events="none"]) {
+  fill: url(#metal-selected) !important;
+  stroke: #67e8f9;
+  stroke-width: 2.5;
+}
+
+.part:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.wheel-part) > :is(path, rect, circle, ellipse, polygon):not([pointer-events="none"]) {
+  fill: url(#metal-hover) !important;
+  stroke: #38bdf8;
+  stroke-width: 2;
+}
+
+.part[data-name*="Vidro"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="vidro"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="Parabrisa"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="parabrisa"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="Glass"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="glass"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]) {
+  fill: url(#metal-glass) !important;
+  opacity: 0.88;
+}
+
+.part[data-name*="Vidro"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="vidro"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="Parabrisa"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="parabrisa"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="Glass"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]),
+.part[data-name*="glass"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) > :is(path, rect):not([pointer-events="none"]) {
+  fill: url(#metal-glass) !important;
+  opacity: 1;
+}
+
+[id^="container-car-"]    .part,
+[id^="container-car2d-"]  .part { --color-clean: url(#metal-car-blue); }
+[id^="container-moto-"]   .part { --color-clean: url(#metal-moto-dark); }
+[id^="container-truck-"]  .part { --color-clean: url(#metal-truck-gradient); }
+[id^="container-bus-"]    .part,
+[id^="container-microbus-"] .part { --color-clean: url(#grad-metal); }
+[id^="container-van-"]    .part { --color-clean: url(#metal-van-gradient); }
+[id^="container-custom-"] .part { --color-clean: url(#metal-car-blue); }
+
+/* Vidros clicáveis: mantém gradiente de vidro no estado normal */
+.part[data-name*="Vidro"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="vidro"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="Parabrisa"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="parabrisa"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="Glass"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="glass"]:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) {
+  fill: url(#metal-glass) !important;
+  opacity: 0.88;
+}
+
+.part[data-name*="Vidro"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="vidro"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="Parabrisa"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="parabrisa"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="Glass"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected),
+.part[data-name*="glass"]:hover:not(.damage-low):not(.damage-medium):not(.damage-high):not(.selected) {
+  fill: url(#metal-glass) !important;
+  opacity: 1;
+  filter: brightness(1.25) drop-shadow(0 0 10px rgba(34, 211, 238, 0.55)) !important;
+}
+
+.wheel-pneu  { fill: #121824; stroke: #020617; stroke-width: 2.5; pointer-events: none; }
+.glass-light { fill: #fef08a; opacity: 0.85; stroke: #eab308; stroke-width: 1.5; pointer-events: none; }
+.glass-light-red { fill: #f87171; opacity: 0.85; stroke: #dc2626; stroke-width: 1.5; pointer-events: none; }
+.shadow-ground { fill: rgba(2,6,23,0.55); filter: blur(8px); pointer-events: none; }
+.aesthetic-line { fill: none; stroke: rgba(15,23,42,0.65); stroke-width: 1.8; pointer-events: none; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+
+.form-input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.875rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus { border-color: var(--primary); }
+
+select { background: var(--input-bg); color: var(--input-color); }
+select option {
+  background: var(--input-bg);
+  color: var(--input-color);
+}
+
+/* Dropdown nativo: no Windows/macOS o SO ignora várias classes Tailwind
+   e acaba com texto branco sobre fundo claro no modo dia. */
+html.light select,
+html.light select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+html:not(.light) select option {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .main-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Light-mode contrast fixes (WCAG 2.1 4.5:1) ──────────────── */
+html.light .glass-card label,
+html.light .glass-card label span,
+html.light .glass-card .text-slate-400,
+html.light .glass-card .text-slate-500 {
+  color: #334155;
+}
+
+/* Painel "Gerenciar Campos" é sempre fundo escuro (slate-950) — labels
+   precisam ficar claros mesmo quando o form pai está em html.light. */
+html.light .glass-card .field-manager-panel label,
+html.light .glass-card .field-manager-panel label span,
+html.light .glass-card .field-manager-panel .field-mgr-label,
+html.light .glass-card .field-manager-panel .text-slate-100,
+html.light .glass-card .field-manager-panel .text-slate-200,
+html.light .glass-card .field-manager-panel .text-slate-300 {
+  color: #f1f5f9 !important;
+}
+html.light .glass-card .field-manager-panel .text-slate-400,
+html.light .glass-card .field-manager-panel .text-slate-500,
+html.light .glass-card .field-manager-panel .line-through {
+  color: #94a3b8 !important;
+}
+html.light .glass-card .field-manager-panel .text-sky-300,
+html.light .glass-card .field-manager-panel .text-sky-400 {
+  color: #7dd3fc !important;
+}
+html.light .glass-card .field-manager-panel .text-white {
+  color: #ffffff !important;
+}
+
+html.light .glass-card input,
+html.light .glass-card select,
+html.light .glass-card textarea {
+  color: #0f172a;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #cbd5e1;
+}
+
+html.light .glass-card select option {
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+html.light .glass-card input::placeholder,
+html.light .glass-card textarea::placeholder {
+  color: #64748b;
+}
+
+html.light .glass-card .text-\[var\(--text-muted\)\] {
+  color: #3f3e3a;
+}
+
+html.light .glass-card .text-\[var\(--text-main\)\] {
+  color: #141413;
+}
+
+html.light .glass-card .text-\[var\(--signal-bright\)\] {
+  color: #8a5508;
+}
+
+html.light .glass-card button.bg-sky-500\/10,
+html.light .glass-card .bg-sky-500\/10 {
+  background-color: rgba(2, 132, 199, 0.15);
+  border-color: rgba(2, 132, 199, 0.4);
+}
+
+html.light .glass-card .text-sky-400 {
+  color: #0369a1;
+}
+
+html.light .glass-card .text-sky-500 {
+  color: #0369a1;
+}
+
+html.light .glass-card .bg-green-500\/10,
+html.light .glass-card .bg-green-500\/5 {
+  background-color: rgba(21, 128, 61, 0.12);
+}
+
+html.light .glass-card .text-green-500 {
+  color: #15803d;
+}
+
+html.light .glass-card .text-red-500 {
+  color: #dc2626;
+}
+
+html.light .glass-card .text-amber-400,
+html.light .glass-card .text-amber-500 {
+  color: #b45309;
+}
+
+html.light .glass-card .border-slate-800,
+html.light .glass-card .border-white\/5,
+html.light .glass-card .border-white\/\[0\.04\],
+html.light .glass-card .border-white\/\[0\.08\] {
+  border-color: #d1d5db;
+}
+
+html.light .glass-card .bg-black\/20,
+html.light .glass-card .bg-white\/\[0\.02\],
+html.light .glass-card .bg-white\/\[0\.04\],
+html.light .glass-card .bg-white\/\[0\.05\],
+html.light .glass-card .bg-white\/5 {
+  background-color: rgba(241, 245, 249, 0.9);
+}
+
+/* .text-white em fundo claro some; em botão preenchido precisa continuar branco.
+   Exceção: badges sobre capa escura (bg-black/30) devem permanecer brancos. */
+html.light .glass-card .text-white {
+  color: #0f172a;
+}
+html.light .glass-card .bg-primary,
+html.light .glass-card .bg-primary .text-white,
+html.light .glass-card button.bg-primary,
+html.light .glass-card .bg-sky-500,
+html.light .glass-card .bg-sky-600,
+html.light .glass-card .bg-green-500,
+html.light .glass-card .bg-green-600,
+html.light .glass-card .bg-blue-600,
+html.light .glass-card [class*="bg-gradient-to"] {
+  color: #ffffff !important;
+}
+html.light .glass-card .cover-badge,
+html.light .glass-card [class*="bg-black/"] {
+  color: #ffffff !important;
+}
+
+html.light .glass-card .border-white\/10 {
+  border-color: #cbd5e1;
+}
+
+html.light .glass-card .form-input {
+  color: #0f172a;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #cbd5e1;
+}
+
+html.light .glass-card .text-slate-200,
+html.light .glass-card .text-slate-300 {
+  color: #334155;
+}
+
+html.light .glass-card .text-slate-600 {
+  color: #475569;
+}
+
+html.light .glass-card .text-red-400 {
+  color: #b91c1c;
+}
+
+html.light .glass-card .text-amber-400 {
+  color: #92400e;
+}
+
+html.light .glass-card .text-emerald-500 {
+  color: #065f46;
+}
+
+html.light .glass-card .text-green-400 {
+  color: #15803d;
+}
+
+html.light .glass-card .text-violet-400 {
+  color: #6d28d9;
+}
+
+html.light .glass-card .text-orange-400 {
+  color: #c2410c;
+}
+
+/* Abas / seletores segmentados fora do glass-card */
+html.light .theme-tabs {
+  background-color: rgba(255, 255, 255, 0.92);
+  border-color: #cbd5e1;
+}
+html.light .theme-tabs .theme-tab-idle {
+  color: #475569;
+}
+html.light .theme-tabs .theme-tab-idle:hover {
+  color: #0f172a;
+}
+html.light .theme-tabs .theme-tab-active {
+  color: #0369a1;
+  background-color: rgba(2, 132, 199, 0.12);
+  border-color: rgba(2, 132, 199, 0.35);
+}
+
+html.light .theme-segment {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+html.light .theme-segment .theme-segment-idle {
+  color: #475569;
+}
+html.light .theme-segment .theme-segment-active {
+  color: #ffffff;
+}
+
+.feature-card {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+.feature-card:hover {
+  border-color: rgba(0,170,255,0.4);
+  box-shadow: 0 0 24px rgba(0,170,255,0.15);
+  transform: translateY(-2px);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+@keyframes intro-glow-reveal {
+  0% { opacity: 0; filter: drop-shadow(0 0 0px #00aaff); transform: scale(0.9); }
+  40% { opacity: 1; filter: drop-shadow(0 0 40px #00aaff); }
+  100% { opacity: 1; filter: drop-shadow(0 0 12px rgba(0,170,255,0.4)); transform: scale(1); }
+}
+
+/* ── Mobile performance: trocar efeitos caros por equivalentes baratos ── */
+@media (max-width: 900px) {
+  /* Vidro embaçado -> fundo sólido (backdrop-filter repinta a cada frame no scroll) */
+  .glass-card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--card-bg-solid);
+  }
+
+  /* Grid de fundo fixo força repaint da tela inteira ao rolar */
+  body::before {
+    display: none;
+  }
+
+  /* Sombra de chão com blur custa pintura; remover só na landing */
+  .landing-container .shadow-ground {
+    filter: none;
+  }
+
+  /* backdrop-filter é caríssimo no WebKit (iOS) — desligar no mobile */
+  .backdrop-blur-sm, .backdrop-blur, .backdrop-blur-md, .backdrop-blur-lg, .backdrop-blur-xl, .backdrop-blur-2xl, .backdrop-blur-3xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Desativar view transitions no mobile para navegação instantânea e sem lag */
+  ::view-transition,
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+    animation-duration: 0s !important;
+  }
+}
+
+/* ============================================================
+   GSAP HIGH-TECH ANIMATION STYLES (Cyberpunk Pericial)
+   ============================================================ */
+
+/* 1. Spotlight Cursor Glow nos Cards */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(56, 189, 248, 0.15),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* 2. 3D Hero Container */
+.gsap-hero-3d {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* 4. Scanner Laser Pericial */
+.pdf-scan-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.pdf-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, #38bdf8 50%, transparent 100%);
+  box-shadow: 0 0 15px #38bdf8, 0 0 30px #0284c7;
+  z-index: 10;
+  pointer-events: none;
+  animation: laserScan 3s ease-in-out infinite alternate;
+}
+
+@keyframes laserScan {
+  0% { top: 0%; opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { top: 98%; opacity: 0.8; }
+}
+
+/* 8. Vehicle diagram outline mode — strips every SVG fill/gradient down to a
+   transparent, line-only render. Works on every vehicle/view because it
+   targets shape elements generically rather than per-vehicle classes. */
+.va-outline {
+  /* Dark (default): bright ink on slate canvas. Light overrides below.
+     Stroke uses SVG user units (no px) so weight scales with the viewBox
+     when the diagram grows to fullscreen — fixed CSS px looked like
+     hairlines on a near-black canvas. */
+  --outline-ink: #f1f5f9;
+  --outline-stroke: 1.85;
+}
+
+html.light .va-outline {
+  --outline-ink: #0f172a;
+  --outline-stroke: 1.55;
+}
+
+/* Fullscreen portal paints on #020617 — thicken + brighten so part
+   boundaries stay readable against the near-black canvas. */
+.va-outline.va-outline--fs {
+  --outline-ink: #ffffff;
+  --outline-stroke: 2.85;
+}
+
+.va-outline [id^="container-"] svg :is(path, circle, ellipse, rect, polygon, line) {
+  fill: none !important;
+  stroke: var(--outline-ink) !important;
+  stroke-width: var(--outline-stroke) !important;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Soft edge glow in dark fullscreen so antialiased strokes don't melt into
+   the near-black canvas. Light mode stays crisp/flat. */
+.va-outline.va-outline--fs [id^="container-"] svg :is(path, circle, ellipse, rect, polygon, line) {
+  /* Screen-stable weight in fullscreen: user-unit strokes alone still thin
+     out when the SVG is huge; lock to CSS px + strong halo for contrast. */
+  vector-effect: non-scaling-stroke;
+  stroke-width: 3.25px !important;
+  filter:
+    drop-shadow(0 0 1px rgba(255, 255, 255, 0.95))
+    drop-shadow(0 0 2.5px rgba(248, 250, 252, 0.55)) !important;
+}
+
+html.light .va-outline.va-outline--fs [id^="container-"] svg :is(path, circle, ellipse, rect, polygon, line) {
+  stroke-width: 2.5px !important;
+  filter: none !important;
+}
+
+/* Clickable .part boundaries slightly heavier than decorative leftovers. */
+.va-outline [id^="container-"] svg .part:is(path, circle, ellipse, rect, polygon, line),
+.va-outline [id^="container-"] svg .part :is(path, circle, ellipse, rect, polygon, line) {
+  stroke-width: calc(var(--outline-stroke) + 0.45) !important;
+}
+
+.va-outline.va-outline--fs [id^="container-"] svg .part:is(path, circle, ellipse, rect, polygon, line),
+.va-outline.va-outline--fs [id^="container-"] svg .part :is(path, circle, ellipse, rect, polygon, line) {
+  stroke-width: 3.75px !important;
+}
+
+html.light .va-outline.va-outline--fs [id^="container-"] svg .part:is(path, circle, ellipse, rect, polygon, line),
+html.light .va-outline.va-outline--fs [id^="container-"] svg .part :is(path, circle, ellipse, rect, polygon, line) {
+  stroke-width: 3px !important;
+}
+
+/* Damage / selected fills must stay outline-only in this mode — those rules
+   also use !important fills, so reassert stroke colors for severity. */
+.va-outline [id^="container-"] svg .part.damage-low :is(path, circle, ellipse, rect, polygon, line),
+.va-outline [id^="container-"] svg .part.damage-low:is(path, circle, ellipse, rect, polygon, line) {
+  stroke: #94a3b8 !important;
+}
+.va-outline [id^="container-"] svg .part.damage-medium :is(path, circle, ellipse, rect, polygon, line),
+.va-outline [id^="container-"] svg .part.damage-medium:is(path, circle, ellipse, rect, polygon, line) {
+  stroke: #fb923c !important;
+}
+.va-outline [id^="container-"] svg .part.damage-high :is(path, circle, ellipse, rect, polygon, line),
+.va-outline [id^="container-"] svg .part.damage-high:is(path, circle, ellipse, rect, polygon, line) {
+  stroke: #f87171 !important;
+}
+.va-outline [id^="container-"] svg .part.selected :is(path, circle, ellipse, rect, polygon, line),
+.va-outline [id^="container-"] svg .part.selected:is(path, circle, ellipse, rect, polygon, line) {
+  stroke: #38bdf8 !important;
+  stroke-width: calc(var(--outline-stroke) + 0.9) !important;
+}
+
+.va-outline.va-outline--fs [id^="container-"] svg .part.selected :is(path, circle, ellipse, rect, polygon, line),
+.va-outline.va-outline--fs [id^="container-"] svg .part.selected:is(path, circle, ellipse, rect, polygon, line) {
+  stroke-width: 4.5px !important;
+}
+
+/* Every vehicle SVG already marks purely cosmetic detail (bolts, engine fins,
+   chrome shine, tread grooves...) with pointer-events="none" — the same flag
+   usePartProps uses to exclude them from click handling and draw-in
+   animations. Reuse it here: hide that detail entirely in outline mode so
+   only the clickable .part boundaries remain, instead of drowning them in
+   decorative linework. */
+.va-outline [id^="container-"] svg [pointer-events="none"],
+.va-outline [id^="container-"] svg [pointer-events="none"] * {
+  display: none !important;
+}
+
+.va-outline [id^="container-"] svg ellipse:first-child {
+  /* Ground-contact shadow ellipse: keep it faint instead of a bold outline. */
+  display: block !important;
+  opacity: 0.2 !important;
+  stroke: var(--outline-ink) !important;
+  filter: none !important;
+}
+
+/* fill:none shrinks a path's default click-hit area down to just its stroke
+   line (SVG's default pointer-events: visiblePainted only hit-tests actually
+   painted pixels). Force the full shape geometry to stay clickable so
+   tapping anywhere inside a part still registers, not just on its edge. */
+.va-outline [id^="container-"] svg .part,
+.va-outline [id^="container-"] svg .part * {
+  pointer-events: visible !important;
+}
+
+/* 7. Ambient Background Glow Orbs */
+.bg-glow-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: 0.45;
+  mix-blend-mode: screen;
+}
+

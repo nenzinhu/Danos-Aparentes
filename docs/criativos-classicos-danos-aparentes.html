@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criativos Clássicos — Danos Aparentes</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --brand-bg: #f7f3ed;
+            --brand-text: #1a1a1a;
+            --brand-accent: #864df9;
+            --brand-gold: #F7E397;
+            --brand-pink: #efcde5;
+            --brand-lilac: #dcd3ef;
+            --brand-lavender: #c7b9ff;
+            --brand-mint: #b0e4da;
+            --brand-font-title: 'Inter Tight', sans-serif;
+            --brand-font-body: 'Inter', sans-serif;
+            --gradient: linear-gradient(135deg, #F7E397, #efcde5, #864df9);
+            --card-shadow: 0 2px 16px rgba(134, 77, 249, .08);
+            --da-surface: #020617;
+            --da-cyan: #1FB6FF;
+            --da-amber: #ffb938;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--brand-font-body);
+            background: var(--brand-bg);
+            color: var(--brand-text);
+            line-height: 1.65;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 48px 24px 32px;
+        }
+        .page-header img { width: 180px; margin-bottom: 24px; }
+        .page-header h1 {
+            font-family: var(--brand-font-title);
+            font-size: 2rem;
+            color: #000;
+            margin-bottom: 8px;
+        }
+        .page-header .subtitle {
+            font-size: .95rem;
+            color: #666;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+
+        .section-title {
+            font-family: var(--brand-font-title);
+            font-size: 1.35rem;
+            margin: 48px 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title .emoji { font-size: 1.5rem; }
+        .section-desc { color: #666; font-size: .88rem; margin-bottom: 20px; }
+
+        .briefing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        .briefing-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: var(--card-shadow);
+            border-left: 4px solid var(--brand-accent);
+        }
+        .briefing-card .label {
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .briefing-card .value { font-weight: 500; font-size: .88rem; }
+
+        .insight-box {
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px 28px;
+            box-shadow: var(--card-shadow);
+            border-left: 5px solid var(--brand-gold);
+            margin-bottom: 32px;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+        .insight-box .label {
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .cliches {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px 24px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 40px;
+            font-size: .88rem;
+        }
+        .cliches ul { padding-left: 18px; margin-top: 8px; }
+        .cliches li { margin-bottom: 4px; color: #555; }
+
+        .conceito {
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            padding: 40px;
+            margin-bottom: 40px;
+            border-top: 5px solid var(--brand-accent);
+        }
+        .conceito-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+        .conceito-header .numero {
+            font-family: var(--brand-font-title);
+            font-size: 3rem;
+            line-height: 1;
+            color: var(--brand-accent);
+            opacity: .25;
+            flex-shrink: 0;
+        }
+        .conceito-header .info h2 {
+            font-family: var(--brand-font-title);
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+        .conceito-header .info .badges { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: .72rem;
+            letter-spacing: .3px;
+        }
+        .badge-plataforma { background: var(--brand-lilac); color: #4a2896; }
+        .badge-formato { background: #f0ebe4; color: #555; }
+        .badge-angulo { background: #e8e0f5; color: #5b3da0; }
+        .badge-lei { background: var(--brand-gold); color: #6d5a0a; }
+
+        .estrategia {
+            background: #faf8f5;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .estrategia .field { display: flex; flex-direction: column; }
+        .estrategia .field-label {
+            font-size: .72rem;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .estrategia .field-value { font-weight: 500; font-size: .88rem; }
+
+        .copy-table-wrap {
+            overflow-x: auto;
+            border-radius: 12px;
+            box-shadow: 0 1px 8px rgba(0, 0, 0, .04);
+            margin-bottom: 24px;
+        }
+        table.copy-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+        table.copy-table thead th {
+            font-family: var(--brand-font-title);
+            font-weight: 700;
+            font-size: .78rem;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            padding: 14px 18px;
+            background: var(--brand-accent);
+            color: #fff;
+            text-align: left;
+        }
+        table.copy-table thead th:first-child { border-radius: 12px 0 0 0; }
+        table.copy-table thead th:last-child { border-radius: 0 12px 0 0; }
+        table.copy-table tbody td {
+            padding: 12px 18px;
+            border-bottom: 1px solid #f0ebe4;
+            vertical-align: top;
+        }
+        table.copy-table tbody td:first-child {
+            font-weight: 600;
+            font-family: var(--brand-font-title);
+            color: var(--brand-accent);
+            white-space: nowrap;
+            min-width: 140px;
+        }
+
+        .visual-concept {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+            align-items: start;
+        }
+        .visual-swatch {
+            width: 100%;
+            aspect-ratio: 4/5;
+            border-radius: 12px;
+            background: var(--da-surface);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
+            color: #e8f4ff;
+            text-align: center;
+            font-size: .75rem;
+        }
+        .visual-swatch .overlay-demo {
+            font-family: var(--brand-font-title);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--da-cyan);
+            letter-spacing: .02em;
+        }
+        .visual-swatch .meta {
+            color: #7a9bbf;
+            font-size: .68rem;
+        }
+        .visual-desc h4 {
+            font-family: var(--brand-font-title);
+            font-size: .95rem;
+            margin-bottom: 10px;
+        }
+        .visual-desc ul { padding-left: 18px; font-size: .88rem; }
+        .visual-desc ul li { margin-bottom: 6px; }
+
+        .format-block {
+            background: #faf8f5;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            font-size: .88rem;
+        }
+        .format-block h5 {
+            font-family: var(--brand-font-title);
+            font-size: .9rem;
+            margin-bottom: 8px;
+            color: var(--brand-accent);
+        }
+        .format-block p, .format-block li { color: #444; }
+        .format-block ul { padding-left: 18px; }
+
+        .plataformas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .plataforma-card {
+            background: #faf8f5;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .plataforma-card h5 {
+            font-family: var(--brand-font-title);
+            font-size: .82rem;
+            margin-bottom: 6px;
+            color: var(--brand-accent);
+        }
+        .plataforma-card p { font-size: .82rem; color: #666; }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: .88rem;
+        }
+        .pros-cons .ok { background: #e8f5e9; border-radius: 10px; padding: 12px 14px; }
+        .pros-cons .warn { background: #fff8e1; border-radius: 10px; padding: 12px 14px; }
+
+        .analise-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: var(--card-shadow);
+            border-top: 4px solid var(--brand-accent);
+            margin-bottom: 24px;
+        }
+        .analise-card h3 {
+            font-family: var(--brand-font-title);
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+        .analise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 8px;
+        }
+        .analise-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .85rem;
+            padding: 6px 0;
+        }
+        .analise-item .check {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .75rem;
+            flex-shrink: 0;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .85rem;
+            margin-top: 12px;
+        }
+        .compare-table th, .compare-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0ebe4;
+            text-align: left;
+            vertical-align: top;
+        }
+        .compare-table th {
+            font-family: var(--brand-font-title);
+            font-size: .75rem;
+            text-transform: uppercase;
+            color: #666;
+        }
+
+        .notice {
+            background: #fff3e0;
+            border-radius: 12px;
+            padding: 14px 18px;
+            font-size: .85rem;
+            margin-bottom: 32px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .page-footer { text-align: center; padding: 24px; font-size: .78rem; color: #999; }
+
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 1.5rem; }
+            .conceito { padding: 24px; }
+            .visual-concept { grid-template-columns: 1fr; }
+            .conceito-header { flex-direction: column; gap: 12px; }
+            .pros-cons { grid-template-columns: 1fr; }
+        }
+        @media print {
+            body { background: #fff; }
+            .conceito { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="page-header">
+        <a href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-classic-ad-creative-final&utm_content=header-logo"><img src="https://gui.marketing/wp-content/uploads/2025/02/gui.marketing-1640-x-263-px-1080-x-1080-px.gif"
+            alt="guimarketing"></a>
+        <h1>Criativos Clássicos — Danos Aparentes</h1>
+        <p class="subtitle">Conceitos de publicidade clássica adaptados ao feed. Wedge: <strong>locadoras</strong> · prova no ato · zero prova social inventada.
+            Plataforma prioritária: <strong>Meta Ads</strong>.
+        </p>
+    </header>
+
+    <div class="container">
+
+        <div class="notice">
+            <strong>Restrição de prova:</strong> 0 cases públicos. Criativos usam prova de <em>mecanismo</em> (QR/hash) e evidência pública do <em>problema</em> (com fonte). Sem depoimentos, estrelas ou métricas inventadas.
+        </div>
+
+        <h2 class="section-title"><span class="emoji">📋</span> Diagnóstico do Briefing</h2>
+        <p class="section-desc">Extração estruturada antes da criação · Destino: danosaparentes.com.br/locadoras</p>
+
+        <div class="briefing-grid">
+            <div class="briefing-card">
+                <div class="label">Cliente</div>
+                <div class="value">Danos Aparentes</div>
+            </div>
+            <div class="briefing-card">
+                <div class="label">Produto/Serviço</div>
+                <div class="value">SaaS vistoria veicular digital (PDF + hash SHA-256 + QR + GPS + assinaturas)</div>
+            </div>
+            <div class="briefing-card">
+                <div class="label">Público</div>
+                <div class="value">Dono/ops de locadora SME — disputa na devolução</div>
+            </div>
+            <div class="briefing-card">
+                <div class="label">Dor Principal</div>
+                <div class="value">“Já estava assim” / cobrança sem par entrega×devolução</div>
+            </div>
+            <div class="briefing-card">
+                <div class="label">Diferencial</div>
+                <div class="value">Laudo que se verifica + prova no ato</div>
+            </div>
+            <div class="briefing-card">
+                <div class="label">Plataformas</div>
+                <div class="value">Meta (prioridade), Google Display, LinkedIn, Reels</div>
+            </div>
+            <div class="briefing-card">
+                <div class="label">Tom de Voz</div>
+                <div class="value">Direto, operacional, balcão</div>
+            </div>
+            <div class="briefing-card">
+                <div class="label">Estética</div>
+                <div class="value">Minimalista gráfico / editorial documental (dark navy + ciano)</div>
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <div class="label">Insight Central</div>
+            “No balcão da locadora, a verdade não é o que aconteceu com o carro — é o que você consegue provar no ato.”
+        </div>
+
+        <div class="cliches">
+            <strong>Clichês descartados</strong>
+            <ul>
+                <li>Dashboard SaaS com gráfico verde subindo</li>
+                <li>Aperto de mão / sorriso corporativo</li>
+                <li>Carro impecável em estúdio branco + checklist flutuante</li>
+                <li>“Digitalize sua frota” com UI genérica</li>
+                <li>Estrelas ★★★★★ / depoimento em card / “+500 empresas”</li>
+            </ul>
+        </div>
+
+        <!-- CONCEITO 1 -->
+        <div class="conceito" id="conceito-1">
+            <div class="conceito-header">
+                <div class="numero">01</div>
+                <div class="info">
+                    <h2>O Amassado Fantasma — Metáfora Visual</h2>
+                    <div class="badges">
+                        <span class="badge badge-plataforma">Meta Ads</span>
+                        <span class="badge badge-formato">Estática · Carrossel · Vídeo</span>
+                        <span class="badge badge-angulo">Metáfora Visual</span>
+                        <span class="badge badge-lei">Visual Hammer + Verbal Nail</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="estrategia">
+                <div class="field">
+                    <span class="field-label">Conceito</span>
+                    <span class="field-value">O Amassado Fantasma</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Ideia em 1 frase</span>
+                    <span class="field-value">O amassado que ninguém prova some no balcão e leva a cobrança</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Formato</span>
+                    <span class="field-value">Feed 4:5 · Stories 9:16 · Carrossel</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Lei Clássica</span>
+                    <span class="field-value">Mostre, não conte · In Media Res</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Psicologia</span>
+                    <span class="field-value">Loss Aversion + identificação de balcão</span>
+                </div>
+            </div>
+
+            <div class="copy-table-wrap">
+                <table class="copy-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Conteúdo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Overlay</td>
+                            <td>Prove que é novo.</td>
+                        </tr>
+                        <tr>
+                            <td>Headline / Hook</td>
+                            <td>No balcão, o amassado some. A cobrança também.</td>
+                        </tr>
+                        <tr>
+                            <td>Texto principal</td>
+                            <td>Sem par retirada × devolução, você não compara — discute. Diagrama, foto+GPS, assinatura no ato, PDF com hash + QR. App novo. Sem depoimento inventado.</td>
+                        </tr>
+                        <tr>
+                            <td>CTA</td>
+                            <td>Teste 7 dias sem cartão</td>
+                        </tr>
+                        <tr>
+                            <td>Overlays A/B</td>
+                            <td>A: Prove que é novo. · B: Sem prova, some. · C: Fantasma no balcão.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="visual-concept">
+                <div class="visual-swatch">
+                    <div class="overlay-demo">Prove que é novo.</div>
+                    <div class="meta">Balcão · contorno-fantasma na porta<br>4:5 · navy + ciano</div>
+                </div>
+                <div class="visual-desc">
+                    <h4>Conceito Visual</h4>
+                    <ul>
+                        <li><strong>Cena:</strong> Porta do carro com amassado só em giz/contorno; mãos discutindo no balcão; luz fluorescente.</li>
+                        <li><strong>Paleta:</strong> #020617 · #1FB6FF · #ffb938 (ponto de avaria)</li>
+                        <li><strong>Estilo:</strong> Fotografia documental publicitária</li>
+                        <li><strong>Overlay:</strong> “Prove que é novo.” (não repete “fantasma”)</li>
+                        <li><strong>Branding check:</strong> ✅ Sem o mecanismo (diagrama/QR), a peça vira só drama — a virada é do produto</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="format-block">
+                <h5>Carrossel (5 cards)</h5>
+                <ul>
+                    <li><strong>1 Hook:</strong> “Esse amassado existe?” — só o fantasma, sem marca</li>
+                    <li><strong>2 Tensão:</strong> “Já estava assim” engole a cobrança</li>
+                    <li><strong>3 Virada:</strong> Diagrama no celular</li>
+                    <li><strong>4 Prova:</strong> PDF + QR + SHA-256</li>
+                    <li><strong>5 CTA:</strong> 7 dias grátis · sem cartão</li>
+                </ul>
+            </div>
+
+            <div class="format-block">
+                <h5>Vídeo 15–20s</h5>
+                <p>0–2s fantasma na porta → 2–5s “Já estava assim” → 5–12s diagrama/assinatura/QR → 12–18s CTA trial. Mudo-first.</p>
+            </div>
+
+            <div class="plataformas-grid">
+                <div class="plataforma-card">
+                    <h5>Meta (Feed 4:5)</h5>
+                    <p>Peça principal. Overlay curto + CTA Cadastre-se.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>Stories / Reels 9:16</h5>
+                    <p>Crop vertical do balcão; texto maior no terço superior seguro.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>Google Display</h5>
+                    <p>Versão 1:1 / 16:9 com menos cena, mais overlay.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>LinkedIn</h5>
+                    <p>Copy mais operacional; manter metáfora, cortar tom “fantasma” no texto.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>YouTube Bumper</h5>
+                    <p>Cortar o vídeo em 6s: fantasma → “Prove no ato” → logo.</p>
+                </div>
+            </div>
+
+            <div class="pros-cons">
+                <div class="ok">✅ Thumb-stop alto; identificação imediata do gestor</div>
+                <div class="warn">⚠️ Evitar direção “horror”; manter documental</div>
+            </div>
+        </div>
+
+        <!-- CONCEITO 2 -->
+        <div class="conceito" id="conceito-2">
+            <div class="conceito-header">
+                <div class="numero">02</div>
+                <div class="info">
+                    <h2>Dois Selos. Uma Diferença. — Demonstração</h2>
+                    <div class="badges">
+                        <span class="badge badge-plataforma">Meta Ads</span>
+                        <span class="badge badge-formato">Estática · Carrossel · Vídeo</span>
+                        <span class="badge badge-angulo">Contraste Temporal</span>
+                        <span class="badge badge-lei">Branding Insubstituível</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="estrategia">
+                <div class="field">
+                    <span class="field-label">Conceito</span>
+                    <span class="field-value">Dois Selos. Uma Diferença.</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Ideia em 1 frase</span>
+                    <span class="field-value">A cobrança justa é a diferença entre dois laudos selados</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Formato</span>
+                    <span class="field-value">Feed 4:5 · Carrossel 5 cards</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Lei Clássica</span>
+                    <span class="field-value">Demonstração engenhosa do mecanismo</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Psicologia</span>
+                    <span class="field-value">Contrast Effect + Trust Calibration (QR)</span>
+                </div>
+            </div>
+
+            <div class="copy-table-wrap">
+                <table class="copy-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Conteúdo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Overlay</td>
+                            <td>Compare. Não discuta.</td>
+                        </tr>
+                        <tr>
+                            <td>Headline / Hook</td>
+                            <td>Dois laudos. Uma diferença. Essa é a cobrança.</td>
+                        </tr>
+                        <tr>
+                            <td>Texto principal</td>
+                            <td>Foto solta discute. Par retirada × devolução com GPS, assinatura e hash compara. Escaneia o QR. Sem depoimento falso.</td>
+                        </tr>
+                        <tr>
+                            <td>CTA</td>
+                            <td>Gerar laudo verificável · 7 dias grátis</td>
+                        </tr>
+                        <tr>
+                            <td>Overlays A/B</td>
+                            <td>A: Compare. Não discuta. · B: A diferença cobra. · C: Retirada × Devolução.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="visual-concept">
+                <div class="visual-swatch">
+                    <div class="overlay-demo">Compare. Não discuta.</div>
+                    <div class="meta">2 PDFs · QR âmbar<br>ponto só na devolução</div>
+                </div>
+                <div class="visual-desc">
+                    <h4>Conceito Visual</h4>
+                    <ul>
+                        <li><strong>Cena:</strong> Dois PDFs lado a lado (RETIRADA / DEVOLUÇÃO); só o segundo tem ponto âmbar de avaria.</li>
+                        <li><strong>Paleta:</strong> Surface #020617 · ciano UI · âmbar selo</li>
+                        <li><strong>Estilo:</strong> Still editorial de produto / minimalista gráfico</li>
+                        <li><strong>Overlay:</strong> “Compare. Não discuta.”</li>
+                        <li><strong>Branding check:</strong> ✅ WhatsApp não replica o par selado — logo trocado falha</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="format-block">
+                <h5>Carrossel (5 cards)</h5>
+                <ul>
+                    <li><strong>1:</strong> Uma foto. Zero comparação.</li>
+                    <li><strong>2:</strong> Sem vistoria de entrada, devolução vira achismo</li>
+                    <li><strong>3:</strong> Dois selos. Uma diferença.</li>
+                    <li><strong>4:</strong> GPS · assinatura dual · hash</li>
+                    <li><strong>5:</strong> Starter R$29,90 · Pro R$49,90 · 7 dias</li>
+                </ul>
+            </div>
+
+            <div class="format-block">
+                <h5>Vídeo 20–25s</h5>
+                <p>Teaser “PDF ALTERADO” → WhatsApp sozinho → montagem do par selado → CTA. Ideal para retarget MOF.</p>
+            </div>
+
+            <div class="plataformas-grid">
+                <div class="plataforma-card">
+                    <h5>Meta Feed</h5>
+                    <p>Hero do mecanismo; melhor em warm/retarget.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>LinkedIn</h5>
+                    <p>Formato natural B2B — enfatizar hash/QR.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>Google Display</h5>
+                    <p>Dois painéis simplificados + overlay curto.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>TikTok / Reels</h5>
+                    <p>Swipe revela o ponto âmbar no 2º laudo.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>YouTube</h5>
+                    <p>Demo 15s do fluxo até o QR.</p>
+                </div>
+            </div>
+
+            <div class="pros-cons">
+                <div class="ok">✅ Message match forte com LP /locadoras</div>
+                <div class="warn">⚠️ Menos emoção crua — depende do ponto âmbar como herói</div>
+            </div>
+        </div>
+
+        <!-- CONCEITO 3 -->
+        <div class="conceito" id="conceito-3">
+            <div class="conceito-header">
+                <div class="numero">03</div>
+                <div class="info">
+                    <h2>A Vistoria Doze Dias Depois — Provocação</h2>
+                    <div class="badges">
+                        <span class="badge badge-plataforma">Meta Ads</span>
+                        <span class="badge badge-formato">Estática · Carrossel · Vídeo curto</span>
+                        <span class="badge badge-angulo">Problema Dramatizado</span>
+                        <span class="badge badge-lei">In Media Res + Autoridade do problema</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="estrategia">
+                <div class="field">
+                    <span class="field-label">Conceito</span>
+                    <span class="field-value">A Vistoria Doze Dias Depois</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Ideia em 1 frase</span>
+                    <span class="field-value">Prova tardia não é prova — é acusação</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Formato</span>
+                    <span class="field-value">4:5 · Carrossel 6 · Bumper 9–12s</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Lei Clássica</span>
+                    <span class="field-value">Provocação + In Media Res</span>
+                </div>
+                <div class="field">
+                    <span class="field-label">Psicologia</span>
+                    <span class="field-value">Authority Bias (problema) com honestidade</span>
+                </div>
+            </div>
+
+            <div class="copy-table-wrap">
+                <table class="copy-table">
+                    <thead>
+                        <tr>
+                            <th>Elemento</th>
+                            <th>Conteúdo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Overlay</td>
+                            <td>Prova no ato.</td>
+                        </tr>
+                        <tr>
+                            <td>Headline / Hook</td>
+                            <td>Vistoria doze dias depois não é prova. É acusação.</td>
+                        </tr>
+                        <tr>
+                            <td>Texto principal</td>
+                            <td>Fecha no ato: diagrama, foto+GPS, duas assinaturas, PDF com hash + QR. Legenda pode citar ConJur 2024 como prova do <em>problema</em> — nunca como cliente.</td>
+                        </tr>
+                        <tr>
+                            <td>CTA</td>
+                            <td>Assine na tela hoje · 7 dias grátis</td>
+                        </tr>
+                        <tr>
+                            <td>Overlays A/B</td>
+                            <td>A: Prova no ato. · B: Depois não conta. · C: Assine agora.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="visual-concept">
+                <div class="visual-swatch">
+                    <div class="overlay-demo">Prova no ato.</div>
+                    <div class="meta">Pátio vazio · post-it · calendário<br>12 dias (cena, não estatística)</div>
+                </div>
+                <div class="visual-desc">
+                    <h4>Conceito Visual</h4>
+                    <ul>
+                        <li><strong>Cena:</strong> Pátio ao entardecer; post-it no para-brisa; páginas de calendário ao vento.</li>
+                        <li><strong>Paleta:</strong> Navy frio + ciano de rim light</li>
+                        <li><strong>Estilo:</strong> Documental / cinema leve (sem horror)</li>
+                        <li><strong>Overlay:</strong> “Prova no ato.”</li>
+                        <li><strong>Branding check:</strong> ✅ Virada = assinatura dual + QR — não genérico “digitalize”</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="format-block">
+                <h5>Carrossel (6 cards)</h5>
+                <ul>
+                    <li>Vistoria em 12 dias? → Sem cliente/assinatura/GPS → Cobrança sem checagem prévia cai → Fecha no ato → Hash/QR → Trial</li>
+                </ul>
+            </div>
+
+            <div class="format-block">
+                <h5>Vídeo curto 9–12s</h5>
+                <p>Calendário voando → assinatura no celular → QR + CTA. Ideal Stories/Reels.</p>
+            </div>
+
+            <div class="plataformas-grid">
+                <div class="plataforma-card">
+                    <h5>Meta Feed</h5>
+                    <p>Ângulo jurídico-educativo; budget menor.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>Stories / Reels</h5>
+                    <p>Formato curto 9–12s performa melhor.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>LinkedIn</h5>
+                    <p>Tom sóbrio; fonte ConJur na legenda.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>Google Display</h5>
+                    <p>Overlay “Prova no ato” + CTA trial.</p>
+                </div>
+                <div class="plataforma-card">
+                    <h5>YouTube</h5>
+                    <p>Bumper 6s: “Depois não conta.”</p>
+                </div>
+            </div>
+
+            <div class="pros-cons">
+                <div class="ok">✅ Autoridade do problema sem fake social proof</div>
+                <div class="warn">⚠️ “12 dias” = cena; não vender como média estatística</div>
+            </div>
+        </div>
+
+        <!-- ANÁLISE -->
+        <div class="analise-card">
+            <h3>Análise Comparativa — Ordem de teste sugerida</h3>
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>Conceito</th>
+                        <th>Funil</th>
+                        <th>Budget teste</th>
+                        <th>Por quê</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>01 · Amassado Fantasma</strong></td>
+                        <td>Cold TOF</td>
+                        <td>50%</td>
+                        <td>Maior thumb-stop na dor de balcão</td>
+                    </tr>
+                    <tr>
+                        <td><strong>02 · Dois Selos</strong></td>
+                        <td>Warm MOF</td>
+                        <td>35%</td>
+                        <td>Educa mecanismo; message match LP</td>
+                    </tr>
+                    <tr>
+                        <td><strong>03 · Doze Dias Depois</strong></td>
+                        <td>Cold→Warm</td>
+                        <td>15%</td>
+                        <td>Ângulo jurídico; disciplina de fonte</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top:14px;font-size:.88rem;color:#555;">Destino: <code>https://danosaparentes.com.br/locadoras</code> · CTA nativo Cadastre-se / Obter oferta · 7–10 dias de teste.</p>
+        </div>
+
+        <div class="analise-card">
+            <h3>Checklist de Publicidade Clássica</h3>
+            <div class="analise-grid">
+                <div class="analise-item">
+                    <div class="check">✓</div>
+                    <span>Uma ideia por peça</span>
+                </div>
+                <div class="analise-item">
+                    <div class="check">✓</div>
+                    <span>Visual Hammer + Verbal Nail (não se repetem)</span>
+                </div>
+                <div class="analise-item">
+                    <div class="check">✓</div>
+                    <span>Mostre, não conte (não-literal)</span>
+                </div>
+                <div class="analise-item">
+                    <div class="check">✓</div>
+                    <span>In Media Res (começa no clímax)</span>
+                </div>
+                <div class="analise-item">
+                    <div class="check">✓</div>
+                    <span>Branding insubstituível (teste do logo)</span>
+                </div>
+                <div class="analise-item">
+                    <div class="check">✓</div>
+                    <span>Zero prova social inventada</span>
+                </div>
+                <div class="analise-item">
+                    <div class="check">✓</div>
+                    <span>Diversificação de ângulos e formatos</span>
+                </div>
+                <div class="analise-item">
+                    <div class="check">✓</div>
+                    <span>≥3 overlays A/B por conceito</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="page-footer">
+        <p><a href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-classic-ad-creative-final&utm_content=footer" style="color:#999;text-decoration:none;">gui.marketing</a> — Criativos Clássicos · Danos Aparentes · 2026-07-25</p>
+    </footer>
+
+</body>
+
+</html>

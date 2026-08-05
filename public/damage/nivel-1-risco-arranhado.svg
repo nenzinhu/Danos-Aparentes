@@ -1,0 +1,153 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 424" width="300" height="424" fill="none" role="img" aria-label="Nível 1: Superficial — Risco / Arranhado">
+  <title>Nível 1: Superficial — Risco / Arranhado</title>
+  <defs>
+    <linearGradient id="s1-pill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="0.5" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#047857"/>
+    </linearGradient>
+
+    <!-- lataria vermelha -->
+    <linearGradient id="s1-paint" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#f87171"/>
+      <stop offset="0.28" stop-color="#e11d48"/>
+      <stop offset="0.62" stop-color="#b91c1c"/>
+      <stop offset="1" stop-color="#5b0f0f"/>
+    </linearGradient>
+    <linearGradient id="s1-paint-top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fecaca"/>
+      <stop offset="0.45" stop-color="#ef4444"/>
+      <stop offset="1" stop-color="#7f1d1d"/>
+    </linearGradient>
+    <linearGradient id="s1-sill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7f1d1d"/>
+      <stop offset="1" stop-color="#2b0707"/>
+    </linearGradient>
+
+    <!-- vidro da esfera -->
+    <radialGradient id="s1-gloss" cx="0.33" cy="0.24" r="0.72">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.62"/>
+      <stop offset="0.32" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="0.72" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#0f172a" stop-opacity="0.42"/>
+    </radialGradient>
+    <radialGradient id="s1-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0.72" stop-color="#7dd3fc" stop-opacity="0"/>
+      <stop offset="0.92" stop-color="#7dd3fc" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- pedestal -->
+    <linearGradient id="s1-disc" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#dbeafe" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#93c5fd" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="s1-disc-side" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#bfdbfe" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#60a5fa" stop-opacity="0.35"/>
+    </linearGradient>
+
+    <filter id="s1-soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <filter id="s1-pillshadow" x="-30%" y="-60%" width="160%" height="260%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#065f46" flood-opacity="0.45"/>
+    </filter>
+    <filter id="s1-orbshadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#1e3a8a" flood-opacity="0.28"/>
+    </filter>
+
+    <clipPath id="s1-clip"><circle cx="150" cy="176" r="86"/></clipPath>
+  </defs>
+
+  <!-- ================= PEDESTAL HOLOGRÁFICO ================= -->
+  <g>
+    <ellipse cx="150" cy="286" rx="112" ry="30" fill="#93c5fd" opacity="0.28" filter="url(#s1-soft)"/>
+    <path d="M38 272 a112 30 0 0 0 224 0 v10 a112 30 0 0 1 -224 0 z" fill="url(#s1-disc-side)"/>
+    <ellipse cx="150" cy="272" rx="112" ry="30" fill="url(#s1-disc)"/>
+    <ellipse cx="150" cy="272" rx="112" ry="30" fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.9"/>
+    <ellipse cx="150" cy="268" rx="88" ry="23" fill="none" stroke="#e0f2fe" stroke-width="2" opacity="0.85"/>
+    <ellipse cx="150" cy="264" rx="64" ry="16" fill="none" stroke="#bae6fd" stroke-width="1.6" opacity="0.7"/>
+    <ellipse cx="150" cy="260" rx="40" ry="10" fill="none" stroke="#ffffff" stroke-width="1.2" opacity="0.55"/>
+  </g>
+
+  <!-- ================= ESFERA ================= -->
+  <g filter="url(#s1-orbshadow)">
+    <circle cx="150" cy="176" r="94" fill="url(#s1-halo)"/>
+    <circle cx="150" cy="176" r="86" fill="#fee2e2"/>
+    <g clip-path="url(#s1-clip)">
+      <!-- carroceria vermelha em perspectiva -->
+      <rect x="60" y="86" width="180" height="180" fill="url(#s1-paint)"/>
+      <path d="M64 86 h172 v34 c-46 -16 -110 -14 -172 8 z" fill="url(#s1-paint-top)" opacity="0.9"/>
+      <path d="M52 132 C 96 112 176 106 250 124 L250 138 C 176 120 96 126 52 146 z" fill="#fca5a5" opacity="0.45"/>
+      <path d="M52 214 C 100 236 190 238 252 218 L252 268 L52 268 z" fill="url(#s1-sill)" opacity="0.9"/>
+      <path d="M52 212 C 100 234 190 236 252 216" stroke="#0f0303" stroke-width="5" fill="none" opacity="0.55"/>
+      <path d="M52 208 C 100 230 190 232 252 212" stroke="#fca5a5" stroke-width="1.6" fill="none" opacity="0.5"/>
+      <!-- reflexo especular sobre a pintura -->
+      <path d="M56 160 C 108 142 196 140 246 158 L246 170 C 196 152 108 154 56 172 z" fill="#ffffff" opacity="0.14"/>
+
+      <!-- ARRANHÕES (3 garras metálicas) -->
+      <g stroke-linecap="round" fill="none">
+        <!-- sulco escuro (profundidade) -->
+        <path d="M92 216 C 112 186 144 156 190 124" stroke="#450a0a" stroke-width="6" opacity="0.5"/>
+        <path d="M106 228 C 128 196 162 168 210 136" stroke="#450a0a" stroke-width="7" opacity="0.5"/>
+        <path d="M126 238 C 150 210 184 184 224 156" stroke="#450a0a" stroke-width="5" opacity="0.5"/>
+
+        <!-- metal exposto -->
+        <path d="M92 216 C 112 186 144 156 190 124" stroke="#e2e8f0" stroke-width="3.4"/>
+        <path d="M106 228 C 128 196 162 168 210 136" stroke="#cbd5e1" stroke-width="4.2"/>
+        <path d="M126 238 C 150 210 184 184 224 156" stroke="#e2e8f0" stroke-width="2.8"/>
+
+        <!-- brilho na aresta superior do sulco -->
+        <path d="M92 216 C 112 186 144 156 190 124" stroke="#ffffff" stroke-width="1.3" opacity="0.95" transform="translate(-1.5,-1.5)"/>
+        <path d="M106 228 C 128 196 162 168 210 136" stroke="#ffffff" stroke-width="1.5" opacity="0.95" transform="translate(-1.8,-1.8)"/>
+        <path d="M126 238 C 150 210 184 184 224 156" stroke="#ffffff" stroke-width="1.1" opacity="0.9" transform="translate(-1.3,-1.3)"/>
+
+        <!-- micro-riscos finos acompanhando as garras -->
+        <g stroke="#f8fafc" stroke-width="0.9" opacity="0.75">
+          <path d="M99 214 C 118 188 148 160 188 132"/>
+          <path d="M115 230 C 136 200 168 174 206 146"/>
+          <path d="M134 240 C 156 214 188 190 222 166"/>
+          <path d="M86 210 C 104 184 132 158 168 132" opacity="0.5"/>
+        </g>
+      </g>
+
+      <!-- lascas de tinta soltas -->
+      <g stroke="#cbd5e1" stroke-width="0.9">
+        <polygon points="122,190 133,182 130,196" fill="#f8fafc"/>
+        <polygon points="160,158 171,150 168,164" fill="#ffffff"/>
+        <polygon points="196,132 206,126 203,139" fill="#f1f5f9"/>
+        <polygon points="146,210 154,204 152,215" fill="#e2e8f0"/>
+        <polygon points="182,178 190,172 188,183" fill="#ffffff"/>
+      </g>
+
+      <!-- vidro por cima -->
+      <circle cx="150" cy="176" r="86" fill="url(#s1-gloss)"/>
+    </g>
+    <circle cx="150" cy="176" r="86" fill="none" stroke="#ffffff" stroke-width="4"/>
+    <circle cx="150" cy="176" r="86" fill="none" stroke="#38bdf8" stroke-width="1.2" opacity="0.55"/>
+    <path d="M92 122 A 78 78 0 0 1 208 118" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity="0.5" fill="none"/>
+  </g>
+
+  <!-- ================= SELO SUPERIOR ================= -->
+  <g filter="url(#s1-pillshadow)">
+    <rect x="34" y="16" width="232" height="40" rx="20" fill="url(#s1-pill)" stroke="#a7f3d0" stroke-width="2"/>
+    <circle cx="60" cy="36" r="11" fill="#ffffff"/>
+    <circle cx="60" cy="36" r="7" fill="#059669"/>
+    <circle cx="57.5" cy="33" r="2.4" fill="#d1fae5" opacity="0.9"/>
+    <text x="80" y="42" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="0.6">NÍVEL 1: SUPERFICIAL</text>
+  </g>
+
+  <!-- brilhos decorativos -->
+  <g fill="#bfdbfe" opacity="0.75">
+    <path d="M276 306 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4 z"/>
+    <path d="M24 296 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 z" opacity="0.7"/>
+  </g>
+
+  <!-- ================= RÓTULO ================= -->
+  <g fill="#1e293b" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="400" letter-spacing="0.4" text-anchor="middle">
+    <text x="150" y="358">RISCO /</text>
+    <text x="150" y="392">ARRANHADO</text>
+  </g>
+</svg>

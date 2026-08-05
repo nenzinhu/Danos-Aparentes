@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 424" width="300" height="424" fill="none" role="img" aria-label="Nível 2: Estrutural — Amassado / Deformado">
+  <title>Nível 2: Estrutural — Amassado / Deformado</title>
+  <defs>
+    <linearGradient id="s2-pill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbbf24"/>
+      <stop offset="0.5" stop-color="#f59e0b"/>
+      <stop offset="1" stop-color="#b45309"/>
+    </linearGradient>
+
+    <!-- lataria azul -->
+    <linearGradient id="s2-paint" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#93c5fd"/>
+      <stop offset="0.3" stop-color="#3b82f6"/>
+      <stop offset="0.68" stop-color="#1d4ed8"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="s2-paint-top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dbeafe"/>
+      <stop offset="0.5" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#1e40af"/>
+    </linearGradient>
+    <!-- cavidade do amassado -->
+    <radialGradient id="s2-cavity" cx="0.62" cy="0.68" r="0.85">
+      <stop offset="0" stop-color="#1e40af" stop-opacity="0.35"/>
+      <stop offset="0.45" stop-color="#172554" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#020617" stop-opacity="0.92"/>
+    </radialGradient>
+    <linearGradient id="s2-lip" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#bfdbfe"/>
+      <stop offset="0.5" stop-color="#60a5fa"/>
+      <stop offset="1" stop-color="#1e40af"/>
+    </linearGradient>
+
+    <radialGradient id="s2-gloss" cx="0.33" cy="0.24" r="0.72">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="0.32" stop-color="#ffffff" stop-opacity="0.12"/>
+      <stop offset="0.72" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#0f172a" stop-opacity="0.42"/>
+    </radialGradient>
+    <radialGradient id="s2-halo" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0.72" stop-color="#7dd3fc" stop-opacity="0"/>
+      <stop offset="0.92" stop-color="#7dd3fc" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/>
+    </radialGradient>
+
+    <linearGradient id="s2-disc" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#dbeafe" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#93c5fd" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="s2-disc-side" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#bfdbfe" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#60a5fa" stop-opacity="0.35"/>
+    </linearGradient>
+
+    <filter id="s2-soft" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <filter id="s2-pillshadow" x="-30%" y="-60%" width="160%" height="260%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#92400e" flood-opacity="0.45"/>
+    </filter>
+    <filter id="s2-orbshadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#1e3a8a" flood-opacity="0.28"/>
+    </filter>
+
+    <clipPath id="s2-clip"><circle cx="150" cy="176" r="86"/></clipPath>
+  </defs>
+
+  <!-- ================= PEDESTAL ================= -->
+  <g>
+    <ellipse cx="150" cy="286" rx="112" ry="30" fill="#93c5fd" opacity="0.28" filter="url(#s2-soft)"/>
+    <path d="M38 272 a112 30 0 0 0 224 0 v10 a112 30 0 0 1 -224 0 z" fill="url(#s2-disc-side)"/>
+    <ellipse cx="150" cy="272" rx="112" ry="30" fill="url(#s2-disc)"/>
+    <ellipse cx="150" cy="272" rx="112" ry="30" fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.9"/>
+    <ellipse cx="150" cy="268" rx="88" ry="23" fill="none" stroke="#e0f2fe" stroke-width="2" opacity="0.85"/>
+    <ellipse cx="150" cy="264" rx="64" ry="16" fill="none" stroke="#bae6fd" stroke-width="1.6" opacity="0.7"/>
+    <ellipse cx="150" cy="260" rx="40" ry="10" fill="none" stroke="#ffffff" stroke-width="1.2" opacity="0.55"/>
+  </g>
+
+  <!-- ================= ESFERA ================= -->
+  <g filter="url(#s2-orbshadow)">
+    <circle cx="150" cy="176" r="94" fill="url(#s2-halo)"/>
+    <circle cx="150" cy="176" r="86" fill="#dbeafe"/>
+    <g clip-path="url(#s2-clip)">
+      <rect x="60" y="86" width="180" height="180" fill="url(#s2-paint)"/>
+      <path d="M60 86 h180 v40 c-52 -18 -122 -16 -180 8 z" fill="url(#s2-paint-top)" opacity="0.85"/>
+      <path d="M52 138 C 100 116 190 114 252 134 L252 146 C 190 126 100 128 52 150 z" fill="#bfdbfe" opacity="0.35"/>
+
+      <!-- AMASSADO: cavidade profunda com lábio deformado -->
+      <path d="M78 150 C 96 118 152 108 196 128 C 236 146 240 196 214 224 C 188 252 128 254 100 228 C 74 204 66 176 78 150 Z"
+            fill="url(#s2-lip)" opacity="0.95"/>
+      <path d="M92 156 C 110 130 156 122 192 140 C 224 156 226 196 204 218 C 182 240 132 240 110 220 C 88 200 82 176 92 156 Z"
+            fill="url(#s2-cavity)"/>
+      <!-- lábio brilhante (metal dobrado) na borda do amassado -->
+      <path d="M78 150 C 96 118 152 108 196 128 C 210 135 219 146 223 158 C 213 146 200 137 186 132 C 146 118 100 128 84 156 Z"
+            fill="#dbeafe" opacity="0.9"/>
+      <path d="M80 152 C 100 122 154 110 198 130" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.95"/>
+      <path d="M88 170 C 106 142 152 132 190 150" stroke="#93c5fd" stroke-width="2.4" stroke-linecap="round" fill="none" opacity="0.65"/>
+      <!-- reflexo interno curvo da cavidade -->
+      <path d="M112 214 C 94 192 102 164 128 148" stroke="#60a5fa" stroke-width="3.4" stroke-linecap="round" fill="none" opacity="0.6"/>
+      <path d="M126 222 C 110 200 116 174 138 158" stroke="#93c5fd" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.45"/>
+      <path d="M204 206 C 218 186 214 162 196 148" stroke="#0b1220" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.55"/>
+      <!-- sombra inferior de contato -->
+      <path d="M100 228 C 130 252 190 250 214 224" stroke="#0b1220" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.35"/>
+
+      <path d="M52 236 C 100 258 190 258 252 236" stroke="#172554" stroke-width="6" fill="none" opacity="0.5"/>
+      <circle cx="150" cy="176" r="86" fill="url(#s2-gloss)"/>
+    </g>
+    <circle cx="150" cy="176" r="86" fill="none" stroke="#ffffff" stroke-width="4"/>
+    <circle cx="150" cy="176" r="86" fill="none" stroke="#38bdf8" stroke-width="1.2" opacity="0.55"/>
+    <path d="M92 122 A 78 78 0 0 1 208 118" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity="0.5" fill="none"/>
+  </g>
+
+  <!-- ================= SELO SUPERIOR ================= -->
+  <g filter="url(#s2-pillshadow)" transform="rotate(-3 150 36)">
+    <rect x="30" y="16" width="240" height="40" rx="20" fill="url(#s2-pill)" stroke="#fde68a" stroke-width="2"/>
+    <circle cx="56" cy="36" r="11" fill="#ffffff"/>
+    <circle cx="56" cy="36" r="7" fill="#f59e0b"/>
+    <circle cx="53.5" cy="33" r="2.4" fill="#fef3c7" opacity="0.9"/>
+    <text x="76" y="42" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" letter-spacing="0.6">NÍVEL 2: ESTRUTURAL</text>
+  </g>
+
+  <g fill="#bfdbfe" opacity="0.75">
+    <path d="M276 306 l4 10 10 4 -10 4 -4 10 -4 -10 -10 -4 10 -4 z"/>
+    <path d="M24 296 l3 7 7 3 -7 3 -3 7 -3 -7 -7 -3 7 -3 z" opacity="0.7"/>
+  </g>
+
+  <!-- ================= RÓTULO ================= -->
+  <g fill="#1e293b" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="400" letter-spacing="0.4" text-anchor="middle">
+    <text x="150" y="358">AMASSADO /</text>
+    <text x="150" y="392">DEFORMADO</text>
+  </g>
+</svg>

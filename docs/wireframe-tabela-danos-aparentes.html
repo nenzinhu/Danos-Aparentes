@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wireframe LP — Danos Aparentes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-title: 'Inter Tight', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --brand-accent: #9E4428;
+      --brand-dark: #141413;
+      --brand-lilac: #f0e6e1;
+      --card-shadow: 0 2px 16px rgba(0,0,0,.06);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body);
+      background: #f7f3ed;
+      color: #1a1a1a;
+      line-height: 1.65;
+    }
+    .page-header { text-align: center; padding: 48px 24px 32px; }
+    .page-header img { height: 48px; margin-bottom: 16px; }
+    .page-header h1 {
+      font-family: var(--font-title);
+      font-size: 2rem;
+      color: #000;
+    }
+    .page-header .subtitle {
+      font-size: .95rem;
+      color: #666;
+      max-width: 640px;
+      margin: 8px auto 0;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px 64px; }
+    .brand-badge {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: .75rem;
+      background: var(--brand-lilac);
+      color: var(--brand-accent);
+      margin-bottom: 24px;
+    }
+    .meta-strip {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      font-size: .85rem;
+      box-shadow: var(--card-shadow);
+      border-left: 4px solid var(--brand-accent);
+    }
+    .meta-strip strong { color: var(--brand-dark); }
+    .wireframe-wrap {
+      overflow-x: auto;
+      border-radius: 16px;
+      box-shadow: var(--card-shadow);
+      background: #fff;
+      margin-bottom: 40px;
+    }
+    table.wireframe-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .86rem;
+    }
+    table.wireframe-table thead th {
+      font-family: var(--font-title);
+      font-weight: 700;
+      font-size: .8rem;
+      text-transform: uppercase;
+      padding: 14px 16px;
+      background: var(--brand-dark);
+      color: #fff;
+      text-align: left;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    table.wireframe-table thead th:first-child { border-radius: 16px 0 0 0; }
+    table.wireframe-table thead th:last-child { border-radius: 0 16px 0 0; }
+    table.wireframe-table tbody td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+    table.wireframe-table tbody tr:hover { background: #faf8f5; }
+    table.wireframe-table tbody td:first-child {
+      font-weight: 600;
+      font-family: var(--font-title);
+      color: var(--brand-accent);
+      white-space: nowrap;
+      min-width: 130px;
+    }
+    table.wireframe-table ul { margin: 0; padding-left: 16px; }
+    table.wireframe-table ul li { margin-bottom: 4px; }
+    .section-separator td {
+      background: var(--brand-lilac) !important;
+      font-family: var(--font-title) !important;
+      font-weight: 700 !important;
+      color: var(--brand-accent) !important;
+      font-size: .82rem !important;
+      text-transform: uppercase !important;
+      letter-spacing: .5px !important;
+      padding: 10px 16px !important;
+    }
+    .tag-h {
+      display: inline-block;
+      font-size: .65rem;
+      font-weight: 700;
+      background: #fff6db;
+      color: #a67c00;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    .tag-e {
+      display: inline-block;
+      font-size: .65rem;
+      font-weight: 700;
+      background: #e6f5ee;
+      color: #1a7f4b;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 4px;
+    }
+    .defesa-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: var(--card-shadow);
+      border-top: 4px solid var(--brand-accent);
+      margin-bottom: 40px;
+    }
+    .defesa-card h2 {
+      font-family: var(--font-title);
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: var(--brand-accent);
+    }
+    .defesa-card h3 {
+      font-family: var(--font-title);
+      font-size: .95rem;
+      margin: 20px 0 8px;
+    }
+    .defesa-card p, .defesa-card li { font-size: .88rem; line-height: 1.7; }
+    .defesa-card ul { padding-left: 18px; }
+    .defesa-card ul li { margin-bottom: 6px; }
+    .tag-framework {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 12px;
+      font-size: .72rem;
+      font-weight: 700;
+      background: var(--brand-accent);
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .conv-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .conv-item {
+      background: #faf8f5;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: .8rem;
+    }
+    .conv-item strong { display: block; margin-bottom: 4px; color: var(--brand-dark); }
+    .page-footer { text-align: center; padding: 24px; font-size: .78rem; color: #999; }
+    .page-footer a { color: #999; text-decoration: none; }
+    @media (max-width: 768px) {
+      .page-header h1 { font-size: 1.5rem; }
+      table.wireframe-table { font-size: .8rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-wireframe-landing-page&utm_content=header-logo">
+      <img src="https://gui.marketing/wp-content/uploads/2025/02/gui.marketing-1640-x-263-px-1080-x-1080-px.gif" alt="gui.marketing" />
+    </a>
+    <h1>Wireframe Landing Page — Danos Aparentes</h1>
+    <p class="subtitle">
+      Wireframe em formato de tabela para landing page de geração de SQLs.
+      Framework <strong>P.A.S.T.O.R.</strong> — Vistoria veicular digital (wedge: locadoras).
+    </p>
+  </header>
+
+  <div class="container">
+    <span class="brand-badge">Danos Aparentes · LP Locadoras · 2026-07-25</span>
+
+    <div class="meta-strip">
+      <strong>Wedge:</strong> locadoras / “já estava assim” / prova no ato &nbsp;·&nbsp;
+      <strong>Prova:</strong> 0 cases — demo QR + citação jurídica + trial (sem depoimentos inventados) &nbsp;·&nbsp;
+      <strong>MD:</strong> <code>docs/wireframe-lp-danos-aparentes.md</code>
+    </div>
+
+    <div class="wireframe-wrap">
+      <table class="wireframe-table" id="wireframe-danos-aparentes">
+        <thead>
+          <tr>
+            <th>Seção</th>
+            <th>Framework</th>
+            <th>Elemento</th>
+            <th>Conteúdo</th>
+            <th>Notas para Designer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- P -->
+          <tr class="section-separator">
+            <td colspan="5">P — PROBLEM (abrir a ferida da devolução)</td>
+          </tr>
+          <tr>
+            <td>Hero</td>
+            <td>Problem</td>
+            <td>Headline (H1)</td>
+            <td>Chega de discutir amassado que já existia no carro. <span class="tag-e">[E-produto]</span></td>
+            <td>Fundo #141413 ou full-bleed pátio/balcão. Brand Danos Aparentes hero-level. Tipografia Outfit / Saira Condensed. Máx. 2 linhas.</td>
+          </tr>
+          <tr>
+            <td>Hero</td>
+            <td>Problem</td>
+            <td>Subheadline</td>
+            <td>Vistoria digital na retirada e na devolução: diagrama, foto com GPS, assinatura na tela e PDF com hash SHA-256 + QR — prova no ato, não discussão no balcão.</td>
+            <td>Máx. 3 linhas. Cor suave sobre dark. Sem feature soup além do mecanismo.</td>
+          </tr>
+          <tr>
+            <td>Hero</td>
+            <td>Problem</td>
+            <td>CTA primário</td>
+            <td>Começar 7 dias grátis — sem cartão</td>
+            <td>Botão accent #9E4428 ou claro no dark. Sombra forte. Não usar “Saiba mais”.</td>
+          </tr>
+          <tr>
+            <td>Hero</td>
+            <td>Problem</td>
+            <td>CTA secundário</td>
+            <td>Ver um laudo real com QR</td>
+            <td>Ghost / link → âncora #demo.</td>
+          </tr>
+          <tr>
+            <td>Hero</td>
+            <td>Problem</td>
+            <td>Trust bar</td>
+            <td>
+              <ul>
+                <li>Hash SHA-256 + QR público</li>
+                <li>Offline no pátio</li>
+                <li>7 dias grátis sem cartão</li>
+                <li>App novo — sem depoimentos inventados</li>
+              </ul>
+            </td>
+            <td>4 badges honestos. Proibido logos de clientes fictícios. Badge 4 = honesty strip.</td>
+          </tr>
+
+          <!-- A -->
+          <tr class="section-separator">
+            <td colspan="5">A — AMPLIFY (custo de não ter prova)</td>
+          </tr>
+          <tr>
+            <td>Amplify</td>
+            <td>Amplify</td>
+            <td>Headline (H2)</td>
+            <td>Sem vistoria de entrada comparável, a cobrança de avaria vira discussão — e às vezes, processo.</td>
+            <td>Fundo rose suave (#FFF5F3). Sem cards genéricos de “desafios”.</td>
+          </tr>
+          <tr>
+            <td>Amplify</td>
+            <td>Amplify</td>
+            <td>3 cards de dor</td>
+            <td>
+              <ul>
+                <li><strong>“Já estava assim.”</strong> Cliente nega dano novo. Sem laudo de retirada no mesmo padrão, você discute — não compara. <span class="tag-e">[E]</span></li>
+                <li><strong>Foto WhatsApp / só na devolução.</strong> Sem par entrega×devolução, o ônus da prova fica frágil. <span class="tag-e">[E]</span></li>
+                <li><strong>Cada vistoriador, um jeito.</strong> Prancheta diferente = laudos incomparáveis. <span class="tag-e">[E-produto]</span></li>
+              </ul>
+            </td>
+            <td>Grid 3 colunas. Ícones alerta (vermelho só no ícone). Linguagem de balcão.</td>
+          </tr>
+          <tr>
+            <td>Amplify</td>
+            <td>Amplify</td>
+            <td>Bloco autoridade (problema)</td>
+            <td>Citação ConJur (07/03/2024): ausência de checagem antes da entrega impossibilita comparação do estado antes×depois. Link para fonte. Label: “Prova do problema no mercado — não são clientes do app.”</td>
+            <td>Bloco citação + fonte mono pequena. Nunca estilo “depoimento de cliente”.</td>
+          </tr>
+
+          <!-- S -->
+          <tr class="section-separator">
+            <td colspan="5">S — STORY / SOLUTION (mecanismo único)</td>
+          </tr>
+          <tr>
+            <td>Solution</td>
+            <td>Solution</td>
+            <td>Headline (H2)</td>
+            <td>Laudo de avarias aparentes que prova a si mesmo.</td>
+            <td>Fundo branco. Hierarquia limpa.</td>
+          </tr>
+          <tr>
+            <td>Solution</td>
+            <td>Solution</td>
+            <td>4 steps</td>
+            <td>
+              <ol>
+                <li>Marque no diagrama (padrão entre vistoriadores)</li>
+                <li>Foto com GPS + timestamp</li>
+                <li>Assinatura vistoriador + cliente na tela, no ato</li>
+                <li>PDF selado: hash SHA-256 + QR (editar quebra o hash)</li>
+              </ol>
+            </td>
+            <td>Stepper horizontal desktop; stack mobile. Número grande + ícone.</td>
+          </tr>
+          <tr>
+            <td>Solution</td>
+            <td>Solution</td>
+            <td>Contraste antes×depois</td>
+            <td><strong>Antes:</strong> prancheta / WhatsApp / PDF editável. <strong>Depois (mecanismo):</strong> laudo verificável. Sem claim de ROI de cliente.</td>
+            <td>Split 2 colunas. Antagonista visual à esquerda.</td>
+          </tr>
+
+          <!-- T -->
+          <tr class="section-separator">
+            <td colspan="5">T — TRANSFORMATION / TESTIMONY* (prova honesta — zero fake quotes)</td>
+          </tr>
+          <tr>
+            <td>Prova</td>
+            <td>Testimony*</td>
+            <td>Headline (H2)</td>
+            <td>Prova do que existe hoje — sem cases inventados.</td>
+            <td>Fundo ice (#EDF4FF). Honesty first.</td>
+          </tr>
+          <tr>
+            <td>Prova</td>
+            <td>Testimony*</td>
+            <td>Demo produto (#demo)</td>
+            <td><strong>Escaneie o QR deste laudo demo.</strong> Confira o hash. Prova do mecanismo — não um depoimento. CTA: “Abrir verificação pública”.</td>
+            <td>Mock PDF + QR real. Placeholder amarelo se QR ainda não live.</td>
+          </tr>
+          <tr>
+            <td>Prova</td>
+            <td>Testimony*</td>
+            <td>Prova de mercado</td>
+            <td>ConJur 2024 + TJDFT 2022 (vistoria prévia / cobrança unilateral). Citar fonte. Explicitar: não são clientes Danos Aparentes.</td>
+            <td>2 cards com link externo.</td>
+          </tr>
+          <tr>
+            <td>Prova</td>
+            <td>Testimony*</td>
+            <td>Honesty strip</td>
+            <td>App novo. Ainda não temos histórico público de clientes. Preferimos trial + laudo verificável a depoimento falso.</td>
+            <td>Sem estrelas falsas. Tipografia sóbria.</td>
+          </tr>
+
+          <!-- O -->
+          <tr class="section-separator">
+            <td colspan="5">O — OFFER (preço transparente SME)</td>
+          </tr>
+          <tr>
+            <td>Offer</td>
+            <td>Offer</td>
+            <td>Headline (H2)</td>
+            <td>Comece pelo plano que cabe no volume da sua base.</td>
+            <td>Fundo lavender suave.</td>
+          </tr>
+          <tr>
+            <td>Offer</td>
+            <td>Offer</td>
+            <td>Pricing</td>
+            <td>
+              <ul>
+                <li><strong>Starter R$ 29,90/mês</strong> — 20 laudos (≈ R$ 1,50/laudo)</li>
+                <li><strong>Pro R$ 49,90/mês</strong> — 80 laudos + white-label (≈ R$ 0,62/laudo)</li>
+                <li><strong>Corporativo a partir de R$ 299/mês</strong> — multi-usuário; piloto via WhatsApp; sem case inventado</li>
+              </ul>
+            </td>
+            <td>3 cards. Destacar Pro white-label. Não inventar “mais popular” sem dado.</td>
+          </tr>
+          <tr>
+            <td>Offer</td>
+            <td>Offer</td>
+            <td>Risk reversal + CTA</td>
+            <td>7 dias grátis sem cartão. Cancele no portal. PIX no SME. CTA: “Quero testar na minha locadora” → #form</td>
+            <td>Trust line sob cards.</td>
+          </tr>
+
+          <!-- FAQ -->
+          <tr class="section-separator">
+            <td colspan="5">FAQ / OBJEÇÕES (ansiedade B2B)</td>
+          </tr>
+          <tr>
+            <td>FAQ</td>
+            <td>—</td>
+            <td>Accordion</td>
+            <td>
+              <ul>
+                <li>Validade jurídica? → registro documental forte; valor probatório depende do contrato — sem prometer sentença</li>
+                <li>WhatsApp basta? → sem entrada comparável, cobrança frágil (ConJur)</li>
+                <li>Cases? → ainda não; demo + trial</li>
+                <li>Offline? → PWA + sync</li>
+                <li>Treinamento? → diagrama guia <span class="tag-h">[H validar]</span></li>
+                <li>Laudo cautelar? → ≠ avarias aparentes entrega/devolução</li>
+              </ul>
+            </td>
+            <td>Fundo gray. Accordion escaneável.</td>
+          </tr>
+
+          <!-- R -->
+          <tr class="section-separator">
+            <td colspan="5">R — RESPONSE (formulário + lead scoring)</td>
+          </tr>
+          <tr>
+            <td>Form</td>
+            <td>Response</td>
+            <td>Headline (H2)</td>
+            <td>Ative 7 dias grátis e faça a primeira vistoria na sua base</td>
+            <td>Fundo peach (#FFF8F0). Form max-width 500px centrado.</td>
+          </tr>
+          <tr>
+            <td>Form</td>
+            <td>Response</td>
+            <td>Campos</td>
+            <td>
+              Nome · E-mail · WhatsApp · Empresa<br />
+              <strong>Cargo:</strong> Dono/sócio · Gerente ops/pátio · Coordenador vistoria · Outro<br />
+              <strong>Segmento:</strong> Locadora · Frota aluguel · Oficina · Gestão frota · Outro<br />
+              <strong>Desafio:</strong> “Já estava assim” · Padronizar · Substituir WhatsApp/papel · White-label · Offline · Outro<br />
+              Volume devoluções/mês (opcional)
+            </td>
+            <td>Labels como placeholder. Dropdowns = scoring. Prefill Locadora via UTM.</td>
+          </tr>
+          <tr>
+            <td>Form</td>
+            <td>Response</td>
+            <td>CTA + trust</td>
+            <td>Quero meu trial de 7 dias · Dados confidenciais · Sem cartão no trial</td>
+            <td>Botão full-width. Microcopy abaixo.</td>
+          </tr>
+
+          <!-- Footer -->
+          <tr class="section-separator">
+            <td colspan="5">FOOTER</td>
+          </tr>
+          <tr>
+            <td>Footer</td>
+            <td>—</td>
+            <td>Info</td>
+            <td>Logo Danos Aparentes · WhatsApp · danosaparentes.com.br · Planos · Privacidade · Verificar laudo · © 2026</td>
+            <td>Fundo #141413. Minimalista.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="defesa-card">
+      <span class="tag-framework">P.A.S.T.O.R.</span>
+      <h2>Defesa do Wireframe: Framework P.A.S.T.O.R.</h2>
+
+      <h3>1. Justificativa da Escolha</h3>
+      <p>
+        Locadoras Problem-Aware precisam validar a dor, amplificar o custo (operacional + jurídico),
+        entender a cadeia causal do laudo verificável e só então ver preço/trial. P.A.S.T.O.R. cobre
+        educação B2B sem forçar “testimonials” inexistentes — o T* vira prova honesta (demo QR + ConJur/TJDFT + honesty strip).
+      </p>
+      <ul>
+        <li><strong>Message match</strong> — Hero “já estava assim” alinha ads Search/Meta (m↑).</li>
+        <li><strong>Mecanismo em 2 screens</strong> — hash/QR/GPS/assinatura explicáveis ao chefe (v↑).</li>
+        <li><strong>Ansiedade de marca nova</strong> — honesty block + trial sem cartão (−a, +i).</li>
+      </ul>
+
+      <h3>2. Adequação ao Contexto</h3>
+      <ul>
+        <li><strong>Nível de consciência:</strong> Problem → Solution Aware (ICP Real locadoras).</li>
+        <li><strong>Natureza do produto:</strong> SaaS com mecanismo técnico; Story/Solution obrigatório.</li>
+        <li><strong>Objetivo (SQL):</strong> trial SME / lead com scoring (cargo, segmento, desafio).</li>
+        <li><strong>Canal:</strong> Google Search + Meta → esta LP (não home multi-ICP).</li>
+      </ul>
+
+      <h3>3. Frameworks Descartados</h3>
+      <ul>
+        <li><strong>AIDA</strong> — curto demais para mecanismo + FAQ jurídico + gap de prova.</li>
+        <li><strong>PAS</strong> — dor ok, falta oferta/pricing e educação do selo hash.</li>
+        <li><strong>BAB</strong> — sem métrica real de “depois” de clientes; viraria ficção.</li>
+        <li><strong>4 P's</strong> — urgência/escassez falsa não cabe a app novo.</li>
+      </ul>
+
+      <h3>4. Resultado Esperado</h3>
+      <ul>
+        <li><strong>Tempo médio na página:</strong> 2–4 min (LP longa B2B — esperado).</li>
+        <li><strong>CVR estimada:</strong> 3–8% Search intent; 1–3% Meta frio <span class="tag-h">[H]</span> — calibrar em 2 semanas.</li>
+        <li><strong>Qualidade dos leads:</strong> alta se Segmento=Locadora + Desafio=“já estava assim”.</li>
+      </ul>
+
+      <h3>5. Fórmula de Conversão C = 4m + 3v + 2(i−f) − 2a</h3>
+      <div class="conv-grid">
+        <div class="conv-item"><strong>m ×4 — Forte</strong> Hero wedge devolução; match com ads.</div>
+        <div class="conv-item"><strong>v ×3 — Forte mecanismo</strong> Fraco em ROI de cliente (gap cases).</div>
+        <div class="conv-item"><strong>i ×2 — Médio</strong> Trial 7 dias sem cartão + preço literal.</div>
+        <div class="conv-item"><strong>f ×2− — Baixo–médio</strong> Form com scoring; CTA no hero.</div>
+        <div class="conv-item"><strong>a ×2− — Mitigado</strong> Honesty + demo + FAQ nuance; zero fake quotes.</div>
+      </div>
+      <p style="margin-top:16px">
+        <strong>Espectro Empresa (nível 1):</strong> ainda fraco (0 cases). Sinalizado — não inventar depoimentos;
+        substituir por prova de produto até betas nomeados.
+      </p>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <p>
+      <a href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-wireframe-landing-page&utm_content=footer">gui.marketing</a>
+      — Wireframe Tabela · Danos Aparentes · 2026
+    </p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,631 @@
+'use client'
+
+import { useCallback, useMemo, useRef, useState } from 'react'
+import type { Damage, DamageType, VehicleInfo, VehicleType, ViewType } from '@/src/types'
+import { VIEW_NAME, VIEW_TAB_SHORT, VIEW_ORIENTATION_HINT } from '@/src/components/app/constants'
+import { VIEW_PHOTO_ORDER, countFilledViewPhotos } from '@/src/lib/viewPhotos'
+import {
+  VIEW_FACE_PART_ID,
+  buildViewPhotosFromAssignments,
+  filterDamagesToInvalidateOnViewChange,
+  reassignViewPhoto,
+  type ViewSideAssignment,
+} from '@/src/lib/viewSideAssign'
+import { storePhotoEvidence } from '@/src/lib/photoEvidence'
+import { deletePhotoRef } from '@/src/lib/photoStore'
+import {
+  finishPhotoUploadProgress,
+  startPhotoUploadProgress,
+  updatePhotoUploadProgress,
+} from '@/src/lib/photoUploadProgress'
+import { classifyViewSides } from '@/src/lib/viewSideClassifyClient'
+import { suggestViewDamageFromPhoto } from '@/src/lib/viewDamageSuggestClient'
+import { ResolvedPhoto } from '@/src/components/ResolvedPhoto'
+import PhotoAttachButtons from '@/src/components/PhotoAttachButtons'
+import ViewSideConfirmPanel, { type ConfirmItem } from '@/src/components/app/ViewSideConfirmPanel'
+import ViewDamageTagPanel from '@/src/components/app/ViewDamageTagPanel'
+import { IconCamera } from '@/src/components/ui/AnimatedIcons'
+import Button from '@/src/components/ui/Button'
+import { buttonVariants } from '@/src/components/ui/buttonVariants'
+
+const TYPE_LABEL: Record<DamageType, string> = {
+  scratch: 'Risco / Arranhado',
+  dent: 'Amassado',
+  broken: 'Quebrado',
+}
+
+type Phase = 'batch' | 'confirm' | 'done'
+
+type Props = {
+  info: VehicleInfo
+  onChange: (info: VehicleInfo) => void
+  highlightView?: ViewType
+  compact?: boolean
+  vehicleType?: VehicleType
+  damages?: Damage[]
+  onAddDamageRecord?: (damage: Damage) => void
+  onUpdateDamage?: (id: string, patch: Partial<Damage>) => void
+  onRemoveDamage?: (id: string) => void
+  accessToken?: string
+  decidedByName?: string
+  onToast?: (msg: string) => void
+  inspectionId?: string | null
+  vehicleId?: string | null
+}
+
+function createDamageId(): Damage['id'] {
+  return (typeof crypto !== 'undefined' && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `dmg-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`) as Damage['id']
+}
+
+/**
+ * Captura das fotos dos 4 lados (~90°).
+ * Fluxo: lote → IA sugere lados → humano confirma → IA sugere avarias (tags).
+ */
+export default function ViewPhotosCapture({
+  info,
+  onChange,
+  highlightView,
+  compact,
+  vehicleType = 'car',
+  damages = [],
+  onAddDamageRecord,
+  onUpdateDamage,
+  onRemoveDamage,
+  accessToken,
+  decidedByName,
+  onToast,
+  inspectionId,
+  vehicleId,
+}: Props) {
+  const [busy, setBusy] = useState(false)
+  const [classifying, setClassifying] = useState(false)
+  const [confirming, setConfirming] = useState(false)
+  const [analyzingView, setAnalyzingView] = useState<ViewType | null>(null)
+  const [replaceView, setReplaceView] = useState<ViewType | null>(null)
+  const [busyView, setBusyView] = useState<ViewType | null>(null)
+  const [localAssignments, setLocalAssignments] = useState<ConfirmItem[]>([])
+  const damageRunForConfirmAt = useRef<string | null>(null)
+
+  const filled = countFilledViewPhotos(info)
+  const complete = filled === 4
+  const pending = info.pendingViewPhotoRefs || []
+
+  const phase: Phase = useMemo(() => {
+    if (pending.length > 0 || localAssignments.length > 0) {
+      if (localAssignments.length > 0) return 'confirm'
+      return 'batch'
+    }
+    if (filled > 0 || info.viewSidesConfirmedAt) return 'done'
+    return 'batch'
+  }, [pending.length, localAssignments.length, filled, info.viewSidesConfirmedAt])
+
+  const faceDamagesByView = useMemo(() => {
+    const map: Partial<Record<ViewType, Damage[]>> = {}
+    for (const d of damages) {
+      if (d.partId !== VIEW_FACE_PART_ID) continue
+      if (d.evidenceStatus === 'ignorado') continue
+      const list = map[d.view] || []
+      list.push(d)
+      map[d.view] = list
+    }
+    return map
+  }, [damages])
+
+  const persistPending = useCallback(
+    (refs: string[], extra?: Partial<VehicleInfo>) => {
+      onChange({
+        ...info,
+        pendingViewPhotoRefs: refs,
+        ...extra,
+      })
+    },
+    [info, onChange],
+  )
+
+  async function addFiles(files: File[]) {
+    const room = Math.max(0, 4 - pending.length)
+    const slice = files.slice(0, room)
+    if (!slice.length) {
+      onToast?.('Já há 4 fotos no lote.')
+      return
+    }
+    setBusy(true)
+    startPhotoUploadProgress(slice.length, 'Evidências dos 4 lados…')
+    try {
+      const next = [...pending]
+      for (let i = 0; i < slice.length; i += 1) {
+        updatePhotoUploadProgress({
+          phase: 'compressing',
+          current: i,
+          label: `Salvando foto ${i + 1}/${slice.length}…`,
+        })
+        const { optimizedRef } = await storePhotoEvidence(slice[i], {
+          inspectionId: inspectionId || undefined,
+          vehicleId: vehicleId || undefined,
+        })
+        next.push(optimizedRef)
+        updatePhotoUploadProgress({ current: i + 1 })
+      }
+      persistPending(next, {
+        viewSideSuggestions: undefined,
+        viewSidesConfirmedAt: undefined,
+        viewSidesConfirmedBy: undefined,
+      })
+      setLocalAssignments([])
+    } catch (e) {
+      console.error(e)
+      onToast?.('Não foi possível salvar a foto.')
+    } finally {
+      finishPhotoUploadProgress()
+      setBusy(false)
+    }
+  }
+
+  function removePending(ref: string) {
+    void deletePhotoRef(ref)
+    persistPending(
+      pending.filter((r) => r !== ref),
+      { viewSideSuggestions: undefined },
+    )
+    setLocalAssignments((prev) => prev.filter((a) => a.photoRef !== ref))
+  }
+
+  async function runSideClassify() {
+    if (!pending.length) return
+    setClassifying(true)
+    try {
+      const suggestions = await classifyViewSides(pending, accessToken)
+      const byRef = new Map(suggestions.map((s) => [s.photoRef, s.suggestedView]))
+      const items: ConfirmItem[] = pending.map((photoRef, i) => {
+        const suggested = byRef.get(photoRef)
+        const fallback = VIEW_PHOTO_ORDER[i]
+        return {
+          photoRef,
+          view: (suggested || fallback) as ViewType,
+          fromAi: Boolean(suggested),
+        }
+      })
+      // Resolver duplicatas simples: mantém a primeira, limpa as seguintes
+      const used = new Set<ViewType>()
+      for (const item of items) {
+        if (!item.view) continue
+        if (used.has(item.view)) {
+          item.view = ''
+          item.fromAi = false
+        } else {
+          used.add(item.view as ViewType)
+        }
+      }
+      onChange({
+        ...info,
+        viewSideSuggestions: suggestions,
+      })
+      setLocalAssignments(items)
+      onToast?.(
+        suggestions.length
+          ? 'Revise os lados sugeridos pela IA.'
+          : 'Escolha os lados na mão (IA indisponível).',
+      )
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Falha ao identificar lados.'
+      onToast?.(msg)
+      const items: ConfirmItem[] = pending.map((photoRef, i) => ({
+        photoRef,
+        view: VIEW_PHOTO_ORDER[i] || '',
+        fromAi: false,
+      }))
+      setLocalAssignments(items)
+    } finally {
+      setClassifying(false)
+    }
+  }
+
+  function onChangeView(photoRef: string, view: ViewType) {
+    setLocalAssignments((prev) =>
+      prev.map((item) => (item.photoRef === photoRef ? { ...item, view, fromAi: false } : item)),
+    )
+  }
+
+  function redoBatch() {
+    for (const ref of pending) void deletePhotoRef(ref)
+    setLocalAssignments([])
+    onChange({
+      ...info,
+      pendingViewPhotoRefs: [],
+      viewSideSuggestions: undefined,
+    })
+  }
+
+  async function confirmSides() {
+    const assignments: ViewSideAssignment[] = localAssignments
+      .filter((i) => i.view)
+      .map((i) => ({ photoRef: i.photoRef, view: i.view as ViewType }))
+    setConfirming(true)
+    try {
+      const viewPhotos = buildViewPhotosFromAssignments(assignments)
+      const confirmedAt = new Date().toISOString()
+      onChange({
+        ...info,
+        viewPhotos: { ...(info.viewPhotos || {}), ...viewPhotos },
+        pendingViewPhotoRefs: [],
+        viewSideSuggestions: undefined,
+        viewSidesConfirmedAt: confirmedAt,
+        viewSidesConfirmedBy: decidedByName || undefined,
+      })
+      setLocalAssignments([])
+      damageRunForConfirmAt.current = null
+      onToast?.('Lados confirmados.')
+      // Dispara análise de avarias após commit do estado — useEffect abaixo
+      queueMicrotask(() => {
+        void runDamageAnalysis(viewPhotos, { force: true, runKey: confirmedAt })
+      })
+    } finally {
+      setConfirming(false)
+    }
+  }
+
+  const runDamageAnalysis = useCallback(
+    async (
+      viewPhotos: Partial<Record<ViewType, string>>,
+      opts?: { onlyView?: ViewType; force?: boolean; runKey?: string },
+    ) => {
+      if (!onAddDamageRecord || !onRemoveDamage) return
+      const runKey = opts?.runKey || opts?.onlyView || 'all'
+      if (!opts?.force && damageRunForConfirmAt.current === runKey) return
+      damageRunForConfirmAt.current = runKey
+      const views = opts?.onlyView ? [opts.onlyView] : VIEW_PHOTO_ORDER
+      if (opts?.onlyView) setAnalyzingView(opts.onlyView)
+      else setAnalyzingView('frontal') // indicador genérico
+      try {
+        for (const view of views) {
+          if (opts?.onlyView) setAnalyzingView(view)
+          const photoRef = viewPhotos[view]
+          if (!photoRef) continue
+          for (const d of filterDamagesToInvalidateOnViewChange(damages, { view })) {
+            onRemoveDamage(d.id)
+          }
+          const suggestion = await suggestViewDamageFromPhoto({
+            photoRef,
+            partName: VIEW_NAME[view],
+            accessToken,
+          })
+          if (!suggestion || suggestion.noDamage) {
+            if (opts?.onlyView) onToast?.('Nenhuma avaria aparente nesta foto.')
+            continue
+          }
+          onAddDamageRecord({
+            id: createDamageId(),
+            vehicle: vehicleType,
+            view,
+            partId: VIEW_FACE_PART_ID,
+            partName: VIEW_NAME[view],
+            type: suggestion.type,
+            typeName: TYPE_LABEL[suggestion.type],
+            severity: suggestion.severity,
+            notes: suggestion.description,
+            photos: [photoRef],
+            photoNotes: [''],
+            evidenceStatus: 'sugerido',
+          })
+        }
+      } catch (e) {
+        console.error(e)
+        onToast?.(
+          opts?.onlyView
+            ? 'Não foi possível reanalisar esta foto.'
+            : 'Lados ok; não foi possível analisar avarias agora.',
+        )
+      } finally {
+        setAnalyzingView(null)
+      }
+    },
+    [accessToken, damages, onAddDamageRecord, onRemoveDamage, onToast, vehicleType],
+  )
+
+  function changeConfirmedView(fromView: ViewType, toView: ViewType) {
+    if (fromView === toView) return
+    const photoRef = info.viewPhotos?.[fromView]
+    if (!photoRef) return
+    const nextPhotos = reassignViewPhoto(info.viewPhotos || {}, fromView, toView)
+    // Invalida sugestões nas duas vistas afetadas
+    for (const v of [fromView, toView]) {
+      for (const d of filterDamagesToInvalidateOnViewChange(damages, { view: v })) {
+        onRemoveDamage?.(d.id)
+      }
+    }
+    onChange({
+      ...info,
+      viewPhotos: nextPhotos,
+    })
+    onToast?.(`Lado alterado para ${VIEW_TAB_SHORT[toView]}.`)
+  }
+
+  async function reanalyzeView(view: ViewType) {
+    const photoRef = info.viewPhotos?.[view]
+    if (!photoRef) return
+    await runDamageAnalysis({ [view]: photoRef }, {
+      onlyView: view,
+      force: true,
+      runKey: `reanalyze-${view}-${Date.now()}`,
+    })
+  }
+  async function handleReplaceFile(view: ViewType, file: File) {
+    setBusyView(view)
+    startPhotoUploadProgress(1, `Foto ${VIEW_NAME[view]}…`)
+    try {
+      updatePhotoUploadProgress({ phase: 'compressing', label: 'Preservando original e otimizando…' })
+      const { optimizedRef } = await storePhotoEvidence(file, {
+        inspectionId: inspectionId || undefined,
+        vehicleId: vehicleId || undefined,
+      })
+      updatePhotoUploadProgress({ phase: 'uploading', current: 1 })
+      const prev = info.viewPhotos?.[view]
+      if (prev) void deletePhotoRef(prev)
+      for (const d of filterDamagesToInvalidateOnViewChange(damages, { view, photoRef: prev })) {
+        onRemoveDamage?.(d.id)
+      }
+      onChange({
+        ...info,
+        viewPhotos: { ...(info.viewPhotos || {}), [view]: optimizedRef },
+        viewSidesConfirmedAt: undefined,
+        viewSidesConfirmedBy: undefined,
+      })
+      setReplaceView(null)
+      onToast?.(`Foto ${VIEW_NAME[view]} atualizada — confirme de novo se precisar.`)
+    } catch (e) {
+      console.error(e)
+      onToast?.('Erro ao substituir foto.')
+    } finally {
+      finishPhotoUploadProgress()
+      setBusyView(null)
+    }
+  }
+
+  function removeConfirmed(view: ViewType) {
+    const prev = info.viewPhotos?.[view]
+    if (prev) void deletePhotoRef(prev)
+    for (const d of filterDamagesToInvalidateOnViewChange(damages, { view, photoRef: prev })) {
+      onRemoveDamage?.(d.id)
+    }
+    const next = { ...(info.viewPhotos || {}) }
+    delete next[view]
+    onChange({
+      ...info,
+      viewPhotos: next,
+      viewSidesConfirmedAt: undefined,
+    })
+    setReplaceView(null)
+  }
+
+  const showBatch = phase === 'batch'
+  const showConfirm = phase === 'confirm'
+  const showDone = phase === 'done' || (filled > 0 && !showConfirm && !showBatch)
+
+  return (
+    <div
+      className={`rounded-2xl px-4 py-5 space-y-4 transition-colors ${
+        complete
+          ? 'bg-emerald-500/[0.06] ring-1 ring-emerald-500/25'
+          : 'bg-[var(--panel-bg)] ring-1 ring-[var(--card-border)]'
+      }`}
+    >
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="ds-label">Evidência</p>
+          <p className="ds-h3 mt-0.5">Evidências dos 4 lados</p>
+          {!compact && (
+            <p className="ds-caption mt-1">
+              Tire as 4 rápido. A IA sugere o lado; você confirma.
+            </p>
+          )}
+          <p className="ds-caption mt-1.5 text-[var(--signal-bright)] font-semibold leading-snug">
+            {VIEW_ORIENTATION_HINT}
+          </p>
+        </div>
+        <span
+          className={`inline-flex items-center min-h-7 px-2.5 rounded-lg text-[0.7rem] font-bold tabular-nums ${
+            complete
+              ? 'bg-emerald-500/15 text-emerald-300'
+              : 'bg-white/[0.04] text-[var(--text-muted)]'
+          }`}
+        >
+          {showBatch || showConfirm ? `${pending.length || localAssignments.length}/4 lote` : `${filled}/4`}
+        </span>
+      </div>
+
+      {showBatch && (
+        <div className="space-y-3">
+          <PhotoAttachButtons
+            disabled={busy || pending.length >= 4}
+            compressing={busy}
+            label="foto do lado"
+            multiple
+            maxFiles={4 - pending.length}
+            onFile={(f) => void addFiles([f])}
+            onFiles={(files) => void addFiles(files)}
+          />
+
+          {pending.length > 0 && (
+            <ul className="grid grid-cols-2 sm:grid-cols-4 gap-2 list-none m-0 p-0">
+              {pending.map((ref, i) => (
+                <li key={ref} className="relative rounded-xl overflow-hidden aspect-[3/4] bg-black/40 ring-1 ring-[var(--card-border)]">
+                  <ResolvedPhoto refOrDataUrl={ref} alt={`Lote ${i + 1}`} className="absolute inset-0 w-full h-full object-cover" />
+                  <button
+                    type="button"
+                    onClick={() => removePending(ref)}
+                    className="absolute top-1.5 right-1.5 min-w-8 min-h-8 rounded-lg bg-black/55 text-white text-xs font-bold"
+                    aria-label="Remover foto do lote"
+                  >
+                    ✕
+                  </button>
+                  <span className="absolute bottom-1.5 left-1.5 text-[0.62rem] font-bold bg-black/55 text-white px-1.5 py-0.5 rounded">
+                    {i + 1}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="primary"
+              size="md"
+              disabled={pending.length < 1 || classifying || busy}
+              onClick={() => void runSideClassify()}
+            >
+              {classifying ? 'Identificando lados…' : 'Identificar lados com IA'}
+            </Button>
+            {filled > 0 && pending.length === 0 && (
+              <p className="ds-caption self-center">Ou use as fotos já confirmadas abaixo.</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {showConfirm && (
+        <ViewSideConfirmPanel
+          items={localAssignments}
+          onChangeView={onChangeView}
+          onConfirm={() => void confirmSides()}
+          onRedo={redoBatch}
+          confirming={confirming}
+        />
+      )}
+
+      {showDone && (
+        <>
+          {analyzingView && (
+            <p className="text-xs font-semibold text-sky-400">
+              Analisando avarias{analyzingView ? ` · ${VIEW_TAB_SHORT[analyzingView]}` : ''}…
+            </p>
+          )}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {VIEW_PHOTO_ORDER.map((view) => {
+              const src = info.viewPhotos?.[view]
+              const active = highlightView === view
+              const replacing = replaceView === view
+              const tags = faceDamagesByView[view] || []
+              return (
+                <div
+                  key={view}
+                  className={`relative rounded-2xl overflow-hidden transition-all duration-200 ${
+                    active
+                      ? 'ring-2 ring-[var(--primary)]/50'
+                      : src
+                        ? 'ring-1 ring-emerald-500/30'
+                        : 'ring-1 ring-[var(--card-border)]'
+                  }`}
+                >
+                  {src && !replacing ? (
+                    <div className="relative aspect-[3/4] sm:aspect-[4/5] bg-black/40">
+                      <ResolvedPhoto
+                        refOrDataUrl={src}
+                        alt={VIEW_NAME[view]}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                        <p className="text-[0.65rem] font-bold text-white/90 truncate">{VIEW_NAME[view]}</p>
+                      </div>
+                      <div className="absolute top-1.5 right-1.5 flex gap-1">
+                        <button
+                          type="button"
+                          title="Reanalisar avarias nesta foto"
+                          disabled={analyzingView !== null}
+                          onClick={() => void reanalyzeView(view)}
+                          className="min-w-8 min-h-8 rounded-lg bg-black/55 text-sky-300 text-sm font-bold disabled:opacity-40"
+                          aria-label={`Reanalisar ${VIEW_NAME[view]}`}
+                        >
+                          {analyzingView === view ? '…' : '↻'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setReplaceView(view)}
+                          className={buttonVariants({
+                            variant: 'ghost',
+                            size: 'sm',
+                            className: '!min-h-8 !px-2 !py-1 !text-[0.65rem] bg-black/55 text-white hover:text-white rounded-lg',
+                          })}
+                        >
+                          Substituir
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removeConfirmed(view)}
+                          className="min-w-8 min-h-8 rounded-lg bg-black/55 text-white text-xs font-bold"
+                          aria-label={`Remover foto ${VIEW_NAME[view]}`}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={`flex flex-col ${compact ? 'aspect-[4/3] p-3' : 'aspect-[3/4] sm:aspect-[4/5] p-4'} items-center justify-center gap-2.5 bg-black/[0.12]`}>
+                      <IconCamera size={compact ? 22 : 32} className="text-[var(--text-muted)] opacity-70" />
+                      <p className="text-[0.7rem] font-bold text-[var(--text-main)] text-center">
+                        {VIEW_NAME[view]}
+                      </p>
+                      <PhotoAttachButtons
+                        disabled={busyView !== null}
+                        compressing={busyView === view}
+                        label={VIEW_NAME[view]}
+                        onFile={(file) => void handleReplaceFile(view, file)}
+                        className="flex-col gap-1.5 w-full"
+                      />
+                      {replacing && (
+                        <button
+                          type="button"
+                          onClick={() => setReplaceView(null)}
+                          className={buttonVariants({ variant: 'ghost', size: 'sm', className: '!text-[0.65rem]' })}
+                        >
+                          Cancelar
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {src && (
+                    <div className="px-2 pt-2 flex flex-wrap gap-1" role="tablist" aria-label="Trocar lado da foto (sentido de marcha)">
+                      {VIEW_PHOTO_ORDER.map((tab) => (
+                        <button
+                          key={tab}
+                          type="button"
+                          role="tab"
+                          aria-selected={tab === view}
+                          title={VIEW_ORIENTATION_HINT}
+                          onClick={() => changeConfirmedView(view, tab)}
+                          className={`min-h-8 px-2 rounded-md text-[0.62rem] font-bold border transition-colors ${
+                            tab === view
+                              ? 'bg-[var(--primary)]/20 border-[var(--primary)] text-[var(--primary)]'
+                              : 'border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]'
+                          }`}
+                        >
+                          {VIEW_TAB_SHORT[tab]}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {src && onUpdateDamage && tags.map((d) => (
+                    <div key={d.id} className="px-2 pb-2">
+                      <ViewDamageTagPanel
+                        damage={d}
+                        decidedByName={decidedByName}
+                        onUpdate={onUpdateDamage}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )
+            })}
+          </div>
+          {!compact && filled < 4 && pending.length === 0 && localAssignments.length === 0 && (
+            <p className="ds-caption">Faltam fotos — use Substituir/anexar em cada lado ou limpe e use o lote.</p>
+          )}
+        </>
+      )}
+    </div>
+  )
+}

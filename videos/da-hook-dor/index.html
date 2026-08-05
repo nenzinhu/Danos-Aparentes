@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Chega de discutir amassado</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #020617;
+      }
+
+      body {
+        font-family:
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+      }
+
+      #root {
+        --bg: #020617;
+        --text: #e8f4ff;
+        --muted: #7a9bbf;
+        --accent-sky: #1fb6ff;
+        --accent-amber: #ffb938;
+        --border-tint: rgba(0, 190, 255, 0.16);
+
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        background: var(--bg);
+        overflow: hidden;
+      }
+
+      /* faint blueprint-grid texture — static, decorative, evokes the product's
+         vehicle-inspection-diagram motif at very low opacity */
+      #bg-grid {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background-image:
+          repeating-linear-gradient(
+            to right,
+            var(--border-tint) 0px,
+            var(--border-tint) 1px,
+            transparent 1px,
+            transparent 90px
+          ),
+          repeating-linear-gradient(
+            to bottom,
+            var(--border-tint) 0px,
+            var(--border-tint) 1px,
+            transparent 1px,
+            transparent 90px
+          );
+        opacity: 0.55;
+      }
+
+      .scene-content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        padding: 140px 96px;
+        gap: 40px;
+        box-sizing: border-box;
+        text-align: center;
+      }
+
+      #line1 {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+        line-height: 1.22;
+        font-size: 64px;
+        color: var(--text);
+        max-width: 860px;
+      }
+
+      #line2-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+      }
+
+      #line2 {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -0.015em;
+        line-height: 1.08;
+        font-size: 92px;
+        color: var(--accent-amber);
+        max-width: 880px;
+      }
+
+      #underline {
+        width: 460px;
+        max-width: 80%;
+        height: 10px;
+        border-radius: 6px;
+        background: var(--accent-sky);
+        transform-origin: left center;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="4"
+      data-width="1080"
+      data-height="1920"
+      data-fps="30"
+    >
+      <div
+        id="bg-grid"
+        class="clip"
+        data-start="0"
+        data-duration="4"
+        data-track-index="0"
+      ></div>
+
+      <div class="scene-content">
+        <div id="line1" class="clip" data-start="0" data-duration="4" data-track-index="1">
+          Chega de discutir amassado
+        </div>
+
+        <div id="line2-wrap" class="clip" data-start="0" data-duration="4" data-track-index="2">
+          <div id="line2">que já existia<br />no carro.</div>
+          <div id="underline"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      // seek-safe gate: hide delayed elements once via autoAlpha, reveal with a
+      // paired to()/from() pair at the entrance — never opacity:1 + from(opacity:0).
+      gsap.set("#line1", { autoAlpha: 0 });
+      gsap.set("#line2", { autoAlpha: 0, scale: 0.7, transformOrigin: "center center" });
+      gsap.set("#underline", { autoAlpha: 0, scaleX: 0 });
+
+      // Hook — line 1 settles first (fade + slight-y).
+      tl.to("#line1", { autoAlpha: 1, duration: 0.5, ease: "power3.out" }, 0.05);
+      tl.from("#line1", { y: 24, duration: 0.5, ease: "power3.out" }, 0.05);
+
+      // Punch — line 2 lands heaviest, amber accent, scale-punch settle.
+      tl.to("#line2", { autoAlpha: 1, scale: 1, duration: 0.7, ease: "back.out(1.6)" }, 0.65);
+      tl.from("#line2", { y: 16, duration: 0.7, ease: "back.out(1.6)" }, 0.65);
+
+      // Resolve — underline draws left-to-right beneath line 2, then holds.
+      tl.to("#underline", { autoAlpha: 1, duration: 0.4, ease: "power2.out" }, 1.35);
+      tl.from("#underline", { scaleX: 0, duration: 0.4, ease: "power2.out" }, 1.35);
+
+      // pad the timeline to the full composition duration (held resolve, no motion
+      // after ~1.75s — ~2.25s static hold out of the 4s total).
+      tl.to({}, { duration: 4 }, 0);
+
+      tl.seek(0);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

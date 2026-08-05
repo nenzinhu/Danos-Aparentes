@@ -1,0 +1,139 @@
+{
+  "bgm": null,
+  "voices": [
+    {
+      "frame": 1,
+      "path": "audio/01.wav",
+      "duration_s": 4.992,
+      "words": []
+    },
+    {
+      "frame": 2,
+      "path": "audio/02.wav",
+      "duration_s": 4.757,
+      "words": []
+    },
+    {
+      "frame": 3,
+      "path": "audio/03.wav",
+      "duration_s": 3.989,
+      "words": []
+    },
+    {
+      "frame": 4,
+      "path": "audio/04.wav",
+      "duration_s": 3.691,
+      "words": []
+    },
+    {
+      "frame": 5,
+      "path": "audio/05.wav",
+      "duration_s": 5.12,
+      "words": []
+    },
+    {
+      "frame": 6,
+      "path": "audio/06.wav",
+      "duration_s": 4.949,
+      "words": []
+    },
+    {
+      "frame": 7,
+      "path": "audio/07.wav",
+      "duration_s": 3.157,
+      "words": []
+    },
+    {
+      "frame": 8,
+      "path": "audio/08.wav",
+      "duration_s": 3.477,
+      "words": []
+    }
+  ],
+  "sfx": [
+    {
+      "frame": 1,
+      "file": "assets/sfx/soft-thud-on-each-phrase-landing.mp3",
+      "offset_s": 0,
+      "duration_s": 0.864,
+      "volume": 0.35
+    },
+    {
+      "frame": 2,
+      "file": "assets/sfx/soft-riser-into-the-name-reveal.mp3",
+      "offset_s": 0,
+      "duration_s": 3.405,
+      "volume": 0.35
+    },
+    {
+      "frame": 3,
+      "file": "assets/sfx/light-key-tap-ticks.mp3",
+      "offset_s": 0,
+      "duration_s": 0.768,
+      "volume": 0.35
+    },
+    {
+      "frame": 3,
+      "file": "assets/sfx/soft-pop-per-field.mp3",
+      "offset_s": 0,
+      "duration_s": 1.308,
+      "volume": 0.35
+    },
+    {
+      "frame": 4,
+      "file": "assets/sfx/soft-tap.mp3",
+      "offset_s": 0,
+      "duration_s": 0.264,
+      "volume": 0.35
+    },
+    {
+      "frame": 4,
+      "file": "assets/sfx/then-a-short-confirm-chime.mp3",
+      "offset_s": 0,
+      "duration_s": 0.72,
+      "volume": 0.35
+    },
+    {
+      "frame": 5,
+      "file": "assets/sfx/pen-stroke-whoosh.mp3",
+      "offset_s": 0,
+      "duration_s": 0.288,
+      "volume": 0.35
+    },
+    {
+      "frame": 5,
+      "file": "assets/sfx/then-a-soft-metallic-lock-click.mp3",
+      "offset_s": 0,
+      "duration_s": 1.56,
+      "volume": 0.35
+    },
+    {
+      "frame": 6,
+      "file": "assets/sfx/three-soft-pops.mp3",
+      "offset_s": 0,
+      "duration_s": 2.6,
+      "volume": 0.35
+    },
+    {
+      "frame": 6,
+      "file": "assets/sfx/one-per-card-landing.mp3",
+      "offset_s": 0,
+      "duration_s": 1.104,
+      "volume": 0.35
+    },
+    {
+      "frame": 7,
+      "file": "assets/sfx/message-received-pop.mp3",
+      "offset_s": 0,
+      "duration_s": 0.576,
+      "volume": 0.35
+    },
+    {
+      "frame": 8,
+      "file": "assets/sfx/soft-chime-on-cta-landing.mp3",
+      "offset_s": 0,
+      "duration_s": 4.362,
+      "volume": 0.35
+    }
+  ]
+}

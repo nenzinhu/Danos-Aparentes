@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js" integrity="sha384-sG0Hv1tP1lZCk9KQmrIbY/XNwi+OY84GQqhMscbnsoBFqAz8KNCil1kvfL3Hbbk2" crossorigin="anonymous"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #000;
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #E8E6DC;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-35y9" id="root" data-composition-id="main" data-start="0" data-duration="34.132" data-width="1080" data-height="1920">
+      <div data-hf-id="hf-s6ob" id="el-01-antes" class="scene" data-composition-id="01-antes" data-composition-src="compositions/frames/01-antes.html" data-start="0" data-duration="5.392" data-track-index="0"></div>
+      <audio data-hf-id="hf-z1h5" id="el-01-antes-voice" src="audio/01.wav" data-start="0" data-duration="4.992" data-track-index="10" data-volume="1"></audio>
+
+      <div data-hf-id="hf-sz4c" id="el-02-intro" class="scene" data-composition-id="02-intro" data-composition-src="compositions/frames/02-intro.html" data-start="4.992" data-duration="5.257" data-track-index="1"></div>
+      <audio data-hf-id="hf-ow9z" id="el-02-intro-voice" src="audio/02.wav" data-start="4.992" data-duration="4.757" data-track-index="10" data-volume="1"></audio>
+
+      <div data-hf-id="hf-msf9" id="el-03-placa" class="scene" data-composition-id="03-placa" data-composition-src="compositions/frames/03-placa.html" data-start="9.748999999999999" data-duration="4.489" data-track-index="0"></div>
+      <audio data-hf-id="hf-mcbq" id="el-03-placa-voice" src="audio/03.wav" data-start="9.748999999999999" data-duration="3.989" data-track-index="10" data-volume="1"></audio>
+
+      <div data-hf-id="hf-7hu2" id="el-04-toque-voz" class="scene" data-composition-id="04-toque-voz" data-composition-src="compositions/frames/04-toque-voz.html" data-start="13.738" data-duration="4.191" data-track-index="1"></div>
+      <audio data-hf-id="hf-a9wt" id="el-04-toque-voz-voice" src="audio/04.wav" data-start="13.738" data-duration="3.691" data-track-index="10" data-volume="1"></audio>
+
+      <div data-hf-id="hf-ip3l" id="el-05-assinatura-hash" class="scene" data-composition-id="05-assinatura-hash" data-composition-src="compositions/frames/05-assinatura-hash.html" data-start="17.429" data-duration="5.62" data-track-index="0"></div>
+      <audio data-hf-id="hf-mwpp" id="el-05-assinatura-hash-voice" src="audio/05.wav" data-start="17.429" data-duration="5.12" data-track-index="10" data-volume="1"></audio>
+
+      <div data-hf-id="hf-yr96" id="el-06-beneficios" class="scene" data-composition-id="06-beneficios" data-composition-src="compositions/frames/06-beneficios.html" data-start="22.549" data-duration="5.449" data-track-index="1"></div>
+      <audio data-hf-id="hf-8b6x" id="el-06-beneficios-voice" src="audio/06.wav" data-start="22.549" data-duration="4.949" data-track-index="10" data-volume="1"></audio>
+
+      <div data-hf-id="hf-yhb0" id="el-07-whatsapp" class="scene" data-composition-id="07-whatsapp" data-composition-src="compositions/frames/07-whatsapp.html" data-start="27.497999999999998" data-duration="3.657" data-track-index="0"></div>
+      <audio data-hf-id="hf-vf7q" id="el-07-whatsapp-voice" src="audio/07.wav" data-start="27.497999999999998" data-duration="3.157" data-track-index="10" data-volume="1"></audio>
+
+      <div data-hf-id="hf-uo41" id="el-08-cta" class="scene" data-composition-id="08-cta" data-composition-src="compositions/frames/08-cta.html" data-start="30.654999999999998" data-duration="3.477" data-track-index="1"></div>
+      <audio data-hf-id="hf-qrky" id="el-08-cta-voice" src="audio/08.wav" data-start="30.654999999999998" data-duration="3.477" data-track-index="10" data-volume="1"></audio>
+
+      <!-- SFX -->
+      <audio data-hf-id="hf-7vi1" id="el-sfx-0" src="assets/sfx/soft-thud-on-each-phrase-landing.mp3" data-start="0" data-duration="0.864" data-track-index="20" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-fpcq" id="el-sfx-1" src="assets/sfx/soft-riser-into-the-name-reveal.mp3" data-start="4.992" data-duration="3.405" data-track-index="21" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-9oq2" id="el-sfx-2" src="assets/sfx/light-key-tap-ticks.mp3" data-start="9.749" data-duration="0.768" data-track-index="22" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-u3dp" id="el-sfx-3" src="assets/sfx/soft-pop-per-field.mp3" data-start="9.749" data-duration="1.308" data-track-index="23" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-4gwt" id="el-sfx-4" src="assets/sfx/soft-tap.mp3" data-start="13.738" data-duration="0.264" data-track-index="24" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-ga5c" id="el-sfx-5" src="assets/sfx/then-a-short-confirm-chime.mp3" data-start="13.738" data-duration="0.72" data-track-index="25" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-kanh" id="el-sfx-6" src="assets/sfx/pen-stroke-whoosh.mp3" data-start="17.429" data-duration="0.288" data-track-index="26" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-oltj" id="el-sfx-7" src="assets/sfx/then-a-soft-metallic-lock-click.mp3" data-start="17.429" data-duration="1.56" data-track-index="27" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-p6rr" id="el-sfx-8" src="assets/sfx/three-soft-pops.mp3" data-start="22.549" data-duration="2.6" data-track-index="28" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-8nui" id="el-sfx-9" src="assets/sfx/one-per-card-landing.mp3" data-start="22.549" data-duration="1.104" data-track-index="29" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-32cu" id="el-sfx-10" src="assets/sfx/message-received-pop.mp3" data-start="27.498" data-duration="0.576" data-track-index="30" data-volume="0.35"></audio>
+      <audio data-hf-id="hf-38tb" id="el-sfx-11" src="assets/sfx/soft-chime-on-cta-landing.mp3" data-start="30.655" data-duration="4.362" data-track-index="31" data-volume="0.35"></audio>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = gsap.timeline({ paused: true });
+      // ── frame transitions (injected by transitions.mjs) ──
+      (function () { var tl = window.__timelines["main"];
+        tl.to("#el-01-antes", { scale: 2.5, opacity: 0, filter: "blur(8px)", duration: 0.4, ease: "power3.in" }, 4.992);
+        tl.fromTo("#el-02-intro", { scale: 0.5, opacity: 0, filter: "blur(8px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "power3.out" }, 4.992);
+        tl.to("#el-02-intro", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 9.749);
+        tl.fromTo("#el-03-placa", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 9.749);
+        tl.to("#el-03-placa", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 13.738);
+        tl.fromTo("#el-04-toque-voz", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 13.738);
+        tl.to("#el-04-toque-voz", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 17.429);
+        tl.fromTo("#el-05-assinatura-hash", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 17.429);
+        tl.to("#el-05-assinatura-hash", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 22.549);
+        tl.fromTo("#el-06-beneficios", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 22.549);
+        tl.to("#el-06-beneficios", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 27.498);
+        tl.fromTo("#el-07-whatsapp", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 27.498);
+        tl.to("#el-07-whatsapp", { opacity: 0, duration: 0.5, ease: "power2.inOut" }, 30.655);
+        tl.fromTo("#el-08-cta", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.inOut" }, 30.655);
+        tl.to({}, { duration: 34.132 }, 0); // full-span anchor — main.duration() == composition total (Studio master duration)
+      })();
+    </script>
+  </body>
+</html>

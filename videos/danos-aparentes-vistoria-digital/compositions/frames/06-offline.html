@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- head is metadata for the source file only; the runtime ignores it -->
+  </head>
+  <body>
+    <template>
+      <style>
+        @font-face {
+          font-family: "Outfit";
+          src: url("capture/assets/fonts/1b99372b3eaef0c8-s.p.1gsd1jahc5dg_.woff2") format("woff2");
+          font-weight: 100 900;
+          font-style: normal;
+          font-display: block;
+        }
+        @font-face {
+          font-family: "IBM Plex Mono";
+          src: url("capture/assets/fonts/2fe89d53234c61d4-s.1u30mmyq6lnsd.woff2") format("woff2");
+          font-weight: 400;
+          font-style: normal;
+          font-display: block;
+        }
+
+        #root {
+          position: absolute;
+          inset: 0;
+          width: 1920px;
+          height: 1080px;
+          overflow: hidden;
+          background: #e8e6dc;
+          container-type: size;
+          font-family: "Outfit", sans-serif;
+        }
+
+        .ground {
+          position: absolute;
+          inset: 0;
+          background-color: #e8e6dc;
+          background-image: linear-gradient(rgba(20, 20, 19, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(20, 20, 19, 0.1) 1px, transparent 1px);
+          background-size: 2cqw 2cqw;
+        }
+
+        .hairline {
+          position: absolute;
+          left: 4cqw;
+          right: 4cqw;
+          height: 0.12cqw;
+          background: #141413;
+        }
+        .hairline.top {
+          top: 3cqw;
+        }
+        .hairline.bottom {
+          /* caption pill owns the bottom ~17% (y > 896px on this 1080-tall canvas) —
+             keep the bottom rule inside the safe area instead of the true canvas edge */
+          top: 860px;
+        }
+
+        .mono-tag {
+          position: absolute;
+          left: 4cqw;
+          top: 4.4cqw;
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 13px;
+          letter-spacing: 0.06em;
+          color: #141413;
+        }
+
+        .content {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          height: 896px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .swap-wrap {
+          position: relative;
+          width: 78cqw;
+          height: 300px;
+        }
+
+        .line {
+          position: absolute;
+          inset: 0;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: "Outfit", sans-serif;
+          font-weight: 400;
+          font-size: 118px;
+          line-height: 0.95;
+          letter-spacing: -0.006em;
+          color: #141413;
+          text-align: center;
+          opacity: 0;
+          will-change: transform, opacity;
+        }
+
+        .line.qualifier {
+          color: #9e4428;
+        }
+      </style>
+
+      <div id="root" data-composition-id="06-offline" data-width="1920" data-height="1080">
+        <div class="ground clip" data-start="0" data-duration="4.545" data-track-index="0"></div>
+        <div class="hairline top clip" data-start="0" data-duration="4.545" data-track-index="1"></div>
+        <div class="hairline bottom clip" data-start="0" data-duration="4.545" data-track-index="2"></div>
+        <div class="mono-tag clip" data-start="0" data-duration="4.545" data-track-index="3">06 — OFFLINE</div>
+
+        <div class="content clip" data-start="0" data-duration="4.545" data-track-index="4">
+          <div class="swap-wrap">
+            <p class="line hero" id="line-hero">Funciona até sem sinal no pátio</p>
+            <p class="line qualifier" id="line-qualifier">— sincroniza sozinho depois.</p>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        window.__timelines = window.__timelines || {};
+
+        const heroEl = document.getElementById("line-hero");
+        const qualEl = document.getElementById("line-qualifier");
+
+        const tl = gsap.timeline({ paused: true });
+
+        // Scene 2 (0.4–1.8s): headline line fades in centered while scaling 95%→100%, then holds.
+        tl.fromTo(
+          heroEl,
+          { opacity: 0, scale: 0.95, y: 0 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.65, ease: "power2.out" },
+          0.4,
+        );
+
+        // Scene 3 (1.8–4.545s): single slide-up crossfade — hero exits up+fades,
+        // qualifier enters from below-center and fades in to take its place. Holds to the cut.
+        tl.fromTo(
+          heroEl,
+          { opacity: 1, y: 0 },
+          { opacity: 0, y: -110, duration: 0.55, ease: "power2.in" },
+          1.8,
+        );
+        tl.fromTo(
+          qualEl,
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+          2.05,
+        );
+
+        // Held settle: very low-amplitude sine breathing on the qualifier line (subtle jitter,
+        // sin(0) = 0 at IDLE_START so there is no jump from the crossfade's resting state).
+        const IDLE_START = 2.75;
+        const IDLE_DUR = 4.545 - IDLE_START;
+        const phase = { p: 0 };
+        tl.to(
+          phase,
+          {
+            p: Math.PI * 2 * 0.7,
+            duration: IDLE_DUR,
+            ease: "none",
+            onUpdate: () => {
+              const scale = 1 + Math.sin(phase.p) * 0.01;
+              const y = Math.sin(phase.p) * 2;
+              qualEl.style.transform = `translateY(${y}px) scale(${scale})`;
+            },
+          },
+          IDLE_START,
+        );
+
+        window.__timelines["06-offline"] = tl;
+      </script>
+    </template>
+  </body>
+</html>
