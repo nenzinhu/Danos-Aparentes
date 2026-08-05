@@ -28,6 +28,16 @@ const VIEW_FROM_TOKEN: Record<string, ViewType> = {
   'lado do motorista': 'lateral-left',
   motorista: 'lateral-left',
   left: 'lateral-left',
+  // Brasil: tampa/bocal de combustível identifica o lado esquerdo do veículo
+  'tampa de combustivel': 'lateral-left',
+  'tampa combustivel': 'lateral-left',
+  'bocal de combustivel': 'lateral-left',
+  'bocal combustivel': 'lateral-left',
+  portinhola: 'lateral-left',
+  'portinhola de combustivel': 'lateral-left',
+  'fuel door': 'lateral-left',
+  'fuel filler': 'lateral-left',
+  'fuel cap': 'lateral-left',
   'lateral-right': 'lateral-right',
   'lateral_right': 'lateral-right',
   direita: 'lateral-right',
@@ -88,27 +98,31 @@ export function parseViewSideResponse(
 }
 
 export function buildViewSideClassifyPrompt(photoCount: number): string {
-  return `Você analisa fotos de vistoria veicular no Brasil. Há ${photoCount} foto(s) numeradas de 0 a ${photoCount - 1}.
+  return `Você analisa fotos de inspeção veicular no Brasil. Há ${photoCount} foto(s) numeradas de 0 a ${photoCount - 1}.
 
-ATENÇÃO CRÍTICA: Você tem a tendência de errar confundindo a posição da foto com o lado do veículo. Para evitar erros, siga estritamente esta regra física absoluta: Procure o volante e o retrovisor do motorista na imagem. Se o posto do motorista estiver visível na foto, a resposta DEVE SER OBRIGATORIAMENTE Esquerda ("lateral-left"). Se for o lado do carona/passageiro, DEVE SER Direita ("lateral-right"). Nunca use a posição da foto na tela como referência.
+ATENÇÃO CRÍTICA: Você tem a tendência de errar confundindo a posição da foto com o lado do veículo. Nunca use a posição da foto na tela como referência. Use apenas marcas físicas do veículo.
 
-REGRA DE ORIENTAÇÃO VEICULAR (obrigatória):
-Para a classificação da lateral do veículo, adote sempre o padrão de referência do sentido de marcha (de dentro para fora):
+REGRA DE ORIENTAÇÃO VEICULAR (obrigatória — sentido de marcha, de dentro para fora):
 
-Lado Esquerdo: É o lado onde fica o posto de condução (motorista / retrovisor esquerdo). Use o token JSON "lateral-left".
+Lado Esquerdo ("lateral-left"):
+- Posto de condução / volante / porta e retrovisor do motorista.
+- REFERÊNCIA ABSOLUTA NESTA PLATAFORMA: a tampa (portinhola / bocal) de combustível identifica o LADO ESQUERDO.
+- Se a foto mostrar a tampa de combustível na carroceria, a resposta DEVE SER OBRIGATORIAMENTE "lateral-left".
 
-Lado Direito: É o lado oposto ao condutor (passageiro / retrovisor direito / bocal de combustível, dependendo do modelo). Use o token JSON "lateral-right".
-
-Atenção: Não utilize a perspectiva de quem está olhando de fora para o carro. Se a foto mostrar a porta do motorista, classifique obrigatoriamente como Esquerda ("lateral-left").
+Lado Direito ("lateral-right"):
+- Lado oposto ao motorista (passageiro / carona / retrovisor direito).
+- É o lado SEM a tampa de combustível (no padrão desta plataforma).
+- Se a foto mostrar a lateral sem tampa de combustível e com porta do passageiro, use "lateral-right".
 
 Frontal / Traseira (mesma orientação do veículo, sentido de marcha):
 - "frontal" — frente do veículo (sentido de marcha / nariz: para-choque dianteiro, faróis, grade, placa dianteira).
-- "traseira" — oposto à frente (para-choque traseiro, lanternas, porta-malas/tampa, placa traseira).
+- "traseira" — oposto à frente (para-choque traseiro, lanternas, porta-malas/tampa, placa traseira). Não confundir tampa do porta-malas com tampa de combustível.
 
 PROIBIDO:
 - Usar esquerda/direita da imagem na tela ou da câmera.
 - Classificar pela perspectiva de quem olha o carro de fora.
 - Espelhar ou inverter por causa do ângulo da foto.
+- Associar tampa de combustível ao lado direito.
 - Trocar frente e traseira por reflexo.
 
 Responda SOMENTE JSON válido, sem markdown:
@@ -117,5 +131,6 @@ Responda SOMENTE JSON válido, sem markdown:
 Regras:
 - Um objeto por foto (índices 0..${photoCount - 1}).
 - Preferir views distintas quando houver 4 fotos.
-- Em dúvida, aplique a regra do sentido de marcha (de dentro para fora); porta do motorista = "lateral-left".`
+- Em dúvida entre laterais: tampa de combustível = "lateral-left"; lado oposto = "lateral-right".
+- Porta do motorista também = "lateral-left".`
 }

@@ -261,7 +261,7 @@ export default function InspectTab({
     })
   }, [newDamages])
 
-  /** Ao mudar o lado no diagrama, pergunta tirar/anexar foto daquela face. */
+  /** Após verificar o lado no SVG, pede a foto dessa face (as 4 entram no dossiê). */
   useEffect(() => {
     if (section !== 'diagrama') {
       diagramReadyRef.current = false
@@ -296,7 +296,8 @@ export default function InspectTab({
   const handleSkipViewPhoto = useCallback(() => {
     if (photoPromptView) skippedPhotoViewsRef.current.add(photoPromptView)
     setPhotoPromptView(null)
-  }, [photoPromptView])
+    onToast('Anexe as 4 vistas antes de gerar o dossiê')
+  }, [photoPromptView, onToast])
 
   const allNewConfirmed =
     newDamages.length === 0 || newDamages.every((d) => confirmedNewIds.has(d.id))

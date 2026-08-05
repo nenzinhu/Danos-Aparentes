@@ -17,11 +17,13 @@ type Props = {
   view: ViewType
   currentPhoto?: string
   onSaved: (view: ViewType, photoRef: string) => void
-  onSkip: () => void
+  /** Opcional: só use se o fluxo permitir adiar (PDF ainda exige as 4 faces). */
+  onSkip?: () => void
 }
 
 /**
  * Prompt após trocar a vista no diagrama: tirar ou anexar a foto desse lado.
+ * As 4 vistas entram no dossiê junto com o diagrama SVG.
  */
 export default function ViewSidePhotoPrompt({ view, currentPhoto, onSaved, onSkip }: Props) {
   const cameraRef = useRef<HTMLInputElement>(null)
@@ -70,7 +72,12 @@ export default function ViewSidePhotoPrompt({ view, currentPhoto, onSaved, onSki
           {VIEW_NAME[view]}
         </h2>
         <p className="mt-2 text-sm text-[var(--text-muted)] leading-relaxed">
-          Tire ou anexe a foto desta face (~90°). Ela entra no PDF junto com o diagrama SVG.
+          Anexe a foto desta face (~90°). As 4 vistas entram no dossiê com o diagrama SVG.
+          {view === 'lateral-left'
+            ? ' Lado esquerdo: costuma ter a tampa de combustível.'
+            : view === 'lateral-right'
+              ? ' Lado direito: oposto à tampa de combustível.'
+              : ''}
         </p>
 
         <input
@@ -117,14 +124,16 @@ export default function ViewSidePhotoPrompt({ view, currentPhoto, onSaved, onSki
             <IconGallery size={18} />
             Anexar da galeria
           </button>
-          <button
-            type="button"
-            disabled={busy}
-            onClick={onSkip}
-            className="min-h-11 w-full rounded-xl text-sm font-bold text-[var(--text-muted)] hover:text-[var(--text-main)]"
-          >
-            Agora não
-          </button>
+          {onSkip ? (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={onSkip}
+              className="min-h-11 w-full rounded-xl text-sm font-bold text-[var(--text-muted)] hover:text-[var(--text-main)]"
+            >
+              Depois (PDF exige as 4)
+            </button>
+          ) : null}
         </div>
       </motion.div>
     </div>

@@ -18,6 +18,13 @@ describe('normalizeViewSideToken', () => {
     expect(normalizeViewSideToken('motorista')).toBe('lateral-left')
     expect(normalizeViewSideToken('lado do passageiro')).toBe('lateral-right')
   })
+
+  it('maps tampa de combustível to left side', () => {
+    expect(normalizeViewSideToken('tampa de combustivel')).toBe('lateral-left')
+    expect(normalizeViewSideToken('Bocal de Combustível')).toBe('lateral-left')
+    expect(normalizeViewSideToken('portinhola')).toBe('lateral-left')
+    expect(normalizeViewSideToken('fuel door')).toBe('lateral-left')
+  })
 })
 
 describe('parseViewSideResponse', () => {

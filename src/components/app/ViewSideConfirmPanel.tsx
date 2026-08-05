@@ -39,7 +39,8 @@ export default function ViewSideConfirmPanel({
       <div>
         <p className="ds-label">Confirme os lados</p>
         <p className="ds-caption mt-1">
-          A IA sugeriu — corrija se precisar. Cada lado só uma vez.
+          A IA sugeriu os lados — corrija se precisar. Tampa de combustível = esquerda; o outro
+          lado = direita. Cada lado só uma vez.
         </p>
         <p className="ds-caption mt-1.5 text-[var(--signal-bright)] font-semibold leading-snug">
           {VIEW_ORIENTATION_HINT}

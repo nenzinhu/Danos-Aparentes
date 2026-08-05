@@ -154,6 +154,13 @@ export default function ViewPhotosCapture({
         viewSidesConfirmedBy: undefined,
       })
       setLocalAssignments([])
+      // Com 4 evidências no lote, a IA identifica os lados automaticamente.
+      if (next.length === 4) {
+        // defer so state/pending reflects the new refs before classify
+        queueMicrotask(() => {
+          void runSideClassifyWithRefs(next)
+        })
+      }
     } catch (e) {
       console.error(e)
       onToast?.('Não foi possível salvar a foto.')
@@ -163,22 +170,17 @@ export default function ViewPhotosCapture({
     }
   }
 
-  function removePending(ref: string) {
-    void deletePhotoRef(ref)
-    persistPending(
-      pending.filter((r) => r !== ref),
-      { viewSideSuggestions: undefined },
-    )
-    setLocalAssignments((prev) => prev.filter((a) => a.photoRef !== ref))
-  }
-
-  async function runSideClassify() {
-    if (!pending.length) return
+  async function runSideClassifyWithRefs(refs: string[]) {
+    if (refs.length !== 4) {
+      onToast?.('Anexe as 4 evidências dos lados para a IA identificar.')
+      return
+    }
     setClassifying(true)
+    onToast?.('IA analisando imagens… Identificando lados…')
     try {
-      const suggestions = await classifyViewSides(pending, accessToken)
+      const suggestions = await classifyViewSides(refs, accessToken)
       const byRef = new Map(suggestions.map((s) => [s.photoRef, s.suggestedView]))
-      const items: ConfirmItem[] = pending.map((photoRef, i) => {
+      const items: ConfirmItem[] = refs.map((photoRef, i) => {
         const suggested = byRef.get(photoRef)
         const fallback = VIEW_PHOTO_ORDER[i]
         return {
@@ -187,7 +189,6 @@ export default function ViewPhotosCapture({
           fromAi: Boolean(suggested),
         }
       })
-      // Resolver duplicatas simples: mantém a primeira, limpa as seguintes
       const used = new Set<ViewType>()
       for (const item of items) {
         if (!item.view) continue
@@ -200,18 +201,19 @@ export default function ViewPhotosCapture({
       }
       onChange({
         ...info,
+        pendingViewPhotoRefs: refs,
         viewSideSuggestions: suggestions,
       })
       setLocalAssignments(items)
       onToast?.(
         suggestions.length
-          ? 'Revise os lados sugeridos pela IA.'
+          ? 'Revise os lados: tampa de combustível = esquerda.'
           : 'Escolha os lados na mão (IA indisponível).',
       )
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Falha ao identificar lados.'
       onToast?.(msg)
-      const items: ConfirmItem[] = pending.map((photoRef, i) => ({
+      const items: ConfirmItem[] = refs.map((photoRef, i) => ({
         photoRef,
         view: VIEW_PHOTO_ORDER[i] || '',
         fromAi: false,
@@ -220,6 +222,19 @@ export default function ViewPhotosCapture({
     } finally {
       setClassifying(false)
     }
+  }
+
+  async function runSideClassify() {
+    await runSideClassifyWithRefs(pending)
+  }
+
+  function removePending(ref: string) {
+    void deletePhotoRef(ref)
+    persistPending(
+      pending.filter((r) => r !== ref),
+      { viewSideSuggestions: undefined },
+    )
+    setLocalAssignments((prev) => prev.filter((a) => a.photoRef !== ref))
   }
 
   function onChangeView(photoRef: string, view: ViewType) {
@@ -417,7 +432,7 @@ export default function ViewPhotosCapture({
           <p className="ds-h3 mt-0.5">Evidências dos 4 lados</p>
           {!compact && (
             <p className="ds-caption mt-1">
-              Tire as 4 rápido. A IA sugere o lado; você confirma.
+              Anexe as 4 fotos (~90°). Com as 4 no lote, a IA identifica os lados; você confirma.
             </p>
           )}
           <p className="ds-caption mt-1.5 text-[var(--signal-bright)] font-semibold leading-snug">
@@ -468,16 +483,21 @@ export default function ViewPhotosCapture({
             </ul>
           )}
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 items-center">
             <Button
               type="button"
               variant="primary"
               size="md"
-              disabled={pending.length < 1 || classifying || busy}
+              disabled={pending.length !== 4 || classifying || busy}
               onClick={() => void runSideClassify()}
             >
               {classifying ? 'Identificando lados…' : 'Identificar lados com IA'}
             </Button>
+            {pending.length > 0 && pending.length < 4 && (
+              <p className="ds-caption self-center">
+                Faltam {4 - pending.length} foto(s) no lote para a IA analisar.
+              </p>
+            )}
             {filled > 0 && pending.length === 0 && (
               <p className="ds-caption self-center">Ou use as fotos já confirmadas abaixo.</p>
             )}

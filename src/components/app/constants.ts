@@ -36,7 +36,7 @@ export const VIEW_TAB_SHORT: Record<ViewType, string> = {
   traseira: 'Traseira',
 }
 
-/** Regra de orientação veicular (sentido de marcha, de dentro para fora). */
+/** Regra de orientação veicular (sentido de marcha + tampa de combustível = esquerda). */
 export const VIEW_ORIENTATION_HINT =
-  'Para a classificação da lateral do veículo, adote sempre o padrão de referência do sentido de marcha (de dentro para fora): Lado Esquerdo — lado do posto de condução (motorista / retrovisor esquerdo). Lado Direito — lado oposto ao condutor (passageiro / retrovisor direito / bocal de combustível, dependendo do modelo). Atenção: não utilize a perspectiva de quem está olhando de fora para o carro. Se a foto mostrar a porta do motorista, classifique obrigatoriamente como Esquerda. Frontal = frente do veículo (sentido de marcha / nariz). Traseira = oposto à frente.'
+  'Orientação (sentido de marcha): Esquerda = motorista + tampa de combustível. Direita = lado oposto (passageiro), sem a tampa. Frontal = nariz / frente. Traseira = oposto à frente. Não use a esquerda/direita da tela — use marcas do veículo.'
 
