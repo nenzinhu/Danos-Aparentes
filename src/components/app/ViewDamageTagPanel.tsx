@@ -24,13 +24,13 @@ type Props = {
 }
 
 export default function ViewDamageTagPanel({ damage, decidedByName, onUpdate }: Props) {
-  const [open, setOpen] = useState(false)
+  const status = damage.evidenceStatus || 'sugerido'
+  const [open, setOpen] = useState(status === 'sugerido')
   const [editing, setEditing] = useState(false)
   const [draftType, setDraftType] = useState(damage.type)
   const [draftSeverity, setDraftSeverity] = useState(damage.severity)
   const [draftNotes, setDraftNotes] = useState(damage.notes)
 
-  const status = damage.evidenceStatus || 'sugerido'
   if (status === 'ignorado') return null
 
   const typeLabel = TYPE_OPTIONS.find((t) => t.type === damage.type)?.label || 'Avaria'

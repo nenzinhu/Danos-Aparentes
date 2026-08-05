@@ -18,7 +18,6 @@ import {
   startPhotoUploadProgress,
   updatePhotoUploadProgress,
 } from '@/src/lib/photoUploadProgress'
-import { classifyViewSides } from '@/src/lib/viewSideClassifyClient'
 import { suggestViewDamageFromPhoto } from '@/src/lib/viewDamageSuggestClient'
 import { ResolvedPhoto } from '@/src/components/ResolvedPhoto'
 import PhotoAttachButtons from '@/src/components/PhotoAttachButtons'
@@ -61,7 +60,7 @@ function createDamageId(): Damage['id'] {
 
 /**
  * Captura das fotos dos 4 lados (~90°).
- * Fluxo: lote → IA sugere lados → humano confirma → IA sugere avarias (tags).
+ * Fluxo: lote (4 fotos) → humano assinala cada lado → confirma → IA analisa avarias para o humano confirmar.
  */
 export default function ViewPhotosCapture({
   info,
@@ -80,7 +79,6 @@ export default function ViewPhotosCapture({
   vehicleId,
 }: Props) {
   const [busy, setBusy] = useState(false)
-  const [classifying, setClassifying] = useState(false)
   const [confirming, setConfirming] = useState(false)
   const [analyzingView, setAnalyzingView] = useState<ViewType | null>(null)
   const [replaceView, setReplaceView] = useState<ViewType | null>(null)
@@ -153,13 +151,18 @@ export default function ViewPhotosCapture({
         viewSidesConfirmedAt: undefined,
         viewSidesConfirmedBy: undefined,
       })
-      setLocalAssignments([])
-      // Com 4 evidências no lote, a IA identifica os lados automaticamente.
       if (next.length === 4) {
-        // defer so state/pending reflects the new refs before classify
-        queueMicrotask(() => {
-          void runSideClassifyWithRefs(next)
-        })
+        // Humano assinala o lado de cada foto (sem IA nesta etapa).
+        setLocalAssignments(
+          next.map((photoRef) => ({
+            photoRef,
+            view: '' as const,
+            fromAi: false,
+          })),
+        )
+        onToast?.('Assinale o lado correto de cada foto e confirme.')
+      } else {
+        setLocalAssignments([])
       }
     } catch (e) {
       console.error(e)
@@ -170,62 +173,18 @@ export default function ViewPhotosCapture({
     }
   }
 
-  async function runSideClassifyWithRefs(refs: string[]) {
-    if (refs.length !== 4) {
-      onToast?.('Anexe as 4 evidências dos lados para a IA identificar.')
+  function openSideAssignment() {
+    if (pending.length !== 4) {
+      onToast?.('Tire as 4 fotos (frente, traseira, esquerda e direita) antes de assinalar.')
       return
     }
-    setClassifying(true)
-    onToast?.('IA analisando imagens… Identificando lados…')
-    try {
-      const suggestions = await classifyViewSides(refs, accessToken)
-      const byRef = new Map(suggestions.map((s) => [s.photoRef, s.suggestedView]))
-      const items: ConfirmItem[] = refs.map((photoRef, i) => {
-        const suggested = byRef.get(photoRef)
-        const fallback = VIEW_PHOTO_ORDER[i]
-        return {
-          photoRef,
-          view: (suggested || fallback) as ViewType,
-          fromAi: Boolean(suggested),
-        }
-      })
-      const used = new Set<ViewType>()
-      for (const item of items) {
-        if (!item.view) continue
-        if (used.has(item.view)) {
-          item.view = ''
-          item.fromAi = false
-        } else {
-          used.add(item.view as ViewType)
-        }
-      }
-      onChange({
-        ...info,
-        pendingViewPhotoRefs: refs,
-        viewSideSuggestions: suggestions,
-      })
-      setLocalAssignments(items)
-      onToast?.(
-        suggestions.length
-          ? 'Revise os lados: tampa de combustível = esquerda.'
-          : 'Escolha os lados na mão (IA indisponível).',
-      )
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Falha ao identificar lados.'
-      onToast?.(msg)
-      const items: ConfirmItem[] = refs.map((photoRef, i) => ({
+    setLocalAssignments(
+      pending.map((photoRef) => ({
         photoRef,
-        view: VIEW_PHOTO_ORDER[i] || '',
+        view: '' as const,
         fromAi: false,
-      }))
-      setLocalAssignments(items)
-    } finally {
-      setClassifying(false)
-    }
-  }
-
-  async function runSideClassify() {
-    await runSideClassifyWithRefs(pending)
+      })),
+    )
   }
 
   function removePending(ref: string) {
@@ -271,8 +230,7 @@ export default function ViewPhotosCapture({
       })
       setLocalAssignments([])
       damageRunForConfirmAt.current = null
-      onToast?.('Lados confirmados.')
-      // Dispara análise de avarias após commit do estado — useEffect abaixo
+      onToast?.('Lados confirmados. IA analisando avarias nas 4 vistas…')
       queueMicrotask(() => {
         void runDamageAnalysis(viewPhotos, { force: true, runKey: confirmedAt })
       })
@@ -291,11 +249,10 @@ export default function ViewPhotosCapture({
       if (!opts?.force && damageRunForConfirmAt.current === runKey) return
       damageRunForConfirmAt.current = runKey
       const views = opts?.onlyView ? [opts.onlyView] : VIEW_PHOTO_ORDER
-      if (opts?.onlyView) setAnalyzingView(opts.onlyView)
-      else setAnalyzingView('frontal') // indicador genérico
+      let found = 0
       try {
         for (const view of views) {
-          if (opts?.onlyView) setAnalyzingView(view)
+          setAnalyzingView(view)
           const photoRef = viewPhotos[view]
           if (!photoRef) continue
           for (const d of filterDamagesToInvalidateOnViewChange(damages, { view })) {
@@ -310,6 +267,7 @@ export default function ViewPhotosCapture({
             if (opts?.onlyView) onToast?.('Nenhuma avaria aparente nesta foto.')
             continue
           }
+          found += 1
           onAddDamageRecord({
             id: createDamageId(),
             vehicle: vehicleType,
@@ -324,6 +282,13 @@ export default function ViewPhotosCapture({
             photoNotes: [''],
             evidenceStatus: 'sugerido',
           })
+        }
+        if (!opts?.onlyView) {
+          onToast?.(
+            found > 0
+              ? `IA encontrou ${found} possível(is) avaria(s). Revise e confirme cada uma.`
+              : 'IA não encontrou avarias aparentes nas 4 vistas.',
+          )
         }
       } catch (e) {
         console.error(e)
@@ -432,7 +397,8 @@ export default function ViewPhotosCapture({
           <p className="ds-h3 mt-0.5">Evidências dos 4 lados</p>
           {!compact && (
             <p className="ds-caption mt-1">
-              Anexe as 4 fotos (~90°). Com as 4 no lote, a IA identifica os lados; você confirma.
+              Tire as 4 fotos (~90°): frente, traseira, esquerda e direita. Você assinala o lado de
+              cada uma; depois a IA analisa avarias para você confirmar.
             </p>
           )}
           <p className="ds-caption mt-1.5 text-[var(--signal-bright)] font-semibold leading-snug">
@@ -488,14 +454,14 @@ export default function ViewPhotosCapture({
               type="button"
               variant="primary"
               size="md"
-              disabled={pending.length !== 4 || classifying || busy}
-              onClick={() => void runSideClassify()}
+              disabled={pending.length !== 4 || busy}
+              onClick={openSideAssignment}
             >
-              {classifying ? 'Identificando lados…' : 'Identificar lados com IA'}
+              Assinalar lados das 4 fotos
             </Button>
             {pending.length > 0 && pending.length < 4 && (
               <p className="ds-caption self-center">
-                Faltam {4 - pending.length} foto(s) no lote para a IA analisar.
+                Faltam {4 - pending.length} foto(s) — frente, traseira, esquerda e direita.
               </p>
             )}
             {filled > 0 && pending.length === 0 && (
@@ -519,7 +485,7 @@ export default function ViewPhotosCapture({
         <>
           {analyzingView && (
             <p className="text-xs font-semibold text-sky-400">
-              Analisando avarias{analyzingView ? ` · ${VIEW_TAB_SHORT[analyzingView]}` : ''}…
+              IA analisando avarias · {VIEW_TAB_SHORT[analyzingView]}… Confirme depois.
             </p>
           )}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

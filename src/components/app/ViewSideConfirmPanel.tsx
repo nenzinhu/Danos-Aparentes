@@ -37,10 +37,10 @@ export default function ViewSideConfirmPanel({
   return (
     <div className="space-y-4">
       <div>
-        <p className="ds-label">Confirme os lados</p>
+        <p className="ds-label">Assinale os lados</p>
         <p className="ds-caption mt-1">
-          A IA sugeriu os lados — corrija se precisar. Tampa de combustível = esquerda; o outro
-          lado = direita. Cada lado só uma vez.
+          Para cada foto, escolha uma opção: Frontal, Traseira, Esquerda ou Direita. Cada lado só
+          uma vez. Ao confirmar, a IA analisa as vistas em busca de avarias.
         </p>
         <p className="ds-caption mt-1.5 text-[var(--signal-bright)] font-semibold leading-snug">
           {VIEW_ORIENTATION_HINT}
@@ -48,7 +48,7 @@ export default function ViewSideConfirmPanel({
       </div>
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 list-none m-0 p-0">
-        {items.map((item) => (
+        {items.map((item, index) => (
           <li
             key={item.photoRef}
             className="rounded-2xl border border-[var(--card-border)] bg-black/[0.12] overflow-hidden"
@@ -56,20 +56,18 @@ export default function ViewSideConfirmPanel({
             <div className="relative aspect-[4/3] bg-black/40">
               <ResolvedPhoto
                 refOrDataUrl={item.photoRef}
-                alt="Foto do lote"
+                alt={`Foto ${index + 1}`}
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              {item.fromAi && (
-                <span className="absolute top-2 left-2 text-[0.62rem] font-bold px-2 py-0.5 rounded-md bg-amber-500/90 text-amber-950">
-                  Sugestão da IA
-                </span>
-              )}
+              <span className="absolute top-2 left-2 text-[0.62rem] font-bold px-2 py-0.5 rounded-md bg-black/70 text-white">
+                Foto {index + 1}
+              </span>
             </div>
             <div className="p-3 space-y-2">
               <p className="text-[0.7rem] font-bold text-[var(--text-muted)] uppercase tracking-wide">
-                Esta foto é (sentido de marcha)
+                Qual lado é esta foto?
               </p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="grid grid-cols-2 gap-1.5">
                 {VIEW_PHOTO_ORDER.map((view) => {
                   const selected = item.view === view
                   const takenByOther = items.some(
@@ -81,7 +79,7 @@ export default function ViewSideConfirmPanel({
                       type="button"
                       disabled={takenByOther && !selected}
                       onClick={() => onChangeView(item.photoRef, view)}
-                      className={`min-h-9 px-2.5 rounded-lg text-[0.7rem] font-bold border transition-colors ${
+                      className={`min-h-10 px-2.5 rounded-lg text-[0.75rem] font-bold border transition-colors ${
                         selected
                           ? 'bg-[var(--primary)]/20 border-[var(--primary)] text-[var(--primary)]'
                           : takenByOther
@@ -101,7 +99,7 @@ export default function ViewSideConfirmPanel({
 
       {!canConfirm && items.length > 0 && (
         <p className="text-xs text-amber-400/90 font-semibold">
-          {gate.ok ? 'Escolha o lado de todas as fotos.' : gate.reason}
+          {gate.ok ? 'Assinale o lado de todas as 4 fotos.' : gate.reason}
         </p>
       )}
 
@@ -113,7 +111,7 @@ export default function ViewSideConfirmPanel({
           disabled={!canConfirm || confirming}
           onClick={onConfirm}
         >
-          {confirming ? 'Salvando…' : 'Confirmar lados'}
+          {confirming ? 'Confirmando…' : 'Confirmar lados e analisar avarias'}
         </Button>
         <Button type="button" variant="secondary" size="md" disabled={confirming} onClick={onRedo}>
           Refazer fotos
