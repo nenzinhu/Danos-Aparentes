@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import { SeguradorasHeroCtas, SeguradorasPlanosLink, SeguradorasFinalCta } from '@/src/components/SeguradorasCtas'
@@ -64,7 +64,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Quanto custa para uma corretora pequena começar?',
-    a: 'O plano Starter (R$ 29,90/mês, até 20 dossiês) já cobre um volume inicial. O Pro (R$ 49,90/mês, até 80 dossiês) inclui dossiê personalizado. Para volume maior, integrações e dossiês ilimitados, o Corporativo é sob consulta.',
+    a: 'O plano Starter (R$ 29,90/mês, até 20 dossiês) já cobre um volume inicial. O Pro (R$ 79,90/mês, até 80 dossiês) inclui dossiê personalizado. Para volume maior, integrações e dossiês ilimitados, o Corporativo é sob consulta.',
   },
 ]
 

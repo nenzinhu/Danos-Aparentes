@@ -1,4 +1,4 @@
-/** Catálogo canônico dos planos — UI, PIX, Stripe Products e quotas. */
+﻿/** Catálogo canônico dos planos — UI, PIX, Stripe Products e quotas. */
 export type SelfServePlanId = 'starter' | 'pro'
 export type PlanTierId = SelfServePlanId | 'corporativo'
 
@@ -37,8 +37,8 @@ export const PLANS: Record<PlanTierId, PlanDefinition> = {
     id: 'pro',
     name: 'Plano Pro',
     description: 'Até 80 vistorias por mês com marca própria — Danos Aparentes',
-    amountBrlCents: 4990,
-    amountBrl: 49.9,
+    amountBrlCents: 7990,
+    amountBrl: 79.9,
     laudosPerMonth: 80,
     interval: 'month',
     stripeMetadataValue: 'pro',

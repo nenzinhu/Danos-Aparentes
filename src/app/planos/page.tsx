@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import PricingCards from '@/src/components/PricingCards'
 import PlanosFinalCta from '@/src/components/PlanosFinalCta'
@@ -109,7 +109,7 @@ const pricingJsonLd = {
     {
       '@type': 'Offer',
       name: 'Pro',
-      price: '49.90',
+      price: '79.90',
       priceCurrency: 'BRL',
       description: 'Até 80 inspeções/mês com marca própria',
       url: 'https://danosaparentes.com.br/planos',

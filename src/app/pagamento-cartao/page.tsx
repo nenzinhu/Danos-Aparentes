@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -8,7 +8,7 @@ import { useSubscription, type PurchasablePlan } from '@/src/hooks/useSubscripti
 import { loginUrlWithReturnTo } from '@/src/lib/safeReturnTo'
 import { buttonVariants } from '@/src/components/ui/Button'
 
-const PLAN_PRICE: Record<PurchasablePlan, number> = { starter: 29.9, pro: 49.9 }
+const PLAN_PRICE: Record<PurchasablePlan, number> = { starter: 29.9, pro: 79.9 }
 const PLAN_LABEL: Record<PurchasablePlan, string> = {
   starter: 'Plano Starter',
   pro: 'Plano Pro',

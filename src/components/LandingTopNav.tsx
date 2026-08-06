@@ -35,6 +35,7 @@ const NAV: NavGroup[] = [
       },
       { href: '/demo', label: 'Solicitar Demonstração', blurb: 'Conheça a plataforma' },
       { href: '/verify', label: 'Dossiês', blurb: 'Verificar autenticidade do PDF' },
+      { href: '/depoimentos', label: 'Depoimentos', blurb: 'Quem usa conta o resultado' },
       { href: '/planos', label: 'Planos', blurb: 'Starter, Pro e Corporativo' },
     ],
   },

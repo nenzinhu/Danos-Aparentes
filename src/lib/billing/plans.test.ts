@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest'
+﻿import { describe, expect, it } from 'vitest'
 import { PLANS, parsePixPlan, parseSelfServePlan, planDisplayName } from '@/src/lib/billing/plans'
 import { getStripePriceId, resolveCheckoutPlan } from '@/src/lib/server/stripePlans'
 
 describe('billing plans catalog', () => {
   it('mantém os valores comerciais canônicos', () => {
     expect(PLANS.starter.amountBrlCents).toBe(2990)
-    expect(PLANS.pro.amountBrlCents).toBe(4990)
+    expect(PLANS.pro.amountBrlCents).toBe(7990)
     expect(PLANS.corporativo.amountBrlCents).toBe(29900)
     expect(PLANS.starter.laudosPerMonth).toBe(20)
     expect(PLANS.pro.laudosPerMonth).toBe(80)

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import { OficinasHeroCtas, OficinasPlanosLink, OficinasFinalCta } from '@/src/components/OficinasCtas'
@@ -65,7 +65,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Quanto custa para uma oficina pequena?',
-    a: 'O plano Starter (R$ 29,90/mês, até 20 dossiês) já cobre oficinas com menos movimento. O Pro (R$ 49,90/mês, até 80 dossiês) inclui dossiê personalizado e busca de placa. Para múltiplas unidades e dossiês ilimitados, o Corporativo é sob consulta.',
+    a: 'O plano Starter (R$ 29,90/mês, até 20 dossiês) já cobre oficinas com menos movimento. O Pro (R$ 79,90/mês, até 80 dossiês) inclui dossiê personalizado e busca de placa. Para múltiplas unidades e dossiês ilimitados, o Corporativo é sob consulta.',
   },
 ]
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
@@ -84,7 +84,7 @@ const LANDING_JSONLD = {
       {
         '@type': 'Offer',
         name: 'Pro',
-        price: '49.90',
+        price: '79.90',
         priceCurrency: 'BRL',
         description: 'Até 80 inspeções por mês com marca própria',
         url: 'https://danosaparentes.com.br/planos',

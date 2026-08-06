@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+﻿import { describe, expect, it, vi, beforeEach } from 'vitest'
 
 vi.mock('@/src/lib/server/asaasPix', () => ({
   createAsaasPixCharge: vi.fn(async () => ({
@@ -43,7 +43,7 @@ describe('billing/createUnifiedPixCharge', () => {
 
   it('createUnifiedPixCharge normalizes Asaas response', async () => {
     const charge = await createUnifiedPixCharge({
-      amountCents: 4990,
+      amountCents: 7990,
       email: 'a@b.com',
       plan: 'pro',
       durationMonths: 1,

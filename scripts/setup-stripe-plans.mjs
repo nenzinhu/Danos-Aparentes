@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Cria (ou reaproveita) Products + Prices mensais no Stripe para Starter, Pro e Corporativo Start.
  *
@@ -24,7 +24,7 @@ const PLANS = [
     tier: 'pro',
     name: 'Plano Pro',
     description: 'Até 80 laudos em PDF por mês com marca própria — Danos Aparentes',
-    amountBrlCents: 4990,
+    amountBrlCents: 7990,
     envVar: 'STRIPE_PRICE_ID_PRO',
     legacyEnvVar: 'STRIPE_PRICE_ID',
   },

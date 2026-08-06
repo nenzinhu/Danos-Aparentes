@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import {
@@ -87,7 +87,7 @@ const PLANS = [
   },
   {
     name: 'Pro',
-    price: 'R$ 49,90/mês',
+    price: 'R$ 79,90/mês',
     detail: '80 inspeções · white-label (logo no dossiê) · ≈ R$ 0,62/inspeção.',
   },
   {

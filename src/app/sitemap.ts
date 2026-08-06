@@ -26,6 +26,7 @@ const ROUTES: {
   { path: '/demo', priority: 0.7, changeFrequency: 'monthly', lastModified: '2026-07-12' },
   { path: '/suporte', priority: 0.6, changeFrequency: 'monthly', lastModified: '2026-07-01' },
   { path: '/verify', priority: 0.5, changeFrequency: 'monthly', lastModified: '2026-07-01' },
+  { path: '/depoimentos', priority: 0.75, changeFrequency: 'monthly', lastModified: '2026-08-06' },
   { path: '/termos', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-01-15' },
   { path: '/privacidade', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-01-15' },
 ]

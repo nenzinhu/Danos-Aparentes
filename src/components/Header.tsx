@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import React, { memo, useState, useEffect, useRef } from 'react'
 import type { SubscriptionStatus } from '../hooks/useSubscription'
 import Logo from '@/src/components/Logo'
@@ -103,7 +103,7 @@ function ProBenefitsButton({
           )}
           {!isActive && !isTrial && (
             <p className="ds-caption text-center mt-2">
-              A partir de <strong className="text-sky-400">R$ 49,90/mês</strong>
+              A partir de <strong className="text-sky-400">R$ 79,90/mês</strong>
             </p>
           )}
         </div>

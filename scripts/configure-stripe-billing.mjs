@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
  * Configura catálogo Stripe (1 Product por plano) + grava Price IDs na Vercel.
  *
@@ -34,7 +34,7 @@ const PLANS = [
     tier: 'pro',
     name: 'Plano Pro',
     description: 'Até 80 laudos em PDF por mês com marca própria — Danos Aparentes',
-    amountBrlCents: 4990,
+    amountBrlCents: 7990,
     envVars: ['STRIPE_PRICE_ID_PRO', 'STRIPE_PRICE_ID'],
   },
   {
@@ -189,6 +189,25 @@ async function ensurePlan(plan) {
     console.log(`✨ Price ${plan.tier}: ${price.id}`)
   } else {
     console.log(`✅ Price ${plan.tier}: ${price.id} (R$ ${(price.unit_amount / 100).toFixed(2)}/mês)`)
+  }
+
+  // Arquiva Prices mensais BRL ativos com valor antigo (não dá para editar Price no Stripe).
+  for (const old of existingPrices.data) {
+    if (
+      old.id !== price.id &&
+      old.recurring?.interval === 'month' &&
+      old.currency === 'brl' &&
+      old.unit_amount !== plan.amountBrlCents
+    ) {
+      if (DRY_RUN) {
+        console.log(`[dry-run] arquivaria Price antigo ${old.id} (R$ ${(old.unit_amount / 100).toFixed(2)})`)
+        continue
+      }
+      await stripe.prices.update(old.id, { active: false })
+      console.log(
+        `🗄️  Price antigo arquivado ${old.id} (R$ ${(old.unit_amount / 100).toFixed(2)}/mês)`,
+      )
+    }
   }
 
   return { plan, price }

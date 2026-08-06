@@ -1,4 +1,4 @@
-import React from 'react'
+﻿import React from 'react'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import VehicleViewsDemo from '@/src/components/blog/VehicleViewsDemo'
 import { BlogVideo } from '@/src/components/blog/BlogVideo'
@@ -150,7 +150,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         question: 'Quanto custa um sistema de vistoria veicular digital?',
-        answer: 'Os planos variam de R$ 29,90/mês (Starter, 20 laudos) e R$ 49,90/mês (Pro, 80 laudos com marca própria) até planos corporativos ilimitados a partir de R$ 299/mês. Todos oferecem teste grátis sem cartão.',
+        answer: 'Os planos variam de R$ 29,90/mês (Starter, 20 laudos) e R$ 79,90/mês (Pro, 80 laudos com marca própria) até planos corporativos ilimitados a partir de R$ 299/mês. Todos oferecem teste grátis sem cartão.',
       },
     ],
     content: (

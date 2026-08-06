@@ -1,4 +1,4 @@
-export type ChatSupportSegment = 'home' | 'locadoras' | 'oficinas' | 'seguradoras' | 'frotas'
+﻿export type ChatSupportSegment = 'home' | 'locadoras' | 'oficinas' | 'seguradoras' | 'frotas'
 
 export const VALID_CHAT_SEGMENTS: ChatSupportSegment[] = [
   'home',
@@ -29,7 +29,7 @@ export const GENERAL_KNOWLEDGE = `
 - White-label: Pro+ personaliza o dossiê com logo e marca.
 - Planos:
   • Starter: R$ 29,90/mês — até 20 inspeções/mês.
-  • Pro: R$ 49,90/mês — até 80 inspeções/mês, marca própria, dashboard, suporte prioritário.
+  • Pro: R$ 79,90/mês — até 80 inspeções/mês, marca própria, dashboard, suporte prioritário.
   • Corporativo Start: R$ 299/mês — até 5 usuários, inspeções ilimitadas.
   • Corporativo Growth: R$ 699/mês — até 15 usuários.
   • Enterprise: a partir de R$ 1.490/mês — 15+ usuários, API e SLA.

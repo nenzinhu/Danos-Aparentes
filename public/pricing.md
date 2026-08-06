@@ -1,7 +1,7 @@
-# Preços — Danos Aparentes
+﻿# Preços — Danos Aparentes
 
 Fonte: planos publicados em https://danosaparentes.com.br/planos (espelho de `PricingCards`).
-Atualizado: 2026-08-02. Moeda: BRL. CTA principal: trial 7 dias sem cartão; cartão/PIX como assinar agora. PIX disponível nos planos SME.
+Atualizado: 2026-08-06. Moeda: BRL. CTA principal: trial 7 dias sem cartão; cartão/PIX como assinar agora. PIX disponível nos planos SME.
 
 ## Starter
 
@@ -12,10 +12,10 @@ Atualizado: 2026-08-02. Moeda: BRL. CTA principal: trial 7 dias sem cartão; car
 
 ## Pro
 
-- Preço: R$ 49,90/mês
+- Preço: R$ 79,90/mês
 - Limite: até 80 laudos em PDF por mês
 - Inclui: tudo do Starter; marca própria (nome e logotipo no PDF); painel de estatísticas/dashboard; modelos de layout de PDF adicionais; suporte com prioridade
-- Aprox.: ≈ R$ 0,62/laudo (80 laudos)
+- Aprox.: ≈ R$ 1,00/laudo (80 laudos)
 - Destaque: plano mais escolhido para quem precisa de white-label no laudo
 
 ## Corporativo — Start

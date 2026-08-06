@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+﻿import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import {
@@ -120,7 +120,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Quanto custa para começar?',
-    a: 'Starter R$ 29,90/mês (até 20 dossiês) e Pro R$ 49,90/mês (até 80 dossiês, com marca própria). Corporativo a partir de R$ 299 para multi-usuário e dossiês ilimitados. 7 dias grátis sem cartão.',
+    a: 'Starter R$ 29,90/mês (até 20 dossiês) e Pro R$ 79,90/mês (até 80 dossiês, com marca própria). Corporativo a partir de R$ 299 para multi-usuário e dossiês ilimitados. 7 dias grátis sem cartão.',
   },
 ]
 
