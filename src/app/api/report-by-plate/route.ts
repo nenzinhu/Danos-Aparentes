@@ -1,56 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin';
-import { getUserFromRequest } from '@/src/lib/server/auth';
+import { getAuthzFromRequest } from '@/src/lib/server/rbac';
 import { normalizePlate } from '@/src/lib/reportComparison';
-
-// Descobre os user_ids cujos laudos entram na busca: o próprio usuário,
-// mais toda a equipe da mesma empresa (dono OU membro aceito) no plano
-// Corporativo. Sem empresa, o escopo é só o próprio usuário.
-async function resolveScopeUserIds(userId: string): Promise<string[]> {
-  if (!supabaseAdmin) return [userId];
-
-  const { data: ownedCompany } = await supabaseAdmin
-    .from('companies')
-    .select('id')
-    .eq('owner_id', userId)
-    .maybeSingle();
-
-  let companyId = ownedCompany?.id as string | undefined;
-  let ownerId = userId;
-
-  if (!companyId) {
-    const { data: membership } = await supabaseAdmin
-      .from('team_members')
-      .select('company_id, companies(owner_id)')
-      .eq('user_id', userId)
-      .eq('status', 'accepted')
-      .maybeSingle();
-
-    if (membership?.company_id) {
-      companyId = membership.company_id as string;
-      const companies = membership.companies as unknown as { owner_id?: string } | { owner_id?: string }[] | null;
-      const owner = Array.isArray(companies) ? companies[0]?.owner_id : companies?.owner_id;
-      if (owner) ownerId = owner;
-    }
-  }
-
-  if (!companyId) return [userId];
-
-  const { data: members } = await supabaseAdmin
-    .from('team_members')
-    .select('user_id, status')
-    .eq('company_id', companyId);
-
-  const teamUserIds = (members ?? [])
-    .filter(m => m.status === 'accepted' && m.user_id)
-    .map(m => m.user_id as string);
-
-  return Array.from(new Set([ownerId, userId, ...teamUserIds]));
-}
+import { resolveReadableUserIds } from '@/src/lib/server/vehicleScope';
 
 export async function GET(req: NextRequest) {
-  const user = await getUserFromRequest(req);
-  if (!user) {
+  const authz = await getAuthzFromRequest(req);
+  if (!authz) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
   }
 
@@ -65,12 +21,25 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const scopeUserIds = await resolveScopeUserIds(user.id);
+    // Owner: equipe legível; inspector/solo: só o próprio user_id
+    const scopeUserIds = await resolveReadableUserIds({
+      userId: authz.userId,
+      tenantId: authz.tenantId,
+      role: authz.role,
+    });
 
-    const { data: inspections, error: inspError } = await supabaseAdmin
+    let query = supabaseAdmin
       .from('vehicle_inspections')
-      .select('id, plate, updated_at')
+      .select('id, plate, updated_at, user_id, tenant_id')
       .in('user_id', scopeUserIds);
+
+    if (authz.tenantId) {
+      query = query.eq('tenant_id', authz.tenantId);
+    } else {
+      query = query.is('tenant_id', null);
+    }
+
+    const { data: inspections, error: inspError } = await query;
     if (inspError) throw inspError;
 
     const matches = (inspections ?? [])
@@ -95,7 +64,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (err) {
     console.error('Erro ao buscar laudo anterior por placa:', err);
-    // Não bloqueia a vistoria — só não mostra a comparação.
     return NextResponse.json({ found: false });
   }
 }

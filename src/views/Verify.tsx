@@ -20,6 +20,13 @@ import {
 } from '../lib/verify/disclosureScope'
 import { comparePdfUpload, hashPdfBytes } from '../lib/verify/pdfUploadVerify'
 import { logPublicVerifyAudit } from '../lib/verify/logVerifyAudit'
+import {
+  fetchPublicReportByCode,
+  fetchPublicReportByHash,
+  fetchPublicReportByPdfHash,
+  fetchPublicReportVersions,
+  type PublicReportReceipt,
+} from '../lib/verify/publicReceipt'
 
 interface HashRecord {
   hash: string
@@ -40,6 +47,13 @@ interface HashRecord {
   inspection_id?: string | null
   disclosure_scope?: string | null
   severity_summary?: SeveritySummary | null
+  final_hash?: string | null
+  integrity_manifest?: { pdf_hash?: string } | null
+  inspection_status?: string | null
+}
+
+function receiptToRecord(r: PublicReportReceipt): HashRecord {
+  return { ...r }
 }
 
 interface VersionInfo {
@@ -168,25 +182,19 @@ export default function Verify() {
     try {
       let data: HashRecord | null = null
       if (byCode) {
-        const res = await supabase
-          .from('report_hashes')
-          .select('*')
-          .eq('public_code', h)
-          .order('version', { ascending: false })
-          .limit(1)
-          .maybeSingle()
+        const res = await fetchPublicReportByCode(supabase, h)
         if (res.error) {
           setStatus('error')
           return
         }
-        data = (res.data as HashRecord) || null
+        data = res.data ? receiptToRecord(res.data) : null
       } else {
-        const res = await supabase.from('report_hashes').select('*').eq('hash', h).maybeSingle()
+        const res = await fetchPublicReportByHash(supabase, h)
         if (res.error) {
           setStatus('error')
           return
         }
-        data = (res.data as HashRecord) || null
+        data = res.data ? receiptToRecord(res.data) : null
       }
 
       if (!data) {
@@ -205,13 +213,9 @@ export default function Verify() {
 
       let isSupersededVersion = false
       if (rec.report_key) {
-        const { data: siblings } = await supabase
-          .from('report_hashes')
-          .select('hash, version')
-          .eq('report_key', rec.report_key)
-          .order('version', { ascending: true })
+        const { data: siblings } = await fetchPublicReportVersions(supabase, rec.report_key)
         if (siblings && siblings.length > 0) {
-          const latest = siblings[siblings.length - 1] as { hash: string; version: number }
+          const latest = siblings[siblings.length - 1]
           const info = {
             version: rec.version || 1,
             total: siblings.length,
@@ -223,15 +227,7 @@ export default function Verify() {
         }
       }
 
-      let inspectionStatus: string | null = null
-      if (rec.inspection_id) {
-        const { data: insp } = await supabase
-          .from('vehicle_inspections')
-          .select('status')
-          .eq('id', rec.inspection_id)
-          .maybeSingle()
-        inspectionStatus = (insp?.status as string) || null
-      }
+      const inspectionStatus = rec.inspection_status || null
 
       const o = resolveVerifyOutcome({
         found: true,
@@ -339,15 +335,10 @@ export default function Verify() {
       const buf = await file.arrayBuffer()
       const pdfHash = await hashPdfBytes(buf)
 
-      const byPdf = await supabase
-        .from('report_hashes')
-        .select('*')
-        .filter('integrity_manifest->>pdf_hash', 'eq', pdfHash)
-        .limit(1)
-        .maybeSingle()
+      const byPdf = await fetchPublicReportByPdfHash(supabase, pdfHash)
 
       let matchedBy: 'pdf_hash' | 'typed_hash' | 'none' = 'none'
-      let data = (byPdf.data as HashRecord | null) || null
+      let data = byPdf.data ? receiptToRecord(byPdf.data) : null
       if (data) matchedBy = 'pdf_hash'
 
       if (!data && inputHash.trim()) {
@@ -355,30 +346,18 @@ export default function Verify() {
         const byCode = isPublicCodeQuery(typed)
         const key = byCode ? normalizePublicCode(typed) : normalizeHash(typed)
         const res = byCode
-          ? await supabase.from('report_hashes').select('*').eq('public_code', key).order('version', { ascending: false }).limit(1).maybeSingle()
-          : await supabase.from('report_hashes').select('*').eq('hash', key).maybeSingle()
-        data = (res.data as HashRecord | null) || null
+          ? await fetchPublicReportByCode(supabase, key)
+          : await fetchPublicReportByHash(supabase, key)
+        data = res.data ? receiptToRecord(res.data) : null
         if (data) matchedBy = 'typed_hash'
       }
 
-      let inspectionStatus: string | null = null
+      let inspectionStatus: string | null = data?.inspection_status || null
       let isSupersededVersion = false
-      if (data?.inspection_id) {
-        const { data: insp } = await supabase
-          .from('vehicle_inspections')
-          .select('status')
-          .eq('id', data.inspection_id)
-          .maybeSingle()
-        inspectionStatus = (insp?.status as string) || null
-      }
       if (data?.report_key) {
-        const { data: siblings } = await supabase
-          .from('report_hashes')
-          .select('hash, version')
-          .eq('report_key', data.report_key)
-          .order('version', { ascending: true })
+        const { data: siblings } = await fetchPublicReportVersions(supabase, data.report_key)
         if (siblings && siblings.length > 1) {
-          const latest = siblings[siblings.length - 1] as { hash: string; version: number }
+          const latest = siblings[siblings.length - 1]
           isSupersededVersion = latest.hash !== data.hash
           setVersionInfo({
             version: data.version || 1,
@@ -394,8 +373,8 @@ export default function Verify() {
         record: data
           ? {
               hash: data.hash,
-              final_hash: (data as HashRecord & { final_hash?: string }).final_hash,
-              integrity_manifest: (data as HashRecord & { integrity_manifest?: { pdf_hash?: string } }).integrity_manifest,
+              final_hash: data.final_hash,
+              integrity_manifest: data.integrity_manifest,
               inspection_status: inspectionStatus,
               is_superseded_version: isSupersededVersion,
             }

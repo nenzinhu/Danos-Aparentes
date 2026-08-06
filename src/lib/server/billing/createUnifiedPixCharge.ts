@@ -1,6 +1,6 @@
 import { parsePixPlan, planDisplayName, type PlanTierId } from '@/src/lib/billing/plans'
 import { createAsaasPixCharge } from '@/src/lib/server/asaasPix'
-import { getAsaasApiKey } from '@/src/lib/server/asaasClient'
+import { assertAsaasSafeForProduction, getAsaasApiKey } from '@/src/lib/server/asaasClient'
 import { createPixCharge as createMercadoPagoPixCharge } from '@/src/lib/server/pixClient'
 
 export type PixProviderId = 'asaas' | 'mercadopago'
@@ -42,8 +42,10 @@ export function resolvePixProvider(explicit?: string | null): PixProviderId {
 }
 
 export function assertPixProviderConfigured(provider: PixProviderId): string | null {
-  if (provider === 'asaas' && !getAsaasApiKey()) {
-    return 'PIX Asaas não configurado (ASAAS_API_KEY).'
+  if (provider === 'asaas') {
+    if (!getAsaasApiKey()) return 'PIX Asaas não configurado (ASAAS_API_KEY).'
+    const prodBlock = assertAsaasSafeForProduction()
+    if (prodBlock) return prodBlock
   }
   if (provider === 'mercadopago' && !process.env.PIX_MERCADO_PAGO_ACCESS_TOKEN) {
     return 'PIX Mercado Pago não configurado.'

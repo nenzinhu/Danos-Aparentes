@@ -3,6 +3,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/src/hooks/useAuth'
 import { supabaseEnabled } from '@/src/lib/supabase'
+import { clearTenantContextCache } from '@/src/lib/tenant/resolveTenant'
 import Login from '@/src/views/Login'
 
 function Centered({ children }: { children: React.ReactNode }) {
@@ -34,6 +35,7 @@ function AcceptInvite() {
           const body = await res.json().catch(() => ({}))
           throw new Error(body?.error || 'Não foi possível aceitar o convite')
         }
+        clearTenantContextCache(session.user.id)
         setState('done')
         setTimeout(() => router.replace('/app'), 1500)
       } catch (err) {

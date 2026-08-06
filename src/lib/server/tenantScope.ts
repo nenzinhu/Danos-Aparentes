@@ -6,12 +6,19 @@ export async function resolveTenantContextForUser(userId: string): Promise<Tenan
   return resolveTenantContext(userId, supabaseAdmin)
 }
 
-/** ponytail: service-role reads are not filtered by tenant_id yet — callers must pass tenantId explicitly. */
+/**
+ * Isolamento de linhas tenant-scoped:
+ * - corp: tenant_id da linha deve bater com o contexto
+ * - solo: exige userId e tenant_id null na linha
+ */
 export function tenantMatchesRow(
   ctx: TenantContext,
-  rowTenantId: string | null | undefined,
+  row: { tenant_id?: string | null; user_id?: string | null },
+  userId?: string,
 ): boolean {
-  if (!ctx.tenantId) return true
-  if (!rowTenantId) return false
-  return ctx.tenantId === rowTenantId
+  if (ctx.tenantId) {
+    return row.tenant_id === ctx.tenantId
+  }
+  if (!userId) return false
+  return row.user_id === userId && (row.tenant_id == null || row.tenant_id === '')
 }

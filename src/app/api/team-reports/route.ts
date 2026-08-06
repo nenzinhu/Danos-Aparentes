@@ -67,13 +67,17 @@ export async function GET(req: NextRequest) {
         .eq('tenant_id', company.id);
       if (inspError) throw inspError;
 
-      const { data: damages, error: dmgError } = await supabaseAdmin
-        .from('damages')
-        .select('*')
-        .in('user_id', acceptedUserIds);
-      if (dmgError) throw dmgError;
+      const inspectionIds = (inspections ?? []).map((i) => i.id as string);
+      let damageRows: Record<string, unknown>[] = [];
+      if (inspectionIds.length > 0) {
+        const { data: damages, error: dmgError } = await supabaseAdmin
+          .from('damages')
+          .select('*')
+          .in('inspection_id', inspectionIds);
+        if (dmgError) throw dmgError;
+        damageRows = (damages ?? []) as Record<string, unknown>[];
+      }
 
-      const damageRows = (damages ?? []) as Record<string, unknown>[];
       reports = (inspections ?? []).map((insp) => ({
         inspectorEmail: emailByUserId.get(insp.user_id as string) || '',
         report: mapRemoteInspection(insp as Record<string, unknown>, damageRows),

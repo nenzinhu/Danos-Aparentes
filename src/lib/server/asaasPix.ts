@@ -3,7 +3,7 @@
  * Retorno alinhado ao contrato da UI: qrCode (base64) + copyPaste + id.
  */
 
-import { asaasRequest } from '@/src/lib/server/asaasClient'
+import { asaasRequest, assertAsaasSafeForProduction, isAsaasSandboxUrl } from '@/src/lib/server/asaasClient'
 
 export type AsaasPixChargeResult = {
   /** Prefixo asaas: para distinguir do id numérico do Mercado Pago. */
@@ -30,6 +30,15 @@ function todayPlusDays(days: number): string {
   return d.toISOString().slice(0, 10)
 }
 
+function resolveCustomerCpf(): string {
+  const fromEnv = (process.env.ASAAS_DEFAULT_CPF || '').trim()
+  if (fromEnv) return fromEnv
+  if (isAsaasSandboxUrl()) return SANDBOX_FALLBACK_CPF
+  throw new Error(
+    'ASAAS_DEFAULT_CPF obrigatório em Asaas produção (não use CPF de sandbox em live).',
+  )
+}
+
 async function findOrCreateCustomer(email: string, name: string): Promise<string> {
   const listed = await asaasRequest<AsaasCustomerList>(
     `/customers?email=${encodeURIComponent(email)}&limit=1`,
@@ -38,7 +47,7 @@ async function findOrCreateCustomer(email: string, name: string): Promise<string
   const existing = listed.data?.[0]?.id
   if (existing) return existing
 
-  const cpfCnpj = process.env.ASAAS_DEFAULT_CPF || SANDBOX_FALLBACK_CPF
+  const cpfCnpj = resolveCustomerCpf()
   const created = await asaasRequest<AsaasCustomer>('/customers', 'POST', {
     name: name || email.split('@')[0] || 'Cliente',
     email,
@@ -76,6 +85,9 @@ export async function createAsaasPixCharge(
   email: string,
   opts?: { customerName?: string; description?: string; externalReference?: string },
 ): Promise<AsaasPixChargeResult> {
+  const prodBlock = assertAsaasSafeForProduction()
+  if (prodBlock) throw new Error(prodBlock)
+
   await ensurePixAddressKey()
 
   const customerId = await findOrCreateCustomer(email, opts?.customerName || email)

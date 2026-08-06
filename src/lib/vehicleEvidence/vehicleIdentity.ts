@@ -12,6 +12,28 @@ export function tenantScopeKey(tenantId: string | null | undefined, userId: stri
   return `user:${userId}`
 }
 
+/** UUID company → DB uuid columns; solo → null (não `user:`). */
+export function toDbTenantId(tenantId: string | null | undefined): string | null {
+  if (!tenantId) return null
+  if (tenantId.startsWith('user:')) return null
+  return tenantId
+}
+
+/** Para vehicle_events (TEXT NOT NULL): company uuid ou `user:{uid}`. */
+export function toEventsTenantId(tenantId: string | null | undefined, userId: string): string {
+  return tenantScopeKey(toDbTenantId(tenantId) ?? null, userId)
+}
+
+/** Converte valor de coluna TEXT/uuid para chave de domínio. */
+export function fromDbTenantId(
+  dbTenantId: string | null | undefined,
+  userId: string,
+): string {
+  if (dbTenantId && !dbTenantId.startsWith('user:')) return dbTenantId
+  if (dbTenantId?.startsWith('user:')) return dbTenantId
+  return `user:${userId}`
+}
+
 /**
  * Chave de resolução de veículo.
  * Preferência: id interno > VIN > placa normalizada (escopo tenant).

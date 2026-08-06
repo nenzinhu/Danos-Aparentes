@@ -10,6 +10,36 @@ export function getAsaasBaseUrl(): string {
   return raw
 }
 
+export function isAsaasSandboxUrl(apiUrl?: string): boolean {
+  const u = (apiUrl || getAsaasBaseUrl()).toLowerCase()
+  return u.includes('sandbox')
+}
+
+function isProdBaseUrl(baseUrl: string): boolean {
+  try {
+    const host = new URL(baseUrl.includes('://') ? baseUrl : `https://${baseUrl}`).hostname.toLowerCase()
+    return (
+      host === 'danosaparentes.com.br' ||
+      host === 'www.danosaparentes.com.br' ||
+      host === 'danosaparentes.vercel.app'
+    )
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Em BASE_URL de produção, recusa Asaas sandbox (default) para não cobrar no ambiente errado.
+ */
+export function assertAsaasSafeForProduction(): string | null {
+  const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || '').trim()
+  if (!baseUrl || !isProdBaseUrl(baseUrl)) return null
+  if (isAsaasSandboxUrl()) {
+    return 'Asaas está em sandbox com BASE_URL de produção. Defina ASAAS_API_URL=https://api.asaas.com na Vercel.'
+  }
+  return null
+}
+
 export function getAsaasApiKey(): string | undefined {
   return process.env.ASAAS_API_KEY || undefined
 }

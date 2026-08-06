@@ -58,7 +58,7 @@ export async function blockExportWithoutReview(
   return false
 }
 
-/** Fail-open offline: não trava vistoria no pátio se a API de cota falhar. */
+/** Fail-closed online: só libera PDF com 200 + allowed; offline sem token ainda permite. */
 export async function checkLaudoQuota(accessToken?: string): Promise<QuotaCheck> {
   if (!accessToken) return { allowed: true }
   try {
@@ -67,17 +67,27 @@ export async function checkLaudoQuota(accessToken?: string): Promise<QuotaCheck>
       headers: { Authorization: `Bearer ${accessToken}` },
     })
     const data = await res.json().catch(() => ({}))
-    if (res.ok) return { allowed: true, limit: data.limit, planTier: data.plan_tier }
+    if (res.ok && data?.allowed !== false) {
+      return { allowed: true, limit: data.limit, planTier: data.plan_tier }
+    }
     if (res.status === 403) {
       return { allowed: false, reason: data.reason, limit: data.limit, planTier: data.plan_tier }
     }
-    return { allowed: true }
+    return {
+      allowed: false,
+      reason: data?.code === 'quota_rpc_missing' ? 'quota_rpc_missing' : 'quota_unavailable',
+      limit: data.limit,
+      planTier: data.plan_tier,
+    }
   } catch {
-    return { allowed: true }
+    return { allowed: false, reason: 'quota_unavailable' }
   }
 }
 
 export function quotaBlockedMessage(check: QuotaCheck): string {
+  if (check.reason === 'quota_rpc_missing' || check.reason === 'quota_unavailable') {
+    return '❌ Não foi possível verificar o limite de laudos. Tente novamente em instantes ou atualize a página.'
+  }
   const planLabel = check.planTier === 'starter' ? 'Starter' : check.planTier === 'pro' ? 'Pro' : 'atual'
   return `❌ Limite de ${check.limit ?? ''} laudos do plano ${planLabel} atingido neste mês. Faça upgrade em /planos para continuar.`
 }

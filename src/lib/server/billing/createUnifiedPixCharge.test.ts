@@ -10,6 +10,7 @@ vi.mock('@/src/lib/server/asaasPix', () => ({
 
 vi.mock('@/src/lib/server/asaasClient', () => ({
   getAsaasApiKey: vi.fn(() => 'asaas_test_key'),
+  assertAsaasSafeForProduction: vi.fn(() => null),
 }))
 
 vi.mock('@/src/lib/server/pixClient', () => ({

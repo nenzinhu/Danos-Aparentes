@@ -109,6 +109,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `Assinatura inválida: ${(err as Error).message}` }, { status: 400 });
   }
 
+  /** Fail-closed: qualquer falha de escrita no DB → 5xx para o Stripe retentar. */
+  let dbWriteFailed = false;
+
   try {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session;
@@ -136,8 +139,10 @@ export async function POST(req: NextRequest) {
 
         if (error) {
           console.error(`[stripe-webhook] Falha ao ativar assinatura do usuário ${userId}:`, error);
+          dbWriteFailed = true;
         } else if (!data || data.length === 0) {
           console.error(`[stripe-webhook] checkout.session.completed: upsert sem retorno para user_id=${userId}`);
+          dbWriteFailed = true;
         }
       }
     }
@@ -149,18 +154,54 @@ export async function POST(req: NextRequest) {
         : mapStripeStatus(subscription.status);
       const periodEndUnix = getCurrentPeriodEnd(subscription);
       const planTier = resolvePlanTier(subscription);
+      const customerId =
+        typeof subscription.customer === 'string'
+          ? subscription.customer
+          : subscription.customer?.id ?? null;
+      const userIdFromMeta =
+        typeof subscription.metadata?.user_id === 'string' ? subscription.metadata.user_id : null;
 
-      const { data, error } = await supabaseAdmin.from('subscriptions').update({
+      const updatePayload = {
         status,
         plan_tier: planTier,
+        stripe_subscription_id: subscription.id,
         current_period_end: periodEndUnix ? new Date(periodEndUnix * 1000).toISOString() : null,
         updated_at: new Date().toISOString(),
-      }).eq('stripe_subscription_id', subscription.id).select('user_id');
+        ...(customerId ? { stripe_customer_id: customerId } : {}),
+      };
+
+      const { data, error } = await supabaseAdmin
+        .from('subscriptions')
+        .update(updatePayload)
+        .eq('stripe_subscription_id', subscription.id)
+        .select('user_id');
 
       if (error) {
         console.error(`[stripe-webhook] Falha ao atualizar assinatura stripe_subscription_id=${subscription.id}:`, error);
+        dbWriteFailed = true;
       } else if (!data || data.length === 0) {
-        console.error(`[stripe-webhook] ${event.type}: nenhuma linha em subscriptions para stripe_subscription_id=${subscription.id} — atualização perdida.`);
+        // Checkout pode ter falhado antes — tenta upsert se soubermos o user_id.
+        if (userIdFromMeta) {
+          const { data: upserted, error: upsertErr } = await supabaseAdmin
+            .from('subscriptions')
+            .upsert(
+              { user_id: userIdFromMeta, ...updatePayload },
+              { onConflict: 'user_id' },
+            )
+            .select('user_id');
+          if (upsertErr || !upserted?.length) {
+            console.error(
+              `[stripe-webhook] ${event.type}: upsert fallback falhou sub=${subscription.id}`,
+              upsertErr,
+            );
+            dbWriteFailed = true;
+          }
+        } else {
+          console.error(
+            `[stripe-webhook] ${event.type}: nenhuma linha para stripe_subscription_id=${subscription.id} e sem metadata.user_id`,
+          );
+          dbWriteFailed = true;
+        }
       }
     }
 
@@ -168,12 +209,16 @@ export async function POST(req: NextRequest) {
       const invoice = event.data.object as Stripe.Invoice;
       const subId = invoiceSubscriptionId(invoice);
       if (subId) {
-        const { error } = await supabaseAdmin.from('subscriptions').update({
+        const { data, error } = await supabaseAdmin.from('subscriptions').update({
           status: 'past_due',
           updated_at: new Date().toISOString(),
-        }).eq('stripe_subscription_id', subId);
+        }).eq('stripe_subscription_id', subId).select('user_id');
         if (error) {
           console.error(`[stripe-webhook] invoice.payment_failed: falha ao marcar past_due sub=${subId}:`, error);
+          dbWriteFailed = true;
+        } else if (!data || data.length === 0) {
+          console.error(`[stripe-webhook] invoice.payment_failed: linha ausente sub=${subId}`);
+          dbWriteFailed = true;
         }
       }
     }
@@ -182,14 +227,25 @@ export async function POST(req: NextRequest) {
       const invoice = event.data.object as Stripe.Invoice;
       const subId = invoiceSubscriptionId(invoice);
       if (subId) {
-        const { error } = await supabaseAdmin.from('subscriptions').update({
+        const { data, error } = await supabaseAdmin.from('subscriptions').update({
           status: 'active',
           updated_at: new Date().toISOString(),
-        }).eq('stripe_subscription_id', subId);
+        }).eq('stripe_subscription_id', subId).select('user_id');
         if (error) {
           console.error(`[stripe-webhook] invoice.paid: falha ao marcar active sub=${subId}:`, error);
+          dbWriteFailed = true;
+        } else if (!data || data.length === 0) {
+          console.error(`[stripe-webhook] invoice.paid: linha ausente sub=${subId}`);
+          dbWriteFailed = true;
         }
       }
+    }
+
+    if (dbWriteFailed) {
+      return NextResponse.json(
+        { error: 'Falha ao persistir assinatura — Stripe deve retentar' },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({ received: true });

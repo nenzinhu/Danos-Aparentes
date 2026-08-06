@@ -64,7 +64,19 @@ function evaluateGtmOps(env) {
   req('supabase_service', 'SUPABASE_SERVICE_ROLE_KEY', 'critical', 'webhooks, trial, PDF server')
   req('stripe_secret', 'STRIPE_SECRET_KEY', 'critical', 'checkout cartão')
   req('stripe_webhook', 'STRIPE_WEBHOOK_SECRET', 'critical', 'pagamento cartão não ativa assinatura')
-  req('stripe_price_pro', 'STRIPE_PRICE_ID', 'critical', 'plano Pro')
+  {
+    const proOk = present('STRIPE_PRICE_ID_PRO') || present('STRIPE_PRICE_ID')
+    checks.push({
+      id: 'stripe_price_pro',
+      level: 'critical',
+      ok: proOk,
+      detail: proOk
+        ? present('STRIPE_PRICE_ID_PRO')
+          ? 'STRIPE_PRICE_ID_PRO definido'
+          : 'STRIPE_PRICE_ID (legado Pro) definido'
+        : 'STRIPE_PRICE_ID_PRO ou STRIPE_PRICE_ID ausente — plano Pro',
+    })
+  }
   req('stripe_price_starter', 'STRIPE_PRICE_ID_STARTER', 'critical', 'plano Starter')
 
   const provider = (value('PIX_PROVIDER') || 'asaas').toLowerCase()
