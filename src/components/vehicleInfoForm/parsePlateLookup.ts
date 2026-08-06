@@ -1,4 +1,5 @@
 import type { VehicleType } from '../../types'
+import { extractFipePublic } from '../../lib/plateLookup/fipePublic'
 import type { FoundData } from './constants'
 
 function pickStr(...vals: unknown[]): string {
@@ -92,14 +93,16 @@ function inferCarDiagram(portasHint: string): 'car' | 'car2d' {
   return 'car'
 }
 
-/** Mapeia resposta WDAPI → FoundData. Retorna null se a API sinalizar erro. */
+/** Mapeia resposta WDAPI → FoundData. Retorna null se a API sinalizar erro. Prefere FIPE para marca/modelo/ano. */
 export function mapPlateApiToFound(data: Record<string, unknown>): FoundData | null {
   const msg = typeof data.message === 'string' ? data.message.toLowerCase() : ''
   if (data.erro || data.error || msg.includes('not found')) return null
 
-  const marca = pickStr(data.MARCA, data.marca)
-  const modelo = pickStr(data.MODELO, data.modelo, data.SUBMODELO)
-  const anoVal = pickStr(data.anoModelo, data.ano, data.ANO)
+  const fipe = extractFipePublic(data)
+
+  const marca = pickStr(fipe?.textoMarca, data.MARCA, data.marca)
+  const modelo = pickStr(fipe?.textoModelo, data.MODELO, data.modelo, data.SUBMODELO)
+  const anoVal = pickStr(fipe?.anoModelo, data.anoModelo, data.ano, data.ANO)
   const cor = pickStr(data.cor, data.COR)
   const cidade = pickStr(data.municipio, data.MUNICIPIO, data.cidade)
   const uf = pickStr(data.uf, data.UF, data.estado).toUpperCase()
@@ -185,5 +188,6 @@ export function mapPlateApiToFound(data: Record<string, unknown>): FoundData | n
     svgType,
     ano: anoVal,
     especie: especieRaw || vtypeVal,
+    ...(fipe ? { fipe } : {}),
   }
 }

@@ -1,4 +1,4 @@
-import type { SavedReport } from '../../types'
+import type { FipePublicSummary, SavedReport } from '../../types'
 import { normalizePlate } from '../reportComparison'
 import { compareInspections } from './compareInspections'
 import { savedReportToInspection } from './adapters'
@@ -17,6 +17,8 @@ export type VehicleHistorySummary = {
   newDamagesOnLast: number
   firstInspectedAt: number | null
   lastInspectedAt: number | null
+  /** Resumo FIPE do último laudo com consulta (só campos públicos). */
+  fipe?: FipePublicSummary
 }
 
 function syntheticVehicleId(plate: string): string {
@@ -83,6 +85,9 @@ export function groupReportsByVehicle(
       }
     }
 
+    const fipe =
+      [...sorted].reverse().find((r) => r.vehicleInfo.fipe)?.vehicleInfo.fipe
+
     summaries.push({
       id,
       plate,
@@ -95,6 +100,7 @@ export function groupReportsByVehicle(
       newDamagesOnLast,
       firstInspectedAt: sorted[0]?.savedAt ?? null,
       lastInspectedAt: last.savedAt,
+      ...(fipe ? { fipe } : {}),
     })
   }
 

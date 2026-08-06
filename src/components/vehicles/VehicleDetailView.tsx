@@ -64,6 +64,9 @@ export default function VehicleDetailView({
 
   const titleParts = [vehicle.brand, vehicle.color].filter(Boolean)
   const displayName = titleParts.length > 0 ? titleParts.join(' · ') : 'Veículo sem descrição'
+  const fipe =
+    vehicle.fipe ??
+    [...vehicle.reports].reverse().find((r) => r.vehicleInfo.fipe)?.vehicleInfo.fipe
 
   async function handleHydrate() {
     setHydrateBusy(true)
@@ -165,6 +168,41 @@ export default function VehicleDetailView({
           <p className="mt-2 font-mono-data text-lg sm:text-xl tracking-[0.12em] text-[var(--signal-bright)]">
             {vehicle.plate || '—'}
           </p>
+          {fipe && (
+            <div className="mt-4 max-w-xl rounded-xl border border-[var(--card-border)]/80 bg-[var(--card-bg-solid)]/70 px-4 py-3">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--text-muted)] mb-2">
+                Referência FIPE
+              </p>
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                {(fipe.textoMarca || fipe.textoModelo) && (
+                  <div className="sm:col-span-2">
+                    <dt className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">Marca / modelo</dt>
+                    <dd className="text-[var(--text-main)] font-medium leading-snug">
+                      {[fipe.textoMarca, fipe.textoModelo].filter(Boolean).join(' · ')}
+                    </dd>
+                  </div>
+                )}
+                {fipe.anoModelo && (
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">Ano modelo</dt>
+                    <dd className="text-[var(--text-main)] font-medium">{fipe.anoModelo}</dd>
+                  </div>
+                )}
+                {fipe.valor && (
+                  <div>
+                    <dt className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">Valor</dt>
+                    <dd className="text-[var(--text-main)] font-medium">{fipe.valor}</dd>
+                  </div>
+                )}
+                {fipe.mesReferencia && (
+                  <div className="sm:col-span-2">
+                    <dt className="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">Mês referência</dt>
+                    <dd className="text-[var(--text-main)] font-medium">{fipe.mesReferencia}</dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+          )}
           <p className="mt-3 text-sm text-[var(--text-muted)] max-w-xl leading-relaxed">
             Prontuário digital do veículo — inspeções, evidências, comparações e eventos em uma
             linha do tempo auditável.

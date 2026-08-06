@@ -28,9 +28,8 @@ export function useZoomPan(
    * ref can end up attached to a different element than the one the
    * gesture effect originally bound to. */
   rebindKey?: unknown,
-  /** When true, a drag never pans/offsets the vehicle — it's always treated
-   * as a view-swipe attempt instead, regardless of zoom level. Zoom (+/−/pinch)
-   * stays free; only the padlock button toggles this flag. */
+  /** When true, blocks pan AND zoom — diagram stays at 100% until unlocked
+   * via the padlock button. */
   panLocked?: boolean
 ) {
   const [scale, setScale] = useState(1)
@@ -64,10 +63,12 @@ export function useZoomPan(
   }
 
   function zoomIn() {
+    if (panLockedRef.current) return
     setScale(s => Math.min(4, s + 0.2))
   }
 
   function zoomOut() {
+    if (panLockedRef.current) return
     setScale(s => Math.max(0.5, s - 0.2))
   }
 
@@ -77,7 +78,7 @@ export function useZoomPan(
 
     function onWheel(e: WheelEvent) {
       e.preventDefault()
-      // Zoom always allowed — padlock only blocks pan/offset.
+      if (panLockedRef.current) return
       setScale(s => Math.min(4, Math.max(0.5, s - e.deltaY * 0.001)))
     }
 
@@ -137,7 +138,7 @@ export function useZoomPan(
     function onTouchMove(e: TouchEvent) {
       if (e.touches.length === 2 && pinchDist.current !== null) {
         e.preventDefault()
-        // Pinch-zoom always allowed — padlock only blocks pan.
+        if (panLockedRef.current) return
         const dist = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY

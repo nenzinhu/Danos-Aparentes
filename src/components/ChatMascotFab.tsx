@@ -71,7 +71,7 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
           )
 
           gsap.to(floatEl, {
-            y: -8,
+            y: -4,
             duration: 1.7,
             ease: 'sine.inOut',
             yoyo: true,
@@ -79,7 +79,7 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
           })
 
           gsap.to(floatEl, {
-            rotation: 4,
+            rotation: 2,
             duration: 2.4,
             ease: 'sine.inOut',
             yoyo: true,
@@ -89,8 +89,8 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
 
           if (glow) {
             gsap.to(glow, {
-              scale: 1.22,
-              autoAlpha: 0.6,
+              scale: 1.1,
+              autoAlpha: 0.45,
               duration: 1.85,
               ease: 'sine.inOut',
               yoyo: true,
@@ -101,9 +101,9 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
           if (ring) {
             gsap.fromTo(
               ring,
-              { scale: 0.9, autoAlpha: 0.6 },
+              { scale: 0.92, autoAlpha: 0.45 },
               {
-                scale: 1.42,
+                scale: 1.2,
                 autoAlpha: 0,
                 duration: 2.2,
                 ease: 'power1.out',
@@ -115,11 +115,11 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
           sparkles.forEach((s, i) => {
             gsap.fromTo(
               s,
-              { autoAlpha: 0.1, scale: 0.5, rotation: 0 },
+              { autoAlpha: 0.1, scale: 0.4, rotation: 0 },
               {
-                autoAlpha: 1,
-                scale: 1.2,
-                rotation: 25,
+                autoAlpha: 0.85,
+                scale: 0.95,
+                rotation: 18,
                 duration: 0.85 + i * 0.12,
                 ease: 'sine.inOut',
                 yoyo: true,
@@ -131,8 +131,8 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
 
           if (badge) {
             gsap.to(badge, {
-              y: -4,
-              scale: 1.08,
+              y: -2,
+              scale: 1.04,
               duration: 0.9,
               ease: 'sine.inOut',
               yoyo: true,
@@ -235,17 +235,17 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
       onPointerLeave={onPointerLeave}
       onPointerDown={onPointerDown}
       aria-label={open ? 'Fechar chat de suporte' : 'Abrir chat de ajuda'}
-      className="relative h-[5rem] w-[5rem] outline-none focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-full"
+      className="relative h-14 w-14 outline-none focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] rounded-full"
     >
       <span
         ref={glowRef}
         aria-hidden
-        className="pointer-events-none absolute inset-[-20%] rounded-full bg-sky-400/40 blur-2xl"
+        className="pointer-events-none absolute inset-[-12%] rounded-full bg-sky-400/30 blur-xl"
       />
       <span
         ref={ringRef}
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-full border-2 border-sky-300/60"
+        className="pointer-events-none absolute inset-0 rounded-full border border-sky-300/50"
       />
 
       {[
@@ -260,7 +260,7 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
             sparkleRefs.current[i] = el
           }}
           aria-hidden
-          className={`pointer-events-none absolute ${pos} text-[11px] text-sky-100 drop-shadow-[0_0_4px_rgba(125,211,252,0.9)]`}
+          className={`pointer-events-none absolute ${pos} text-[8px] text-sky-100 drop-shadow-[0_0_3px_rgba(125,211,252,0.8)]`}
         >
           ✦
         </span>
@@ -269,13 +269,13 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
       <span ref={floatRef} className="absolute inset-0 z-[1] block">
         <span
           ref={figureRef}
-          className="relative block h-full w-full overflow-hidden rounded-full bg-gradient-to-b from-sky-50 to-sky-200/90 shadow-[0_12px_28px_-6px_rgba(14,165,233,0.55)] ring-2 ring-white/80"
+          className="relative block h-full w-full overflow-hidden rounded-full bg-gradient-to-b from-sky-50 to-sky-200/90 shadow-[0_8px_18px_-4px_rgba(14,165,233,0.45)] ring-2 ring-white/80"
         >
           <Image
             src={MASCOT_SRC}
             alt=""
-            width={160}
-            height={160}
+            width={112}
+            height={112}
             className="h-full w-full object-cover object-[50%_38%] select-none pointer-events-none"
             priority={false}
           />
@@ -285,7 +285,7 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
       <span
         ref={badgeRef}
         aria-hidden
-        className="absolute -top-1 -left-1 z-[2] rounded-full bg-sky-950 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide text-white border border-sky-300/40 shadow-md"
+        className="absolute -top-0.5 -left-0.5 z-[2] rounded-full bg-sky-950 px-1 py-px text-[7px] font-black uppercase tracking-wide text-white border border-sky-300/40 shadow-md"
       >
         Ajuda
       </span>
@@ -293,7 +293,7 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
       <span
         ref={closeRef}
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[3] flex items-center justify-center rounded-full bg-slate-950/50 backdrop-blur-[2px] text-3xl font-black text-white opacity-0"
+        className="pointer-events-none absolute inset-0 z-[3] flex items-center justify-center rounded-full bg-slate-950/50 backdrop-blur-[2px] text-xl font-black text-white opacity-0"
       >
         ×
       </span>

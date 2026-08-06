@@ -1,5 +1,5 @@
 'use client';
-import React, { Suspense, useState, useCallback, useMemo, useEffect, useRef } from 'react'
+import React, { Suspense, useState, useCallback, useMemo, useEffect } from 'react'
 import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity, InspectionPurpose, SavedReport } from '@/src/types'
 import VehicleSelector, { VehicleIconSvg } from '@/src/components/VehicleSelector'
 import ViewSelector from '@/src/components/ViewSelector'
@@ -20,7 +20,6 @@ import RetornoLookupPanel from './RetornoLookupPanel'
 import NewDamagesAlert from './NewDamagesAlert'
 import NewDamagesInspectorConfirm from './NewDamagesInspectorConfirm'
 import ViewPhotosCapture from './ViewPhotosCapture'
-import ViewSidePhotoPrompt from './ViewSidePhotoPrompt'
 import { VEHICLE_NAME, VIEW_NAME } from './constants'
 import { isNewDamage, type PreviousReportSummary } from '@/src/lib/reportComparison'
 import { hasAllViewPhotos } from '@/src/lib/viewPhotos'
@@ -252,10 +251,6 @@ export default function InspectTab({
   )
 
   const [confirmedNewIds, setConfirmedNewIds] = useState<Set<string>>(() => new Set())
-  const [photoPromptView, setPhotoPromptView] = useState<ViewType | null>(null)
-  const skippedPhotoViewsRef = useRef<Set<ViewType>>(new Set())
-  const lastPromptedViewRef = useRef<ViewType | null>(null)
-  const diagramReadyRef = useRef(false)
 
   useEffect(() => {
     const ids = new Set(newDamages.map((d) => d.id))
@@ -265,44 +260,6 @@ export default function InspectTab({
       return next
     })
   }, [newDamages])
-
-  /** Após verificar o lado no SVG, pede a foto dessa face (as 4 entram no dossiê). */
-  useEffect(() => {
-    if (section !== 'diagrama') {
-      diagramReadyRef.current = false
-      return
-    }
-    if (!diagramReadyRef.current) {
-      diagramReadyRef.current = true
-      lastPromptedViewRef.current = viewType
-      return
-    }
-    if (lastPromptedViewRef.current === viewType) return
-    lastPromptedViewRef.current = viewType
-
-    if (vehicleInfo.viewPhotos?.[viewType]) return
-    if (skippedPhotoViewsRef.current.has(viewType)) return
-    setPhotoPromptView(viewType)
-  }, [section, viewType, vehicleInfo.viewPhotos])
-
-  const handleViewPhotoSaved = useCallback(
-    (view: ViewType, photoRef: string) => {
-      skippedPhotoViewsRef.current.delete(view)
-      onVehicleInfoChange({
-        ...vehicleInfo,
-        viewPhotos: { ...(vehicleInfo.viewPhotos || {}), [view]: photoRef },
-      })
-      setPhotoPromptView(null)
-      onToast(`Foto ${VIEW_NAME[view]} salva`)
-    },
-    [vehicleInfo, onVehicleInfoChange, onToast],
-  )
-
-  const handleSkipViewPhoto = useCallback(() => {
-    if (photoPromptView) skippedPhotoViewsRef.current.add(photoPromptView)
-    setPhotoPromptView(null)
-    onToast('Anexe as 4 vistas antes de gerar o dossiê')
-  }, [photoPromptView, onToast])
 
   const allNewConfirmed =
     newDamages.length === 0 || newDamages.every((d) => confirmedNewIds.has(d.id))
@@ -523,14 +480,6 @@ export default function InspectTab({
 
       {section === 'diagrama' && (
         <>
-          {photoPromptView && (
-            <ViewSidePhotoPrompt
-              view={photoPromptView}
-              currentPhoto={vehicleInfo.viewPhotos?.[photoPromptView]}
-              onSaved={handleViewPhotoSaved}
-              onSkip={handleSkipViewPhoto}
-            />
-          )}
           <div className="flex flex-col gap-4 items-center">
             <div className="w-full">
               <VehicleSelector current={vehicleType} onChange={onVehicleTypeChange} />

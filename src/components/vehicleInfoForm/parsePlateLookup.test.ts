@@ -69,4 +69,73 @@ describe('mapPlateApiToFound', () => {
     })
     expect(found?.svgType).toBe('car2d')
   })
+
+  it('prefere FIPE para marca/modelo/ano e guarda só o resumo público', () => {
+    const found = mapPlateApiToFound({
+      MARCA: 'Volkswagen',
+      MODELO: 'CrossFox',
+      anoModelo: 2006,
+      tipo: 'Automóvel',
+      portas: 5,
+      fipe: {
+        dados: [
+          {
+            ano_modelo: '2007',
+            codigo_fipe: '005225-6',
+            codigo_marca: 59,
+            codigo_modelo: '2368',
+            combustivel: 'Gasolina',
+            id_valor: 77250,
+            mes_referencia: 'maio de 2022 ',
+            referencia_fipe: 285,
+            score: 101,
+            sigla_combustivel: 'G',
+            texto_marca: 'VW - VolksWagen',
+            texto_modelo: 'CROSSFOX 1.6 Mi Total Flex 8V 5p',
+            texto_valor: 'R$ 28.799,00',
+            tipo_modelo: 1,
+          },
+        ],
+      },
+    })
+    expect(found?.brand).toContain('VW - VolksWagen')
+    expect(found?.brand).toContain('CROSSFOX 1.6 Mi Total Flex 8V 5p')
+    expect(found?.brand).toContain('2007')
+    expect(found?.fipe).toEqual({
+      mesReferencia: 'maio de 2022',
+      valor: 'R$ 28.799,00',
+      anoModelo: '2007',
+      textoMarca: 'VW - VolksWagen',
+      textoModelo: 'CROSSFOX 1.6 Mi Total Flex 8V 5p',
+    })
+    expect(JSON.stringify(found)).not.toContain('codigo_fipe')
+    expect(JSON.stringify(found)).not.toContain('id_valor')
+  })
+
+  it('escolhe o FIPE com maior score', () => {
+    const found = mapPlateApiToFound({
+      fipe: {
+        dados: [
+          {
+            score: 10,
+            texto_marca: 'Baixo',
+            texto_modelo: 'A',
+            texto_valor: 'R$ 1,00',
+            mes_referencia: 'jan',
+            ano_modelo: '2000',
+          },
+          {
+            score: 200,
+            texto_marca: 'Alto',
+            texto_modelo: 'B',
+            texto_valor: 'R$ 2,00',
+            mes_referencia: 'fev',
+            ano_modelo: '2001',
+          },
+        ],
+      },
+    })
+    expect(found?.fipe?.textoMarca).toBe('Alto')
+    expect(found?.fipe?.valor).toBe('R$ 2,00')
+  })
 })

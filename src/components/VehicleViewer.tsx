@@ -1,5 +1,5 @@
 'use client'
-import React, { useRef, useState, useLayoutEffect, useCallback, useMemo, memo } from 'react'
+import React, { useRef, useState, useLayoutEffect, useCallback, useMemo, memo, useEffect } from 'react'
 import { VehicleType, ViewType, Damage, DamageType, Severity } from '../types'
 import type { PreviousReportSummary } from '../lib/reportComparison'
 import { useZoomPan } from '../hooks/useZoomPan'
@@ -71,9 +71,15 @@ function RootComponent({
   // and the fullscreen overlay both mount a Viewport sharing this same ref,
   // so without this the listeners stay stuck on whichever one existed when
   // the effect first ran and dragging silently does nothing in fullscreen.
-  const [panLocked, setPanLocked] = useState(false)
+  const [panLocked, setPanLocked] = useState(true)
   const { scale, reset, zoomIn, zoomOut } = useZoomPan(containerRef, targetRef, handleHorizontalSwipe, fullscreen, panLocked)
   const [outlineMode, setOutlineMode] = useState(false)
+
+  // Trocar vista → sempre 100% e cadeado travado até o usuário destrancar.
+  useEffect(() => {
+    reset()
+    setPanLocked(true)
+  }, [viewType, vehicleType]) // eslint-disable-line react-hooks/exhaustive-deps -- reset is stable enough per render; lock on view/vehicle change
 
   const prevViewRef = useRef<ViewType>(viewType)
   const prevVehicleRef = useRef<VehicleType>(vehicleType)

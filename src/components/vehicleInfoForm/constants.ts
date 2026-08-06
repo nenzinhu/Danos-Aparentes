@@ -42,7 +42,7 @@ export const inputClasses =
 export const labelClasses =
   'block text-[0.68rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1'
 
-import type { VehicleType } from '../../types'
+import type { FipePublicSummary, VehicleType } from '../../types'
 
 export interface FoundData {
   brand: string
@@ -53,6 +53,8 @@ export interface FoundData {
   svgType: Exclude<VehicleType, 'custom'>
   ano: string
   especie: string
+  /** Presente quando a API retornou FIPE — não exibir no formulário. */
+  fipe?: FipePublicSummary
 }
 
 export interface CustomFieldDef {

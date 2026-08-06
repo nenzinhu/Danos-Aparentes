@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getClientIp, getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
+import { sanitizePlateLookupPayload } from '@/src/lib/plateLookup/fipePublic';
 
 // Placas brasileiras: formato antigo (ABC1234) ou Mercosul (ABC1D23).
 const PLATE_REGEX = /^[A-Z]{3}\d[A-Z\d]\d{2}$/;
@@ -41,7 +42,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: `Erro na consulta (HTTP ${res.status})` }, { status: 502 });
     }
     const data = await res.json();
-    return NextResponse.json(data);
+    if (!data || typeof data !== 'object') {
+      return NextResponse.json({ error: 'Resposta inválida da consulta' }, { status: 502 });
+    }
+    // FIPE bruto (códigos internos) não sai para o cliente — só resumo público.
+    return NextResponse.json(sanitizePlateLookupPayload(data as Record<string, unknown>));
   } catch (err) {
     console.error('Erro na consulta de placa:', err);
     return NextResponse.json({ error: 'Erro ao consultar a placa' }, { status: 500 });

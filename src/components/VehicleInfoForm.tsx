@@ -316,6 +316,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
       if (fd.city && !info.city) updates.city = fd.city
       if (fd.state && !info.state) updates.state = fd.state
       if (!info.vehicleTypeDesc) updates.vehicleTypeDesc = fd.vehicleTypeDesc
+      if (fd.fipe) updates.fipe = fd.fipe
 
       onChange({ ...info, ...updates, plate })
       if (onVehicleTypeDetected) onVehicleTypeDetected(fd.svgType)

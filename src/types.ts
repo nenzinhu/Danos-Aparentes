@@ -30,6 +30,15 @@ export interface Damage {
   aiDecisionId?: string
 }
 
+/** Resumo FIPE exibido só no histórico veicular (sem códigos internos). */
+export interface FipePublicSummary {
+  mesReferencia: string
+  valor: string
+  anoModelo: string
+  textoMarca: string
+  textoModelo: string
+}
+
 export interface VehicleInfo {
   owner: string
   phone: string
@@ -72,6 +81,11 @@ export interface VehicleInfo {
   geo?: GeoLocation
   /** Checklist de segurança e pátio (pneus, combustível, vidros, macaco, triângulo, CRLV, faróis). */
   checklist?: VehicleChecklist
+  /**
+   * Tabela FIPE (consulta de placa) — só campos públicos para o histórico.
+   * Códigos internos (codigo_fipe, id_valor, etc.) nunca são persistidos.
+   */
+  fipe?: FipePublicSummary
 }
 
 export interface VehicleChecklist {

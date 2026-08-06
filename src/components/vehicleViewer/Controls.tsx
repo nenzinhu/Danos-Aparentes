@@ -32,12 +32,17 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
   }, [containerRef, flipStateRef, setFullscreen])
 
   const togglePanLock = useCallback(() => {
-    setPanLocked(!panLocked)
-  }, [panLocked, setPanLocked])
+    if (panLocked) {
+      setPanLocked(false)
+    } else {
+      reset()
+      setPanLocked(true)
+    }
+  }, [panLocked, setPanLocked, reset])
 
   const zoomControls = (
     <>
-      <button type="button" onClick={zoomOut} className={`${btnBase} px-2.5 py-1 text-[0.85rem]`} aria-label="Diminuir zoom">−</button>
+      <button type="button" onClick={zoomOut} className={`${btnBase} px-2.5 py-1 text-[0.85rem]`} aria-label="Diminuir zoom" disabled={panLocked}>−</button>
       <button
         type="button"
         onClick={reset}
@@ -47,15 +52,15 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
       >
         {Math.round(scale * 100)}%
       </button>
-      <button type="button" onClick={zoomIn} className={`${btnBase} px-2.5 py-1 text-[0.85rem]`} aria-label="Aumentar zoom">+</button>
+      <button type="button" onClick={zoomIn} className={`${btnBase} px-2.5 py-1 text-[0.85rem]`} aria-label="Aumentar zoom" disabled={panLocked}>+</button>
       <button type="button" onClick={reset} className={`${btnBase} px-2 py-1 text-[0.75rem]`} aria-label="Resetar zoom">↺</button>
       <button
         type="button"
         onClick={togglePanLock}
         title={
           panLocked
-            ? 'Destravar arrastar (só o cadeado controla isto)'
-            : 'Travar arrastar — zoom continua livre; só o cadeado altera'
+            ? 'Destravar zoom e arrastar'
+            : 'Travar em 100% — zoom e arrastar bloqueados'
         }
         aria-pressed={panLocked}
         aria-label={panLocked ? 'Destravar diagrama' : 'Travar diagrama'}
@@ -69,7 +74,7 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
   if (variant === 'header') {
     return (
       <div className='flex gap-1.5 items-center'>
-        <button type="button" onClick={zoomOut} className={`${btnBase} px-3 py-1.5 text-[0.85rem]`} aria-label="Diminuir zoom">−</button>
+        <button type="button" onClick={zoomOut} className={`${btnBase} px-3 py-1.5 text-[0.85rem]`} aria-label="Diminuir zoom" disabled={panLocked}>−</button>
         <button
           type="button"
           onClick={reset}
@@ -79,15 +84,15 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
         >
           {Math.round(scale * 100)}%
         </button>
-        <button type="button" onClick={zoomIn} className={`${btnBase} px-3 py-1.5 text-[0.85rem]`} aria-label="Aumentar zoom">+</button>
+        <button type="button" onClick={zoomIn} className={`${btnBase} px-3 py-1.5 text-[0.85rem]`} aria-label="Aumentar zoom" disabled={panLocked}>+</button>
         <button type="button" onClick={reset} className={`${btnBase} px-2.5 py-1.5`} aria-label="Resetar zoom">↺</button>
         <button
           type="button"
           onClick={togglePanLock}
           title={
             panLocked
-              ? 'Destravar arrastar (só o cadeado controla isto)'
-              : 'Travar arrastar — zoom continua livre; só o cadeado altera'
+              ? 'Destravar zoom e arrastar'
+              : 'Travar em 100% — zoom e arrastar bloqueados'
           }
           aria-pressed={panLocked}
           aria-label={panLocked ? 'Destravar diagrama' : 'Travar diagrama'}
