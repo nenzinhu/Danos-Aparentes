@@ -59,10 +59,14 @@ export default function PdfPreviewSection() {
               </button>
             </div>
             <div className="bg-slate-950 p-2 sm:p-4 rounded-b-xl border border-slate-800 w-full flex justify-center">
-              <img
+              <Image
                 src={selectedImage}
                 alt="Visualização ampliada do laudo de vistoria"
+                width={1240}
+                height={1754}
+                sizes="(max-width: 1024px) 100vw, 900px"
                 className="max-h-[82vh] w-auto object-contain rounded-lg shadow-2xl"
+                unoptimized={selectedImage.startsWith('blob:')}
               />
             </div>
           </div>
@@ -158,13 +162,13 @@ export default function PdfPreviewSection() {
                 {/* Container da Imagem com Efeito Hover e Scanner Laser */}
                 <div className="pdf-scan-container relative w-full aspect-[1/1.41] bg-slate-900/50 overflow-hidden flex items-center justify-center p-2">
                   <div className="pdf-scan-line" />
-                  <img
+                  <Image
                     src={page.src}
                     alt={page.title}
                     width={page.width}
                     height={page.height}
                     loading="lazy"
-                    decoding="async"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 556px"
                     className="w-full h-full object-contain rounded transition-transform duration-300 group-hover:scale-[1.02]"
                   />
                   {/* Badge Overlay */}

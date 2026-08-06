@@ -66,6 +66,10 @@ export default function LupaVehicleReveal({
         <img
           src={vehicle.src}
           alt=""
+          width={Math.round(size * 0.68)}
+          height={Math.round(size * 0.68)}
+          loading="eager"
+          decoding="sync"
           className="absolute inset-0 w-full h-full object-contain"
         />
       </div>

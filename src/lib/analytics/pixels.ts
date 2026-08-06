@@ -24,6 +24,21 @@ const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 // em toda página, antes mesmo do usuário decidir sobre cookies). Centralizamos aqui
 // para respeitar o mesmo consentimento de marketing que já vale para Meta/TikTok,
 // e para não custar ~150KB + ~360ms de script logo no carregamento inicial.
+
+/**
+ * Adia execução para quando o browser estiver ocioso (requestIdleCallback),
+ * com fallback de 3s para browsers que não suportam (Safari < 17).
+ * Reduz TBT ao não disputar a main thread durante o LCP.
+ */
+function whenIdle(fn: () => void): void {
+  if (typeof window === 'undefined') return
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(fn, { timeout: 3000 })
+  } else {
+    setTimeout(fn, 3000)
+  }
+}
+
 export function initGoogleAds(): void {
   if (typeof window === 'undefined') return
   if (!hasMarketingConsent()) return
@@ -40,11 +55,13 @@ export function initGoogleAds(): void {
   }
   ;(window as unknown as { __daGtagBooted?: boolean }).__daGtagBooted = true
 
-  const script = document.createElement('script')
-  script.async = true
-  const loaderId = GA_MEASUREMENT_ID || GOOGLE_ADS_ID
-  script.src = `https://www.googletagmanager.com/gtag/js?id=${loaderId}`
-  document.head.appendChild(script)
+  whenIdle(() => {
+    const script = document.createElement('script')
+    script.async = true
+    const loaderId = GA_MEASUREMENT_ID || GOOGLE_ADS_ID
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${loaderId}`
+    document.head.appendChild(script)
+  })
 }
 
 export function analyticsEnabled(): boolean {
@@ -71,47 +88,51 @@ export function initPixels(): void {
   if (!analyticsEnabled()) return
 
   if (META_ID && !window.fbq) {
-    ;(function (f: Window, b: Document, e: string, v: string) {
-      const n = (f.fbq = function (...args: unknown[]) {
-        const fbqFn = n as typeof f.fbq & {
-          callMethod?: (...a: unknown[]) => void
-          queue: unknown[]
-        }
-        if (fbqFn.callMethod) {
-          fbqFn.callMethod(...args)
-        } else {
-          fbqFn.queue.push(args)
-        }
-      }) as typeof f.fbq & { queue: unknown[]; loaded?: boolean; version?: string }
-      if (!f._fbq) f._fbq = n
-      n.queue = []
-      n.loaded = true
-      n.version = '2.0'
-      const t = b.createElement(e) as HTMLScriptElement
-      t.async = true
-      t.src = v
-      const s = b.getElementsByTagName(e)[0]
-      s.parentNode!.insertBefore(t, s)
-    })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
-    window.fbq!('init', META_ID)
+    whenIdle(() => {
+      ;(function (f: Window, b: Document, e: string, v: string) {
+        const n = (f.fbq = function (...args: unknown[]) {
+          const fbqFn = n as typeof f.fbq & {
+            callMethod?: (...a: unknown[]) => void
+            queue: unknown[]
+          }
+          if (fbqFn.callMethod) {
+            fbqFn.callMethod(...args)
+          } else {
+            fbqFn.queue.push(args)
+          }
+        }) as typeof f.fbq & { queue: unknown[]; loaded?: boolean; version?: string }
+        if (!f._fbq) f._fbq = n
+        n.queue = []
+        n.loaded = true
+        n.version = '2.0'
+        const t = b.createElement(e) as HTMLScriptElement
+        t.async = true
+        t.src = v
+        const s = b.getElementsByTagName(e)[0]
+        s.parentNode!.insertBefore(t, s)
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
+      window.fbq!('init', META_ID!)
+    })
   }
 
   if (TIKTOK_ID && !window.ttq) {
-    const script = document.createElement('script')
-    script.text = `
-      !function (w, d, t) {
-        w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];
-        ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];
-        ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
-        for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
-        ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";
-        ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};
-        var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;
-        var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
-        ttq.load('${TIKTOK_ID}');
-      }(window, document, 'ttq');
-    `
-    document.head.appendChild(script)
+    whenIdle(() => {
+      const script = document.createElement('script')
+      script.text = `
+        !function (w, d, t) {
+          w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];
+          ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];
+          ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
+          for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
+          ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";
+          ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};
+          var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;
+          var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+          ttq.load('${TIKTOK_ID}');
+        }(window, document, 'ttq');
+      `
+      document.head.appendChild(script)
+    })
   }
 }
 
