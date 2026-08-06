@@ -1,10 +1,13 @@
-export const LOCAL_PHOTO_MAX_WIDTH = 1200
-export const LOCAL_PHOTO_QUALITY = 0.8
+export const LOCAL_PHOTO_MAX_WIDTH = 1600
+export const LOCAL_PHOTO_QUALITY = 0.88
 
-/** Parâmetros mais agressivos para envio ao Supabase Storage. */
-export const STORAGE_PHOTO_MAX_WIDTH = 960
-export const STORAGE_PHOTO_QUALITY = 0.68
-export const STORAGE_PHOTO_MAX_BYTES = 420_000
+/**
+ * Upload para Supabase Storage: qualidade alta (evidência).
+ * Bytes ficam no Storage (não no Postgres). Limite evita só arquivos absurdos.
+ */
+export const STORAGE_PHOTO_MAX_WIDTH = 2048
+export const STORAGE_PHOTO_QUALITY = 0.9
+export const STORAGE_PHOTO_MAX_BYTES = 2_500_000
 
 export function fileToDataUrl(file: File | Blob): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -68,13 +71,15 @@ export function compressBlob(
   return drawBlobToCanvas(blob, maxWidth, quality)
 }
 
-/** Comprime iterativamente até caber no limite ideal para upload na nuvem. */
+/**
+ * Preserva qualidade: só reduz levemente se passar do teto de bytes.
+ * Não desce para 640px / qualidade baixa (evidência veicular).
+ */
 export async function compressBlobForStorage(blob: Blob): Promise<Blob> {
   const attempts: Array<[number, number]> = [
     [STORAGE_PHOTO_MAX_WIDTH, STORAGE_PHOTO_QUALITY],
-    [840, 0.62],
-    [720, 0.55],
-    [640, 0.48],
+    [1920, 0.88],
+    [1600, 0.85],
   ]
 
   let best = blob

@@ -108,6 +108,8 @@ interface InspectTabProps {
   hasAccess: boolean
   accessToken?: string
   userId?: string
+  /** Nome/e-mail para auditoria de confirmação (não use UUID). */
+  decidedByName?: string
   onVehicleTypeChange: (type: VehicleType) => void
   onViewTypeChange: (view: ViewType) => void
   onVehicleInfoChange: (info: VehicleInfo) => void
@@ -181,6 +183,7 @@ export default function InspectTab({
   hasAccess,
   accessToken,
   userId,
+  decidedByName,
   onVehicleTypeChange,
   onViewTypeChange,
   onVehicleInfoChange,
@@ -228,7 +231,9 @@ export default function InspectTab({
 }: InspectTabProps) {
   const [section, setSection] = useState<InspectSection>('dados')
   const { role } = useTenantContext(userId)
+  // Solo revisa o próprio laudo; owner revisa qualquer (rbac). Sem ownerId no SavedReport local.
   const mayReview = userId ? canReviewReport(role, userId, userId) : true
+  const evidenceActorLabel = decidedByName || vehicleInfo.owner || undefined
 
   const handleWizardComplete = useCallback(() => {
     onWizardComplete()
@@ -448,7 +453,7 @@ export default function InspectTab({
                     onUpdateDamage={onUpdateDamage}
                     onRemoveDamage={onRemoveDamage}
                     accessToken={accessToken}
-                    decidedByName={userId}
+                    decidedByName={evidenceActorLabel}
                     onToast={onToast}
                     inspectionId={inspectionId}
                     vehicleId={vehicleId}
@@ -649,7 +654,7 @@ export default function InspectTab({
             onUpdateDamage={onUpdateDamage}
             onRemoveDamage={onRemoveDamage}
             accessToken={accessToken}
-            decidedByName={userId}
+            decidedByName={evidenceActorLabel}
             onToast={onToast}
             inspectionId={inspectionId}
             vehicleId={vehicleId}

@@ -30,19 +30,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
   }
 
-  const { allowed, retryAfterSec } = await checkRateLimit(
-    `generate-pdf:${user.id}`,
-    LIMIT_PER_USER,
-    WINDOW_MS,
-  )
-  if (!allowed) {
+  const [rate, hasSub] = await Promise.all([
+    checkRateLimit(`generate-pdf:${user.id}`, LIMIT_PER_USER, WINDOW_MS),
+    userHasActiveSubscription(user.id),
+  ])
+  if (!rate.allowed) {
     return NextResponse.json(
       { error: 'Muitas gerações de PDF. Tente novamente em instantes.' },
-      { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
+      { status: 429, headers: { 'Retry-After': String(rate.retryAfterSec) } },
     )
   }
-
-  const hasSub = await userHasActiveSubscription(user.id)
   if (!hasSub) {
     return NextResponse.json({ error: 'Assinatura inativa' }, { status: 403 })
   }

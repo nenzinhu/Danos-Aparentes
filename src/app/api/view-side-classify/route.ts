@@ -22,19 +22,18 @@ export async function POST(req: NextRequest) {
       if (!user) {
         return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
       }
-      const hasAccess = await userHasActiveSubscription(user.id)
+      // Parallel gates (async-parallel): subscription + rate limit after auth.
+      const [hasAccess, rate] = await Promise.all([
+        userHasActiveSubscription(user.id),
+        checkRateLimit(`view-side-classify:${user.id}`, LIMIT_PER_USER, WINDOW_MS),
+      ])
       if (!hasAccess) {
         return NextResponse.json({ error: 'Assinatura inativa' }, { status: 403 })
       }
-      const { allowed, retryAfterSec } = await checkRateLimit(
-        `view-side-classify:${user.id}`,
-        LIMIT_PER_USER,
-        WINDOW_MS,
-      )
-      if (!allowed) {
+      if (!rate.allowed) {
         return NextResponse.json(
           { error: 'Muitas análises em pouco tempo. Tente novamente em instantes.' },
-          { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
+          { status: 429, headers: { 'Retry-After': String(rate.retryAfterSec) } },
         )
       }
     } else {
@@ -74,20 +73,25 @@ export async function POST(req: NextRequest) {
     }
 
     const prompt = buildViewSideClassifyPrompt(photos.length)
-    // Uma chamada por foto (mais estável que multi-image); agrega no parse final.
-    const perPhotoTexts: string[] = []
-    for (let i = 0; i < photos.length; i += 1) {
-      const parsed = parseImageDataUrl(photos[i])!
-      const imageDataUrl = `data:${parsed.mimeType};base64,${parsed.base64}`
-      const singlePrompt = `${prompt}
+    // Uma chamada por foto em paralelo (mais estável que multi-image; menor latência).
+    const visionResults = await Promise.all(
+      photos.map((photo: string, i: number) => {
+        const parsed = parseImageDataUrl(photo)!
+        const imageDataUrl = `data:${parsed.mimeType};base64,${parsed.base64}`
+        const singlePrompt = `${prompt}
 
 Analise SOMENTE a foto de índice ${i} (esta imagem). Responda com suggestions contendo só esse índice.`
-      const groq = await callGroqVision(singlePrompt, imageDataUrl, `view-side-classify:${i}`)
+        return callGroqVision(singlePrompt, imageDataUrl, `view-side-classify:${i}`)
+      }),
+    )
+
+    for (const groq of visionResults) {
       if (!groq.ok) {
         return NextResponse.json({ error: groq.error }, { status: groq.status })
       }
-      perPhotoTexts.push(groq.text)
     }
+
+    const perPhotoTexts = visionResults.map((g) => (g.ok ? g.text : ''))
 
     const merged: { index: number; view: string }[] = []
     for (const text of perPhotoTexts) {

@@ -11,16 +11,25 @@ import { useInspectionWorkflow } from '@/src/hooks/useInspectionWorkflow'
 import { supabaseEnabled } from '@/src/lib/supabase'
 import { computeReviewContentHash } from '@/src/lib/pdf/reviewGate'
 import Header from '@/src/components/Header'
-import DashboardView from '@/src/components/DashboardView'
 import AppAuthGate from '@/src/components/app/AppAuthGate'
 import AppTabBar from '@/src/components/app/AppTabBar'
 import AppShellOverlays from '@/src/components/app/AppShellOverlays'
-import InspectTab from '@/src/components/app/InspectTab'
-import TeamTab from '@/src/components/app/TeamTab'
 import PhotoUploadProgressBar from '@/src/components/PhotoUploadProgressBar'
 import { useTenantContext } from '@/src/hooks/useTenantContext'
 import type { Session } from '@supabase/supabase-js'
 import { completeOnboarding } from '@/src/lib/onboarding'
+import dynamic from 'next/dynamic'
+import AppLoadingShell from '@/src/components/app/AppLoadingShell'
+
+const DashboardView = dynamic(() => import('@/src/components/DashboardView'), {
+  loading: () => <AppLoadingShell />,
+})
+const InspectTab = dynamic(() => import('@/src/components/app/InspectTab'), {
+  loading: () => <AppLoadingShell />,
+})
+const TeamTab = dynamic(() => import('@/src/components/app/TeamTab'), {
+  loading: () => <AppLoadingShell />,
+})
 
 function formatSyncFailureToast(dropped: DroppedSyncItem[]): string {
   const first = dropped[0]
@@ -268,6 +277,12 @@ export default function AppAuthenticatedShell({
                 hasAccess={subscription?.hasAccess ?? false}
                 accessToken={session?.access_token}
                 userId={session?.user.id}
+                decidedByName={
+                  (session?.user.user_metadata?.full_name as string | undefined) ||
+                  (session?.user.user_metadata?.name as string | undefined) ||
+                  session?.user.email ||
+                  undefined
+                }
                 onVehicleTypeChange={inspection.handleVehicleTypeChange}
                 onViewTypeChange={inspection.handleViewTypeChange}
                 onVehicleInfoChange={inspection.setVehicleInfo}

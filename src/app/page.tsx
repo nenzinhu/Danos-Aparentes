@@ -1,34 +1,17 @@
 "use client";
+import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 import { DirectionalTransition } from './DirectionalTransition'
 import Link from 'next/link'
-import IntroVideo from '../components/IntroVideo'
-import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
-import { LEGAL_CONTACT_EMAIL, LEGAL_CNPJ, LEGAL_COMPANY_NAME } from '../components/LegalContent';
+import { LEGAL_CONTACT_EMAIL, LEGAL_CNPJ, LEGAL_COMPANY_NAME } from '../components/legalMeta';
 import LandingCtaLink from '../components/LandingCtaLink';
 import LandingTopNav from '../components/LandingTopNav';
 import FaviconInertiaMark from '../components/FaviconInertiaMark';
 import LupaVehicleReveal from '../components/LupaVehicleReveal';
 import GsapTextReveal from '../components/GsapTextReveal';
 import GsapSplitSubline from '../components/GsapSplitSubline';
-import FinalCtaSection from '../components/FinalCtaSection';
-import ChatSupportWidget from '../components/ChatSupportWidget';
 import HeroHistoryMockup from '../components/landing/HeroHistoryMockup';
-import ProblemSection from '../components/landing/ProblemSection';
-import AntesDepoisSection from '../components/landing/AntesDepoisSection';
-import HowItWorksHistorySection from '../components/landing/HowItWorksHistorySection';
-import VehicleHistoryTimelineSection from '../components/landing/VehicleHistoryTimelineSection';
-import VisualDamageSection from '../components/landing/VisualDamageSection';
-import AiAssistantSection from '../components/landing/AiAssistantSection';
-import AudienceSection from '../components/landing/AudienceSection';
-import FeaturesGridSection from '../components/landing/FeaturesGridSection';
-import EvidenceContextSection from '../components/landing/EvidenceContextSection';
-import DiffCompareSection from '../components/landing/DiffCompareSection';
-import PricingSection from '../components/PricingSection';
-import FAQSection from '../components/FAQSection';
-import PdfPreviewSection from '../components/PdfPreviewSection';
-import BlogTeaserSection from '../components/BlogTeaserSection';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   heroCopyStage,
@@ -46,6 +29,25 @@ import {
 
 /** Sticky CTA depends on viewport — keep client-only. */
 const MobileStickyCta = dynamic(() => import('../components/MobileStickyCta'), { ssr: false });
+
+/** Below-fold / heavy: code-split (react-best-practices bundle-dynamic-imports). */
+const IntroVideo = dynamic(() => import('../components/IntroVideo'), { ssr: false });
+const ChatSupportWidget = dynamic(() => import('../components/ChatSupportWidget'), { ssr: false });
+const ProblemSection = dynamic(() => import('../components/landing/ProblemSection'));
+const AntesDepoisSection = dynamic(() => import('../components/landing/AntesDepoisSection'));
+const HowItWorksHistorySection = dynamic(() => import('../components/landing/HowItWorksHistorySection'));
+const VehicleHistoryTimelineSection = dynamic(() => import('../components/landing/VehicleHistoryTimelineSection'));
+const VisualDamageSection = dynamic(() => import('../components/landing/VisualDamageSection'));
+const AiAssistantSection = dynamic(() => import('../components/landing/AiAssistantSection'));
+const AudienceSection = dynamic(() => import('../components/landing/AudienceSection'));
+const FeaturesGridSection = dynamic(() => import('../components/landing/FeaturesGridSection'));
+const EvidenceContextSection = dynamic(() => import('../components/landing/EvidenceContextSection'));
+const DiffCompareSection = dynamic(() => import('../components/landing/DiffCompareSection'));
+const PricingSection = dynamic(() => import('../components/PricingSection'));
+const FAQSection = dynamic(() => import('../components/FAQSection'));
+const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'));
+const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'));
+const FinalCtaSection = dynamic(() => import('../components/FinalCtaSection'));
 
 const HOME_PUBLISHED_DATE = '2026-01-15'
 const HOME_UPDATED_DATE = '2026-08-05'

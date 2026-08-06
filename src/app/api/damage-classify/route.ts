@@ -37,19 +37,21 @@ export async function POST(req: NextRequest) {
       if (!user) {
         return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
       }
-      const hasAccess = await userHasActiveSubscription(user.id);
+      const [hasAccess, rate] = await Promise.all([
+        userHasActiveSubscription(user.id),
+        checkRateLimit(
+          `damage-classify:${user.id}`,
+          DAMAGE_CLASSIFY_LIMIT_PER_USER,
+          DAMAGE_CLASSIFY_WINDOW_MS,
+        ),
+      ]);
       if (!hasAccess) {
         return NextResponse.json({ error: 'Assinatura inativa' }, { status: 403 });
       }
-      const { allowed, retryAfterSec } = await checkRateLimit(
-        `damage-classify:${user.id}`,
-        DAMAGE_CLASSIFY_LIMIT_PER_USER,
-        DAMAGE_CLASSIFY_WINDOW_MS,
-      );
-      if (!allowed) {
+      if (!rate.allowed) {
         return NextResponse.json(
           { error: 'Muitas análises em pouco tempo. Tente novamente em instantes.' },
-          { status: 429, headers: { 'Retry-After': String(retryAfterSec) } },
+          { status: 429, headers: { 'Retry-After': String(rate.retryAfterSec) } },
         );
       }
     } else {

@@ -249,20 +249,33 @@ export default function ViewPhotosCapture({
       if (!opts?.force && damageRunForConfirmAt.current === runKey) return
       damageRunForConfirmAt.current = runKey
       const views = opts?.onlyView ? [opts.onlyView] : VIEW_PHOTO_ORDER
-      let found = 0
       try {
         for (const view of views) {
-          setAnalyzingView(view)
           const photoRef = viewPhotos[view]
           if (!photoRef) continue
           for (const d of filterDamagesToInvalidateOnViewChange(damages, { view })) {
             onRemoveDamage(d.id)
           }
-          const suggestion = await suggestViewDamageFromPhoto({
-            photoRef,
-            partName: VIEW_NAME[view],
-            accessToken,
-          })
+        }
+
+        setAnalyzingView(views[0] || null)
+        const results = await Promise.all(
+          views.map(async (view) => {
+            const photoRef = viewPhotos[view]
+            if (!photoRef) return { view, photoRef: null as string | null, suggestion: null }
+            const suggestion = await suggestViewDamageFromPhoto({
+              photoRef,
+              partName: VIEW_NAME[view],
+              accessToken,
+            })
+            return { view, photoRef, suggestion }
+          }),
+        )
+
+        let found = 0
+        for (const { view, photoRef, suggestion } of results) {
+          setAnalyzingView(view)
+          if (!photoRef) continue
           if (!suggestion || suggestion.noDamage) {
             if (opts?.onlyView) onToast?.('Nenhuma avaria aparente nesta foto.')
             continue

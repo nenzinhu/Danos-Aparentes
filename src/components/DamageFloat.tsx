@@ -16,7 +16,14 @@ import {
 import { compressImage, fileToDataUrl } from '../lib/imageUtils'
 import { supabase, supabaseEnabled } from '../lib/supabase'
 import { isNewDamage, type PreviousReportSummary } from '../lib/reportComparison'
-import ThreeDamageCanvas from './ThreeDamageCanvas'
+import dynamic from 'next/dynamic'
+
+const ThreeDamageCanvas = dynamic(() => import('./ThreeDamageCanvas'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-40 rounded-xl bg-black/20 animate-pulse" aria-hidden />
+  ),
+})
 
 interface Props {
   partId?: string

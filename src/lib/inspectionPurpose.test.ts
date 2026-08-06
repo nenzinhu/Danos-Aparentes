@@ -42,19 +42,19 @@ describe('inspectionPurpose lookup', () => {
       id: 'a',
       savedAt: 1,
       publicCode: 'DA-2026-AAAAAA',
-      vehicleInfo: { plate: 'ABC1D23' as SavedReport['vehicleInfo']['plate'], cpf: '123.456.789-09' },
+      vehicleInfo: { plate: 'ABC1D23', cpf: '123.456.789-09' } as SavedReport['vehicleInfo'],
     }),
     report({
       id: 'b',
       savedAt: 3,
       publicCode: 'DA-2026-BBBBBB-R1',
-      vehicleInfo: { plate: 'ABC1D23' as SavedReport['vehicleInfo']['plate'], cpf: '12345678909' },
+      vehicleInfo: { plate: 'ABC1D23', cpf: '12345678909' } as SavedReport['vehicleInfo'],
     }),
     report({
       id: 'c',
       savedAt: 2,
       publicCode: 'DA-2026-CCCCCC',
-      vehicleInfo: { plate: 'XYZ9A87' as SavedReport['vehicleInfo']['plate'], cpf: '98765432100' },
+      vehicleInfo: { plate: 'XYZ9A87', cpf: '98765432100' } as SavedReport['vehicleInfo'],
     }),
   ]
 
