@@ -4489,6 +4489,9 @@ BLOG_POSTS.unshift(
   },
 )
 
+import { NEW_POSTS_202608 } from './blogPosts202608'
+BLOG_POSTS.unshift(...NEW_POSTS_202608)
+
 export function getPost(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find(p => p.slug === slug)
 }

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Display só Blog — Danos Aparentes</title>
+  <style>
+    :root {
+      --bg: #071018;
+      --card: #0c1824;
+      --border: rgba(125, 211, 252, 0.22);
+      --text: #e8f4ff;
+      --muted: #8aa3b8;
+      --signal: #38bdf8;
+      --cta: linear-gradient(135deg, #0ea5e9, #0369a1);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 2rem 1.25rem 3rem;
+    }
+    h1 { font-size: 1.5rem; margin: 0 0 0.35rem; }
+    .sub { color: var(--muted); margin: 0 0 1.5rem; font-size: 0.9rem; }
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .meta div {
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+    }
+    .meta b {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 0.35rem;
+    }
+    section { margin-top: 2rem; }
+    h2 {
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin: 0 0 1rem;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .banner {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background:
+        linear-gradient(145deg, rgba(14, 165, 233, 0.18), transparent 45%),
+        var(--card);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px -10px rgba(56, 189, 248, 0.45);
+    }
+    .brand {
+      font-size: 0.58rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--signal);
+    }
+    .hl {
+      font-weight: 800;
+      line-height: 1.15;
+      margin: 0.35rem 0;
+    }
+    .cta {
+      display: inline-block;
+      margin-top: 0.45rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: var(--cta);
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 800;
+    }
+    .s300 { width: 300px; height: 250px; padding: 1rem; }
+    .s300 .hl { font-size: 1.35rem; }
+    .s728 { width: 728px; max-width: 100%; height: 90px; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .s728 .hl { font-size: 1.05rem; margin: 0.15rem 0; }
+    .s320 { width: 320px; height: 50px; padding: 0.35rem 0.7rem; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .s320 .hl { font-size: 0.72rem; margin: 0; }
+    .s320 .cta { margin: 0; padding: 0.25rem 0.5rem; font-size: 0.58rem; }
+    .note { color: var(--muted); font-size: 0.8rem; margin-top: 1.5rem; line-height: 1.5; }
+    code { color: #7dd3fc; }
+    a.file { color: var(--signal); }
+  </style>
+</head>
+<body>
+  <h1>Campanha única: <code>disp_blog</code></h1>
+  <p class="sub">Apenas blog — todo anúncio leva a um artigo ou ao hub <code>/blog</code>. Sem LP de planos/locadoras nesta campanha.</p>
+
+  <div class="meta">
+    <div><b>Campanha</b>disp_blog</div>
+    <div><b>Rede</b>Google Display</div>
+    <div><b>Destino</b>somente /blog e /blog/[slug]</div>
+    <div><b>CSV</b><a class="file" href="./disp_blog_ads.csv">disp_blog_ads.csv</a></div>
+  </div>
+
+  <section>
+    <h2>300×250 — artigos</h2>
+    <div class="row">
+      <a class="banner s300" href="https://danosaparentes.com.br/blog/checklist-vistoria-devolucao-locadora?utm_source=google&utm_medium=display&utm_campaign=disp_blog&utm_content=300x250_checklist_locadora" target="_blank" rel="noreferrer">
+        <div class="brand">Danos Aparentes · Blog</div>
+        <p class="hl">Checklist de devolução com histórico por placa</p>
+        <p style="margin:0;color:var(--muted);font-size:0.78rem;line-height:1.35">Entrega × devolução com evidência digital.</p>
+        <span class="cta">Ler artigo</span>
+      </a>
+      <a class="banner s300" href="https://danosaparentes.com.br/blog/avarias-preexistentes-como-provar?utm_source=google&utm_medium=display&utm_campaign=disp_blog&utm_content=300x250_preexistentes" target="_blank" rel="noreferrer">
+        <div class="brand">Danos Aparentes · Blog</div>
+        <p class="hl">“Já estava assim?” Prove com o histórico</p>
+        <p style="margin:0;color:var(--muted);font-size:0.78rem;line-height:1.35">Avarias preexistentes com registro comparável.</p>
+        <span class="cta">Ler artigo</span>
+      </a>
+      <a class="banner s300" href="https://danosaparentes.com.br/blog/vistoria-foto-gps-hash-sha256-eliminar-contestacoes?utm_source=google&utm_medium=display&utm_campaign=disp_blog&utm_content=300x250_hash" target="_blank" rel="noreferrer">
+        <div class="brand">Danos Aparentes · Blog</div>
+        <p class="hl">Foto + GPS + hash. Menos contestação.</p>
+        <p style="margin:0;color:var(--muted);font-size:0.78rem;line-height:1.35">Guia técnico do laudo verificável.</p>
+        <span class="cta">Ler artigo</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>728×90 — leaderboard</h2>
+    <div class="row">
+      <a class="banner s728" href="https://danosaparentes.com.br/blog/checklist-vistoria-devolucao-locadora?utm_source=google&utm_medium=display&utm_campaign=disp_blog&utm_content=728x90_checklist" target="_blank" rel="noreferrer">
+        <div>
+          <div class="brand">Blog · Danos Aparentes</div>
+          <p class="hl">Checklist de devolução com histórico por placa</p>
+        </div>
+        <span class="cta">Ler no blog</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2>320×50 — mobile / hub</h2>
+    <div class="row">
+      <a class="banner s320" href="https://danosaparentes.com.br/blog?utm_source=google&utm_medium=display&utm_campaign=disp_blog&utm_content=320x50_hub" target="_blank" rel="noreferrer">
+        <div>
+          <div class="brand">Blog</div>
+          <p class="hl">Histórico veicular — artigos práticos</p>
+        </div>
+        <span class="cta">Abrir</span>
+      </a>
+    </div>
+  </section>
+
+  <p class="note">
+    <strong>Setup Google Ads:</strong> 1 campanha Display <code>disp_blog</code> · 2 ad groups (<code>blog_artigos</code> + <code>blog_retarget</code>) ·
+    audiência retarget = visitantes de <code>/blog</code> (7–30 dias) · contextual = topics/placements de conteúdo auto ·
+    importar linhas do CSV como referência de URL/copy. Destino final <em>somente</em> blog.
+  </p>
+</body>
+</html>
