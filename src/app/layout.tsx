@@ -167,6 +167,19 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
+        {/* ── Preconnect crítico: Google Fonts (2 origens) ─────────────────
+            Elimina latência de DNS+TCP+TLS na cadeia de fontes.
+            Deve vir antes do preload de imagem para não competir. */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+
+        {/* ── DNS-prefetch para scripts de terceiros (não-bloqueantes) ─── */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://analytics.tiktok.com" />
+        <link rel="dns-prefetch" href="https://cdn.posthog.com" />
+
+        {/* ── LCP hero image: preload da logo acima do fold ────────────── */}
         <link rel="preload" href="/logo.png" as="image" type="image/png" fetchPriority="high" />
         <style dangerouslySetInnerHTML={{ __html: `
           :root { color-scheme: dark; }

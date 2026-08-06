@@ -17,11 +17,26 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
+  // Compressão gzip/brotli explícita (Vercel já comprime, mas garante em dev/preview)
+  compress: true,
+  // Tree-shake imports de pacotes pesados — reduz unused JS no bundle cliente
+  experimental: {
+    optimizePackageImports: [
+      'framer-motion',
+      'gsap',
+      '@gsap/react',
+      'posthog-js',
+      'qrcode.react',
+    ],
+  },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]
   },
   images: {
     formats: ['image/avif', 'image/webp'],
+    // Permite que next/image sirva imagens redimensionadas nos tamanhos usados
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 556],
   },
   outputFileTracingIncludes: {
     '/api/generate-pdf': [

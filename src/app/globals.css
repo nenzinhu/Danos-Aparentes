@@ -1235,13 +1235,15 @@ html.light .theme-segment .theme-segment-active {
   box-shadow: 0 0 15px #38bdf8, 0 0 30px #0284c7;
   z-index: 10;
   pointer-events: none;
+  /* Usa translateY em vez de `top` — composited pelo GPU, sem forced reflow. */
   animation: laserScan 3s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 @keyframes laserScan {
-  0% { top: 0%; opacity: 0.8; }
-  50% { opacity: 1; }
-  100% { top: 98%; opacity: 0.8; }
+  0%   { transform: translateY(0%);    opacity: 0.8; }
+  50%  { opacity: 1; }
+  100% { transform: translateY(3233%); opacity: 0.8; }
 }
 
 /* 8. Vehicle diagram outline mode — strips every SVG fill/gradient down to a

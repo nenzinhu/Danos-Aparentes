@@ -38,38 +38,56 @@ export default function GsapTextReveal({
     const node = ref.current;
     if (!node) return;
 
-    const pieces = node.querySelectorAll<HTMLElement>('[data-split-piece]');
+    let mm: gsap.MatchMedia | null = null
+    let idleId: number | null = null
 
-    const mm = gsap.matchMedia();
-    mm.add(
-      { reduceMotion: '(prefers-reduced-motion: reduce)' },
-      (context) => {
-        const conditions = context.conditions as { reduceMotion: boolean };
-        if (conditions.reduceMotion) {
-          gsap.set(pieces, { yPercent: 0, autoAlpha: 1 });
-          return;
-        }
-
-        gsap.fromTo(
-          pieces,
-          { yPercent: 110, autoAlpha: 0 },
-          {
-            yPercent: 0,
-            autoAlpha: 1,
-            duration: 0.9,
-            ease: 'power4.out',
-            stagger: 0.045,
-            delay: delay / 1000,
-            scrollTrigger: onScroll
-              ? { trigger: node, start: 'top 85%', toggleActions: 'play none none reverse' }
-              : undefined,
+    const run = () => {
+      if (!node.isConnected) return
+      const pieces = node.querySelectorAll<HTMLElement>('[data-split-piece]');
+      mm = gsap.matchMedia();
+      mm.add(
+        { reduceMotion: '(prefers-reduced-motion: reduce)' },
+        (context) => {
+          const conditions = context.conditions as { reduceMotion: boolean };
+          if (conditions.reduceMotion) {
+            gsap.set(pieces, { yPercent: 0, autoAlpha: 1 });
+            return;
           }
-        );
-      },
-      node
-    );
 
-    return () => mm.revert();
+          gsap.fromTo(
+            pieces,
+            { yPercent: 110, autoAlpha: 0 },
+            {
+              yPercent: 0,
+              autoAlpha: 1,
+              duration: 0.9,
+              ease: 'power4.out',
+              stagger: 0.045,
+              delay: delay / 1000,
+              scrollTrigger: onScroll
+                ? { trigger: node, start: 'top 85%', toggleActions: 'play none none reverse' }
+                : undefined,
+            }
+          );
+        },
+        node
+      );
+    }
+
+    // Defer GSAP animation to idle time so it doesn't compete with LCP paint
+    if ('requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(run, { timeout: 2500 })
+    } else {
+      idleId = window.setTimeout(run, 300) as unknown as number
+    }
+
+    return () => {
+      if (idleId !== null) {
+        if ('cancelIdleCallback' in window) window.cancelIdleCallback(idleId)
+        else window.clearTimeout(idleId)
+      }
+      mm?.revert()
+    }
   }, [delay, split, children, onScroll]);
 
   const parts = split === 'chars' ? Array.from(children) : children.split(' ');
