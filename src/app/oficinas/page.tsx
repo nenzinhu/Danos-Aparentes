@@ -7,6 +7,7 @@ import ChatSupportWidget from '@/src/components/ChatSupportWidget'
 import B2bHistoricoSection from '@/src/components/B2bHistoricoSection'
 import B2bMatchedHeroCopy from '@/src/components/B2bMatchedHeroCopy'
 import MobileStickyCta from '@/src/components/MobileStickyCta'
+import SocialProofSection from '@/src/components/SocialProofSection'
 import { B2B_BRAND, B2B_CATEGORY_SHORT, B2B_PRODUCT_LINE } from '@/src/lib/b2bPositioning'
 
 const TITLE = `Histórico inteligente para oficina | ${B2B_BRAND}`
@@ -157,13 +158,19 @@ export default function OficinasPage() {
           </div>
         </section>
 
+        <SocialProofSection
+          vertical="oficinas"
+          title="Prontuário digital, fidelidade e prova quando a briga vira processo."
+          subtitle="Centros automotivos e estacionamentos que registram entrada, histórico e evidência."
+          className="mt-16"
+        />
+
         <section className="mt-16 text-center">
           <h2 className="font-display text-2xl font-bold tracking-tight mb-2">
             Com a marca da sua oficina, não a nossa
           </h2>
           <p className="text-sm text-[var(--text-muted)] max-w-lg mx-auto mb-2">
-            Ainda não temos histórico público de clientes — a plataforma é nova. Em vez de depoimento, veja o
-            dossiê técnico real gerado pela plataforma: a logo do topo é configurável para a sua oficina.
+            O dossiê técnico sai com a logo da sua oficina: hash, QR e o mesmo padrão de evidência dos relatos acima.
           </p>
           <LaudoSheet />
         </section>

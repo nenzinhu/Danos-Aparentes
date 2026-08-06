@@ -26,6 +26,7 @@ import {
   B2B_CTA_DEMO,
   B2B_CTA_PLATFORM,
 } from '../lib/b2bPositioning';
+import { SOCIAL_PROOF_QUOTES } from '../lib/socialProof';
 
 /** Sticky CTA depends on viewport — keep client-only. */
 const MobileStickyCta = dynamic(() => import('../components/MobileStickyCta'), { ssr: false });
@@ -44,13 +45,14 @@ const FeaturesGridSection = dynamic(() => import('../components/landing/Features
 const EvidenceContextSection = dynamic(() => import('../components/landing/EvidenceContextSection'));
 const DiffCompareSection = dynamic(() => import('../components/landing/DiffCompareSection'));
 const PricingSection = dynamic(() => import('../components/PricingSection'));
+const SocialProofSection = dynamic(() => import('../components/SocialProofSection'));
 const FAQSection = dynamic(() => import('../components/FAQSection'));
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'));
 const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'));
 const FinalCtaSection = dynamic(() => import('../components/FinalCtaSection'));
 
 const HOME_PUBLISHED_DATE = '2026-01-15'
-const HOME_UPDATED_DATE = '2026-08-05'
+const HOME_UPDATED_DATE = '2026-08-06'
 
 const LANDING_JSONLD = {
   '@context': 'https://schema.org',
@@ -103,6 +105,16 @@ const LANDING_JSONLD = {
     url: 'https://danosaparentes.com.br',
     logo: 'https://danosaparentes.com.br/logo-full.png',
   },
+  review: SOCIAL_PROOF_QUOTES.map((q) => ({
+    '@type': 'Review',
+    name: q.headline,
+    reviewBody: q.body,
+    author: {
+      '@type': 'Person',
+      name: q.name,
+      jobTitle: q.role,
+    },
+  })),
 };
 
 const WEBSITE_JSONLD = {
@@ -388,18 +400,20 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* Prova social e autoridade */}
+      {/* Destaque rápido — prova social (detalhe na seção completa antes dos planos) */}
       <aside
-        aria-label="Prova social"
+        aria-label="Destaque de prova social"
         className="w-full z-10 relative border-y border-[var(--card-border)]/50 bg-[var(--panel-bg)]/70 backdrop-blur-sm"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-8 py-5 text-center space-y-2">
           <p className="text-sm sm:text-base font-bold text-[var(--text-main)] leading-snug">
-            Feito para quem precisa da memória digital do veículo — não só da foto de hoje.
+            “Zerou as discussões na devolução dos carros e evitou prejuízos.”
           </p>
           <p className="text-xs sm:text-sm text-[var(--text-muted)] leading-relaxed">
-            Locadoras, frotistas, oficinas e transportadoras: inspeções, evidências, eventos e linha do tempo em uma só
-            plataforma de Inteligência Histórica Veicular.
+            Marcelo R., Gerente de Operações em Locadora —{' '}
+            <a href="#prova-social" className="text-[var(--signal-bright)] hover:underline font-semibold">
+              ver depoimentos
+            </a>
           </p>
         </div>
       </aside>
@@ -416,6 +430,7 @@ export default function LandingPage() {
       <AudienceSection />
       <FeaturesGridSection />
       <BlogTeaserSection />
+      <SocialProofSection vertical="home" />
       <PricingSection />
       <FAQSection items={FAQ_ITEMS} />
       <FinalCtaSection />

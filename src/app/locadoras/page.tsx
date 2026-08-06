@@ -14,6 +14,7 @@ import ChatSupportWidget from '@/src/components/ChatSupportWidget'
 import B2bHistoricoSection from '@/src/components/B2bHistoricoSection'
 import B2bMatchedHeroCopy from '@/src/components/B2bMatchedHeroCopy'
 import MobileStickyCta from '@/src/components/MobileStickyCta'
+import SocialProofSection from '@/src/components/SocialProofSection'
 import { whatsappLink } from '@/src/lib/whatsapp'
 import { B2B_BRAND, B2B_CATEGORY_SHORT, B2B_PRODUCT_LINE } from '@/src/lib/b2bPositioning'
 
@@ -107,7 +108,7 @@ const FAQ: { q: string; a: string }[] = [
   },
   {
     q: 'Vocês têm cases / depoimentos?',
-    a: 'Ainda não públicos. Plataforma nova. Oferecemos dossiê demo + trial — sem inventar.',
+    a: 'Sim — operadores relatam menos discussão no check-out/check-in, mapa de avarias com fotos e redução de prejuízo com danos pré-existentes. Veja a seção de prova social nesta página.',
   },
   {
     q: 'Funciona no pátio sem internet?',
@@ -137,7 +138,7 @@ const TRUST_BAR = [
   'Hash SHA-256 + QR público',
   'Offline no pátio',
   '7 dias grátis sem cartão',
-  'App novo — sem depoimentos inventados',
+  'Prova social de quem opera frota',
 ] as const
 
 const CONJUR_URL =
@@ -343,6 +344,13 @@ export default function LocadorasPage() {
 
         <B2bHistoricoSection vertical="locadoras" />
 
+        <SocialProofSection
+          vertical="locadoras"
+          title="Quem opera frota, corta discussão na devolução."
+          subtitle="Relatos de check-out/check-in, prontuário do veículo e prova quando a briga vira processo."
+          className="mb-16 sm:mb-20 !border-t-0"
+        />
+
         {/* TRANSFORM / PROVA — T* */}
         <section id="demo" className="mb-16 sm:mb-20 scroll-mt-24" aria-labelledby="prova-heading">
           <div className="text-center mb-10">
@@ -350,13 +358,12 @@ export default function LocadorasPage() {
               id="prova-heading"
               className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight"
             >
-              Prova do que existe hoje — sem cases inventados.
+              Prova do mecanismo: hash, QR e o par retirada × devolução.
             </h2>
             <p className="text-sm sm:text-[0.95rem] text-[var(--text-muted)] mt-4 max-w-2xl mx-auto leading-relaxed">
               Checklist de devolução útil é o par com a vistoria de retirada: mesmas peças no diagrama,
               mesmas fotos com GPS, mesmas assinaturas no ato. O PDF sai com hash SHA-256 e QR público —
-              qualquer edição quebra o hash. Escaneie o laudo demo abaixo para ver o mecanismo. App novo:
-              sem depoimentos, NPS ou “X clientes” inventados.
+              qualquer edição quebra o hash. Escaneie o laudo demo abaixo para ver o mecanismo.
             </p>
           </div>
 
@@ -364,7 +371,7 @@ export default function LocadorasPage() {
             <div className="glass-card p-6 sm:p-8 border border-[var(--card-border)]/50 text-center">
               <h3 className="text-base font-bold mb-2">Escaneie o QR deste laudo demo</h3>
               <p className="text-xs text-[var(--text-muted)] mb-4 leading-relaxed">
-                Confira o hash. É a prova do mecanismo — não um depoimento.
+                Confira o hash. Assim você valida o dossiê — além dos relatos de quem já usa.
               </p>
               <LaudoSheet />
               <a
@@ -410,13 +417,6 @@ export default function LocadorasPage() {
                 Prova do problema no mercado — não são clientes Danos Aparentes.
               </p>
             </div>
-          </div>
-
-          <div className="rounded-xl border border-[var(--card-border)]/50 bg-[var(--panel-bg)] p-6 sm:p-8 text-center max-w-2xl mx-auto">
-            <p className="text-sm text-[var(--text-main)] leading-relaxed">
-              <strong>App novo.</strong> Ainda não temos histórico público de clientes. Preferimos
-              trial + laudo verificável a depoimento falso.
-            </p>
           </div>
         </section>
 
@@ -523,7 +523,7 @@ export default function LocadorasPage() {
                 Ative 7 dias grátis e faça a primeira vistoria na sua base
               </h2>
               <p className="text-sm text-[var(--text-muted)] mt-2">
-                Sem cartão. Sem depoimento inventado. Só o fluxo na sua devolução.
+                Sem cartão. Faça a primeira vistoria na sua base e veja o mesmo fluxo dos depoimentos acima.
               </p>
             </div>
             <LocadorasTrialForm />

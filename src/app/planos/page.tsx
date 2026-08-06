@@ -4,6 +4,7 @@ import PricingCards from '@/src/components/PricingCards'
 import PlanosFinalCta from '@/src/components/PlanosFinalCta'
 import PlanosCompareTable from '@/src/components/PlanosCompareTable'
 import LandingCtaLink from '@/src/components/LandingCtaLink'
+import SocialProofSection from '@/src/components/SocialProofSection'
 import { buttonVariants } from '@/src/components/ui/buttonVariants'
 import { whatsappLink } from '@/src/lib/whatsapp'
 
@@ -238,6 +239,13 @@ export default function PlanosPage() {
               ))}
             </ol>
           </section>
+
+          <SocialProofSection
+            vertical="home"
+            title="Vale a pena demais — quem usa conta o resultado."
+            subtitle="Menos discussão na devolução, prontuário que fideliza e prova quando a briga vira processo."
+            className="mb-12 !border-t-0"
+          />
 
           <div id="recursos-planos">
             <PricingCards />
