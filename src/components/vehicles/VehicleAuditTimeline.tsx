@@ -13,6 +13,7 @@ export default function VehicleAuditTimeline({
 }) {
   const [rows, setRows] = useState<AuditLogRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [showIds, setShowIds] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -33,11 +34,24 @@ export default function VehicleAuditTimeline({
     }
   }, [vehicleId, inspectionIds.join('|')])
 
-  const items = presentAuditTimeline(rows)
+  const items = presentAuditTimeline(rows, { showIds })
 
   return (
     <section className="mt-2">
-      <h2 className="font-display text-xl font-bold mb-3">Auditoria do veículo</h2>
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <h2 className="font-display text-xl font-bold">Auditoria do veículo</h2>
+        {!loading && items.length > 0 && (
+          <label className="flex items-center gap-2 text-[11px] text-[var(--text-muted)] cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={showIds}
+              onChange={(e) => setShowIds(e.target.checked)}
+              className="rounded border-[var(--card-border)]"
+            />
+            Mostrar IDs técnicos
+          </label>
+        )}
+      </div>
       {loading ? (
         <p className="text-xs text-[var(--text-muted)]">Carregando eventos…</p>
       ) : items.length === 0 ? (
@@ -54,7 +68,7 @@ export default function VehicleAuditTimeline({
               </time>
               <p className="text-sm font-bold mt-0.5">{item.label}</p>
               {item.detail && (
-                <p className="text-xs text-[var(--text-muted)]">{item.detail}</p>
+                <p className="text-xs text-[var(--text-muted)] mt-0.5">{item.detail}</p>
               )}
             </div>
           ))}

@@ -55,11 +55,26 @@ export type SaveReportOptions = {
 
 export function useSavedReports(userId?: string) {
   const [saved, setSaved] = useState<SavedReport[]>([])
+  const [mergeNotice, setMergeNotice] = useState<string | null>(null)
+
+  const clearMergeNotice = useCallback(() => setMergeNotice(null), [])
 
   const refreshRemote = useCallback(async () => {
     if (!supabaseEnabled || !userId) return
-    const merged = await mergeRemoteReports(userId)
-    setSaved(merged)
+    const { reports, merges } = await mergeRemoteReports(userId)
+    setSaved(reports)
+    const multi = merges.filter((m) => m.multiContributor)
+    if (multi.length > 0) {
+      const totalExtra = multi.reduce(
+        (s, m) => s + m.damagesFromLocalOnly + m.damagesFromRemoteOnly,
+        0,
+      )
+      setMergeNotice(
+        multi.length === 1
+          ? `Histórico mesclado na sync: contribuições de mais de um dispositivo (${totalExtra} dano(s) unidos).`
+          : `${multi.length} vistorias mescladas na sync (multi-dispositivo).`,
+      )
+    }
   }, [userId])
 
   useEffect(() => {
@@ -325,6 +340,8 @@ export function useSavedReports(userId?: string) {
     saveReport,
     deleteReport,
     refreshRemote,
+    mergeNotice,
+    clearMergeNotice,
     createCorrection,
     markReportIssued,
     markReviewComplete,

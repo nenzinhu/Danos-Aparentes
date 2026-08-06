@@ -36,6 +36,8 @@ export interface PhotoEvidenceRecord {
   mimeType: string
   byteSize: number
   sha256: string
+  /** FASE 20: average hash 8×8 (16 hex chars) for perceptual reuse detection. */
+  perceptualHash?: string | null
   optimizedPhotoId: string
   optimizedSha256?: string
   width?: number | null
@@ -208,5 +210,29 @@ export const db = {
   },
   async deletePhotoEvidence(id: string) {
     return tx('photo_evidence', 'readwrite', s => s.delete(id))
+  },
+  async getAllPhotoEvidence(): Promise<PhotoEvidenceRecord[]> {
+    return tx<PhotoEvidenceRecord[]>('photo_evidence', 'readonly', s => s.getAll())
+  },
+  async getPhotoEvidenceByInspection(inspectionId: string): Promise<PhotoEvidenceRecord[]> {
+    if (!inspectionId) return []
+    const database = await openDB()
+    return new Promise((resolve, reject) => {
+      const t = database.transaction('photo_evidence', 'readonly')
+      const store = t.objectStore('photo_evidence')
+      if (!store.indexNames.contains('inspectionId')) {
+        const req = store.getAll()
+        req.onsuccess = () => {
+          const all = (req.result as PhotoEvidenceRecord[]) || []
+          resolve(all.filter((r) => r.inspectionId === inspectionId))
+        }
+        req.onerror = () => reject(req.error)
+        return
+      }
+      const idx = store.index('inspectionId')
+      const req = idx.getAll(inspectionId)
+      req.onsuccess = () => resolve((req.result as PhotoEvidenceRecord[]) || [])
+      req.onerror = () => reject(req.error)
+    })
   },
 }

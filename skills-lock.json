@@ -1,11 +1,41 @@
 {
   "version": 1,
   "skills": {
+    "analytical-thinking": {
+      "source": "ysskrishna/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/analytical-thinking/SKILL.md",
+      "computedHash": "acdc87636cd6176a6c874980f91750e431cb017974bf061a1151b2ed194bdc9d"
+    },
+    "creative-thinking": {
+      "source": "ysskrishna/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/creative-thinking/SKILL.md",
+      "computedHash": "79435714a25f4ec7b48ce69b543419f69b1d66a1bd9d67145f39f14b5e2640cc"
+    },
+    "critical-thinking": {
+      "source": "ysskrishna/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/critical-thinking/SKILL.md",
+      "computedHash": "03a2732c5389d415e76ee7f38fb8e80fe78db812c58ac7456f6f1589fd90985a"
+    },
+    "design-thinking": {
+      "source": "ysskrishna/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/design-thinking/SKILL.md",
+      "computedHash": "7197699fb755419ad0833953a7f0b27bfd3aa12929e83bbaf36343198ff769d8"
+    },
     "embedded-captions": {
       "source": "heygen-com/hyperframes",
       "sourceType": "github",
       "skillPath": "skills/embedded-captions/SKILL.md",
       "computedHash": "91ced93001a65d0238ccc5e36266e27e07829a04f36c0d4bbd63451358484b15"
+    },
+    "ethical-thinking": {
+      "source": "ysskrishna/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ethical-thinking/SKILL.md",
+      "computedHash": "f746de492075ba40d4be0ef0628cd113fb4dc1912583d60961bf437704c1a770"
     },
     "faceless-explainer": {
       "source": "heygen-com/hyperframes",
@@ -18,6 +48,12 @@
       "sourceType": "github",
       "skillPath": "skills/figma/SKILL.md",
       "computedHash": "0adc2a1e01767db70b0b614d3543cdbc62bf0939dd7fc10bf4e4905d2127a83e"
+    },
+    "first-principles-thinking": {
+      "source": "ysskrishna/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/first-principles-thinking/SKILL.md",
+      "computedHash": "43990f988ca9009580f22271998f02b2cf8e156e54e2ebdb76f4117be3891c0f"
     },
     "general-video": {
       "source": "heygen-com/hyperframes",
@@ -121,6 +157,12 @@
       "skillPath": "skills/hyperframes-registry/SKILL.md",
       "computedHash": "62984a677583cb55beebbb5784e1caeabf7ac3e5a09e66bb5dd7205d5ab411bf"
     },
+    "lateral-thinking": {
+      "source": "ysskrishna/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/lateral-thinking/SKILL.md",
+      "computedHash": "f3fbee56b39157a3f4dd9d88f10ff69feaf96a3e73fc17a1d369c6d38ec53beb"
+    },
     "media-use": {
       "source": "heygen-com/hyperframes",
       "sourceType": "github",
@@ -157,11 +199,23 @@
       "skillPath": "skills/remotion-to-hyperframes/SKILL.md",
       "computedHash": "bddd2720d403d329750ff75f3dcb31db1161b6fe3e4e26b4758ba17ae3332951"
     },
+    "six-thinking-hats": {
+      "source": "ysskrishna/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/six-thinking-hats/SKILL.md",
+      "computedHash": "4606fa5b9285197bd84c45095ec1627b8a1db624d164feb8c2ade93b87c51ec4"
+    },
     "slideshow": {
       "source": "heygen-com/hyperframes",
       "sourceType": "github",
       "skillPath": "skills/slideshow/SKILL.md",
       "computedHash": "28d18343acb41890734b60682bfaabade02462fb9ac9edcfb40bd52552384219"
+    },
+    "strategic-thinking": {
+      "source": "ysskrishna/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/strategic-thinking/SKILL.md",
+      "computedHash": "00dea731d7a6fe1e9d51e23c427c59acb55e801d2cae1fc087a28bbc959b20bb"
     },
     "stripe-best-practices": {
       "source": "stripe/ai",
@@ -180,6 +234,18 @@
       "sourceType": "github",
       "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
       "computedHash": "3639bed1f40b3fbadae79fee631c42c89b2d1f5c30b05d5aa3cca06422a6bbbc"
+    },
+    "supastarter-nextjs-skill": {
+      "source": "oscardrt/supastarter-nextjs-skill",
+      "sourceType": "github",
+      "skillPath": "supastarter-nextjs-skill/SKILL.md",
+      "computedHash": "7534489fdb68c8c093d36996a7906caf91fc1721f1d307ad37bdbe52ca1f2f4e"
+    },
+    "systems-thinking": {
+      "source": "ysskrishna/ai-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/systems-thinking/SKILL.md",
+      "computedHash": "f8bad385faabd6a3e1fcc8f47d8437dc3b884ce8fb9ede8fc57a7e9745e28919"
     },
     "talking-head-recut": {
       "source": "heygen-com/hyperframes",

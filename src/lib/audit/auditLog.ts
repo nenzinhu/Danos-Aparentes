@@ -35,6 +35,11 @@ export const AUDIT_EVENT_TYPES = [
   'damage_marked_changed',
   'damage_marked_uncertain',
   'comparison_exported',
+  // FASE 20 — antifraude fotográfica
+  'photo_reuse_alert',
+  'photo_context_alert',
+  // FASE 22 — merge multi-vistoriador
+  'merge_resolved',
 ] as const
 
 export type AuditEventType = (typeof AUDIT_EVENT_TYPES)[number] | (string & {})

@@ -8,6 +8,11 @@ import { createId } from './id'
 import { db, type PhotoEvidenceRecord, type PhotoGps } from './db'
 import { sha256Hex } from './pdf/integrityManifest'
 import { appendAuditEvent } from './audit/auditLog'
+import {
+  computePerceptualHashFromBlob,
+  evaluatePhotoAntifraud,
+  type PhotoFingerprint,
+} from './audit/photoAntifraud'
 import { PHOTO_REF_PREFIX, isPhotoRef, storePhoto } from './photoStore'
 
 export type { PhotoEvidenceRecord, PhotoGps }
@@ -57,6 +62,7 @@ export function buildPhotoEvidenceMeta(args: {
   mimeType: string
   byteSize: number
   sha256: string
+  perceptualHash?: string | null
   optimizedSha256?: string
   width?: number | null
   height?: number | null
@@ -76,6 +82,7 @@ export function buildPhotoEvidenceMeta(args: {
     mimeType: args.mimeType || 'application/octet-stream',
     byteSize: args.byteSize,
     sha256: args.sha256,
+    perceptualHash: args.perceptualHash ?? null,
     optimizedSha256: args.optimizedSha256,
     width: args.width ?? null,
     height: args.height ?? null,
@@ -133,6 +140,7 @@ export async function storePhotoEvidence(
   const optimizedSha256 = await hashBlobSha256(optimizedBlob)
   const optimizedRef = await storePhoto(optimizedBlob)
   const optimizedPhotoId = optimizedRef.slice(PHOTO_REF_PREFIX.length)
+  const perceptualHash = await computePerceptualHashFromBlob(originalBlob)
 
   const optRecord = await db.getPhoto(optimizedPhotoId)
   if (optRecord) {
@@ -150,6 +158,7 @@ export async function storePhotoEvidence(
       mimeType,
       byteSize: originalBlob.size,
       sha256: originalSha256,
+      perceptualHash,
       optimizedSha256,
       width: size?.width ?? null,
       height: size?.height ?? null,
@@ -177,6 +186,7 @@ export async function storePhotoEvidence(
         vehicle_id: opts.vehicleId ?? null,
         sha256: originalSha256,
         optimized_sha256: optimizedSha256,
+        perceptual_hash: perceptualHash,
         mime_type: mimeType,
         byte_size: originalBlob.size,
         width: size?.width ?? null,
@@ -185,7 +195,67 @@ export async function storePhotoEvidence(
     })
   }
 
+  // FASE 20: alerta local de reuso / inconsistência (não bloqueia captura).
+  void runLocalAntifraudCheck(record, opts)
+
   return { optimizedRef, evidenceId, originalSha256, optimizedSha256 }
+}
+
+function toFingerprint(r: PhotoEvidenceRecord): PhotoFingerprint {
+  return {
+    id: r.id,
+    sha256: r.sha256,
+    perceptualHash: r.perceptualHash,
+    inspectionId: r.inspectionId,
+    capturedAt: r.capturedAt,
+    gps: r.gps ? { lat: r.gps.lat, lng: r.gps.lng } : null,
+  }
+}
+
+async function runLocalAntifraudCheck(
+  record: PhotoEvidenceRecord,
+  opts: StorePhotoEvidenceOpts,
+): Promise<void> {
+  try {
+    const all = await db.getAllPhotoEvidence()
+    const finding = evaluatePhotoAntifraud({
+      photo: toFingerprint(record),
+      candidates: all.map(toFingerprint),
+      inspectionGps: opts.gps ? { lat: opts.gps.lat, lng: opts.gps.lng } : null,
+      inspectionAnchorAt: record.capturedAt,
+    })
+    for (const reuse of finding.reuses) {
+      void appendAuditEvent({
+        event_type: 'photo_reuse_alert',
+        inspection_id: opts.inspectionId ?? null,
+        idempotency_key: `photo_reuse:${record.id}:${reuse.candidateId}:${reuse.kind}`,
+        metadata: {
+          photo_id: record.id,
+          kind: reuse.kind,
+          match_photo_id: reuse.candidateId,
+          match_inspection_id: reuse.candidateInspectionId,
+          hamming: reuse.distance ?? null,
+          sha256: record.sha256.slice(0, 16),
+        },
+      })
+    }
+    for (const ctx of finding.context) {
+      // Na captura, GPS da foto == GPS passado em opts → sem mismatch local.
+      // Mantido para simetria; sync fará o cruzamento com geo da vistoria.
+      void appendAuditEvent({
+        event_type: 'photo_context_alert',
+        inspection_id: opts.inspectionId ?? null,
+        idempotency_key: `photo_ctx:${record.id}:${ctx.kind}`,
+        metadata: {
+          photo_id: record.id,
+          kind: ctx.kind,
+          detail: ctx.detail,
+        },
+      })
+    }
+  } catch {
+    // best-effort
+  }
 }
 
 /** Look up original SHA-256 for an optimized `blob:` / `storage:` display ref. */

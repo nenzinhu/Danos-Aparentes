@@ -32,7 +32,19 @@ export async function POST(req: NextRequest) {
 
   if (error) {
     console.error('[report-quota] Falha ao consumir cota de laudos:', error);
-    return NextResponse.json({ error: 'Erro ao verificar limite de laudos' }, { status: 500 });
+    const missingFn =
+      error.code === 'PGRST202' ||
+      /consume_laudo_quota/i.test(error.message || '') ||
+      /schema cache/i.test(error.message || '');
+    return NextResponse.json(
+      {
+        error: missingFn
+          ? 'Cota de laudos não configurada no banco. Aplique a migration 20260724_starter_plan_quota (ou 20260806010000_ensure_laudo_quota).'
+          : 'Erro ao verificar limite de laudos',
+        code: missingFn ? 'quota_rpc_missing' : undefined,
+      },
+      { status: 500 },
+    );
   }
 
   const result = data as QuotaResult;

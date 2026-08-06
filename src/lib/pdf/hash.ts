@@ -6,6 +6,11 @@ import { hashRegisterIdempotencyKey } from '../sync/idempotency'
 import { resolveTenantId } from '../tenant/resolveTenant'
 import { supabase, supabaseEnabled } from '../supabase'
 import { normalizePlate } from '../reportComparison'
+import {
+  buildSeveritySummary,
+  normalizeDisclosureScope,
+  type DisclosureScope,
+} from '../verify/disclosureScope'
 import { buildIntegrityManifest, type IntegrityManifest } from './integrityManifest'
 
 /**
@@ -76,6 +81,8 @@ export type RegisterHashMeta = {
   supersedesHash?: string
   publicCode?: string
   laudoVersion?: number
+  /** FASE 21 — nível de divulgação pública do QR/verify. */
+  disclosureScope?: DisclosureScope
 }
 
 /** Registra o hash no Supabase para a página /verify conferir depois */
@@ -115,6 +122,11 @@ export async function registerHash(
       version = meta.laudoVersion
     }
 
+    const disclosureScope = normalizeDisclosureScope(meta?.disclosureScope, {
+      forNewIssue: true,
+    })
+    const severitySummary = buildSeveritySummary(damages)
+
     const row: Record<string, unknown> = {
       hash, user_id: session.user.id, tenant_id: tenantId, plate: info.plate || '',
       ref: info.ref || '', issued_at: date, damages_count: damages.length,
@@ -130,6 +142,8 @@ export async function registerHash(
       supersedes_hash: meta?.supersedesHash || '',
       inspection_id: meta?.inspectionId || '',
       public_code: meta?.publicCode || '',
+      disclosure_scope: disclosureScope,
+      severity_summary: severitySummary,
     }
     if (manifest) {
       row.integrity_scheme = manifest.scheme
@@ -151,6 +165,7 @@ export async function registerHash(
         public_code: meta?.publicCode || '',
         integrity_scheme: manifest?.scheme || '',
         final_hash: manifest?.final_hash || '',
+        disclosure_scope: disclosureScope,
       },
     })
 

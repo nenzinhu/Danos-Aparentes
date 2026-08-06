@@ -4,7 +4,13 @@ import { supabaseAdmin } from '@/src/lib/server/supabaseAdmin'
 import { getUserFromRequest } from '@/src/lib/server/auth'
 import { getTrustedBaseUrl } from '@/src/lib/server/trustedBaseUrl'
 import { STRIPE_PLAN_METADATA_KEY } from '@/src/lib/billing/plans'
-import { checkoutIntegrationId, resolveCheckoutPlan } from '@/src/lib/server/stripePlans'
+import {
+  assertStripePriceAvailable,
+  checkoutIntegrationId,
+  classifyStripePriceError,
+  resolveCheckoutPlan,
+  stripePriceUserMessage,
+} from '@/src/lib/server/stripePlans'
 
 export async function POST(req: NextRequest) {
   const user = await getUserFromRequest(req)
@@ -19,6 +25,11 @@ export async function POST(req: NextRequest) {
 
   if (!supabaseAdmin) {
     return NextResponse.json({ error: 'Supabase não configurado' }, { status: 500 })
+  }
+
+  const priceCheck = await assertStripePriceAvailable(priceId, envVar)
+  if (!priceCheck.ok) {
+    return NextResponse.json({ error: priceCheck.error }, { status: priceCheck.status })
   }
 
   const origin = getTrustedBaseUrl({
@@ -60,16 +71,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ url: session.url })
   } catch (err) {
     console.error('Erro ao criar sessão de checkout:', err)
-    const stripeMessage = err instanceof Error ? err.message : ''
-    const testLiveMismatch =
-      stripeMessage.includes('test mode') && stripeMessage.includes('live mode')
+    const issue = classifyStripePriceError(err)
     return NextResponse.json(
       {
-        error: testLiveMismatch
-          ? 'Configuração Stripe inconsistente: o Price ID está em modo teste, mas a chave da API é live. Crie o preço no Dashboard Live e atualize STRIPE_PRICE_ID_STARTER / STRIPE_PRICE_ID_PRO na Vercel.'
-          : 'Erro ao criar sessão de checkout. Tente novamente em alguns instantes.',
+        error:
+          issue === 'other'
+            ? 'Erro ao criar sessão de checkout. Tente novamente em alguns instantes.'
+            : stripePriceUserMessage(issue, envVar),
       },
-      { status: 500 },
+      { status: issue === 'other' ? 500 : 503 },
     )
   }
 }

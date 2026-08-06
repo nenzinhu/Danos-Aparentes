@@ -52,4 +52,6 @@ export interface PdfSettings {
   laudoVersion?: number
   /** Entrada ou retorno — altera subtítulo padrão do PDF. */
   inspectionPurpose?: 'entrada' | 'retorno'
+  /** FASE 21 — o que o QR/verify público revela. Default: authenticity. */
+  disclosureScope?: import('../verify/disclosureScope').DisclosureScope
 }

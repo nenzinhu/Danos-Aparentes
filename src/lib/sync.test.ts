@@ -159,6 +159,10 @@ vi.mock('./photoStore', () => ({
     localPhotos: photos,
     localNotes: notes,
   })),
+  uploadViewPhotosForSync: vi.fn(async (viewPhotos: Record<string, string | undefined>) => ({
+    remoteViewPhotos: viewPhotos,
+    localViewPhotos: viewPhotos,
+  })),
 }))
 
 vi.mock('./photoStorage', () => ({
@@ -199,8 +203,8 @@ describe('mergeRemoteReports', () => {
 
     const merged = await mergeRemoteReports('user-1')
 
-    expect(merged).toHaveLength(1)
-    expect(merged[0].savedAt).toBe(2000)
+    expect(merged.reports).toHaveLength(1)
+    expect(merged.reports[0].savedAt).toBe(2000)
     expect(dbState.saved.get('r1')?.savedAt).toBe(2000)
   })
 
@@ -210,8 +214,8 @@ describe('mergeRemoteReports', () => {
 
     const merged = await mergeRemoteReports('user-1')
 
-    expect(merged).toHaveLength(1)
-    expect(merged[0].savedAt).toBe(3000)
+    expect(merged.reports).toHaveLength(1)
+    expect(merged.reports[0].savedAt).toBe(3000)
     expect(dbState.queue).toHaveLength(1)
     expect(dbState.queue[0]).toMatchObject({ type: 'upsert', reportId: 'r1' })
   })
@@ -231,7 +235,7 @@ describe('mergeRemoteReports', () => {
 
     const merged = await mergeRemoteReports('user-1')
 
-    expect(merged).toHaveLength(0)
+    expect(merged.reports).toHaveLength(0)
     expect(dbState.deleted).toContain('r1')
   })
 
@@ -240,7 +244,7 @@ describe('mergeRemoteReports', () => {
 
     const merged = await mergeRemoteReports('user-1')
 
-    expect(merged).toHaveLength(1)
+    expect(merged.reports).toHaveLength(1)
     expect(dbState.deleted).not.toContain('r1')
   })
 
@@ -250,7 +254,7 @@ describe('mergeRemoteReports', () => {
 
     const merged = await mergeRemoteReports('user-1')
 
-    expect(merged).toHaveLength(1)
+    expect(merged.reports).toHaveLength(1)
     expect(dbState.deleted).not.toContain('r1')
   })
 
@@ -259,8 +263,8 @@ describe('mergeRemoteReports', () => {
 
     const merged = await mergeRemoteReports('user-1')
 
-    expect(merged).toHaveLength(1)
-    expect(merged[0].id).toBe('r2')
+    expect(merged.reports).toHaveLength(1)
+    expect(merged.reports[0].id).toBe('r2')
     expect(dbState.saved.get('r2')?.id).toBe('r2')
   })
 
@@ -270,8 +274,8 @@ describe('mergeRemoteReports', () => {
 
     const merged = await mergeRemoteReports('user-1')
 
-    expect(merged[0].status).toBe('issued')
-    expect(merged[0].savedAt).toBe(1000)
+    expect(merged.reports[0].status).toBe('issued')
+    expect(merged.reports[0].savedAt).toBe(1000)
     expect(dbState.queue).toHaveLength(1)
     expect(dbState.queue[0]).toMatchObject({ type: 'upsert', reportId: 'r1' })
   })
@@ -282,8 +286,8 @@ describe('mergeRemoteReports', () => {
 
     const merged = await mergeRemoteReports('user-1')
 
-    expect(merged[0].status).toBe('issued')
-    expect(merged[0].savedAt).toBe(1000)
+    expect(merged.reports[0].status).toBe('issued')
+    expect(merged.reports[0].savedAt).toBe(1000)
   })
 
   it('não apaga laudo local emitido se sumiu do pull remoto', async () => {
@@ -291,10 +295,57 @@ describe('mergeRemoteReports', () => {
 
     const merged = await mergeRemoteReports('user-1')
 
-    expect(merged).toHaveLength(1)
-    expect(merged[0].status).toBe('issued')
+    expect(merged.reports).toHaveLength(1)
+    expect(merged.reports[0].status).toBe('issued')
     expect(dbState.deleted).not.toContain('r1')
     expect(dbState.queue).toHaveLength(1)
+  })
+
+  it('une danos de dois dispositivos no mesmo draft', async () => {
+    const localDmg = {
+      id: 'd-local',
+      vehicle: 'car',
+      view: 'frontal',
+      partId: 'hood',
+      partName: 'Capô',
+      type: 'dent',
+      typeName: 'Amassado',
+      severity: 'low',
+      notes: '',
+      photos: [],
+      photoNotes: [],
+    }
+    const remoteDmg = {
+      id: 'd-remote',
+      vehicle: 'car',
+      view: 'traseira',
+      partId: 'trunk',
+      partName: 'Porta-malas',
+      type: 'scratch',
+      typeName: 'Risco',
+      severity: 'medium',
+      notes: '',
+      photos: [],
+      photoNotes: [],
+    }
+    dbState.saved.set('r1', makeReport({
+      id: 'r1',
+      savedAt: 1000,
+      status: 'complete',
+      damages: [localDmg as never],
+    }))
+    remoteState.inspections = [makeReport({
+      id: 'r1',
+      savedAt: 2000,
+      status: 'complete',
+      damages: [remoteDmg as never],
+    })]
+
+    const merged = await mergeRemoteReports('user-1')
+
+    expect(merged.reports[0].damages).toHaveLength(2)
+    expect(merged.merges.some((m) => m.multiContributor)).toBe(true)
+    expect(dbState.queue.some((q) => q.type === 'upsert' && q.reportId === 'r1')).toBe(true)
   })
 })
 

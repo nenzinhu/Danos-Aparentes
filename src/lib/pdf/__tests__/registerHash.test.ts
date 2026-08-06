@@ -73,6 +73,8 @@ describe('registerHash', () => {
     expect(insertMock).toHaveBeenCalledWith(expect.objectContaining({
       company_name: 'Locadora XPTO',
       company_logo: 'data:image/png;base64,FAKELOGO',
+      disclosure_scope: 'authenticity',
+      severity_summary: { low: 0, medium: 0, high: 0 },
     }))
   })
 

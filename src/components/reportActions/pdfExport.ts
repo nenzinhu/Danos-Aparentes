@@ -3,6 +3,11 @@ import type { PdfSettings, SvgPdfData } from '../../lib/pdf/types'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { appendAuditEvent } from '../../lib/audit/auditLog'
+import {
+  DEFAULT_NEW_DISCLOSURE_SCOPE,
+  normalizeDisclosureScope,
+  type DisclosureScope,
+} from '../../lib/verify/disclosureScope'
 import { staticVehicleRegistry } from '../vehicles/staticRegistry'
 import VehicleDefs from '../vehicles/VehicleDefs'
 
@@ -105,6 +110,21 @@ export function persistSectionsConfig(config: SectionVisibilityState) {
   }
 }
 
+const DISCLOSURE_STORAGE_KEY = 'pdf_disclosure_scope'
+
+export function loadDisclosureScope(): DisclosureScope {
+  if (typeof window === 'undefined') return DEFAULT_NEW_DISCLOSURE_SCOPE
+  return normalizeDisclosureScope(localStorage.getItem(DISCLOSURE_STORAGE_KEY), {
+    forNewIssue: true,
+  })
+}
+
+export function persistDisclosureScope(scope: DisclosureScope) {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(DISCLOSURE_STORAGE_KEY, scope)
+  }
+}
+
 export type ResolvedExportMeta = {
   inspectionId?: string
   publicCode?: string
@@ -177,6 +197,7 @@ export function resolvePdfSettings(
     correctionReason: meta.correctionReason,
     supersedesHash: meta.supersedesHash,
     inspectionPurpose: meta.inspectionPurpose,
+    disclosureScope: loadDisclosureScope(),
   }
 }
 

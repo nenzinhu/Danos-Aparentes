@@ -80,3 +80,6 @@ tmp/
 
 .vercel
 .env*
+
+.vercel
+.env*

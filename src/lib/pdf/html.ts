@@ -104,6 +104,7 @@ export async function buildFullHtml(
       supersedesHash: settings?.supersedesHash,
       publicCode: settings?.publicCode,
       laudoVersion: settings?.laudoVersion,
+      disclosureScope: settings?.disclosureScope,
     })
   }
 

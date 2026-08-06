@@ -20,8 +20,10 @@ import {
   blockExportWithoutReview,
   captureSvgs,
   checkLaudoQuota,
+  loadDisclosureScope,
   loadPdfTheme,
   loadSectionsConfig,
+  persistDisclosureScope,
   persistPdfTheme,
   persistSectionsConfig,
   quotaBlockedMessage,
@@ -29,6 +31,7 @@ import {
   type PdfTheme,
   type SectionVisibilityState,
 } from './reportActions/pdfExport'
+import type { DisclosureScope } from '../lib/verify/disclosureScope'
 
 export { captureSvgs } from './reportActions/pdfExport'
 
@@ -71,10 +74,16 @@ export default function ReportActions({
   const [showSectionsAccordion, setShowSectionsAccordion] = useState(false)
   const [pdfTheme, setPdfTheme] = useState<PdfTheme>(() => loadPdfTheme())
   const [sectionsConfig, setSectionsConfig] = useState<SectionVisibilityState>(() => loadSectionsConfig())
+  const [disclosureScope, setDisclosureScope] = useState<DisclosureScope>(() => loadDisclosureScope())
 
   const updateSectionsConfig = (newConfig: SectionVisibilityState) => {
     setSectionsConfig(newConfig)
     persistSectionsConfig(newConfig)
+  }
+
+  const updateDisclosureScope = (scope: DisclosureScope) => {
+    setDisclosureScope(scope)
+    persistDisclosureScope(scope)
   }
 
   const getResolvedPdfSettings = () => resolvePdfSettings(hasAccess, pdfTheme, sectionsConfig, {
@@ -282,6 +291,8 @@ export default function ReportActions({
         onToggle={() => setShowSectionsAccordion(v => !v)}
         sectionsConfig={sectionsConfig}
         onChange={updateSectionsConfig}
+        disclosureScope={disclosureScope}
+        onDisclosureChange={updateDisclosureScope}
       />
 
       <div className="flex flex-col gap-2">

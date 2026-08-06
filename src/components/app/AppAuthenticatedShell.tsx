@@ -49,9 +49,15 @@ export default function AppAuthenticatedShell({
 }: AppAuthenticatedShellProps) {
   const { damages, addDamage, removeDamage, updateDamage, clearDamages } = useDamages()
   const { config: ttsConfig, setConfig: setTtsConfig, speak, speakHover, voices } = useTts(session?.access_token)
-  const { saved, saveReport, deleteReport, refreshRemote, createCorrection, markReportIssued, markReviewComplete, clearReviewReport } = useSavedReports(session?.user.id)
+  const { saved, saveReport, deleteReport, refreshRemote, mergeNotice, clearMergeNotice, createCorrection, markReportIssued, markReviewComplete, clearReviewReport } = useSavedReports(session?.user.id)
   const { info: subscription, loading: subLoading, openPortal } = useSubscription(session?.user.id, session?.access_token)
   const shell = useAppShellState({ openPortal })
+
+  useEffect(() => {
+    if (!mergeNotice) return
+    shell.showToast(mergeNotice)
+    clearMergeNotice()
+  }, [mergeNotice, clearMergeNotice, shell])
 
   const onSyncPermanentFailure = useCallback((dropped: DroppedSyncItem[]) => {
     if (dropped.length === 0) return
