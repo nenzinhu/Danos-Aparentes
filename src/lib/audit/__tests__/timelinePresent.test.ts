@@ -22,10 +22,13 @@ function row(partial: Partial<AuditLogRow> & Pick<AuditLogRow, 'event_type'>): A
 }
 
 describe('presentAuditEvent', () => {
-  it('maps known types to Portuguese labels', () => {
+  it('maps known types to Portuguese human titles', () => {
     const p = presentAuditEvent(row({ event_type: 'issuance' }))
-    expect(p.label).toBe('Laudo emitido')
+    expect(p.title).toBe('Dossiê emitido')
+    expect(p.label).toBe('Dossiê emitido')
     expect(p.tone).toBe('ok')
+    expect(p.category).toBe('documento')
+    expect(p.statusLabel).toBe('Assinado')
     expect(p.eventHashShort).toBe('ABCDEF012345')
   })
 
@@ -59,8 +62,8 @@ describe('presentAuditEvent', () => {
         },
       }),
     )
-    expect(p.label).toBe('QR do veículo gerado')
-    expect(p.detail).toContain('GOL0000')
+    expect(p.title).toBe('Link público do histórico gerado')
+    expect(p.description).toContain('GOL0000')
     expect(p.detail).not.toContain('vehicle_id')
     expect(p.detail).not.toContain('f33f60ab')
     expect(p.detail).not.toMatch(/^\s*\{/)
@@ -90,9 +93,10 @@ describe('presentAuditEvent', () => {
         },
       }),
     )
-    expect(p.label).toBe('Histórico sincronizado')
-    expect(p.detail).toContain('atualizado')
+    expect(p.title).toBe('Histórico sincronizado')
+    expect(p.description).toMatch(/atualizado|preservada|nuvem/i)
     expect(p.detail).not.toContain('vehicle_id')
+    expect(p.category).toBe('sincronizacao')
   })
 
   it('describes review_completed without raw JSON', () => {
@@ -105,12 +109,13 @@ describe('presentAuditEvent', () => {
         },
       }),
     )
-    expect(p.label).toBe('Revisão humana concluída')
-    expect(p.detail).toBe('Sem observações registradas')
+    expect(p.title).toBe('Revisão concluída')
+    expect(p.detail).toMatch(/observações|revisão/i)
     expect(p.detail).not.toMatch(/\{/)
+    expect(p.detail).not.toContain('review_content_hash')
   })
 
-  it('describes photo_reuse_alert in plain language', () => {
+  it('describes photo_reuse_alert in plain language without IDs', () => {
     const p = presentAuditEvent(
       row({
         event_type: 'photo_reuse_alert',
@@ -122,9 +127,31 @@ describe('presentAuditEvent', () => {
         },
       }),
     )
-    expect(p.label).toBe('Alerta: foto reutilizada')
+    expect(p.title).toBe('Alerta de evidência reutilizada')
     expect(p.tone).toBe('warn')
-    expect(p.detail).toContain('SHA-256')
+    expect(p.category).toBe('alerta')
+    expect(p.detail).toMatch(/idêntica|reaproveitamento|evidência/i)
     expect(p.detail).not.toContain('insp-other')
+    expect(p.detail).not.toContain('photo_id')
+  })
+
+  it('never surfaces decision or comparison_id in default presentation', () => {
+    const p = presentAuditEvent(
+      row({
+        event_type: 'comparison_reviewed',
+        metadata: {
+          decision: 'accept',
+          comparison_id: 'cmp-uuid-123',
+          identity_key: 'part:door',
+          new: 1,
+          unchanged: 6,
+        },
+      }),
+    )
+    expect(p.detail).not.toContain('decision')
+    expect(p.detail).not.toContain('comparison_id')
+    expect(p.detail).not.toContain('identity_key')
+    expect(p.detail).not.toContain('cmp-uuid')
+    expect(p.bullets.some((b) => /novo/i.test(b))).toBe(true)
   })
 })

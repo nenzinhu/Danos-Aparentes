@@ -1,20 +1,16 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { listAuditEventsByInspection, type AuditLogRow } from '../lib/audit/auditLog'
-import { presentAuditTimeline, type TimelinePresentation, type TimelineTone } from '../lib/audit/timelinePresent'
+import {
+  CATEGORY_STYLE,
+  presentAuditTimeline,
+  type TimelinePresentation,
+} from '../lib/audit/timelinePresent'
 
 interface InspectionAuditTimelineProps {
   inspectionId: string | null | undefined
   /** When true, timeline is read-only context (issued). Always read-only in practice. */
   issued?: boolean
-}
-
-const TONE_CLASS: Record<TimelineTone, string> = {
-  neutral: 'border-[var(--panel-border)] bg-[var(--card-bg-solid)]',
-  ok: 'border-emerald-500/25 bg-emerald-500/5',
-  warn: 'border-amber-500/25 bg-amber-500/5',
-  ai: 'border-sky-500/25 bg-sky-500/5',
-  block: 'border-rose-500/25 bg-rose-500/5',
 }
 
 export default function InspectionAuditTimeline({ inspectionId, issued }: InspectionAuditTimelineProps) {
@@ -34,7 +30,7 @@ export default function InspectionAuditTimeline({ inspectionId, issued }: Inspec
         setItems(presentAuditTimeline(rows))
       })
       .catch(() => {
-        if (!cancelled) setError('Não foi possível carregar a trilha de auditoria.')
+        if (!cancelled) setError('Não foi possível carregar o histórico desta inspeção.')
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -54,16 +50,16 @@ export default function InspectionAuditTimeline({ inspectionId, issued }: Inspec
         className="w-full flex items-center justify-between gap-3 text-left"
       >
         <div>
-          <p className="text-sm font-bold text-[var(--text-main)]">Trilha de auditoria</p>
+          <p className="text-sm font-bold text-[var(--text-main)]">Histórico desta inspeção</p>
           <p className="text-[0.72rem] text-[var(--text-muted)] mt-0.5">
-            Eventos técnicos desta vistoria{issued ? ' (somente leitura após emissão)' : ''}.
+            Eventos do prontuário digital{issued ? ' (somente leitura após emissão)' : ''}.
           </p>
         </div>
         <span className="text-xs font-bold text-[var(--text-muted)]">{open ? 'Recolher' : 'Ver'}</span>
       </button>
 
       {open && (
-        <div className="mt-4 space-y-2" role="list" aria-label="Timeline de auditoria">
+        <div className="mt-4 space-y-2.5" role="list" aria-label="Histórico da inspeção">
           {loading && (
             <p className="text-[0.75rem] text-[var(--text-muted)]">Carregando eventos…</p>
           )}
@@ -72,31 +68,49 @@ export default function InspectionAuditTimeline({ inspectionId, issued }: Inspec
           )}
           {!loading && !error && items.length === 0 && (
             <p className="text-[0.75rem] text-[var(--text-muted)]">
-              Nenhum evento registrado ainda para esta vistoria.
+              Nenhum evento encontrado. Assim que houver atividade, o histórico aparece aqui.
             </p>
           )}
-          {items.map((ev) => (
-            <div
-              key={ev.eventId}
-              role="listitem"
-              className={`rounded-lg border px-3 py-2 ${TONE_CLASS[ev.tone]}`}
-            >
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <p className="text-[0.8rem] font-bold text-[var(--text-main)]">{ev.label}</p>
-                <p className="text-[0.68rem] text-[var(--text-muted)] font-mono">{ev.when}</p>
+          {items.map((ev) => {
+            const style = CATEGORY_STYLE[ev.category]
+            return (
+              <div
+                key={ev.eventId}
+                role="listitem"
+                className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] px-3.5 py-3"
+              >
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${style.badge}`}
+                    >
+                      {style.label}
+                    </span>
+                    <p className="text-[0.85rem] font-bold text-[var(--text-main)]">{ev.title}</p>
+                  </div>
+                  <p className="text-[0.68rem] text-[var(--text-muted)]">{ev.when}</p>
+                </div>
+                {ev.description && (
+                  <p className="text-[0.72rem] text-[var(--text-muted)] mt-1.5 leading-relaxed">
+                    {ev.description}
+                  </p>
+                )}
+                {ev.bullets.length > 0 && (
+                  <ul className="mt-2 space-y-1 text-[0.7rem] text-[var(--text-main)]/85 list-none m-0 p-0">
+                    {ev.bullets.map((b) => (
+                      <li key={b} className="flex gap-1.5">
+                        <span className="text-emerald-400">✔</span>
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <p className="mt-2 text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                  {ev.statusLabel}
+                </p>
               </div>
-              {ev.detail && (
-                <p className="text-[0.7rem] text-[var(--text-muted)] mt-1 leading-relaxed break-all">
-                  {ev.detail}
-                </p>
-              )}
-              {ev.eventHashShort && (
-                <p className="text-[0.65rem] text-[var(--text-muted)] mt-1 font-mono opacity-70">
-                  chain {ev.eventHashShort}…
-                </p>
-              )}
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>

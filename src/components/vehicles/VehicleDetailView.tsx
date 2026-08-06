@@ -7,11 +7,7 @@ import {
   type VehicleHistorySummaryWithCloud,
 } from '@/src/lib/vehicleEvidence'
 import { appendAuditEvent } from '@/src/lib/audit/auditLog'
-import VehicleAuditTimeline from './VehicleAuditTimeline'
-
-function formatDateTime(ts: number): string {
-  return new Date(ts).toLocaleString('pt-BR')
-}
+import VehicleHistoryTimeline from './VehicleHistoryTimeline'
 
 type RemoteInspection = {
   id: string
@@ -33,7 +29,6 @@ export default function VehicleDetailView({
   userId: string
   onHydrated?: () => void | Promise<void>
 }) {
-  const last = vehicle.reports[vehicle.reports.length - 1]
   const [qrBusy, setQrBusy] = useState(false)
   const [qrUrl, setQrUrl] = useState<string | null>(null)
   const [qrError, setQrError] = useState<string | null>(null)
@@ -67,6 +62,9 @@ export default function VehicleDetailView({
   const needsHydrate =
     vehicle.cloudOnly || cloudOnlyInspections.length > 0 || vehicle.reports.length === 0
 
+  const titleParts = [vehicle.brand, vehicle.color].filter(Boolean)
+  const displayName = titleParts.length > 0 ? titleParts.join(' · ') : 'Veículo sem descrição'
+
   async function handleHydrate() {
     setHydrateBusy(true)
     setHydrateMsg(null)
@@ -74,10 +72,10 @@ export default function VehicleDetailView({
       const result = await hydrateVehicleReportsLocally(userId, vehicle.id, accessToken)
       setHydrateMsg(
         result.written > 0
-          ? `${result.written} inspeção(ões) baixada(s) para este dispositivo.`
+          ? `Histórico atualizado: ${result.written} inspeção(ões) baixada(s) neste dispositivo.`
           : result.pulled === 0
             ? 'Nenhuma inspeção na nuvem para este veículo.'
-            : 'Histórico local já está atualizado.',
+            : 'Memória digital já estava preservada neste dispositivo.',
       )
       void appendAuditEvent({
         event_type: 'inspection_linked_to_vehicle',
@@ -123,7 +121,9 @@ export default function VehicleDetailView({
       setQrUrl(url)
       try {
         await navigator.clipboard.writeText(url)
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
       void appendAuditEvent({
         event_type: 'comparison_exported',
         metadata: {
@@ -140,48 +140,59 @@ export default function VehicleDetailView({
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <p className="text-xs font-bold uppercase tracking-wide text-[var(--text-muted)]">Veículo</p>
-        <h1 className="font-display text-3xl font-bold tracking-wide mt-1">{vehicle.plate}</h1>
-        <p className="text-sm text-[var(--text-muted)] mt-1">
-          {[vehicle.brand, vehicle.color].filter(Boolean).join(' · ') || 'Sem descrição'}
-          {vehicle.lastLocation ? ` · ${vehicle.lastLocation}` : ''}
-        </p>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Stat label="Inspeções" value={String(vehicle.reports.length)} />
-        <Stat label="Danos ativos (última)" value={String(vehicle.activeDamageCount)} />
-        <Stat label="Novos na última" value={String(vehicle.newDamagesOnLast)} />
-        <Stat
-          label="Primeira inspeção"
-          value={
-            vehicle.firstInspectedAt
-              ? new Date(vehicle.firstInspectedAt).toLocaleDateString('pt-BR')
-              : '—'
-          }
+    <div className="flex flex-col gap-8">
+      {/* Hero — prontuário */}
+      <header className="relative overflow-hidden rounded-2xl border border-[var(--card-border)]/70 bg-[linear-gradient(145deg,color-mix(in_srgb,var(--signal)_10%,transparent)_0%,var(--card-bg-solid)_45%,transparent_100%)] px-5 py-6 sm:px-7 sm:py-8">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-40 bg-[linear-gradient(var(--grid-color)_1px,transparent_1px),linear-gradient(90deg,var(--grid-color)_1px,transparent_1px)] bg-[size:28px_28px]"
         />
-      </div>
+        <div className="relative">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Histórico Digital Ativo
+            </span>
+            {vehicle.lastLocation && (
+              <span className="text-[11px] text-[var(--text-muted)] truncate max-w-[16rem]">
+                {vehicle.lastLocation}
+              </span>
+            )}
+          </div>
+          <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-[var(--text-main)]">
+            {displayName}
+          </h1>
+          <p className="mt-2 font-mono-data text-lg sm:text-xl tracking-[0.12em] text-[var(--signal-bright)]">
+            {vehicle.plate || '—'}
+          </p>
+          <p className="mt-3 text-sm text-[var(--text-muted)] max-w-xl leading-relaxed">
+            Prontuário digital do veículo — inspeções, evidências, comparações e eventos em uma
+            linha do tempo auditável.
+          </p>
+        </div>
+      </header>
 
       <div className="flex flex-wrap gap-2">
         <Link
           href="/app"
-          className="px-4 py-2.5 rounded-lg text-xs font-bold bg-sky-500/15 border border-sky-500/30 text-sky-300 hover:bg-sky-500/25 transition-colors"
+          className="px-4 py-2.5 rounded-xl text-xs font-bold text-white shadow-md shadow-sky-500/15"
+          style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
         >
-          Nova Inspeção
+          Nova inspeção
         </Link>
         <Link
           href={`/app/vehicles/${encodeURIComponent(vehicle.id)}/compare`}
-          className="px-4 py-2.5 rounded-lg text-xs font-bold bg-[var(--card-bg-solid)] border border-[var(--card-border)] text-[var(--text-main)] hover:border-sky-500/40 transition-colors"
+          className="px-4 py-2.5 rounded-xl text-xs font-bold bg-[var(--card-bg-solid)] border border-[var(--card-border)] text-[var(--text-main)] hover:border-sky-500/40 transition-colors"
         >
           Comparar inspeções
         </Link>
         <button
           type="button"
           disabled={hydrateBusy}
-          onClick={() => { void handleHydrate() }}
-          className="px-4 py-2.5 rounded-lg text-xs font-bold border border-violet-500/30 text-violet-300 hover:bg-violet-500/10 disabled:opacity-50"
+          onClick={() => {
+            void handleHydrate()
+          }}
+          className="px-4 py-2.5 rounded-xl text-xs font-bold border border-violet-500/30 text-violet-300 hover:bg-violet-500/10 disabled:opacity-50"
           title="Baixa dossiês completos da nuvem para este dispositivo"
         >
           {hydrateBusy ? 'Sincronizando…' : 'Sincronizar histórico'}
@@ -189,128 +200,58 @@ export default function VehicleDetailView({
         <button
           type="button"
           disabled={qrBusy}
-          onClick={() => { void handleVehicleQr() }}
-          className="px-4 py-2.5 rounded-lg text-xs font-bold border border-[var(--card-border)] hover:border-sky-500/40 disabled:opacity-50"
+          onClick={() => {
+            void handleVehicleQr()
+          }}
+          className="px-4 py-2.5 rounded-xl text-xs font-bold border border-[var(--card-border)] hover:border-sky-500/40 disabled:opacity-50"
         >
           {qrBusy ? 'Gerando QR…' : 'QR do veículo'}
         </button>
         <Link
           href="/app/vehicles"
-          className="px-4 py-2.5 rounded-lg text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
+          className="px-4 py-2.5 rounded-xl text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
         >
           ← Todos os veículos
         </Link>
       </div>
 
+      {needsHydrate && (
+        <p className="text-xs text-sky-300/90 border border-sky-500/25 rounded-xl px-3 py-2.5 bg-sky-500/10">
+          Há registros na nuvem incompletos neste dispositivo. Use{' '}
+          <strong>Sincronizar histórico</strong> para carregar evidências e comparar.
+        </p>
+      )}
+
       {hydrateMsg && (
-        <p className="text-xs text-sky-300 border border-sky-500/25 rounded-lg px-3 py-2 bg-sky-500/10">
+        <p className="text-xs text-sky-300 border border-sky-500/25 rounded-xl px-3 py-2 bg-sky-500/10">
           {hydrateMsg}
         </p>
       )}
 
       {qrError && (
-        <p className="text-xs text-amber-300 border border-amber-500/30 rounded-lg px-3 py-2 bg-amber-500/10">
+        <p className="text-xs text-amber-300 border border-amber-500/30 rounded-xl px-3 py-2 bg-amber-500/10">
           {qrError}
         </p>
       )}
       {qrUrl && (
         <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] p-3 text-xs break-all">
-          <p className="font-bold text-[var(--text-muted)] mb-1">Link público (copiado se permitido):</p>
+          <p className="font-bold text-[var(--text-muted)] mb-1">Link público do prontuário:</p>
           <a href={qrUrl} className="text-sky-400 hover:underline" target="_blank" rel="noreferrer">
             {qrUrl}
           </a>
           <p className="text-[var(--text-muted)] mt-2">
-            Exibe só laudos emitidos do seu escopo — sem CPF nem dados pessoais.
+            Exibe laudos emitidos do seu escopo — sem dados pessoais sensíveis.
           </p>
         </div>
       )}
 
-      <section>
-        <h2 className="font-display text-xl font-bold mb-3">Linha do Tempo</h2>
-        {needsHydrate && (
-          <p className="text-xs text-sky-300/90 mb-3 border border-sky-500/25 rounded-lg px-3 py-2 bg-sky-500/10">
-            Há inspeções na nuvem incompletas neste dispositivo. Use{' '}
-            <strong>Sincronizar histórico</strong> para baixar danos e evidências e poder comparar.
-          </p>
-        )}
-        <div className="relative flex flex-col gap-0 border-l border-[var(--card-border)] ml-2 pl-4">
-          {vehicle.reports.map((r) => (
-            <div key={r.id} className="relative py-3">
-              <span className="absolute -left-[1.35rem] top-4 w-2.5 h-2.5 rounded-full bg-sky-400 ring-4 ring-[var(--bg-main)]" />
-              <time className="text-[10px] font-bold uppercase text-[var(--text-muted)]">
-                {formatDateTime(r.savedAt)}
-              </time>
-              <p className="text-sm font-bold mt-0.5">
-                Inspeção {r.publicCode || r.id.slice(0, 8)}
-                {r.status ? (
-                  <span className="ml-2 text-[10px] font-bold uppercase text-[var(--text-muted)]">
-                    {r.status}
-                  </span>
-                ) : null}
-                {r.syncedAt == null || r.syncedAt < r.savedAt ? (
-                  <span className="ml-2 text-[10px] font-bold uppercase text-amber-400">
-                    pendente sync
-                  </span>
-                ) : null}
-              </p>
-              <p className="text-xs text-[var(--text-muted)]">
-                {r.damages.length === 0
-                  ? 'Sem danos registrados'
-                  : `${r.damages.length} dano(s) identificado(s)`}
-                {r.vehicleInfo.geo?.address ? ` · ${r.vehicleInfo.geo.address}` : ''}
-              </p>
-            </div>
-          ))}
-          {cloudOnlyInspections.map((r) => (
-            <div key={`cloud-${r.id}`} className="relative py-3">
-              <span className="absolute -left-[1.35rem] top-4 w-2.5 h-2.5 rounded-full bg-violet-400 ring-4 ring-[var(--bg-main)]" />
-              <time className="text-[10px] font-bold uppercase text-[var(--text-muted)]">
-                {r.updated_at ? formatDateTime(Date.parse(r.updated_at)) : '—'}
-              </time>
-              <p className="text-sm font-bold mt-0.5">
-                Inspeção {r.public_code || r.id.slice(0, 8)}
-                <span className="ml-2 text-[10px] font-bold uppercase text-violet-300">nuvem</span>
-                {r.status ? (
-                  <span className="ml-2 text-[10px] font-bold uppercase text-[var(--text-muted)]">
-                    {r.status}
-                  </span>
-                ) : null}
-              </p>
-              <p className="text-xs text-[var(--text-muted)]">
-                Metadados remotos — danos completos após sync no dispositivo.
-              </p>
-            </div>
-          ))}
-          {vehicle.reports.length === 0 && cloudOnlyInspections.length === 0 && (
-            <p className="text-sm text-[var(--text-muted)] py-3">Nenhuma inspeção listada ainda.</p>
-          )}
-          {last && vehicle.newDamagesOnLast > 0 && (
-            <div className="relative py-3">
-              <span className="absolute -left-[1.35rem] top-4 w-2.5 h-2.5 rounded-full bg-amber-400 ring-4 ring-[var(--bg-main)]" />
-              <p className="text-sm font-bold text-amber-300">
-                {vehicle.newDamagesOnLast} novo(s) dano(s) na última inspeção
-              </p>
-              <p className="text-xs text-[var(--text-muted)]">
-                Detectado por comparação estrutural — revisar na tela de comparação.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <VehicleAuditTimeline
-        vehicleId={vehicle.id}
-        inspectionIds={vehicle.reports.map((r) => r.id)}
+      <VehicleHistoryTimeline
+        vehicle={vehicle}
+        cloudOnlyInspections={cloudOnlyInspections}
+        onSyncRequest={() => {
+          void handleHydrate()
+        }}
       />
-    </div>
-  )
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] p-3">
-      <p className="text-lg font-bold">{value}</p>
-      <p className="text-[10px] uppercase font-bold text-[var(--text-muted)] mt-0.5">{label}</p>
     </div>
   )
 }
