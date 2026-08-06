@@ -261,7 +261,7 @@ export function computeProntuarioIntel(
     {
       id: 'last',
       label: 'Última inspeção',
-      value: formatRelativePast(lastAt, now),
+      value: lastAt != null ? formatRelativePast(lastAt, now) : 'Sem inspeção',
       tone: 'default',
     },
     {
@@ -291,7 +291,7 @@ export function computeProntuarioIntel(
     {
       id: 'sync',
       label: 'Última sincronização',
-      value: lastSyncAt > 0 ? formatRelativePast(lastSyncAt, now) : pendingCount > 0 ? 'Pendente' : '—',
+      value: lastSyncAt > 0 ? formatRelativePast(lastSyncAt, now) : pendingCount > 0 ? 'Pendente' : 'Sem sincronização',
       tone: pendingCount > 0 ? 'warn' : 'ok',
     },
     {
@@ -324,7 +324,7 @@ export function computeProntuarioIntel(
         newDamages > 0
           ? `+${newDamages} desde a última inspeção`
           : removedOrRepaired > 0
-            ? `${removedOrRepaired} possível${removedOrRepaired === 1 ? '' : 'is'} reparo${removedOrRepaired === 1 ? '' : 's'}`
+            ? `${removedOrRepaired} ${removedOrRepaired === 1 ? 'possível reparo' : 'possíveis reparos'}`
             : 'Sem alteração recente',
     },
     {
@@ -405,7 +405,7 @@ export function computeProntuarioIntel(
     { label: 'Última inspeção', value: formatRelativePast(lastAt, now) },
     {
       label: 'Comparado com anterior',
-      value: prev ? 'Sim' : reports.length <= 1 ? 'Aguardando 2ª inspeção' : '—',
+      value: prev ? 'Sim' : reports.length <= 1 ? 'Aguardando 2ª inspeção' : 'Indisponível',
       tone: prev ? 'ok' : 'default',
     },
     {
@@ -447,7 +447,7 @@ export function computeProntuarioIntel(
     activeDamages: vehicle.activeDamageCount,
     evidenceCount,
     lastSyncLabel:
-      lastSyncAt > 0 ? formatRelativePast(lastSyncAt, now) : pendingCount > 0 ? 'Pendente' : '—',
+      lastSyncAt > 0 ? formatRelativePast(lastSyncAt, now) : pendingCount > 0 ? 'Pendente' : 'Sem sincronização',
     aiStatus: ai.kind,
     aiStatusLabel: ai.label,
     aiConfidenceAvg,

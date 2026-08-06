@@ -91,6 +91,34 @@ export default function VehicleDetailView({
 
   const displayName = intel.modelLabel || 'Veículo sem descrição'
 
+  const fipeFacts = useMemo(() => {
+    if (!fipe) return []
+    return [
+      { label: 'Marca', value: fipe.textoMarca?.trim() },
+      { label: 'Modelo', value: fipe.textoModelo?.trim() },
+      { label: 'Ano', value: fipe.anoModelo?.trim() },
+      { label: 'Combustível', value: fipe.combustivel?.trim() },
+      { label: 'Mês referência', value: fipe.mesReferencia?.trim() },
+    ].filter((c): c is { label: string; value: string } => Boolean(c.value))
+  }, [fipe])
+
+  const identityChips = useMemo(() => {
+    const chips: { label: string; value: string }[] = []
+    if (intel.color?.trim()) chips.push({ label: 'Cor', value: intel.color.trim() })
+    if (intel.year?.trim()) chips.push({ label: 'Ano', value: intel.year.trim() })
+    chips.push({ label: 'Danos ativos', value: String(intel.activeDamages) })
+    chips.push({ label: 'Histórico', value: intel.historyStatusLabel })
+    return chips
+  }, [intel.color, intel.year, intel.activeDamages, intel.historyStatusLabel])
+
+  const executiveMetrics = useMemo(
+    () =>
+      intel.executiveMetrics.filter(
+        (m) => Boolean(m.value?.trim()) && m.value.trim() !== '—' && m.value.trim() !== '-',
+      ),
+    [intel.executiveMetrics],
+  )
+
   async function handleHydrate() {
     setHydrateBusy(true)
     setHydrateMsg(null)
@@ -184,43 +212,59 @@ export default function VehicleDetailView({
                 />
                 <VehicleIconSvg type={intel.vehicleType} size={52} />
               </div>
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     Histórico Digital Ativo
                   </span>
-                  <span className="inline-flex rounded-full border border-[var(--card-border)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
-                    {intel.historyStatusLabel}
-                  </span>
-                  {vehicle.lastLocation && (
+                  {vehicle.lastLocation?.trim() ? (
                     <span className="text-[11px] text-[var(--text-muted)] truncate max-w-[14rem]">
-                      {vehicle.lastLocation}
+                      {vehicle.lastLocation.trim()}
                     </span>
-                  )}
+                  ) : null}
                 </div>
-                <h1 className="font-display text-2xl sm:text-4xl font-bold tracking-tight text-[var(--text-main)] [text-wrap:balance]">
-                  {displayName}
-                </h1>
-                <p className="mt-1.5 font-mono-data text-lg sm:text-xl tracking-[0.12em] text-[var(--signal-bright)]">
-                  {intel.plate || '—'}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
-                  {intel.color && (
-                    <span className="rounded-lg border border-[var(--card-border)]/70 bg-[var(--panel-bg)]/60 px-2.5 py-1 text-[var(--text-muted)]">
-                      Cor <strong className="text-[var(--text-main)] ml-1">{intel.color}</strong>
-                    </span>
-                  )}
-                  {intel.year && (
-                    <span className="rounded-lg border border-[var(--card-border)]/70 bg-[var(--panel-bg)]/60 px-2.5 py-1 text-[var(--text-muted)]">
-                      Ano <strong className="text-[var(--text-main)] ml-1">{intel.year}</strong>
-                    </span>
-                  )}
-                  <span className="rounded-lg border border-[var(--card-border)]/70 bg-[var(--panel-bg)]/60 px-2.5 py-1 text-[var(--text-muted)]">
-                    Danos ativos{' '}
-                    <strong className="text-[var(--text-main)] ml-1">{intel.activeDamages}</strong>
-                  </span>
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                  <div className="min-w-0">
+                    <h1 className="font-display text-2xl sm:text-4xl font-bold tracking-tight text-[var(--text-main)] [text-wrap:balance]">
+                      {displayName}
+                    </h1>
+                    <p className="mt-1.5 font-mono-data text-lg sm:text-xl tracking-[0.12em] text-[var(--signal-bright)]">
+                      {intel.plate?.trim() || 'Sem placa'}
+                    </p>
+                  </div>
+                  {/* Valor FIPE em destaque na testa do card */}
+                  {fipe?.valor?.trim() ? (
+                    <div className="shrink-0 rounded-2xl border border-emerald-400/35 bg-emerald-500/10 px-4 py-3 text-left sm:text-right shadow-[0_0_28px_-8px_rgba(52,211,153,0.45)]">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-emerald-300/90">
+                        Valor FIPE
+                      </p>
+                      <p className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-emerald-200 tabular-nums leading-none mt-1">
+                        {fipe.valor.trim()}
+                      </p>
+                      {fipe.mesReferencia?.trim() ? (
+                        <p className="mt-1.5 text-[10px] font-semibold text-emerald-200/70">
+                          Ref. {fipe.mesReferencia.trim()}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
+                {identityChips.length > 0 && (
+                  <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
+                    {identityChips.map((chip) => (
+                      <span
+                        key={chip.label}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--card-border)]/70 bg-[var(--panel-bg)]/60 px-2.5 py-1 text-[var(--text-muted)]"
+                      >
+                        <span className="font-bold uppercase tracking-wide text-[9px] opacity-80">
+                          {chip.label}
+                        </span>
+                        <strong className="text-[var(--text-main)] font-semibold">{chip.value}</strong>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -243,58 +287,56 @@ export default function VehicleDetailView({
             </div>
           </div>
 
-          {/* Métricas executivas */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-8 gap-2">
-            {intel.executiveMetrics.map((m) => (
-              <div
-                key={m.id}
-                className="rounded-xl border border-[var(--card-border)]/60 bg-[var(--card-bg-solid)]/70 px-2.5 py-2.5 transition-[transform,border-color,box-shadow] duration-200 motion-safe:hover:-translate-y-0.5 hover:border-sky-500/30 hover:shadow-[0_0_20px_-8px_rgba(56,189,248,0.25)]"
-              >
-                <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)] leading-tight mb-1">
-                  {m.label}
-                </p>
-                <p
-                  className={`text-sm sm:text-base font-bold tabular-nums tracking-tight leading-tight ${metricToneClass[m.tone || 'default']}`}
+          {/* Métricas executivas — só com valor preenchido */}
+          {executiveMetrics.length > 0 && (
+            <div
+              className="grid gap-2"
+              style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(9.5rem, 1fr))' }}
+            >
+              {executiveMetrics.map((m) => (
+                <div
+                  key={m.id}
+                  className="rounded-xl border border-[var(--card-border)]/60 bg-[var(--card-bg-solid)]/70 px-3 py-2.5 transition-[transform,border-color,box-shadow] duration-200 motion-safe:hover:-translate-y-0.5 hover:border-sky-500/30 hover:shadow-[0_0_20px_-8px_rgba(56,189,248,0.25)]"
                 >
-                  {m.value}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* FIPE painel informativo */}
-          {fipe && (
-            <div className="rounded-xl border border-[var(--card-border)]/70 bg-[linear-gradient(120deg,color-mix(in_srgb,var(--signal)_8%,transparent),transparent_55%)] px-4 py-4">
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--signal-bright)]">
-                  Referência FIPE
-                </p>
-                {fipe.valor && (
-                  <p className="font-display text-xl font-bold tracking-tight text-[var(--text-main)]">
-                    {fipe.valor}
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)] leading-tight mb-1">
+                    {m.label}
                   </p>
-                )}
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                {[
-                  { label: 'Marca', value: fipe.textoMarca },
-                  { label: 'Modelo', value: fipe.textoModelo },
-                  { label: 'Ano', value: fipe.anoModelo },
-                  { label: 'Combustível', value: fipe.combustivel || '—' },
-                  { label: 'FIPE', value: fipe.valor },
-                  { label: 'Mês referência', value: fipe.mesReferencia },
-                ]
-                  .filter((c) => c.value)
-                  .map((cell) => (
-                    <div key={cell.label} className="min-w-0">
-                      <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-0.5">
-                        {cell.label}
-                      </p>
-                      <p className="text-sm font-semibold text-[var(--text-main)] leading-snug truncate" title={cell.value}>
-                        {cell.value}
-                      </p>
-                    </div>
-                  ))}
+                  <p
+                    className={`text-sm sm:text-base font-bold tabular-nums tracking-tight leading-snug break-words ${metricToneClass[m.tone || 'default']}`}
+                  >
+                    {m.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* FIPE — grade fluida só com fatos preenchidos */}
+          {fipe && fipeFacts.length > 0 && (
+            <div className="rounded-xl border border-[var(--card-border)]/70 bg-[linear-gradient(120deg,color-mix(in_srgb,var(--signal)_8%,transparent),transparent_55%)] px-4 py-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--signal-bright)] mb-3">
+                Referência FIPE
+              </p>
+              <div
+                className="grid gap-3"
+                style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(8.5rem, 1fr))' }}
+              >
+                {fipeFacts.map((cell) => (
+                  <div
+                    key={cell.label}
+                    className="min-w-0 rounded-lg border border-[var(--card-border)]/50 bg-[var(--card-bg-solid)]/50 px-3 py-2.5"
+                  >
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1">
+                      {cell.label}
+                    </p>
+                    <p
+                      className="text-sm font-semibold text-[var(--text-main)] leading-snug break-words"
+                      title={cell.value}
+                    >
+                      {cell.value}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           )}

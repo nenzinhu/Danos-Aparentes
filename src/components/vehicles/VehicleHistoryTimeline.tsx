@@ -418,8 +418,9 @@ export default function VehicleHistoryTimeline({
     <section className="flex flex-col gap-6" aria-labelledby="vehicle-history-heading">
       {/* 4. Indicadores contextuais */}
       {kpis.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+        <div className="grid gap-2.5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(9.5rem, 1fr))' }}>
           {kpis.map((kpi) => {
+            const hint = kpi.hint?.trim()
             const inner = (
               <>
                 <p className="text-2xl font-bold tabular-nums tracking-tight text-[var(--text-main)]">
@@ -428,7 +429,9 @@ export default function VehicleHistoryTimeline({
                 <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mt-0.5">
                   {kpi.label}
                 </p>
-                <p className="text-[11px] text-[var(--text-muted)]/90 mt-1.5 leading-snug">{kpi.hint}</p>
+                {hint ? (
+                  <p className="text-[11px] text-[var(--text-muted)]/90 mt-1.5 leading-snug break-words">{hint}</p>
+                ) : null}
               </>
             )
             const className =
@@ -468,8 +471,13 @@ export default function VehicleHistoryTimeline({
               </p>
             )}
           </div>
-          <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {intel.summaryRows.map((row) => (
+          <dl
+            className="grid gap-3"
+            style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(10rem, 1fr))' }}
+          >
+            {intel.summaryRows
+              .filter((row) => Boolean(row.value?.trim()) && row.value.trim() !== '—')
+              .map((row) => (
               <div
                 key={row.label}
                 className="rounded-xl border border-[var(--card-border)]/50 bg-[var(--panel-bg)]/40 px-3 py-2.5"
@@ -477,7 +485,7 @@ export default function VehicleHistoryTimeline({
                 <dt className="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
                   {row.label}
                 </dt>
-                <dd className={`mt-1 text-sm font-semibold ${summaryTone[row.tone || 'default']}`}>
+                <dd className={`mt-1 text-sm font-semibold break-words ${summaryTone[row.tone || 'default']}`}>
                   {row.value}
                 </dd>
               </div>
@@ -632,7 +640,7 @@ export default function VehicleHistoryTimeline({
                         {item.photoCount} foto{item.photoCount === 1 ? '' : 's'}
                       </span>
                     )}
-                    {item.damageCount != null && (
+                    {item.damageCount != null && item.damageCount > 0 && (
                       <span className="rounded-md border border-[var(--card-border)]/70 px-2 py-0.5 text-[10px] font-bold text-[var(--text-muted)]">
                         {item.damageCount} dano{item.damageCount === 1 ? '' : 's'}
                       </span>
@@ -642,11 +650,11 @@ export default function VehicleHistoryTimeline({
                         {item.evidenceCount} evidência{item.evidenceCount === 1 ? '' : 's'}
                       </span>
                     )}
-                    {item.stageHint && (
+                    {item.stageHint?.trim() ? (
                       <span className="rounded-md border border-sky-500/25 bg-sky-500/5 px-2 py-0.5 text-[10px] font-bold text-sky-300/90">
-                        {item.stageHint}
+                        {item.stageHint.trim()}
                       </span>
-                    )}
+                    ) : null}
                   </div>
 
                   {isOpen && (
