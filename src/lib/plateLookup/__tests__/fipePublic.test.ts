@@ -9,6 +9,7 @@ const sampleFipe = {
       id_valor: 77250,
       mes_referencia: 'maio de 2022 ',
       score: 101,
+      combustivel: 'Gasolina',
       texto_marca: 'VW - VolksWagen',
       texto_modelo: 'CROSSFOX 1.6 Mi Total Flex 8V 5p',
       texto_valor: 'R$ 28.799,00',
@@ -25,6 +26,7 @@ describe('extractFipePublic / sanitizePlateLookupPayload', () => {
       anoModelo: '2007',
       textoMarca: 'VW - VolksWagen',
       textoModelo: 'CROSSFOX 1.6 Mi Total Flex 8V 5p',
+      combustivel: 'Gasolina',
     })
   })
 
@@ -40,6 +42,7 @@ describe('extractFipePublic / sanitizePlateLookupPayload', () => {
       anoModelo: '2007',
       textoMarca: 'VW - VolksWagen',
       textoModelo: 'CROSSFOX 1.6 Mi Total Flex 8V 5p',
+      combustivel: 'Gasolina',
     })
     expect(JSON.stringify(sanitized)).not.toContain('codigo_fipe')
   })

@@ -107,6 +107,7 @@ describe('mapPlateApiToFound', () => {
       anoModelo: '2007',
       textoMarca: 'VW - VolksWagen',
       textoModelo: 'CROSSFOX 1.6 Mi Total Flex 8V 5p',
+      combustivel: 'Gasolina',
     })
     expect(JSON.stringify(found)).not.toContain('codigo_fipe')
     expect(JSON.stringify(found)).not.toContain('id_valor')

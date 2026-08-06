@@ -37,6 +37,8 @@ export interface FipePublicSummary {
   anoModelo: string
   textoMarca: string
   textoModelo: string
+  /** Ex.: "Gasolina" — opcional, quando a API envia. */
+  combustivel?: string
 }
 
 export interface VehicleInfo {

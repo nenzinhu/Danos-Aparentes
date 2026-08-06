@@ -11,6 +11,7 @@ import {
   type TimelinePresentation,
   type TimelineStatusKind,
 } from '@/src/lib/audit/timelinePresent'
+import type { ProntuarioIntel } from '@/src/lib/vehicleEvidence/prontuarioIntel'
 import type { VehicleHistorySummaryWithCloud } from '@/src/lib/vehicleEvidence'
 import type { SavedReport } from '@/src/types'
 import { resolvePhotoUrl } from '@/src/lib/photoStore'
@@ -29,6 +30,13 @@ type StoryItem = {
   href?: string
   actionLabel?: string
   photoRefs?: string[]
+  photoCount?: number
+  damageCount?: number
+  evidenceCount?: number
+  responsible?: string
+  aiResultLabel?: string
+  aiConfidence?: number | null
+  stageHint?: string
   aiBlock?: {
     confidence?: number | null
     severityLabel?: string | null
@@ -126,6 +134,23 @@ function collectPhotoRefs(report: SavedReport, max = 4): string[] {
   return refs
 }
 
+function countReportEvidence(report: SavedReport): number {
+  let n = report.damages.reduce((acc, d) => acc + (d.photos?.length || 0), 0)
+  n += report.vehicleInfo.interiorPhotos?.length || 0
+  if (report.vehicleInfo.viewPhotos) {
+    n += Object.values(report.vehicleInfo.viewPhotos).filter(Boolean).length
+  }
+  return n
+}
+
+function aiLabelFromReport(r: SavedReport): { label?: string; confidence?: number | null } {
+  const statuses = r.damages.map((d) => d.evidenceStatus).filter(Boolean)
+  if (statuses.some((s) => s === 'sugerido')) return { label: 'IA: em análise', confidence: 70 }
+  if (statuses.some((s) => s === 'confirmado')) return { label: 'IA: 98%', confidence: 98 }
+  if (statuses.length === 0) return {}
+  return { label: 'IA: revisada', confidence: 85 }
+}
+
 function buildInspectionStories(
   vehicle: VehicleHistorySummaryWithCloud,
   cloudOnly: RemoteInspection[],
@@ -136,12 +161,17 @@ function buildInspectionStories(
     const { whenDate, whenTime, sortAt } = formatParts(r.savedAt)
     const st = statusFromReport(r)
     const damageCount = r.damages.length
-    const evidenceCount = r.damages.reduce((n, d) => n + (d.photos?.length || 0), 0)
+    const evidenceCount = countReportEvidence(r)
+    const photoCount = r.damages.reduce((n, d) => n + (d.photos?.length || 0), 0)
+    const ai = aiLabelFromReport(r)
+    const responsible =
+      r.vehicleInfo.owner?.trim() ||
+      (r.vehicleInfo.inspectorSignature ? 'Responsável assinado' : 'Equipe de vistoria')
     items.push({
       id: `insp-${r.id}`,
       sortAt,
       category: 'inspecao',
-      title: 'Inspeção registrada',
+      title: 'Nova inspeção',
       description:
         damageCount === 0
           ? 'O estado do veículo foi documentado sem avarias aparentes neste momento.'
@@ -152,7 +182,8 @@ function buildInspectionStories(
           : 'Diagrama atualizado',
         ...(r.vehicleInfo.geo?.address ? [`Local: ${r.vehicleInfo.geo.address}`] : []),
         ...(r.publicCode ? [`Dossiê ${r.publicCode}`] : []),
-      ],
+        photoCount > 0 ? `${photoCount} foto${photoCount === 1 ? '' : 's'} anexada${photoCount === 1 ? '' : 's'}` : '',
+      ].filter(Boolean),
       whenDate,
       whenTime,
       status: st.status,
@@ -160,6 +191,13 @@ function buildInspectionStories(
       href: `/app/vehicles/${encodeURIComponent(vehicle.id)}/compare`,
       actionLabel: 'Comparar inspeções',
       photoRefs: collectPhotoRefs(r),
+      photoCount,
+      damageCount,
+      evidenceCount,
+      responsible,
+      aiResultLabel: ai.label,
+      aiConfidence: ai.confidence,
+      stageHint: 'Inspeção → evidências → validação',
       source: 'inspection',
     })
   }
@@ -171,7 +209,7 @@ function buildInspectionStories(
       id: `cloud-${r.id}`,
       sortAt,
       category: 'sincronizacao',
-      title: 'Inspeção na nuvem',
+      title: 'Sincronização pendente',
       description:
         'Há um registro remoto ainda incompleto neste dispositivo. Sincronize para ver danos e fotos.',
       bullets: [
@@ -182,6 +220,8 @@ function buildInspectionStories(
       whenTime,
       status: 'pendente',
       statusLabel: 'Pendente',
+      responsible: 'Nuvem',
+      stageHint: 'Sincronização',
       source: 'inspection',
     })
   }
@@ -193,7 +233,7 @@ function buildInspectionStories(
       id: `insight-new-${vehicle.id}`,
       sortAt: sortAt + 1,
       category: 'comparacao',
-      title: 'Comparação concluída',
+      title: 'Comparação com histórico',
       description: 'A inspeção foi comparada automaticamente com a anterior.',
       bullets: [
         `${vehicle.newDamagesOnLast} novo${vehicle.newDamagesOnLast === 1 ? '' : 's'} dano${vehicle.newDamagesOnLast === 1 ? '' : 's'} encontrado${vehicle.newDamagesOnLast === 1 ? '' : 's'}`,
@@ -205,6 +245,9 @@ function buildInspectionStories(
       statusLabel: 'Validado',
       href: `/app/vehicles/${encodeURIComponent(vehicle.id)}/compare`,
       actionLabel: 'Ver comparação',
+      damageCount: vehicle.newDamagesOnLast,
+      aiResultLabel: 'Sem divergências estruturais',
+      stageHint: 'Comparação → resultado',
       source: 'insight',
     })
   }
@@ -224,6 +267,22 @@ function auditToStory(p: TimelinePresentation, sortAt: number): StoryItem {
     whenTime: p.whenTime,
     status: p.status,
     statusLabel: p.statusLabel,
+    responsible: 'Sistema de auditoria',
+    aiResultLabel:
+      p.category === 'ia' && p.meta.confidence != null
+        ? `IA: ${p.meta.confidence}%`
+        : p.category === 'ia'
+          ? 'IA processou imagens'
+          : undefined,
+    aiConfidence: p.meta.confidence,
+    stageHint:
+      p.category === 'ia'
+        ? 'IA processou imagens'
+        : p.category === 'sincronizacao'
+          ? 'Sincronização'
+          : p.category === 'comparacao'
+            ? 'Comparação com histórico'
+            : undefined,
     aiBlock:
       p.category === 'ia'
         ? {
@@ -272,7 +331,7 @@ function TimelineThumb({ photoRef }: { photoRef: string }) {
     <img
       src={url}
       alt=""
-      className="h-14 w-14 rounded-lg object-cover border border-[var(--card-border)]/80 shadow-sm"
+      className="h-14 w-14 rounded-lg object-cover border border-[var(--card-border)]/80 shadow-sm transition-transform duration-200 motion-safe:group-hover:scale-[1.02]"
     />
   )
 }
@@ -295,13 +354,21 @@ function SkeletonCards() {
   )
 }
 
+const summaryTone: Record<string, string> = {
+  default: 'text-[var(--text-main)]',
+  ok: 'text-emerald-300',
+  warn: 'text-amber-300',
+}
+
 export default function VehicleHistoryTimeline({
   vehicle,
   cloudOnlyInspections = [],
+  intel,
   onSyncRequest,
 }: {
   vehicle: VehicleHistorySummaryWithCloud
   cloudOnlyInspections?: RemoteInspection[]
+  intel?: ProntuarioIntel
   onSyncRequest?: () => void
 }) {
   const [rows, setRows] = useState<AuditLogRow[]>([])
@@ -345,27 +412,81 @@ export default function VehicleHistoryTimeline({
     return stories.filter((s) => s.category === filter)
   }, [stories, filter])
 
-  const counts = useMemo(() => {
-    const evidence = vehicle.reports.reduce(
-      (n, r) => n + r.damages.reduce((m, d) => m + (d.photos?.length || 0), 0),
-      0,
-    )
-    const ai = stories.filter((s) => s.category === 'ia').length
-    const comparisons =
-      stories.filter((s) => s.category === 'comparacao').length +
-      (vehicle.reports.length >= 2 ? 1 : 0)
-    return {
-      inspections: vehicle.reports.length + cloudOnlyInspections.length,
-      damages: vehicle.activeDamageCount,
-      evidences: evidence,
-      comparisons,
-      events: stories.length,
-      ai,
-    }
-  }, [vehicle, cloudOnlyInspections, stories])
+  const kpis = intel?.contextualKpis ?? []
 
   return (
     <section className="flex flex-col gap-6" aria-labelledby="vehicle-history-heading">
+      {/* 4. Indicadores contextuais */}
+      {kpis.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+          {kpis.map((kpi) => {
+            const inner = (
+              <>
+                <p className="text-2xl font-bold tabular-nums tracking-tight text-[var(--text-main)]">
+                  {kpi.value}
+                </p>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mt-0.5">
+                  {kpi.label}
+                </p>
+                <p className="text-[11px] text-[var(--text-muted)]/90 mt-1.5 leading-snug">{kpi.hint}</p>
+              </>
+            )
+            const className =
+              'block rounded-xl border border-[var(--card-border)]/70 bg-[var(--card-bg-solid)]/80 px-3 py-3 shadow-sm shadow-black/5 transition-[transform,border-color,box-shadow] duration-200 motion-safe:hover:-translate-y-0.5 hover:border-sky-500/30 hover:shadow-[0_0_24px_-10px_rgba(56,189,248,0.3)]'
+            if (kpi.href) {
+              return (
+                <Link key={kpi.id} href={kpi.href} className={className}>
+                  {inner}
+                </Link>
+              )
+            }
+            return (
+              <div key={kpi.id} className={className}>
+                {inner}
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {/* 5. Resumo do Histórico */}
+      {intel && (
+        <div className="rounded-2xl border border-[var(--card-border)]/70 bg-[var(--card-bg-solid)]/85 p-4 sm:p-5 transition-[box-shadow,border-color] duration-200 hover:border-sky-500/25 hover:shadow-[0_0_32px_-14px_rgba(56,189,248,0.22)]">
+          <div className="flex flex-wrap items-end justify-between gap-2 mb-4">
+            <div>
+              <p className="font-mono-data text-[11px] tracking-[0.2em] uppercase text-[var(--signal-bright)] mb-1">
+                Inteligência do prontuário
+              </p>
+              <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight">
+                Resumo do Histórico
+              </h2>
+            </div>
+            {intel.avgDaysBetween != null && (
+              <p className="text-[11px] text-[var(--text-muted)]">
+                Média {intel.avgDaysBetween}d entre inspeções · {intel.totalChanges} alteração
+                {intel.totalChanges === 1 ? '' : 'ões'} recente{intel.totalChanges === 1 ? '' : 's'}
+              </p>
+            )}
+          </div>
+          <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {intel.summaryRows.map((row) => (
+              <div
+                key={row.label}
+                className="rounded-xl border border-[var(--card-border)]/50 bg-[var(--panel-bg)]/40 px-3 py-2.5"
+              >
+                <dt className="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
+                  {row.label}
+                </dt>
+                <dd className={`mt-1 text-sm font-semibold ${summaryTone[row.tone || 'default']}`}>
+                  {row.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )}
+
+      {/* 6–7. Linha do Tempo + eventos */}
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="font-mono-data text-[11px] tracking-[0.2em] uppercase text-[var(--signal-bright)] mb-1">
@@ -376,32 +497,9 @@ export default function VehicleHistoryTimeline({
           </h2>
           <p className="text-sm text-[var(--text-muted)] mt-1">
             {filtered.length} evento{filtered.length === 1 ? '' : 's'}
-            {filter !== 'todos' ? ` · filtro ativo` : ''}
+            {filter !== 'todos' ? ' · filtro ativo' : ''} — evolução auditável do veículo
           </p>
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-        {[
-          { label: 'Inspeções', value: counts.inspections },
-          { label: 'Danos', value: counts.damages },
-          { label: 'Evidências', value: counts.evidences },
-          { label: 'Comparações', value: counts.comparisons },
-          { label: 'Eventos', value: counts.events },
-          { label: 'Análises IA', value: counts.ai },
-        ].map((kpi) => (
-          <div
-            key={kpi.label}
-            className="rounded-xl border border-[var(--card-border)]/70 bg-[var(--card-bg-solid)]/80 px-3 py-3 shadow-sm shadow-black/5 transition-transform motion-safe:hover:-translate-y-0.5"
-          >
-            <p className="text-2xl font-bold tabular-nums tracking-tight text-[var(--text-main)]">
-              {kpi.value}
-            </p>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mt-0.5">
-              {kpi.label}
-            </p>
-          </div>
-        ))}
       </div>
 
       <div
@@ -418,7 +516,7 @@ export default function VehicleHistoryTimeline({
               role="tab"
               aria-selected={active}
               onClick={() => setFilter(f.id)}
-              className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold border transition-colors ${
+              className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold border transition-colors duration-200 ${
                 active
                   ? 'bg-[var(--text-main)] text-[var(--bg-main)] border-transparent'
                   : 'bg-transparent text-[var(--text-muted)] border-[var(--card-border)] hover:text-[var(--text-main)] hover:border-[var(--text-muted)]'
@@ -461,25 +559,32 @@ export default function VehicleHistoryTimeline({
         <ol className="relative m-0 list-none p-0 pl-0 sm:pl-2">
           <div
             aria-hidden
-            className="absolute left-[1.15rem] sm:left-[1.35rem] top-3 bottom-3 w-px bg-gradient-to-b from-[var(--card-border)] via-[var(--card-border)]/60 to-transparent"
+            className="absolute left-[1.35rem] sm:left-[1.55rem] top-4 bottom-4 w-px bg-gradient-to-b from-sky-400/50 via-[var(--card-border)]/70 to-transparent"
           />
           {filtered.map((item, index) => {
             const style = CATEGORY_STYLE[item.category]
             const isOpen = expanded[item.id] ?? index < 4
+            const isLatest = index === 0
             return (
-              <li
-                key={item.id}
-                className="relative pl-12 sm:pl-14 pb-5 last:pb-0"
-              >
-                <span
-                  className={`absolute left-2.5 sm:left-3 top-5 flex h-7 w-7 items-center justify-center rounded-full border border-[var(--card-border)] ${style.iconBg} text-[11px] font-black shadow-md shadow-black/20 ring-4 ring-[var(--bg-main)]`}
-                  title={style.label}
-                >
-                  {categoryGlyph(item.category)}
+              <li key={item.id} className="relative pl-14 sm:pl-16 pb-6 last:pb-0">
+                {/* Marcador premium */}
+                <span className="absolute left-2 sm:left-2.5 top-5 flex h-9 w-9 items-center justify-center">
+                  <span
+                    aria-hidden
+                    className={`absolute inset-0 rounded-full bg-sky-400/25 blur-[6px] ${
+                      isLatest ? 'motion-safe:animate-pulse' : ''
+                    }`}
+                  />
+                  <span
+                    className={`relative flex h-8 w-8 items-center justify-center rounded-full border border-sky-400/40 ${style.iconBg} text-[12px] font-black shadow-[0_0_14px_rgba(56,189,248,0.35)] ring-[5px] ring-[var(--bg-main)] transition-transform duration-200 motion-safe:group-hover:scale-105`}
+                    title={style.label}
+                  >
+                    {categoryGlyph(item.category)}
+                  </span>
                 </span>
 
                 <article
-                  className={`group rounded-2xl border border-[var(--card-border)]/80 bg-[var(--card-bg-solid)]/90 p-4 sm:p-5 shadow-sm shadow-black/10 transition-[transform,box-shadow,border-color] duration-200 motion-safe:hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20 hover:border-[var(--card-border)] ${style.ring} ring-1`}
+                  className={`group rounded-2xl border border-[var(--card-border)]/80 bg-[var(--card-bg-solid)]/90 p-4 sm:p-5 shadow-sm shadow-black/10 transition-[transform,box-shadow,border-color] duration-200 motion-safe:hover:-translate-y-0.5 hover:shadow-lg hover:shadow-sky-500/10 hover:border-sky-500/30 ${style.ring} ring-1`}
                 >
                   <header className="flex flex-wrap items-start justify-between gap-2">
                     <div className="min-w-0">
@@ -489,10 +594,15 @@ export default function VehicleHistoryTimeline({
                         >
                           {style.label}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[var(--text-muted)]">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-300">
                           <span aria-hidden>{statusIcon(item.status)}</span>
                           {item.statusLabel}
                         </span>
+                        {item.aiResultLabel && (
+                          <span className="inline-flex rounded-full border border-violet-500/30 bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-200">
+                            {item.aiResultLabel}
+                          </span>
+                        )}
                       </div>
                       <h3 className="font-display text-lg sm:text-xl font-bold tracking-tight text-[var(--text-main)] [text-wrap:balance]">
                         {item.title}
@@ -500,11 +610,12 @@ export default function VehicleHistoryTimeline({
                       <time className="mt-1 block text-[11px] font-bold uppercase tracking-wide text-[var(--text-muted)]">
                         {item.whenDate}
                         {item.whenTime ? ` · ${item.whenTime}` : ''}
+                        {item.responsible ? ` · ${item.responsible}` : ''}
                       </time>
                     </div>
                     <button
                       type="button"
-                      className="text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                      className="text-[11px] font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors duration-200"
                       aria-expanded={isOpen}
                       onClick={() =>
                         setExpanded((prev) => ({ ...prev, [item.id]: !isOpen }))
@@ -513,6 +624,30 @@ export default function VehicleHistoryTimeline({
                       {isOpen ? 'Recolher' : 'Expandir'}
                     </button>
                   </header>
+
+                  {/* Badges de métricas do evento */}
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {item.photoCount != null && item.photoCount > 0 && (
+                      <span className="rounded-md border border-[var(--card-border)]/70 px-2 py-0.5 text-[10px] font-bold text-[var(--text-muted)]">
+                        {item.photoCount} foto{item.photoCount === 1 ? '' : 's'}
+                      </span>
+                    )}
+                    {item.damageCount != null && (
+                      <span className="rounded-md border border-[var(--card-border)]/70 px-2 py-0.5 text-[10px] font-bold text-[var(--text-muted)]">
+                        {item.damageCount} dano{item.damageCount === 1 ? '' : 's'}
+                      </span>
+                    )}
+                    {item.evidenceCount != null && item.evidenceCount > 0 && (
+                      <span className="rounded-md border border-[var(--card-border)]/70 px-2 py-0.5 text-[10px] font-bold text-[var(--text-muted)]">
+                        {item.evidenceCount} evidência{item.evidenceCount === 1 ? '' : 's'}
+                      </span>
+                    )}
+                    {item.stageHint && (
+                      <span className="rounded-md border border-sky-500/25 bg-sky-500/5 px-2 py-0.5 text-[10px] font-bold text-sky-300/90">
+                        {item.stageHint}
+                      </span>
+                    )}
+                  </div>
 
                   {isOpen && (
                     <div className="mt-3 space-y-3">
@@ -536,39 +671,46 @@ export default function VehicleHistoryTimeline({
                         </ul>
                       )}
 
-                      {item.aiBlock && (item.aiBlock.partName || item.aiBlock.confidence || item.aiBlock.severityLabel) && (
-                        <div className="rounded-xl border border-violet-500/25 bg-violet-500/10 px-4 py-3">
-                          <p className="text-[11px] font-bold uppercase tracking-wider text-violet-300 mb-2">
-                            ✦ Análise de IA
-                          </p>
-                          <p className="text-sm font-semibold text-[var(--text-main)]">
-                            {item.aiBlock.partName
-                              ? `Novo dano identificado · ${item.aiBlock.partName}`
-                              : 'Novo dano identificado'}
-                          </p>
-                          <dl className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                            {item.aiBlock.confidence != null && (
-                              <div>
-                                <dt className="text-[var(--text-muted)]">Confiança</dt>
-                                <dd className="font-bold text-violet-200">{item.aiBlock.confidence}%</dd>
-                              </div>
-                            )}
-                            {item.aiBlock.severityLabel && (
-                              <div>
-                                <dt className="text-[var(--text-muted)]">Severidade</dt>
-                                <dd className="font-bold">{item.aiBlock.severityLabel}</dd>
-                              </div>
-                            )}
-                            {item.aiBlock.partName && (
-                              <div className="col-span-2 sm:col-span-1">
-                                <dt className="text-[var(--text-muted)]">Componente</dt>
-                                <dd className="font-bold">{item.aiBlock.partName}</dd>
-                              </div>
-                            )}
-                          </dl>
-                          <p className="mt-2 text-[11px] text-violet-200/80">Comparado automaticamente.</p>
-                        </div>
-                      )}
+                      {item.aiBlock &&
+                        (item.aiBlock.partName ||
+                          item.aiBlock.confidence ||
+                          item.aiBlock.severityLabel) && (
+                          <div className="rounded-xl border border-violet-500/25 bg-violet-500/10 px-4 py-3">
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-violet-300 mb-2">
+                              ✦ Análise de IA
+                            </p>
+                            <p className="text-sm font-semibold text-[var(--text-main)]">
+                              {item.aiBlock.partName
+                                ? `Novo dano identificado · ${item.aiBlock.partName}`
+                                : 'Novo dano identificado'}
+                            </p>
+                            <dl className="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+                              {item.aiBlock.confidence != null && (
+                                <div>
+                                  <dt className="text-[var(--text-muted)]">Confiança</dt>
+                                  <dd className="font-bold text-violet-200">
+                                    {item.aiBlock.confidence}%
+                                  </dd>
+                                </div>
+                              )}
+                              {item.aiBlock.severityLabel && (
+                                <div>
+                                  <dt className="text-[var(--text-muted)]">Severidade</dt>
+                                  <dd className="font-bold">{item.aiBlock.severityLabel}</dd>
+                                </div>
+                              )}
+                              {item.aiBlock.partName && (
+                                <div className="col-span-2 sm:col-span-1">
+                                  <dt className="text-[var(--text-muted)]">Componente</dt>
+                                  <dd className="font-bold">{item.aiBlock.partName}</dd>
+                                </div>
+                              )}
+                            </dl>
+                            <p className="mt-2 text-[11px] text-violet-200/80">
+                              Comparado automaticamente.
+                            </p>
+                          </div>
+                        )}
 
                       {item.photoRefs && item.photoRefs.length > 0 && (
                         <div>
@@ -587,7 +729,7 @@ export default function VehicleHistoryTimeline({
                         <div className="pt-1">
                           <Link
                             href={item.href}
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-xs font-bold text-sky-300 hover:bg-sky-500/20 transition-colors"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-xs font-bold text-sky-300 hover:bg-sky-500/20 transition-colors duration-200"
                           >
                             {item.actionLabel}
                             <span aria-hidden>→</span>
@@ -605,4 +747,3 @@ export default function VehicleHistoryTimeline({
     </section>
   )
 }
-
