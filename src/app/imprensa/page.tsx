@@ -145,6 +145,8 @@ function AssetCard({ asset }: { asset: Asset }) {
           <img
             src={asset.preview}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="max-h-16 max-w-full object-contain"
           />
         ) : null}
@@ -283,7 +285,7 @@ export default function ImprensaPage() {
                   className="group rounded-xl border border-[var(--card-border)]/60 overflow-hidden hover:border-[var(--sheet-line)] transition-colors focus-visible:ring-2 ring-[var(--primary)] outline-none"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={a.preview} alt={a.name} className="w-full h-auto block bg-[var(--bg-main)]" />
+                  <img src={a.preview} alt={a.name} loading="lazy" decoding="async" className="w-full h-auto block bg-[var(--bg-main)]" />
                   <div className="flex items-center justify-between gap-3 px-3 py-2.5 bg-[var(--btn-secondary-bg)] border-t border-[var(--card-border)]/40">
                     <div>
                       <p className="text-sm font-bold text-[var(--text-main)]">{a.name}</p>

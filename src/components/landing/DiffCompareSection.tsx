@@ -218,7 +218,8 @@ function PdfReportCarousel({
           <button
             type="button"
             onClick={() => setZoomOpen(true)}
-            className="rounded-lg bg-black/75 px-2.5 py-1.5 font-mono-data text-[10px] uppercase tracking-wider text-white"
+            className="rounded-lg bg-black/75 px-2.5 py-1.5 font-mono-data text-[10px] uppercase tracking-wider text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            aria-label={`Zoom — ${title} ${current.label}`}
           >
             Zoom
           </button>
@@ -238,7 +239,7 @@ function PdfReportCarousel({
         type="button"
         onClick={() => setZoomOpen(true)}
         className="relative md:hidden block w-full bg-white aspect-[3/4] cursor-zoom-in group focus-visible:ring-2 ring-[var(--primary)] ring-inset outline-none"
-        aria-label={`Abrir ${current.label} em zoom`}
+        aria-label={`Toque para zoom — ${title} ${current.label}`}
       >
         <Image
           src={current.preview}
@@ -399,6 +400,8 @@ function PdfZoomLightbox({
             alt={page.alt}
             width={1787}
             height={2525}
+            loading="lazy"
+            decoding="async"
             className="max-w-none origin-top rounded-md shadow-2xl bg-white select-none"
             style={{
               width: `${Math.round(1100 * scale)}px`,

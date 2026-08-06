@@ -1,10 +1,13 @@
 -- Schema-base para o Vistoria+ (AvariasAPARENTES-PWA).
 -- Rode este script no SQL Editor do seu projeto Supabase (https://app.supabase.com).
 --
--- Este arquivo é só o ponto de partida (tabelas originais). O estado atual do
--- banco depende também das migrations em src/supabase/migrations/ (raiz do
--- projeto Supabase CLI, com config.toml), que devem ser aplicadas em seguida,
--- em ordem de nome de arquivo. `npm run db:push` já faz as duas coisas.
+-- Este arquivo contém APENAS o DDL original (CREATE TABLE, índices base, triggers,
+-- RLS e funções auxiliares do schema inicial). Colunas e objetos adicionados em
+-- fases posteriores estão em supabase/migrations/ e são aplicados por:
+--   npm run db:push
+-- que executa este arquivo e depois as migrations em ordem de nome.
+
+-- ─── Tabelas principais ───────────────────────────────────────────────────────
 
 create table if not exists vehicle_inspections (
   id text primary key,
@@ -65,31 +68,15 @@ create table if not exists damages (
   created_at timestamptz not null default now()
 );
 
+-- ─── Índices base ─────────────────────────────────────────────────────────────
+
 create index if not exists idx_damages_inspection on damages(inspection_id);
 create index if not exists idx_inspections_user on vehicle_inspections(user_id);
 create index if not exists idx_damages_user on damages(user_id);
 
--- FASE 2 columns (additive for DBs that already had the base table)
-alter table vehicle_inspections add column if not exists public_code text default '';
-alter table vehicle_inspections add column if not exists laudo_version int default 1;
-alter table vehicle_inspections add column if not exists parent_inspection_id text;
-alter table vehicle_inspections add column if not exists correction_reason text default '';
-alter table vehicle_inspections add column if not exists corrected_by uuid;
-alter table vehicle_inspections add column if not exists corrected_at timestamptz;
-alter table vehicle_inspections add column if not exists issued_at timestamptz;
-alter table vehicle_inspections add column if not exists issued_hash text default '';
+-- ─── Trigger de imutabilidade: laudos emitidos/superseded/cancelled ───────────
+-- vehicle_id pode ser vinculado/backfilled sem alterar o conteúdo do laudo.
 
-alter table vehicle_inspections drop constraint if exists vehicle_inspections_status_check;
-alter table vehicle_inspections
-  add constraint vehicle_inspections_status_check
-  check (status in ('draft', 'complete', 'issued', 'superseded', 'cancelled'));
-
-create index if not exists idx_vehicle_inspections_parent
-  on vehicle_inspections (parent_inspection_id)
-  where parent_inspection_id is not null;
-
--- Immutability triggers (issued / superseded / cancelled snapshots).
--- vehicle_id may be linked/backfilled without altering laudo content.
 create or replace function public.prevent_issued_inspection_mutation()
 returns trigger
 language plpgsql
@@ -173,11 +160,12 @@ create trigger trg_prevent_issued_damage_mutation
   before insert or update or delete on damages
   for each row execute function public.prevent_issued_damage_mutation();
 
--- Row Level Security: cada usuário só acessa os próprios registros
+-- ─── Row Level Security ───────────────────────────────────────────────────────
+
 alter table vehicle_inspections enable row level security;
 alter table damages enable row level security;
 
--- Helper para verificar se o usuário possui assinatura ativa, PIX válido ou trial
+-- Helper: verifica assinatura ativa, PIX válido ou trial
 -- (espelha src/lib/subscriptionAccess.ts → hasActiveSubscriptionAccess)
 create or replace function public.user_has_active_subscription(p_user_id uuid)
 returns boolean as $$
@@ -238,8 +226,7 @@ create policy "delete_own_damages" on damages
   for delete using (auth.uid() = user_id);
 
 -- ─── Verificação pública de PDFs (QR Code de integridade) ────────────────────
--- Guarda um "recibo" leve de cada PDF emitido para que o QR Code impresso no
--- documento possa ser conferido publicamente (sem login) na página /verify.html.
+
 create table if not exists report_hashes (
   hash text primary key,
   user_id uuid references auth.users(id) on delete set null,
@@ -248,71 +235,27 @@ create table if not exists report_hashes (
   ref text default '',
   issued_at text default '',
   damages_count int default 0,
-  geo_lat double precision,
-  geo_lng double precision,
-  geo_accuracy int,
-  geo_address text,
   created_at timestamptz not null default now()
 );
 
--- Localização da vistoria (adicionada após a criação original da tabela).
-alter table report_hashes add column if not exists geo_lat double precision;
-alter table report_hashes add column if not exists geo_lng double precision;
-alter table report_hashes add column if not exists geo_accuracy int;
-alter table report_hashes add column if not exists geo_address text;
-
--- Nome da locadora/empresa emissora, exibido na página /verify e no selo
--- embutível para reforçar de quem é o laudo (adicionada após a criação original).
-alter table report_hashes add column if not exists company_name text default '';
-
--- Logo da empresa (data URL, já comprimido no upload) exibido junto do nome
--- na página /verify. Antes só o nome era salvo — a verificação pública nunca
--- mostrava o logo, mesmo quando o laudo original tinha um configurado.
-alter table report_hashes add column if not exists company_logo text default '';
-
--- Versionamento visível do laudo: report_key agrupa reemissões do MESMO laudo
--- (placa + Nº OS normalizados, calculado no cliente em registerHash) e version
--- é o número sequencial dentro desse grupo. Sem isso, reemitir um laudo com
--- correção criava um hash novo sem nenhum vínculo com o anterior — o cliente
--- final não tinha como saber se estava vendo a versão mais recente ou uma
--- versão já substituída (risco jurídico/de fraude apontado pela perícia).
-alter table report_hashes add column if not exists report_key text default '';
-alter table report_hashes add column if not exists version int default 1;
-create index if not exists report_hashes_report_key_idx on report_hashes (report_key, version);
-
--- Integrity-v2: layered SHA-256 manifest (final_hash = 64 hex). v1 `hash` PK
--- (32 hex, QR /verify) stays the public lookup key.
-alter table report_hashes add column if not exists integrity_scheme text default '';
-alter table report_hashes add column if not exists integrity_manifest jsonb;
-alter table report_hashes add column if not exists final_hash text default '';
-
--- FASE 2: correction lineage on the public verify receipt
-alter table report_hashes add column if not exists correction_reason text default '';
-alter table report_hashes add column if not exists supersedes_hash text default '';
-alter table report_hashes add column if not exists inspection_id text default '';
-alter table report_hashes add column if not exists public_code text default '';
-
 alter table report_hashes enable row level security;
 
--- Qualquer pessoa pode consultar um hash específico (é assim que a verificação
--- via QR Code funciona sem exigir login de quem está conferindo o documento).
 drop policy if exists "select_any_hash" on report_hashes;
 create policy "select_any_hash" on report_hashes
   for select using (true);
 
--- Só o autor autenticado da vistoria pode registrar o hash do PDF que emitiu.
 drop policy if exists "insert_own_hash" on report_hashes;
 create policy "insert_own_hash" on report_hashes
   for insert with check (auth.uid() = user_id);
 
--- Autor pode atualizar o próprio registro (ex.: preencher pdf_hash após gerar o PDF).
 drop policy if exists "update_own_hash" on report_hashes;
 create policy "update_own_hash" on report_hashes
   for update
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 
--- Storage: bucket privado para fotos das avarias (acesso via download/signed URL + RLS)
+-- ─── Storage: bucket de fotos de avarias ─────────────────────────────────────
+
 insert into storage.buckets (id, name, public)
 values ('damage-photos', 'damage-photos', false)
 on conflict (id) do update set public = excluded.public;
@@ -326,13 +269,12 @@ create policy "insert_own_photos" on storage.objects
 drop policy if exists "delete_own_photos" on storage.objects;
 create policy "delete_own_photos" on storage.objects
   for delete using (bucket_id = 'damage-photos' and auth.uid()::text = (storage.foldername(name))[1]);
-
 drop policy if exists "update_own_photos" on storage.objects;
 create policy "update_own_photos" on storage.objects
   for update using (bucket_id = 'damage-photos' and auth.uid()::text = (storage.foldername(name))[1]);
 
--- Storage: fotos de documento (CNH), separado de damage-photos por ser dado
--- pessoal mais sensível — bucket privado (sem URL pública), só o dono acessa.
+-- ─── Storage: fotos de documento (CNH) ───────────────────────────────────────
+
 insert into storage.buckets (id, name, public)
 values ('document-photos', 'document-photos', false)
 on conflict (id) do nothing;
@@ -347,23 +289,23 @@ drop policy if exists "delete_own_document_photos" on storage.objects;
 create policy "delete_own_document_photos" on storage.objects
   for delete using (bucket_id = 'document-photos' and auth.uid()::text = (storage.foldername(name))[1]);
 
--- ─── Assinaturas (trial de 7 dias + Stripe + PIX) ─────────────────────────────
+-- ─── Assinaturas (trial 7 dias + Stripe + PIX) ───────────────────────────────
+
 create table if not exists subscriptions (
   user_id uuid primary key references auth.users(id) on delete cascade,
   status text not null default 'trialing'
-    -- 'trialing' | 'active' | 'past_due' | 'canceled' | 'pending_pix' | 'active_pix'
     check (status in ('trialing', 'active', 'past_due', 'canceled', 'pending_pix', 'active_pix')),
   trial_ends_at timestamptz not null,
   stripe_customer_id text,
   stripe_subscription_id text,
   current_period_end timestamptz,
-   updated_at timestamptz not null default now(),
-   created_at timestamptz not null default now(),
-   expires_at timestamptz,
-   pending_months int default 0,
-   pix_charge_id text,
-   welcome_email_sent_at timestamptz,
-   trial_ending_email_sent_at timestamptz
+  updated_at timestamptz not null default now(),
+  created_at timestamptz not null default now(),
+  expires_at timestamptz,
+  pending_months int default 0,
+  pix_charge_id text,
+  welcome_email_sent_at timestamptz,
+  trial_ending_email_sent_at timestamptz
 );
 
 create index if not exists idx_subscriptions_stripe_subscription_id
@@ -377,12 +319,9 @@ drop policy if exists "select_own_subscription" on subscriptions;
 create policy "select_own_subscription" on subscriptions
   for select using (auth.uid() = user_id);
 
--- Não há policies de insert/update/delete por escolha: a escrita nesta tabela
--- é feita apenas pelo backend via service role (trigger de trial e webhook do
--- Stripe), que ignora RLS. Usuários autenticados só podem ler seus próprios dados.
+-- Escrita feita apenas pelo backend via service role (trial trigger + webhook Stripe).
+-- Usuários autenticados só podem ler os próprios dados.
 
--- Cria o trial de 7 dias automaticamente quando uma conta é criada.
--- Roda no banco (security definer) — não depende do client, não pode ser burlado.
 create or replace function public.handle_new_user_trial()
 returns trigger as $$
 begin
@@ -398,8 +337,9 @@ create trigger on_auth_user_created_trial
   after insert on auth.users
   for each row execute function public.handle_new_user_trial();
 
--- ─── FASE 3: append-only audit_log (hash chain) ──────────────────────────────
+-- ─── Audit log append-only (hash chain) ──────────────────────────────────────
 -- Technical audit trail only — does not claim legal validity.
+
 create table if not exists public.audit_log (
   event_id uuid primary key default gen_random_uuid(),
   inspection_id text,
@@ -477,9 +417,10 @@ create trigger trg_prevent_audit_log_delete
   before delete on public.audit_log
   for each row execute function public.prevent_audit_log_mutation();
 
--- ─── Vehicles (histórico / evidência) ───────────────────────────────────────
+-- ─── Vehicles (histórico / evidência) ────────────────────────────────────────
 -- tenant_id aponta para companies.id após migrations de team; sem FK aqui
 -- (companies não está no schema base). Ver migration 20260728000000_vehicles.sql.
+
 create table if not exists public.vehicles (
   id text primary key,
   tenant_id uuid,
@@ -497,31 +438,3 @@ create table if not exists public.vehicles (
 
 alter table public.vehicle_inspections
   add column if not exists vehicle_id text references public.vehicles(id) on delete set null;
-
-create index if not exists idx_inspections_user_updated
-  on public.vehicle_inspections (user_id, updated_at desc);
-
-create index if not exists idx_vehicle_inspections_plate_user
-  on public.vehicle_inspections (user_id, plate);
-
--- Optimized subquery RLS policy helper for vehicle_inspections & damages
-do $$
-begin
-  drop policy if exists "select_own_inspections" on public.vehicle_inspections;
-  create policy "select_own_inspections" on public.vehicle_inspections for select using ((select auth.uid()) = user_id);
-
-  drop policy if exists "update_own_inspections" on public.vehicle_inspections;
-  create policy "update_own_inspections" on public.vehicle_inspections for update using ((select auth.uid()) = user_id);
-
-  drop policy if exists "delete_own_inspections" on public.vehicle_inspections;
-  create policy "delete_own_inspections" on public.vehicle_inspections for delete using ((select auth.uid()) = user_id);
-
-  drop policy if exists "select_own_damages" on public.damages;
-  create policy "select_own_damages" on public.damages for select using ((select auth.uid()) = user_id);
-
-  drop policy if exists "update_own_damages" on public.damages;
-  create policy "update_own_damages" on public.damages for update using ((select auth.uid()) = user_id);
-
-  drop policy if exists "delete_own_damages" on public.damages;
-  create policy "delete_own_damages" on public.damages for delete using ((select auth.uid()) = user_id);
-end $$;

@@ -2,6 +2,11 @@ const DB_NAME = 'avarias-pwa'
 /** v7: photo_evidence includes vehicleId for vehicle history. */
 const DB_VERSION = 7
 
+// Singleton: reuse the same IDBDatabase connection across all operations.
+// Avoids reopening on every tx() call — reduces overhead and prevents
+// race conditions when multiple operations run in parallel.
+let _dbPromise: Promise<IDBDatabase> | null = null
+
 export interface SyncQueueItem {
   qid: number
   type: 'upsert' | 'delete'
@@ -53,7 +58,8 @@ export interface PhotoEvidenceRecord {
 }
 
 function openDB(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
+  if (_dbPromise) return _dbPromise
+  _dbPromise = new Promise((resolve, reject) => {
     const req = indexedDB.open(DB_NAME, DB_VERSION)
     req.onupgradeneeded = () => {
       const db = req.result
@@ -93,8 +99,12 @@ function openDB(): Promise<IDBDatabase> {
       }
     }
     req.onsuccess = () => resolve(req.result)
-    req.onerror = () => reject(req.error)
+    req.onerror = () => {
+      _dbPromise = null // allow retry on failure
+      reject(req.error)
+    }
   })
+  return _dbPromise
 }
 
 async function tx<T>(

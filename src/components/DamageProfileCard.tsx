@@ -1,8 +1,19 @@
 'use client'
 
 import React from 'react'
+import dynamic from 'next/dynamic'
 import type { DamageType, Severity } from '../types'
-import ThreeDamageCanvas from './ThreeDamageCanvas'
+
+// Lazy-load ThreeDamageCanvas so three.js (~600 KB) is only bundled when
+// the '3d' mode is actually rendered — keeps the main bundle lean.
+const ThreeDamageCanvas = dynamic(() => import('./ThreeDamageCanvas'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center rounded-3xl border border-slate-800 bg-slate-950/90" style={{ width: 244, height: 210 }}>
+      <span className="text-xs text-slate-500">Carregando 3D…</span>
+    </div>
+  ),
+})
 
 interface Props {
   type: DamageType
@@ -84,6 +95,8 @@ export default function DamageProfileCard({
         <img
           src={imgSrc}
           alt={imgAlt}
+          loading="lazy"
+          decoding="async"
           className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105"
         />
       </div>

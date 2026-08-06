@@ -227,6 +227,40 @@
   outline-offset: 3px;
 }
 
+/* ── Foco visível global (WCAG 2.4.7 + 2.4.11) ────────────────────────────────
+   Garante indicador de foco claro para navegação via teclado em todos os
+   elementos interativos. Usa :focus-visible para não afetar cliques com mouse. */
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--primary-glow);
+  border-radius: 4px;
+}
+
+/* Tema claro: usa cor de contraste adequada (#9e4428 já está no --primary) */
+html.light button:focus-visible,
+html.light a:focus-visible,
+html.light [role="button"]:focus-visible,
+html.light [role="tab"]:focus-visible,
+html.light input:focus-visible,
+html.light select:focus-visible,
+html.light textarea:focus-visible {
+  outline-color: var(--primary);
+  box-shadow: 0 0 0 5px var(--primary-glow);
+}
+
+/* Componentes que já gerenciam foco com ring do Tailwind:
+   mantém o comportamento deles intacto removendo o outline duplicado. */
+[class*="focus-visible:ring"]:focus-visible {
+  outline: none;
+}
+
 
 html.light {
   color-scheme: light;
