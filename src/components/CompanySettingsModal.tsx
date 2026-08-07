@@ -1,6 +1,8 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react'
 import { compressImage } from '../lib/imageUtils'
+import { db } from '../lib/db'
+import ConfirmModal from './ConfirmModal'
 
 import { IconShieldCheck, IconGallery } from './ui/AnimatedIcons'
 
@@ -24,6 +26,7 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
   const [showSignatures, setShowSignatures] = useState<boolean>(true)
   const [customFooterText, setCustomFooterText] = useState<string>('')
   const [logoError, setLogoError] = useState<string | null>(null)
+  const [showClearConfirm, setShowClearConfirm] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -100,6 +103,17 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
+  const handleClearData = async () => {
+    try {
+      await db.clearAllLocalData()
+    } catch (err) {
+      console.error('Erro ao limpar dados locais:', err)
+    } finally {
+      setShowClearConfirm(false)
+      onClose()
+    }
+  }
+
   const handleSave = () => {
     localStorage.setItem('company_name', companyName.trim())
     localStorage.setItem('company_logo', companyLogo)
@@ -117,10 +131,11 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
   }
 
   return (
-    <div 
-      style={{ position: 'fixed', inset: 0, background: 'rgba(2,6,23,0.72)', zIndex: 9999, padding: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Outfit, sans-serif' }}
-      onClick={e => { if (e.target === e.currentTarget) onClose() }}
-    >
+    <>
+      <div 
+        style={{ position: 'fixed', inset: 0, background: 'rgba(2,6,23,0.72)', zIndex: 9999, padding: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Outfit, sans-serif' }}
+        onClick={e => { if (e.target === e.currentTarget) onClose() }}
+      >
       <div style={{ width: '100%', maxWidth: 500, background: 'rgba(15,23,42,0.97)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, overflow: 'hidden', color: '#f8fafc', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.5)' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -472,6 +487,35 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
             </div>
           </div>
 
+          {/* Dados Locais (offline-first) */}
+          <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 12, padding: '14px 16px' }}>
+            <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#fca5a5', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>
+              Zona de Perigo — Dados Locais
+            </div>
+            <p style={{ fontSize: '0.75rem', color: '#e2e8f0', lineHeight: 1.45, margin: '0 0 12px' }}>
+              Apaga todos os laudos, avarias e fotos armazenados <strong>neste dispositivo</strong>. Não afeta os dados na nuvem (Supabase). Esta ação é irreversível.
+            </p>
+            <button
+              type="button"
+              onClick={() => setShowClearConfirm(true)}
+              style={{
+                width: '100%',
+                background: 'rgba(239,68,68,0.12)',
+                border: '1px solid rgba(239,68,68,0.4)',
+                color: '#fca5a5',
+                fontWeight: 700,
+                fontSize: '0.8rem',
+                padding: '10px 14px',
+                borderRadius: 10,
+                cursor: 'pointer',
+                fontFamily: 'Outfit, sans-serif',
+                transition: 'all 0.2s',
+              }}
+            >
+              🗑️ Limpar Dados Locais
+            </button>
+          </div>
+
           {/* Action Footer */}
           <div style={{ display: 'flex', gap: 10, marginTop: 28, borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16 }}>
             <button
@@ -490,5 +534,34 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
         </div>
       </div>
     </div>
+      <ConfirmClearData
+        isOpen={showClearConfirm}
+        onConfirm={handleClearData}
+        onCancel={() => setShowClearConfirm(false)}
+      />
+    </>
+  )
+}
+
+function ConfirmClearData({
+  isOpen,
+  onConfirm,
+  onCancel,
+}: {
+  isOpen: boolean
+  onConfirm: () => void
+  onCancel: () => void
+}) {
+  return (
+    <ConfirmModal
+      isOpen={isOpen}
+      title="Limpar todos os dados locais?"
+      message="Isso apaga permanentemente os laudos, avarias e fotos deste dispositivo. Os dados na nuvem (Supabase) não serão afetados. Esta ação não pode ser desfeita."
+      confirmLabel="Sim, limpar tudo"
+      cancelLabel="Não"
+      tone="danger"
+      onConfirm={onConfirm}
+      onCancel={onCancel}
+    />
   )
 }

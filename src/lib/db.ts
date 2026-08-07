@@ -245,4 +245,17 @@ export const db = {
       req.onerror = () => reject(req.error)
     })
   },
+  /**
+   * Apaga TODOS os dados locais (offline-first) do dispositivo.
+   * Apenas local — NUNCA toca no Supabase remoto (segurança + princípio
+   * offline-first). A fila de sync é esvaziada junto, evitando reenvio de
+   * laudos já apagados. Quem chama deve pedir confirmação explícita (Sim/Não).
+   */
+  async clearAllLocalData(): Promise<void> {
+    const stores = ['saved_reports', 'damages', 'sync_queue', 'damage_photos', 'photo_evidence', 'metadata']
+    await openDB()
+    for (const store of stores) {
+      await tx(store, 'readwrite', s => s.clear())
+    }
+  },
 }
