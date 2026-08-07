@@ -1,6 +1,9 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const EVENTS = [
   { tone: 'ok' as const, label: 'Entrega', sub: 'Primeira inspeção', date: '12 JAN 2026' },
@@ -21,6 +24,54 @@ const DOT: Record<(typeof EVENTS)[number]['tone'], string> = {
  */
 export default function HeroHistoryMockup() {
   const reduceMotion = useReducedMotion()
+  const listRef = useRef<HTMLUListElement | null>(null)
+
+  useEffect(() => {
+    const list = listRef.current
+    if (!list) return
+    gsap.registerPlugin(ScrollTrigger)
+
+    const ctx = gsap.context(() => {
+      const events = gsap.utils.toArray<HTMLElement>('.gsap-event')
+      if (reduceMotion) {
+        gsap.set(events, { opacity: 1, x: 0 })
+        gsap.set('.gsap-event-dot', { scale: 1, autoAlpha: 1 })
+        gsap.set('.gsap-event-line', { scaleY: 1, autoAlpha: 1 })
+        return
+      }
+
+      const tl = gsap.timeline({ delay: 0.5, defaults: { ease: 'power3.out' } })
+      events.forEach((ev, i) => {
+        const dot = ev.querySelector<HTMLElement>('.gsap-event-dot')
+        const line = ev.querySelector<HTMLElement>('.gsap-event-line')
+        const at = i * 0.18
+        if (dot) {
+          tl.fromTo(
+            dot,
+            { scale: 0, autoAlpha: 0 },
+            { scale: 1, autoAlpha: 1, duration: 0.3, ease: 'back.out(2)' },
+            at,
+          )
+        }
+        if (line) {
+          tl.fromTo(
+            line,
+            { scaleY: 0, autoAlpha: 0, transformOrigin: 'top' },
+            { scaleY: 1, autoAlpha: 1, duration: 0.25 },
+            at + 0.12,
+          )
+        }
+        tl.fromTo(
+          ev,
+          { opacity: 0, x: 14 },
+          { opacity: 1, x: 0, duration: 0.4 },
+          at,
+        )
+      })
+    }, list)
+
+    return () => ctx.revert()
+  }, [reduceMotion])
 
   return (
     <motion.div
@@ -58,19 +109,16 @@ export default function HeroHistoryMockup() {
           <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)] mb-3">
             Memória Digital
           </p>
-          <ul className="space-y-0 m-0 p-0 list-none">
+          <ul ref={listRef} className="space-y-0 m-0 p-0 list-none">
             {EVENTS.map((ev, i) => (
-              <motion.li
+              <li
                 key={`${ev.label}-${ev.date}`}
-                className="flex gap-3"
-                initial={reduceMotion ? false : { opacity: 0, x: 12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.35 + i * 0.12, duration: 0.4 }}
+                className="gsap-event flex gap-3"
               >
                 <div className="flex flex-col items-center pt-1.5">
-                  <span className={`w-2.5 h-2.5 rounded-full ${DOT[ev.tone]}`} />
+                  <span className={`gsap-event-dot w-2.5 h-2.5 rounded-full ${DOT[ev.tone]}`} />
                   {i < EVENTS.length - 1 && (
-                    <span className="w-px flex-1 min-h-[1.75rem] bg-[var(--card-border)] mt-1" />
+                    <span className="gsap-event-line w-px flex-1 min-h-[1.75rem] bg-[var(--card-border)] mt-1" />
                   )}
                 </div>
                 <div className={`pb-4 min-w-0 flex-1 ${i === EVENTS.length - 1 ? 'pb-1' : ''}`}>
@@ -80,7 +128,7 @@ export default function HeroHistoryMockup() {
                   </div>
                   <p className="mt-0.5 text-[11px] text-[var(--text-muted)] leading-snug">{ev.sub}</p>
                 </div>
-              </motion.li>
+              </li>
             ))}
           </ul>
         </div>
