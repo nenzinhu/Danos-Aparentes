@@ -203,66 +203,81 @@ export default function VehicleDetailView({
         />
         <div className="relative flex flex-col gap-6">
           <div className="flex flex-col lg:flex-row gap-5 lg:items-start">
-            {/* Identidade visual do veículo */}
-            <div className="flex gap-4 min-w-0 flex-1">
-              <div className="relative shrink-0 flex h-[4.5rem] w-[4.5rem] sm:h-24 sm:w-24 items-center justify-center rounded-2xl border border-[var(--card-border)]/80 bg-[var(--card-bg-solid)]/80 shadow-inner shadow-black/20 ring-1 ring-sky-500/15">
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 rounded-2xl bg-sky-400/10 blur-md opacity-70"
-                />
-                <VehicleIconSvg type={intel.vehicleType} size={52} />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--success-border)] bg-[var(--success-bg)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--success)]">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--success)] animate-pulse" />
-                    Histórico Digital Ativo
-                  </span>
+            {/* Identidade visual do veículo — grade de mini-cards organizados */}
+            <div className="flex flex-col gap-3 w-full">
+              {/* Card 1: ícone + nome + placa */}
+              <div className="flex gap-4 min-w-0 items-center rounded-2xl border border-[var(--card-border)]/70 bg-[var(--card-bg-solid)]/75 p-4">
+                <div className="relative shrink-0 flex h-[4.5rem] w-[4.5rem] sm:h-24 sm:w-24 items-center justify-center rounded-2xl border border-[var(--card-border)]/80 bg-[var(--card-bg-solid)]/80 shadow-inner shadow-black/20 ring-1 ring-sky-500/15">
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 rounded-2xl bg-sky-400/10 blur-md opacity-70"
+                  />
+                  <VehicleIconSvg type={intel.vehicleType} size={52} />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text-main)] [text-wrap:balance]">
+                    {displayName}
+                  </h1>
+                  <p className="mt-1 font-mono-data text-base sm:text-lg tracking-[0.12em] text-[var(--signal-bright)]">
+                    {intel.plate?.trim() || 'Sem placa'}
+                  </p>
                   {vehicle.lastLocation?.trim() ? (
-                    <span className="text-[11px] text-[var(--text-muted)] truncate max-w-[14rem]">
+                    <p className="mt-1 text-[11px] text-[var(--text-muted)] truncate max-w-[16rem]">
                       {vehicle.lastLocation.trim()}
-                    </span>
-                  ) : null}
-                </div>
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                  <div className="min-w-0">
-                    <h1 className="font-display text-2xl sm:text-4xl font-bold tracking-tight text-[var(--text-main)] [text-wrap:balance]">
-                      {displayName}
-                    </h1>
-                    <p className="mt-1.5 font-mono-data text-lg sm:text-xl tracking-[0.12em] text-[var(--signal-bright)]">
-                      {intel.plate?.trim() || 'Sem placa'}
                     </p>
-                  </div>
-                  {/* Valor FIPE em destaque na testa do card */}
-                  {fipe?.valor?.trim() ? (
-                    <div className="shrink-0 rounded-2xl border border-[var(--success-border)] bg-[var(--success-bg)] px-4 py-3 text-left sm:text-right shadow-[0_0_24px_-10px_var(--success-glow,transparent)]">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--success)]/90">
-                        Valor FIPE
-                      </p>
-                      <p className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[var(--success)] tabular-nums leading-none mt-1">
-                        {fipe.valor.trim()}
-                      </p>
-                      {fipe.mesReferencia?.trim() ? (
-                        <p className="mt-1.5 text-[10px] font-semibold text-[var(--success)]/80">
-                          Ref. {fipe.mesReferencia.trim()}
-                        </p>
-                      ) : null}
-                    </div>
                   ) : null}
                 </div>
+              </div>
+
+              {/* Card 2+: mini-cards de status, FIPE e identidade */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {/* Status — card menor */}
+                <div className="rounded-xl border border-[var(--card-border)]/70 bg-[var(--card-bg-solid)]/75 px-3 py-3 flex flex-col gap-1.5">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[var(--text-muted)]">
+                    Status
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[var(--success)]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--success)] animate-pulse" />
+                    Histórico Ativo
+                  </span>
+                </div>
+
+                {/* Valor FIPE */}
+                {fipe?.valor?.trim() ? (
+                  <div className="rounded-xl border border-[var(--success-border)] bg-[var(--success-bg)] px-3 py-3 flex flex-col gap-0.5">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[var(--success)]/90">
+                      Valor FIPE
+                    </p>
+                    <p className="font-display text-lg sm:text-xl font-bold tracking-tight text-[var(--success)] tabular-nums leading-none">
+                      {fipe.valor.trim()}
+                    </p>
+                    {fipe.mesReferencia?.trim() ? (
+                      <p className="text-[10px] font-semibold text-[var(--success)]/80">
+                        Ref. {fipe.mesReferencia.trim()}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {/* Identidade (marca/cor/ano) */}
                 {identityChips.length > 0 && (
-                  <div className="mt-3 flex flex-wrap gap-2 text-[11px]">
-                    {identityChips.map((chip) => (
-                      <span
-                        key={chip.label}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--card-border)]/70 bg-[var(--panel-bg)]/60 px-2.5 py-1 text-[var(--text-muted)]"
-                      >
-                        <span className="font-bold uppercase tracking-wide text-[9px] opacity-80">
-                          {chip.label}
+                  <div className="rounded-xl border border-[var(--card-border)]/70 bg-[var(--card-bg-solid)]/75 px-3 py-3 flex flex-col gap-1.5 sm:col-span-2">
+                    <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[var(--text-muted)]">
+                      Identidade
+                    </p>
+                    <div className="flex flex-wrap gap-1.5 text-[11px]">
+                      {identityChips.map((chip) => (
+                        <span
+                          key={chip.label}
+                          className="inline-flex items-center gap-1 rounded-md border border-[var(--card-border)]/70 bg-[var(--panel-bg)]/60 px-2 py-0.5 text-[var(--text-muted)]"
+                        >
+                          <span className="font-bold uppercase tracking-wide text-[9px] opacity-80">
+                            {chip.label}
+                          </span>
+                          <strong className="text-[var(--text-main)] font-semibold">{chip.value}</strong>
                         </span>
-                        <strong className="text-[var(--text-main)] font-semibold">{chip.value}</strong>
-                      </span>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
