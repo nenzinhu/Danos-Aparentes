@@ -62,7 +62,7 @@ export default function GsapSplitSubline({ children, as = 'p', className = '', d
     if ('requestIdleCallback' in window) {
       idleId = window.requestIdleCallback(run, { timeout: 2000 })
     } else {
-      idleId = window.setTimeout(run, 200) as unknown as number
+      idleId = setTimeout(run, 200) as unknown as number
     }
 
     return () => {

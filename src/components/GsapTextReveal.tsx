@@ -78,7 +78,7 @@ export default function GsapTextReveal({
     if ('requestIdleCallback' in window) {
       idleId = window.requestIdleCallback(run, { timeout: 2500 })
     } else {
-      idleId = window.setTimeout(run, 300) as unknown as number
+      idleId = setTimeout(run, 300) as unknown as number
     }
 
     return () => {
