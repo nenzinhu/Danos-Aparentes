@@ -627,7 +627,7 @@ export default function InspectTab({
           <div>
             <p className="ds-label mb-1">Assinaturas</p>
             <p className="ds-h3 mb-3">GPS e assinaturas</p>
-            <FinalizePanel info={vehicleInfo} onChange={onVehicleInfoChange} inspectionId={inspectionId} />
+            <FinalizePanel info={vehicleInfo} onChange={onVehicleInfoChange} inspectionId={inspectionId} accessToken={accessToken} />
           </div>
 
           <div className="space-y-4 pt-2">

@@ -29,6 +29,13 @@ create table if not exists vehicle_inspections (
   cnh_category text default '',
   inspector_signature text default '',
   client_signature text default '',
+  -- FASE: Certificação digital (Assinafy / ICp-Brasil)
+  assinafy_document_id text default '',
+  assinafy_assignment_id text default '',
+  assinafy_signing_url text default '',
+  assinafy_cert_status text default '',
+  assinafy_signer_name text default '',
+  assinafy_certified_at timestamptz,
   status text not null default 'complete',
   geo_lat double precision,
   geo_lng double precision,
