@@ -124,6 +124,23 @@ Itens marcados com ✅ já estão implementados no core; 🔶 são parciais (bas
 
 ---
 
+## 🚀 10 Ideias Futuras (não implementadas)
+
+Inovações **ainda inexistentes** no repositório, viáveis e ancoradas no domínio de inspeção veicular. Complementam — não repetem — as 10 anteriores.
+
+1. **Slider de comparação antes/depois por peça.** Sobrepor foto de check-in e check-out no diagrama com controle deslizante, evidenciando a avaria surgida. (Hoje só há `compareInspections` em dados, sem UI de slider.)
+2. **Assinatura biométrica do inspetor.** Reconhecimento facial ou biometria amarrada ao hash do laudo, travando identidade do emissor (hoje `inspectorSignature` é textual).
+3. **Vistoria colaborativa em tempo real.** Dois inspetores marcando o mesmo veículo ao mesmo tempo, com merge de avarias por peça.
+4. **Marketplace de verificação entre empresas.** Locadora consulta o histórico de uma placa de outra companhia mediante consentimento do proprietário (hoje o histórico é por tenant).
+5. **Widget embarcável de selo "Verificado".** Snippet `iframe`/JS para sites de venda de usados exibirem a procedência do veículo via Danos Aparentes.
+6. **IA preditiva de custo de reparo.** A partir de tipo/severidade da avaria, estima valor de conserto usando tabela de peças + FIPE (hoje a FIPE só traz valor do veículo).
+7. **Detector de fraude por IA.** Cruzamento de padrões — mesma foto em placas diferentes, edição de imagem, timestamps incoerentes — sobre o `auditLog` existente.
+8. **Overlay de câmera com contorno do veículo (AR leve).** A câmera mostra o silhueta do modelo sobreposto à peça real para marcar a avaria no ponto exato, offline.
+9. **Exportação para seguradora via webhook assinado.** Envio automático do laudo (JSON + PDF) ao sistema da seguradora com Assinatura HMAC, além de PDF/WhatsApp.
+10. **Score de conformidade do inspetor.** Pontuação de qualidade de laudo por operador (completude, fotos obrigatórias dos 4 lados), derivada da telemetria já coletada.
+
+---
+
 <p align="center">
   <sub>Danos Aparentes — Inteligência Histórica Veicular • <a href="https://www.danosaparentes.com.br">www.danosaparentes.com.br</a></sub>
 </p>
