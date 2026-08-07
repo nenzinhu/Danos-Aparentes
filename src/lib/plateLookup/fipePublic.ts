@@ -16,6 +16,15 @@ function asTrimmedString(v: unknown): string {
   return ''
 }
 
+/** Procura o mês de referência FIPE em todas as variantes conhecidas da resposta. */
+function pickMesReferencia(...candidates: unknown[]): string {
+  for (const c of candidates) {
+    const v = asTrimmedString(c)
+    if (v) return v
+  }
+  return ''
+}
+
 function scoreOf(row: FipeRawRow): number {
   const n = typeof row.score === 'number' ? row.score : Number(row.score)
   return Number.isFinite(n) ? n : 0
@@ -46,7 +55,15 @@ export function extractFipePublic(data: Record<string, unknown>): FipePublicSumm
   if (already && typeof already === 'object' && already !== null) {
     const o = already as Record<string, unknown>
     return toSummary({
-      mesReferencia: asTrimmedString(o.mesReferencia ?? o.mes_referencia),
+      mesReferencia: pickMesReferencia(
+        o.mesReferencia,
+        o.mes_referencia,
+        o.referencia_fipe,
+        o.mes,
+        o.referencia,
+        data.mes_referencia,
+        data.mesReferencia,
+      ),
       valor: asTrimmedString(o.valor ?? o.texto_valor),
       anoModelo: asTrimmedString(o.anoModelo ?? o.ano_modelo),
       textoMarca: asTrimmedString(o.textoMarca ?? o.texto_marca),
@@ -57,15 +74,40 @@ export function extractFipePublic(data: Record<string, unknown>): FipePublicSumm
 
   const fipe = data.fipe
   if (!fipe || typeof fipe !== 'object') return null
-  const dados = (fipe as { dados?: unknown }).dados
-  if (!Array.isArray(dados) || dados.length === 0) return null
+  const fipeObj = fipe as Record<string, unknown>
+  const dados = (fipeObj.dados ?? fipeObj.data) as unknown
+  if (!Array.isArray(dados) || dados.length === 0) {
+    // fipe sem array de dados: tenta ler mês/valor direto de fipe ou do topo.
+    const directMes = pickMesReferencia(
+      fipeObj.mes_referencia,
+      fipeObj.mesReferencia,
+      fipeObj.referencia_fipe,
+      data.mes_referencia,
+      data.mesReferencia,
+    )
+    if (!directMes && !fipeObj.texto_marca && !fipeObj.texto_valor) return null
+    return toSummary({
+      mesReferencia: directMes,
+      valor: asTrimmedString(fipeObj.valor ?? fipeObj.texto_valor),
+      anoModelo: asTrimmedString(fipeObj.anoModelo ?? fipeObj.ano_modelo),
+      textoMarca: asTrimmedString(fipeObj.textoMarca ?? fipeObj.texto_marca),
+      textoModelo: asTrimmedString(fipeObj.textoModelo ?? fipeObj.texto_modelo),
+      combustivel: asTrimmedString(fipeObj.combustivel) || undefined,
+    })
+  }
 
   const rows = dados.filter((r): r is FipeRawRow => !!r && typeof r === 'object')
   if (rows.length === 0) return null
 
   const best = [...rows].sort((a, b) => scoreOf(b) - scoreOf(a))[0]
   return toSummary({
-    mesReferencia: asTrimmedString(best.mes_referencia),
+    mesReferencia: pickMesReferencia(
+      best.mes_referencia,
+      fipeObj.mes_referencia,
+      fipeObj.mesReferencia,
+      data.mes_referencia,
+      data.mesReferencia,
+    ),
     valor: asTrimmedString(best.texto_valor),
     anoModelo: asTrimmedString(best.ano_modelo),
     textoMarca: asTrimmedString(best.texto_marca),
