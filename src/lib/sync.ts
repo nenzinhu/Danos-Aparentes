@@ -6,6 +6,8 @@ import { uploadDamagePhotosForSync, uploadInteriorPhotosForSync, uploadViewPhoto
 import { deleteInspectionPhotos } from './photoStorage'
 import { mapRemoteInspection } from './reportMapping'
 import { appendAuditEvent } from './audit/auditLog'
+import { anchorInspectionChain } from './audit/anchor'
+import { syncPhotoEvidenceAndAntifraud } from './syncPhotoAntifraud'
 import { isIssuedLocked } from './pdf/reportIssuance'
 import { resolveTenantId } from './tenant/resolveTenant'
 import { syncUpsertIdempotencyKey } from './sync/idempotency'
@@ -190,27 +192,36 @@ async function pushReport(report: SavedReport, userId: string) {
       await db.putSaved({ ...local, vehicleId: remoteVehicleId, syncedAt: Date.now() })
     }
   }
-  void appendAuditEvent({
-    event_type: 'change',
-    inspection_id: report.id,
-    tenant_id: tenantId,
-    idempotency_key: syncUpsertIdempotencyKey(report.id, report.savedAt),
-    metadata: {
-      status: report.status ?? 'complete',
-      damages_count: report.damages.length,
-      source: 'sync_upsert',
-      vehicle_id: remoteVehicleId,
-    },
-  })
-  if (remoteVehicleId) {
-    void appendAuditEvent({
-      event_type: 'inspection_linked_to_vehicle',
+  // FASE 20: sync metadados de evidência + alertas de antifraude (best-effort).
+  void syncPhotoEvidenceAndAntifraud(reportWithVehicle, userId)
+
+  const auditWrites: Promise<unknown>[] = [
+    appendAuditEvent({
+      event_type: 'change',
       inspection_id: report.id,
       tenant_id: tenantId,
-      idempotency_key: `linked:${report.id}:${remoteVehicleId}`,
-      metadata: { vehicle_id: remoteVehicleId, plate: report.vehicleInfo.plate },
-    })
+      idempotency_key: syncUpsertIdempotencyKey(report.id, report.savedAt),
+      metadata: {
+        status: report.status ?? 'complete',
+        damages_count: report.damages.length,
+        source: 'sync_upsert',
+        vehicle_id: remoteVehicleId,
+      },
+    }),
+  ]
+  if (remoteVehicleId) {
+    auditWrites.push(
+      appendAuditEvent({
+        event_type: 'inspection_linked_to_vehicle',
+        inspection_id: report.id,
+        tenant_id: tenantId,
+        idempotency_key: `linked:${report.id}:${remoteVehicleId}`,
+        metadata: { vehicle_id: remoteVehicleId, plate: report.vehicleInfo.plate },
+      }),
+    )
   }
+  // FASE 19: ancora a ponta da cadeia após os eventos deste sync (best-effort).
+  void Promise.allSettled(auditWrites).then(() => anchorInspectionChain(report.id))
 }
 
 async function deleteRemoteReport(id: string, userId: string) {
@@ -502,7 +513,12 @@ const tryFlush = useCallback(async () => {
     window.addEventListener('online', onOnline)
     window.addEventListener('offline', onOffline)
     document.addEventListener('visibilitychange', onVisible)
-    const interval = setInterval(() => { tryFlush(); }, 30000)
+    // Sincronização periódica a cada 10s. O controle de gargalo já existe:
+    // 1) `flushing.current` impede requisições empilhadas (só uma por vez);
+    // 2) `tryFlush` retorna cedo se a fila estiver vazia (updated_at/queue),
+    //    então não há tráfego se não houve alteração local;
+    // 3) eventos online/visibility disparam flush imediato (debounce via setTimeout 0).
+    const interval = setInterval(() => { tryFlush(); }, 10000)
     return () => {
       window.removeEventListener('online', onOnline)
       window.removeEventListener('offline', onOffline)
