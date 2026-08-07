@@ -1,35 +1,46 @@
 import React from 'react'
+import Image from 'next/image'
 import type { BlogPost } from '@/src/content/blog'
 
 // Capa do blog: foto realista full-bleed quando houver image;
 // senão gradiente + grelha "blueprint" + emoji.
+// Usa next/image (fill) para responsividade + formatos modernos (avif/webp)
+// e dimensions explícitas (evita CLS).
 export function BlogCover({
   cover,
   className = '',
   emojiClass = 'text-6xl',
   children,
+  priority = false,
+  sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px',
 }: {
   cover: BlogPost['cover']
   className?: string
   emojiClass?: string
   children?: React.ReactNode
+  priority?: boolean
+  sizes?: string
 }) {
   const hasPhoto = Boolean(cover.image)
+  const coverImage = cover.image
 
   return (
     <div
       className={`relative overflow-hidden flex items-center justify-center ${className}`}
       style={{ background: cover.gradient }}
     >
-      {hasPhoto ? (
+      {hasPhoto && coverImage ? (
         <>
-          <img
-            src={cover.image}
+          <Image
+            src={coverImage}
             alt=""
             aria-hidden="true"
-            loading="lazy"
+            fill
+            priority={priority}
+            loading={priority ? undefined : 'lazy'}
             decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
+            sizes={sizes}
+            className="object-cover"
           />
           <div
             aria-hidden="true"
