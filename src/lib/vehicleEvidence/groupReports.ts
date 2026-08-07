@@ -3,6 +3,7 @@ import { normalizePlate } from '../reportComparison'
 import { compareInspections } from './compareInspections'
 import { savedReportToInspection } from './adapters'
 import { tenantScopeKey } from './vehicleIdentity'
+import { filterDamagesForPdf } from '../evidenceStatus'
 
 export type VehicleHistorySummary = {
   /** vehicles.id ou chave sintética `local:{plate}` até backfill. */
@@ -96,7 +97,7 @@ export function groupReportsByVehicle(
       vehicleType: last.vehicleType,
       reports: sorted,
       lastLocation: last.vehicleInfo.geo?.address,
-      activeDamageCount: last.damages.length,
+      activeDamageCount: filterDamagesForPdf(last.damages).length,
       newDamagesOnLast,
       firstInspectedAt: sorted[0]?.savedAt ?? null,
       lastInspectedAt: last.savedAt,

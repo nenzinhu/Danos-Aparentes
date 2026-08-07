@@ -13,6 +13,7 @@ import {
 } from '@/src/lib/audit/timelinePresent'
 import type { ProntuarioIntel } from '@/src/lib/vehicleEvidence/prontuarioIntel'
 import type { VehicleHistorySummaryWithCloud } from '@/src/lib/vehicleEvidence'
+import { filterDamagesForPdf } from '@/src/lib/evidenceStatus'
 import type { SavedReport } from '@/src/types'
 import { resolvePhotoUrl } from '@/src/lib/photoStore'
 
@@ -160,7 +161,7 @@ function buildInspectionStories(
   for (const r of vehicle.reports) {
     const { whenDate, whenTime, sortAt } = formatParts(r.savedAt)
     const st = statusFromReport(r)
-    const damageCount = r.damages.length
+    const damageCount = filterDamagesForPdf(r.damages).length
     const evidenceCount = countReportEvidence(r)
     const photoCount = r.damages.reduce((n, d) => n + (d.photos?.length || 0), 0)
     const ai = aiLabelFromReport(r)
