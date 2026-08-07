@@ -141,6 +141,23 @@ Inovações **ainda inexistentes** no repositório, viáveis e ancoradas no dom�
 
 ---
 
+## 💎 10 Ideias Adicionais
+
+Terceira leva de inovações, distinta das duas anteriores (existentes e futuras) — abrange ângulos jurídico, operacional, integração, UX, dados e sustentabilidade.
+
+1. **Laudo multilíngue automático.** Gere o PDF em PT/ES/EN conforme o perfil do cliente (hoje só PT-BR).
+2. **Modo "vistoria relâmpago".** Fluxo de 1 toque para devolução de locadora: só foto dos 4 lados + IA marca tudo, sem abrir o diagrama.
+3. **Disparo automático via WhatsApp Business API.** Envio do laudo + QR ao cliente no momento da assinatura (hoje é `wa.me` manual).
+4. **Backup georredundante de fotos com checksum.** Replica `photo_evidence` em 2 regiões e valida integridade das fotos originais (anti-perda).
+5. **Timeline de vida do veículo.** Além de avarias, registra quilometragem, troca de óleo e pneus para histórico de valorização.
+6. **Modo alto contraste para uso sob sol.** UI otimizada para leitura em pátio sob sol forte (acessibilidade operacional).
+7. **Webhooks de evento para o cliente.** `inspection.issued`, `dispute.opened` disparam automações no sistema do cliente (Zapier/Make).
+8. **Prova on-chain opcional.** Ancorar o hash numa blockchain pública para seguradoras que exigem prova não repudiável.
+9. **Wizard de regularização DETRAN.** Pré-preenche o formulário do órgão a partir do laudo para transferência.
+10. **Relatório de sustentabilidade da frota.** Disputas fechadas sem processo convertidas em economia e redução de desperdício.
+
+---
+
 <p align="center">
   <sub>Danos Aparentes — Inteligência Histórica Veicular • <a href="https://www.danosaparentes.com.br">www.danosaparentes.com.br</a></sub>
 </p>
