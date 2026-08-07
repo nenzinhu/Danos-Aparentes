@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, useCallback, useMemo, memo, Suspense } from 'react'
+import React, { useState, useEffect, useCallback, useMemo, memo, Suspense, useRef } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { vehicleRegistry } from '../vehicles/registry'
 import DamageCallouts, { DamageCalloutLegend } from '../DamageCallouts'
@@ -24,11 +24,11 @@ const orbitVariants = {
 }
 
 export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen?: boolean }) {
-  const {
-    vehicleType, viewType, damages, speak, speakHover,
+  const { vehicleType, viewType, damages, speak, speakHover,
     selectedPart, setSelectedPart, orbitDir, containerRef, targetRef,
     baseContainerRef, baseTargetRef, scale, outlineMode,
   } = useVehicleViewer()
+  const scannerRef = useRef<HTMLDivElement>(null)
 
   const VehicleComp = vehicleRegistry[vehicleType]?.[viewType] || vehicleRegistry['car']?.[viewType] || vehicleRegistry['car']['lateral-left']
   const layoutKey = `${vehicleType}-${viewType}`
@@ -148,6 +148,27 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
             '-=0.22',
           )
         }
+        // Scanner pericial: feixe desce revelando o diagrama (clip-path).
+        const scanner = scannerRef.current
+        if (scanner) {
+          tl.fromTo(
+            scanner,
+            { clipPath: 'inset(0 0 100% 0)' },
+            {
+              clipPath: 'inset(0 0 0% 0)',
+              duration: 0.9,
+              ease: 'power1.inOut',
+            },
+            '-=0.3',
+          )
+          tl.fromTo(
+            scanner.querySelector('.va-scanner-beam'),
+            { yPercent: -120 },
+            { yPercent: 560, duration: 0.9, ease: 'power1.inOut' },
+            '<',
+          )
+          tl.to(scanner, { autoAlpha: 0, duration: 0.3 }, '+=0.05')
+        }
       }, root)
       return true
     }
@@ -202,6 +223,22 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
             </div>
           </motion.div>
         </AnimatePresence>
+
+        <div
+          ref={scannerRef}
+          aria-hidden="true"
+          className="va-scanner pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-2xl"
+          style={{ clipPath: 'inset(0 0 100% 0)' }}
+        >
+          <div
+            className="va-scanner-beam absolute inset-x-0 top-0 h-16"
+            style={{
+              background:
+                'linear-gradient(to bottom, transparent, color-mix(in srgb, var(--signal) 35%, transparent) 70%, color-mix(in srgb, var(--signal-bright) 70%, transparent))',
+              filter: 'blur(1px)',
+            }}
+          />
+        </div>
 
         <DamageCallouts
           containerRef={containerRef}
