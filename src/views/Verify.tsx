@@ -9,24 +9,8 @@ import {
   resolveVerifyOutcome,
   type PublicVerifyOutcome,
 } from '../lib/verify/publicVerify'
-import {
-  DISCLOSURE_LABELS,
-  fieldsForDisclosureScope,
-  normalizeDisclosureScope,
-  parseSeveritySummary,
-  type DisclosureScope,
-  type PublicFieldFlags,
-  type SeveritySummary,
-} from '../lib/verify/disclosureScope'
 import { comparePdfUpload, hashPdfBytes } from '../lib/verify/pdfUploadVerify'
 import { logPublicVerifyAudit } from '../lib/verify/logVerifyAudit'
-import {
-  fetchPublicReportByCode,
-  fetchPublicReportByHash,
-  fetchPublicReportByPdfHash,
-  fetchPublicReportVersions,
-  type PublicReportReceipt,
-} from '../lib/verify/publicReceipt'
 
 interface HashRecord {
   hash: string
@@ -45,15 +29,6 @@ interface HashRecord {
   version?: number | null
   public_code?: string | null
   inspection_id?: string | null
-  disclosure_scope?: string | null
-  severity_summary?: SeveritySummary | null
-  final_hash?: string | null
-  integrity_manifest?: { pdf_hash?: string } | null
-  inspection_status?: string | null
-}
-
-function receiptToRecord(r: PublicReportReceipt): HashRecord {
-  return { ...r }
 }
 
 interface VersionInfo {
@@ -61,20 +36,6 @@ interface VersionInfo {
   total: number
   latestHash: string
   isLatest: boolean
-}
-
-interface ReliabilityInfo {
-  found: boolean
-  score?: number
-  level?: 'alto' | 'medio' | 'basico'
-  levelLabel?: string
-  criteria?: { id: string; label: string; met: boolean }[]
-  eventsCount?: number
-  anchoredCount?: number
-  photoAlertCount?: number
-  chainOk?: boolean
-  anchorsOk?: boolean
-  lastAnchorAt?: string | null
 }
 
 type Status = 'loading' | 'valid' | 'not_found' | 'no_hash' | 'offline' | 'error' | PublicVerifyOutcome
@@ -134,7 +95,6 @@ export default function Verify() {
   const [pdfError, setPdfError] = useState('')
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null)
   const [outcome, setOutcome] = useState<PublicVerifyOutcome | null>(null)
-  const [reliability, setReliability] = useState<ReliabilityInfo | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const pdfInputRef = useRef<HTMLInputElement>(null)
 
@@ -182,19 +142,25 @@ export default function Verify() {
     try {
       let data: HashRecord | null = null
       if (byCode) {
-        const res = await fetchPublicReportByCode(supabase, h)
+        const res = await supabase
+          .from('report_hashes')
+          .select('*')
+          .eq('public_code', h)
+          .order('version', { ascending: false })
+          .limit(1)
+          .maybeSingle()
         if (res.error) {
           setStatus('error')
           return
         }
-        data = res.data ? receiptToRecord(res.data) : null
+        data = (res.data as HashRecord) || null
       } else {
-        const res = await fetchPublicReportByHash(supabase, h)
+        const res = await supabase.from('report_hashes').select('*').eq('hash', h).maybeSingle()
         if (res.error) {
           setStatus('error')
           return
         }
-        data = res.data ? receiptToRecord(res.data) : null
+        data = (res.data as HashRecord) || null
       }
 
       if (!data) {
@@ -213,9 +179,13 @@ export default function Verify() {
 
       let isSupersededVersion = false
       if (rec.report_key) {
-        const { data: siblings } = await fetchPublicReportVersions(supabase, rec.report_key)
+        const { data: siblings } = await supabase
+          .from('report_hashes')
+          .select('hash, version')
+          .eq('report_key', rec.report_key)
+          .order('version', { ascending: true })
         if (siblings && siblings.length > 0) {
-          const latest = siblings[siblings.length - 1]
+          const latest = siblings[siblings.length - 1] as { hash: string; version: number }
           const info = {
             version: rec.version || 1,
             total: siblings.length,
@@ -227,7 +197,15 @@ export default function Verify() {
         }
       }
 
-      const inspectionStatus = rec.inspection_status || null
+      let inspectionStatus: string | null = null
+      if (rec.inspection_id) {
+        const { data: insp } = await supabase
+          .from('vehicle_inspections')
+          .select('status')
+          .eq('id', rec.inspection_id)
+          .maybeSingle()
+        inspectionStatus = (insp?.status as string) || null
+      }
 
       const o = resolveVerifyOutcome({
         found: true,
@@ -258,26 +236,6 @@ export default function Verify() {
 
     setTimeout(() => { void applyAndVerify(h, lat && lng ? { lat, lng } : null); }, 0)
   }, [applyAndVerify])
-
-  useEffect(() => {
-    const wantsSeal = status === 'valid' || status === 'superseded_version' || status === 'cancelled'
-    if (!record?.hash || !wantsSeal) {
-      setReliability(null)
-      return
-    }
-    let cancelled = false
-    void (async () => {
-      try {
-        const res = await fetch(`/api/reliability?hash=${encodeURIComponent(record.hash)}`)
-        if (!res.ok) return
-        const body = (await res.json()) as ReliabilityInfo
-        if (!cancelled && body.found) setReliability(body)
-      } catch {
-        // selo é best-effort — nunca bloqueia a verificação
-      }
-    })()
-    return () => { cancelled = true }
-  }, [record?.hash, status])
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -335,10 +293,15 @@ export default function Verify() {
       const buf = await file.arrayBuffer()
       const pdfHash = await hashPdfBytes(buf)
 
-      const byPdf = await fetchPublicReportByPdfHash(supabase, pdfHash)
+      const byPdf = await supabase
+        .from('report_hashes')
+        .select('*')
+        .filter('integrity_manifest->>pdf_hash', 'eq', pdfHash)
+        .limit(1)
+        .maybeSingle()
 
       let matchedBy: 'pdf_hash' | 'typed_hash' | 'none' = 'none'
-      let data = byPdf.data ? receiptToRecord(byPdf.data) : null
+      let data = (byPdf.data as HashRecord | null) || null
       if (data) matchedBy = 'pdf_hash'
 
       if (!data && inputHash.trim()) {
@@ -346,18 +309,30 @@ export default function Verify() {
         const byCode = isPublicCodeQuery(typed)
         const key = byCode ? normalizePublicCode(typed) : normalizeHash(typed)
         const res = byCode
-          ? await fetchPublicReportByCode(supabase, key)
-          : await fetchPublicReportByHash(supabase, key)
-        data = res.data ? receiptToRecord(res.data) : null
+          ? await supabase.from('report_hashes').select('*').eq('public_code', key).order('version', { ascending: false }).limit(1).maybeSingle()
+          : await supabase.from('report_hashes').select('*').eq('hash', key).maybeSingle()
+        data = (res.data as HashRecord | null) || null
         if (data) matchedBy = 'typed_hash'
       }
 
-      let inspectionStatus: string | null = data?.inspection_status || null
+      let inspectionStatus: string | null = null
       let isSupersededVersion = false
+      if (data?.inspection_id) {
+        const { data: insp } = await supabase
+          .from('vehicle_inspections')
+          .select('status')
+          .eq('id', data.inspection_id)
+          .maybeSingle()
+        inspectionStatus = (insp?.status as string) || null
+      }
       if (data?.report_key) {
-        const { data: siblings } = await fetchPublicReportVersions(supabase, data.report_key)
+        const { data: siblings } = await supabase
+          .from('report_hashes')
+          .select('hash, version')
+          .eq('report_key', data.report_key)
+          .order('version', { ascending: true })
         if (siblings && siblings.length > 1) {
-          const latest = siblings[siblings.length - 1]
+          const latest = siblings[siblings.length - 1] as { hash: string; version: number }
           isSupersededVersion = latest.hash !== data.hash
           setVersionInfo({
             version: data.version || 1,
@@ -373,8 +348,8 @@ export default function Verify() {
         record: data
           ? {
               hash: data.hash,
-              final_hash: data.final_hash,
-              integrity_manifest: data.integrity_manifest,
+              final_hash: (data as HashRecord & { final_hash?: string }).final_hash,
+              integrity_manifest: (data as HashRecord & { integrity_manifest?: { pdf_hash?: string } }).integrity_manifest,
               inspection_status: inspectionStatus,
               is_superseded_version: isSupersededVersion,
             }
@@ -411,12 +386,6 @@ export default function Verify() {
   }
 
   const presentation = outcome ? presentVerifyOutcome(outcome) : null
-  const disclosureScope: DisclosureScope = normalizeDisclosureScope(record?.disclosure_scope)
-  const fields: PublicFieldFlags = fieldsForDisclosureScope(disclosureScope)
-  const severitySummary =
-    parseSeveritySummary(record?.severity_summary)
-    ?? null
-  const disclosureMeta = DISCLOSURE_LABELS[disclosureScope]
 
   const ICONS: Record<string, { icon: string; bg: string; text: string; border: string; title: string; desc: string }> = {
     loading: {
@@ -500,7 +469,7 @@ export default function Verify() {
             <div className="text-5xl shrink-0">{view.icon}</div>
             <div>
               <h2 className={`text-lg font-black uppercase tracking-tight ${view.text} mb-1`}>{view.title}</h2>
-              {showDetails && fields.showCompany && (record?.company_name || record?.company_logo) && (
+              {showDetails && (record?.company_name || record?.company_logo) && (
                 <div className="flex items-center gap-2 mb-1">
                   {record.company_logo && (
                     <img src={record.company_logo} alt={record.company_name || 'Logo da empresa'} className="h-6 max-w-[120px] object-contain" />
@@ -617,7 +586,7 @@ export default function Verify() {
             </div>
           )}
 
-          {showDetails && versionInfo && fields.showVersion && versionInfo.total > 1 && (
+          {showDetails && versionInfo && versionInfo.total > 1 && (
             versionInfo.isLatest ? (
               <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
                 <p className="text-xs font-bold text-emerald-800">
@@ -642,114 +611,20 @@ export default function Verify() {
 
           {showDetails && record && (
             <div className="space-y-4">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2 flex items-center justify-between gap-2">
-                <span>Detalhes do Registro</span>
-                <span className="text-[9px] font-black text-slate-600 bg-slate-100 border border-slate-200 rounded px-2 py-0.5 shrink-0">
-                  {disclosureMeta.title}
-                </span>
-              </h3>
-              <p className="text-[11px] text-slate-400 leading-relaxed -mt-2">
-                {disclosureMeta.description}
-              </p>
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2">Detalhes do Registro</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-                {fields.showPlate && (
-                  <Row label="Placa do Veículo" value={maskPlate(record.plate || '')} />
-                )}
-                {fields.showRef && (
-                  <Row label="Referência / OS" value={record.ref || 'NÃO INFORMADA'} />
-                )}
-                {fields.showDamagesCount && (
-                  <Row label="Danos Registrados" value={String(record.damages_count)} />
-                )}
-                {fields.showSeverityBreakdown && severitySummary && (
-                  <Row
-                    label="Severidade"
-                    value={`Leve ${severitySummary.low} · Média ${severitySummary.medium} · Grave ${severitySummary.high}`}
-                  />
-                )}
-                {fields.showIssuedAt && (
-                  <Row label="Data de Emissão" value={record.issued_at || 'NÃO INFORMADA'} />
-                )}
-                {fields.showPublicCode && record.public_code && (
-                  <Row label="Código Público" value={record.public_code} />
-                )}
-                {fields.showCompany && record.company_name && (
-                  <Row label="Empresa Emissora" value={record.company_name} />
-                )}
-                {fields.showVersion && versionInfo && (
-                  <Row label="Versão do Laudo" value={`${versionInfo.version} de ${versionInfo.total}`} />
-                )}
+                <Row label="Placa do Veículo" value={maskPlate(record.plate || '')} />
+                <Row label="Referência / OS" value={record.ref || 'NÃO INFORMADA'} />
+                <Row label="Danos Registrados" value={String(record.damages_count)} />
+                <Row label="Data de Emissão" value={record.issued_at || 'NÃO INFORMADA'} />
+                {record.public_code && <Row label="Código Público" value={record.public_code} />}
+                {record.company_name && <Row label="Empresa Emissora" value={record.company_name} />}
+                {versionInfo && <Row label="Versão do Laudo" value={`${versionInfo.version} de ${versionInfo.total}`} />}
               </div>
             </div>
           )}
 
-          {showDetails && fields.showReliability && reliability && reliability.found && (
-            <div className="space-y-4">
-              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2 flex items-center justify-between">
-                <span>Selo de Confiabilidade</span>
-                <span
-                  className={`text-[9px] font-black rounded px-2 py-0.5 border ${
-                    reliability.chainOk === false || reliability.anchorsOk === false
-                      ? 'text-rose-700 bg-rose-50 border-rose-200'
-                      : reliability.level === 'alto'
-                        ? 'text-emerald-700 bg-emerald-50 border-emerald-200'
-                        : reliability.level === 'medio'
-                          ? 'text-amber-700 bg-amber-50 border-amber-200'
-                          : 'text-slate-600 bg-slate-50 border-slate-200'
-                  }`}
-                >
-                  {reliability.chainOk === false || reliability.anchorsOk === false
-                    ? 'TRILHA COMPROMETIDA'
-                    : `${reliability.levelLabel} · ${reliability.score}/100`}
-                </span>
-              </h3>
-
-              {(reliability.chainOk === false || reliability.anchorsOk === false) && (
-                <div className="rounded-lg border border-rose-200 bg-rose-50 p-4">
-                  <p className="text-xs font-bold text-rose-800 leading-relaxed">
-                    ⚠️ A trilha de auditoria deste laudo não confere com os registros
-                    ancorados. O histórico pode ter sido alterado após o registro original.
-                  </p>
-                </div>
-              )}
-
-              {(reliability.photoAlertCount ?? 0) > 0 && (
-                <div className="rounded-lg border border-amber-300 bg-amber-50 p-4">
-                  <p className="text-xs font-bold text-amber-900 leading-relaxed">
-                    ⚠️ {reliability.photoAlertCount} alerta(s) de evidência fotográfica
-                    (possível reuso ou inconsistência de GPS/horário). Isso reduz o selo
-                    de confiabilidade — não invalida automaticamente o hash do laudo.
-                  </p>
-                </div>
-              )}
-
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2">
-                {(reliability.criteria || []).map((c) => (
-                  <li key={c.id} className="flex items-center gap-2 text-xs">
-                    <span className={c.met ? 'text-emerald-600' : 'text-slate-300'}>
-                      {c.met ? '✓' : '○'}
-                    </span>
-                    <span className={`font-bold ${c.met ? 'text-slate-700' : 'text-slate-400'}`}>
-                      {c.label}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                {reliability.anchoredCount && reliability.anchoredCount > 0
-                  ? `Histórico com ${reliability.eventsCount} evento(s) de auditoria e ${reliability.anchoredCount} âncora(s) de tempo${
-                      reliability.lastAnchorAt
-                        ? ` — última em ${new Date(reliability.lastAnchorAt).toLocaleString('pt-BR')}`
-                        : ''
-                    }.`
-                  : `Histórico com ${reliability.eventsCount ?? 0} evento(s) de auditoria. Ainda sem âncora de tempo registrada.`}
-              </p>
-            </div>
-          )}
-
           {(() => {
-            if (!fields.showGeo) return null
             const fromDb = !!record && record.geo_lat != null && record.geo_lng != null
             const lat = fromDb ? String(record!.geo_lat) : geo?.lat
             const lng = fromDb ? String(record!.geo_lng) : geo?.lng
@@ -783,16 +658,14 @@ export default function Verify() {
             )
           })()}
 
-          {fields.showHash && (
-            <div className="pt-8 border-t border-dashed border-slate-200">
-              <div className="space-y-3 w-full max-w-sm">
-                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Identificador Digital (HASH)</div>
-                <div className="bg-slate-50 border border-slate-100 p-3 rounded font-mono text-[10px] text-slate-500 break-all leading-relaxed">
-                  {hash || 'NENHUM HASH FORNECIDO PARA VALIDAÇÃO'}
-                </div>
+          <div className="pt-8 border-t border-dashed border-slate-200">
+            <div className="space-y-3 w-full max-w-sm">
+              <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Identificador Digital (HASH)</div>
+              <div className="bg-slate-50 border border-slate-100 p-3 rounded font-mono text-[10px] text-slate-500 break-all leading-relaxed">
+                {hash || 'NENHUM HASH FORNECIDO PARA VALIDAÇÃO'}
               </div>
             </div>
-          )}
+          </div>
         </div>
 
         <div className="bg-slate-50 p-4 text-center border-t border-slate-100">
