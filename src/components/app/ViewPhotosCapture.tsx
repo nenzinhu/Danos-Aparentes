@@ -19,6 +19,7 @@ import {
   updatePhotoUploadProgress,
 } from '@/src/lib/photoUploadProgress'
 import { suggestViewDamageFromPhoto } from '@/src/lib/viewDamageSuggestClient'
+import { classifyViewSides } from '@/src/lib/viewSideClassifyClient'
 import { ResolvedPhoto } from '@/src/components/ResolvedPhoto'
 import PhotoAttachButtons from '@/src/components/PhotoAttachButtons'
 import ViewSideConfirmPanel, { type ConfirmItem } from '@/src/components/app/ViewSideConfirmPanel'
@@ -83,6 +84,7 @@ export default function ViewPhotosCapture({
   const [analyzingView, setAnalyzingView] = useState<ViewType | null>(null)
   const [replaceView, setReplaceView] = useState<ViewType | null>(null)
   const [busyView, setBusyView] = useState<ViewType | null>(null)
+  const [autoClassifying, setAutoClassifying] = useState(false)
   const [localAssignments, setLocalAssignments] = useState<ConfirmItem[]>([])
   const damageRunForConfirmAt = useRef<string | null>(null)
 
@@ -236,6 +238,58 @@ export default function ViewPhotosCapture({
       })
     } finally {
       setConfirming(false)
+    }
+  }
+
+  async function runLightning() {
+    if (pending.length !== 4) {
+      onToast?.('Tire as 4 fotos (frente, traseira, esquerda e direita) antes do relâmpago.')
+      return
+    }
+    setAutoClassifying(true)
+    try {
+      const suggestions = await classifyViewSides(pending, accessToken)
+      if (!suggestions.length) {
+        onToast?.('IA não identificou os lados. Assinale na mão.')
+        return
+      }
+      const assignments: ViewSideAssignment[] = suggestions
+        .filter((s) => s.suggestedView)
+        .map((s) => ({ photoRef: s.photoRef, view: s.suggestedView }))
+      // Protege contra lados duplicados sugeridos pela IA: mantém só o primeiro por lado.
+      const seen = new Set<ViewType>()
+      const deduped = assignments.filter((a) => {
+        if (seen.has(a.view)) return false
+        seen.add(a.view)
+        return true
+      })
+      if (deduped.length < 4) {
+        onToast?.('IA deixou dúvida em algum lado. Assinale na mão para garantir.')
+        return
+      }
+      const viewPhotos = buildViewPhotosFromAssignments(deduped)
+      const confirmedAt = new Date().toISOString()
+      onChange({
+        ...info,
+        viewPhotos: { ...(info.viewPhotos || {}), ...viewPhotos },
+        pendingViewPhotoRefs: [],
+        viewSideSuggestions: suggestions.map((s) => ({
+          photoRef: s.photoRef,
+          suggestedView: s.suggestedView,
+        })),
+        viewSidesConfirmedAt: confirmedAt,
+        viewSidesConfirmedBy: 'IA (relâmpago)',
+      })
+      setLocalAssignments([])
+      onToast?.('Lados identificados pela IA. Analisando avarias nas 4 vistas…')
+      queueMicrotask(() => {
+        void runDamageAnalysis(viewPhotos, { force: true, runKey: confirmedAt })
+      })
+    } catch (e) {
+      console.error(e)
+      onToast?.('Sem conexão ou IA indisponível. Assinale os lados na mão.')
+    } finally {
+      setAutoClassifying(false)
     }
   }
 
@@ -471,6 +525,16 @@ export default function ViewPhotosCapture({
               onClick={openSideAssignment}
             >
               Assinalar lados das 4 fotos
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="md"
+              disabled={pending.length !== 4 || busy || autoClassifying}
+              onClick={() => void runLightning()}
+              title="IA identifica os lados e marca as avarias automaticamente"
+            >
+              {autoClassifying ? '⚡ Identificando…' : '⚡ Vistoria Relâmpago'}
             </Button>
             {pending.length > 0 && pending.length < 4 && (
               <p className="ds-caption self-center">
