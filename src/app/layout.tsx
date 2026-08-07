@@ -267,8 +267,8 @@ export default function RootLayout({
                   inLanguage: 'pt-BR',
                   offers: {
                     '@type': 'Offer',
+                    price: '0',
                     priceCurrency: 'BRL',
-                    category: 'Free',
                     url: `${SITE_URL}/planos`,
                   },
                   publisher: { '@id': `${SITE_URL}/#organization` },

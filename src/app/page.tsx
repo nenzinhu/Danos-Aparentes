@@ -70,8 +70,8 @@ const LANDING_JSONLD = {
     '@type': 'AggregateOffer',
     priceCurrency: 'BRL',
     lowPrice: '29.90',
-    highPrice: '1490.00',
-    offerCount: 5,
+    highPrice: '299.00',
+    offerCount: 3,
     offers: [
       {
         '@type': 'Offer',
