@@ -79,6 +79,12 @@
   --signal-glow: rgba(245, 166, 35, 0.35);
   --sheet-line: rgba(245, 166, 35, 0.5);
 
+  /* Sucesso / positivo — verde que funciona nos dois temas (substitui emerald fixo) */
+  --success: #34d399;
+  --success-bright: #6ee7b7;
+  --success-bg: rgba(16, 185, 129, 0.12);
+  --success-border: rgba(52, 211, 153, 0.3);
+
   /* Etiquetas de avaria (callouts) — contraste no tema escuro */
   --damage-select-stroke: #67e8f9;
   --damage-select-fill: rgba(34, 211, 238, 0.22);
@@ -309,6 +315,12 @@ html.light {
   --signal-bright: #8a5508;
   --signal-glow: rgba(138, 85, 8, 0.22);
   --sheet-line: rgba(138, 85, 8, 0.5);
+
+  /* Sucesso / positivo no modo claro: verde escuro legivel (>=4.5:1 sobre fundo claro) */
+  --success: #15803d;
+  --success-bright: #166534;
+  --success-bg: rgba(21, 128, 61, 0.1);
+  --success-border: rgba(21, 128, 61, 0.28);
 
   /* Callouts legíveis sobre o diagrama no modo claro */
   --damage-select-stroke: #0e7490;

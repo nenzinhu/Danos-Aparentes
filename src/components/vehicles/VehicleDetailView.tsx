@@ -214,8 +214,8 @@ export default function VehicleDetailView({
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--success-border)] bg-[var(--success-bg)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[var(--success)]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--success)] animate-pulse" />
                     Histórico Digital Ativo
                   </span>
                   {vehicle.lastLocation?.trim() ? (
@@ -235,15 +235,15 @@ export default function VehicleDetailView({
                   </div>
                   {/* Valor FIPE em destaque na testa do card */}
                   {fipe?.valor?.trim() ? (
-                    <div className="shrink-0 rounded-2xl border border-emerald-400/35 bg-emerald-500/10 px-4 py-3 text-left sm:text-right shadow-[0_0_28px_-8px_rgba(52,211,153,0.45)]">
-                      <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-emerald-300/90">
+                    <div className="shrink-0 rounded-2xl border border-[var(--success-border)] bg-[var(--success-bg)] px-4 py-3 text-left sm:text-right shadow-[0_0_24px_-10px_var(--success-glow,transparent)]">
+                      <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[var(--success)]/90">
                         Valor FIPE
                       </p>
-                      <p className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-emerald-200 tabular-nums leading-none mt-1">
+                      <p className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[var(--success)] tabular-nums leading-none mt-1">
                         {fipe.valor.trim()}
                       </p>
                       {fipe.mesReferencia?.trim() ? (
-                        <p className="mt-1.5 text-[10px] font-semibold text-emerald-200/70">
+                        <p className="mt-1.5 text-[10px] font-semibold text-[var(--success)]/80">
                           Ref. {fipe.mesReferencia.trim()}
                         </p>
                       ) : null}

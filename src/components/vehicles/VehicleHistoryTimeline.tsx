@@ -602,7 +602,7 @@ export default function VehicleHistoryTimeline({
                         >
                           {style.label}
                         </span>
-                        <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-bold text-emerald-300">
+                        <span className="inline-flex items-center gap-1 rounded-full border border-[var(--success-border)] bg-[var(--success-bg)] px-2 py-0.5 text-[10px] font-bold text-[var(--success)]">
                           <span aria-hidden>{statusIcon(item.status)}</span>
                           {item.statusLabel}
                         </span>
@@ -672,7 +672,7 @@ export default function VehicleHistoryTimeline({
                               key={b}
                               className="flex items-start gap-2 text-sm text-[var(--text-main)]/90"
                             >
-                              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400/80" />
+                              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--success)]/80" />
                               <span>{b}</span>
                             </li>
                           ))}
