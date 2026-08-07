@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { gsap } from 'gsap'
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { vehicleRegistry } from './vehicles/registry'
 import { vehicleOptions } from './VehicleShowcaseSection'
 import { VehicleIconSvg } from './VehicleSelector'
@@ -33,6 +35,38 @@ export default function HeroVehiclePicker() {
   const damages = damagesByVehicle[activeVehicle] ?? []
 
   useEffect(() => {
+    const wrap = diagramWrapRef.current
+    if (!wrap) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    gsap.registerPlugin(DrawSVGPlugin, ScrollTrigger)
+
+    const ctx = gsap.context(() => {
+      const shapes = gsap.utils.toArray<SVGGeometryElement>(
+        'svg path, svg line, svg polygon, svg circle, svg rect',
+        wrap,
+      )
+      if (!shapes.length) return
+      gsap.fromTo(
+        shapes,
+        { drawSVG: '0%' },
+        {
+          drawSVG: '100%',
+          duration: 1,
+          stagger: 0.012,
+          ease: 'power1.inOut',
+          scrollTrigger: {
+            trigger: wrap,
+            start: 'top 82%',
+            toggleActions: 'play none none reverse',
+          },
+        },
+      )
+    }, wrap)
+
+    return () => ctx.revert()
+  }, [])
+
+  useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false
       return
@@ -45,6 +79,21 @@ export default function HeroVehiclePicker() {
       { opacity: 0, scale: 0.96, y: 6 },
       { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: 'power2.out' },
     )
+    // Redesenha o contorno do novo veículo ao trocar.
+    const wrap = diagramWrapRef.current
+    if (wrap) {
+      const shapes = gsap.utils.toArray<SVGGeometryElement>(
+        'svg path, svg line, svg polygon, svg circle, svg rect',
+        wrap,
+      )
+      if (shapes.length) {
+        gsap.fromTo(
+          shapes,
+          { drawSVG: '0%' },
+          { drawSVG: '100%', duration: 0.8, stagger: 0.012, ease: 'power1.inOut' },
+        )
+      }
+    }
   }, [activeVehicle])
 
   const selected = vehicleOptions.find(o => o.type === activeVehicle) || vehicleOptions[0]
