@@ -15,6 +15,7 @@ import AppAuthGate from '@/src/components/app/AppAuthGate'
 import AppTabBar from '@/src/components/app/AppTabBar'
 import AppShellOverlays from '@/src/components/app/AppShellOverlays'
 import PhotoUploadProgressBar from '@/src/components/PhotoUploadProgressBar'
+import ErrorBoundary from '@/src/components/ErrorBoundary'
 import { useTenantContext } from '@/src/hooks/useTenantContext'
 import type { Session } from '@supabase/supabase-js'
 import { completeOnboarding } from '@/src/lib/onboarding'
@@ -240,6 +241,7 @@ export default function AppAuthenticatedShell({
             showTeamTab={subscription?.isCorporate ?? false}
           />
 
+          <ErrorBoundary>
           <main className="w-full max-w-7xl px-4 sm:px-5 flex flex-col gap-5 mt-3">
             {shell.activeTab === 'dashboard' ? (
               <DashboardView
@@ -340,6 +342,7 @@ export default function AppAuthenticatedShell({
               />
             )}
           </main>
+          </ErrorBoundary>
 
           <AppShellOverlays
             savedModal={shell.savedModal}
