@@ -33,6 +33,7 @@ CREATE INDEX IF NOT EXISTS idx_webhook_company ON public.webhook_subscriptions (
 ALTER TABLE public.api_keys ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.webhook_subscriptions ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Acesso a chaves de API por empresa" ON public.api_keys;
 CREATE POLICY "Acesso a chaves de API por empresa" ON public.api_keys
   FOR ALL USING (
     company_id IN (
@@ -45,6 +46,7 @@ CREATE POLICY "Acesso a chaves de API por empresa" ON public.api_keys
     OR auth.role() = 'service_role'
   );
 
+DROP POLICY IF EXISTS "Acesso a webhooks por empresa" ON public.webhook_subscriptions;
 CREATE POLICY "Acesso a webhooks por empresa" ON public.webhook_subscriptions
   FOR ALL USING (
     company_id IN (

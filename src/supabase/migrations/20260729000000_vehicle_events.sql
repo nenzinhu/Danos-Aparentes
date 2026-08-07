@@ -31,24 +31,28 @@ CREATE INDEX IF NOT EXISTS idx_vehicle_events_type ON public.vehicle_events (typ
 ALTER TABLE public.vehicle_events ENABLE ROW LEVEL SECURITY;
 
 -- Políticas de RLS para acesso isolado por tenant/usuário
+DROP POLICY IF EXISTS "Permitir leitura de eventos por tenant" ON public.vehicle_events;
 CREATE POLICY "Permitir leitura de eventos por tenant" ON public.vehicle_events
   FOR SELECT USING (
     tenant_id = COALESCE(auth.jwt() ->> 'company_id', 'user:' || auth.uid()::text)
     OR auth.role() = 'service_role'
   );
 
+DROP POLICY IF EXISTS "Permitir criacao de eventos por tenant" ON public.vehicle_events;
 CREATE POLICY "Permitir criacao de eventos por tenant" ON public.vehicle_events
   FOR INSERT WITH CHECK (
     tenant_id = COALESCE(auth.jwt() ->> 'company_id', 'user:' || auth.uid()::text)
     OR auth.role() = 'service_role'
   );
 
+DROP POLICY IF EXISTS "Permitir atualizacao de eventos por tenant" ON public.vehicle_events;
 CREATE POLICY "Permitir atualizacao de eventos por tenant" ON public.vehicle_events
   FOR UPDATE USING (
     tenant_id = COALESCE(auth.jwt() ->> 'company_id', 'user:' || auth.uid()::text)
     OR auth.role() = 'service_role'
   );
 
+DROP POLICY IF EXISTS "Permitir delecao de eventos por tenant" ON public.vehicle_events;
 CREATE POLICY "Permitir delecao de eventos por tenant" ON public.vehicle_events
   FOR DELETE USING (
     tenant_id = COALESCE(auth.jwt() ->> 'company_id', 'user:' || auth.uid()::text)

@@ -80,17 +80,21 @@ AS $$
     );
 $$;
 
+DROP POLICY IF EXISTS "vehicle_events_select_tenant" ON public.vehicle_events;
 CREATE POLICY "vehicle_events_select_tenant" ON public.vehicle_events
   FOR SELECT USING (public.can_access_vehicle_event_tenant(tenant_id));
 
+DROP POLICY IF EXISTS "vehicle_events_insert_tenant" ON public.vehicle_events;
 CREATE POLICY "vehicle_events_insert_tenant" ON public.vehicle_events
   FOR INSERT WITH CHECK (
     public.can_access_vehicle_event_tenant(tenant_id)
     AND (created_by IS NULL OR created_by = auth.uid())
   );
 
+DROP POLICY IF EXISTS "vehicle_events_update_tenant" ON public.vehicle_events;
 CREATE POLICY "vehicle_events_update_tenant" ON public.vehicle_events
   FOR UPDATE USING (public.can_access_vehicle_event_tenant(tenant_id));
 
+DROP POLICY IF EXISTS "vehicle_events_delete_tenant" ON public.vehicle_events;
 CREATE POLICY "vehicle_events_delete_tenant" ON public.vehicle_events
   FOR DELETE USING (public.can_access_vehicle_event_tenant(tenant_id));
