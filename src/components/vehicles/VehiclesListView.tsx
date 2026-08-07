@@ -71,24 +71,38 @@ export default function VehiclesListView({
             href={`/app/vehicles/${encodeURIComponent(v.id)}`}
             className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] p-4 flex items-center justify-between gap-4 hover:border-sky-500/40 transition-colors"
           >
-            <div>
+            <div className="min-w-0 flex-1">
               <p className="font-display text-xl font-bold tracking-wide">{v.plate || '—'}</p>
-              <p className="text-xs text-[var(--text-muted)] mt-0.5">
+              <p
+                className="text-xs text-[var(--text-muted)] mt-0.5 truncate"
+                title={
+                  [v.brand, v.color].filter(Boolean).join(' ') +
+                  (v.lastLocation ? ` · ${v.lastLocation}` : '')
+                }
+              >
                 {[v.brand, v.color].filter(Boolean).join(' · ') || 'Veículo'}
                 {v.lastLocation ? ` · ${v.lastLocation}` : ''}
               </p>
             </div>
-            <div className="text-right text-xs text-[var(--text-muted)] shrink-0">
+            <div className="flex flex-col items-end gap-0.5 text-right text-xs leading-snug">
               {v.cloudOnly ? (
-                <p className="font-bold text-sky-300">Só na nuvem</p>
+                <span className="font-bold text-sky-300">Só na nuvem</span>
               ) : (
-                <p className="font-bold text-[var(--text-main)]">{v.reports.length} vistoria(s)</p>
+                <span className="font-bold tabular-nums text-[var(--text-main)]">
+                  {v.reports.length} vistoria(vistorias)
+                </span>
               )}
-              <p>{v.activeDamageCount} dano(s) na última</p>
+              <span className="tabular-nums text-[var(--text-muted)]">
+                {v.activeDamageCount} dano(s) na última
+              </span>
               {v.newDamagesOnLast > 0 && (
-                <p className="text-amber-400 font-bold mt-0.5">{v.newDamagesOnLast} novo(s)</p>
+                <span className="font-bold text-amber-400 tabular-nums">
+                  +{v.newDamagesOnLast} novo(s)
+                </span>
               )}
-              <p className="mt-1">Última: {formatDate(v.lastInspectedAt)}</p>
+              <span className="pt-0.5 text-[var(--text-muted)]/70">
+                Última: {formatDate(v.lastInspectedAt)}
+              </span>
             </div>
           </Link>
         ))
