@@ -245,10 +245,10 @@ function PdfReportCarousel({
           src={current.preview}
           alt={current.alt}
           fill
-          quality={100}
+          quality={85}
           priority={page === 0}
           className="object-contain object-top"
-          sizes="100vw"
+          sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1200px) 45vw, 524px"
         />
         <span className="absolute bottom-3 right-3 rounded-lg bg-black/70 px-2.5 py-1.5 font-mono-data text-[10px] uppercase tracking-wider text-white">
           Toque para zoom · PDF

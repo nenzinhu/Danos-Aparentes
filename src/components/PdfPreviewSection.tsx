@@ -168,7 +168,7 @@ export default function PdfPreviewSection() {
                     width={page.width}
                     height={page.height}
                     loading="lazy"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 556px"
+                    sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1024px) calc(50vw - 24px), 556px"
                     className="w-full h-full object-contain rounded transition-transform duration-300 group-hover:scale-[1.02]"
                   />
                   {/* Badge Overlay */}

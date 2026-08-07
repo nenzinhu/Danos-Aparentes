@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import Reveal from '../Reveal'
 import {
   IconSparkles,
@@ -139,15 +140,26 @@ export default function FeaturesGridSection() {
         </Reveal>
 
         <Reveal delay={80} className="flex flex-col items-center lg:items-end sticky top-24">
-          <div className="w-full max-w-[260px] sm:max-w-[280px] overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black shadow-xl ring-1 ring-[var(--primary)]/15">
+          <div className="w-full max-w-[260px] sm:max-w-[280px] overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black shadow-xl ring-1 ring-[var(--primary)]/15 relative">
+            {/* Poster via next/image para servir tamanho correto (~280px max) */}
+            <Image
+              src={POSTER}
+              alt=""
+              aria-hidden="true"
+              width={280}
+              height={498}
+              sizes="(max-width: 640px) 260px, 280px"
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              priority={false}
+            />
             <video
               src={SRC}
               poster={POSTER}
               controls
               playsInline
-              preload="metadata"
+              preload="none"
               aria-label={VIDEO_TITLE}
-              className="w-full h-auto aspect-[9/16]"
+              className="w-full h-auto aspect-[9/16] relative z-10"
             />
           </div>
           <p className="mt-3 text-center lg:text-right text-xs text-[var(--text-muted)] max-w-[280px]">
