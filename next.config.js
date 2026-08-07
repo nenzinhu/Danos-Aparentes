@@ -34,6 +34,9 @@ const nextConfig = {
   },
   images: {
     formats: ['image/avif', 'image/webp'],
+    // Qualidades customizadas usadas por next/image (DiffCompareSection usa 85,
+    // AiAssistantSection usa 92). Sem isso o Next emite warning de quality não configurada.
+    qualities: [75, 85, 92],
     // Permite que next/image sirva imagens redimensionadas nos tamanhos usados
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 556],
