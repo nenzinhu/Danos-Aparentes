@@ -257,6 +257,25 @@ export default function RootLayout({
                   publisher: { '@id': `${SITE_URL}/#organization` },
                 },
                 {
+                  '@type': 'SoftwareApplication',
+                  '@id': `${SITE_URL}/#webapp`,
+                  name: 'Danos Aparentes',
+                  url: SITE_URL,
+                  applicationCategory: 'BusinessApplication',
+                  applicationSubCategory: 'Inteligência Histórica Veicular',
+                  operatingSystem: 'Web',
+                  inLanguage: 'pt-BR',
+                  offers: {
+                    '@type': 'Offer',
+                    priceCurrency: 'BRL',
+                    category: 'Free',
+                    url: `${SITE_URL}/planos`,
+                  },
+                  publisher: { '@id': `${SITE_URL}/#organization` },
+                  description:
+                    'Plataforma brasileira para registrar, comparar e comprovar o histórico de veículos com fotos, avarias, evidências e laudos técnicos assistidos por IA.',
+                },
+                {
                   '@type': 'WebPage',
                   '@id': `${SITE_URL}/#webpage`,
                   url: SITE_URL,
