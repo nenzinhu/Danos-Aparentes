@@ -61,19 +61,26 @@ export function useSavedReports(userId?: string) {
 
   const refreshRemote = useCallback(async () => {
     if (!supabaseEnabled || !userId) return
-    const { reports, merges } = await mergeRemoteReports(userId)
-    setSaved(reports)
-    const multi = merges.filter((m) => m.multiContributor)
-    if (multi.length > 0) {
-      const totalExtra = multi.reduce(
-        (s, m) => s + m.damagesFromLocalOnly + m.damagesFromRemoteOnly,
-        0,
-      )
-      setMergeNotice(
-        multi.length === 1
-          ? `Histórico mesclado na sync: contribuições de mais de um dispositivo (${totalExtra} dano(s) unidos).`
-          : `${multi.length} vistorias mescladas na sync (multi-dispositivo).`,
-      )
+    try {
+      const { reports, merges } = await mergeRemoteReports(userId)
+      // Nunca esvaziar a lista local se a sync falhar ou retornar vazia
+      // inadvertidamente: só atualiza se houver um array válido.
+      if (Array.isArray(reports)) setSaved(reports)
+      const multi = merges.filter((m) => m.multiContributor)
+      if (multi.length > 0) {
+        const totalExtra = multi.reduce(
+          (s, m) => s + m.damagesFromLocalOnly + m.damagesFromRemoteOnly,
+          0,
+        )
+        setMergeNotice(
+          multi.length === 1
+            ? `Histórico mesclado na sync: contribuições de mais de um dispositivo (${totalExtra} dano(s) unidos).`
+            : `${multi.length} vistorias mescladas na sync (multi-dispositivo).`,
+        )
+      }
+    } catch (err) {
+      // Falha de sync não deve zerar o histórico local já carregado.
+      console.error('[sync] falha ao mesclar relatórios remotos:', err)
     }
   }, [userId])
 
