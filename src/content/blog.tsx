@@ -4803,6 +4803,280 @@ BLOG_POSTS.push(
   },
 )
 
+BLOG_POSTS.push(
+  {
+    slug: 'oficina-laudo-entrada-veiculo-divergencia-orcamento',
+    title: 'Oficina e Mecânica: Laudo de Entrada Acaba com a Divergência de Orçamento',
+    excerpt:
+      'Oficina, mecânica e funilaria: a dor do veículo que entra limpo e sai com avaria contestada. Saiba como o histórico inteligente de veículo registra o estado na chegada.',
+    category: 'Oficina',
+    tags: ['oficina', 'mecânica', 'funilaria', 'borracharia', 'laudo de entrada', 'orçamento de conserto', 'histórico de veículo', 'divergência de reparo'],
+    date: '2026-08-07',
+    updatedDate: '2026-08-07',
+    readingMinutes: 6,
+    author: { name: 'Jeferson', role: 'Vistoria digital B2B' },
+    cover: { gradient: 'linear-gradient(135deg,#7c2d12 0%,#c2410c 45%,#fb923c 100%)', emoji: '🔧', image: '/blog-covers/digitalizar-vistoria-oficina.webp' },
+    toc: [
+      { id: 'dor', label: 'A dor da oficina' },
+      { id: 'risco', label: 'O risco do conserto' },
+      { id: 'solucao', label: 'Laudo de entrada do veículo' },
+      { id: 'beneficio', label: 'Benefício para o negócio' },
+    ],
+    faq: [
+      { question: 'Como a oficina prova que a avaria não foi causada no conserto?', answer: 'Com um laudo de entrada no recebimento: fotos das 4 vistas e assinatura registram o estado antes de subir no elevador. Na entrega, o compare mostra o que é novo.' },
+      { question: 'Laudo de entrada ajuda na divergência de orçamento?', answer: 'Sim. Ele documenta o que já estava danificado antes do serviço, evitando que o cliente cobre da oficina um risco pré-existente.' },
+    ],
+    content: (
+      <>
+        <p>
+          Na oficina, a história se repete: o cliente deixa o carro para trocar o óleo e volta
+          reclamando de um amassado na lateral. <strong>Foi na baixa do elevador ou já estava?</strong>{' '}
+          Sem registro, a mecânica paga a conta.
+        </p>
+        <h2 id="dor">A dor da oficina</h2>
+        <p>
+          O veículo entra, sobe no elevador, e ninguém fotografa o estado. Na entrega, qualquer
+          arranhão vira &ldquo;a oficina bateu&rdquo;. A funilaria e a borracharia carregam o prejuízo.
+        </p>
+        <h2 id="risco">O risco do conserto</h2>
+        <ul>
+          <li><strong>Conserto por conta própria</strong> de dano que não causou.</li>
+          <li><strong>Reclamação de má qualidade</strong> — dano à reputação local.</li>
+          <li><strong>Cliente perdido</strong> que não volta mais.</li>
+        </ul>
+        <Cta />
+        <h2 id="solucao">Laudo de entrada do veículo</h2>
+        <p>
+          No <strong>recebimento</strong>, o carro é vistoriado nas 4 vistas com GPS e o cliente
+          assina o estado. O histórico por placa mostra as visitas anteriores — se o risco já
+          constava, a oficina está livre.
+        </p>
+        <h2 id="beneficio">Benefício para o negócio</h2>
+        <p>
+          A oficina entrega com <strong>prova de origem</strong>. O orçamento bate com o serviço, a
+          divergência cai e o cliente confia — porque tudo está registrado.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'seguradora-pericia-sinistro-laudo-verificavel',
+    title: 'Seguradora e Perícia: Laudo Verificável Acelera o Pagamento de Sinistro',
+    excerpt:
+      'Seguradora, perito e indenização: a dor do sinistro travado por falta de prova. Veja como o histórico inteligente de veículo com hash e QR Code agiliza a análise.',
+    category: 'Seguro',
+    tags: ['seguradora', 'perito', 'sinistro', 'indenização', 'vistoria de sinistro', 'perícia de avaria', 'laudo verificável', 'histórico de veículo'],
+    date: '2026-08-07',
+    updatedDate: '2026-08-07',
+    readingMinutes: 7,
+    author: { name: 'Jeferson', role: 'Vistoria digital B2B' },
+    cover: { gradient: 'linear-gradient(135deg,#0f766e 0%,#0d9488 45%,#2dd4bf 100%)', emoji: '🛡️', image: '/blog-covers/relatorio-pdf-oficial-com-seguranca-maxima.webp' },
+    toc: [
+      { id: 'dor', label: 'A dor da seguradora' },
+      { id: 'atraso', label: 'O custo do sinistro travado' },
+      { id: 'solucao', label: 'Laudo verificável com hash e QR' },
+      { id: 'beneficio', label: 'Benefício para a análise' },
+    ],
+    faq: [
+      { question: 'Como o laudo verificável acelera a perícia de sinistro?', answer: 'Porque traz avarias por peça, fotos geolocalizadas e assinatura num documento que o perito confere em segundos pelo QR Code — sem idas e voltas.' },
+      { question: 'Por que usar hash SHA-256 no laudo de seguro?', answer: 'O hash prova que o laudo não foi editado após a vistoria, eliminando a suspeita de fraude na indenização.' },
+    ],
+    content: (
+      <>
+        <p>
+          Seguradora e perito vivem de documentar sinistro. A dor: o processo travado porque falta
+          prova, o <strong>pagamento atrasa meses</strong> e o segurado reclama no Procon.
+        </p>
+        <h2 id="dor">A dor da seguradora</h2>
+        <p>
+          O laudo chega incompleto — sem foto de contexto, sem assinatura. O perito marca visita,
+          pede complemento, e cada documento faltante adia a indenização.
+        </p>
+        <h2 id="atraso">O custo do sinistro travado</h2>
+        <ul>
+          <li><strong>Indenização parada</strong> gera juros e processo.</li>
+          <li><strong>Perito sobrecarregado</strong> com retrabalho.</li>
+          <li><strong>Segurado insatisfeito</strong> cancela o contrato.</li>
+        </ul>
+        <Cta />
+        <h2 id="solucao">Laudo verificável com hash e QR</h2>
+        <p>
+          O laudo de avarias sai com <strong>hash SHA-256 e QR Code</strong>: o perito aponta a câmera
+          e confere o original online. Avarias por peça, fotos com GPS e assinatura fecham a prova
+          num só documento.
+        </p>
+        <h2 id="beneficio">Benefício para a análise</h2>
+        <p>
+          A seguradora reduz o ciclo de sinistro, o perito confere em vez de coletar, e a
+          indenização sai certa — <strong>com prova, não com palpite</strong>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'despachante-transferencia-veicular-laudo-procedencia',
+    title: 'Despachante: Laudo de Procedência para Transferência Veicular no DETRAN',
+    excerpt:
+      'Despachante e regularização: a dor da transferência sem comprovação do estado do veículo. Saiba como o histórico inteligente de veículo embasa o processo no DETRAN.',
+    category: 'Despachante',
+    tags: ['despachante', 'transferência veicular', 'DETRAN', 'regularização', 'laudo de procedência', 'histórico de veículo', 'mudança de propriedade'],
+    date: '2026-08-07',
+    updatedDate: '2026-08-07',
+    readingMinutes: 6,
+    author: { name: 'Jeferson', role: 'Vistoria digital B2B' },
+    cover: { gradient: 'linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 45%,#38bdf8 100%)', emoji: '📑', image: '/blog-covers/laudo-de-vistoria-para-despachantes.webp' },
+    toc: [
+      { id: 'dor', label: 'A dor do despachante' },
+      { id: 'risco', label: 'O risco da transferência' },
+      { id: 'solucao', label: 'Laudo de procedência do veículo' },
+      { id: 'beneficio', label: 'Benefício para o processo' },
+    ],
+    faq: [
+      { question: 'Como o despachante comprova o estado do veículo na transferência?', answer: 'Com um laudo de procedência: fotos e avarias por peça registradas no momento da transação, servindo de embasamento para a mudança de propriedade no DETRAN.' },
+      { question: 'O histórico de veículo ajuda na regularização?', answer: 'Sim. Ele mostra as transferências anteriores e o estado de cada uma, dando sequência documental ao processo de regularização.' },
+    ],
+    content: (
+      <>
+        <p>
+          Despachante vive de tirar veículo do papel. A dor: a transferência travada porque ninguém
+          comprova o <strong>estado do carro na mudança de dono</strong> — e o DETRAN pede mais
+          documentos.
+        </p>
+        <h2 id="dor">A dor do despachante</h2>
+        <p>
+          O cliente chega com o carro e o contrato, mas sem registro do estado. Na vistoria do
+          órgão, uma avaria vira motivo de indeferimento e o processo recomeça.
+        </p>
+        <h2 id="risco">O risco da transferência</h2>
+        <ul>
+          <li><strong>Indeferimento no DETRAN</strong> por falta de prova.</li>
+          <li><strong>Retrabalho do despachante</strong> sem cobrar extra.</li>
+          <li><strong>Cliente insatisfeito</strong> com a demora.</li>
+        </ul>
+        <Cta />
+        <h2 id="solucao">Laudo de procedência do veículo</h2>
+        <p>
+          Na <strong>transação</strong>, o veículo recebe um laudo de procedência com fotos e
+          assinatura de ambas as partes. O histórico por placa registra a cadeia de transferências —
+          cada dono, cada estado.
+        </p>
+        <h2 id="beneficio">Benefício para o processo</h2>
+        <p>
+          O despachante leva um <strong>documento embasado</strong> ao DETRAN. A transferência sai
+          sem surpresa, e o cliente vê profissionalismo na regularização.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'frotista-corporativo-historico-unificado-avarias',
+    title: 'Frotista Corporativo: Histórico Unificado de Avarias em Escala',
+    excerpt:
+      'Gestão de frota corporativa e a dor do controle de avarias pulverizado. Veja como o histórico inteligente de veículo unifica o registro entre motoristas e unidades.',
+    category: 'Frota',
+    tags: ['frotista', 'gestão de frota', 'frota corporativa', 'controle de avarias', 'veículos da empresa', 'histórico de veículo', 'motorista'],
+    date: '2026-08-07',
+    updatedDate: '2026-08-07',
+    readingMinutes: 7,
+    author: { name: 'Jeferson', role: 'Vistoria digital B2B' },
+    cover: { gradient: 'linear-gradient(135deg,#312e81 0%,#4f46e5 45%,#818cf8 100%)', emoji: '🚐', image: '/blog-covers/controle-avarias-frota.webp' },
+    toc: [
+      { id: 'dor', label: 'A dor do frotista' },
+      { id: 'pulverizacao', label: 'O problema do controle pulverizado' },
+      { id: 'solucao', label: 'Histórico unificado por placa' },
+      { id: 'beneficio', label: 'Benefício para a gestão' },
+    ],
+    faq: [
+      { question: 'Como o frotista controla avarias entre motoristas?', answer: 'Com laudo de entrega e devolução por motorista, associado à placa. O sistema cruza o histórico e mostra quem responde por cada avaria.' },
+      { question: 'Um histórico unificado ajuda a gestão de frota?', answer: 'Sim. Ele centraliza o registro de todas as unidades e motoristas, substituindo planilhas isoladas por uma linha do tempo por veículo.' },
+    ],
+    content: (
+      <>
+        <p>
+          Frotista corporativo opera dezenas de veículos e tantos motoristas. A dor: a avaria
+          aparece, <strong>ninguém sabe de quem</strong> e a culpa fica com a empresa.
+        </p>
+        <h2 id="dor">A dor do frotista</h2>
+        <p>
+          Cada motorista entrega o carro sem laudo. Na revisão, o amassado aparece e ninguém assume
+          — a frota absorve o custo.
+        </p>
+        <h2 id="pulverizacao">O problema do controle pulverizado</h2>
+        <ul>
+          <li><strong>Planilhas por unidade</strong> que não se falam.</li>
+          <li><strong>Avaria sem responsável</strong> vira custo da empresa.</li>
+          <li><strong>Auditoria impossível</strong> em frota grande.</li>
+        </ul>
+        <Cta />
+        <h2 id="solucao">Histórico unificado por placa</h2>
+        <p>
+          Cada entrega/devolução de motorista gera um laudo associado à placa. O sistema cruza o
+          histórico e mostra a linha do tempo: <strong>quem pegou, quem devolveu, o que mudou</strong>.
+        </p>
+        <h2 id="beneficio">Benefício para a gestão</h2>
+        <p>
+          O frotista cobra o responsável certo, padroniza sem treinamento longo e tem relatório de
+          cada veículo — <strong>controle real, não planilha quebrada</strong>.
+        </p>
+      </>
+    ),
+  },
+  {
+    slug: 'concessionaria-seminovo-laudo-procedencia-venda',
+    title: 'Concessionária e Seminovos: Laudo de Procedência Aumenta a Confiança na Venda',
+    excerpt:
+      'Concessionária e revenda de seminovos: a dor do usado sem procedência. Saiba como o histórico inteligente de veículo embasa a venda e protege o cliente.',
+    category: 'Concessionária',
+    tags: ['concessionária', 'seminovos', 'revenda de usados', 'laudo de procedência', 'veículo usado', 'histórico de veículo', 'confiança na venda'],
+    date: '2026-08-07',
+    updatedDate: '2026-08-07',
+    readingMinutes: 6,
+    author: { name: 'Jeferson', role: 'Vistoria digital B2B' },
+    cover: { gradient: 'linear-gradient(135deg,#0c4a6e 0%,#0369a1 45%,#1FB6FF 100%)', emoji: '🏪', image: '/blog-covers/vistoria-de-seminovos-para-concessionarias.webp' },
+    toc: [
+      { id: 'dor', label: 'A dor da concessionária' },
+      { id: 'risco', label: 'O risco do seminovo sem prova' },
+      { id: 'solucao', label: 'Laudo de procedência na vitrine' },
+      { id: 'beneficio', label: 'Benefício para a venda' },
+    ],
+    faq: [
+      { question: 'Como a concessionária prova o estado do seminovo?', answer: 'Com um laudo de procedência: avarias por peça, fotos e quilometragem registradas, servindo de embasamento para a venda do usado.' },
+      { question: 'O histórico de veículo aumenta a confiança na venda?', answer: 'Sim. Mostrar a procedência do carro na vitrine transmite seriedade e reduz a objeção de compra por medo de golpe.' },
+    ],
+    content: (
+      <>
+        <p>
+          Concessionária e revenda de seminovos vivem de confiança. A dor: o cliente olha o usado e
+          pensa <strong>&ldquo;será que é batido escondido?&rdquo;</strong> — e não fecha.
+        </p>
+        <h2 id="dor">A dor da concessionária</h2>
+        <p>
+          O carro está na vitrine, mas sem registro do estado. O vendedor diz &ldquo;conservado&rdquo;,
+          o cliente desconfia e vai para a concorrência.
+        </p>
+        <h2 id="risco">O risco do seminovo sem prova</h2>
+        <ul>
+          <li><strong>Perda de venda</strong> por falta de credibilidade.</li>
+          <li><strong>Reclamação pós-venda</strong> de avaria oculta.</li>
+          <li><strong>Processo de má-fé</strong> contra a loja.</li>
+        </ul>
+        <Cta />
+        <h2 id="solucao">Laudo de procedência na vitrine</h2>
+        <p>
+          Cada seminovo recebe um laudo de procedência com avarias por peça e fotos. O histórico por
+          placa mostra a linha do tempo do veículo — e o QR Code permite ao cliente conferir o
+          original.
+        </p>
+        <h2 id="beneficio">Benefício para a venda</h2>
+        <p>
+          A concessionária vende com <strong>prova, não com promessa</strong>. O cliente confia, a
+          objeção cai e o fechamento vem mais rápido.
+        </p>
+      </>
+    ),
+  },
+)
+
 // Um parágrafo único por categoria — a página de categoria antes só listava
 // os mesmos cards que já aparecem em /blog (título + data), sem nenhum texto
 // próprio. Categorias com 1-2 posts ficavam praticamente idênticas ao post
