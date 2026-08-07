@@ -106,6 +106,25 @@ O resultado é um ciclo onde **a avaria é registrada no momento certo, no lugar
 
 ---
 
+## 🔟 10 Ideias & Inovações
+
+Lista de inovações que definem o Danos Aparentes e direções de produto de alto impacto.
+Itens marcados com ✅ já estão no core; itens com 🔬 são propostas de evolução.
+
+1. **✅ Diagrama de avarias por coordenada de peça.** Em vez de texto livre, o operador clica na peça exata e marca tipo/dimensão/gravidade. A avaria vira dado estruturado — zero ambiguidade.
+2. **✅ Laudo com hash SHA-256 + QR Code.** Cada relatório recebe uma impressão digital criptográfica e um QR apontando ao original. Integridade e verificabilidade contra falsificação.
+3. **✅ Histórico inteligente por placa.** Linha do tempo contínua (check-in → check-out, transferência, sinistro) entre operadores — estacionamento, valet, locadora, guincho, depósito, frota.
+4. **✅ PWA Offline-First.** IndexedDB + fila de sincronização permitem vistoriar sem internet e sincronizar depois (flush de 10s + throttle).
+5. **✅ Sync híbrido local⇄nuvem.** Merge por placa com Supabase Postgres + RLS por tenant; dados no dispositivo e na nuvem sem perder inspeção.
+6. **🔬 Visão Computacional para leitura de fotos.** Detectar e classificar avaria direto da foto (bounding box + gravidade), sugerindo o preenchimento do diagrama automaticamente — IA como copiloto.
+7. **🔬 Laudo de procedência embarcado no DETRAN/despachantes.** O mesmo laudo vira documento de transferência, fechando o ciclo de regularização.
+8. **🔬 Detecção de recorrência por placa.** Alerta quando uma placa retorna com avaria na mesma peça após check-out — evidência automática de responsabilidade.
+9. **🔬 API pública de verificação.** Terceiros (seguradoras, clientes) conferem a integridade de um laudo via QR Code sem login, tornando o laudo moeda de troca.
+10. **🔬 Analytics operacional de disputas.** Dashboard de taxa de disputa, MTTR de laudo e reincidência por frota — transforma o histórico em inteligência gerencial.
+
+---
+
 <p align="center">
   <sub>Danos Aparentes — Inteligência Histórica Veicular • <a href="https://www.danosaparentes.com.br">www.danosaparentes.com.br</a></sub>
 </p>
+
