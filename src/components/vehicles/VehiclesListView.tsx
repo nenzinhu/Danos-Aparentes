@@ -10,6 +10,10 @@ function formatDate(ts: number | null): string {
   return new Date(ts).toLocaleDateString('pt-BR')
 }
 
+function plural(n: number, singular: string, pluralStr: string): string {
+  return n === 1 ? singular : pluralStr
+}
+
 export default function VehiclesListView({
   vehicles,
 }: {
@@ -84,25 +88,23 @@ export default function VehiclesListView({
                 {v.lastLocation ? ` · ${v.lastLocation}` : ''}
               </p>
             </div>
-            <div className="flex flex-col items-end gap-0.5 text-right text-xs leading-snug">
+            <div className="flex flex-col items-end gap-1 text-right text-xs leading-snug">
               {v.cloudOnly ? (
                 <span className="font-bold text-sky-300">Só na nuvem</span>
               ) : (
                 <span className="font-bold tabular-nums text-[var(--text-main)]">
-                  {v.reports.length} vistoria(vistorias)
+                  {v.reports.length} {plural(v.reports.length, 'vistoria', 'vistorias')}
                 </span>
               )}
               <span className="tabular-nums text-[var(--text-muted)]">
-                {v.activeDamageCount} dano(s) na última
+                {v.activeDamageCount} {plural(v.activeDamageCount, 'dano', 'danos')} na última
               </span>
               {v.newDamagesOnLast > 0 && (
                 <span className="font-bold text-amber-400 tabular-nums">
-                  +{v.newDamagesOnLast} novo(s)
+                  +{v.newDamagesOnLast} {plural(v.newDamagesOnLast, 'novo', 'novos')}
                 </span>
               )}
-              <span className="pt-0.5 text-[var(--text-muted)]/70">
-                Última: {formatDate(v.lastInspectedAt)}
-              </span>
+              <span className="text-[var(--text-muted)]/70">Última: {formatDate(v.lastInspectedAt)}</span>
             </div>
           </Link>
         ))
