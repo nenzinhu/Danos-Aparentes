@@ -106,9 +106,14 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
   const handleClearData = async () => {
     try {
       await db.clearAllLocalData()
+      setShowClearConfirm(false)
+      onClose()
+      // Recarrega para garantir que todo o estado (sync status, listas em
+      // memória, cache de fotos) reflita o armazenamento local vazio.
+      // "Limpar Dados Locais" é irreversível por design.
+      window.location.reload()
     } catch (err) {
       console.error('Erro ao limpar dados locais:', err)
-    } finally {
       setShowClearConfirm(false)
       onClose()
     }

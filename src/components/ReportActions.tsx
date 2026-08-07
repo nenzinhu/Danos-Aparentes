@@ -175,8 +175,9 @@ export default function ReportActions({
     if (hash && hash !== 'N/D') {
       setReportHash(hash)
       onIssued?.(hash)
+      return true
     }
-    return true
+    return false
   }
 
   async function whatsappPdf(): Promise<boolean> {
