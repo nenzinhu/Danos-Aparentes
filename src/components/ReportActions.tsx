@@ -57,6 +57,8 @@ interface Props {
   userId?: string
   /** Bloqueia PDF (ex.: avarias novas sem confirmação do vistoriador). */
   blockExportReason?: string | null
+  /** Após gerar o PDF com sucesso, volta para o Início (Dashboard/Home). */
+  onReturnHome?: () => void
 }
 
 export default function ReportActions({
@@ -65,6 +67,7 @@ export default function ReportActions({
   inspectionPurpose, onIssued,
   reviewedAt, isReviewed, onConfirmReview, onClearReview, userId,
   blockExportReason = null,
+  onReturnHome,
 }: Props) {
   const { role } = useTenantContext(userId)
   const mayReview = userId ? canReviewReport(role, userId, userId) : true
@@ -387,6 +390,28 @@ export default function ReportActions({
               {loading === 'badge-copy' ? <span className="animate-pulse">⏳</span> : <IconCopy />}
               Copiar código
             </button>
+          </div>
+        )}
+
+        {reportHash && (
+          <div className="rounded-xl p-4 mt-2 border border-emerald-500/30 bg-emerald-500/10 flex flex-col items-center gap-3 text-center">
+            <div className="flex items-center gap-2 text-emerald-300 font-extrabold text-[0.95rem]">
+              <IconSeal />
+              Dossiê emitido com sucesso
+            </div>
+            <p className="text-[0.74rem] text-[var(--text-muted)] leading-relaxed max-w-[34ch]">
+              O laudo foi gerado e registrado na cadeia de auditoria. Compartilhe o
+              PDF ou retorne ao início para uma nova vistoria.
+            </p>
+            {onReturnHome && (
+              <button
+                type="button"
+                onClick={onReturnHome}
+                className="w-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white font-extrabold text-[0.85rem] py-2.5 px-4 rounded-xl shadow-lg shadow-emerald-500/20 hover:brightness-110 transition-all"
+              >
+                ↩️ Retornar ao Início
+              </button>
+            )}
           </div>
         )}
       </div>

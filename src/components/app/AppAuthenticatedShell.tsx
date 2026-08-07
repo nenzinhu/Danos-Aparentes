@@ -336,6 +336,7 @@ export default function AppAuthenticatedShell({
                 showActivationOnboarding={shell.showActivationOnboarding}
                 savedReportCount={saved.length}
                 onHideActivationOnboarding={() => shell.setShowActivationOnboarding(false)}
+                onReturnHome={() => shell.setActiveTab('dashboard')}
               />
             )}
           </main>

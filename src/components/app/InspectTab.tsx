@@ -163,6 +163,8 @@ interface InspectTabProps {
   showActivationOnboarding?: boolean
   savedReportCount?: number
   onHideActivationOnboarding?: () => void
+  /** Volta para o Início (Dashboard) após emitir o PDF com sucesso. */
+  onReturnHome?: () => void
 }
 
 export default function InspectTab({
@@ -227,6 +229,7 @@ export default function InspectTab({
   showActivationOnboarding = false,
   savedReportCount = 0,
   onHideActivationOnboarding,
+  onReturnHome,
 }: InspectTabProps) {
   const [section, setSection] = useState<InspectSection>('dados')
   const { role } = useTenantContext(userId)
@@ -658,6 +661,7 @@ export default function InspectTab({
               onClearReview={onClearReview}
               userId={userId}
               blockExportReason={blockExportReason}
+              onReturnHome={onReturnHome}
             />
             <InspectionAuditTimeline
               inspectionId={inspectionId}
