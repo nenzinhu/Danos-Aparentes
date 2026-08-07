@@ -167,20 +167,18 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
-        {/* ── Preconnect crítico: Google Fonts (2 origens) ─────────────────
-            Elimina latência de DNS+TCP+TLS na cadeia de fontes.
-            Deve vir antes do preload de imagem para não competir. */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
         {/* ── DNS-prefetch para scripts de terceiros (não-bloqueantes) ─── */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://connect.facebook.net" />
         <link rel="dns-prefetch" href="https://analytics.tiktok.com" />
         <link rel="dns-prefetch" href="https://cdn.posthog.com" />
 
-        {/* ── LCP hero image: preload da logo acima do fold ────────────── */}
-        <link rel="preload" href="/logo.png" as="image" type="image/png" fetchPriority="high" />
+        {/* ── LCP: preload do SVG da logo que é o elemento LCP real ──────
+            O Lighthouse identificou /brand/logo-full.svg como LCP.
+            Preloading como fetch + tipo correto garante descoberta imediata. */}
+        <link rel="preload" href="/brand/logo-full.svg" as="image" type="image/svg+xml" fetchPriority="high" />
+        {/* Mantém preload da logo.png para fallbacks e outros usos */}
+        <link rel="preload" href="/logo.png" as="image" type="image/png" />
         <style dangerouslySetInnerHTML={{ __html: `
           :root { color-scheme: dark; }
           html.light { color-scheme: light; }

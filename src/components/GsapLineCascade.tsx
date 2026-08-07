@@ -20,8 +20,9 @@ interface Props {
 }
 
 /**
- * Line cascade reveal. A11y: sr-only + aria-hidden no visual animado
- * (sem aria-label em <p>).
+ * Line cascade reveal. A11y: sr-only + aria-hidden no visual animado.
+ * SplitText é diferido para requestIdleCallback para não causar forced
+ * reflow durante o LCP e não bloquear a main thread nas primeiras tasks.
  */
 export default function GsapLineCascade({ children, as = 'p', className = '', delay = 0, stagger = 0.12 }: Props) {
   const visualRef = useRef<HTMLSpanElement | null>(null);
@@ -30,30 +31,48 @@ export default function GsapLineCascade({ children, as = 'p', className = '', de
     const node = visualRef.current;
     if (!node) return;
 
-    const split = new SplitText(node, { type: 'lines', mask: 'lines', linesClass: 'cascade-line' });
-    gsap.set(node, { autoAlpha: 1 });
+    let split: InstanceType<typeof SplitText> | null = null;
+    let tween: gsap.core.Tween | null = null;
+    let idleId: number | null = null;
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      gsap.set(split.lines, { yPercent: 0, autoAlpha: 1 });
-      return () => split.revert();
+    const run = () => {
+      if (!node.isConnected) return;
+      split = new SplitText(node, { type: 'lines', mask: 'lines', linesClass: 'cascade-line' });
+      gsap.set(node, { autoAlpha: 1 });
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        gsap.set(split.lines, { yPercent: 0, autoAlpha: 1 });
+        return;
+      }
+
+      tween = gsap.fromTo(
+        split.lines,
+        { yPercent: 100, autoAlpha: 0 },
+        {
+          yPercent: 0,
+          autoAlpha: 1,
+          duration: 0.7,
+          ease: 'power3.out',
+          stagger,
+          delay: delay / 1000,
+        }
+      );
+    };
+
+    // Defer SplitText layout read to idle time to avoid forced reflow during LCP
+    if ('requestIdleCallback' in window) {
+      idleId = window.requestIdleCallback(run, { timeout: 2000 });
+    } else {
+      idleId = setTimeout(run, 200) as unknown as number;
     }
 
-    const tween = gsap.fromTo(
-      split.lines,
-      { yPercent: 100, autoAlpha: 0 },
-      {
-        yPercent: 0,
-        autoAlpha: 1,
-        duration: 0.7,
-        ease: 'power3.out',
-        stagger,
-        delay: delay / 1000,
-      }
-    );
-
     return () => {
-      tween.kill();
-      split.revert();
+      if (idleId !== null) {
+        if ('cancelIdleCallback' in window) window.cancelIdleCallback(idleId);
+        else clearTimeout(idleId);
+      }
+      tween?.kill();
+      split?.revert();
     };
   }, [children, delay, stagger]);
 

@@ -64,6 +64,10 @@ export default function Logo({
           style={{ height: size, width: 'auto' }}
           className="object-contain flex-shrink-0 drop-shadow-[0_0_12px_rgba(56,189,248,0.25)] transition-shadow duration-300"
           fetchPriority="high"
+          loading="eager"
+          decoding="sync"
+          width={160}
+          height={size}
           onError={(e) => { e.currentTarget.style.display = 'none' }}
         />
       ) : (
