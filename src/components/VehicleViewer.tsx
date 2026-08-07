@@ -74,6 +74,7 @@ function RootComponent({
   const [panLocked, setPanLocked] = useState(true)
   const { scale, reset, zoomIn, zoomOut } = useZoomPan(containerRef, targetRef, handleHorizontalSwipe, fullscreen, panLocked)
   const [outlineMode, setOutlineMode] = useState(false)
+  const [compareMode, setCompareMode] = useState(false)
 
   // Trocar vista → sempre 100% e cadeado travado até o usuário destrancar.
   useEffect(() => {
@@ -111,7 +112,7 @@ function RootComponent({
   const contextValue = useMemo(() => ({
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
     accessToken, previousReport, onToast,
-    fullscreen, setFullscreen, selectedPart, setSelectedPart, orbitDir, outlineMode, setOutlineMode, panLocked, setPanLocked,
+    fullscreen, setFullscreen, selectedPart, setSelectedPart, orbitDir, outlineMode, setOutlineMode, panLocked, setPanLocked, compareMode, setCompareMode,
     scale, zoomIn, zoomOut, reset, containerRef, targetRef, baseContainerRef, baseTargetRef, flipStateRef
   }), [
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,

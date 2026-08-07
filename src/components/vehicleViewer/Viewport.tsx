@@ -26,7 +26,7 @@ const orbitVariants = {
 export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFullscreen?: boolean }) {
   const { vehicleType, viewType, damages, speak, speakHover,
     selectedPart, setSelectedPart, orbitDir, containerRef, targetRef,
-    baseContainerRef, baseTargetRef, scale, outlineMode,
+    baseContainerRef, baseTargetRef, scale, outlineMode, previousReport, compareMode,
   } = useVehicleViewer()
   const scannerRef = useRef<HTMLDivElement>(null)
 
@@ -247,6 +247,8 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
           scale={scale}
           layoutKey={layoutKey}
           compact={compact}
+          compareMode={compareMode}
+          baselineKeys={previousReport?.damageKeys}
         />
       </div>
 

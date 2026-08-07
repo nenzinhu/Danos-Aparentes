@@ -29,6 +29,8 @@ export interface VehicleViewerContextValue {
   setOutlineMode: (f: boolean) => void
   panLocked: boolean
   setPanLocked: (f: boolean) => void
+  compareMode: boolean
+  setCompareMode: (f: boolean) => void
 
   // Zoom/Pan
   scale: number

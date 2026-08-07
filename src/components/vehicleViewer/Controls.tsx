@@ -20,7 +20,7 @@ function LockIcon({ locked }: { locked: boolean }) {
 }
 
 export const Controls = memo(function Controls({ variant = 'floating' }: { variant?: 'floating' | 'header' }) {
-  const { zoomIn, zoomOut, reset, scale, setFullscreen, containerRef, flipStateRef, outlineMode, setOutlineMode, panLocked, setPanLocked } = useVehicleViewer()
+  const { zoomIn, zoomOut, reset, scale, setFullscreen, containerRef, flipStateRef, outlineMode, setOutlineMode, panLocked, setPanLocked, compareMode, setCompareMode } = useVehicleViewer()
 
   const openFullscreen = useCallback(() => {
     // Snapshot the small viewport's bounds/position now, while it's still the
@@ -132,6 +132,15 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
         className={`${btnBase} px-2 py-1 text-[0.75rem] ${outlineMode ? 'bg-sky-500/25 border-sky-400/50 text-sky-300' : ''}`}
       >
         ◇ Contorno
+      </button>
+      <button
+        type="button"
+        onClick={() => setCompareMode(!compareMode)}
+        title='Comparar entrada (check-in) vs saída (check-out)'
+        aria-pressed={compareMode}
+        className={`${btnBase} px-2 py-1 text-[0.7rem] flex items-center gap-1 ${compareMode ? 'bg-emerald-500/25 border-emerald-400/50 text-emerald-300' : ''}`}
+      >
+        ⇄ Comparar
       </button>
       <button
         type="button"

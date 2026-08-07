@@ -1,6 +1,7 @@
 'use client';
-import { useCallback, useLayoutEffect, useState, type RefObject } from 'react'
+import { useCallback, useLayoutEffect, useState, useEffect, type RefObject } from 'react'
 import type { Damage, DamageType, Severity } from '../types'
+import { gsap, prefersReducedMotion } from '../lib/gsap'
 
 type SelectedPart = { id: string; name: string } | null
 
@@ -17,6 +18,8 @@ interface CalloutItem {
   /** Estimated chip width (px) for collision. */
   w: number
   h: number
+  /** Modo comparação: 'in' = entrada (check-in), 'out' = saída nova (check-out). */
+  compare?: 'in' | 'out'
 }
 
 interface Props {
@@ -27,6 +30,10 @@ interface Props {
   scale: number
   /** Remeasure when view/vehicle swaps. */
   layoutKey: string
+  /** Modo comparação entrada (check-in) vs saída (check-out). */
+  compareMode?: boolean
+  /** Chaves (partId::type) da inspeção anterior (entrada). */
+  baselineKeys?: Set<string> | null
   /**
    * Mobile / narrow: pins only on the SVG; text lives in DamageCalloutLegend
    * so labels don't smother the smaller diagram.
@@ -282,6 +289,8 @@ export default function DamageCallouts({
   scale,
   layoutKey,
   compact = false,
+  compareMode = false,
+  baselineKeys,
 }: Props) {
   const [items, setItems] = useState<CalloutItem[]>([])
 
@@ -300,12 +309,16 @@ export default function DamageCallouts({
 
     const next: CalloutItem[] = []
     const seen = new Set<string>()
+    const baselineSet = compareMode && baselineKeys
+      ? new Set([...baselineKeys].map((k) => k.split('::')[0]))
+      : null
 
     const push = (
       partId: string,
       title: string,
       tone: Severity | 'select',
       subtitle?: string,
+      compare?: 'in' | 'out',
     ) => {
       if (seen.has(partId)) return
       const el = findPartEl(root, partId)
@@ -322,11 +335,18 @@ export default function DamageCallouts({
         : Math.max(ax - LABEL_GAP, EDGE + w)
       const ly = Math.max(EDGE + h / 2, Math.min(ay, cRect.height - EDGE - h / 2))
 
-      next.push({ key: partId, ax, ay, lx, ly, side, title, subtitle, tone, w, h })
+      next.push({ key: partId, ax, ay, lx, ly, side, title, subtitle, tone, w, h, compare })
     }
 
     for (const d of damages) {
-      push(d.partId, d.partName, d.severity, TYPE_SHORT[d.type] ?? d.typeName)
+      const isNew = baselineSet ? !baselineSet.has(d.partId) : false
+      const tone = compareMode
+        ? (isNew ? 'high' : 'low')
+        : d.severity
+      const compare: 'in' | 'out' | undefined = compareMode
+        ? (isNew ? 'out' : 'in')
+        : undefined
+      push(d.partId, d.partName, tone, TYPE_SHORT[d.type] ?? d.typeName, compare)
     }
 
     if (selectedPart) {
@@ -354,7 +374,7 @@ export default function DamageCallouts({
     }
 
     setItems(resolveCalloutCollisions(next, cRect.width, cRect.height))
-  }, [containerRef, damages, selectedPart, compact])
+  }, [containerRef, damages, selectedPart, compact, compareMode, baselineKeys])
 
   useLayoutEffect(() => {
     measure()
@@ -375,6 +395,43 @@ export default function DamageCallouts({
       mo?.disconnect()
     }
   }, [measure, scale, layoutKey, containerRef])
+
+  // Animação "combinar" no modo comparação: entrada (azul) fixa, saída (vermelho)
+  // cresce a partir dela; novos danos pulsam. Respeita prefers-reduced-motion.
+  useEffect(() => {
+    if (!compareMode) return
+    if (prefersReducedMotion()) return
+    const root = containerRef.current
+    if (!root) return
+    const ctx = gsap.context(() => {
+      const pins = gsap.utils.toArray<SVGGElement>('[data-compare]', root)
+      if (!pins.length) return
+      gsap.fromTo(
+        pins,
+        { scale: 0, transformOrigin: '50% 50%', transformBox: 'fill-box' },
+        {
+          scale: 1,
+          duration: 0.5,
+          ease: 'back.out(1.7)',
+          stagger: 0.08,
+        },
+      )
+      const outs = pins.filter((p) => p.getAttribute('data-compare') === 'out')
+      if (outs.length) {
+        gsap.to(outs, {
+          scale: 1.18,
+          repeat: -1,
+          yoyo: true,
+          duration: 0.7,
+          ease: 'sine.inOut',
+          delay: 0.6,
+          transformOrigin: '50% 50%',
+          transformBox: 'fill-box',
+        })
+      }
+    }, root)
+    return () => ctx.revert()
+  }, [compareMode, items, containerRef])
 
   if (!items.length) return null
 
@@ -431,7 +488,7 @@ export default function DamageCallouts({
             )
           }
           return (
-            <g key={`line-${item.key}`}>
+            <g key={`line-${item.key}`} data-compare={item.compare}>
               <line
                 x1={item.ax}
                 y1={item.ay}
@@ -459,6 +516,24 @@ export default function DamageCallouts({
                 strokeOpacity={0.35}
                 strokeWidth={1}
               />
+              {item.compare === 'in' && (
+                <path
+                  d="M 0 0 l -3 -4 l 6 0 z"
+                  transform={`translate(${item.ax}, ${item.ay - 15})`}
+                  fill="var(--damage-low-stroke)"
+                  stroke="#020617"
+                  strokeWidth={0.75}
+                />
+              )}
+              {item.compare === 'out' && (
+                <path
+                  d="M 0 0 l -3 4 l 6 0 z"
+                  transform={`translate(${item.ax}, ${item.ay + 15})`}
+                  fill="var(--damage-high-stroke)"
+                  stroke="#020617"
+                  strokeWidth={0.75}
+                />
+              )}
             </g>
           )
         })}
