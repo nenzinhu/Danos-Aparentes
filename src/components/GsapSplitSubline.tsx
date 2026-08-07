@@ -68,7 +68,7 @@ export default function GsapSplitSubline({ children, as = 'p', className = '', d
     return () => {
       if (idleId !== null) {
         if ('cancelIdleCallback' in window) window.cancelIdleCallback(idleId)
-        else window.clearTimeout(idleId)
+        else clearTimeout(idleId)
       }
       tween?.kill()
       split?.revert()

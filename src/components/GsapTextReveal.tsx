@@ -84,7 +84,7 @@ export default function GsapTextReveal({
     return () => {
       if (idleId !== null) {
         if ('cancelIdleCallback' in window) window.cancelIdleCallback(idleId)
-        else window.clearTimeout(idleId)
+        else clearTimeout(idleId)
       }
       mm?.revert()
     }
