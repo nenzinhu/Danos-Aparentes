@@ -6,13 +6,28 @@ import { uploadDamagePhotosForSync, uploadInteriorPhotosForSync, uploadViewPhoto
 import { deleteInspectionPhotos } from './photoStorage'
 import { mapRemoteInspection } from './reportMapping'
 import { appendAuditEvent } from './audit/auditLog'
-import { anchorInspectionChain } from './audit/anchor'
-import { syncPhotoEvidenceAndAntifraud } from './syncPhotoAntifraud'
 import { isIssuedLocked } from './pdf/reportIssuance'
 import { resolveTenantId } from './tenant/resolveTenant'
 import { syncUpsertIdempotencyKey } from './sync/idempotency'
 import { ensureRemoteVehicle } from './vehicleEvidence/ensureRemoteVehicle'
-import { decideMergeWinner, mergeInspectionReports } from './sync/mergePolicy'
+import { decideMergeWinner, mergeInspectionReports, type ContentMergeStats } from './sync/mergePolicy'
+
+export type MergeRemoteResult = {
+  reports: SavedReport[]
+  merges: ContentMergeStats[]
+}
+
+function neutralStats(needsPush: boolean): ContentMergeStats {
+  return {
+    damagesFromLocalOnly: 0,
+    damagesFromRemoteOnly: 0,
+    damagesMerged: 0,
+    photosUnionExtra: 0,
+    fieldDivergences: [],
+    needsPush,
+    multiContributor: false,
+  }
+}
 
 function inspectionRow(r: SavedReport, userId: string, tenantId: string | null) {
   const v = r.vehicleInfo
@@ -175,36 +190,27 @@ async function pushReport(report: SavedReport, userId: string) {
       await db.putSaved({ ...local, vehicleId: remoteVehicleId, syncedAt: Date.now() })
     }
   }
-  // FASE 20: sync metadados de evidência + alertas de antifraude (best-effort).
-  void syncPhotoEvidenceAndAntifraud(reportWithVehicle, userId)
-
-  const auditWrites: Promise<unknown>[] = [
-    appendAuditEvent({
-      event_type: 'change',
+  void appendAuditEvent({
+    event_type: 'change',
+    inspection_id: report.id,
+    tenant_id: tenantId,
+    idempotency_key: syncUpsertIdempotencyKey(report.id, report.savedAt),
+    metadata: {
+      status: report.status ?? 'complete',
+      damages_count: report.damages.length,
+      source: 'sync_upsert',
+      vehicle_id: remoteVehicleId,
+    },
+  })
+  if (remoteVehicleId) {
+    void appendAuditEvent({
+      event_type: 'inspection_linked_to_vehicle',
       inspection_id: report.id,
       tenant_id: tenantId,
-      idempotency_key: syncUpsertIdempotencyKey(report.id, report.savedAt),
-      metadata: {
-        status: report.status ?? 'complete',
-        damages_count: report.damages.length,
-        source: 'sync_upsert',
-        vehicle_id: remoteVehicleId,
-      },
-    }),
-  ]
-  if (remoteVehicleId) {
-    auditWrites.push(
-      appendAuditEvent({
-        event_type: 'inspection_linked_to_vehicle',
-        inspection_id: report.id,
-        tenant_id: tenantId,
-        idempotency_key: `linked:${report.id}:${remoteVehicleId}`,
-        metadata: { vehicle_id: remoteVehicleId, plate: report.vehicleInfo.plate },
-      }),
-    )
+      idempotency_key: `linked:${report.id}:${remoteVehicleId}`,
+      metadata: { vehicle_id: remoteVehicleId, plate: report.vehicleInfo.plate },
+    })
   }
-  // FASE 19: ancora a ponta da cadeia após os eventos deste sync (best-effort).
-  void Promise.allSettled(auditWrites).then(() => anchorInspectionChain(report.id))
 }
 
 async function deleteRemoteReport(id: string, userId: string) {
@@ -354,20 +360,9 @@ async function enqueueLocalUpsert(localR: SavedReport, pendingUpsertIds: Set<str
 
 /**
  * Merge local + remoto com política anti-corrupção de laudos emitidos.
- * Drafts/completos: merge semântico (união de danos/fotos — FASE 22).
+ * Drafts/completos: last-write-wins por savedAt.
  * Locked (issued/superseded/cancelled): nunca perde para unlocked remoto.
  */
-export type MergeRemoteResult = {
-  reports: SavedReport[]
-  merges: Array<{
-    reportId: string
-    multiContributor: boolean
-    damagesFromLocalOnly: number
-    damagesFromRemoteOnly: number
-    fieldDivergences: string[]
-  }>
-}
-
 export async function mergeRemoteReports(userId: string): Promise<MergeRemoteResult> {
   const [remote, local, queue] = await Promise.all([
     pullRemote(userId),
@@ -381,8 +376,8 @@ export async function mergeRemoteReports(userId: string): Promise<MergeRemoteRes
     queue.filter(q => q.type === 'upsert').map(q => q.reportId),
   )
 
-  const merged: SavedReport[] = []
-  const merges: MergeRemoteResult['merges'] = []
+  const reports: SavedReport[] = []
+  const merges: ContentMergeStats[] = []
 
   for (const localR of local) {
     const remoteR = remoteById.get(localR.id)
@@ -391,59 +386,41 @@ export async function mergeRemoteReports(userId: string): Promise<MergeRemoteRes
       if (localR.syncedAt && !pendingUpsertIds.has(localR.id)) {
         // Laudo emitido local nunca some só porque o pull falhou em achar a linha.
         if (isIssuedLocked(localR.status)) {
-          merged.push(localR)
+          reports.push(localR)
+          merges.push(neutralStats(true))
           await enqueueLocalUpsert(localR, pendingUpsertIds)
           continue
         }
         await db.deleteSaved(localR.id)
         continue
       }
-      merged.push(localR)
+      reports.push(localR)
+      merges.push(neutralStats(false))
       continue
     }
 
     const decision = decideMergeWinner(localR, remoteR)
-    if (decision === 'merge-and-push') {
-      const hydratedRemote = hydrateRemoteReport(remoteR)
-      const { report, stats } = mergeInspectionReports(localR, hydratedRemote)
-      await db.putSaved(report)
-      merged.push(report)
-      void prefetchReportPhotoCache(report.damages)
-      if (stats.needsPush) {
-        await enqueueLocalUpsert(report, pendingUpsertIds)
-      }
-      if (stats.multiContributor || stats.fieldDivergences.length > 0 || stats.damagesFromRemoteOnly > 0) {
-        merges.push({
-          reportId: report.id,
-          multiContributor: stats.multiContributor,
-          damagesFromLocalOnly: stats.damagesFromLocalOnly,
-          damagesFromRemoteOnly: stats.damagesFromRemoteOnly,
-          fieldDivergences: stats.fieldDivergences,
-        })
-        void appendAuditEvent({
-          event_type: 'merge_resolved',
-          inspection_id: report.id,
-          idempotency_key: `merge:${report.id}:${localR.savedAt}:${remoteR.savedAt}`,
-          metadata: {
-            damages_local_only: stats.damagesFromLocalOnly,
-            damages_remote_only: stats.damagesFromRemoteOnly,
-            damages_merged: stats.damagesMerged,
-            photos_union_extra: stats.photosUnionExtra,
-            field_divergences: stats.fieldDivergences,
-            multi_contributor: stats.multiContributor,
-          },
-        })
-      }
-    } else if (decision === 'take-remote') {
+    if (decision === 'take-remote') {
       const winner = hydrateRemoteReport(remoteR)
       await db.putSaved(winner)
-      merged.push(winner)
+      reports.push(winner)
+      merges.push(neutralStats(false))
       void prefetchReportPhotoCache(winner.damages)
+    } else if (decision === 'merge-and-push') {
+      // Ambos unlocked: união semântica de danos/fotos + scalars por savedAt.
+      const { report: mergedReport, stats } = mergeInspectionReports(localR, remoteR)
+      await db.putSaved(mergedReport)
+      reports.push(mergedReport)
+      merges.push(stats)
+      if (stats.needsPush) await enqueueLocalUpsert(mergedReport, pendingUpsertIds)
     } else if (decision === 'keep-local-and-push') {
-      merged.push(localR)
+      reports.push(localR)
+      merges.push(neutralStats(true))
       await enqueueLocalUpsert(localR, pendingUpsertIds)
     } else {
-      merged.push(localR)
+      // keep-local (ambos locked, local mais novo): mantém local.
+      reports.push(localR)
+      merges.push(neutralStats(false))
     }
   }
 
@@ -451,17 +428,16 @@ export async function mergeRemoteReports(userId: string): Promise<MergeRemoteRes
     if (!localById.has(remoteR.id)) {
       const incoming = hydrateRemoteReport(remoteR)
       await db.putSaved(incoming)
-      merged.push(incoming)
+      reports.push(incoming)
+      merges.push(neutralStats(false))
       void prefetchReportPhotoCache(incoming.damages)
     }
   }
 
-  return {
-    reports: merged
-      .filter((r, i, arr) => arr.findIndex(x => x.id === r.id) === i)
-      .sort((a, b) => b.savedAt - a.savedAt),
-    merges,
-  }
+  const ordered = reports
+    .filter((r, i, arr) => arr.findIndex(x => x.id === r.id) === i)
+    .sort((a, b) => b.savedAt - a.savedAt)
+  return { reports: ordered, merges }
 }
 
 export type SyncStatus = 'synced' | 'pending' | 'offline' | 'error'
