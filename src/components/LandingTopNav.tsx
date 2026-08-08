@@ -175,16 +175,26 @@ export default function LandingTopNav() {
 
   useEffect(() => {
     if (!mobileOpen) return
-    const drawer = rootRef.current?.querySelector<HTMLElement>('[data-mobile-drawer]')
+    const drawer = document.querySelector<HTMLElement>('[data-mobile-drawer]')
     if (!drawer) return
     const items = Array.from(drawer.querySelectorAll<HTMLElement>('[data-mobile-item]'))
     animateOpen(drawer, items)
   }, [mobileOpen])
 
+  // Trava o scroll do body enquanto o drawer mobile está aberto
+  useEffect(() => {
+    if (!mobileOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [mobileOpen])
+
   return (
     <nav ref={rootRef} className="gsap-header-item relative flex items-center" aria-label="Navegação principal">
       {/* Desktop */}
-      <ul className="hidden lg:flex items-center gap-1">
+      <ul className="desktop-nav hidden lg:flex items-center gap-1">
         {NAV.map(group => {
           const expanded = openId === group.id
           return (
@@ -349,78 +359,101 @@ export default function LandingTopNav() {
           closeAll()
         }}
       >
+        <span className="mobile-burger" aria-hidden="true" data-open={mobileOpen}>
+          <span />
+          <span />
+          <span />
+        </span>
         Menu
-        <span aria-hidden="true">{mobileOpen ? '▴' : '▾'}</span>
       </button>
 
       {mobileOpen && (
-        <div
-          id={`${uid}-mobile`}
-          data-mobile-drawer
-          className="lg:hidden absolute right-0 top-full mt-2 z-[60] w-[min(92vw,360px)] rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/98 backdrop-blur-xl shadow-2xl p-3 max-h-[70vh] overflow-y-auto"
-        >
-          {NAV.map(group => (
-            <div key={group.id} data-mobile-item className="mb-3 last:mb-0">
-              <p className="px-2 pt-1 pb-1.5 font-mono-data text-[9px] uppercase tracking-[0.16em] text-[var(--signal-bright)]">
-                {group.label}
-                {group.blurb ? ` · ${group.blurb}` : ''}
-              </p>
-              <ul className="flex flex-col gap-0.5">
-                {group.items.map(item => {
-                  if (isLeaf(item)) {
-                    const isLaudos = item.href === '/verify'
-                    return (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 hover:bg-[var(--btn-secondary-hover)]"
-                          onClick={() => setMobileOpen(false)}
-                        >
-                          {isLaudos && (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              src="/icons/laudos-verify.svg"
-                              alt=""
-                              width={24}
-                              height={24}
-                              className="h-5 w-5 shrink-0"
-                              aria-hidden
-                            />
-                          )}
-                          <span className="min-w-0">
-                            <span className="block text-sm font-bold text-[var(--text-main)]">{item.label}</span>
-                            {item.blurb && (
-                              <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{item.blurb}</span>
+        <div className="lg:hidden fixed inset-0 z-[9999]" role="dialog" aria-modal="true" aria-label="Menu">
+          {/* Backdrop translúcido: isola o conteúdo e fecha ao clicar fora */}
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+            onClick={() => setMobileOpen(false)}
+            aria-hidden="true"
+          />
+          <div
+            id={`${uid}-mobile`}
+            data-mobile-drawer
+            className="absolute right-0 top-0 h-full w-[min(86vw,360px)] flex flex-col border-l border-[var(--card-border)] bg-[var(--panel-bg)] shadow-2xl p-3 overflow-y-auto"
+          >
+            <div className="flex justify-end mb-2">
+              <button
+                type="button"
+                onClick={() => setMobileOpen(false)}
+                aria-label="Fechar menu"
+                className="px-3 py-1.5 rounded-lg border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-sm font-bold text-[var(--text-main)] cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+            {NAV.map(group => (
+              <div key={group.id} data-mobile-item className="mb-3 last:mb-0">
+                <p className="px-2 pt-1 pb-1.5 font-mono-data text-[9px] uppercase tracking-[0.16em] text-[var(--signal-bright)]">
+                  {group.label}
+                  {group.blurb ? ` · ${group.blurb}` : ''}
+                </p>
+                <ul className="flex flex-col gap-0.5">
+                  {group.items.map(item => {
+                    if (isLeaf(item)) {
+                      const isLaudos = item.href === '/verify'
+                      return (
+                        <li key={item.href}>
+                          <Link
+                            href={item.href}
+                            className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 hover:bg-[var(--btn-secondary-hover)]"
+                            onClick={() => setMobileOpen(false)}
+                          >
+                            {isLaudos && (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src="/icons/laudos-verify.svg"
+                                alt=""
+                                width={24}
+                                height={24}
+                                className="h-5 w-5 shrink-0"
+                                aria-hidden
+                              />
                             )}
-                          </span>
-                        </Link>
+                            <span className="min-w-0">
+                              <span className="block text-sm font-bold text-[var(--text-main)]">{item.label}</span>
+                              {item.blurb && (
+                                <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{item.blurb}</span>
+                              )}
+                            </span>
+                          </Link>
+                        </li>
+                      )
+                    }
+                    return (
+                      <li key={item.id} className="rounded-xl border border-[var(--card-border)]/50 overflow-hidden">
+                        <p className="px-3 py-2 text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                          {item.label}
+                        </p>
+                        {item.children.map(child => (
+                          <Link
+                            key={child.href}
+                            href={child.href}
+                            className="block px-3 py-2.5 border-t border-[var(--card-border)]/40 hover:bg-[var(--btn-secondary-hover)]"
+                            onClick={() => setMobileOpen(false)}
+                          >
+                            <span className="block text-sm font-bold text-[var(--text-main)]">{child.label}</span>
+                            {child.blurb && (
+                              <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{child.blurb}</span>
+                            )}
+                          </Link>
+                        ))}
                       </li>
                     )
-                  }
-                  return (
-                    <li key={item.id} className="rounded-xl border border-[var(--card-border)]/50 overflow-hidden">
-                      <p className="px-3 py-2 text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                        {item.label}
-                      </p>
-                      {item.children.map(child => (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          className="block px-3 py-2.5 border-t border-[var(--card-border)]/40 hover:bg-[var(--btn-secondary-hover)]"
-                          onClick={() => setMobileOpen(false)}
-                        >
-                          <span className="block text-sm font-bold text-[var(--text-main)]">{child.label}</span>
-                          {child.blurb && (
-                            <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{child.blurb}</span>
-                          )}
-                        </Link>
-                      ))}
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-          ))}
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </nav>

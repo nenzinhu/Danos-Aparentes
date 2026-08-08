@@ -1388,3 +1388,43 @@ html.light .va-outline.va-outline--fs [id^="container-"] svg .part :is(path, cir
   mix-blend-mode: screen;
 }
 
+
+/* ===== Menu mobile: hambúrguer + isolamento de camadas ===== */
+@media (max-width: 767px) {
+  .desktop-nav {
+    display: none !important;
+  }
+}
+
+/* Ícone hambúrguer (3 barras -> X) */
+.mobile-burger {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  width: 18px;
+  height: 14px;
+}
+.mobile-burger > span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.22s ease, opacity 0.18s ease;
+}
+.mobile-burger[data-open='true'] > span:nth-child(1) {
+  transform: translateY(5px) rotate(45deg);
+}
+.mobile-burger[data-open='true'] > span:nth-child(2) {
+  opacity: 0;
+}
+.mobile-burger[data-open='true'] > span:nth-child(3) {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-burger > span {
+    transition: none;
+  }
+}
