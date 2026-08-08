@@ -1466,3 +1466,8 @@ html.light .mobile-menu-dropdown {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Logo DQA: alterna variante por tema via CSS (sem estado JS, sem flash). */
+.dqa-light { display: none; }
+html.light .dqa-dark { display: none; }
+html.light .dqa-light { display: inline; }
