@@ -79,10 +79,10 @@ export default function AiAssistantSection() {
         <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 items-start">
           <Reveal>
             <figure className="rounded-2xl border border-[var(--card-border)] overflow-hidden bg-[var(--panel-bg)]/50">
-              <div className="relative w-full aspect-[1024/570] bg-[var(--bg-main)]">
+              <div className="relative w-full aspect-[1498/896] bg-[var(--bg-main)]">
                 <Image
                   src="/landing/ia-sugestiva-confirma.webp"
-                  alt="Tela do app: IA sugere classificação; vistoriador aceita, edita ou ignora antes de confirmar"
+                  alt="Tela do app: IA sugere classificação de avaria; vistoriador aceita, edita ou ignora antes de confirmar"
                   fill
                   quality={92}
                   className="object-contain object-top"
