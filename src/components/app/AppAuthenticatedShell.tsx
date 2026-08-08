@@ -241,6 +241,10 @@ export default function AppAuthenticatedShell({
           <AppTabBar
             activeTab={shell.activeTab}
             onTabChange={shell.setActiveTab}
+            onNewInspection={(purpose) => {
+              inspection.selectPurpose(purpose)
+              shell.setActiveTab('inspect')
+            }}
             onOpenSettings={() => shell.setSettingsModal(true)}
             onOpenTutorial={() => shell.setTutorialOpen(true)}
             showTeamTab={subscription?.isCorporate ?? false}

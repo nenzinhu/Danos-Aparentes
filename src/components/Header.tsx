@@ -118,9 +118,6 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onSignOut, syncS
       <div className="relative z-10 flex items-center justify-between gap-3 min-h-12">
         <div className="flex items-center gap-3 min-w-0">
           <Logo size={40} variant="full" className="shrink-0 drop-shadow-[0_0_16px_rgba(31,182,255,0.25)]" />
-          <p className="ds-caption hidden md:block truncate max-w-[220px]">
-            Vistoria com evidência
-          </p>
         </div>
 
         <div className="flex items-center justify-end gap-1.5 sm:gap-2 flex-wrap">

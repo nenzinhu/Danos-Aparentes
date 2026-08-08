@@ -5,13 +5,16 @@ import { useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
 import CompanyLogoButton from '@/src/components/CompanyLogoButton';
 import PwaInstallButton from '@/src/components/PwaInstallButton';
-import { IconDocument, IconSparkles, IconTeam, IconSearch } from '@/src/components/ui/AnimatedIcons';
+import { IconTeam, IconSearch } from '@/src/components/ui/AnimatedIcons';
 import { buttonVariants } from '@/src/components/ui/buttonVariants';
 import PanelSmartDropdown from './PanelSmartDropdown';
+import NewInspectionDropdown from './NewInspectionDropdown';
+import type { InspectionPurpose } from '@/src/types';
 
 interface AppTabBarProps {
   activeTab: 'inspect' | 'dashboard' | 'team' | 'vehicles';
   onTabChange: (tab: 'inspect' | 'dashboard' | 'team' | 'vehicles') => void;
+  onNewInspection: (purpose: InspectionPurpose) => void;
   onOpenSettings: () => void;
   onOpenTutorial: () => void;
   showTeamTab?: boolean;
@@ -68,7 +71,7 @@ function GsapTabButton({
   );
 }
 
-export default function AppTabBar({ activeTab, onTabChange, onOpenSettings, onOpenTutorial, showTeamTab }: AppTabBarProps) {
+export default function AppTabBar({ activeTab, onTabChange, onNewInspection, onOpenSettings, onOpenTutorial, showTeamTab }: AppTabBarProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -91,21 +94,10 @@ export default function AppTabBar({ activeTab, onTabChange, onOpenSettings, onOp
         ref={containerRef}
         className="theme-tabs bg-[var(--card-bg-solid)] border border-[var(--card-border)] rounded-xl p-1 flex flex-wrap gap-0.5 justify-center shadow-sm backdrop-blur-md max-w-full"
       >
-        <GsapTabButton
-          onClick={() => onTabChange('inspect')}
-          className={tabClass(activeTab === 'inspect', true)}
-        >
-          <IconDocument size={14} className={activeTab === 'inspect' ? 'text-white' : 'text-slate-400'} />
-          <span className="hidden sm:inline">Nova Inspeção</span><span className="sm:hidden">Inspeção</span>
-        </GsapTabButton>
-
-        <GsapTabButton
-          onClick={() => onTabChange('dashboard')}
-          className={tabClass(activeTab === 'dashboard')}
-        >
-          <IconSparkles size={14} className={activeTab === 'dashboard' ? 'text-[var(--primary)]' : 'text-slate-400'} />
-          <span className="hidden sm:inline">Gestão Histórica</span><span className="sm:hidden">Painel</span>
-        </GsapTabButton>
+        <NewInspectionDropdown
+          active={activeTab === 'inspect'}
+          onSelect={(purpose) => onNewInspection(purpose)}
+        />
 
         <PanelSmartDropdown onSelect={(v) => onTabChange(v)} />
 
@@ -119,17 +111,21 @@ export default function AppTabBar({ activeTab, onTabChange, onOpenSettings, onOp
           </GsapTabButton>
         )}
 
-        <CompanyLogoButton onClick={onOpenSettings} />
-        <PwaInstallButton />
-
         <GsapTabButton
           onClick={onOpenTutorial}
           className={buttonVariants({ variant: 'ghost', size: 'sm', className: '!rounded-lg inline-flex items-center gap-1.5' })}
-          title="Como funciona a plataforma"
+          title="Ajuda / Como funciona"
         >
-          <IconSearch size={14} className="text-[var(--signal)]" />
-          <span className="hidden sm:inline">Tutorial</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-[var(--signal)]">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" />
+            <line x1="12" y1="17" x2="12" y2="17" />
+          </svg>
+          <span className="hidden sm:inline">Ajuda</span>
         </GsapTabButton>
+
+        <CompanyLogoButton onClick={onOpenSettings} />
+        <PwaInstallButton />
       </div>
     </div>
   );
