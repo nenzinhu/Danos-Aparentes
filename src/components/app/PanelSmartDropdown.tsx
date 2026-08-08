@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
+import { MenuPortal, useAnchoredMenu } from './useAnchoredMenu'
 
 interface PanelSmartDropdownProps {
   onSelect: (view: 'vehicles' | 'dashboard') => void
@@ -12,15 +13,22 @@ const OPTIONS: { id: 'vehicles' | 'dashboard'; label: string; desc: string }[] =
   { id: 'dashboard', label: 'Gestão de Histórica', desc: 'KPIs e auditoria' },
 ]
 
+const MENU_WIDTH = 224
+
 /**
  * Ícone "Painel Inteligente" no topo. Hover/tap mostra tooltip; clique abre
  * dropdown com Histórico / Gestão de Histórica e troca a tela principal.
+ *
+ * Menu em portal no body (useAnchoredMenu), alinhado à direita, para não
+ * ficar esmagado pelo `overflow-x-auto` da tab bar.
  */
 export default function PanelSmartDropdown({ onSelect }: PanelSmartDropdownProps) {
   const [open, setOpen] = useState(false)
   const [tooltip, setTooltip] = useState(false)
   const wrapRef = useRef<HTMLDivElement>(null)
+  const btnRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+  const pos = useAnchoredMenu(open, btnRef, MENU_WIDTH, 'right')
 
   useEffect(() => {
     if (!open) return
@@ -42,11 +50,7 @@ export default function PanelSmartDropdown({ onSelect }: PanelSmartDropdownProps
     if (!open || !menuRef.current) return
     const el = menuRef.current
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    gsap.fromTo(
-      el,
-      { opacity: 0, y: -6 },
-      { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' },
-    )
+    gsap.fromTo(el, { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' })
   }, [open])
 
   return (
@@ -57,6 +61,7 @@ export default function PanelSmartDropdown({ onSelect }: PanelSmartDropdownProps
       onMouseLeave={() => setTooltip(false)}
     >
       <button
+        ref={btnRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
@@ -94,30 +99,33 @@ export default function PanelSmartDropdown({ onSelect }: PanelSmartDropdownProps
         </div>
       )}
 
-      {open && (
-        <div
-          ref={menuRef}
-          role="menu"
-          aria-label="Painel Inteligente"
-          className="absolute top-full mt-2 right-0 z-50 w-56 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] shadow-xl p-1.5"
-        >
-          {OPTIONS.map((opt) => (
-            <button
-              key={opt.id}
-              type="button"
-              role="menuitem"
-              onClick={() => {
-                setOpen(false)
-                onSelect(opt.id)
-              }}
-              className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-white/[0.05] focus-visible:ring-2 ring-[var(--primary)] outline-none flex flex-col"
-            >
-              <span className="text-sm font-bold text-[var(--text-main)]">{opt.label}</span>
-              <span className="text-[11px] text-[var(--text-muted)]">{opt.desc}</span>
-            </button>
-          ))}
-        </div>
-      )}
+      <MenuPortal>
+        {open && pos && (
+          <div
+            ref={menuRef}
+            role="menu"
+            aria-label="Painel Inteligente"
+            style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
+            className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] shadow-xl p-1.5"
+          >
+            {OPTIONS.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setOpen(false)
+                  onSelect(opt.id)
+                }}
+                className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-white/[0.05] focus-visible:ring-2 ring-[var(--primary)] outline-none flex flex-col"
+              >
+                <span className="text-sm font-bold text-[var(--text-main)]">{opt.label}</span>
+                <span className="text-[11px] text-[var(--text-muted)]">{opt.desc}</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </MenuPortal>
     </div>
   )
 }

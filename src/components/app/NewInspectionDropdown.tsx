@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { EntradaIcon, SaidaIcon } from '@/src/components/OperationTypeIcons'
 import type { InspectionPurpose } from '@/src/types'
+import { MenuPortal, useAnchoredMenu } from './useAnchoredMenu'
 
 interface NewInspectionDropdownProps {
   onSelect: (purpose: InspectionPurpose) => void
@@ -15,14 +16,21 @@ const OPTIONS: { id: InspectionPurpose; label: string; desc: string; Icon: typeo
   { id: 'retorno', label: 'Saída / Entrega', desc: 'Veículo deixa a guarda', Icon: SaidaIcon },
 ]
 
+const MENU_WIDTH = 240
+
 /**
  * Aba "Iniciar Vistoria" vira dropdown com os tipos de vistoria.
+ *
+ * O menu flutua em portal no body (ver useAnchoredMenu) para não ficar
+ * esmagado pelo `overflow-x-auto` da tab bar.
  */
 export default function NewInspectionDropdown({ onSelect, active }: NewInspectionDropdownProps) {
   const [open, setOpen] = useState(false)
   const [tooltip, setTooltip] = useState(false)
   const wrapRef = useRef<HTMLDivElement>(null)
+  const btnRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+  const pos = useAnchoredMenu(open, btnRef, MENU_WIDTH, 'left')
 
   useEffect(() => {
     if (!open) return
@@ -54,6 +62,7 @@ export default function NewInspectionDropdown({ onSelect, active }: NewInspectio
       onMouseLeave={() => setTooltip(false)}
     >
       <button
+        ref={btnRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
@@ -80,33 +89,36 @@ export default function NewInspectionDropdown({ onSelect, active }: NewInspectio
         </div>
       )}
 
-      {open && (
-        <div
-          ref={menuRef}
-          role="menu"
-          aria-label="Tipo de inspeção"
-          className="absolute top-full mt-2 left-0 z-50 w-60 rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] shadow-xl p-1.5"
-        >
-          {OPTIONS.map((opt) => (
-            <button
-              key={opt.id}
-              type="button"
-              role="menuitem"
-              onClick={() => {
-                setOpen(false)
-                onSelect(opt.id)
-              }}
-              className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-white/[0.05] focus-visible:ring-2 ring-[var(--primary)] outline-none flex items-center gap-2.5"
-            >
-              <opt.Icon size={18} className="text-[var(--primary)] shrink-0" />
-              <span className="flex flex-col">
-                <span className="text-sm font-bold text-[var(--text-main)]">{opt.label}</span>
-                <span className="text-[11px] text-[var(--text-muted)]">{opt.desc}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
+      <MenuPortal>
+        {open && pos && (
+          <div
+            ref={menuRef}
+            role="menu"
+            aria-label="Tipo de inspeção"
+            style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
+            className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] shadow-xl p-1.5"
+          >
+            {OPTIONS.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setOpen(false)
+                  onSelect(opt.id)
+                }}
+                className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-white/[0.05] focus-visible:ring-2 ring-[var(--primary)] outline-none flex items-center gap-2.5"
+              >
+                <opt.Icon size={18} className="text-[var(--primary)] shrink-0" />
+                <span className="flex flex-col">
+                  <span className="text-sm font-bold text-[var(--text-main)]">{opt.label}</span>
+                  <span className="text-[11px] text-[var(--text-muted)]">{opt.desc}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </MenuPortal>
     </div>
   )
 }

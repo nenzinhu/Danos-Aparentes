@@ -1471,3 +1471,15 @@ html.light .mobile-menu-dropdown {
 .dqa-light { display: none; }
 html.light .dqa-dark { display: none; }
 html.light .dqa-light { display: inline; }
+
+/* App: tab bar rolavel no mobile (uma unica linha, sem quebrar) e header
+   que nao estoura a viewport. Os dropdowns sao portais fixos no body, entao
+   nao dependem do overflow da barra. */
+@media (max-width: 767px) {
+  .theme-tabs {
+    -webkit-overflow-scrolling: touch;
+  }
+  .theme-tabs > * {
+    flex: 0 0 auto;
+  }
+}
