@@ -29,6 +29,7 @@ import type { RetornoLookupKind } from '@/src/lib/inspectionPurpose'
 import Link from 'next/link'
 import FirstInspectionOnboarding from './FirstInspectionOnboarding'
 
+import { EntradaIcon, SaidaIcon } from '@/src/components/OperationTypeIcons'
 import { IconDocument, IconCar, IconSignature, IconFolder } from '@/src/components/ui/AnimatedIcons'
 import Button from '@/src/components/ui/Button'
 import { buttonVariants } from '@/src/components/ui/buttonVariants'
@@ -353,26 +354,32 @@ export default function InspectTab({
                 <button
                   type="button"
                   onClick={() => onSelectPurpose('entrada')}
-                  className={`text-left min-h-[4.5rem] px-4 py-3.5 rounded-2xl font-bold border transition-all duration-200 ${
+                  className={`flex items-center gap-3 text-left min-h-[4.5rem] px-4 py-3.5 rounded-2xl font-bold border transition-all duration-200 ${
                     inspectionPurpose === 'entrada'
                       ? 'bg-[var(--btn-secondary-bg)] border-[var(--primary)]/45 text-[var(--text-main)] ring-1 ring-[var(--primary)]/20'
                       : 'border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--primary)]/25'
                   }`}
                 >
-                  <span className="block text-sm">Recebi / saída</span>
-                  <span className="ds-caption mt-1 block font-medium">Estado na entrega ou retirada</span>
+                  <EntradaIcon size={26} className={inspectionPurpose === 'entrada' ? 'text-emerald-300' : 'text-[var(--text-muted)]'} />
+                  <span>
+                    <span className="block text-sm">Entrada / Recebimento</span>
+                    <span className="ds-caption mt-1 block font-medium">Estado na entrega ou retirada</span>
+                  </span>
                 </button>
                 <button
                   type="button"
                   onClick={() => onSelectPurpose('retorno')}
-                  className={`text-left min-h-[4.5rem] px-4 py-3.5 rounded-2xl font-bold border transition-all duration-200 ${
+                  className={`flex items-center gap-3 text-left min-h-[4.5rem] px-4 py-3.5 rounded-2xl font-bold border transition-all duration-200 ${
                     inspectionPurpose === 'retorno'
                       ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-100 ring-1 ring-emerald-500/20'
                       : 'border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-emerald-500/25'
                   }`}
                 >
-                  <span className="block text-sm">Foi devolvido</span>
-                  <span className="ds-caption mt-1 block font-medium">Comparar com a entrada</span>
+                  <SaidaIcon size={26} className={inspectionPurpose === 'retorno' ? 'text-sky-300' : 'text-[var(--text-muted)]'} />
+                  <span>
+                    <span className="block text-sm">Saída / Entrega</span>
+                    <span className="ds-caption mt-1 block font-medium">Comparar com a entrada</span>
+                  </span>
                 </button>
               </div>
             </div>
