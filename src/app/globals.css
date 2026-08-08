@@ -1428,3 +1428,32 @@ html.light .va-outline.va-outline--fs [id^="container-"] svg .part :is(path, cir
     transition: none;
   }
 }
+
+/* ===== Fix: painel do menu mobile cortando o texto do hero =====
+   Causa raiz: --panel-bg e translucido (rgba(...,0.5)), entao o h1/paragrafo
+   do hero apareciam ATRAVES do painel aberto. Aqui forcamos fundo solido. */
+.mobile-menu-dropdown {
+  background-color: #0b1329;
+  background-image: none;
+  opacity: 1;
+}
+html.light .mobile-menu-dropdown {
+  background-color: #faf9f5;
+}
+
+@media (max-width: 767px) {
+  /* Header e painel acima de tudo; hero em camada propria e abaixo. */
+  .site-header {
+    position: relative;
+    z-index: 9999;
+  }
+  .mobile-menu-dropdown {
+    z-index: 9999;
+  }
+  .hero-section {
+    position: relative;
+    z-index: 1;
+    /* Margem de seguranca: o texto nunca encosta na barra de navegacao. */
+    padding-top: 1.5rem;
+  }
+}

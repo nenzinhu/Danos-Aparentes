@@ -379,7 +379,7 @@ export default function LandingTopNav() {
           <div
             id={`${uid}-mobile`}
             data-mobile-drawer
-            className="absolute right-0 top-0 h-full w-[min(86vw,360px)] flex flex-col border-l border-[var(--card-border)] bg-[var(--panel-bg)] shadow-2xl p-3 overflow-y-auto"
+            className="mobile-menu-dropdown absolute right-0 top-0 h-full w-[min(86vw,360px)] flex flex-col border-l border-[var(--card-border)] shadow-2xl p-3 overflow-y-auto"
           >
             <div className="flex justify-end mb-2">
               <button

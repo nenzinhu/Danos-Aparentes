@@ -326,7 +326,7 @@ export default function LandingPage() {
 
       <div aria-hidden="true" className="fixed inset-0 bg-[linear-gradient(var(--grid-color)_1px,transparent_1px),linear-gradient(90deg,var(--grid-color)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none z-0" />
 
-      <header className="w-full px-4 sm:px-8 py-5 flex justify-between items-center gap-3 z-50 shrink-0">
+      <header className="site-header w-full px-4 sm:px-8 py-5 flex justify-between items-center gap-3 z-50 shrink-0">
         <div className="gsap-header-item flex items-center gap-2 sm:gap-3 min-w-0">
           <FaviconInertiaMark size={44} />
           <span className="hidden sm:inline font-extrabold tracking-tight uppercase whitespace-nowrap text-[var(--text-main)] text-lg">
@@ -374,7 +374,7 @@ export default function LandingPage() {
         </div>
       </header>
 
-      <main id="main-content" tabIndex={-1} className="gsap-hero-container flex-1 flex items-center justify-center px-4 sm:px-8 py-6 z-10 relative outline-none">
+      <main id="main-content" tabIndex={-1} className="hero-section gsap-hero-container flex-1 flex items-center justify-center px-4 sm:px-8 py-6 z-10 relative outline-none">
         <div className="gsap-hero-3d sheet-frame max-w-7xl w-full">
           <span aria-hidden="true" className="crop-tr" />
           <span aria-hidden="true" className="crop-br" />
