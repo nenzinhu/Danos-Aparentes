@@ -337,7 +337,7 @@ export default function LandingPage() {
         <div className="flex items-center gap-2 sm:gap-4 min-w-0">
           <Link
             href="/verify"
-            className="gsap-header-item inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-1.5 rounded-xl text-sm font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--btn-secondary-bg)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none"
+            className="gsap-header-item hidden sm:inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-1.5 rounded-xl text-sm font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--btn-secondary-bg)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none"
             title="Verificar autenticidade do dossiê"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -358,7 +358,7 @@ export default function LandingPage() {
             </Link>
             <button
               onClick={toggleDarkMode}
-              className="gsap-header-item p-2 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] rounded-xl transition-all outline-none cursor-pointer flex items-center justify-center"
+              className="gsap-header-item shrink-0 p-2 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] rounded-xl transition-all outline-none cursor-pointer flex items-center justify-center"
               aria-label="Alternar tema"
             >
               <IconSunMoon isDark={darkMode} className={darkMode ? 'text-amber-400' : 'text-slate-400'} size={20} />

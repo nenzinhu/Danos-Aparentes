@@ -107,6 +107,28 @@ function animateOpen(panel: HTMLElement, items: HTMLElement[]) {
   )
 }
 
+// Accordion mobile: expande/recolhe a sublista com GSAP (altura + fade dos itens).
+function animateAccordion(body: HTMLElement, open: boolean) {
+  const items = Array.from(body.querySelectorAll<HTMLElement>('[data-acc-item]'))
+  gsap.killTweensOf([body, ...items])
+  if (prefersReducedMotion()) {
+    gsap.set(body, { height: open ? 'auto' : 0, autoAlpha: open ? 1 : 0 })
+    gsap.set(items, { autoAlpha: open ? 1 : 0, y: 0 })
+    return
+  }
+  if (open) {
+    gsap.set(body, { height: 'auto', autoAlpha: 1 })
+    const full = body.offsetHeight
+    gsap.fromTo(body, { height: 0 }, { height: full, duration: 0.34, ease: 'power2.out',
+      onComplete: () => gsap.set(body, { height: 'auto' }) })
+    gsap.fromTo(items, { autoAlpha: 0, y: -6 },
+      { autoAlpha: 1, y: 0, duration: 0.28, stagger: 0.04, ease: 'power2.out', delay: 0.06 })
+  } else {
+    gsap.to(items, { autoAlpha: 0, y: -4, duration: 0.14, stagger: 0.02, ease: 'power1.in' })
+    gsap.to(body, { height: 0, autoAlpha: 0, duration: 0.26, ease: 'power2.inOut', delay: 0.05 })
+  }
+}
+
 function animateCascade(panel: HTMLElement, items: HTMLElement[]) {
   if (prefersReducedMotion()) {
     gsap.set(panel, { autoAlpha: 1, x: 0 })
@@ -132,6 +154,9 @@ export default function LandingTopNav() {
   const [openId, setOpenId] = useState<string | null>(null)
   const [cascadeId, setCascadeId] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
+  // Grupo expandido no accordion mobile (um por vez).
+  const [mobileGroup, setMobileGroup] = useState<string | null>(null)
+  const accRefs = useRef<Record<string, HTMLDivElement | null>>({})
   // Portal só após montar no cliente (evita mismatch de hidratação).
   // useSyncExternalStore em vez de setState num effect (sem render em cascata).
   const mounted = useSyncExternalStore(
@@ -188,6 +213,15 @@ export default function LandingTopNav() {
     const items = Array.from(drawer.querySelectorAll<HTMLElement>('[data-mobile-item]'))
     animateOpen(drawer, items)
   }, [mobileOpen])
+
+  // Anima o accordion sempre que o grupo expandido muda (e recolhe o anterior).
+  useEffect(() => {
+    if (!mobileOpen) return
+    for (const g of NAV) {
+      const body = accRefs.current[g.id]
+      if (body) animateAccordion(body, mobileGroup === g.id)
+    }
+  }, [mobileGroup, mobileOpen])
 
   // Trava o scroll do body enquanto o drawer mobile está aberto
   useEffect(() => {
@@ -364,6 +398,7 @@ export default function LandingTopNav() {
         aria-controls={`${uid}-mobile`}
         aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
         onClick={() => {
+          setMobileGroup(null)
           setMobileOpen(o => !o)
           closeAll()
         }}
@@ -401,68 +436,101 @@ export default function LandingTopNav() {
                 ✕
               </button>
             </div>
-            {NAV.map(group => (
-              <div key={group.id} data-mobile-item className="mb-3 last:mb-0">
-                <p className="px-2 pt-1 pb-1.5 font-mono-data text-[9px] uppercase tracking-[0.16em] text-[var(--signal-bright)]">
-                  {group.label}
-                  {group.blurb ? ` · ${group.blurb}` : ''}
-                </p>
-                <ul className="flex flex-col gap-0.5">
-                  {group.items.map(item => {
-                    if (isLeaf(item)) {
-                      const isLaudos = item.href === '/verify'
-                      return (
-                        <li key={item.href}>
-                          <Link
-                            href={item.href}
-                            className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 hover:bg-[var(--btn-secondary-hover)]"
-                            onClick={() => setMobileOpen(false)}
-                          >
-                            {isLaudos && (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src="/icons/laudos-verify.svg"
-                                alt=""
-                                width={24}
-                                height={24}
-                                className="h-5 w-5 shrink-0"
-                                aria-hidden
-                              />
-                            )}
-                            <span className="min-w-0">
-                              <span className="block text-sm font-bold text-[var(--text-main)]">{item.label}</span>
-                              {item.blurb && (
-                                <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{item.blurb}</span>
-                              )}
-                            </span>
-                          </Link>
-                        </li>
-                      )
-                    }
-                    return (
-                      <li key={item.id} className="rounded-xl border border-[var(--card-border)]/50 overflow-hidden">
-                        <p className="px-3 py-2 text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                          {item.label}
-                        </p>
-                        {item.children.map(child => (
-                          <Link
-                            key={child.href}
-                            href={child.href}
-                            className="block px-3 py-2.5 border-t border-[var(--card-border)]/40 hover:bg-[var(--btn-secondary-hover)]"
-                            onClick={() => setMobileOpen(false)}
-                          >
-                            <span className="block text-sm font-bold text-[var(--text-main)]">{child.label}</span>
-                            {child.blurb && (
-                              <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{child.blurb}</span>
-                            )}
-                          </Link>
-                        ))}
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            ))}
+            {NAV.map(group => {
+              const expanded = mobileGroup === group.id
+              return (
+                <div key={group.id} data-mobile-item className="mb-1.5 last:mb-0">
+                  {/* Cabeçalho do accordion: Plataforma / Segmentos / Conteúdo / Empresa */}
+                  <button
+                    type="button"
+                    aria-expanded={expanded}
+                    aria-controls={`${uid}-acc-${group.id}`}
+                    onClick={() => setMobileGroup(expanded ? null : group.id)}
+                    className="w-full flex items-center justify-between gap-3 px-3 py-3 rounded-xl text-left cursor-pointer hover:bg-[var(--btn-secondary-hover)] transition-colors"
+                  >
+                    <span className="min-w-0">
+                      <span className="block text-base font-bold text-[var(--text-main)]">{group.label}</span>
+                      {group.blurb && (
+                        <span className="block text-[11px] text-[var(--text-muted)] mt-0.5 leading-snug">
+                          {group.blurb}
+                        </span>
+                      )}
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className={`shrink-0 text-xs text-[var(--signal-bright)] transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
+                    >
+                      ▾
+                    </span>
+                  </button>
+
+                  {/* Corpo animado via GSAP (altura + stagger dos itens) */}
+                  <div
+                    id={`${uid}-acc-${group.id}`}
+                    ref={el => {
+                      accRefs.current[group.id] = el
+                    }}
+                    className="overflow-hidden"
+                    style={{ height: 0, opacity: 0, visibility: 'hidden' }}
+                  >
+                    <ul className="flex flex-col gap-0.5 pb-2 pl-2">
+                      {group.items.map(item => {
+                        if (isLeaf(item)) {
+                          const isLaudos = item.href === '/verify'
+                          return (
+                            <li key={item.href} data-acc-item>
+                              <Link
+                                href={item.href}
+                                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 hover:bg-[var(--btn-secondary-hover)]"
+                                onClick={() => setMobileOpen(false)}
+                              >
+                                {isLaudos && (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img
+                                    src="/icons/laudos-verify.svg"
+                                    alt=""
+                                    width={24}
+                                    height={24}
+                                    className="h-5 w-5 shrink-0"
+                                    aria-hidden
+                                  />
+                                )}
+                                <span className="min-w-0">
+                                  <span className="block text-sm font-bold text-[var(--text-main)]">{item.label}</span>
+                                  {item.blurb && (
+                                    <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{item.blurb}</span>
+                                  )}
+                                </span>
+                              </Link>
+                            </li>
+                          )
+                        }
+                        return (
+                          <li key={item.id} data-acc-item className="rounded-xl border border-[var(--card-border)]/50 overflow-hidden mt-1">
+                            <p className="px-3 py-2 text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                              {item.label}
+                            </p>
+                            {item.children.map(child => (
+                              <Link
+                                key={child.href}
+                                href={child.href}
+                                className="block px-3 py-2.5 border-t border-[var(--card-border)]/40 hover:bg-[var(--btn-secondary-hover)]"
+                                onClick={() => setMobileOpen(false)}
+                              >
+                                <span className="block text-sm font-bold text-[var(--text-main)]">{child.label}</span>
+                                {child.blurb && (
+                                  <span className="block text-[11px] text-[var(--text-muted)] mt-0.5">{child.blurb}</span>
+                                )}
+                              </Link>
+                            ))}
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>,
         document.body,
