@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import Reveal from '../Reveal'
+import GsapTextReveal from '../GsapTextReveal'
 
 const PDF_FILE = '/landing/antes-depois-laudo.pdf'
 
@@ -60,9 +61,13 @@ export default function DiffCompareSection() {
           Comparação
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
         </div>
-        <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
+        <GsapTextReveal
+          as="h2"
+          split="words"
+          className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl"
+        >
           Saiba o que mudou entre duas vistorias.
-        </h2>
+        </GsapTextReveal>
         <p className="mt-4 text-sm text-[var(--text-muted)] max-w-2xl leading-relaxed">
           Identifique diferenças entre diferentes momentos do histórico do veículo — o PDF de entrada e o de retorno
           mostram o antes e o depois.
@@ -206,39 +211,11 @@ function PdfReportCarousel({
         </button>
       </div>
 
-      {/* Native PDF viewer (desktop) */}
-      <div className="relative hidden md:block w-full bg-[#525659] aspect-[3/4] sm:aspect-[4/5]">
-        <iframe
-          key={current.pdfPage}
-          title={`${title} — ${current.label}`}
-          src={pdfPageUrl(current.pdfPage)}
-          className="absolute inset-0 w-full h-full border-0 bg-white"
-        />
-        <div className="absolute bottom-3 right-3 flex gap-2">
-          <button
-            type="button"
-            onClick={() => setZoomOpen(true)}
-            className="rounded-lg bg-black/75 px-2.5 py-1.5 font-mono-data text-[10px] uppercase tracking-wider text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            aria-label={`Zoom — ${title} ${current.label}`}
-          >
-            Zoom
-          </button>
-          <a
-            href={pdfPageUrl(current.pdfPage)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-lg bg-black/75 px-2.5 py-1.5 font-mono-data text-[10px] uppercase tracking-wider text-white"
-          >
-            Abrir PDF
-          </a>
-        </div>
-      </div>
-
-      {/* Preview WebP (mobile + fallback) */}
+      {/* Preview WebP (todos os breakpoints — sem iframe pesado) */}
       <button
         type="button"
         onClick={() => setZoomOpen(true)}
-        className="relative md:hidden block w-full bg-white aspect-[3/4] cursor-zoom-in group focus-visible:ring-2 ring-[var(--primary)] ring-inset outline-none"
+        className="relative block w-full bg-white aspect-[3/4] cursor-zoom-in group focus-visible:ring-2 ring-[var(--primary)] ring-inset outline-none"
         aria-label={`Toque para zoom — ${title} ${current.label}`}
       >
         <Image
