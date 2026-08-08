@@ -79,10 +79,10 @@ export default function AiAssistantSection() {
         <div className="grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 items-start">
           <Reveal>
             <figure className="rounded-2xl border border-[var(--card-border)] overflow-hidden bg-[var(--panel-bg)]/50">
-              <div className="relative w-full aspect-[1498/896] bg-[var(--bg-main)]">
+              <div className="relative w-full aspect-[5992/3584] bg-[var(--bg-main)]">
                 <ZoomableImage
                   src="/landing/ia-sugestiva-confirma.webp"
-                  alt="Tela do app: IA sugere classificação de avaria; vistoriador aceita, edita ou ignora antes de confirmar"
+                  alt="Tela do app: IA sugere classificação de avaria (amassado grave na traseira) com opções Aceitar, Editar ou Ignorar"
                 />
               </div>
               <figcaption className="px-4 py-3 border-t border-[var(--card-border)] font-mono-data text-[10px] uppercase tracking-[0.16em] text-[var(--text-muted)]">
