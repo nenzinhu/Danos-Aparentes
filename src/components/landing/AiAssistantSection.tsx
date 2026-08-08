@@ -1,7 +1,7 @@
 'use client'
 
 import Reveal from '../Reveal'
-import ZoomableImage from '../ZoomableImage'
+import GsapZoomImage from '../GsapZoomImage'
 
 const AI_BADGES = [
   'IA analisando imagens...',
@@ -80,7 +80,7 @@ export default function AiAssistantSection() {
           <Reveal>
             <figure className="rounded-2xl border border-[var(--card-border)] overflow-hidden bg-[var(--panel-bg)]/50">
               <div className="relative w-full aspect-[5992/3584] bg-[var(--bg-main)]">
-                <ZoomableImage
+                <GsapZoomImage
                   src="/landing/ia-sugestiva-confirma.webp"
                   alt="Tela do app: IA sugere classificação de avaria (amassado grave na traseira) com opções Aceitar, Editar ou Ignorar"
                 />
