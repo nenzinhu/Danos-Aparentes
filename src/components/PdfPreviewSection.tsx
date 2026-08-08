@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Reveal from './Reveal';
-import { IconCar, IconCamera, IconShieldCheck, IconSignature, IconBolt } from './ui/AnimatedIcons';
 
 const REPORT_PAGES = [
   {
@@ -212,64 +211,8 @@ export default function PdfPreviewSection() {
           </div>
         </div>
 
-        {/* Coluna Direita: Texto Impactante mostrando a força do laudo */}
+        {/* Coluna Direita: Call to Action */}
         <div className="lg:col-span-5 space-y-6">
-          <Reveal className="space-y-4">
-            <span className="text-[11px] font-mono-data uppercase tracking-widest text-[var(--signal-bright)] font-bold">
-              Por que organizar o relatório assim?
-            </span>
-            <h3 className="font-display text-3xl sm:text-4xl font-bold uppercase tracking-tight leading-[1.05] text-[var(--text-main)]">
-              Documente o estado do veículo com informações{' '}
-              <span className="text-[var(--signal-bright)]">organizadas e verificáveis</span>
-            </h3>
-            <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-              O relatório do <strong className="text-[var(--text-main)]">Danos Aparentes</strong> substitui
-              planilha e foto solta por um registro do que estava no carro naquele momento. Mais contexto e
-              evidências para reduzir disputas.
-            </p>
-          </Reveal>
-
-          {/* Lista de Diferenciais Impactantes */}
-          <div className="space-y-4 pt-2">
-            {[
-              {
-                icon: <IconCar size={22} className="text-sky-400" />,
-                title: 'Diagrama: onde está o dano, sem ambiguidade',
-                desc: 'Cada avaria marcada na peça certa do veículo. Cliente e equipe veem o mesmo mapa — não uma descrição vaga no chat.',
-              },
-              {
-                icon: <IconCamera size={22} className="text-emerald-400" />,
-                title: 'Foto com local e horário da vistoria',
-                desc: 'A imagem do dano pode carregar GPS e timestamp — contexto de onde e quando o registro foi feito.',
-              },
-              {
-                icon: <IconShieldCheck size={22} className="text-purple-400" />,
-                title: 'PDF com hash SHA-256 e QR de verificação',
-                desc: 'Camada de verificação: alteração no arquivo deixa o hash inconsistente; o QR abre a conferência pública do laudo.',
-              },
-              {
-                icon: <IconSignature size={22} className="text-amber-400" />,
-                title: 'Assinatura na tela, no momento da vistoria',
-                desc: 'Vistoriador e cliente registram o aceite na hora — entrada, saída ou devolução — sem “assino depois”.',
-              },
-              {
-                icon: <IconBolt size={22} className="text-yellow-400" />,
-                title: 'Envio no WhatsApp em um toque',
-                desc: 'O PDF vai direto para o cliente, no canal em que a conversa sobre o veículo costuma acontecer.',
-              },
-            ].map((item, idx) => (
-              <Reveal key={idx} delay={idx * 60}>
-                <div className="p-4 rounded-xl bg-[var(--panel-bg)] border border-[var(--card-border)] hover:border-[var(--sheet-line)] transition-colors duration-200 flex items-start gap-3.5">
-                  <span className="shrink-0 p-2.5 rounded-lg bg-[var(--bg-main)] border border-[var(--card-border)] flex items-center justify-center">{item.icon}</span>
-                  <div>
-                    <p className="text-xs sm:text-sm font-bold text-[var(--text-main)] tracking-tight">{item.title}</p>
-                    <p className="text-[11px] text-[var(--text-muted)] mt-1 leading-relaxed">{item.desc}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-
           {/* Destaque do Call to Action curto */}
           <Reveal delay={300} className="pt-4">
             <div className="p-5 rounded-2xl bg-gradient-to-r from-primary/10 via-sky-500/10 to-transparent border border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-4">
