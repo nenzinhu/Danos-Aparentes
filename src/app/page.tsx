@@ -327,14 +327,14 @@ export default function LandingPage() {
       <div aria-hidden="true" className="fixed inset-0 bg-[linear-gradient(var(--grid-color)_1px,transparent_1px),linear-gradient(90deg,var(--grid-color)_1px,transparent_1px)] bg-[size:48px_48px] pointer-events-none z-0" />
 
       <header className="site-header w-full px-4 sm:px-8 py-5 flex justify-between items-center gap-3 z-50 shrink-0">
-        <div className="gsap-header-item flex items-center gap-2 sm:gap-3 min-w-0">
+        <div className="gsap-header-item flex items-center gap-2 sm:gap-3 min-w-0 shrink-0">
           <FaviconInertiaMark size={44} />
           <span className="hidden sm:inline font-extrabold tracking-tight uppercase whitespace-nowrap text-[var(--text-main)] text-lg">
             Danos Aparentes
           </span>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-4 shrink-0 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
           <Link
             href="/verify"
             className="gsap-header-item inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-1.5 rounded-xl text-sm font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--btn-secondary-bg)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none"

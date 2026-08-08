@@ -348,23 +348,25 @@ export default function LandingTopNav() {
         })}
       </ul>
 
-      {/* Mobile trigger */}
+      {/* Mobile trigger — botão só-ícone para não espremer o logo/Dossiês no header */}
       <button
         type="button"
-        className="lg:hidden inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-sm font-bold text-[var(--text-main)] cursor-pointer"
+        className="lg:hidden inline-flex items-center justify-center h-10 w-10 shrink-0 rounded-xl border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--text-main)] cursor-pointer"
         aria-expanded={mobileOpen}
         aria-controls={`${uid}-mobile`}
+        aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
         onClick={() => {
           setMobileOpen(o => !o)
           closeAll()
         }}
       >
-        <span className="mobile-burger" aria-hidden="true" data-open={mobileOpen}>
+        {/* Estado via CLASSE, não via [data-open='true']: o minificador do build
+            remove as aspas e o seletor passa a casar com o menu fechado. */}
+        <span className={`mobile-burger${mobileOpen ? ' is-open' : ''}`} aria-hidden="true">
           <span />
           <span />
           <span />
         </span>
-        Menu
       </button>
 
       {mobileOpen && (
