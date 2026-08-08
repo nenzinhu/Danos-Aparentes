@@ -93,15 +93,17 @@ export default function GsapZoomImage({ src, alt, className, maxZoom = 2.6 }: Pr
       onTouchMove={onTouchMove}
     >
       <div ref={imgRef} className="will-change-transform" style={{ transformOrigin: '50% 50%' }}>
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          quality={100}
-          className="object-contain object-top"
-          sizes="(max-width: 1024px) 100vw, 640px"
-          priority={false}
-        />
+        <div className="absolute inset-0">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            quality={100}
+            className="object-contain object-top"
+            sizes="(max-width: 1024px) 100vw, 640px"
+            priority={false}
+          />
+        </div>
       </div>
       <span className="pointer-events-none absolute bottom-2 right-2 rounded-md bg-black/55 px-2 py-1 text-[0.62rem] font-bold uppercase tracking-wide text-white/90 backdrop-blur">
         🔍 Passe o mouse / toque para ampliar
