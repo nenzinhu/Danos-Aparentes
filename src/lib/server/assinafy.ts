@@ -10,11 +10,23 @@
  *   4. getDocument     → consulta status (até "certificated")
  */
 
+import { config as loadDotenv } from 'dotenv'
+// Garante que o .env local seja carregado mesmo fora do pipeline automático do Next.
+loadDotenv()
+
 const ASSINAFY_BASE = process.env.ASSINAFY_BASE_URL || 'https://api.assinafy.com.br/v1'
 
 function getApiKey(): string {
-  const key = process.env.ASSINAFY_API_KEY?.trim() ?? ''
-  if (!key) throw new Error('ASSINAFY_API_KEY não configurada')
+  const key =
+    process.env.ASSINAFY_API_KEY?.trim() ||
+    process.env.ASSINAFY_KEY?.trim() ||
+    process.env.NEXT_PUBLIC_ASSINAFY_API_KEY?.trim() ||
+    ''
+  if (!key) {
+    throw new Error(
+      'ASSINAFY_API_KEY não configurada. Defina a variável de ambiente ASSINAFY_API_KEY (no .env.local ou no painel da plataforma de hospedagem).',
+    )
+  }
   return key
 }
 
