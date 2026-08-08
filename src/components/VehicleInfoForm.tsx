@@ -131,6 +131,17 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
     }
   }, [customFieldDefs, info, onChange])
 
+  const renameCustomField = useCallback((id: string, newLabel: string) => {
+    const label = newLabel.trim()
+    if (!label) return
+    const next = customFieldDefs.map(d => d.id === id ? { ...d, label } : d)
+    setCustomFieldDefs(next); saveCustomFieldDefs(next)
+    const fields = (info.customFields || []).map(f =>
+      f.id === id ? { ...f, label } : f,
+    )
+    onChange({ ...info, customFields: fields })
+  }, [customFieldDefs, info, onChange])
+
   const setCustomFieldValue = useCallback((id: string, label: string, value: string) => {
     const existing = info.customFields || []
     const has = existing.some(f => f.id === id)
@@ -405,6 +416,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
             onAddCustomField={addCustomField}
             onRemoveCustomField={removeCustomField}
             onMoveCustomField={moveCustomField}
+            onRenameCustomField={renameCustomField}
             draggedCustomId={draggedCustomId}
             dragOverCustomId={dragOverCustomId}
             onDragCustomStart={setDraggedCustomId}

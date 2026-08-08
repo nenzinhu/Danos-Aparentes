@@ -28,6 +28,7 @@ interface Props {
   onAddCustomField: () => void
   onRemoveCustomField: (id: string) => void
   onMoveCustomField: (id: string, dir: -1 | 1) => void
+  onRenameCustomField: (id: string, newLabel: string) => void
   draggedCustomId: string | null
   dragOverCustomId: string | null
   onDragCustomStart: (id: string) => void
@@ -61,6 +62,7 @@ export default function FieldVisibilityPanel(props: Props) {
     onAddCustomField,
     onRemoveCustomField,
     onMoveCustomField,
+    onRenameCustomField,
     draggedCustomId,
     dragOverCustomId,
     onDragCustomStart,
@@ -74,6 +76,8 @@ export default function FieldVisibilityPanel(props: Props) {
   const [activeTab, setActiveTab] = useState<'standard' | 'custom'>('standard')
   const [isFullModalOpen, setIsFullModalOpen] = useState(false)
   const [activeTouchDragKey, setActiveTouchDragKey] = useState<string | null>(null)
+  const [editingCustomId, setEditingCustomId] = useState<string | null>(null)
+  const [editingCustomLabel, setEditingCustomLabel] = useState('')
   
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
@@ -365,9 +369,32 @@ export default function FieldVisibilityPanel(props: Props) {
                     ⠿
                   </div>
 
-                  <span className="field-mgr-label flex-1 text-[0.82rem] text-slate-100 font-bold truncate">
-                    {d.label}
-                  </span>
+                  {editingCustomId === d.id ? (
+                    <input
+                      autoFocus
+                      value={editingCustomLabel}
+                      onChange={(e) => setEditingCustomLabel(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onRenameCustomField(d.id, editingCustomLabel)
+                          setEditingCustomId(null)
+                        } else if (e.key === 'Escape') {
+                          setEditingCustomId(null)
+                        }
+                      }}
+                      onBlur={() => {
+                        onRenameCustomField(d.id, editingCustomLabel)
+                        setEditingCustomId(null)
+                      }}
+                      className="flex-1 px-2 py-1 text-[0.82rem] bg-slate-950 border border-sky-400/60 rounded-lg text-slate-100 outline-none focus:ring-2 ring-sky-400/40"
+                      aria-label={`Renomear ${d.label}`}
+                    />
+                  ) : (
+                    <span className="field-mgr-label flex-1 text-[0.82rem] text-slate-100 font-bold truncate">
+                      {d.label}
+                    </span>
+                  )}
 
                   <div className="inline-flex rounded-lg border border-slate-700/60 overflow-hidden divide-x divide-slate-700/60 shrink-0">
                     <button
@@ -409,6 +436,21 @@ export default function FieldVisibilityPanel(props: Props) {
                   >
                     <TrashIcon />
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingCustomId(d.id)
+                      setEditingCustomLabel(d.label)
+                    }}
+                    title="Renomear campo"
+                    aria-label={`Renomear ${d.label}`}
+                    className="w-8 h-8 flex items-center justify-center rounded-lg text-sky-400 hover:bg-sky-500/20 hover:text-sky-300 transition-colors border border-transparent hover:border-sky-500/30"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M12 20h9" />
+                      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                    </svg>
+                  </button>
                 </div>
               )
             })}
@@ -446,7 +488,7 @@ export default function FieldVisibilityPanel(props: Props) {
 
       {/* Quick Dropdown Panel */}
       {filterOpen && (
-        <div className="field-manager-panel absolute top-[calc(100%+10px)] right-0 z-[600] w-[335px] sm:w-[365px] bg-slate-950/98 border border-sky-500/30 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-2xl ring-1 ring-white/10 animate-in fade-in zoom-in-95 duration-200">
+        <div className="field-manager-panel absolute top-[calc(100%+10px)] right-0 z-[600] w-[min(335px,calc(100vw-1.5rem))] sm:w-[365px] bg-slate-950/98 border border-sky-500/30 rounded-2xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-2xl ring-1 ring-white/10 animate-in fade-in zoom-in-95 duration-200">
           
           {/* Header */}
           <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80">
