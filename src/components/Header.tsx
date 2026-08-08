@@ -15,6 +15,7 @@ interface Props {
   onRetrySync?: () => void
   subscription?: { status: SubscriptionStatus; trialDaysLeft: number }
   onManageSubscription?: () => void
+  navSlot?: React.ReactNode
 }
 
 import { IconDocument, IconSignature, IconGps, IconShieldCheck, IconSearch, IconTeam, IconSparkles, IconSunMoon, IconCheck, IconSync, IconOffline, IconWarning } from './ui/AnimatedIcons'
@@ -112,13 +113,17 @@ function ProBenefitsButton({
   )
 }
 
-function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onSignOut, syncStatus, syncLastError, onRetrySync, subscription, onManageSubscription }: Props) {
+function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onSignOut, syncStatus, syncLastError, onRetrySync, subscription, onManageSubscription, navSlot }: Props) {
   return (
     <header className="relative w-full max-w-[1250px] mx-auto px-4 pt-3 sm:pt-4 pb-2 font-outfit">
       <div className="relative z-10 flex items-center justify-between gap-3 min-h-12">
         <div className="flex items-center gap-3 min-w-0">
           <Logo size={40} variant="full" className="shrink-0 drop-shadow-[0_0_16px_rgba(31,182,255,0.25)]" />
         </div>
+
+        {navSlot && (
+          <div className="flex-1 min-w-0 flex justify-center px-2">{navSlot}</div>
+        )}
 
         <div className="flex items-center justify-end gap-1.5 sm:gap-2 flex-wrap">
           <ProBenefitsButton

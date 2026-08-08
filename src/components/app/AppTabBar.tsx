@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
-import CompanyLogoButton from '@/src/components/CompanyLogoButton';
 import PwaInstallButton from '@/src/components/PwaInstallButton';
 import { IconTeam, IconSearch } from '@/src/components/ui/AnimatedIcons';
 import { buttonVariants } from '@/src/components/ui/buttonVariants';
@@ -17,8 +15,6 @@ interface AppTabBarProps {
   onNewInspection: (purpose: InspectionPurpose) => void;
   onOpenSettings: () => void;
   onOpenTutorial: () => void;
-  syncStatus?: 'synced' | 'pending' | 'offline' | 'error';
-  onRetrySync?: () => void;
   showTeamTab?: boolean;
 }
 
@@ -73,9 +69,8 @@ function GsapTabButton({
   );
 }
 
-export default function AppTabBar({ activeTab, onTabChange, onNewInspection, onOpenSettings, onOpenTutorial, syncStatus, onRetrySync, showTeamTab }: AppTabBarProps) {
+export default function AppTabBar({ activeTab, onTabChange, onNewInspection, onOpenSettings, onOpenTutorial, showTeamTab }: AppTabBarProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   useEffect(() => {
     const el = containerRef.current;
@@ -113,10 +108,6 @@ export default function AppTabBar({ activeTab, onTabChange, onNewInspection, onO
           </GsapTabButton>
         )}
 
-        {syncStatus && (
-          <SyncBadge status={syncStatus} onRetry={onRetrySync} />
-        )}
-
         <GsapTabButton
           onClick={onOpenTutorial}
           className={buttonVariants({ variant: 'ghost', size: 'sm', className: '!rounded-lg inline-flex items-center gap-1.5' })}
@@ -129,28 +120,8 @@ export default function AppTabBar({ activeTab, onTabChange, onNewInspection, onO
           </svg>
         </GsapTabButton>
 
-        <CompanyLogoButton onClick={onOpenSettings} />
         <PwaInstallButton />
       </div>
     </div>
-  );
-}
-
-function SyncBadge({ status, onRetry }: { status: 'synced' | 'pending' | 'offline' | 'error'; onRetry?: () => void }) {
-  const map = {
-    synced: { text: 'Pro Sync', color: 'text-emerald-300', dot: 'bg-emerald-400' },
-    pending: { text: 'Pro Sync', color: 'text-amber-300', dot: 'bg-amber-400' },
-    offline: { text: 'Pro Sync', color: 'text-slate-400', dot: 'bg-slate-500' },
-    error: { text: 'Pro Sync', color: 'text-rose-300', dot: 'bg-rose-400' },
-  }[status];
-  const Tag = onRetry && status !== 'synced' ? 'button' : 'span';
-  return (
-    <Tag
-      {...(onRetry && status !== 'synced' ? { type: 'button' as const, onClick: onRetry, title: 'Sincronização pendente — toque para tentar de novo' } : { title: 'Sincronizado (Pro Sync)' })}
-      className={`h-8 px-2.5 rounded-lg border border-[var(--card-border)] flex items-center gap-1.5 ${map.color} ${onRetry && status !== 'synced' ? 'cursor-pointer hover:opacity-90' : ''}`}
-    >
-      <span className={`h-2 w-2 rounded-full ${map.dot}`} aria-hidden />
-      <span className="text-[0.65rem] font-bold hidden sm:inline">{map.text}</span>
-    </Tag>
   );
 }

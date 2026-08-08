@@ -235,22 +235,21 @@ export default function AppAuthenticatedShell({
               onRetrySync={supabaseEnabled ? () => { void tryFlush() } : undefined}
               subscription={headerSubscription}
               onManageSubscription={shell.handleManageSubscription}
+              navSlot={
+                <AppTabBar
+                  activeTab={shell.activeTab}
+                  onTabChange={shell.setActiveTab}
+                  onNewInspection={(purpose) => {
+                    inspection.selectPurpose(purpose)
+                    shell.setActiveTab('inspect')
+                  }}
+                  onOpenSettings={() => shell.setSettingsModal(true)}
+                  onOpenTutorial={() => shell.setTutorialOpen(true)}
+                  showTeamTab={subscription?.isCorporate ?? false}
+                />
+              }
             />
           </ViewTransition>
-
-          <AppTabBar
-            activeTab={shell.activeTab}
-            onTabChange={shell.setActiveTab}
-            onNewInspection={(purpose) => {
-              inspection.selectPurpose(purpose)
-              shell.setActiveTab('inspect')
-            }}
-            onOpenSettings={() => shell.setSettingsModal(true)}
-            onOpenTutorial={() => shell.setTutorialOpen(true)}
-            syncStatus={supabaseEnabled ? syncStatus : undefined}
-            onRetrySync={supabaseEnabled ? () => { void tryFlush() } : undefined}
-            showTeamTab={subscription?.isCorporate ?? false}
-          />
 
           <ErrorBoundary>
           <main className="w-full max-w-7xl px-4 sm:px-5 flex flex-col gap-5 mt-3">
