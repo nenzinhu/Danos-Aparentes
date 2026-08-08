@@ -136,11 +136,17 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
       <button
         type="button"
         onClick={() => setCompareMode(!compareMode)}
-        title='Comparar entrada (check-in) vs saída (check-out)'
+        title='Comparar entrada (recebido) vs saída (devolvido)'
         aria-pressed={compareMode}
         className={`${btnBase} px-2 py-1 text-[0.7rem] flex items-center gap-1 ${compareMode ? 'bg-emerald-500/25 border-emerald-400/50 text-emerald-300' : ''}`}
       >
-        ⇄ Comparar
+        <svg width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round'>
+          <path d='M7 4 L3 8 L7 12' />
+          <path d='M3 8 H14 a4 4 0 0 1 4 4 V20' />
+          <path d='M17 20 L21 16 L17 12' />
+          <path d='M21 16 H10 a4 4 0 0 1 -4 -4 V4' />
+        </svg>
+        {compareMode ? 'Comparando' : 'Comparar'}
       </button>
       <button
         type="button"

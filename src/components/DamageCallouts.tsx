@@ -499,45 +499,67 @@ export default function DamageCallouts({
                 strokeOpacity={0.75}
                 strokeLinecap="round"
               />
-              <circle
-                cx={item.ax}
-                cy={item.ay}
-                r={3.5}
-                fill={tone.stroke}
-                stroke="#020617"
-                strokeWidth={1.25}
-              />
-              <circle
-                cx={item.ax}
-                cy={item.ay}
-                r={7}
-                fill="none"
-                stroke={tone.stroke}
-                strokeOpacity={0.35}
-                strokeWidth={1}
-              />
-              {item.compare === 'in' && (
-                <path
-                  d="M 0 0 l -3 -4 l 6 0 z"
-                  transform={`translate(${item.ax}, ${item.ay - 15})`}
-                  fill="var(--damage-low-stroke)"
-                  stroke="#020617"
-                  strokeWidth={0.75}
-                />
-              )}
-              {item.compare === 'out' && (
-                <path
-                  d="M 0 0 l -3 4 l 6 0 z"
-                  transform={`translate(${item.ax}, ${item.ay + 15})`}
-                  fill="var(--damage-high-stroke)"
-                  stroke="#020617"
-                  strokeWidth={0.75}
-                />
+              {item.compare ? (
+                <g transform={`translate(${item.ax}, ${item.ay})`}>
+                  <circle r={10} fill={tone.fill} stroke={tone.stroke} strokeWidth={2} />
+                  {item.compare === 'in' ? (
+                    <path
+                      d="M0 4 L0 -3.5 M-3.4 0.2 L0 3.8 L3.4 0.2"
+                      fill="none"
+                      stroke={tone.stroke}
+                      strokeWidth={1.8}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  ) : (
+                    <path
+                      d="M0 -4 L0 3.5 M-3.4 -0.2 L0 -3.8 L3.4 -0.2"
+                      fill="none"
+                      stroke={tone.stroke}
+                      strokeWidth={1.8}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  )}
+                </g>
+              ) : (
+                <>
+                  <circle
+                    cx={item.ax}
+                    cy={item.ay}
+                    r={3.5}
+                    fill={tone.stroke}
+                    stroke="#020617"
+                    strokeWidth={1.25}
+                  />
+                  <circle
+                    cx={item.ax}
+                    cy={item.ay}
+                    r={7}
+                    fill="none"
+                    stroke={tone.stroke}
+                    strokeOpacity={0.35}
+                    strokeWidth={1}
+                  />
+                </>
               )}
             </g>
           )
         })}
       </svg>
+
+      {compareMode && (
+        <div className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-2 z-30 flex items-center gap-3 rounded-full border border-white/10 bg-slate-900/85 px-3 py-1.5 text-[0.62rem] font-bold backdrop-blur-md">
+          <span className="flex items-center gap-1.5 text-[var(--damage-low-text)]">
+            <svg width="14" height="14" viewBox="-11 -11 22 22"><circle r="9" fill="var(--damage-low-fill)" stroke="var(--damage-low-stroke)" strokeWidth="2" /><path d="M0 4 L0 -3.5 M-3.4 0.2 L0 3.8 L3.4 0.2" fill="none" stroke="var(--damage-low-stroke)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            Entrada (recebido)
+          </span>
+          <span className="flex items-center gap-1.5 text-[var(--damage-high-text)]">
+            <svg width="14" height="14" viewBox="-11 -11 22 22"><circle r="9" fill="var(--damage-high-fill)" stroke="var(--damage-high-stroke)" strokeWidth="2" /><path d="M0 -4 L0 3.5 M-3.4 -0.2 L0 -3.8 L3.4 -0.2" fill="none" stroke="var(--damage-high-stroke)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            Saída (devolvido)
+          </span>
+        </div>
+      )}
 
       {!compact && items.map(item => {
         const tone = TONE[item.tone]
