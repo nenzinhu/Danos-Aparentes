@@ -247,6 +247,8 @@ export default function AppAuthenticatedShell({
             }}
             onOpenSettings={() => shell.setSettingsModal(true)}
             onOpenTutorial={() => shell.setTutorialOpen(true)}
+            syncStatus={supabaseEnabled ? syncStatus : undefined}
+            onRetrySync={supabaseEnabled ? () => { void tryFlush() } : undefined}
             showTeamTab={subscription?.isCorporate ?? false}
           />
 
