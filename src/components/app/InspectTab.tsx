@@ -42,7 +42,7 @@ const INSPECT_SECTIONS: {
   short: string
   icon: React.ReactNode
 }[] = [
-  { id: 'dados', label: 'Identidade', short: 'ID', icon: <IconDocument size={14} /> },
+  { id: 'dados', label: 'Dados do Veículo', short: 'Veículo', icon: <IconDocument size={14} /> },
   { id: 'diagrama', label: 'Danos', short: 'Danos', icon: <IconCar size={14} /> },
   { id: 'finalizar', label: 'Dossiê Técnico', short: 'Dossiê', icon: <IconSignature size={14} /> },
 ]
@@ -60,8 +60,8 @@ function sectionTabClass(active: boolean) {
 function sectionHint(purpose: InspectionPurpose | undefined, section: InspectSection): string {
   if (section === 'dados') {
     return purpose === 'retorno'
-      ? 'Busque a inspeção anterior e confirme a Identidade do Veículo.'
-      : 'Identidade do Veículo, depois evidências dos 4 lados.'
+      ? 'Busque a inspeção anterior e confirme os Dados do Veículo.'
+      : 'Dados do Veículo, depois evidências dos 4 lados.'
   }
   if (section === 'diagrama') {
     return 'Toque nas peças com dano e anexe evidências.'
@@ -547,7 +547,7 @@ export default function InspectTab({
             </VehicleViewer.Root>
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
               <p className="ds-caption max-w-md">
-                Evidências dos 4 lados em <strong className="text-[var(--text-main)]">Identidade</strong>
+                Evidências dos 4 lados em <strong className="text-[var(--text-main)]">Dados do Veículo</strong>
                 {hasAllViewPhotos(vehicleInfo)
                   ? ' · completas.'
                   : ` · faltam ${4 - Object.values(vehicleInfo.viewPhotos || {}).filter(Boolean).length}.`}

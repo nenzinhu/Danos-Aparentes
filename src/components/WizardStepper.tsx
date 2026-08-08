@@ -2,8 +2,8 @@
 import type { WizardStep } from './wizardTypes'
 
 const WIZARD_STEPS: { step: WizardStep; label: string }[] = [
-  { step: 1, label: 'Responsável' },
-  { step: 2, label: 'Identidade' },
+  { step: 1, label: 'Dados do Cliente' },
+  { step: 2, label: 'Dados do Veículo' },
   { step: 3, label: 'Evidências' },
 ]
 

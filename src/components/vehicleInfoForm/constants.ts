@@ -25,6 +25,8 @@ export const FIELD_LABELS: Record<string, string> = {
   cpf: 'CPF',
   cnh: 'Nº da Habilitação (CNH)',
   cnhCategory: 'Categoria CNH',
+  km: 'Quilometragem (KM)',
+  ano: 'Ano do Veículo',
   brand: 'Marca / Modelo',
   plate: 'Placa do Veículo',
   color: 'Cor do Veículo',

@@ -97,14 +97,14 @@ export default function WizardStepVehicle({
         </div>
       </div>
 
-      {(show('brand') || show('color') || show('vehicleTypeDesc')) && (
+      {(show('brand') || show('color') || show('vehicleTypeDesc') || show('km') || show('ano')) && (
         <div className="flex flex-wrap gap-3 mb-3">
-          {orderedKeysIn(['brand', 'color', 'vehicleTypeDesc']).filter(show).map(key => (
+          {orderedKeysIn(['brand', 'color', 'vehicleTypeDesc', 'km', 'ano']).filter(show).map(key => (
             <div key={key} className="flex-1 min-w-[160px]">
               {key === 'brand' && (
                 <>
-                  <label htmlFor="brand-input" className={labelClasses}>Marca / Modelo / Ano</label>
-                  <input id="brand-input" className={inputClasses} value={info.brand} onChange={e => set('brand', e.target.value)} placeholder="Ex: Toyota Corolla 2023" />
+                  <label htmlFor="brand-input" className={labelClasses}>Marca / Modelo</label>
+                  <input id="brand-input" className={inputClasses} value={info.brand} onChange={e => set('brand', e.target.value)} placeholder="Ex: Toyota Corolla" />
                 </>
               )}
               {key === 'color' && (
@@ -120,6 +120,18 @@ export default function WizardStepVehicle({
                     <option value="">— Selecione —</option>
                     {VEHICLE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
+                </>
+              )}
+              {key === 'km' && (
+                <>
+                  <label htmlFor="km-input" className={labelClasses}>Quilometragem (KM)</label>
+                  <input id="km-input" className={inputClasses} value={info.km || ''} onChange={e => set('km', e.target.value.replace(/[^0-9]/g, ''))} placeholder="Ex: 45000" inputMode="numeric" />
+                </>
+              )}
+              {key === 'ano' && (
+                <>
+                  <label htmlFor="ano-input" className={labelClasses}>Ano do Veículo</label>
+                  <input id="ano-input" className={inputClasses} value={info.ano || ''} onChange={e => set('ano', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))} placeholder="Ex: 2023" inputMode="numeric" maxLength={4} />
                 </>
               )}
             </div>

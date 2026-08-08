@@ -73,6 +73,10 @@ export interface VehicleInfo {
   cpf?: string
   cnh?: string
   cnhCategory?: string
+  /** Quilometragem registrada na vistoria (KM). */
+  km?: string
+  /** Ano de fabricação/modelo do veículo. */
+  ano?: string
   inspectorSignature?: string
   clientSignature?: string
   /** FASE 7 — sealed metadata for on-screen / future providers (no legal claim). */
