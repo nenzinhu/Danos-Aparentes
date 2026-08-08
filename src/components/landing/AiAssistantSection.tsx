@@ -1,7 +1,7 @@
 'use client'
 
-import Image from 'next/image'
 import Reveal from '../Reveal'
+import ZoomableImage from '../ZoomableImage'
 
 const AI_BADGES = [
   'IA analisando imagens...',
@@ -80,14 +80,9 @@ export default function AiAssistantSection() {
           <Reveal>
             <figure className="rounded-2xl border border-[var(--card-border)] overflow-hidden bg-[var(--panel-bg)]/50">
               <div className="relative w-full aspect-[1498/896] bg-[var(--bg-main)]">
-                <Image
+                <ZoomableImage
                   src="/landing/ia-sugestiva-confirma.webp"
                   alt="Tela do app: IA sugere classificação de avaria; vistoriador aceita, edita ou ignora antes de confirmar"
-                  fill
-                  quality={92}
-                  className="object-contain object-top"
-                  sizes="(max-width: 1024px) 100vw, 640px"
-                  priority={false}
                 />
               </div>
               <figcaption className="px-4 py-3 border-t border-[var(--card-border)] font-mono-data text-[10px] uppercase tracking-[0.16em] text-[var(--text-muted)]">
