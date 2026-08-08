@@ -1457,3 +1457,12 @@ html.light .mobile-menu-dropdown {
     padding-top: 1.5rem;
   }
 }
+
+/* Scroll horizontal sem barra visivel (tab bar do app no mobile). */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

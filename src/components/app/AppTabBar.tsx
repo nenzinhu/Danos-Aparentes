@@ -89,7 +89,7 @@ export default function AppTabBar({ activeTab, onTabChange, onNewInspection, onO
     <div className="flex justify-center mt-1 mb-1 px-2">
       <div
         ref={containerRef}
-        className="theme-tabs bg-[var(--card-bg-solid)] border border-[var(--card-border)] rounded-xl p-1 flex flex-wrap items-center gap-0.5 justify-center shadow-sm backdrop-blur-md max-w-full"
+        className="theme-tabs bg-[var(--card-bg-solid)] border border-[var(--card-border)] rounded-xl p-1 flex items-center gap-0.5 justify-start sm:justify-center shadow-sm backdrop-blur-md max-w-full overflow-x-auto no-scrollbar sm:overflow-visible sm:flex-wrap"
       >
         <NewInspectionDropdown
           active={activeTab === 'inspect'}

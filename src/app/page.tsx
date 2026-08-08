@@ -192,14 +192,14 @@ function HeroCopy() {
       </div>
 
       {reduceMotion ? (
-        <h1 className="mt-5 text-2xl sm:text-3xl lg:text-[2.35rem] tracking-tight font-semibold text-[var(--text-main)] leading-[1.08] [text-wrap:balance] max-w-xl">
+        <h1 className="mt-5 text-xl max-[400px]:text-2xl sm:text-3xl lg:text-[2.35rem] tracking-tight font-semibold text-[var(--text-main)] leading-[1.12] sm:leading-[1.08] [text-wrap:balance] max-w-xl">
           {B2B_PRODUCT_LINE}
         </h1>
       ) : (
         <GsapTextReveal
           as="h1"
           split="words"
-          className="mt-5 text-2xl sm:text-3xl lg:text-[2.35rem] tracking-tight font-semibold text-[var(--text-main)] leading-[1.08] [text-wrap:balance] max-w-xl"
+          className="mt-5 text-xl max-[400px]:text-2xl sm:text-3xl lg:text-[2.35rem] tracking-tight font-semibold text-[var(--text-main)] leading-[1.12] sm:leading-[1.08] [text-wrap:balance] max-w-xl"
         >
           {B2B_PRODUCT_LINE}
         </GsapTextReveal>
