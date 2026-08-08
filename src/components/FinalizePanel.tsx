@@ -377,10 +377,17 @@ export default function FinalizePanel({
               variant="primary"
               onClick={() => { void handleCertify() }}
               loading={certStatus === 'loading'}
+              disabled={!info.inspectorSignature || !info.clientSignature}
               className="w-full"
             >
               {certStatus === 'loading' ? 'Enviando para Assinafy…' : '🔐 Assinar com certificação digital'}
             </Button>
+            {(!info.inspectorSignature || !info.clientSignature) && (
+              <p className="text-[0.7rem] text-amber-400 font-semibold">
+                ⚠️ Registre as assinaturas do vistoriador e do responsável antes de certificar,
+                para que o laudo certificado já inclua ambas.
+              </p>
+            )}
             {certError && (
               <p className="text-[0.72rem] text-red-400 font-semibold" role="alert">{certError}</p>
             )}
