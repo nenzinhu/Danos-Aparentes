@@ -32,7 +32,7 @@ export default function NewDamagesInspectorConfirm({
         </p>
         <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed">
           Estes danos não existiam na inspeção anterior. A IA pode ter sugerido tipo/severidade na
-          foto — confirme cada um como responsável do veículo para liberar o dossiê.
+          foto. Confirme cada um como responsável do veículo para liberar o dossiê.
         </p>
       </div>
 
@@ -63,7 +63,7 @@ export default function NewDamagesInspectorConfirm({
                   </div>
                   <p className="text-[0.72rem] text-[var(--text-muted)] mt-0.5">
                     {d.typeName}
-                    {d.notes ? ` — ${d.notes}` : ''}
+                    {d.notes ? `. ${d.notes}` : ''}
                   </p>
                 </div>
               </label>
@@ -89,7 +89,7 @@ export default function NewDamagesInspectorConfirm({
           }`}
         >
           {allDone
-            ? 'Confirmado — PDF liberado'
+            ? 'Confirmado. PDF liberado'
             : `${confirmedCount}/${newDamages.length} confirmada(s)`}
         </p>
       </div>

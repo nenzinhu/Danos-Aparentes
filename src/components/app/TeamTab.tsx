@@ -172,10 +172,10 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold text-[var(--text-main)] truncate">
-                      {tr.report.vehicleInfo.brand || 'Veículo'} — {tr.report.vehicleInfo.plate || 'S/P'}
+                      {tr.report.vehicleInfo.brand || 'Veículo'} · {tr.report.vehicleInfo.plate || 'S/P'}
                     </div>
                     <div className="text-xs text-[var(--text-muted)] truncate">
-                      Inspetor: {tr.inspectorEmail || '—'} • {tr.report.damages.length} avaria(s)
+                      Inspetor: {tr.inspectorEmail || 'S/I'} • {tr.report.damages.length} avaria(s)
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">

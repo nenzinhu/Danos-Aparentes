@@ -71,7 +71,7 @@ export default function RetornoLookupPanel({
       <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-4 space-y-4">
         <div>
           <p className="text-[0.7rem] font-bold uppercase tracking-wider text-emerald-400 mb-1">
-            Dados importados — confirme
+            Dados importados. Confirme
           </p>
           <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed">
             Todos os dados da inspeção anterior foram carregados. O diagrama começa vazio para você marcar

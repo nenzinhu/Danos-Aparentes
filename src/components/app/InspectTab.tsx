@@ -288,7 +288,7 @@ export default function InspectTab({
 
   const confirmAllNew = useCallback(() => {
     setConfirmedNewIds(new Set(newDamages.map((d) => d.id)))
-    onToast('Confirmado como responsável — dossiê liberado após a revisão')
+    onToast('Confirmado como responsável. O dossiê é liberado após a revisão')
   }, [newDamages, onToast])
 
   const goToSection = useCallback(
@@ -441,7 +441,7 @@ export default function InspectTab({
             <div className="text-[0.8rem] px-3.5 py-3 rounded-xl bg-amber-500/8 border border-amber-500/20 text-amber-400">
               Inspeção anterior em{' '}
               <strong>{new Date(previousReport.updatedAt).toLocaleDateString('pt-BR')}</strong>
-              — avarias novas aparecem no laudo.
+              Avarias novas aparecem no laudo.
               {liveCompare && (
                 <p className="mt-2 text-amber-200/90 ds-caption">
                   Ao vivo: {liveCompare.result.summary.newDamages} novo(s),{' '}
@@ -592,7 +592,7 @@ export default function InspectTab({
 
           {allVehicleDamages.length === 0 ? (
             <p className="ds-caption px-3.5 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-emerald-400">
-              Nenhuma avaria — o PDF inclui diagrama e fotos dos 4 lados.
+              Nenhuma avaria. O PDF inclui diagrama e fotos dos 4 lados.
             </p>
           ) : (
             <DamageList

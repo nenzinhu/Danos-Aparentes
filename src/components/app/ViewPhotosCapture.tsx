@@ -420,7 +420,7 @@ export default function ViewPhotosCapture({
         viewSidesConfirmedBy: undefined,
       })
       setReplaceView(null)
-      onToast?.(`Foto ${VIEW_NAME[view]} atualizada — confirme de novo se precisar.`)
+      onToast?.(`Foto ${VIEW_NAME[view]} atualizada. Confirme de novo se precisar.`)
     } catch (e) {
       console.error(e)
       onToast?.('Erro ao substituir foto.')
@@ -538,7 +538,7 @@ export default function ViewPhotosCapture({
             </Button>
             {pending.length > 0 && pending.length < 4 && (
               <p className="ds-caption self-center">
-                Faltam {4 - pending.length} foto(s) — frente, traseira, esquerda e direita.
+                Faltam {4 - pending.length} foto(s): frente, traseira, esquerda e direita.
               </p>
             )}
             {filled > 0 && pending.length === 0 && (
@@ -685,7 +685,7 @@ export default function ViewPhotosCapture({
             })}
           </div>
           {!compact && filled < 4 && pending.length === 0 && localAssignments.length === 0 && (
-            <p className="ds-caption">Faltam fotos — use Substituir/anexar em cada lado ou limpe e use o lote.</p>
+            <p className="ds-caption">Faltam fotos. Use Substituir/anexar em cada lado ou limpe e use o lote.</p>
           )}
         </>
       )}

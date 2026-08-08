@@ -243,9 +243,9 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
           <div ref={chatEndRef} />
         </div>
 
-        {/* Quick Actions Panel */}
+        {/* Ações do painel */}
         <div className="px-6 py-3 bg-slate-900/60 border-t border-white/5 flex flex-wrap gap-2 items-center">
-          <span className="text-[10px] font-mono-data text-slate-500 mr-2">AÇÕES RÁPIDAS:</span>
+          <span className="text-[10px] font-mono-data text-slate-500 mr-2">AÇÕES:</span>
           <button
             onClick={() => handleQuickAction('diagnostic')}
             disabled={loading}

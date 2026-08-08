@@ -23,13 +23,13 @@ const STEPS = [
   {
     id: 'dados' as const,
     label: 'Identidade',
-    hint: 'Digite a placa — marca e modelo preenchem sozinhos.',
+    hint: 'Digite a placa: marca e modelo preenchem sozinhos.',
     icon: IconDocument,
   },
   {
     id: 'diagrama' as const,
     label: 'Danos',
-    hint: 'Toque nas peças com dano — ou continue sem danos.',
+    hint: 'Toque nas peças com dano, ou continue sem danos.',
     icon: IconCar,
   },
   {

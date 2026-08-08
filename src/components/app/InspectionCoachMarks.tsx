@@ -11,7 +11,7 @@ const STEPS = [
   {
     icon: <IconDocument size={20} className="text-sky-400" />,
     title: 'Identidade do Veículo',
-    text: 'Comece pelo responsável. Depois consulte a placa — os dados preenchem sozinhos. No computador, use “Salvar prévia” para continuar no celular.',
+    text: 'Comece pelo responsável. Depois consulte a placa: os dados preenchem sozinhos. No computador, use “Salvar prévia” para continuar no celular.',
   },
   {
     icon: <IconCar size={20} className="text-sky-400" />,
@@ -26,7 +26,7 @@ const STEPS = [
   {
     icon: <IconDocument size={20} className="text-purple-400" />,
     title: 'Emita o dossiê técnico',
-    text: 'Exporte o dossiê com hash, QR Code e GPS — nova versão do histórico do veículo.',
+    text: 'Exporte o dossiê com hash, QR Code e GPS. Nova versão do histórico do veículo.',
   },
 ]
 
@@ -42,7 +42,7 @@ export default function InspectionCoachMarks({ isOpen, onClose }: Props) {
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Guia rápido da primeira inspeção"
+      aria-label="Guia da primeira inspeção"
       className="fixed z-[9998] bottom-4 right-4 left-4 sm:left-auto sm:w-[320px] p-4 rounded-2xl border backdrop-blur-xl shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300"
       style={{ background: 'var(--card-bg)', borderColor: 'var(--card-border)', boxShadow: 'var(--glass-shadow)' }}
     >
