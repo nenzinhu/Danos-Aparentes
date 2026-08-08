@@ -147,6 +147,8 @@ interface InspectTabProps {
   inspectionId?: string | null
   vehicleId?: string | null
   publicCode?: string
+  /** Garante que a inspeção existe no banco (salva a prévia) e retorna o id. */
+  onEnsureInspectionId?: () => Promise<string | null>
   laudoVersion?: number
   correctionReason?: string
   supersedesHash?: string
@@ -214,6 +216,7 @@ export default function InspectTab({
   inspectionId,
   vehicleId,
   publicCode,
+  onEnsureInspectionId,
   laudoVersion,
   correctionReason,
   supersedesHash,
@@ -669,6 +672,7 @@ export default function InspectTab({
               userId={userId}
               blockExportReason={blockExportReason}
               onReturnHome={onReturnHome}
+              onEnsureInspectionId={onEnsureInspectionId}
             />
             <InspectionAuditTimeline
               inspectionId={inspectionId}

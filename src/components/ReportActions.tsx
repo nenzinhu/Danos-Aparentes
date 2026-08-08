@@ -60,6 +60,8 @@ interface Props {
   blockExportReason?: string | null
   /** Após gerar o PDF com sucesso, volta para o Início (Dashboard/Home). */
   onReturnHome?: () => void
+  /** Garante que a inspeção existe no banco (salva a prévia) e retorna o id. */
+  onEnsureInspectionId?: () => Promise<string | null>
 }
 
 export default function ReportActions({
@@ -68,7 +70,7 @@ export default function ReportActions({
   inspectionPurpose, onIssued,
   reviewedAt, isReviewed, onConfirmReview, onClearReview, userId,
   blockExportReason = null,
-  onReturnHome,
+  onReturnHome, onEnsureInspectionId,
 }: Props) {
   const { role } = useTenantContext(userId)
   const mayReview = userId ? canReviewReport(role, userId, userId) : true
@@ -360,6 +362,7 @@ export default function ReportActions({
           inspectionId={inspectionId}
           accessToken={accessToken}
           defaultName={vehicleInfo?.owner || undefined}
+          onEnsureInspectionId={onEnsureInspectionId}
           compact
         />
 

@@ -297,6 +297,11 @@ export default function AppAuthenticatedShell({
                 onToggleFormCollapse={inspection.toggleFormCollapse}
                 onWizardComplete={shell.onWizardComplete}
                 onSaveDraft={inspection.handleSaveDraft}
+                onEnsureInspectionId={async () => {
+                  if (inspection.activeReportId) return inspection.activeReportId
+                  await inspection.handleSaveDraft()
+                  return inspection.activeReportId
+                }}
                 onOpenSaved={shell.openSavedModal}
                 onClearAll={inspection.handleClearAll}
                 onClearDamages={inspection.handleClearDamages}

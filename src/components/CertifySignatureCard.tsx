@@ -8,6 +8,8 @@ interface Props {
   accessToken?: string | null
   /** Nome padrão do signatário (ex.: nome do cliente já informado). */
   defaultName?: string
+  /** Garante que a inspeção existe no banco (salva a prévia) e retorna o id. */
+  onEnsureInspectionId?: () => Promise<string | null>
   /** Layout compacto (usado junto aos botões de exportação). */
   compact?: boolean
 }
@@ -17,7 +19,7 @@ interface Props {
  * Gera o laudo PDF no servidor, envia para a Assinafy e retorna o link
  * de assinatura qualificada do signatário.
  */
-export default function CertifySignatureCard({ inspectionId, accessToken, defaultName, compact }: Props) {
+export default function CertifySignatureCard({ inspectionId, accessToken, defaultName, onEnsureInspectionId, compact }: Props) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [error, setError] = useState('')
   const [result, setResult] = useState<{ signingUrl: string; signerName: string } | null>(null)
@@ -25,7 +27,7 @@ export default function CertifySignatureCard({ inspectionId, accessToken, defaul
   const [email, setEmail] = useState('')
 
   const handleCertify = useCallback(async () => {
-    if (!inspectionId || !accessToken) {
+    if (!accessToken) {
       setError('Faça login novamente para certificar a assinatura digital.')
       return
     }
@@ -37,6 +39,16 @@ export default function CertifySignatureCard({ inspectionId, accessToken, defaul
     setStatus('loading')
     setError('')
     try {
+      // Garante que a inspeção existe no banco (salva a prévia) antes de certificar.
+      let id = inspectionId || null
+      if (!id && onEnsureInspectionId) {
+        id = await onEnsureInspectionId()
+      }
+      if (!id) {
+        setError('Salve a vistoria antes de certificar a assinatura digital.')
+        setStatus('error')
+        return
+      }
       const res = await fetch('/api/certify-signature', {
         method: 'POST',
         headers: {
@@ -44,7 +56,7 @@ export default function CertifySignatureCard({ inspectionId, accessToken, defaul
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
-          inspectionId,
+          inspectionId: id,
           signer: { fullName: signerName, email: email.trim() || undefined },
         }),
       })
