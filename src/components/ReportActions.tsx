@@ -16,6 +16,7 @@ import {
   IconWhatsAppFull,
 } from './reportActions/icons'
 import PdfSectionsPanel from './reportActions/PdfSectionsPanel'
+import CertifySignatureCard from './CertifySignatureCard'
 import {
   blockExportWithoutReview,
   captureSvgs,
@@ -354,6 +355,13 @@ export default function ReportActions({
             <span className="text-[0.72rem]">TXT</span>
           </button>
         </div>
+
+        <CertifySignatureCard
+          inspectionId={inspectionId}
+          accessToken={accessToken}
+          defaultName={vehicleInfo?.owner || undefined}
+          compact
+        />
 
         <button
           onClick={() => setShowBadgePanel(v => !v)}

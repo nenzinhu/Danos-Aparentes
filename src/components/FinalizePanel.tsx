@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react'
 import type { GeoLocation, VehicleInfo } from '../types'
 import Button from './ui/Button'
 import { appendAuditEvent } from '../lib/audit/auditLog'
+import CertifySignatureCard from './CertifySignatureCard'
 
 interface Props {
   info: VehicleInfo
@@ -29,17 +30,6 @@ export default function FinalizePanel({
 }: Props) {
   const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [geoError, setGeoError] = useState('')
-
-  // Certificação digital (Assinafy — ICp-Brasil)
-  const [certStatus, setCertStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
-  const [certError, setCertError] = useState('')
-  const [certResult, setCertResult] = useState<{
-    signingUrl: string
-    signerName: string
-    status: string
-  } | null>(null)
-  const [certName, setCertName] = useState('')
-  const [certEmail, setCertEmail] = useState('')
 
   const set = useCallback((field: keyof VehicleInfo, value: string) => {
     onChange({ ...info, [field]: value })
@@ -94,44 +84,6 @@ export default function FinalizePanel({
     setGeoStatus('idle')
     setGeoError('')
   }, [info, onChange])
-
-  const handleCertify = useCallback(async () => {
-    if (!inspectionId || !accessToken) {
-      setCertError('Faça login novamente para certificar a assinatura digital.')
-      return
-    }
-    const name = certName.trim()
-    if (!name) {
-      setCertError('Informe o nome do signatário para a certificação digital.')
-      return
-    }
-    setCertStatus('loading')
-    setCertError('')
-    try {
-      const res = await fetch('/api/certify-signature', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          inspectionId,
-          signer: { fullName: name, email: certEmail.trim() || undefined },
-        }),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (res.ok && data.signingUrl) {
-        setCertResult({ signingUrl: data.signingUrl, signerName: name, status: data.status })
-        setCertStatus('done')
-      } else {
-        setCertError(data.error || 'Não foi possível iniciar a certificação digital.')
-        setCertStatus('error')
-      }
-    } catch {
-      setCertError('Erro de conexão ao solicitar certificação.')
-      setCertStatus('error')
-    }
-  }, [inspectionId, accessToken, certName, certEmail])
 
   return (
     <div className="space-y-4">
@@ -211,71 +163,7 @@ export default function FinalizePanel({
       )}
 
       {/* Certificação digital (Assinafy — ICp-Brasil) */}
-      <div className="pt-4 border-t border-emerald-500/20 space-y-3">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 text-[0.7rem] font-black text-emerald-400 tracking-wider uppercase">
-            🔐 Certificação Digital
-          </span>
-          <span className="text-[0.62rem] text-[var(--text-muted)]">Assinatura qualificada ICp-Brasil</span>
-        </div>
-        <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed">
-          Gera o laudo em PDF e envia para assinatura com certificado digital (validade jurídica).
-          O signatário recebe o link e assina com token de verificação.
-        </p>
-
-        {certStatus === 'done' && certResult ? (
-          <div className="glass-card p-4 text-center">
-            <p className="text-sm font-bold text-emerald-400">Certificação iniciada</p>
-            <p className="text-xs text-[var(--text-muted)] mt-1">
-              Link enviado para <strong>{certResult.signerName}</strong>.
-            </p>
-            <a
-              href={certResult.signingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mt-2 text-[0.75rem] font-bold text-emerald-400 hover:text-emerald-300 underline"
-            >
-              Abrir link de assinatura →
-            </a>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            <input
-              type="text"
-              value={certName}
-              onChange={(e) => setCertName(e.target.value)}
-              placeholder="Nome do signatário (certificação)"
-              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg text-[0.8rem] outline-none focus:border-emerald-500/40"
-            />
-            <input
-              type="email"
-              value={certEmail}
-              onChange={(e) => setCertEmail(e.target.value)}
-              placeholder="E-mail para envio do token (opcional)"
-              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg text-[0.8rem] outline-none focus:border-emerald-500/40"
-            />
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => { void handleCertify() }}
-              loading={certStatus === 'loading'}
-              disabled={!info.inspectorSignature || !info.clientSignature}
-              className="w-full"
-            >
-              {certStatus === 'loading' ? 'Enviando para Assinafy…' : '🔐 Assinar com certificação digital'}
-            </Button>
-            {(!info.inspectorSignature || !info.clientSignature) && (
-              <p className="text-[0.7rem] text-amber-400 font-semibold">
-                ⚠️ Registre as assinaturas do vistoriador e do responsável antes de certificar,
-                para que o laudo certificado já inclua ambas.
-              </p>
-            )}
-            {certError && (
-              <p className="text-[0.72rem] text-red-400 font-semibold" role="alert">{certError}</p>
-            )}
-          </div>
-        )}
-      </div>
+      <CertifySignatureCard inspectionId={inspectionId} accessToken={accessToken} />
     </div>
   )
 }
