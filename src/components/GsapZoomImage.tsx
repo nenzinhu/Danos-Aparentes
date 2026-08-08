@@ -98,7 +98,7 @@ export default function GsapZoomImage({ src, alt, className, maxZoom = 2.6 }: Pr
             src={src}
             alt={alt}
             fill
-            quality={100}
+            quality={92}
             className="object-contain object-top"
             sizes="(max-width: 1024px) 100vw, 640px"
             priority={false}
