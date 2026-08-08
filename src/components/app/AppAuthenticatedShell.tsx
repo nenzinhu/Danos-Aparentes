@@ -6,6 +6,7 @@ import { useTts } from '@/src/hooks/useTts'
 import { useSavedReports } from '@/src/hooks/useSavedReports'
 import { useSubscription } from '@/src/hooks/useSubscription'
 import { useSyncStatus, type DroppedSyncItem } from '@/src/lib/sync'
+import { groupReportsByVehicle } from '@/src/lib/vehicleEvidence'
 import { useAppShellState } from '@/src/hooks/useAppShellState'
 import { useInspectionWorkflow } from '@/src/hooks/useInspectionWorkflow'
 import { supabaseEnabled } from '@/src/lib/supabase'
@@ -31,6 +32,10 @@ const InspectTab = dynamic(() => import('@/src/components/app/InspectTab'), {
 const TeamTab = dynamic(() => import('@/src/components/app/TeamTab'), {
   loading: () => <AppLoadingShell />,
 })
+const VehiclesListView = dynamic(
+  () => import('@/src/components/vehicles/VehiclesListView'),
+  { loading: () => <AppLoadingShell /> },
+)
 
 function formatSyncFailureToast(dropped: DroppedSyncItem[]): string {
   const first = dropped[0]
@@ -256,17 +261,7 @@ export default function AppAuthenticatedShell({
                 showAuditDashboard={tenantRole === 'owner'}
               />
             ) : shell.activeTab === 'vehicles' ? (
-              <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] p-6 text-center">
-                <p className="text-sm text-[var(--text-muted)] mb-3">
-                Histórico e linha do tempo dos veículos.
-                </p>
-                <a
-                  href="/app/vehicles"
-                  className="inline-block text-sm font-bold text-sky-400 hover:underline"
-                >
-                  Abrir hub de veículos →
-                </a>
-              </div>
+              <VehiclesListView vehicles={groupReportsByVehicle(saved)} />
             ) : (
               <InspectTab
                 vehicleType={inspection.vehicleType}

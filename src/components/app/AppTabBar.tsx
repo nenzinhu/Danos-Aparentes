@@ -5,8 +5,9 @@ import { useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
 import CompanyLogoButton from '@/src/components/CompanyLogoButton';
 import PwaInstallButton from '@/src/components/PwaInstallButton';
-import { IconDocument, IconSparkles, IconTeam, IconSearch, IconCar } from '@/src/components/ui/AnimatedIcons';
+import { IconDocument, IconSparkles, IconTeam, IconSearch } from '@/src/components/ui/AnimatedIcons';
 import { buttonVariants } from '@/src/components/ui/buttonVariants';
+import PanelSmartDropdown from './PanelSmartDropdown';
 
 interface AppTabBarProps {
   activeTab: 'inspect' | 'dashboard' | 'team' | 'vehicles';
@@ -99,24 +100,14 @@ export default function AppTabBar({ activeTab, onTabChange, onOpenSettings, onOp
         </GsapTabButton>
 
         <GsapTabButton
-          onClick={() => {
-            onTabChange('vehicles');
-            router.push('/app/vehicles');
-          }}
-          className={tabClass(activeTab === 'vehicles')}
-          title="Linha do Tempo e comparação por veículo"
-        >
-          <IconCar size={14} className={activeTab === 'vehicles' ? 'text-[var(--primary)]' : 'text-slate-400'} />
-          Histórico
-        </GsapTabButton>
-
-        <GsapTabButton
           onClick={() => onTabChange('dashboard')}
           className={tabClass(activeTab === 'dashboard')}
         >
           <IconSparkles size={14} className={activeTab === 'dashboard' ? 'text-[var(--primary)]' : 'text-slate-400'} />
           <span className="hidden sm:inline">Gestão Histórica</span><span className="sm:hidden">Painel</span>
         </GsapTabButton>
+
+        <PanelSmartDropdown onSelect={(v) => onTabChange(v)} />
 
         {showTeamTab && (
           <GsapTabButton
