@@ -13,11 +13,10 @@ interface NewInspectionDropdownProps {
 const OPTIONS: { id: InspectionPurpose; label: string; desc: string; Icon: typeof EntradaIcon }[] = [
   { id: 'entrada', label: 'Entrada / Recebimento', desc: 'Veículo entra na guarda', Icon: EntradaIcon },
   { id: 'retorno', label: 'Saída / Entrega', desc: 'Veículo deixa a guarda', Icon: SaidaIcon },
-  { id: 'retorno', label: 'Retorno', desc: 'Comparar com vistoria anterior', Icon: SaidaIcon },
 ]
 
 /**
- * Aba "Nova Inspeção" vira dropdown com os tipos de vistoria.
+ * Aba "Iniciar Vistoria" vira dropdown com os tipos de vistoria.
  */
 export default function NewInspectionDropdown({ onSelect, active }: NewInspectionDropdownProps) {
   const [open, setOpen] = useState(false)
@@ -59,8 +58,8 @@ export default function NewInspectionDropdown({ onSelect, active }: NewInspectio
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Nova Inspeção"
-        title="Nova Inspeção"
+        aria-label="Iniciar Vistoria"
+        title="Iniciar Vistoria"
         className={
           'px-3 sm:px-4 py-2 rounded-lg text-xs font-bold font-outfit transition-colors cursor-pointer border inline-flex items-center gap-1.5 ' +
           (active
@@ -72,12 +71,12 @@ export default function NewInspectionDropdown({ onSelect, active }: NewInspectio
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
           <path d="M14 2v6h6" />
         </svg>
-        <span className="hidden sm:inline">Nova Inspeção</span><span className="sm:hidden">Inspeção</span>
+        <span className="hidden sm:inline">Iniciar Vistoria</span><span className="sm:hidden">Vistoria</span>
       </button>
 
       {tooltip && !open && (
         <div role="tooltip" className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap rounded-md bg-black/85 px-2.5 py-1.5 text-[11px] font-semibold text-white pointer-events-none">
-          Nova Inspeção
+          Iniciar Vistoria
         </div>
       )}
 

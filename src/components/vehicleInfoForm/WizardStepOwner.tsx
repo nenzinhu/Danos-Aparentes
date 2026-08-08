@@ -29,9 +29,17 @@ export default function WizardStepOwner({
                   <label htmlFor="profile-select" className={labelClasses}>Perfil do Relatório</label>
                   <select id="profile-select" className={inputClasses} value={info.profile} onChange={e => set('profile', e.target.value)}>
                     <option value="">— Selecione —</option>
+                    <option value="estacionamento">Estacionamento</option>
+                    <option value="valet">Valet</option>
+                    <option value="locadora">Locadora</option>
+                    <option value="guincho">Guincho</option>
+                    <option value="deposito">Depósito / Pátio</option>
+                    <option value="frota">Frota / Corporativo</option>
                     <option value="oficina">Oficina</option>
-                    <option value="perito">Perito</option>
                     <option value="seguradora">Seguradora</option>
+                    <option value="despachante">Despachante</option>
+                    <option value="concessionaria">Concessionária</option>
+                    <option value="perito">Perito</option>
                   </select>
                 </>
               )}

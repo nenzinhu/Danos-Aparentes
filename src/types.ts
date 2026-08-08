@@ -64,7 +64,7 @@ export interface VehicleInfo {
   viewSidesConfirmedAt?: string
   viewSidesConfirmedBy?: string
   // NEW fields:
-  profile: 'oficina' | 'perito' | 'seguradora' | ''
+  profile: string  // Perfil do relatório (estacionamento, locadora, oficina, etc.)
   ref: string        // Nº da OS
   color: string      // Cor do veículo
   vehicleTypeDesc: string  // Tipo do veículo (textual)
