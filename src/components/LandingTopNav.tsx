@@ -102,31 +102,74 @@ function animateOpen(panel: HTMLElement, items: HTMLElement[]) {
   )
   gsap.fromTo(
     items,
-    { autoAlpha: 0, y: 10 },
-    { autoAlpha: 1, y: 0, duration: 0.32, stagger: 0.045, ease: 'power2.out', delay: 0.04 },
+    { autoAlpha: 0, x: 24, y: 0 },
+    { autoAlpha: 1, x: 0, y: 0, duration: 0.4, stagger: 0.06, ease: 'back.out(1.2)', delay: 0.06 },
   )
 }
 
-// Accordion mobile: expande/recolhe a sublista com GSAP (altura + fade dos itens).
+// Accordion mobile: timeline GSAP com slide lateral, stagger e chevron animado.
 function animateAccordion(body: HTMLElement, open: boolean) {
   const items = Array.from(body.querySelectorAll<HTMLElement>('[data-acc-item]'))
-  gsap.killTweensOf([body, ...items])
+  const head = body.previousElementSibling as HTMLElement | null
+  const chevron = head?.querySelector<HTMLElement>('[data-acc-chevron]') ?? null
+  const glow = head?.querySelector<HTMLElement>('[data-acc-glow]') ?? null
+  gsap.killTweensOf([body, ...items, chevron, glow].filter(Boolean) as HTMLElement[])
+
   if (prefersReducedMotion()) {
     gsap.set(body, { height: open ? 'auto' : 0, autoAlpha: open ? 1 : 0 })
-    gsap.set(items, { autoAlpha: open ? 1 : 0, y: 0 })
+    gsap.set(items, { autoAlpha: open ? 1 : 0, x: 0, y: 0 })
+    if (chevron) gsap.set(chevron, { rotate: open ? 180 : 0 })
+    if (glow) gsap.set(glow, { scaleX: open ? 1 : 0 })
     return
   }
+
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+
+  if (chevron) {
+    tl.to(chevron, {
+      rotate: open ? 180 : 0,
+      scale: open ? 1.15 : 1,
+      color: open ? 'var(--primary)' : 'var(--signal-bright)',
+      duration: 0.42,
+      ease: open ? 'back.out(2.5)' : 'power2.inOut',
+    }, 0)
+    if (open) tl.to(chevron, { scale: 1, duration: 0.2, ease: 'power2.out' }, 0.3)
+  }
+
+  // Linha de destaque que "varre" sob o cabeçalho do grupo ativo
+  if (glow) {
+    tl.fromTo(glow,
+      { scaleX: open ? 0 : 1, transformOrigin: 'left center' },
+      { scaleX: open ? 1 : 0, duration: open ? 0.5 : 0.25, ease: open ? 'power3.out' : 'power2.in' },
+    0)
+  }
+
   if (open) {
     gsap.set(body, { height: 'auto', autoAlpha: 1 })
     const full = body.offsetHeight
-    gsap.fromTo(body, { height: 0 }, { height: full, duration: 0.34, ease: 'power2.out',
-      onComplete: () => gsap.set(body, { height: 'auto' }) })
-    gsap.fromTo(items, { autoAlpha: 0, y: -6 },
-      { autoAlpha: 1, y: 0, duration: 0.28, stagger: 0.04, ease: 'power2.out', delay: 0.06 })
+    tl.fromTo(body,
+      { height: 0 },
+      { height: full, duration: 0.44, ease: 'expo.out',
+        onComplete: () => gsap.set(body, { height: 'auto' }) },
+    0)
+    tl.fromTo(items,
+      { autoAlpha: 0, x: -18, y: -4, scale: 0.97 },
+      { autoAlpha: 1, x: 0, y: 0, scale: 1, duration: 0.42,
+        stagger: { each: 0.055, from: 'start' }, ease: 'back.out(1.4)' },
+    0.1)
   } else {
-    gsap.to(items, { autoAlpha: 0, y: -4, duration: 0.14, stagger: 0.02, ease: 'power1.in' })
-    gsap.to(body, { height: 0, autoAlpha: 0, duration: 0.26, ease: 'power2.inOut', delay: 0.05 })
+    tl.to(items, {
+      autoAlpha: 0, x: -12, scale: 0.98, duration: 0.18,
+      stagger: { each: 0.025, from: 'end' }, ease: 'power2.in',
+    }, 0)
+    tl.to(body, { height: 0, autoAlpha: 0, duration: 0.3, ease: 'power3.inOut' }, 0.08)
   }
+}
+
+// Feedback tátil ao tocar num cabeçalho do accordion.
+function pressFeedback(el: HTMLElement) {
+  if (prefersReducedMotion()) return
+  gsap.fromTo(el, { scale: 0.975 }, { scale: 1, duration: 0.35, ease: 'elastic.out(1, 0.5)' })
 }
 
 function animateCascade(panel: HTMLElement, items: HTMLElement[]) {
@@ -445,9 +488,19 @@ export default function LandingTopNav() {
                     type="button"
                     aria-expanded={expanded}
                     aria-controls={`${uid}-acc-${group.id}`}
-                    onClick={() => setMobileGroup(expanded ? null : group.id)}
-                    className="w-full flex items-center justify-between gap-3 px-3 py-3 rounded-xl text-left cursor-pointer hover:bg-[var(--btn-secondary-hover)] transition-colors"
+                    onClick={e => {
+                      pressFeedback(e.currentTarget)
+                      setMobileGroup(expanded ? null : group.id)
+                    }}
+                    className="group relative w-full flex items-center justify-between gap-3 px-3 py-3 rounded-xl text-left cursor-pointer hover:bg-[var(--btn-secondary-hover)] transition-colors overflow-hidden"
                   >
+                    {/* Barra de destaque que varre sob o grupo ativo */}
+                    <span
+                      data-acc-glow
+                      aria-hidden="true"
+                      className="pointer-events-none absolute left-0 bottom-0 h-[2px] w-full bg-gradient-to-r from-[var(--primary)] to-transparent"
+                      style={{ transform: 'scaleX(0)', transformOrigin: 'left center' }}
+                    />
                     <span className="min-w-0">
                       <span className="block text-base font-bold text-[var(--text-main)]">{group.label}</span>
                       {group.blurb && (
@@ -457,8 +510,9 @@ export default function LandingTopNav() {
                       )}
                     </span>
                     <span
+                      data-acc-chevron
                       aria-hidden="true"
-                      className={`shrink-0 text-xs text-[var(--signal-bright)] transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
+                      className="shrink-0 text-xs text-[var(--signal-bright)] inline-block"
                     >
                       ▾
                     </span>
@@ -481,8 +535,11 @@ export default function LandingTopNav() {
                             <li key={item.href} data-acc-item>
                               <Link
                                 href={item.href}
-                                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 hover:bg-[var(--btn-secondary-hover)]"
-                                onClick={() => setMobileOpen(false)}
+                                className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 hover:bg-[var(--btn-secondary-hover)] active:scale-[0.98] transition-transform"
+                                onClick={e => {
+                                  pressFeedback(e.currentTarget as HTMLElement)
+                                  setMobileOpen(false)
+                                }}
                               >
                                 {isLaudos && (
                                   // eslint-disable-next-line @next/next/no-img-element
