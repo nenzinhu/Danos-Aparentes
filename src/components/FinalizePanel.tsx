@@ -2,8 +2,6 @@
 import { useState, useCallback } from 'react'
 import type { GeoLocation, VehicleInfo } from '../types'
 import Button from './ui/Button'
-import { appendAuditEvent } from '../lib/audit/auditLog'
-import CertifySignatureCard from './CertifySignatureCard'
 
 interface Props {
   info: VehicleInfo
@@ -11,22 +9,18 @@ interface Props {
   showGeo?: boolean
   /** Optional inspection id for audit trail. */
   inspectionId?: string | null
-  sessionId?: string
   /** Bearer token for server-side actions (PDF/certification). */
   accessToken?: string | null
 }
 
 /**
- * GPS + certificação digital — ficam depois da revisão de avarias,
- * imediatamente antes de gerar o PDF.
+ * GPS da vistoria — fica depois da revisão de avarias, imediatamente antes
+ * de gerar o PDF. A certificação digital vive em ReportActions (card único).
  */
 export default function FinalizePanel({
   info,
   onChange,
   showGeo = true,
-  inspectionId,
-  sessionId,
-  accessToken,
 }: Props) {
   const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
   const [geoError, setGeoError] = useState('')
@@ -161,9 +155,6 @@ export default function FinalizePanel({
           )}
         </div>
       )}
-
-      {/* Certificação digital (Assinafy — ICp-Brasil) */}
-      <CertifySignatureCard inspectionId={inspectionId} accessToken={accessToken} />
     </div>
   )
 }

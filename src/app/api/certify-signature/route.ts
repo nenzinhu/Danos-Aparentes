@@ -49,7 +49,11 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  let body: { inspectionId?: string; signer?: AssinafySignerInput }
+  let body: {
+    inspectionId?: string
+    signer?: AssinafySignerInput
+    deliveryChannel?: 'whatsapp' | 'email'
+  }
   try {
     body = await req.json()
   } catch {
@@ -105,7 +109,7 @@ export async function POST(req: NextRequest) {
 
     // 4. Cria signatário + solicita assinatura
     const signerId = await createSigner(signer)
-    const verificationMethod = resolveVerificationMethod(signer)
+    const verificationMethod = resolveVerificationMethod(signer, body.deliveryChannel)
     const assignment = await createVirtualAssignment(documentId, signerId, verificationMethod)
 
     // 5. Persiste vínculo para auditoria

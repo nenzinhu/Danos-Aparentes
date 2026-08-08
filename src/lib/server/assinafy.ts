@@ -174,8 +174,18 @@ export async function getDocument(documentId: string): Promise<AssinafyDocument>
   return r.data
 }
 
-/** Decide o método de verificação com base nos dados disponíveis do signatário. */
-export function resolveVerificationMethod(input: AssinafySignerInput): VerificationMethod {
+/**
+ * Decide o método de verificação com base nos dados disponíveis do signatário.
+ *
+ * `preferred` reflete o canal escolhido na UI; só é honrado se o dado
+ * correspondente existir. Sem preferência, e-mail tem precedência.
+ */
+export function resolveVerificationMethod(
+  input: AssinafySignerInput,
+  preferred?: 'whatsapp' | 'email',
+): VerificationMethod {
+  if (preferred === 'whatsapp' && input.whatsappPhone) return 'Whatsapp'
+  if (preferred === 'email' && input.email) return 'Email'
   if (input.email) return 'Email'
   if (input.whatsappPhone) return 'Whatsapp'
   return 'Email'

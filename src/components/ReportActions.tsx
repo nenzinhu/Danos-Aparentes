@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { Damage, VehicleInfo, VehicleType } from '../types'
-import { generatePdf, generatePdfBlob, buildBadgeSnippet } from '../lib/pdf'
+import { generatePdf, buildBadgeSnippet } from '../lib/pdf'
 import { copyReport, downloadTxt, sendWhatsApp } from '../lib/report'
 import { resolveDamagePhotos, resolvePhotos } from '../lib/photoStore'
 import { canReviewReport } from '../lib/auth/rbac'
@@ -9,11 +9,9 @@ import { useTenantContext } from '../hooks/useTenantContext'
 import {
   IconCopy,
   IconDamageList,
-  IconPdf,
   IconSeal,
   IconTxt,
   IconWhatsApp,
-  IconWhatsAppFull,
 } from './reportActions/icons'
 import PdfSectionsPanel from './reportActions/PdfSectionsPanel'
 import CertifySignatureCard from './CertifySignatureCard'
@@ -183,27 +181,6 @@ export default function ReportActions({
     return false
   }
 
-  async function whatsappPdf(): Promise<boolean> {
-    const payload = await preparePdfPayload()
-    if (!payload) return false
-    const blob = await generatePdfBlob(
-      payload.resolvedVehicleInfo,
-      payload.resolvedDamages,
-      payload.svgData,
-      payload.pdfSettings,
-      { accessToken },
-    )
-    const file = new File([blob], `vistoria-${vehicleInfo.plate || 'sem-placa'}.pdf`, { type: 'application/pdf' })
-    if (navigator.canShare?.({ files: [file] })) {
-      await navigator.share({ files: [file], title: 'Relatório de Vistoria' })
-    } else {
-      const url = URL.createObjectURL(blob)
-      window.open(url, '_blank')
-      setTimeout(() => URL.revokeObjectURL(url), 60_000)
-    }
-    return true
-  }
-
   const btnBase = "w-full flex items-center justify-start gap-2 px-3.5 py-2.5 rounded-xl font-outfit text-[0.85rem] font-bold transition-all duration-200"
 
   return (
@@ -309,34 +286,10 @@ export default function ReportActions({
           className={`${btnBase} bg-green-500/10 border border-green-500/30 text-green-500 hover:bg-green-500/20 disabled:opacity-60`}
         >
           {loading === 'wp' ? <span className="animate-pulse">⏳</span> : <IconWhatsApp />}
-          Enviar via WhatsApp
+          Enviar resumo via WhatsApp
         </button>
 
-        <button
-          onClick={() => handle('wp-pdf', whatsappPdf)}
-          disabled={loading !== null || !canExportOfficialPdf}
-          title={!canExportOfficialPdf ? 'Confirme a revisão humana antes de gerar o PDF' : undefined}
-          className={`${btnBase} bg-green-500/5 border border-green-500/20 text-green-500 hover:bg-green-500/15 disabled:opacity-60`}
-        >
-          {loading === 'wp-pdf' ? <span className="animate-pulse">⏳</span> : <IconWhatsAppFull />}
-          WhatsApp (PDF)
-        </button>
-
-        <div className="grid grid-cols-3 gap-2">
-          <button
-            onClick={() => handle('pdf', handlePdf, '📄 PDF gerado!')}
-            disabled={loading !== null || !canExportOfficialPdf}
-            title={
-              !canExportOfficialPdf
-                ? 'Confirme a revisão humana acima antes de gerar o PDF'
-                : 'Gerar PDF Profissional com Mapa de Avarias'
-            }
-            className={`${btnBase} flex-col justify-center gap-1 bg-gradient-to-br from-emerald-500/15 to-emerald-600/10 border border-emerald-500/35 text-emerald-500 p-2.5 hover:from-emerald-500/20 hover:to-emerald-600/15 disabled:opacity-60`}
-          >
-            {loading === 'pdf' ? <span className="text-xl animate-pulse">⏳</span> : <IconPdf />}
-            <span className="text-[0.72rem]">{canExportOfficialPdf ? 'PDF' : 'Revise'}</span>
-          </button>
-
+        <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, '📋 Copiado!')}
             disabled={loading !== null}
@@ -363,6 +316,8 @@ export default function ReportActions({
           accessToken={accessToken}
           defaultName={vehicleInfo?.owner || undefined}
           onEnsureInspectionId={onEnsureInspectionId}
+          onPlainPdf={() => handle('pdf', handlePdf, '📄 PDF gerado!')}
+          canExportPlainPdf={canExportOfficialPdf}
           compact
         />
 
