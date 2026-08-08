@@ -1,6 +1,7 @@
 'use client'
 
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { gsap } from 'gsap'
 
@@ -131,6 +132,13 @@ export default function LandingTopNav() {
   const [openId, setOpenId] = useState<string | null>(null)
   const [cascadeId, setCascadeId] = useState<string | null>(null)
   const [mobileOpen, setMobileOpen] = useState(false)
+  // Portal só após montar no cliente (evita mismatch de hidratação).
+  // useSyncExternalStore em vez de setState num effect (sem render em cascata).
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  )
   const panelRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const cascadeRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
@@ -369,7 +377,7 @@ export default function LandingTopNav() {
         </span>
       </button>
 
-      {mobileOpen && (
+      {mobileOpen && mounted && createPortal(
         <div className="lg:hidden fixed inset-0 z-[9999]" role="dialog" aria-modal="true" aria-label="Menu">
           {/* Backdrop translúcido: isola o conteúdo e fecha ao clicar fora */}
           <div
@@ -456,7 +464,8 @@ export default function LandingTopNav() {
               </div>
             ))}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </nav>
   )
