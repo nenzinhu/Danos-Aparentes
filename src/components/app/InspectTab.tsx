@@ -351,40 +351,50 @@ export default function InspectTab({
         <div className="glass-card p-5 sm:p-7 space-y-6">
           {onSelectPurpose && (
             <div>
-              <p className="ds-label mb-1">Momento</p>
-              <p className="ds-h2 mb-3">O que aconteceu?</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="group" aria-label="Momento da inspeção">
+              <p className="ds-label mb-2">Momento da Inspeção</p>
+              <div
+                className="relative flex p-1 rounded-xl bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)]"
+                role="group"
+                aria-label="Momento da inspeção"
+              >
+                <span
+                  aria-hidden
+                  className={`absolute top-1 bottom-1 rounded-lg bg-[var(--primary)]/15 border border-[var(--primary)]/50 transition-all duration-300 ease-out ${
+                    inspectionPurpose === 'entrada' ? 'left-1 right-1/2' : 'left-1/2 right-1'
+                  }`}
+                />
                 <button
                   type="button"
                   onClick={() => onSelectPurpose('entrada')}
-                  className={`flex items-center gap-3 text-left min-h-[4.5rem] px-4 py-3.5 rounded-2xl font-bold border transition-all duration-200 ${
+                  aria-pressed={inspectionPurpose === 'entrada'}
+                  className={`relative z-10 flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-bold text-[0.8rem] transition-colors ${
                     inspectionPurpose === 'entrada'
-                      ? 'bg-[var(--btn-secondary-bg)] border-[var(--primary)]/45 text-[var(--text-main)] ring-1 ring-[var(--primary)]/20'
-                      : 'border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--primary)]/25'
+                      ? 'text-[var(--primary)]'
+                      : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
                   }`}
                 >
-                  <EntradaIcon size={26} className={inspectionPurpose === 'entrada' ? 'text-emerald-300' : 'text-[var(--text-muted)]'} />
-                  <span>
-                    <span className="block text-sm">Entrada / Recebimento</span>
-                    <span className="ds-caption mt-1 block font-medium">Estado na entrega ou retirada</span>
-                  </span>
+                  <EntradaIcon size={18} />
+                  Entrada / Recebimento
                 </button>
                 <button
                   type="button"
                   onClick={() => onSelectPurpose('retorno')}
-                  className={`flex items-center gap-3 text-left min-h-[4.5rem] px-4 py-3.5 rounded-2xl font-bold border transition-all duration-200 ${
+                  aria-pressed={inspectionPurpose === 'retorno'}
+                  className={`relative z-10 flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-bold text-[0.8rem] transition-colors ${
                     inspectionPurpose === 'retorno'
-                      ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-100 ring-1 ring-emerald-500/20'
-                      : 'border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-emerald-500/25'
+                      ? 'text-[var(--primary)]'
+                      : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
                   }`}
                 >
-                  <SaidaIcon size={26} className={inspectionPurpose === 'retorno' ? 'text-sky-300' : 'text-[var(--text-muted)]'} />
-                  <span>
-                    <span className="block text-sm">Saída / Entrega</span>
-                    <span className="ds-caption mt-1 block font-medium">Comparar com a entrada</span>
-                  </span>
+                  <SaidaIcon size={18} />
+                  Saída / Entrega
                 </button>
               </div>
+              <p className="ds-caption mt-2">
+                {inspectionPurpose === 'entrada'
+                  ? 'Estado na entrega ou retirada do veículo.'
+                  : 'Compara o estado de saída com a inspeção de entrada.'}
+              </p>
             </div>
           )}
           {inspectionPurpose === 'retorno' && onLookupRetorno ? (

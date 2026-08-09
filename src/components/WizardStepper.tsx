@@ -26,23 +26,27 @@ export default function WizardStepper({ current, maxVisited, onStepClick }: Prop
               type="button"
               disabled={!clickable}
               onClick={() => clickable && onStepClick(step)}
-              className={`flex flex-col items-center gap-1 flex-1 min-w-0 py-1 ${clickable ? 'cursor-pointer' : 'cursor-default opacity-60'}`}
+              className={`group flex items-center gap-2 flex-1 min-w-0 py-1 ${clickable ? 'cursor-pointer' : 'cursor-default'}`}
               aria-current={active ? 'step' : undefined}
             >
-              <span className={`w-7 h-7 rounded-full text-xs font-black flex items-center justify-center border shrink-0 ${
-                done ? 'bg-green-500/20 border-green-500/50 text-green-500' :
-                active ? 'bg-sky-500/20 border-sky-500/50 text-sky-500' :
-                'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)]'
+              <span className={`w-6 h-6 rounded-full text-[0.7rem] font-black flex items-center justify-center border shrink-0 transition-colors ${
+                done
+                  ? 'bg-[var(--success-bg)] border-[var(--success-border)] text-[var(--success)]'
+                  : active
+                    ? 'bg-[var(--primary)]/15 border-[var(--primary)]/60 text-[var(--primary)]'
+                    : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)]'
               }`}>
                 {done ? '✓' : step}
               </span>
-              <span className={`text-[0.65rem] font-bold truncate max-w-full ${active ? 'text-sky-500' : 'text-[var(--text-muted)]'}`}>
+              <span className={`text-[0.7rem] font-bold truncate max-w-full transition-colors ${
+                active ? 'text-[var(--primary)]' : done ? 'text-[var(--text-main)]' : 'text-[var(--text-muted)]'
+              }`}>
                 {label}
               </span>
             </button>
             {i < WIZARD_STEPS.length - 1 && (
               <div
-                className={`h-px w-3 shrink-0 ${step < current ? 'bg-green-500/40' : 'bg-[var(--card-border)]'}`}
+                className={`h-px w-4 shrink-0 ${step < current ? 'bg-[var(--success-border)]' : 'bg-[var(--card-border)]'}`}
                 aria-hidden
               />
             )}
