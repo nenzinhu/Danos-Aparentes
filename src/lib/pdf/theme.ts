@@ -120,8 +120,9 @@ export function pillBadge(label: string, color: string, bg: string, theme: PdfTh
 
 export function sectionTitle(text: string, theme: PdfTheme, num?: number): string {
   const label = num ? `${num}. ${text}` : text
-  return `<div class="sec-title" style="margin:10px 0 6px; text-align:center;">
-    <span class="sec-title-text" style="font-size:10px; font-weight:800; color:${theme.textMain}; text-transform:uppercase; letter-spacing:0.08em; font-family:${theme.fontTitle}; border-bottom:1px solid ${theme.accentColor}; padding-bottom:3px; display:inline-block;">${label}</span>
+  return `<div class="sec-title" style="margin:12px 0 7px; display:flex; align-items:center; gap:8px;">
+    <span style="display:inline-block;width:4px;height:13px;background:${theme.accentColor};border-radius:2px;flex:0 0 auto;"></span>
+    <span class="sec-title-text" style="font-size:9.5px; font-weight:800; color:${theme.textMain}; text-transform:uppercase; letter-spacing:0.09em; font-family:${theme.fontTitle}; line-height:1.1;">${label}</span>
   </div>`
 }
 

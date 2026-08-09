@@ -42,6 +42,44 @@ export function buildStatusBadge(damages: Damage[], theme: PdfTheme): string {
   </div>`
 }
 
+/**
+ * Card de resumo executivo — impacto imediato ao abrir o documento.
+ * Placa, protocolo, gravidade e total de avarias em 4 colunas.
+ */
+export function buildExecutiveSummary(
+  info: VehicleInfo,
+  damages: Damage[],
+  theme: PdfTheme,
+  protocol: string,
+  date: string,
+): string {
+  const plate = info.plate || '—'
+  const hasHigh = damages.some(d => d.severity === 'high')
+  const hasMed  = damages.some(d => d.severity === 'medium')
+  const sevLabel = damages.length === 0 ? 'Sem avarias'
+    : hasHigh ? 'Grave' : hasMed ? 'Média' : 'Leve'
+  const sevColor = damages.length === 0 ? '#16a34a'
+    : hasHigh ? '#dc2626' : hasMed ? '#ea580c' : '#ca8a04'
+
+  function cell(value: string, caption: string, valColor = theme.textMain): string {
+    return `<td style="vertical-align:middle;padding:0 12px;border-right:1px solid ${theme.borderLight};">
+      <p style="font-size:7px;font-weight:700;color:${theme.textMuted};text-transform:uppercase;letter-spacing:0.06em;margin:0 0 2px;font-family:${theme.fontTitle};line-height:1.2;">${caption}</p>
+      <p style="font-size:13px;font-weight:800;color:${valColor};margin:0;font-family:${theme.fontTitle};letter-spacing:0.02em;line-height:1.2;">${escapeHtml(value)}</p>
+    </td>`
+  }
+
+  return `<div class="nobreak pdf-exec-summary" style="background:${theme.cardBg};border:1px solid ${theme.borderColor};border-radius:8px;padding:10px 14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+    <table width="100%" cellpadding="0" cellspacing="0" style="table-layout:fixed;">
+      <tr>
+        ${cell(plate, 'Placa')}
+        ${cell(protocol, 'Protocolo')}
+        ${cell(sevLabel, 'Gravidade', sevColor)}
+        ${cell(String(damages.length), 'Total de Avarias', theme.textMain)}
+      </tr>
+    </table>
+  </div>`
+}
+
 export function buildInfoTable(info: VehicleInfo | Partial<VehicleInfo>, theme: PdfTheme): string {
   function field(label: string, val: string): string {
     return `<div style="margin-bottom:5px;">

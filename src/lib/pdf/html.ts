@@ -5,6 +5,7 @@ import { collectOriginalPhotoHashes } from '../photoEvidence'
 import {
   buildChecklistSection,
   buildDamageTable,
+  buildExecutiveSummary,
   buildGeoAuditSection,
   buildInfoTable,
   buildInteriorSection,
@@ -198,6 +199,9 @@ export async function buildFullHtml(
   }
 
   const page1Sections = `
+    <!-- 0. RESUMO EXECUTIVO -->
+    ${sec.showInfoTable ? buildExecutiveSummary(info, damages, theme, protocol, date) : ''}
+
     <!-- 1. IDENTIFICAÇÃO -->
     ${sec.showInfoTable ? `<div class="nobreak" style="margin-bottom:8px;">
       ${sectionTitle('DADOS DO CLIENTE E DO VEÍCULO', theme)}
