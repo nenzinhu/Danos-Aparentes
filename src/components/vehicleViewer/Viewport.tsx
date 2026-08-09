@@ -179,8 +179,17 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
       if (play()) mo.disconnect()
     })
     mo.observe(root, { childList: true, subtree: true })
+    // Segurança: se o efeito GSAP não disparar/completar (chunk lento, plugin
+    // ausente, troca rápida de view), garante que o diagrama fique visível.
+    const safety = window.setTimeout(() => {
+      mo.disconnect()
+      gsap.set(root.querySelectorAll('.part'), { clearProps: 'all', autoAlpha: 1 })
+      const sc = scannerRef.current
+      if (sc) gsap.set(sc, { autoAlpha: 0 })
+    }, 1200)
     return () => {
       mo.disconnect()
+      window.clearTimeout(safety)
       ctx?.revert()
     }
   }, [layoutKey, targetRef])
@@ -212,7 +221,13 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
                   a Suspense boundary that wraps AnimatePresence unmounts the
                   exiting element mid-animation, so onExitComplete never fires
                   and mode="wait" hangs forever. */}
-              <Suspense fallback={null}>
+              <Suspense
+                fallback={
+                  <div className="w-full h-full flex items-center justify-center text-[var(--text-muted)] text-[0.75rem]">
+                    <span className="animate-pulse">Carregando diagrama…</span>
+                  </div>
+                }
+              >
                 <VehicleComp
                   damages={viewDamages}
                   selectedPartId={selectedPart?.id ?? null}

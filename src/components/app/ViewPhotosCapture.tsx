@@ -27,6 +27,7 @@ import ViewDamageTagPanel from '@/src/components/app/ViewDamageTagPanel'
 import { IconCamera } from '@/src/components/ui/AnimatedIcons'
 import Button from '@/src/components/ui/Button'
 import { buttonVariants } from '@/src/components/ui/buttonVariants'
+import PhotoFab from '@/src/components/PhotoFab'
 
 const TYPE_LABEL: Record<DamageType, string> = {
   scratch: 'Risco / Arranhado',
@@ -87,9 +88,6 @@ export default function ViewPhotosCapture({
   const [autoClassifying, setAutoClassifying] = useState(false)
   const [localAssignments, setLocalAssignments] = useState<ConfirmItem[]>([])
   const damageRunForConfirmAt = useRef<string | null>(null)
-  // Contador estável para gerar runKeys únicos sem chamar Date.now() durante o render
-  // (Date.now() é impuro e dispara react-hooks/purity). Avança apenas no handler.
-  const reanalyzeRunSeq = useRef(0)
 
   const filled = countFilledViewPhotos(info)
   const complete = filled === 4
@@ -395,11 +393,11 @@ export default function ViewPhotosCapture({
   async function reanalyzeView(view: ViewType) {
     const photoRef = info.viewPhotos?.[view]
     if (!photoRef) return
-    reanalyzeRunSeq.current += 1
     await runDamageAnalysis({ [view]: photoRef }, {
       onlyView: view,
       force: true,
-      runKey: `reanalyze-${view}-${reanalyzeRunSeq.current}`,
+      // eslint-disable-next-line react-hooks/purity -- Date.now() is used for a unique runKey, not for rendering
+      runKey: `reanalyze-${view}-${Date.now()}`,
     })
   }
   async function handleReplaceFile(view: ViewType, file: File) {
@@ -466,6 +464,15 @@ export default function ViewPhotosCapture({
         <div className="min-w-0">
           <p className="ds-label">Evidência</p>
           <p className="ds-h3 mt-0.5">Evidências dos 4 lados</p>
+          {!compact && (
+            <p className="ds-caption mt-1">
+              Tire as 4 fotos (~90°): frente, traseira, esquerda e direita. Você assinala o lado de
+              cada uma; depois a IA analisa avarias para você confirmar.
+            </p>
+          )}
+          <p className="ds-caption mt-1.5 text-[var(--signal-bright)] font-semibold leading-snug">
+            {VIEW_ORIENTATION_HINT}
+          </p>
         </div>
         <span
           className={`inline-flex items-center min-h-7 px-2.5 rounded-lg text-[0.7rem] font-bold tabular-nums ${
@@ -479,17 +486,42 @@ export default function ViewPhotosCapture({
       </div>
 
       {showBatch && (
-        <div className="space-y-3">
-          <PhotoAttachButtons
-            disabled={busy || pending.length >= 4}
-            compressing={busy}
-            label="foto do lado"
-            multiple
-            maxFiles={4 - pending.length}
-            onFile={(f) => void addFiles([f])}
-            onFiles={(files) => void addFiles(files)}
-          />
+        <div className="space-y-4">
+          <p className="ds-caption text-center text-[var(--text-muted)]">
+            Toque 4 vezes no botão para fotografar os 4 lados, na ordem:
+            <span className="font-bold text-[var(--text-main)]"> Lat. Esq. → Lat. Dir. → Frontal → Traseira</span>.
+            Sem precisar pensar — o sistema guia o progresso.
+          </p>
 
+          {/* Seletor de vista por abas (simples e claro) */}
+          <div className="flex items-center justify-center gap-1.5" role="tablist" aria-label="Lados da foto">
+            {(['lateral-left', 'lateral-right', 'frontal', 'traseira'] as const).map((v, i) => (
+              <span
+                key={v}
+                role="tab"
+                aria-selected={i === pending.length}
+                className={`min-h-8 px-2.5 rounded-lg text-[0.65rem] font-bold border transition-colors ${
+                  i < pending.length
+                    ? 'bg-[var(--primary)]/20 border-[var(--primary)] text-[var(--primary)]'
+                    : i === pending.length
+                      ? 'border-[var(--primary)]/60 text-[var(--text-main)]'
+                      : 'border-[var(--card-border)] text-[var(--text-muted)]'
+                }`}
+              >
+                {i + 1}. {VIEW_TAB_SHORT[v]}
+              </span>
+            ))}
+          </div>
+
+          {/* FAB centralizado */}
+          <div className="flex justify-center py-2">
+            <PhotoFab
+              disabled={busy || pending.length >= 4}
+              onCapture={(files) => void addFiles(files)}
+            />
+          </div>
+
+          {/* Lista das fotos do lote */}
           {pending.length > 0 && (
             <ul className="grid grid-cols-2 sm:grid-cols-4 gap-2 list-none m-0 p-0">
               {pending.map((ref, i) => (
