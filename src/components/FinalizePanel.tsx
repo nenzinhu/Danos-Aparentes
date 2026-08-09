@@ -48,12 +48,22 @@ export default function FinalizePanel({
         }
         try {
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${geo.lat}&lon=${geo.lng}&accept-language=pt-BR`,
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${geo.lat}&lon=${geo.lng}&zoom=18&addressdetails=1&accept-language=pt-BR`,
             { headers: { Accept: 'application/json' } },
           )
           if (res.ok) {
             const data = await res.json()
-            if (data?.display_name) geo.address = String(data.display_name)
+            // Monta o endereço a partir dos campos estruturados (mais preciso que
+            // o display_name, que prioriza POIs distantes).
+            const a = data?.address || {}
+            const parts = [
+              [a.road, a.house_number].filter(Boolean).join(', '),
+              a.suburb || a.neighbourhood || a.quarter || a.district,
+              a.city || a.town || a.municipality || a.county,
+              a.state,
+              a.postcode,
+            ].filter(Boolean)
+            geo.address = parts.length ? parts.join(' · ') : (data?.display_name || '')
           }
         } catch { /* offline: mantém só as coordenadas */ }
         onChange({ ...info, geo })
@@ -123,8 +133,12 @@ export default function FinalizePanel({
               ✓ Localização registrada
             </span>
             {typeof info.geo.accuracy === 'number' && (
-              <span className="inline-flex items-center gap-1 bg-[var(--primary)]/15 border border-[var(--primary)]/30 text-[var(--primary)] rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold">
-                ± {info.geo.accuracy} m
+              <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold border ${
+                info.geo.accuracy > 1000
+                  ? 'bg-amber-500/15 border-amber-500/30 text-amber-400'
+                  : 'bg-[var(--primary)]/15 border-[var(--primary)]/30 text-[var(--primary)]'
+              }`}>
+                ± {info.geo.accuracy} m{info.geo.accuracy > 1000 ? ' (baixa)' : ''}
               </span>
             )}
           </div>
