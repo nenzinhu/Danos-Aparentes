@@ -25,13 +25,14 @@ interface RootProps {
   speak: (text: string) => void
   speakHover: (text: string) => void
   onViewTypeChange?: (v: ViewType) => void
+  onGoToDossier?: () => void
   accessToken?: string
   previousReport?: PreviousReportSummary | null
   onToast?: (msg: string) => void
 }
 
 function RootComponent({
-  children, vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover, onViewTypeChange, accessToken, previousReport = null, onToast
+  children, vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover, onViewTypeChange, onGoToDossier, accessToken, previousReport = null, onToast
 }: RootProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const targetRef = useRef<HTMLDivElement>(null)
@@ -84,40 +85,55 @@ function RootComponent({
 
   const prevViewRef = useRef<ViewType>(viewType)
   const prevVehicleRef = useRef<VehicleType>(vehicleType)
-  const [orbitDir, setOrbitDir] = useState(1)
+  const orbitDirRef = useRef(1)
 
-  // Calcula a direção da órbita (1 = horário, -1 = anti-horário) quando a vista
-  // ou o tipo de veículo mudam, para alimentar o `custom` do AnimatePresence.
-  // Mantém os valores "anterior" em refs atualizados APÓS o commit (effect),
-  // então a leitura aqui é pura e o lint de refs não dispara. O orbitDir é
-  // estado para não ser lido de um ref durante o render.
-  useEffect(() => {
-    if (vehicleType !== prevVehicleRef.current) {
-      prevVehicleRef.current = vehicleType
-      prevViewRef.current = viewType
-      setOrbitDir(1)
-    } else if (viewType !== prevViewRef.current) {
-      const prev = VIEW_ORDER.indexOf(prevViewRef.current)
-      const next = VIEW_ORDER.indexOf(viewType)
-      let diff = next - prev
-      if (diff > 2) diff -= 4
-      if (diff < -2) diff += 4
-      prevViewRef.current = viewType
-      setOrbitDir(diff >= 0 ? 1 : -1)
-    }
-  }, [viewType, vehicleType])
+  // Computed synchronously during render (not in a useEffect) so it's never
+  // stale when AnimatePresence reads `custom` for the exit animation on this
+  // same render. A useEffect here would run one render behind: the exit
+  // variant would compute against the PREVIOUS transition's orbitDir, which
+  // for some VIEW_ORDER pairs happens to numerically equal the entrance
+  // pose (opacity:0, rotateY:90deg) — a degenerate animation that
+  // Framer Motion never signals as complete, permanently stalling
+  // AnimatePresence mode="wait".
+  // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
+  if (vehicleType !== prevVehicleRef.current) {
+    // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
+    orbitDirRef.current = 1
+    // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
+    prevVehicleRef.current = vehicleType
+    // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
+    prevViewRef.current = viewType
+  // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
+  } else if (viewType !== prevViewRef.current) {
+    // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
+    const prev = VIEW_ORDER.indexOf(prevViewRef.current)
+    const next = VIEW_ORDER.indexOf(viewType)
+    let diff = next - prev
+    if (diff > 2) diff -= 4
+    if (diff < -2) diff += 4
+    // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
+    orbitDirRef.current = diff >= 0 ? 1 : -1
+    // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
+    prevViewRef.current = viewType
+  }
+  // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
+  const orbitDir = orbitDirRef.current
 
+  // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
   const contextValue = useMemo(() => ({
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
     accessToken, previousReport, onToast,
     fullscreen, setFullscreen, selectedPart, setSelectedPart, orbitDir, outlineMode, setOutlineMode, panLocked, setPanLocked, compareMode, setCompareMode,
-    scale, zoomIn, zoomOut, reset, containerRef, targetRef, baseContainerRef, baseTargetRef, flipStateRef
+    scale, zoomIn, zoomOut, reset, containerRef, targetRef, baseContainerRef, baseTargetRef, flipStateRef,
+    onViewTypeChange, onGoToDossier,
   }), [
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
-    accessToken, previousReport, onToast, fullscreen, selectedPart, orbitDir, outlineMode, panLocked, scale, zoomIn, zoomOut, reset
+    accessToken, previousReport, onToast, fullscreen, selectedPart, orbitDir, outlineMode, panLocked, scale, zoomIn, zoomOut, reset, onViewTypeChange, onGoToDossier
   ])
 
+  // eslint-disable-next-line react-hooks/refs -- context value intentionally includes refs for consumer components
   return (
+    // eslint-disable-next-line react-hooks/refs -- context value intentionally includes refs for consumer components
     <VehicleViewerContext.Provider value={contextValue}>
       <div className='relative select-none flex flex-col'>
         <VehicleDefs />

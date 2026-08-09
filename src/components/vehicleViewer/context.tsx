@@ -14,6 +14,7 @@ export interface VehicleViewerContextValue {
   speak: (text: string) => void
   speakHover: (text: string) => void
   onViewTypeChange?: (v: ViewType) => void
+  onGoToDossier?: () => void
   accessToken?: string
   /** Baseline da vistoria anterior — marca avarias novas no float. */
   previousReport?: PreviousReportSummary | null

@@ -246,6 +246,11 @@ export default function InspectTab({
     setSection('diagrama')
   }, [onWizardComplete])
 
+  const handleGoToDossier = useCallback(() => {
+    const el = document.getElementById('dossier-section')
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
+
   const plateOk = Boolean(String(vehicleInfo.plate || '').trim())
   const retornoNeedsLookup = inspectionPurpose === 'retorno' && !previousSavedReport
 
@@ -539,6 +544,7 @@ export default function InspectTab({
               speak={speak}
               speakHover={speakHover}
               onViewTypeChange={onViewTypeChange}
+              onGoToDossier={handleGoToDossier}
               accessToken={accessToken}
               previousReport={previousReport}
               onToast={onToast}
@@ -650,7 +656,9 @@ export default function InspectTab({
               )}
             </div>
 
+            <div id="dossier-section">
             <FinalizePanel info={vehicleInfo} onChange={onVehicleInfoChange} inspectionId={inspectionId} accessToken={accessToken} />
+            </div>
 
             {mayReview && onCompleteReview && onReopenReview && (
               <InspectionReviewPanel
