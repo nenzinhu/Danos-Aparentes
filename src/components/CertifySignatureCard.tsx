@@ -146,6 +146,21 @@ export default function CertifySignatureCard({
     }
   }, [onPlainPdf])
 
+  const shareLink = useCallback(async () => {
+    const digits = onlyDigits(phone)
+    const text = `Laudo para assinatura digital (ICP-Brasil): ${result?.signingUrl ?? ''}`
+    // Web Share API: abre o seletor do SO (WhatsApp do app nativo, etc.)
+    if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title: 'Laudo para assinatura', text, url: result?.signingUrl ?? '' })
+        return
+      } catch { /* usuário cancelou ou não suportado: cai no fallback */ }
+    }
+    // Fallback: wa.me (preenche o número se houver, senão abre apenas a mensagem)
+    const waHref = `https://wa.me/${digits ? (digits.length > 11 ? digits : `55${digits}`) : ''}?text=${encodeURIComponent(text)}`
+    window.open(waHref, '_blank', 'noopener,noreferrer')
+  }, [phone, result])
+
   if (result) {
     const digits = onlyDigits(phone)
     const waHref = digits
@@ -157,7 +172,7 @@ export default function CertifySignatureCard({
       <div className={`glass-card p-4 text-center ${compact ? '' : 'mt-4'}`}>
         <p className="text-sm font-bold text-emerald-400">Certificação iniciada</p>
         <p className="text-xs text-[var(--text-muted)] mt-1">
-          Link enviado para <strong>{result.signerName}</strong>.
+          Link de assinatura criado no app. Compartilhe para o signatário assinar.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
           <a
@@ -168,6 +183,13 @@ export default function CertifySignatureCard({
           >
             Abrir link de assinatura →
           </a>
+          <button
+            type="button"
+            onClick={() => { void shareLink() }}
+            className="text-[0.75rem] font-bold text-green-500 hover:text-green-400 underline"
+          >
+            📤 Compartilhar (WhatsApp do app)
+          </button>
           {waHref && (
             <a
               href={waHref}
