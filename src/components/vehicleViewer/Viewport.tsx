@@ -102,10 +102,24 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
     setSelectedPart({ id, name, pos: { x, y } })
   }, [speak, setSelectedPart, containerRef])
 
-  // Professional entrance for every vehicle/view swap (waits for dynamic SVG).
+  // Professional entrance for every vehicle/view swap. Robust: never leaves the
+  // diagram invisible if the effect is interrupted (fast view switches, slow lazy
+  // chunk, or a missing GSAP plugin). Parts are always visible at rest.
   useEffect(() => {
     const root = targetRef.current
-    if (!root || prefersReducedMotion()) return
+    if (!root) return
+
+    // Garante visibilidade base antes de qualquer animação.
+    const ensureVisible = () => {
+      gsap.set(root.querySelectorAll<SVGElement>('.part'), { clearProps: 'all', autoAlpha: 1 })
+      const sc = scannerRef.current
+      if (sc) gsap.set(sc, { autoAlpha: 0 })
+    }
+
+    if (prefersReducedMotion()) {
+      ensureVisible()
+      return
+    }
 
     let ctx: gsap.Context | null = null
     let done = false
@@ -125,14 +139,17 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
       })
 
       ctx = gsap.context(() => {
+        // Estado final garantido: visível. O 'from' apenas desloca/escala; nunca
+        // esconde (sem autoAlpha:0), então uma interrupção não deixa invisível.
         gsap.set(parts, { transformOrigin: '50% 50%', transformBox: 'fill-box' })
         const tl = gsap.timeline({ defaults: { ease: 'power2.out' } })
         tl.from(parts, {
-          autoAlpha: 0,
           y: 10,
           scale: 0.97,
           duration: 0.4,
           stagger: 0.035,
+          // Se a timeline for interrompida, garante o estado visível final.
+          onInterrupt: () => gsap.set(parts, { clearProps: 'all', autoAlpha: 1 }),
         })
         if (strokable.length) {
           tl.fromTo(
@@ -144,21 +161,17 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
               stagger: 0.025,
               ease: 'power2.inOut',
               onComplete: () => gsap.set(strokable, { clearProps: 'strokeDasharray,strokeDashoffset' }),
+              onInterrupt: () => gsap.set(strokable, { clearProps: 'strokeDasharray,strokeDashoffset' }),
             },
             '-=0.22',
           )
         }
-        // Scanner pericial: feixe desce revelando o diagrama (clip-path).
         const scanner = scannerRef.current
         if (scanner) {
           tl.fromTo(
             scanner,
             { clipPath: 'inset(0 0 100% 0)' },
-            {
-              clipPath: 'inset(0 0 0% 0)',
-              duration: 0.9,
-              ease: 'power1.inOut',
-            },
+            { clipPath: 'inset(0 0 0% 0)', duration: 0.9, ease: 'power1.inOut' },
             '-=0.3',
           )
           tl.fromTo(
@@ -173,24 +186,25 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
       return true
     }
 
-    if (play()) return () => { ctx?.revert() }
+    if (play()) return () => {
+      ctx?.revert()
+      ensureVisible()
+    }
 
     const mo = new MutationObserver(() => {
       if (play()) mo.disconnect()
     })
     mo.observe(root, { childList: true, subtree: true })
-    // Segurança: se o efeito GSAP não disparar/completar (chunk lento, plugin
-    // ausente, troca rápida de view), garante que o diagrama fique visível.
+    // Segurança: se o SVG demora (chunk lazy) ou o plugin falha, força visível.
     const safety = window.setTimeout(() => {
       mo.disconnect()
-      gsap.set(root.querySelectorAll('.part'), { clearProps: 'all', autoAlpha: 1 })
-      const sc = scannerRef.current
-      if (sc) gsap.set(sc, { autoAlpha: 0 })
-    }, 1200)
+      ensureVisible()
+    }, 900)
     return () => {
       mo.disconnect()
       window.clearTimeout(safety)
       ctx?.revert()
+      ensureVisible()
     }
   }, [layoutKey, targetRef])
 

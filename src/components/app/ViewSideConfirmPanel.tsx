@@ -71,12 +71,9 @@ export default function ViewSideConfirmPanel({
                     (o) => o.photoRef !== item.photoRef && o.view === view,
                   )
                   return (
-                    <button
+                    <label
                       key={view}
-                      type="button"
-                      disabled={takenByOther && !selected}
-                      onClick={() => onChangeView(item.photoRef, view)}
-                      className={`min-h-10 px-2.5 rounded-lg text-[0.75rem] font-bold border transition-colors ${
+                      className={`flex items-center gap-2 min-h-10 px-2.5 rounded-lg text-[0.75rem] font-bold border cursor-pointer transition-colors ${
                         selected
                           ? 'bg-[var(--primary)]/20 border-[var(--primary)] text-[var(--primary)]'
                           : takenByOther
@@ -84,8 +81,25 @@ export default function ViewSideConfirmPanel({
                             : 'border-[var(--card-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-bg)]'
                       }`}
                     >
-                      {VIEW_TAB_SHORT[view]}
-                    </button>
+                      <input
+                        type="checkbox"
+                        className="sr-only"
+                        checked={selected}
+                        disabled={takenByOther && !selected}
+                        onChange={() => onChangeView(item.photoRef, view)}
+                      />
+                      <span
+                        className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border ${
+                          selected
+                            ? 'bg-[var(--primary)] border-[var(--primary)] text-white'
+                            : 'border-[var(--card-border)]'
+                        }`}
+                        aria-hidden="true"
+                      >
+                        {selected ? '✓' : ''}
+                      </span>
+                      <span>{VIEW_TAB_SHORT[view]}</span>
+                    </label>
                   )
                 })}
               </div>

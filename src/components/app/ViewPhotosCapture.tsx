@@ -485,30 +485,9 @@ export default function ViewPhotosCapture({
       {showBatch && (
         <div className="space-y-4">
           <p className="ds-caption text-center text-[var(--text-muted)]">
-            Toque 4 vezes no botão para fotografar os 4 lados, na ordem:
-            <span className="font-bold text-[var(--text-main)]"> Lat. Esq. → Lat. Dir. → Frontal → Traseira</span>.
-            Sem precisar pensar — o sistema guia o progresso.
+            Toque 4 vezes no botão para fotografar os 4 lados. Sem precisar pensar — o sistema
+            guia o progresso. Depois você assinala os lados.
           </p>
-
-          {/* Seletor de vista por abas (simples e claro) */}
-          <div className="flex items-center justify-center gap-1.5" role="tablist" aria-label="Lados da foto">
-            {(['lateral-left', 'lateral-right', 'frontal', 'traseira'] as const).map((v, i) => (
-              <span
-                key={v}
-                role="tab"
-                aria-selected={i === pending.length}
-                className={`min-h-8 px-2.5 rounded-lg text-[0.65rem] font-bold border transition-colors ${
-                  i < pending.length
-                    ? 'bg-[var(--primary)]/20 border-[var(--primary)] text-[var(--primary)]'
-                    : i === pending.length
-                      ? 'border-[var(--primary)]/60 text-[var(--text-main)]'
-                      : 'border-[var(--card-border)] text-[var(--text-muted)]'
-                }`}
-              >
-                {i + 1}. {VIEW_TAB_SHORT[v]}
-              </span>
-            ))}
-          </div>
 
           {/* FAB centralizado */}
           <div className="flex justify-center py-2">
