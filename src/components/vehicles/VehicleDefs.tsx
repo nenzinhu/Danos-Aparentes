@@ -5,11 +5,13 @@ export default function VehicleDefs() {
       <defs>
         <linearGradient id="metal-car-blue" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stopColor="#0c4a6e" />
-          <stop offset="22%" stopColor="#0369a1" />
-          <stop offset="45%" stopColor="#38bdf8" />
-          <stop offset="55%" stopColor="#7dd3fc" />
-          <stop offset="72%" stopColor="#0284c7" />
-          <stop offset="100%" stopColor="#082f49" />
+          <stop offset="14%" stopColor="#0ea5e9" />
+          <stop offset="30%" stopColor="#7dd3fc" />
+          <stop offset="42%" stopColor="#38bdf8" />
+          <stop offset="52%" stopColor="#0ea5e9" />
+          <stop offset="68%" stopColor="#0369a1" />
+          <stop offset="86%" stopColor="#075985" />
+          <stop offset="100%" stopColor="#04263b" />
         </linearGradient>
         <linearGradient id="metal-moto-dark" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#7f1d1d" />
@@ -20,11 +22,12 @@ export default function VehicleDefs() {
         </linearGradient>
         <linearGradient id="metal-glass" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#020617" />
-          <stop offset="20%" stopColor="#0f172a" />
-          <stop offset="42%" stopColor="#155e75" />
-          <stop offset="52%" stopColor="#67e8f9" />
-          <stop offset="62%" stopColor="#22d3ee" />
-          <stop offset="78%" stopColor="#0369a1" />
+          <stop offset="18%" stopColor="#0f172a" />
+          <stop offset="38%" stopColor="#155e75" />
+          <stop offset="48%" stopColor="#67e8f9" />
+          <stop offset="56%" stopColor="#22d3ee" />
+          <stop offset="66%" stopColor="#0e7490" />
+          <stop offset="82%" stopColor="#0c4a6e" />
           <stop offset="100%" stopColor="#020617" />
         </linearGradient>
         <linearGradient id="grad-metal" x1="0%" y1="0%" x2="0%" y2="100%">

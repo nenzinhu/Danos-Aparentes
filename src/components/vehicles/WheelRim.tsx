@@ -17,6 +17,17 @@ export function LateralWheelGraphic({ cx, cy, r, caliperSide = 'none' }: Lateral
   return (
     <g pointerEvents="none" className="wheel-graphic">
       <circle cx={cx} cy={cy} r={r} fill="url(#radial-wheel)" />
+      {/* Banda de rodagem (borracha com relevo) */}
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r * 0.97}
+        fill="none"
+        stroke="#020617"
+        strokeWidth={Math.max(1.5, r * 0.06)}
+        strokeDasharray={`${r * 0.10},${r * 0.05}`}
+        opacity={0.85}
+      />
       <circle
         cx={cx}
         cy={cy}
@@ -25,10 +36,13 @@ export function LateralWheelGraphic({ cx, cy, r, caliperSide = 'none' }: Lateral
         stroke="#0f172a"
         strokeWidth={Math.max(1, r * 0.035)}
         strokeDasharray={`${r * 0.14},${r * 0.09}`}
-        opacity={0.8}
+        opacity={0.7}
       />
-      <circle cx={cx} cy={cy} r={rimR + 2} fill="#1e293b" opacity={0.25} />
-      <circle cx={cx} cy={cy} r={rimR} fill="url(#radial-calota)" stroke="#94a3b8" strokeWidth={1.2} />
+      {/* Sombra interna do aro */}
+      <circle cx={cx} cy={cy} r={rimR + 2} fill="#0b1220" opacity={0.35} />
+      <circle cx={cx} cy={cy} r={rimR} fill="url(#radial-calota)" stroke="#cbd5e1" strokeWidth={1.4} />
+      {/* Brilho de aro (realismo) */}
+      <circle cx={cx} cy={cy} r={rimR} fill="none" stroke="#f8fafc" strokeWidth={0.8} opacity={0.4} />
       {SPOKE_ANGLES.map((deg) => {
         const rad = (deg * Math.PI) / 180
         const x2 = cx + spokeLen * Math.cos(rad)
