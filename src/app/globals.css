@@ -75,6 +75,10 @@
   --primary-badge-text: var(--primary);
   --elevenlabs-badge: #4ade80;
 
+  /* Palco do veículo — fundo de estúdio (ilusão 3D) + profundidade nas parts.
+     Aplicado a todos os veículos/lados sem editar os 36 SVGs individualmente. */
+  --stage-bg: radial-gradient(ellipse 78% 78% at 50% 38%, #1e3a5f 0%, #0d1b2e 46%, #05080f 100%);
+
   /* Sinalização — acento âmbar derivado das cores de severidade da vistoria */
   --signal: #f5a623;
   --signal-bright: #ffb938;
@@ -111,6 +115,15 @@
   --duration-exit: 150ms;
   --duration-enter: 210ms;
   --duration-move: 400ms;
+}
+
+/* Fundo de estúdio atrás do SVG do veículo (ilusão 3D) — todos os veículos/lados */
+.vehicle-stage {
+  background: var(--stage-bg);
+}
+/* Drop-shadow nas parts = profundidade / suaviza transição de formas */
+.vehicle-stage .part {
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.45));
 }
 
 /* View Transition Keyframes */

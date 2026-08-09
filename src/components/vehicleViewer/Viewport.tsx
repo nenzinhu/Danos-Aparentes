@@ -224,7 +224,7 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
     <div className={`flex flex-col ${isFullscreen ? 'flex-1 min-h-0' : ''}`}>
       <div
         ref={setContainerNode}
-        className={`relative overflow-hidden cursor-grab touch-none flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] ${isFullscreen ? 'rounded-0 flex-1 min-h-0' : 'rounded-2xl flex-1 min-h-[220px]'} ${outlineMode ? `va-outline${isFullscreen ? ' va-outline--fs' : ''}` : ''}`}
+        className={`relative overflow-hidden cursor-grab touch-none flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] vehicle-stage ${isFullscreen ? 'rounded-0 flex-1 min-h-0' : 'rounded-2xl flex-1 min-h-[220px]'} ${outlineMode ? `va-outline${isFullscreen ? ' va-outline--fs' : ''}` : ''}`}
       >
         <AnimatePresence mode='popLayout' custom={orbitDir}>
           <motion.div

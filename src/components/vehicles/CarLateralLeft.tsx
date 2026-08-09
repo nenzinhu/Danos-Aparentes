@@ -68,12 +68,14 @@ export default function CarLateralLeft({
       <path d="M275,84 L275,158" stroke="#04263b" strokeWidth="1.5" opacity="0.55" fill="none" pointerEvents="none" />
       <path d="M168,84 C170,120 170,140 166,156" stroke="#bae6fd" strokeWidth="1" opacity="0.32" fill="none" pointerEvents="none" />
 
-      {/* Maçanetas — gradiente radial cromado com reflexo (volume de metal) */}
-      <g pointerEvents="none">
+      {/* Maçanetas — partes clicáveis com nome + volume de metal (cromado) */}
+      <g {...partProps('car-ll-handle-front')} data-name="Maçaneta Dianteira Esquerda" pointerEvents="all">
         <rect x="262" y="102" width="16" height="7" rx="3.5" fill="url(#chrome-handle)" stroke="#1e293b" strokeWidth="0.6" />
-        <rect x="265" y="103.5" width="7" height="1.6" rx="0.8" fill="#f8fafc" opacity="0.85" />
+        <rect x="265" y="103.5" width="7" height="1.6" rx="0.8" fill="#f8fafc" opacity="0.85" pointerEvents="none" />
+      </g>
+      <g {...partProps('car-ll-handle-rear')} data-name="Maçaneta Traseira Esquerda" pointerEvents="all">
         <rect x="372" y="102" width="16" height="7" rx="3.5" fill="url(#chrome-handle)" stroke="#1e293b" strokeWidth="0.6" />
-        <rect x="375" y="103.5" width="7" height="1.6" rx="0.8" fill="#f8fafc" opacity="0.85" />
+        <rect x="375" y="103.5" width="7" height="1.6" rx="0.8" fill="#f8fafc" opacity="0.85" pointerEvents="none" />
       </g>
 
       {/* Retrovisor */}
