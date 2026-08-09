@@ -308,14 +308,17 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
           baselineKeys={previousReport?.damageKeys}
         />
 
-        {/* Setas de navegação entre as 4 vistas */}
+        {/* Setas de navegação entre as 4 vistas.
+            Desktop (>=640px): nas laterais, fora da área do SVG.
+            Mobile (<640px): barra abaixo do diagrama, sem sobrepor o veículo. */}
         {onViewTypeChange && (
           <>
+            {/* Desktop: setas laterais flutuantes nas bordas do container */}
             <button
               type="button"
               aria-label="Vista anterior"
               onClick={() => goToView(-1)}
-              className="absolute left-1.5 top-1/2 -translate-y-1/2 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-black/45 text-white text-lg font-bold hover:bg-black/70 active:scale-95 transition-all"
+              className="hidden sm:flex absolute left-1.5 top-1/2 -translate-y-1/2 z-20 w-9 h-9 items-center justify-center rounded-full bg-black/45 text-white text-xl font-bold hover:bg-black/70 active:scale-95 transition-all"
             >
               ‹
             </button>
@@ -323,7 +326,7 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
               type="button"
               aria-label="Próxima vista"
               onClick={() => goToView(1)}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 z-20 w-8 h-8 flex items-center justify-center rounded-full bg-black/45 text-white text-lg font-bold hover:bg-black/70 active:scale-95 transition-all"
+              className="hidden sm:flex absolute right-1.5 top-1/2 -translate-y-1/2 z-20 w-9 h-9 items-center justify-center rounded-full bg-black/45 text-white text-xl font-bold hover:bg-black/70 active:scale-95 transition-all"
             >
               ›
             </button>
@@ -344,6 +347,32 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
           </div>
         )}
       </div>
+
+      {/* Mobile: barra de navegação entre as 4 vistas, abaixo do diagrama
+          (não sobrepõe o SVG do veículo). Aparece só em telas estreitas. */}
+      {onViewTypeChange && (
+        <div className="sm:hidden mt-3 flex items-center justify-between gap-2 px-1">
+          <button
+            type="button"
+            onClick={() => goToView(-1)}
+            className="flex-1 min-h-11 inline-flex items-center justify-center gap-1.5 rounded-xl border border-[var(--card-border)] bg-[var(--btn-secondary-bg)] text-[var(--text-main)] text-sm font-bold hover:bg-white/5 active:scale-95 transition-all"
+          >
+            <span aria-hidden="true" className="text-lg leading-none">‹</span>
+            Anterior
+          </button>
+          <span className="text-[0.7rem] font-mono-data uppercase tracking-wider text-[var(--text-muted)] whitespace-nowrap">
+            {VIEW_ORDER.indexOf(viewType) + 1}/{VIEW_ORDER.length}
+          </span>
+          <button
+            type="button"
+            onClick={() => goToView(1)}
+            className="flex-1 min-h-11 inline-flex items-center justify-center gap-1.5 rounded-xl border border-[var(--card-border)] bg-[var(--btn-secondary-bg)] text-[var(--text-main)] text-sm font-bold hover:bg-white/5 active:scale-95 transition-all"
+          >
+            Próxima
+            <span aria-hidden="true" className="text-lg leading-none">›</span>
+          </button>
+        </div>
+      )}
 
       {compact ? (
         <DamageCalloutLegend
