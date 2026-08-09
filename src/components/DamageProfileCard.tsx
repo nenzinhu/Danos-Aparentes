@@ -1,0 +1,110 @@
+'use client'
+
+import React from 'react'
+import dynamic from 'next/dynamic'
+import type { DamageType, Severity } from '../types'
+
+// Lazy-load ThreeDamageCanvas so three.js (~600 KB) is only bundled when
+// the '3d' mode is actually rendered — keeps the main bundle lean.
+const ThreeDamageCanvas = dynamic(() => import('./ThreeDamageCanvas'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center rounded-3xl border border-slate-800 bg-slate-950/90" style={{ width: 244, height: 210 }}>
+      <span className="text-xs text-slate-500">Carregando 3D…</span>
+    </div>
+  ),
+})
+
+interface Props {
+  type: DamageType
+  severity?: Severity
+  partName?: string
+  isSelected?: boolean
+  onClick?: () => void
+  mode?: 'image' | '3d'
+  className?: string
+}
+
+/**
+ * Componente visual de perfil de avaria exibindo as 3 imagens 3D originais intocadas
+ * ou a renderização 3D Three.js WebGL interativa para a peça selecionada do diagrama.
+ */
+export default function DamageProfileCard({
+  type,
+  severity = 'high',
+  partName,
+  isSelected = false,
+  onClick,
+  mode = 'image',
+  className = '',
+}: Props) {
+  if (mode === '3d') {
+    return (
+      <div onClick={onClick} className="cursor-pointer">
+        <ThreeDamageCanvas
+          type={type}
+          severity={severity}
+          partName={partName || 'Peça Selecionada'}
+          width={220}
+          height={180}
+          className={`${isSelected ? 'ring-4 ring-sky-500/40 border-sky-500 scale-105' : ''} ${className}`}
+        />
+      </div>
+    )
+  }
+
+  const isScratch = type === 'scratch'
+  const isDent = type === 'dent'
+
+  // Ilustrações vetoriais de porta de veículo (SVG, fundo transparente)
+  const imgSrc = isScratch
+    ? '/damage/porta-riscada.svg'
+    : isDent
+    ? '/damage/porta-amassada.svg'
+    : '/damage/porta-trincada.svg'
+
+  const imgAlt = isScratch
+    ? 'Risco / Arranhado — porta de veículo com riscos profundos na lataria'
+    : isDent
+    ? 'Amassado / Deformado — porta de veículo amassada'
+    : 'Quebrado / Trincado — porta de veículo com painel estilhaçado'
+
+  // Card highlight borders for selection
+  const borderClass = isScratch
+    ? isSelected
+      ? 'border-emerald-500 ring-4 ring-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.4)] scale-105'
+      : 'border-slate-800 hover:border-emerald-500/50'
+    : isDent
+    ? isSelected
+      ? 'border-amber-500 ring-4 ring-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.4)] scale-105'
+      : 'border-slate-800 hover:border-amber-500/50'
+    : isSelected
+    ? 'border-rose-500 ring-4 ring-rose-500/30 shadow-[0_0_30px_rgba(244,63,94,0.4)] scale-105'
+    : 'border-slate-800 hover:border-rose-500/50'
+
+  return (
+    <div
+      onClick={onClick}
+      className={`
+        relative flex flex-col items-center justify-center p-1.5 rounded-3xl border-2 overflow-hidden transition-all duration-300 cursor-pointer select-none bg-slate-950/90 shadow-2xl group
+        ${borderClass}
+        ${className}
+      `}
+    >
+      <div className="relative w-full overflow-hidden rounded-2xl">
+        <img
+          src={imgSrc}
+          alt={imgAlt}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
+      {partName && (
+        <div className="py-1 text-[0.62rem] font-bold text-sky-400 uppercase tracking-widest text-center truncate w-full px-2">
+          {partName}
+        </div>
+      )}
+    </div>
+  )
+}

@@ -1,0 +1,23 @@
+{
+  "framework": "nextjs",
+  "crons": [
+    {
+      "path": "/api/cron/trial-ending",
+      "schedule": "0 12 * * *"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.danosaparentes.com.br" }],
+      "destination": "https://danosaparentes.com.br/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.danosaparentes.com.br" }],
+      "destination": "https://danosaparentes.com.br/:path*",
+      "permanent": true
+    }
+  ]
+}

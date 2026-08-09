@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 92" role="img" aria-hidden="true"><style>.m0{fill:#2E3840}.m1{fill:#2F9CFD}.m2{fill:#66C3FF}</style>
+<g transform="translate(6 4)">
+  <ellipse class="m0" cx="18" cy="72" rx="16" ry="15" opacity="0.18"/>
+  <ellipse class="m0" cx="98" cy="72" rx="16" ry="15" opacity="0.18"/>
+
+  <circle class="m0" cx="18" cy="72" r="13.5"/>
+  <circle class="m2" cx="18" cy="72" r="5.5"/>
+  <circle class="m0" cx="98" cy="72" r="13.5"/>
+  <circle class="m2" cx="98" cy="72" r="5.5"/>
+
+  <rect class="m0" x="30" y="63" width="56" height="8" rx="4"/>
+
+  <path class="m1" d="M4 72C1 50 12 32 30 32c14 0 22 12 21 28 0 6-2 10-5 12H8c-3-2-4-6-4-12z"/>
+  <path class="m0" d="M12 40c4 8 6 20 5 32H8c-2-8-3-18 0-26 1-2 2-4 4-6z" opacity="0.35"/>
+  <rect class="m0" x="12" y="26" width="30" height="9" rx="4.5"/>
+
+  <path class="m1" d="M86 72c-3-22 6-40 22-45 3-1 6 0 8 3l8 12c2 3 0 6-3 6-6-1-13 1-17 6-5 6-7 13-7 18 0 6-2 10-5 12H92c-3-2-5-6-6-12z"/>
+  <circle class="m2" cx="110" cy="41" r="7"/>
+  <circle class="m0" cx="110" cy="41" r="3"/>
+  <path d="M100 25l14-6" stroke="#2E3840" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <circle class="m0" cx="99" cy="26" r="3.5"/>
+</g>
+</svg>

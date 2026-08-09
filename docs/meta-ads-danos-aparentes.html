@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Criativos Meta Ads — Danos Aparentes</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Outfit:wght@400;600;700;900&family=Saira+Condensed:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #020617;
+      --elev: #0a1428;
+      --text: #e8f4ff;
+      --muted: #7a9bbf;
+      --primary: #1FB6FF;
+      --signal: #ffb938;
+      --border: #00beff1f;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Outfit, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      background-image: radial-gradient(ellipse 100% 60% at 50% -10%, #0d1f3c 0%, transparent 60%);
+    }
+    a { color: var(--primary); }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 32px 20px 80px; }
+    header { text-align: center; padding: 24px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 32px; }
+    header img { height: 28px; margin-bottom: 16px; opacity: .9; }
+    h1 {
+      font-family: "Saira Condensed", sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+    .sub { color: var(--muted); margin-top: 8px; font-size: .95rem; max-width: 640px; margin-inline: auto; }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+    .pill {
+      font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+      padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border);
+      background: rgba(31,182,255,.08); color: var(--primary);
+    }
+    .pill.signal { color: var(--signal); background: rgba(255,185,56,.1); border-color: rgba(255,185,56,.3); }
+    .pill.warn { color: #fca5a5; background: rgba(239,68,68,.1); border-color: rgba(239,68,68,.3); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin: 24px 0 40px; }
+    .stat {
+      background: var(--elev); border: 1px solid var(--border); border-radius: 16px; padding: 16px;
+    }
+    .stat strong { display: block; font-family: "Saira Condensed", sans-serif; font-size: 1.6rem; color: var(--primary); }
+    .stat span { font-size: .78rem; color: var(--muted); }
+    h2 {
+      font-family: "Saira Condensed", sans-serif;
+      font-size: 1.5rem; text-transform: uppercase; margin: 40px 0 12px;
+    }
+    .note {
+      background: rgba(255,185,56,.08); border-left: 3px solid var(--signal);
+      padding: 12px 16px; border-radius: 0 12px 12px 0; color: var(--muted); font-size: .9rem; margin-bottom: 24px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; margin-bottom: 28px; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { color: var(--muted); font-weight: 600; font-size: .72rem; text-transform: uppercase; letter-spacing: .04em; }
+    .card {
+      background: var(--elev); border: 1px solid var(--border); border-radius: 20px;
+      padding: 28px; margin-bottom: 28px; border-top: 4px solid var(--primary);
+    }
+    .card.hot { border-top-color: var(--signal); }
+    .card.warm { border-top-color: #72c5ee; }
+    .card-head { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+    .num {
+      font-family: "Saira Condensed", sans-serif; font-size: 2.4rem; line-height: 1;
+      color: var(--primary); opacity: .35;
+    }
+    .card h3 { font-family: "Saira Condensed", sans-serif; font-size: 1.35rem; text-transform: uppercase; }
+    .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tag {
+      font-size: .68rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;
+      background: rgba(31,182,255,.12); color: var(--primary);
+    }
+    .tag.cold { background: rgba(239,68,68,.15); color: #fca5a5; }
+    .tag.warm { background: rgba(114,197,238,.15); color: #72c5ee; }
+    .tag.hot { background: rgba(255,185,56,.15); color: var(--signal); }
+    .copy-box {
+      background: rgba(0,0,0,.35); border-radius: 12px; padding: 14px 16px;
+      font-size: .88rem; margin: 12px 0; white-space: pre-wrap;
+    }
+    .copy-box .label { font-family: "IBM Plex Mono", monospace; font-size: .68rem; color: var(--muted); margin-bottom: 6px; }
+    .hl { color: var(--signal); font-weight: 700; }
+    .eid { font-family: "IBM Plex Mono", monospace; font-size: .75rem; color: var(--muted); }
+    footer {
+      margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border);
+      text-align: center; font-size: .8rem; color: var(--muted);
+    }
+    @media (max-width: 640px) {
+      .card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-meta-ads&utm_content=header-logo" target="_blank" rel="noopener">
+        <img src="https://gui.marketing/logo.svg" alt="gui.marketing" onerror="this.style.display='none'" />
+      </a>
+      <h1>Criativos Meta Ads — Danos Aparentes</h1>
+      <p class="sub">Lote 01 · Feed 4:5 · Wedge locadoras · Hook → Hold → Offer · Sem prova social inventada</p>
+      <div class="badge-row">
+        <span class="pill">10 conceitos</span>
+        <span class="pill">Trial 7 dias sem cartão</span>
+        <span class="pill signal">Destino: /locadoras</span>
+        <span class="pill warn">0 cases — sem fake ★</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="stat"><strong>4</strong><span>Cold (TOF)</span></div>
+      <div class="stat"><strong>4</strong><span>Warm (MOF)</span></div>
+      <div class="stat"><strong>2</strong><span>Hot (BOF)</span></div>
+      <div class="stat"><strong>10</strong><span>Creative Types</span></div>
+      <div class="stat"><strong>30</strong><span>Hooks A/B (3×10)</span></div>
+    </div>
+
+    <div class="note">
+      <strong style="color:var(--signal)">Destino de ads:</strong>
+      deep-link <code style="color:var(--primary)">https://danosaparentes.com.br/locadoras</code>
+      (ou LP focada ao shipar). Evitar home multi-ICP. UTMs: <code>utm_source=meta&utm_campaign=locadoras_trial&utm_content=conceito-NN</code>.
+    </div>
+
+    <h2>Matriz do lote</h2>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Conceito</th><th>Tipo</th><th>Hook</th><th>Funil</th><th>Entity ID</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Cansado do “Já Estava Assim”</td><td>Sick of Problem</td><td>Problem/Solution</td><td>Cold</td><td class="eid">EID-01</td></tr>
+        <tr><td>2</td><td>O Que Você Já Digitou no Google</td><td>Search pain SERP</td><td>Fact/Stat</td><td>Cold</td><td class="eid">EID-02</td></tr>
+        <tr><td>3</td><td>WhatsApp vs Laudo Selado</td><td>Old vs New</td><td>Us/Them</td><td>Cold</td><td class="eid">EID-03</td></tr>
+        <tr><td>4</td><td>Sem Vistoria Prévia…</td><td>Industry problem</td><td>Fact/Stat</td><td>Cold</td><td class="eid">EID-04</td></tr>
+        <tr><td>5</td><td>Pare de Absorver o Prejuízo</td><td>Pain & Solution</td><td>Problem/Solution</td><td>Warm</td><td class="eid">EID-05</td></tr>
+        <tr><td>6</td><td>Do Balcão ao PDF Selado</td><td>Before vs After</td><td>Before/After</td><td>Warm</td><td class="eid">EID-06</td></tr>
+        <tr><td>7</td><td>Laudo em 4 Passos</td><td>How-to</td><td>Problem/Solution</td><td>Warm</td><td class="eid">EID-07</td></tr>
+        <tr><td>8</td><td>Validade Jurídica Honesta</td><td>Product FAQ</td><td>Credibility</td><td>Warm</td><td class="eid">EID-08</td></tr>
+        <tr><td>9</td><td>7 Dias. Sem Cartão.</td><td>Offer highlight</td><td>Offer</td><td>Hot</td><td class="eid">EID-09</td></tr>
+        <tr><td>10</td><td>Starter R$29,90</td><td>Direct response</td><td>Offer</td><td>Hot</td><td class="eid">EID-10</td></tr>
+      </tbody>
+    </table>
+
+    <!-- CONCEITOS -->
+    <article class="card">
+      <div class="card-head">
+        <div class="num">01</div>
+        <div>
+          <h3>Cansado do “Já Estava Assim”</h3>
+          <div class="meta">
+            <span class="tag cold">Cold</span>
+            <span class="tag">Sick of Problem</span>
+            <span class="tag">Anger · Relation</span>
+            <span class="eid">EID-01-balcao-confrontation</span>
+          </div>
+        </div>
+      </div>
+      <p><strong>Visual:</strong> balão “JÁ ESTAVA ASSIM” riscado + phone com diagrama.</p>
+      <div class="copy-box"><div class="label">HEADLINE ≤90</div><span class="hl">Cansado do “já estava assim” na devolução?</span></div>
+      <div class="copy-box"><div class="label">CTA</div>Cadastre-se · Descrição: Trial 7 dias sem cartão</div>
+      <p><strong>A/B:</strong> (A) balão · (B) “Quanto absorveu este mês?” · (C) WhatsApp vs diagrama</p>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div class="num">02</div>
+        <div>
+          <h3>O Que Você Já Digitou no Google</h3>
+          <div class="meta"><span class="tag cold">Cold</span><span class="tag">SERP</span><span class="eid">EID-02-serp-pain</span></div>
+        </div>
+      </div>
+      <div class="copy-box"><div class="label">HEADLINE</div><span class="hl">Como provar amassado pré-existente na locação</span></div>
+      <p><strong>Visual:</strong> mock SERP escuro + card produto. <strong>CTA:</strong> Saiba mais</p>
+      <p><strong>A/B:</strong> queries prova / app devolução / WhatsApp vale</p>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div class="num">03</div>
+        <div>
+          <h3>WhatsApp vs Laudo Selado</h3>
+          <div class="meta"><span class="tag cold">Cold</span><span class="tag">Old vs New</span><span class="eid">EID-03-split-whatsapp</span></div>
+        </div>
+      </div>
+      <div class="copy-box"><div class="label">HEADLINE</div><span class="hl">Foto no WhatsApp discute. Laudo com QR compara.</span></div>
+      <p><strong>Visual:</strong> split-screen chat vs PDF+QR. Visual-first sem legenda.</p>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div class="num">04</div>
+        <div>
+          <h3>Sem Vistoria Prévia, a Cobrança Cai</h3>
+          <div class="meta"><span class="tag cold">Cold</span><span class="tag">Industry problem</span><span class="eid">EID-04-legal-problem</span></div>
+        </div>
+      </div>
+      <div class="copy-box"><div class="label">HEADLINE</div><span class="hl">Sem vistoria de entrada, cobrança vira discussão</span></div>
+      <p><strong>Compliance:</strong> prova do <em>problema</em> (fonte pública) — não case do produto. Sem prometer sentença.</p>
+    </article>
+
+    <article class="card warm">
+      <div class="card-head">
+        <div class="num">05</div>
+        <div>
+          <h3>Pare de Absorver o Prejuízo</h3>
+          <div class="meta"><span class="tag warm">Warm</span><span class="tag">Pain & Solution</span><span class="eid">EID-05</span></div>
+        </div>
+      </div>
+      <div class="copy-box"><div class="label">HEADLINE</div><span class="hl">Pare de absorver avaria que você não prova</span></div>
+      <p>Fluxo Retirada → Devolução → Prova. Sem R$ de ROI inventado. Preço Starter só como reforço.</p>
+    </article>
+
+    <article class="card warm">
+      <div class="card-head">
+        <div class="num">06</div>
+        <div>
+          <h3>Do Balcão ao PDF Selado</h3>
+          <div class="meta"><span class="tag warm">Warm</span><span class="tag">Before/After</span><span class="eid">EID-06</span></div>
+        </div>
+      </div>
+      <div class="copy-box"><div class="label">HEADLINE</div><span class="hl">Antes: discussão. Depois: laudo com QR.</span></div>
+    </article>
+
+    <article class="card warm">
+      <div class="card-head">
+        <div class="num">07</div>
+        <div>
+          <h3>Laudo em 4 Passos</h3>
+          <div class="meta"><span class="tag warm">Warm</span><span class="tag">How-to</span><span class="eid">EID-07</span></div>
+        </div>
+      </div>
+      <div class="copy-box"><div class="label">HEADLINE</div><span class="hl">4 passos: placa → diagrama → assinatura → PDF</span></div>
+      <p>Trabalha objeção de treinamento. Offline no pátio.</p>
+    </article>
+
+    <article class="card warm">
+      <div class="card-head">
+        <div class="num">08</div>
+        <div>
+          <h3>Validade Jurídica — Resposta Honesta</h3>
+          <div class="meta"><span class="tag warm">Warm</span><span class="tag">FAQ</span><span class="eid">EID-08</span></div>
+        </div>
+      </div>
+      <div class="copy-box"><div class="label">HEADLINE</div><span class="hl">Validade jurídica? Registro forte. Sem milagre.</span></div>
+      <p>Registro forte / valor depende do contrato / sem sentença prometida. Demo QR.</p>
+    </article>
+
+    <article class="card hot">
+      <div class="card-head">
+        <div class="num">09</div>
+        <div>
+          <h3>7 Dias. Sem Cartão.</h3>
+          <div class="meta"><span class="tag hot">Hot</span><span class="tag">Offer</span><span class="eid">EID-09</span></div>
+        </div>
+      </div>
+      <div class="copy-box"><div class="label">HEADLINE</div><span class="hl">7 dias grátis. Sem cartão. Feito pra locadora.</span></div>
+      <p><strong>CTA:</strong> Obter oferta · evergreen, sem “últimas vagas”.</p>
+    </article>
+
+    <article class="card hot">
+      <div class="card-head">
+        <div class="num">10</div>
+        <div>
+          <h3>Starter R$29,90 · Começa Hoje</h3>
+          <div class="meta"><span class="tag hot">Hot</span><span class="tag">Direct response</span><span class="eid">EID-10</span></div>
+        </div>
+      </div>
+      <div class="copy-box"><div class="label">HEADLINE</div><span class="hl">Starter R$29,90 · 20 laudos · 7 dias grátis</span></div>
+      <p>Pro R$49,90 (80 + white-label). Ideal remarketing. Sem desconto % inventado.</p>
+    </article>
+
+    <h2>Prioridade de teste</h2>
+    <table>
+      <thead><tr><th>Onda</th><th>Conceitos</th><th>Por quê</th></tr></thead>
+      <tbody>
+        <tr><td>1 — TOF</td><td>1, 3, 2</td><td>Dor balcão + contraste + SERP</td></tr>
+        <tr><td>2 — MOF</td><td>5, 6, 7</td><td>Loss aversion + before/after + how-to</td></tr>
+        <tr><td>3 — BOF</td><td>9, 10</td><td>Trial + preço (após engajamento)</td></tr>
+        <tr><td>Qualificação</td><td>4, 8</td><td>Jurídico + FAQ honesta</td></tr>
+      </tbody>
+    </table>
+
+    <p class="note">Detalhe completo (YAML visual, legendas 400–600 chars, prompts): ver <code>docs/meta-ads-danos-aparentes.md</code> e <code>lote-01/prompts-imagens-danos-aparentes.md</code>. Imagens finais 4:5 não geradas neste pedido (briefings + prompts apenas).</p>
+
+    <footer>
+      <p>guimkt-meta-ads v3.6.0 · Danos Aparentes · 2026-07-25</p>
+      <p><a href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-meta-ads&utm_content=footer" target="_blank" rel="noopener">gui.marketing</a></p>
+    </footer>
+  </div>
+</body>
+</html>

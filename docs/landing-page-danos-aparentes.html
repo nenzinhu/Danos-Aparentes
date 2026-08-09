@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Danos Aparentes — Vistoria digital que prova a si mesma | Locadoras</title>
+  <meta name="description" content="Pare de discutir amassado que já existia. Vistoria na retirada e na devolução com diagrama, GPS, assinaturas e PDF com hash SHA-256 + QR. 7 dias grátis sem cartão." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;500;600;700&family=Saira+Condensed:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #1E293B;
+      --primary-rgb: 30, 41, 59;
+      --accent: #9E4428;
+      --accent-rgb: 158, 68, 40;
+      --bg: #141413;
+      --bg-alt: #0A0A09;
+      --bg-surface: rgba(250, 249, 245, 0.04);
+      --text: #FAF9F5;
+      --text-secondary: #B0AEA5;
+      --text-muted: #78766F;
+      --glass-bg: rgba(250, 249, 245, 0.05);
+      --glass-border: rgba(250, 249, 245, 0.1);
+      --glass-blur: 20px;
+      --font-display: 'Saira Condensed', sans-serif;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.45);
+      --shadow-glow: 0 4px 24px rgba(var(--accent-rgb), 0.35);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+    h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); }
+    h2 { font-size: clamp(1.55rem, 3.2vw, 2.35rem); }
+    h3 { font-size: 1.2rem; font-family: var(--font-body); font-weight: 600; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .text-center { text-align: center; }
+    .gradient-text {
+      background: linear-gradient(135deg, #C45A38, #9E4428);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-md);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card:hover {
+      border-color: rgba(var(--accent-rgb), 0.28);
+      box-shadow: var(--shadow-lg), 0 0 40px rgba(var(--accent-rgb), 0.06);
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.22;
+      pointer-events: none;
+      will-change: transform;
+    }
+    .orb-1 { width: 420px; height: 420px; background: var(--accent); top: -120px; right: -80px; }
+    .orb-2 { width: 300px; height: 300px; background: #1E293B; bottom: -40px; left: -100px; }
+    .orb-3 { width: 340px; height: 340px; background: var(--accent); top: 40%; right: -140px; opacity: 0.15; }
+
+    .navbar {
+      position: fixed;
+      top: 16px; left: 16px; right: 16px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      z-index: 100;
+      padding: 12px 24px;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(20, 20, 19, 0.92);
+      box-shadow: var(--shadow-md);
+    }
+    .navbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .navbar-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+    .navbar-cta {
+      background: linear-gradient(135deg, #C45A38, var(--accent));
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .navbar-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .hero {
+      position: relative;
+      padding: 148px 0 88px;
+      overflow: hidden;
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+    }
+    .brand-hero {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 1.85rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+      letter-spacing: 0.03em;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: rgba(var(--accent-rgb), 0.12);
+      border: 1px solid rgba(var(--accent-rgb), 0.28);
+      color: #E8A48A;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 620px;
+      margin: 20px 0 32px;
+      line-height: 1.75;
+    }
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+    }
+    .cta-premium {
+      display: inline-block;
+      background: linear-gradient(135deg, #C45A38, var(--accent));
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 16px 36px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 24px rgba(var(--accent-rgb), 0.4);
+      font-family: var(--font-body);
+    }
+    .cta-premium:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(var(--accent-rgb), 0.5);
+    }
+    .cta-premium.full-width { width: 100%; text-align: center; }
+    .cta-ghost {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border-bottom: 1px solid rgba(250, 249, 245, 0.25);
+      padding-bottom: 2px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .cta-ghost:hover { color: var(--text); }
+
+    .trust-bar {
+      display: flex;
+      gap: 20px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      max-width: 220px;
+    }
+    .trust-item i { color: #E8A48A; flex-shrink: 0; }
+    .trust-item.honesty { color: var(--text-secondary); }
+
+    section { padding: 96px 0; position: relative; overflow: hidden; }
+    .section-alt { background: var(--bg-alt); }
+    .section-amplify { background: linear-gradient(180deg, #1A1210 0%, var(--bg) 100%); }
+    .section-proof { background: linear-gradient(180deg, #0E1218 0%, var(--bg-alt) 100%); }
+    .section-offer { background: linear-gradient(180deg, #16120F 0%, var(--bg) 100%); }
+    .section-form { background: var(--bg-alt); }
+    .section-sub {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 640px;
+      margin-bottom: 40px;
+      line-height: 1.75;
+    }
+    .section-sub.center { margin-left: auto; margin-right: auto; text-align: center; }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .icon {
+      font-size: 22px;
+      color: #E8A48A;
+      margin-bottom: 14px;
+      display: inline-block;
+    }
+    .glass-card p { color: var(--text-secondary); font-size: 0.95rem; margin-top: 8px; }
+    .tag-e {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      margin-top: 12px;
+      display: block;
+    }
+
+    .quote-block {
+      margin-top: 40px;
+      padding: 28px 32px;
+      border-left: 3px solid var(--accent);
+      background: rgba(var(--accent-rgb), 0.08);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+    .quote-block blockquote {
+      font-size: 1.05rem;
+      color: var(--text);
+      font-style: italic;
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+    .quote-meta {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .quote-meta a { color: #E8A48A; }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .step {
+      position: relative;
+      padding-top: 8px;
+    }
+    .step-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: rgba(var(--accent-rgb), 0.45);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .step h3 { margin-bottom: 6px; }
+    .step p { color: var(--text-secondary); font-size: 0.9rem; }
+
+    .contrast-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .contrast-before { border-color: rgba(250, 249, 245, 0.08); opacity: 0.85; }
+    .contrast-after { border-color: rgba(var(--accent-rgb), 0.35); }
+    .contrast-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .demo-placeholder {
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(250,249,245,0.02),
+        rgba(250,249,245,0.02) 10px,
+        rgba(250,249,245,0.04) 10px,
+        rgba(250,249,245,0.04) 20px
+      );
+      border: 1px dashed rgba(250, 249, 245, 0.2);
+      border-radius: var(--radius-md);
+      padding: 32px;
+      margin-bottom: 20px;
+    }
+    .demo-placeholder i { font-size: 48px; color: var(--text-muted); margin-bottom: 16px; }
+    .demo-placeholder p { color: var(--text-secondary); font-size: 0.9rem; max-width: 280px; }
+    .honesty-card {
+      border-color: rgba(250, 249, 245, 0.15);
+      text-align: center;
+      padding: 32px;
+    }
+    .honesty-card p { font-size: 1.05rem; color: var(--text); max-width: 720px; margin: 0 auto; }
+    .source-links { list-style: none; margin-top: 12px; }
+    .source-links li { margin-bottom: 10px; color: var(--text-secondary); font-size: 0.9rem; }
+    .source-links a { color: #E8A48A; }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .price {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: var(--text);
+      margin: 8px 0;
+    }
+    .price span { font-size: 1rem; color: var(--text-muted); font-family: var(--font-body); font-weight: 400; }
+    .price-meta { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; }
+    .price-note { color: var(--text-muted); font-size: 0.82rem; }
+    .pricing-featured {
+      border-color: rgba(var(--accent-rgb), 0.4);
+      background: rgba(var(--accent-rgb), 0.08);
+    }
+    .risk-line {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+    }
+    .offer-cta-wrap { text-align: center; }
+
+    .faq-list { max-width: 760px; margin: 0 auto; }
+    details.faq-item {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      margin-bottom: 12px;
+      padding: 4px 20px;
+    }
+    details.faq-item summary {
+      cursor: pointer;
+      padding: 18px 0;
+      font-weight: 600;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    details.faq-item summary::-webkit-details-marker { display: none; }
+    details.faq-item summary::after {
+      content: '+';
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    details.faq-item[open] summary::after { content: '−'; }
+    details.faq-item .faq-a {
+      padding: 0 0 18px;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      border-top: 1px solid var(--glass-border);
+      padding-top: 14px;
+    }
+
+    .form-card { max-width: 520px; margin: 0 auto; }
+    .form-card label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .field { margin-bottom: 14px; }
+    input, select {
+      font-family: var(--font-body);
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input::placeholder { color: var(--text-muted); }
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
+    }
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B0AEA5' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+    select option { background: #1a1a18; color: var(--text); }
+    .form-trust {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    .footer {
+      padding: 48px 0 32px;
+      border-top: 1px solid var(--glass-border);
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px 24px;
+      margin-bottom: 20px;
+    }
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px; }
+    .footer-credit a { color: var(--text-muted); font-size: 0.75rem; }
+
+    [data-animate] { opacity: 0; }
+    [data-animate].is-visible {
+      animation-fill-mode: both;
+      animation-duration: 0.75s;
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    [data-animate="fade-up"].is-visible { animation-name: fadeInUp; }
+    [data-animate="fade-scale"].is-visible { animation-name: fadeInScale; }
+    [data-animate="slide-left"].is-visible { animation-name: slideInLeft; }
+    [data-animate="slide-right"].is-visible { animation-name: slideInRight; }
+
+    [data-stagger] > *:nth-child(1) { --delay: 0s; }
+    [data-stagger] > *:nth-child(2) { --delay: 0.12s; }
+    [data-stagger] > *:nth-child(3) { --delay: 0.24s; }
+    [data-stagger] > *:nth-child(4) { --delay: 0.36s; }
+    [data-stagger].is-visible > * {
+      animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: var(--delay, 0s);
+    }
+    [data-stagger] > * { opacity: 0; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(36px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.94); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-32px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(32px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      [data-animate], [data-stagger] > * { opacity: 1 !important; }
+    }
+
+    @media (max-width: 900px) {
+      .steps { grid-template-columns: 1fr 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+      .proof-grid, .contrast-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      section { padding: 64px 0; }
+      .hero { padding: 120px 0 60px; min-height: auto; }
+      .steps { grid-template-columns: 1fr; }
+      .trust-bar { flex-direction: column; gap: 12px; }
+      .trust-item { max-width: none; }
+      .cta-premium { width: 100%; text-align: center; }
+      .cta-row { flex-direction: column; align-items: stretch; }
+      .navbar { top: 8px; left: 8px; right: 8px; padding: 10px 16px; }
+      .orb { display: none; }
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 1.85rem; }
+      .glass-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" aria-label="Principal">
+    <div class="navbar-inner">
+      <a class="navbar-logo" href="#top">Danos Aparentes</a>
+      <a class="navbar-cta" href="#form">Trial 7 dias →</a>
+    </div>
+  </nav>
+
+  <!-- HERO — P -->
+  <section class="hero" id="top">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="container">
+      <div data-animate="fade-up">
+        <p class="brand-hero">Danos Aparentes</p>
+        <span class="badge">Para locadoras · prova na devolução</span>
+        <h1>Chega de discutir amassado que <span class="gradient-text">já existia</span> no carro.</h1>
+        <p class="hero-sub">Vistoria digital na retirada e na devolução: diagrama, foto com GPS, assinatura na tela e PDF com hash SHA-256 + QR — prova no ato, não discussão no balcão.</p>
+        <div class="cta-row">
+          <a href="#form" class="cta-premium">Começar 7 dias grátis — sem cartão</a>
+          <a href="#demo" class="cta-ghost">Ver um laudo real com QR</a>
+        </div>
+      </div>
+      <div class="trust-bar" data-animate="fade-up">
+        <div class="trust-item"><i class="fas fa-shield-halved" aria-hidden="true"></i> Hash SHA-256 + QR público</div>
+        <div class="trust-item"><i class="fas fa-wifi" aria-hidden="true"></i> Offline no pátio</div>
+        <div class="trust-item"><i class="fas fa-calendar-check" aria-hidden="true"></i> 7 dias grátis sem cartão</div>
+        <div class="trust-item honesty"><i class="fas fa-hand" aria-hidden="true"></i> App novo — sem depoimentos inventados</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AMPLIFY — A -->
+  <section class="section-amplify" id="amplify">
+    <div class="container">
+      <h2 data-animate="fade-up">Sem vistoria de entrada comparável, a cobrança de avaria vira discussão — e às vezes, processo.</h2>
+      <p class="section-sub" data-animate="fade-up">Três falhas que transformam devolução em briga no balcão.</p>
+      <div class="cards-grid" data-animate="fade-up" data-stagger>
+        <div class="glass-card">
+          <i class="fas fa-triangle-exclamation icon" aria-hidden="true"></i>
+          <h3>“Já estava assim.”</h3>
+          <p>Cliente nega dano novo. Sem laudo de retirada no mesmo padrão, você discute — não compara.</p>
+          <span class="tag-e">[E-problema]</span>
+        </div>
+        <div class="glass-card">
+          <i class="fas fa-mobile-screen icon" aria-hidden="true"></i>
+          <h3>Foto no WhatsApp / vistoria só na devolução</h3>
+          <p>Sem par entrega×devolução, o ônus da prova fica frágil.</p>
+          <span class="tag-e">[E]</span>
+        </div>
+        <div class="glass-card">
+          <i class="fas fa-clipboard-list icon" aria-hidden="true"></i>
+          <h3>Cada vistoriador, um jeito</h3>
+          <p>Prancheta diferente por pessoa = laudos incomparáveis entre filiais.</p>
+          <span class="tag-e">[E-produto]</span>
+        </div>
+      </div>
+      <div class="quote-block" data-animate="fade-up">
+        <blockquote>“A ausência de uma checagem feita pela locadora antes da entrega do veículo ao cliente impossibilita que se faça a necessária comparação entre o estado do carro antes e depois da locação.”</blockquote>
+        <p class="quote-meta">
+          Prova do problema no mercado — não é cliente Danos Aparentes.<br />
+          Fonte: <a href="https://www.conjur.com.br/2024-mar-07/sem-vistoria-previa-locadora-nao-pode-cobrar-multa-por-dano-em-veiculo/" target="_blank" rel="noopener noreferrer">ConJur, 07/03/2024</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION — S -->
+  <section class="section-alt" id="solution">
+    <div class="container">
+      <h2 data-animate="fade-up">Laudo de avarias aparentes que prova a si mesmo.</h2>
+      <p class="section-sub" data-animate="fade-up">Mesmo padrão na retirada e na devolução. Em minutos, no celular — inclusive sem sinal.</p>
+      <div class="steps" data-animate="fade-up" data-stagger>
+        <div class="step glass-card">
+          <div class="step-num">01</div>
+          <h3>Marque no diagrama</h3>
+          <p>Mesma peça, mesma vista, entre vistoriadores.</p>
+        </div>
+        <div class="step glass-card">
+          <div class="step-num">02</div>
+          <h3>Foto com GPS + timestamp</h3>
+          <p>Bloqueia o argumento “essa foto foi depois”.</p>
+        </div>
+        <div class="step glass-card">
+          <div class="step-num">03</div>
+          <h3>Assinatura dual no ato</h3>
+          <p>Vistoriador + cliente na tela — não “12 dias depois”.</p>
+        </div>
+        <div class="step glass-card">
+          <div class="step-num">04</div>
+          <h3>PDF selado</h3>
+          <p>Hash SHA-256 + QR público. Se editar o PDF, o hash quebra.</p>
+        </div>
+      </div>
+      <div class="contrast-grid" data-animate="fade-up">
+        <div class="glass-card contrast-before">
+          <p class="contrast-label">Antes</p>
+          <h3>Prancheta / WhatsApp / PDF editável</h3>
+          <p>Foto solta discute. Formatos diferentes por pessoa. Sem integridade verificável.</p>
+        </div>
+        <div class="glass-card contrast-after">
+          <p class="contrast-label">Depois (mecanismo)</p>
+          <h3>Laudo verificável</h3>
+          <p>Par entrega×devolução no mesmo padrão — sem claim de ROI de cliente.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROVA — T* -->
+  <section class="section-proof" id="demo">
+    <div class="orb orb-3"></div>
+    <div class="container">
+      <h2 class="text-center" data-animate="fade-up">Prova do que existe hoje — sem cases inventados.</h2>
+      <p class="section-sub center" data-animate="fade-up">Mecanismo demonstrável + prova do problema no mercado. Zero depoimentos fictícios.</p>
+      <div class="proof-grid" data-animate="fade-up">
+        <div class="glass-card" data-animate="slide-left">
+          <h3>Escaneie o QR deste laudo demo</h3>
+          <p>Confira o hash. É a prova do mecanismo — não um depoimento.</p>
+          <div class="demo-placeholder" aria-label="Placeholder para laudo demo com QR">
+            <i class="fas fa-qrcode" aria-hidden="true"></i>
+            <p>Inserir laudo demo live com QR. Até lá, use a verificação pública.</p>
+          </div>
+          <a href="https://danosaparentes.com.br/verify" class="cta-premium" target="_blank" rel="noopener noreferrer">Abrir verificação pública →</a>
+          <span class="tag-e">[E-produto]</span>
+        </div>
+        <div class="glass-card" data-animate="slide-right">
+          <h3>Como a Justiça trata falta de vistoria prévia</h3>
+          <p style="margin-bottom:12px;">Prova do problema no mercado — <strong style="color:var(--text)">não são clientes Danos Aparentes</strong>.</p>
+          <ul class="source-links">
+            <li>
+              <strong style="color:var(--text)">ConJur, 07/03/2024</strong> — ausência de checagem prévia impossibilita comparação antes×depois.
+              <br /><a href="https://www.conjur.com.br/2024-mar-07/sem-vistoria-previa-locadora-nao-pode-cobrar-multa-por-dano-em-veiculo/" target="_blank" rel="noopener noreferrer">Abrir fonte →</a>
+            </li>
+            <li>
+              <strong style="color:var(--text)">TJDFT, 26/01/2022</strong> — cobrança após vistoria que “não constatou avaria” / imputação unilateral.
+              <br /><a href="https://www.tjdft.jus.br/institucional/imprensa/noticias/2022/janeiro/locadora-e-condenada-a-devolver-valores-pagos-indevidamente" target="_blank" rel="noopener noreferrer">Abrir fonte →</a>
+            </li>
+          </ul>
+          <span class="tag-e">[E-jurídico]</span>
+        </div>
+      </div>
+      <div class="glass-card honesty-card" data-animate="fade-scale">
+        <p><strong>App novo.</strong> Ainda não temos histórico público de clientes. Preferimos trial + laudo verificável a depoimento falso.</p>
+        <span class="tag-e">[E] honesty</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFFER — O -->
+  <section class="section-offer" id="planos">
+    <div class="container">
+      <h2 class="text-center" data-animate="fade-up">Comece pelo plano que cabe no volume da sua base.</h2>
+      <p class="section-sub center" data-animate="fade-up">Preços literais. Sem “mais popular” inventado.</p>
+      <div class="pricing-grid" data-animate="fade-up" data-stagger>
+        <div class="glass-card">
+          <h3>Starter</h3>
+          <p class="price">R$ 29,90<span>/mês</span></p>
+          <p class="price-meta">20 laudos · ≈ R$ 1,50/laudo</p>
+          <p class="price-note">Ideal para testar o fluxo na devolução.</p>
+        </div>
+        <div class="glass-card pricing-featured">
+          <h3>Pro</h3>
+          <p class="price">R$ 49,90<span>/mês</span></p>
+          <p class="price-meta">80 laudos · white-label (logo no PDF)</p>
+          <p class="price-note">≈ R$ 0,62/laudo · marca no documento.</p>
+        </div>
+        <div class="glass-card">
+          <h3>Corporativo</h3>
+          <p class="price">R$ 299<span>+/mês</span></p>
+          <p class="price-meta">Multi-usuário · piloto sob conversa</p>
+          <p class="price-note">Sem case inventado para fechar. WhatsApp.</p>
+        </div>
+      </div>
+      <p class="risk-line" data-animate="fade-up"><i class="fas fa-lock" aria-hidden="true"></i> 7 dias grátis <strong style="color:var(--text)">sem cartão</strong>. Cancele no portal. PIX disponível no SME.</p>
+      <div class="offer-cta-wrap" data-animate="fade-up">
+        <a href="#form" class="cta-premium">Quero testar na minha locadora →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section-alt" id="faq">
+    <div class="container">
+      <h2 class="text-center" data-animate="fade-up">Perguntas que locadoras fazem antes de testar</h2>
+      <p class="section-sub center" data-animate="fade-up">Objeções reais antecipadas — com nuance, sem absolutos jurídicos.</p>
+      <div class="faq-list" data-animate="fade-up">
+        <details class="faq-item">
+          <summary>O laudo tem validade jurídica?</summary>
+          <div class="faq-a">Registro documental forte (hash, QR, GPS, assinaturas). Valor probatório depende do contrato e do seu jurídico — <strong>não</strong> prometemos sentença ganha. <span class="tag-e">[E]</span></div>
+        </details>
+        <details class="faq-item">
+          <summary>Foto no WhatsApp na devolução não basta?</summary>
+          <div class="faq-a">Sem vistoria de entrada comparável, a cobrança fica frágil (ver ConJur). Nossa oferta é o par retirada×devolução no mesmo padrão. <span class="tag-e">[E]</span></div>
+        </details>
+        <details class="faq-item">
+          <summary>Vocês têm cases / depoimentos?</summary>
+          <div class="faq-a">Ainda não públicos. App novo. Oferecemos laudo demo + trial — sem inventar. <span class="tag-e">[E]</span></div>
+        </details>
+        <details class="faq-item">
+          <summary>Funciona no pátio sem internet?</summary>
+          <div class="faq-a">Sim — PWA offline + sync quando voltar o sinal. <span class="tag-e">[E]</span></div>
+        </details>
+        <details class="faq-item">
+          <summary>Precisa treinar a equipe?</summary>
+          <div class="faq-a">O diagrama guia o fluxo; a primeira vistoria costuma ser em minutos. <span class="tag-e">[E-produto] · [H — validar onboarding]</span></div>
+        </details>
+        <details class="faq-item">
+          <summary>Já tenho laudo cautelar.</summary>
+          <div class="faq-a">Cautelar ≠ laudo de avarias aparentes na entrega/devolução. São finalidades diferentes. <span class="tag-e">[E-produto]</span></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM — R -->
+  <section class="section-form" id="form">
+    <div class="orb orb-1" style="opacity:0.12; top:auto; bottom:-80px;"></div>
+    <div class="container">
+      <h2 class="text-center" data-animate="fade-up">Ative 7 dias grátis e faça a primeira vistoria na sua base</h2>
+      <p class="section-sub center" data-animate="fade-up">Sem cartão. Sem depoimento inventado. Só o fluxo na sua devolução.</p>
+      <form class="form-card glass-card" data-animate="fade-scale" action="#" method="post" onsubmit="event.preventDefault(); alert('Formulário estático (deliverable). Integrar ao trial/CRM no site.');">
+        <div class="field">
+          <label for="nome">Nome completo</label>
+          <input id="nome" name="nome" type="text" placeholder="Seu nome" required autocomplete="name" />
+        </div>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" placeholder="voce@locadora.com.br" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="whatsapp">WhatsApp com DDD</label>
+          <input id="whatsapp" name="whatsapp" type="tel" placeholder="(11) 99999-9999" required autocomplete="tel" />
+        </div>
+        <div class="field">
+          <label for="empresa">Empresa</label>
+          <input id="empresa" name="empresa" type="text" placeholder="Nome da locadora" required autocomplete="organization" />
+        </div>
+        <div class="field">
+          <label for="cargo">Cargo</label>
+          <select id="cargo" name="cargo" required aria-label="Cargo">
+            <option value="">Selecione</option>
+            <option value="dono">Dono/sócio</option>
+            <option value="ops">Gerente de operações/pátio</option>
+            <option value="vistoria">Coordenador de vistoria</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="segmento">Segmento</label>
+          <select id="segmento" name="segmento" required aria-label="Segmento da empresa">
+            <option value="">Selecione</option>
+            <option value="locadora" selected>Locadora</option>
+            <option value="frota-aluguel">Frota de aluguel</option>
+            <option value="oficina">Oficina</option>
+            <option value="gestao-frota">Gestão de frota</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="desafio">Principal desafio</label>
+          <select id="desafio" name="desafio" required aria-label="Principal desafio">
+            <option value="">Selecione</option>
+            <option value="ja-estava">Disputa “já estava assim”</option>
+            <option value="padronizar">Padronizar vistoriadores</option>
+            <option value="whatsapp">Substituir WhatsApp/papel</option>
+            <option value="white-label">White-label no PDF</option>
+            <option value="offline">Offline no pátio</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="volume">Volume aproximado de devoluções/mês <span style="color:var(--text-muted)">(opcional)</span></label>
+          <input id="volume" name="volume" type="text" placeholder="Ex.: 40–80" />
+        </div>
+        <button type="submit" class="cta-premium full-width">Quero meu trial de 7 dias →</button>
+        <p class="form-trust"><i class="fas fa-lock" aria-hidden="true"></i> Dados confidenciais. Sem cartão no trial. Resposta em até 1 dia útil no WhatsApp se Corporativo.</p>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-logo">Danos Aparentes</p>
+      <div class="footer-links">
+        <a href="#planos">Planos</a>
+        <a href="https://danosaparentes.com.br" target="_blank" rel="noopener noreferrer">Site</a>
+        <a href="https://danosaparentes.com.br/verify" target="_blank" rel="noopener noreferrer">Verificar laudo</a>
+        <a href="https://danosaparentes.com.br" target="_blank" rel="noopener noreferrer">Privacidade</a>
+      </div>
+      <p class="footer-copy">© 2026 Danos Aparentes — Vistoria veicular digital para locadoras</p>
+      <p class="footer-credit">
+        <a href="https://gui.marketing/?utm_source=esc-skills&utm_medium=deliverable&utm_campaign=guimkt-landing-page&utm_content=footer" target="_blank" rel="noopener noreferrer">gui.marketing</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const els = document.querySelectorAll('[data-animate], [data-stagger]');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        els.forEach(el => {
+          el.style.opacity = '1';
+          el.classList.add('is-visible');
+          el.querySelectorAll(':scope > *').forEach(child => { child.style.opacity = '1'; });
+        });
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      els.forEach(el => observer.observe(el));
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const id = this.getAttribute('href');
+        if (!id || id === '#') return;
+        const target = document.querySelector(id);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    window.addEventListener('scroll', () => {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    }, { passive: true });
+  </script>
+</body>
+</html>
