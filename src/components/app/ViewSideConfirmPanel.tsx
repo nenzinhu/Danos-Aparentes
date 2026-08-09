@@ -1,7 +1,7 @@
 'use client'
 
 import type { ViewType } from '@/src/types'
-import { VIEW_TAB_SHORT, VIEW_ORIENTATION_HINT } from '@/src/components/app/constants'
+import { VIEW_TAB_SHORT } from '@/src/components/app/constants'
 import { VIEW_PHOTO_ORDER } from '@/src/lib/viewPhotos'
 import { canConfirmSideAssignments } from '@/src/lib/viewSideAssign'
 import { ResolvedPhoto } from '@/src/components/ResolvedPhoto'
@@ -41,9 +41,6 @@ export default function ViewSideConfirmPanel({
         <p className="ds-caption mt-1">
           Para cada foto, escolha uma opção: Frontal, Traseira, Esquerda ou Direita. Cada lado só
           uma vez. Ao confirmar, a IA analisa as vistas em busca de avarias.
-        </p>
-        <p className="ds-caption mt-1.5 text-[var(--signal-bright)] font-semibold leading-snug">
-          {VIEW_ORIENTATION_HINT}
         </p>
       </div>
 

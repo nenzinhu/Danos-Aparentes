@@ -478,6 +478,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
           foundData={foundData}
           plateBorderClass={plateBorderClass}
           onPlateChange={onPlateChange}
+          onPlateSearch={() => lookupPlate(info.plate)}
         />
       )}
 
@@ -499,18 +500,18 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
       </div>
 
-      <div className="sticky bottom-0 z-10 mt-4 pt-3 pb-1 bg-[var(--card-bg)]/95 border-t border-white/5 flex gap-2">
+      <div className="mt-4 pt-3 flex items-center justify-end gap-2 border-t border-[var(--card-border)]">
         {wizardStep > 1 && (
-          <Button variant="secondary" size="lg" onClick={goBack} className="flex-1">
+          <Button variant="ghost" size="sm" onClick={goBack}>
             ← Voltar
           </Button>
         )}
         {wizardStep < 3 ? (
-          <Button variant="primary" size="lg" onClick={goNext} className="flex-1">
+          <Button variant="primary" size="sm" onClick={goNext}>
             Continuar →
           </Button>
         ) : (
-          <Button variant="success" size="lg" onClick={handleComplete} className="flex-1">
+          <Button variant="success" size="sm" onClick={handleComplete}>
             Ir ao diagrama →
           </Button>
         )}

@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from 'react'
 import type { Damage, DamageType, VehicleInfo, VehicleType, ViewType } from '@/src/types'
-import { VIEW_NAME, VIEW_TAB_SHORT, VIEW_ORIENTATION_HINT } from '@/src/components/app/constants'
+import { VIEW_NAME, VIEW_TAB_SHORT } from '@/src/components/app/constants'
 import { VIEW_PHOTO_ORDER, countFilledViewPhotos } from '@/src/lib/viewPhotos'
 import {
   VIEW_FACE_PART_ID,
@@ -470,9 +470,6 @@ export default function ViewPhotosCapture({
               cada uma; depois a IA analisa avarias para você confirmar.
             </p>
           )}
-          <p className="ds-caption mt-1.5 text-[var(--signal-bright)] font-semibold leading-snug">
-            {VIEW_ORIENTATION_HINT}
-          </p>
         </div>
         <span
           className={`inline-flex items-center min-h-7 px-2.5 rounded-lg text-[0.7rem] font-bold tabular-nums ${
@@ -684,7 +681,7 @@ export default function ViewPhotosCapture({
                           type="button"
                           role="tab"
                           aria-selected={tab === view}
-                          title={VIEW_ORIENTATION_HINT}
+                          title="Trocar o lado desta foto"
                           onClick={() => changeConfirmedView(view, tab)}
                           className={`min-h-8 px-2 rounded-md text-[0.62rem] font-bold border transition-colors ${
                             tab === view
