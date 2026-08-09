@@ -20,7 +20,6 @@ const SECTION_OPTIONS: Array<{ key: keyof SectionVisibilityState; label: string 
   { key: 'showPhotoGallery', label: '5. Galeria Fotográfica' },
   { key: 'showInteriorSection', label: '6. Observações do Interior' },
   { key: 'showSignatures', label: '7. Assinaturas (Vistoriador / Resp.)' },
-  { key: 'showQrCode', label: '8. Selo & QR Code de Verificação' },
 ]
 
 type Props = {
@@ -71,7 +70,6 @@ export default function PdfSectionsPanel({
                 showPhotoGallery: false,
                 showInteriorSection: false,
                 showSignatures: false,
-                showQrCode: false,
               })}
               className="px-2 py-1 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 text-[0.68rem] font-bold rounded-md"
             >

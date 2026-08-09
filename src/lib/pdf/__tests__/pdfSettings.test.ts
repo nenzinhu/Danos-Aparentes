@@ -82,12 +82,13 @@ describe('PdfSettings — Customization & Layout Modes (M1 & M2)', () => {
     expect(html).toContain('Documento registrado para fins de seguro.')
   })
 
-  it('omits QR code image when showQrCode is false', async () => {
+  it('never renders a QR code image (verification is via Assinafy link)', async () => {
     const { html } = await buildFullHtml(makeVehicleInfo(), [makeDamage()], undefined, {
-      headerFooter: { showQrCode: false },
+      headerFooter: { showGpsLocation: true },
     })
     expect(html).toContain('Integridade do Documento')
     expect(html).not.toContain('Escaneie o QR Code para atestar')
+    expect(html).not.toContain('<img src="data:image/png;base64,iVBOR')
   })
 
   it('aligns logo to the right when logoPosition is right', async () => {

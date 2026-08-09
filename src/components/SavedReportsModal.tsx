@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect, useDeferredValue } from 'react'
-import { QRCodeSVG } from 'qrcode.react'
 import { SavedReport, VehicleType, Damage } from '../types'
 import { resolveVehicleType } from '../lib/vehicleTypeInference'
 import { generatePdf } from '../lib/pdf'
@@ -679,13 +678,9 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
           onClick={e => { if (e.target === e.currentTarget) setQrModal(null) }}
         >
           <div style={{ width: '100%', maxWidth: 340, background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: 24, textAlign: 'center' }}>
-            <div style={{ fontWeight: 800, fontSize: '0.95rem', marginBottom: 4 }}>QR do veículo {qrModal.plate}</div>
+            <div style={{ fontWeight: 800, fontSize: '0.95rem', marginBottom: 4 }}>Link público do veículo {qrModal.plate}</div>
             <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: 16 }}>
-              Cole este QR no veículo (para-brisa, porta-luvas). Qualquer pessoa que escanear vê o histórico
-              de vistorias, sem dados pessoais do proprietário.
-            </div>
-            <div style={{ background: '#fff', borderRadius: 12, padding: 16, display: 'inline-block' }}>
-              <QRCodeSVG value={qrModal.url} size={200} />
+              Qualquer pessoa com o link vê o histórico de vistorias, sem dados pessoais do proprietário.
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: 12, wordBreak: 'break-all' }}>
               {qrModal.url}

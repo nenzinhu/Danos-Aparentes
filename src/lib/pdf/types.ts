@@ -24,7 +24,6 @@ export interface PdfHeaderFooterConfig {
   logoPosition?: 'left' | 'center' | 'right'
   logoMaxHeight?: number
   headerSubtitle?: string
-  showQrCode?: boolean
   showGpsLocation?: boolean
   customFooterText?: string
 }

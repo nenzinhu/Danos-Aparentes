@@ -25,7 +25,6 @@ export type SectionVisibilityState = {
   showPhotoGallery: boolean
   showInteriorSection: boolean
   showSignatures: boolean
-  showQrCode: boolean
 }
 
 export const DEFAULT_SECTIONS: SectionVisibilityState = {
@@ -38,7 +37,6 @@ export const DEFAULT_SECTIONS: SectionVisibilityState = {
   showPhotoGallery: true,
   showInteriorSection: true,
   showSignatures: true,
-  showQrCode: true,
 }
 
 export type PdfTheme = 'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'minimalista' | 'vibrante'
@@ -169,7 +167,6 @@ export function resolvePdfSettings(
     showPhotoGallery: sectionsConfig.showPhotoGallery,
     showInteriorSection: sectionsConfig.showInteriorSection,
     showSignatures: sectionsConfig.showSignatures,
-    qrCode: sectionsConfig.showQrCode,
     vehicleInfo: sectionsConfig.showInfoTable,
     svgMaps: sectionsConfig.showSvgDiagrams,
     summary: sectionsConfig.showSummaryStats,
@@ -184,7 +181,6 @@ export function resolvePdfSettings(
     companyLogoMaxHeight: logoHeight,
     logoPosition,
     logoMaxHeight: logoHeight,
-    showQrCode: sectionsConfig.showQrCode,
     customFooterText,
   }
 

@@ -1,5 +1,5 @@
 import { Damage, VehicleInfo } from '../../types'
-import { computeHash, generateQrDataUrl, registerHash } from './hash'
+import { computeHash, registerHash } from './hash'
 import { buildIntegrityManifest } from './integrityManifest'
 import { collectOriginalPhotoHashes } from '../photoEvidence'
 import {
@@ -77,7 +77,6 @@ export async function buildFullHtml(
         : settings?.inspectionPurpose === 'entrada'
           ? 'RELATÓRIO DE VISTORIA — ENTRADA / CHECK-OUT'
           : 'RELATÓRIO DE VISTORIA VEICULAR'),
-    showQrCode: settings?.headerFooter?.showQrCode ?? true,
     showGpsLocation: settings?.headerFooter?.showGpsLocation ?? true,
     customFooterText: settings?.headerFooter?.customFooterText || '',
   }
@@ -115,7 +114,9 @@ export async function buildFullHtml(
     process.env.NEXT_PUBLIC_BASE_URL ||
     'https://danosaparentes.com.br'
   const verifyUrl = `${origin.replace(/\/$/, '')}/verify?hash=${encodeURIComponent(hash)}${geoQuery}`
-  const qrDataUrl = hf.showQrCode ? await generateQrDataUrl(verifyUrl) : ''
+  // QR Code de verificação removido do laudo: a verificação/assinatura passa a ser
+  // exclusivamente via certificação digital Assinafy (link de assinatura).
+  const qrDataUrl = ''
   const qrImg = qrDataUrl
     ? `<img src="${qrDataUrl}" width="56" height="56" style="display:block;border:1px solid #E5E7EB;border-radius:6px;background:#fff;" />`
     : ''
@@ -206,9 +207,9 @@ export async function buildFullHtml(
     <!-- 1.1 CHECKLIST DE PÁTIO E SEGURANÇA -->
     ${sec.showChecklistSection ? buildChecklistSection(info, theme) : ''}
 
-    <!-- 1.2 LOCALIZAÇÃO (geo + QR compacto) -->
+    <!-- 1.2 LOCALIZAÇÃO (geo) -->
     ${sec.showGeoAuditSection ? buildGeoAuditSection(info, hash, theme, {
-      qrDataUrl: hf.showQrCode ? qrDataUrl : '',
+      qrDataUrl: '',
       verifyUrl,
     }) : ''}
 
