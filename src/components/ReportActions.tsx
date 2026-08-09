@@ -56,6 +56,8 @@ interface Props {
   userId?: string
   /** Bloqueia PDF (ex.: avarias novas sem confirmação do vistoriador). */
   blockExportReason?: string | null
+  /** Disclosure progressivo: mostra exportação secundária só após as 4 fotos. */
+  photosReady?: boolean
   /** Após gerar o PDF com sucesso, volta para o Início (Dashboard/Home). */
   onReturnHome?: () => void
   /** Garante que a inspeção existe no banco (salva a prévia) e retorna o id. */
@@ -69,6 +71,7 @@ export default function ReportActions({
   reviewedAt, isReviewed, onConfirmReview, onClearReview, userId,
   blockExportReason = null,
   onReturnHome, onEnsureInspectionId,
+  photosReady = false,
 }: Props) {
   const { role } = useTenantContext(userId)
   const mayReview = userId ? canReviewReport(role, userId, userId) : true
@@ -279,109 +282,117 @@ export default function ReportActions({
         onDisclosureChange={updateDisclosureScope}
       />
 
-      <div className="flex flex-col gap-2">
-        <button
-          onClick={() => handle('wp', async () => sendWhatsApp(vehicleInfo, damages))}
-          disabled={loading !== null}
-          className={`${btnBase} bg-green-500/10 border border-green-500/30 text-green-500 hover:bg-green-500/20 disabled:opacity-60`}
-        >
-          {loading === 'wp' ? <span className="animate-pulse">⏳</span> : <IconWhatsApp />}
-          Enviar resumo via WhatsApp
-        </button>
+      {/* Botão primário — Gerar Laudo PDF (sempre visível; desabilita em disclosure) */}
+      <CertifySignatureCard
+        inspectionId={inspectionId}
+        accessToken={accessToken}
+        defaultName={vehicleInfo?.owner || undefined}
+        onEnsureInspectionId={onEnsureInspectionId}
+        onPlainPdf={() => handle('pdf', handlePdf, '📄 PDF gerado!')}
+        canExportPlainPdf={canExportOfficialPdf && photosReady}
+        compact
+      />
 
-        <div className="grid grid-cols-2 gap-2">
+      {/* Disclosure progressivo: exportação secundária só após as 4 fotos */}
+      {photosReady ? (
+        <div className="flex flex-col gap-2">
           <button
-            onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, '📋 Copiado!')}
+            onClick={() => handle('wp', async () => sendWhatsApp(vehicleInfo, damages))}
             disabled={loading !== null}
-            title="Copiar Relatório"
-            className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
+            className={`${btnBase} bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-60`}
           >
-            {loading === 'copy' ? <span className="text-xl animate-pulse">⏳</span> : <IconCopy />}
-            <span className="text-[0.72rem]">Copiar</span>
+            {loading === 'wp' ? <span className="animate-pulse">⏳</span> : <IconWhatsApp />}
+            Enviar resumo via WhatsApp
           </button>
 
-          <button
-            onClick={() => handle('txt', async () => downloadTxt(vehicleInfo, damages), '📝 TXT baixado!')}
-            disabled={loading !== null}
-            title="Bloco de Notas (TXT)"
-            className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
-          >
-            {loading === 'txt' ? <span className="text-xl animate-pulse">⏳</span> : <IconTxt />}
-            <span className="text-[0.72rem]">TXT</span>
-          </button>
-        </div>
-
-        <CertifySignatureCard
-          inspectionId={inspectionId}
-          accessToken={accessToken}
-          defaultName={vehicleInfo?.owner || undefined}
-          onEnsureInspectionId={onEnsureInspectionId}
-          onPlainPdf={() => handle('pdf', handlePdf, '📄 PDF gerado!')}
-          canExportPlainPdf={canExportOfficialPdf}
-          compact
-        />
-
-        <button
-          onClick={() => setShowBadgePanel(v => !v)}
-          disabled={!reportHash}
-          title={reportHash ? 'Selo embutível do laudo' : 'Gere o PDF primeiro para liberar o selo'}
-          className={`${btnBase} bg-sky-500/10 border border-sky-500/30 text-sky-500 hover:bg-sky-500/20 disabled:opacity-40`}
-        >
-          <IconSeal />
-          Selo do laudo
-        </button>
-
-        {showBadgePanel && reportHash && (
-          <div className="flex flex-col gap-2 bg-sky-950/15 border border-sky-500/10 rounded-xl p-2.5">
-            <div className="flex items-center gap-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/selo-laudo-verificado.svg" alt="Laudo Verificado" width={56} height={56} />
-              <p className="text-[0.72rem] text-[var(--text-muted)] leading-snug">
-                Cole este código no site ou anúncio do veículo para exibir o selo de autenticidade.
-              </p>
-            </div>
-            <textarea
-              readOnly
-              value={buildBadgeSnippet(reportHash)}
-              onFocus={(e) => e.currentTarget.select()}
-              rows={3}
-              className="w-full bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] px-3 py-2 rounded-lg font-mono text-[0.7rem] outline-none resize-none"
-            />
+          <div className="grid grid-cols-2 gap-2">
             <button
-              onClick={() => handle('badge-copy', async () => {
-                await navigator.clipboard.writeText(buildBadgeSnippet(reportHash))
-              }, '📋 Código copiado!')}
+              onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, '📋 Copiado!')}
               disabled={loading !== null}
-              className={`${btnBase} justify-center bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
+              title="Copiar Relatório"
+              className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
             >
-              {loading === 'badge-copy' ? <span className="animate-pulse">⏳</span> : <IconCopy />}
-              Copiar código
+              {loading === 'copy' ? <span className="text-xl animate-pulse">⏳</span> : <IconCopy />}
+              <span className="text-[0.72rem]">Copiar</span>
+            </button>
+
+            <button
+              onClick={() => handle('txt', async () => downloadTxt(vehicleInfo, damages), '📝 TXT baixado!')}
+              disabled={loading !== null}
+              title="Bloco de Notas (TXT)"
+              className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
+            >
+              {loading === 'txt' ? <span className="text-xl animate-pulse">⏳</span> : <IconTxt />}
+              <span className="text-[0.72rem]">TXT</span>
             </button>
           </div>
-        )}
 
-        {reportHash && (
-          <div className="rounded-xl p-4 mt-2 border border-emerald-500/30 bg-emerald-500/10 flex flex-col items-center gap-3 text-center">
-            <div className="flex items-center gap-2 text-emerald-300 font-extrabold text-[0.95rem]">
-              <IconSeal />
-              Dossiê emitido com sucesso
-            </div>
-            <p className="text-[0.74rem] text-[var(--text-muted)] leading-relaxed max-w-[34ch]">
-              O laudo foi gerado e registrado na cadeia de auditoria. Compartilhe o
-              PDF ou retorne ao início para uma nova vistoria.
-            </p>
-            {onReturnHome && (
+          <button
+            onClick={() => setShowBadgePanel(v => !v)}
+            disabled={!reportHash}
+            title={reportHash ? 'Selo embutível do laudo' : 'Gere o PDF primeiro para liberar o selo'}
+            className={`${btnBase} bg-sky-500/10 border border-sky-500/30 text-sky-400 hover:bg-sky-500/20 disabled:opacity-40`}
+          >
+            <IconSeal />
+            Selo do laudo
+          </button>
+
+          {showBadgePanel && reportHash && (
+            <div className="flex flex-col gap-2 bg-sky-950/15 border border-sky-500/10 rounded-xl p-2.5">
+              <div className="flex items-center gap-3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/selo-laudo-verificado.svg" alt="Laudo Verificado" width={56} height={56} />
+                <p className="text-[0.72rem] text-[var(--text-muted)] leading-snug">
+                  Cole este código no site ou anúncio do veículo para exibir o selo de autenticidade.
+                </p>
+              </div>
+              <textarea
+                readOnly
+                value={buildBadgeSnippet(reportHash)}
+                onFocus={(e) => e.currentTarget.select()}
+                rows={3}
+                className="w-full bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] px-3 py-2 rounded-lg font-mono text-[0.7rem] outline-none resize-none"
+              />
               <button
-                type="button"
-                onClick={onReturnHome}
-                className="w-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white font-extrabold text-[0.85rem] py-2.5 px-4 rounded-xl shadow-lg shadow-emerald-500/20 hover:brightness-110 transition-all"
+                onClick={() => handle('badge-copy', async () => {
+                  await navigator.clipboard.writeText(buildBadgeSnippet(reportHash))
+                }, '📋 Código copiado!')}
+                disabled={loading !== null}
+                className={`${btnBase} justify-center bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
               >
-                ↩️ Retornar ao Início
+                {loading === 'badge-copy' ? <span className="animate-pulse">⏳</span> : <IconCopy />}
+                Copiar código
               </button>
-            )}
+            </div>
+          )}
+        </div>
+      ) : (
+        <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed px-0.5 py-1">
+          Capture as 4 fotos dos lados (Frontal, Traseira, Esquerda e Direita) para liberar o compartilhamento e o selo do laudo.
+        </p>
+      )}
+
+      {reportHash && (
+        <div className="rounded-xl p-4 mt-2 border border-emerald-500/30 bg-emerald-500/10 flex flex-col items-center gap-3 text-center">
+          <div className="flex items-center gap-2 text-emerald-300 font-extrabold text-[0.95rem]">
+            <IconSeal />
+            Dossiê emitido com sucesso
           </div>
-        )}
-      </div>
+          <p className="text-[0.74rem] text-[var(--text-muted)] leading-relaxed max-w-[34ch]">
+            O laudo foi gerado e registrado na cadeia de auditoria. Compartilhe o
+            PDF ou retorne ao início para uma nova vistoria.
+          </p>
+          {onReturnHome && (
+            <button
+              type="button"
+              onClick={onReturnHome}
+              className="w-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white font-extrabold text-[0.85rem] py-2.5 px-4 rounded-xl shadow-lg shadow-emerald-500/20 hover:brightness-110 transition-all"
+            >
+              ↩️ Retornar ao Início
+            </button>
+          )}
+        </div>
+      )}
     </div>
   )
 }

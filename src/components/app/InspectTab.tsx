@@ -578,89 +578,100 @@ export default function InspectTab({
       )}
 
       {section === 'finalizar' && (
-        <div className="glass-card p-5 sm:p-7 space-y-6">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="ds-label">Revisão</p>
-              <p className="ds-h2">
-                Avarias{' '}
-                <span className={allVehicleDamages.length > 0 ? 'text-red-400' : 'text-[var(--text-muted)]'}>
-                  ({allVehicleDamages.length})
-                </span>
-              </p>
+        <div className="grid grid-cols-1 lg:grid-cols-[65fr_35fr] gap-5 items-start">
+          {/* COLUNA ESQUERDA — Captura de Dados (65%) */}
+          <div className="space-y-4 min-w-0">
+            <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-sm">
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <div>
+                  <p className="ds-label">Revisão</p>
+                  <p className="ds-h2">
+                    Avarias{' '}
+                    <span className={allVehicleDamages.length > 0 ? 'text-red-400' : 'text-[var(--text-muted)]'}>
+                      ({allVehicleDamages.length})
+                    </span>
+                  </p>
+                </div>
+                {allVehicleDamages.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={onClearDamages}
+                    className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'text-red-400 inline-flex items-center gap-1.5' })}
+                  >
+                    <ClearAllIcon size={12} /> Limpar
+                  </button>
+                )}
+              </div>
+
+              {allVehicleDamages.length === 0 ? (
+                <p className="ds-caption px-3.5 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-emerald-400">
+                  Nenhuma avaria. O PDF inclui diagrama e fotos dos 4 lados.
+                </p>
+              ) : (
+                <DamageList
+                  damages={allVehicleDamages}
+                  onRemove={onRemoveDamage}
+                  onUpdate={onUpdateDamage}
+                  previousReport={previousReport}
+                  inspectionId={inspectionId}
+                  vehicleId={vehicleId}
+                  onToast={onToast}
+                />
+              )}
+
+              <div className="mt-4">
+                <ViewPhotosCapture
+                  info={vehicleInfo}
+                  onChange={onVehicleInfoChange}
+                  compact
+                  vehicleType={vehicleType}
+                  damages={allVehicleDamages}
+                  onAddDamageRecord={onAddDamageRecord}
+                  onUpdateDamage={onUpdateDamage}
+                  onRemoveDamage={onRemoveDamage}
+                  accessToken={accessToken}
+                  decidedByName={evidenceActorLabel}
+                  onToast={onToast}
+                  inspectionId={inspectionId}
+                  vehicleId={vehicleId}
+                />
+              </div>
+
+              {newDamages.length > 0 && (
+                <div className="space-y-3 mt-4">
+                  <NewDamagesAlert newCount={newDamages.length} compact />
+                  <NewDamagesInspectorConfirm
+                    newDamages={newDamages}
+                    confirmedIds={confirmedNewIds}
+                    onToggle={toggleNewConfirm}
+                    onConfirmAll={confirmAllNew}
+                  />
+                </div>
+              )}
             </div>
-            {allVehicleDamages.length > 0 && (
-              <button
-                type="button"
-                onClick={onClearDamages}
-                className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'text-red-400 inline-flex items-center gap-1.5' })}
-              >
-                <ClearAllIcon size={12} /> Limpar
-              </button>
-            )}
-          </div>
 
-          {allVehicleDamages.length === 0 ? (
-            <p className="ds-caption px-3.5 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-emerald-400">
-              Nenhuma avaria. O PDF inclui diagrama e fotos dos 4 lados.
-            </p>
-          ) : (
-            <DamageList
-              damages={allVehicleDamages}
-              onRemove={onRemoveDamage}
-              onUpdate={onUpdateDamage}
-              previousReport={previousReport}
-              inspectionId={inspectionId}
-              vehicleId={vehicleId}
-              onToast={onToast}
-            />
-          )}
-
-          <ViewPhotosCapture
-            info={vehicleInfo}
-            onChange={onVehicleInfoChange}
-            compact
-            vehicleType={vehicleType}
-            damages={allVehicleDamages}
-            onAddDamageRecord={onAddDamageRecord}
-            onUpdateDamage={onUpdateDamage}
-            onRemoveDamage={onRemoveDamage}
-            accessToken={accessToken}
-            decidedByName={evidenceActorLabel}
-            onToast={onToast}
-            inspectionId={inspectionId}
-            vehicleId={vehicleId}
-          />
-
-          {newDamages.length > 0 && (
-            <div className="space-y-3">
-              <NewDamagesAlert newCount={newDamages.length} compact />
-              <NewDamagesInspectorConfirm
-                newDamages={newDamages}
-                confirmedIds={confirmedNewIds}
-                onToggle={toggleNewConfirm}
-                onConfirmAll={confirmAllNew}
-              />
+            <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-sm">
+              <p className="ds-label mb-1">Assinaturas</p>
+              <p className="ds-h3 mb-3">GPS e assinaturas</p>
+              <FinalizePanel info={vehicleInfo} onChange={onVehicleInfoChange} inspectionId={inspectionId} accessToken={accessToken} />
             </div>
-          )}
 
-          <div>
-            <p className="ds-label mb-1">Assinaturas</p>
-            <p className="ds-h3 mb-3">GPS e assinaturas</p>
-            <FinalizePanel info={vehicleInfo} onChange={onVehicleInfoChange} inspectionId={inspectionId} accessToken={accessToken} />
-          </div>
-
-          <div className="space-y-4 pt-2">
             {mayReview && onCompleteReview && onReopenReview && (
-              <InspectionReviewPanel
-                reviewedAt={reviewedAt}
-                reviewNotes={reviewNotes}
-                contentStale={reviewContentStale}
-                busy={reviewBusy}
-                onCompleteReview={onCompleteReview}
-                onReopenReview={onReopenReview}
-              />
+              <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-sm">
+                <InspectionReviewPanel
+                  reviewedAt={reviewedAt}
+                  reviewNotes={reviewNotes}
+                  contentStale={reviewContentStale}
+                  busy={reviewBusy}
+                  onCompleteReview={onCompleteReview}
+                  onReopenReview={onReopenReview}
+                />
+              </div>
             )}
+          </div>
+
+          {/* COLUNA DIREITA — Exportação e Ações Finais (35%, Sticky) */}
+          <div className="lg:sticky lg:top-4 space-y-4 min-w-0">
             <ReportActions
               vehicleType={vehicleType}
               vehicleInfo={vehicleInfo}
@@ -681,6 +692,7 @@ export default function InspectTab({
               onClearReview={onClearReview}
               userId={userId}
               blockExportReason={blockExportReason}
+              photosReady={hasAllViewPhotos(vehicleInfo)}
               onReturnHome={onReturnHome}
               onEnsureInspectionId={onEnsureInspectionId}
             />
