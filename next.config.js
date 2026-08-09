@@ -16,6 +16,8 @@ const securityHeaders = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+  poweredByHeader: false,
   serverExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
   // Compressão gzip/brotli explícita (Vercel já comprime, mas garante em dev/preview)
   compress: true,
