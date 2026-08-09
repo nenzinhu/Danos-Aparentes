@@ -58,8 +58,7 @@ const FEATURES = [
 ] as const
 
 const SITE_URL = 'https://danosaparentes.com.br'
-const SRC = '/videos/vistoria-digital-promo.mp4'
-const POSTER = '/videos/vistoria-digital-promo-poster.webp'
+const POSTER = '/blog-covers/antes-e-depois-da-vistoria-digital.webp'
 const VIDEO_TITLE = 'Plataforma: Inteligência Histórica Veicular'
 
 /**
@@ -73,7 +72,7 @@ export default function FeaturesGridSection() {
     description:
       'Inspeções inteligentes, evidências digitais e linha do tempo — a memória digital permanente de cada veículo.',
     thumbnailUrl: `${SITE_URL}${POSTER}`,
-    contentUrl: `${SITE_URL}${SRC}`,
+    contentUrl: `${SITE_URL}${POSTER}`,
     duration: 'PT38S',
     uploadDate: '2026-08-04',
     inLanguage: 'pt-BR',
@@ -140,27 +139,21 @@ export default function FeaturesGridSection() {
         </Reveal>
 
         <Reveal delay={80} className="flex flex-col items-center lg:items-end sticky top-24">
-          <div className="w-full max-w-[260px] sm:max-w-[280px] overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black shadow-xl ring-1 ring-[var(--primary)]/15 relative">
-            {/* Poster via next/image para servir tamanho correto (~280px max) */}
+          <div className="relative w-full max-w-[260px] sm:max-w-[280px] overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black shadow-xl ring-1 ring-[var(--primary)]/15">
             <Image
               src={POSTER}
-              alt=""
-              aria-hidden="true"
+              alt={VIDEO_TITLE}
               width={280}
               height={498}
               sizes="(max-width: 640px) 260px, 280px"
-              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              className="w-full h-auto aspect-[9/16] object-cover"
               priority={false}
             />
-            <video
-              src={SRC}
-              poster={POSTER}
-              controls
-              playsInline
-              preload="none"
-              aria-label={VIDEO_TITLE}
-              className="w-full h-auto aspect-[9/16] relative z-10"
-            />
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <span className="flex items-center justify-center w-14 h-14 rounded-full bg-[var(--primary)]/90 text-white shadow-lg" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+              </span>
+            </div>
           </div>
           <p className="mt-3 text-center lg:text-right text-xs text-[var(--text-muted)] max-w-[280px]">
             Preview da plataforma · 38s

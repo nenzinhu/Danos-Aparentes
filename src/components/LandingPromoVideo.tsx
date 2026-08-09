@@ -2,8 +2,7 @@ import LandingCtaLink from './LandingCtaLink'
 import Reveal from './Reveal'
 
 const SITE_URL = 'https://danosaparentes.com.br'
-const SRC = '/videos/vistoria-digital-promo.mp4'
-const POSTER = '/videos/vistoria-digital-promo-poster.webp'
+const POSTER = '/blog-covers/antes-e-depois-da-vistoria-digital.webp'
 const TITLE = 'PDF Antes × Depois: histórico digital do veículo'
 const DESCRIPTION =
   'Sem vistoria de entrada comparável, a cobrança vira discussão. Marque no SVG, confirme a IA, gere o PDF de entrada e o de retorno — o histórico mostra o que mudou.'
@@ -19,7 +18,7 @@ export default function LandingPromoVideo() {
     name: TITLE,
     description: DESCRIPTION,
     thumbnailUrl: `${SITE_URL}${POSTER}`,
-    contentUrl: `${SITE_URL}${SRC}`,
+    contentUrl: `${SITE_URL}${POSTER}`,
     duration: 'PT38S',
     uploadDate: '2026-08-04',
     inLanguage: 'pt-BR',
@@ -59,16 +58,21 @@ export default function LandingPromoVideo() {
         </Reveal>
 
         <Reveal delay={80} className="flex flex-col items-center lg:items-end">
-          <div className="w-full max-w-[280px] overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black shadow-xl">
-            <video
-              src={SRC}
-              poster={POSTER}
-              controls
-              playsInline
-              preload="metadata"
-              aria-label={TITLE}
-              className="w-full h-auto aspect-[9/16]"
+          <div className="relative w-full max-w-[280px] overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black shadow-xl group">
+            <img
+              src={POSTER}
+              alt={TITLE}
+              width={280}
+              height={498}
+              loading="lazy"
+              decoding="async"
+              className="w-full h-auto aspect-[9/16] object-cover"
             />
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <span className="flex items-center justify-center w-14 h-14 rounded-full bg-[var(--primary)]/90 text-white shadow-lg" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+              </span>
+            </div>
           </div>
           <p className="mt-3 text-center lg:text-right text-xs text-[var(--text-muted)] max-w-[280px]">
             38 segundos · PDF Antes × Depois · play quando quiser
