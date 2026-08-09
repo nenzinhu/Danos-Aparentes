@@ -73,50 +73,55 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
 
   if (variant === 'header') {
     return (
-      <div className='flex gap-1.5 items-center'>
-        <button type="button" onClick={zoomOut} className={`${btnBase} px-3 py-1.5 text-[0.85rem]`} aria-label="Diminuir zoom" disabled={panLocked}>−</button>
-        <button
-          type="button"
-          onClick={reset}
-          title="Voltar a 100% e recentrar"
-          className={`${btnBase} px-3 py-1.5 text-[0.75rem]`}
-          aria-label={`Zoom ${Math.round(scale * 100)} por cento — clicar para 100%`}
-        >
-          {Math.round(scale * 100)}%
-        </button>
-        <button type="button" onClick={zoomIn} className={`${btnBase} px-3 py-1.5 text-[0.85rem]`} aria-label="Aumentar zoom" disabled={panLocked}>+</button>
-        <button type="button" onClick={reset} className={`${btnBase} px-2.5 py-1.5`} aria-label="Resetar zoom">↺</button>
-        <button
-          type="button"
-          onClick={togglePanLock}
-          title={
-            panLocked
-              ? 'Destravar zoom e arrastar'
-              : 'Travar em 100% — zoom e arrastar bloqueados'
-          }
-          aria-pressed={panLocked}
-          aria-label={panLocked ? 'Destravar diagrama' : 'Travar diagrama'}
-          className={`${btnBase} px-2.5 py-1.5 flex items-center gap-1 ${panLocked ? 'bg-amber-500/25 border-amber-400/50 text-amber-300' : ''}`}
-        >
-          <LockIcon locked={panLocked} />
-        </button>
-        <button
-          type="button"
-          onClick={() => setOutlineMode(!outlineMode)}
-          title='Ver só o contorno, sem cores'
-          aria-pressed={outlineMode}
-          className={`${btnBase} px-3 py-1.5 text-[0.75rem] ${outlineMode ? 'bg-sky-500/25 border-sky-400/50 text-sky-300' : ''}`}
-        >
-          ◇ Contorno
-        </button>
+      <div className='flex items-center gap-1.5 min-w-0'>
+        {/* Botão Sair em primeiro lugar e nunca cortado: é a única saída no
+            mobile (sem tecla ESC), então precisa de shrink-0 e vir antes do
+            grupo de zoom, que pode rolar horizontalmente se faltar largura. */}
         <button
           type="button"
           onClick={() => setFullscreen(false)}
-          className={`${btnBase} px-3.5 py-1.5 text-[0.85rem] bg-red-500/20 border-red-500/40 text-red-500 flex items-center gap-1.5 hover:bg-red-500/30`}
+          className={`${btnBase} shrink-0 px-3 py-1.5 text-[0.85rem] bg-red-500/20 border-red-500/40 text-red-500 flex items-center gap-1.5 hover:bg-red-500/30`}
         >
           <svg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'><path d='M8 3v3a2 2 0 01-2 2H3'/><path d='M21 8h-3a2 2 0 01-2-2V3'/><path d='M3 16h3a2 2 0 012 2v3'/><path d='M16 21v-3a2 2 0 012-2h3'/></svg>
-          Sair (ESC)
+          Sair
         </button>
+        <div className='flex items-center gap-1.5 overflow-x-auto min-w-0'>
+          <button type="button" onClick={zoomOut} className={`${btnBase} px-3 py-1.5 text-[0.85rem] shrink-0`} aria-label="Diminuir zoom" disabled={panLocked}>−</button>
+          <button
+            type="button"
+            onClick={reset}
+            title="Voltar a 100% e recentrar"
+            className={`${btnBase} px-3 py-1.5 text-[0.75rem] shrink-0`}
+            aria-label={`Zoom ${Math.round(scale * 100)} por cento — clicar para 100%`}
+          >
+            {Math.round(scale * 100)}%
+          </button>
+          <button type="button" onClick={zoomIn} className={`${btnBase} px-3 py-1.5 text-[0.85rem] shrink-0`} aria-label="Aumentar zoom" disabled={panLocked}>+</button>
+          <button type="button" onClick={reset} className={`${btnBase} px-2.5 py-1.5 shrink-0`} aria-label="Resetar zoom">↺</button>
+          <button
+            type="button"
+            onClick={togglePanLock}
+            title={
+              panLocked
+                ? 'Destravar zoom e arrastar'
+                : 'Travar em 100% — zoom e arrastar bloqueados'
+            }
+            aria-pressed={panLocked}
+            aria-label={panLocked ? 'Destravar diagrama' : 'Travar diagrama'}
+            className={`${btnBase} px-2.5 py-1.5 flex items-center gap-1 shrink-0 ${panLocked ? 'bg-amber-500/25 border-amber-400/50 text-amber-300' : ''}`}
+          >
+            <LockIcon locked={panLocked} />
+          </button>
+          <button
+            type="button"
+            onClick={() => setOutlineMode(!outlineMode)}
+            title='Ver só o contorno, sem cores'
+            aria-pressed={outlineMode}
+            className={`${btnBase} px-3 py-1.5 text-[0.75rem] shrink-0 ${outlineMode ? 'bg-sky-500/25 border-sky-400/50 text-sky-300' : ''}`}
+          >
+            ◇ Contorno
+          </button>
+        </div>
       </div>
     )
   }

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect, useCallback, useMemo, memo, Suspense, useRef } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, type Variants } from 'framer-motion'
 import { vehicleRegistry } from '../vehicles/registry'
 import DamageCallouts, { DamageCalloutLegend } from '../DamageCallouts'
 import { gsap, prefersReducedMotion } from '../../lib/gsap'
@@ -11,7 +11,7 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(DrawSVGPlugin)
 }
 
-const orbitVariants = {
+const orbitVariants: Variants = {
   initial: (dir: number) => ({ rotateY: dir * 90, opacity: 0, scale: 0.92 }),
   animate: {
     rotateY: 0, opacity: 1, scale: 1,
