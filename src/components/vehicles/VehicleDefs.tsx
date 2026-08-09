@@ -13,6 +13,34 @@ export default function VehicleDefs() {
           <stop offset="86%" stopColor="#075985" />
           <stop offset="100%" stopColor="#04263b" />
         </linearGradient>
+        {/* Gradiente de iluminação de estúdio — fundo 3D em vez de preto chapado */}
+        <radialGradient id="studio-bg" cx="50%" cy="38%" r="75%">
+          <stop offset="0%" stopColor="#1e3a5f" />
+          <stop offset="45%" stopColor="#0d1b2e" />
+          <stop offset="100%" stopColor="#05080f" />
+        </radialGradient>
+        {/* Gradiente radial da lataria — simula curvatura/volume de metal */}
+        <linearGradient id="body-sheen" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#bae6fd" stopOpacity="0.55" />
+          <stop offset="22%" stopColor="#7dd3fc" stopOpacity="0.18" />
+          <stop offset="50%" stopColor="#0ea5e9" stopOpacity="0" />
+          <stop offset="100%" stopColor="#04263b" stopOpacity="0.25" />
+        </linearGradient>
+        {/* Gradiente radial da maçaneta — volume de metal cromado */}
+        <radialGradient id="chrome-handle" cx="38%" cy="30%" r="75%">
+          <stop offset="0%" stopColor="#f8fafc" />
+          <stop offset="38%" stopColor="#cbd5e1" />
+          <stop offset="70%" stopColor="#64748b" />
+          <stop offset="100%" stopColor="#1e293b" />
+        </radialGradient>
+        {/* Filtro de sombra projetada (Drop Shadow) */}
+        <filter id="drop-shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="3" stdDeviation="4" floodColor="#000000" floodOpacity="0.45" />
+        </filter>
+        {/* Filtro Gaussian Blur — suaviza transição de formas / reflexos */}
+        <filter id="soft-blur" x="-15%" y="-15%" width="130%" height="130%">
+          <feGaussianBlur stdDeviation="3" />
+        </filter>
         <linearGradient id="metal-moto-dark" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#7f1d1d" />
           <stop offset="30%" stopColor="#ef4444" />
