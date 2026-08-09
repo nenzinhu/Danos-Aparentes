@@ -6,12 +6,12 @@ import { inputClasses, labelClasses } from './constants'
 import { formatCNH, formatCPF, formatPhone } from './formatters'
 import { IconCamera } from '../ui/AnimatedIcons'
 
-/** Checkbox compacto "Estrangeiro" alinhado no mesmo nível do rótulo do campo. */
-function ForeignToggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
+/** Checkbox compacto "Doc. estrangeiro" alinhado no mesmo nível do rótulo do campo. */
+function ForeignToggle({ checked, onChange, label = 'Doc. estrangeiro' }: { checked: boolean; onChange: (v: boolean) => void; label?: string }) {
   return (
     <label
-      className="inline-flex items-center gap-1.5 cursor-pointer text-[0.65rem] font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors select-none"
-      title="Documento estrangeiro"
+      className="inline-flex items-center gap-1.5 cursor-pointer text-[0.62rem] font-bold uppercase tracking-wide text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors select-none"
+      title="Documento estrangeiro (sem CPF/CNH brasileiro)"
     >
       <input
         type="checkbox"
@@ -19,7 +19,7 @@ function ForeignToggle({ checked, onChange }: { checked: boolean; onChange: (v: 
         onChange={e => onChange(e.target.checked)}
         className="w-3.5 h-3.5 rounded border-[var(--btn-secondary-border)] accent-[var(--primary)] cursor-pointer"
       />
-      Estrangeiro
+      {label}
     </label>
   )
 }
@@ -74,8 +74,10 @@ export default function WizardStepOwner({
         <div className="grid grid-cols-1 sm:grid-cols-[3fr_2fr] gap-3 mb-3">
           {show('owner') && (
             <div>
-              <label htmlFor="owner-input" className={labelClasses}>Proprietário / Cliente</label>
-              <input id="owner-input" className={inputClasses} value={info.owner} onChange={e => set('owner', toTitleCase(e.target.value))} placeholder="Ex: João Silva" />
+              <label htmlFor="owner-input" className={labelClasses}>
+                Proprietário / Cliente <span className="text-[var(--severity-high)]" aria-hidden="true">*</span>
+              </label>
+              <input id="owner-input" className={inputClasses} value={info.owner} onChange={e => set('owner', toTitleCase(e.target.value))} placeholder="Ex: João Silva" required aria-required="true" />
             </div>
           )}
           {show('phone') && (
@@ -118,7 +120,7 @@ export default function WizardStepOwner({
           {show('cpf') && (
             <div>
               <label htmlFor="cpf-input" className={`${labelClasses} flex items-center justify-between gap-2`}>
-                <span>CPF</span>
+                <span>CPF <span className="text-[var(--severity-high)]" aria-hidden="true">*</span></span>
                 <ForeignToggle
                   checked={info.cpf?.startsWith('EX-') || false}
                   onChange={(checked) => set('cpf', checked ? 'EX-' : '')}
@@ -140,6 +142,8 @@ export default function WizardStepOwner({
                   onChange={e => set('cpf', formatCPF(e.target.value))}
                   placeholder="000.000.000-00"
                   maxLength={14}
+                  required
+                  aria-required="true"
                 />
               )}
             </div>

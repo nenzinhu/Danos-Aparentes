@@ -364,7 +364,7 @@ export default function InspectTab({
               >
                 <span
                   aria-hidden
-                  className={`absolute top-1 bottom-1 rounded-lg bg-[var(--primary)]/15 border border-[var(--primary)]/50 transition-all duration-300 ease-out ${
+                  className={`absolute top-1 bottom-1 rounded-lg bg-[var(--primary)] transition-all duration-300 ease-out ${
                     inspectionPurpose === 'entrada' ? 'left-1 right-1/2' : 'left-1/2 right-1'
                   }`}
                 />
@@ -372,32 +372,34 @@ export default function InspectTab({
                   type="button"
                   onClick={() => onSelectPurpose('entrada')}
                   aria-pressed={inspectionPurpose === 'entrada'}
+                  title="Veículo chegando: entrada, recebimento ou retirada"
                   className={`relative z-10 flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-bold text-[0.8rem] transition-colors ${
                     inspectionPurpose === 'entrada'
-                      ? 'text-[var(--primary)]'
+                      ? 'bg-[var(--primary)] text-[var(--bg-main)] shadow-[var(--primary-glow)]'
                       : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
                   }`}
                 >
                   <EntradaIcon size={18} />
-                  Entrada / Recebimento
+                  Entrada
                 </button>
                 <button
                   type="button"
                   onClick={() => onSelectPurpose('retorno')}
                   aria-pressed={inspectionPurpose === 'retorno'}
+                  title="Veículo saindo: saída, entrega ou devolução"
                   className={`relative z-10 flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg font-bold text-[0.8rem] transition-colors ${
                     inspectionPurpose === 'retorno'
-                      ? 'text-[var(--primary)]'
+                      ? 'bg-[var(--primary)] text-[var(--bg-main)] shadow-[var(--primary-glow)]'
                       : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
                   }`}
                 >
                   <SaidaIcon size={18} />
-                  Saída / Entrega
+                  Saída
                 </button>
               </div>
               <p className="ds-caption mt-2">
                 {inspectionPurpose === 'entrada'
-                  ? 'Estado na entrega ou retirada do veículo.'
+                  ? 'Registro de chegada do veículo (entrada, recebimento ou retirada).'
                   : 'Compara o estado de saída com a inspeção de entrada.'}
               </p>
             </div>
