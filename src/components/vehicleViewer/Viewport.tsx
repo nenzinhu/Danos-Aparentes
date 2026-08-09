@@ -12,14 +12,14 @@ if (typeof window !== 'undefined') {
 }
 
 const orbitVariants: Variants = {
-  initial: (dir: number) => ({ rotateY: dir * 90, opacity: 0, scale: 0.92 }),
+  initial: (dir: number) => ({ rotateY: dir * 60, opacity: 0, scale: 0.96 }),
   animate: {
     rotateY: 0, opacity: 1, scale: 1,
-    transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1] },
+    transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
   },
   exit: (dir: number) => ({
-    rotateY: dir * -90, opacity: 0, scale: 0.92,
-    transition: { duration: 0.8, ease: [0.4, 0, 0.2, 1] },
+    rotateY: dir * -60, opacity: 0, scale: 0.96,
+    transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
   }),
 }
 
@@ -33,6 +33,18 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
   const VehicleComp = vehicleRegistry[vehicleType]?.[viewType] || vehicleRegistry['car']?.[viewType] || vehicleRegistry['car']['lateral-left']
   const layoutKey = `${vehicleType}-${viewType}`
   const [compact, setCompact] = useState(false)
+
+  // Warm-up: pré-carrega os 4 SVGs do tipo atual para o cache do client,
+  // eliminando o "Carregando diagrama…" na primeira troca de vista.
+  useEffect(() => {
+    const entry = vehicleRegistry[vehicleType] || vehicleRegistry['car']
+    if (!entry) return
+    Object.values(entry).forEach((comp) => {
+      // @ts-expect-error acessa o import dinâmico interno do next/dynamic
+      const loader = comp?.['__esModule'] ? null : (comp as { _payload?: () => Promise<unknown> })?._payload
+      if (typeof loader === 'function') void loader()
+    })
+  }, [vehicleType])
 
   // The shared containerRef/targetRef always track whichever Viewport
   // instance (small or fullscreen) is currently interactive. Only the small
@@ -214,7 +226,7 @@ export const Viewport = memo(function Viewport({ isFullscreen = false }: { isFul
         ref={setContainerNode}
         className={`relative overflow-hidden cursor-grab touch-none flex items-center justify-center [perspective:1100px] [perspective-origin:center_center] ${isFullscreen ? 'rounded-0 flex-1 min-h-0' : 'rounded-2xl flex-1 min-h-[220px]'} ${outlineMode ? `va-outline${isFullscreen ? ' va-outline--fs' : ''}` : ''}`}
       >
-        <AnimatePresence mode='wait' custom={orbitDir}>
+        <AnimatePresence mode='popLayout' custom={orbitDir}>
           <motion.div
             key={layoutKey}
             custom={orbitDir}
