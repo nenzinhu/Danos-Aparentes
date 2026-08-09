@@ -195,14 +195,14 @@ export default function FieldVisibilityPanel(props: Props) {
             <button
               type="button"
               onClick={() => onFilterAll(true)}
-              className="bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/30 text-sky-300 rounded-xl py-2 px-2 text-[0.72rem] font-bold cursor-pointer transition-colors flex items-center justify-center gap-1.5 shadow-sm active:scale-95 min-w-0"
+              className="bg-[var(--primary)]/15 hover:bg-[var(--primary)]/25 border border-[var(--primary)]/30 text-[var(--primary)] rounded-xl py-2 px-2 text-[0.72rem] font-bold cursor-pointer transition-colors flex items-center justify-center gap-1.5 shadow-sm active:scale-95 min-w-0"
             >
               <span className="truncate">✓ Exibir Todos</span>
             </button>
             <button
               type="button"
               onClick={() => onFilterAll(false)}
-              className="bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 rounded-xl py-2 px-2 text-[0.72rem] font-bold cursor-pointer transition-colors flex items-center justify-center gap-1.5 shadow-sm active:scale-95 min-w-0"
+              className="bg-[var(--severity-high)]/15 hover:bg-[var(--severity-high)]/25 border border-[var(--severity-high)]/30 text-[var(--severity-high)] rounded-xl py-2 px-2 text-[0.72rem] font-bold cursor-pointer transition-colors flex items-center justify-center gap-1.5 shadow-sm active:scale-95 min-w-0"
             >
               <span className="truncate">✕ Ocultar Todos</span>
             </button>
@@ -253,18 +253,18 @@ export default function FieldVisibilityPanel(props: Props) {
                     flex items-center gap-2 p-2 rounded-xl border transition-all duration-150 group touch-none select-none min-w-0
                     ${
                       isDragging
-                        ? 'opacity-40 bg-sky-500/20 border-sky-400 scale-[0.98]'
+                        ? 'opacity-40 bg-[var(--primary)]/20 border-sky-400 scale-[0.98]'
                         : isOver
-                        ? 'bg-sky-500/25 border-sky-400 ring-2 ring-sky-400/50 scale-[1.01]'
+                        ? 'bg-[var(--primary)]/25 border-sky-400 ring-2 ring-sky-400/50 scale-[1.01]'
                         : isVisible
-                        ? 'bg-slate-900/80 border-[var(--card-border)] hover:bg-slate-800/90 hover:border-slate-700'
-                        : 'bg-slate-950/50 border-slate-900/80 opacity-55 hover:opacity-90'
+                        ? 'bg-[var(--card-bg-solid)] border-[var(--card-border)] hover:bg-[var(--color-hover)]/90 hover:border-[var(--card-border)]'
+                        : 'bg-[var(--card-bg-solid)]/50 border-[var(--card-border)] opacity-55 hover:opacity-90'
                     }
                   `}
                 >
                   {/* GSAP Touch / Mouse Drag Handle */}
                   <div
-                    className="w-5 h-9 flex items-center justify-center text-slate-500 group-hover:text-sky-400 cursor-grab active:cursor-grabbing shrink-0 text-lg font-mono transition-colors rounded-lg hover:bg-sky-500/10"
+                    className="w-5 h-9 flex items-center justify-center text-[var(--text-muted)] group-hover:text-[var(--primary)] cursor-grab active:cursor-grabbing shrink-0 text-lg font-mono transition-colors rounded-lg hover:bg-[var(--primary)]/10"
                     title="Segure e arraste com o dedo ou mouse"
                   >
                     ⠿
@@ -280,7 +280,7 @@ export default function FieldVisibilityPanel(props: Props) {
                     />
                     <span
                       className={`field-mgr-label truncate font-semibold ${
-                        isVisible ? 'text-slate-100' : 'text-slate-400 line-through'
+                        isVisible ? 'text-[var(--text-main)]' : 'text-[var(--text-muted)] line-through'
                       }`}
                     >
                       {FIELD_LABELS[key] ?? key}
@@ -288,14 +288,14 @@ export default function FieldVisibilityPanel(props: Props) {
                   </label>
 
                   {/* Up / Down Reorder Buttons */}
-                  <div className="inline-flex rounded-lg border border-slate-700/60 overflow-hidden divide-x divide-slate-700/60 shrink-0 shadow-sm">
+                  <div className="inline-flex rounded-lg border border-[var(--card-border)]/60 overflow-hidden divide-x divide-[var(--card-border)] shrink-0 shadow-sm">
                     <button
                       type="button"
                       onClick={() => onMoveField(key, -1)}
                       disabled={i === 0}
                       title="Mover para cima"
                       aria-label={`Mover ${FIELD_LABELS[key]} para cima`}
-                      className="bg-slate-800/90 hover:bg-sky-500/30 text-sky-300 active:bg-sky-500/50 w-9 h-9 flex items-center justify-center text-sm font-bold transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+                      className="bg-[var(--card-bg)] hover:bg-[var(--primary)]/30 text-[var(--primary)] active:bg-[var(--primary)]/50 w-9 h-9 flex items-center justify-center text-sm font-bold transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
                     >
                       ↑
                     </button>
@@ -305,7 +305,7 @@ export default function FieldVisibilityPanel(props: Props) {
                       disabled={i === fieldOrder.length - 1}
                       title="Mover para baixo"
                       aria-label={`Mover ${FIELD_LABELS[key]} para baixo`}
-                      className="bg-slate-800/90 hover:bg-sky-500/30 text-sky-300 active:bg-sky-500/50 w-9 h-9 flex items-center justify-center text-sm font-bold transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+                      className="bg-[var(--card-bg)] hover:bg-[var(--primary)]/30 text-[var(--primary)] active:bg-[var(--primary)]/50 w-9 h-9 flex items-center justify-center text-sm font-bold transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
                     >
                       ↓
                     </button>
@@ -321,8 +321,8 @@ export default function FieldVisibilityPanel(props: Props) {
     return (
       <div className="flex flex-col min-h-0 flex-1 gap-3">
         {/* Custom Field Add Form */}
-        <div className="bg-slate-900/90 border border-sky-500/30 rounded-2xl p-3 space-y-2 shadow-inner shrink-0">
-          <label className="text-[0.72rem] font-black text-sky-400 uppercase tracking-wide flex items-center gap-1.5">
+        <div className="bg-[var(--card-bg)] border border-[var(--primary)]/30 rounded-2xl p-3 space-y-2 shadow-inner shrink-0">
+          <label className="text-[0.72rem] font-black text-[var(--primary)] uppercase tracking-wide flex items-center gap-1.5">
             <span>✨ Novo Campo Personalizado</span>
           </label>
           <div className="flex flex-wrap gap-2">
@@ -336,7 +336,7 @@ export default function FieldVisibilityPanel(props: Props) {
                 }
               }}
               placeholder="Ex: Odômetro, Chassi..."
-              className={`${inputClasses} flex-1 basis-[min(160px,100%)] px-3 py-2 text-[0.82rem] bg-[var(--card-bg-solid)] border-slate-700 text-slate-100 placeholder:text-slate-500 rounded-xl focus:border-sky-400`}
+              className={`${inputClasses} flex-1 basis-[min(160px,100%)] px-3 py-2 text-[0.82rem] bg-[var(--card-bg-solid)] border-[var(--card-border)] text-[var(--text-main)] placeholder:text-[var(--text-muted)] rounded-xl focus:border-sky-400`}
             />
             <button
               type="button"
@@ -346,8 +346,8 @@ export default function FieldVisibilityPanel(props: Props) {
                 rounded-xl px-4 py-2 text-[0.78rem] font-black transition-all flex items-center justify-center gap-1 shrink-0 shadow-md
                 ${
                   newFieldName.trim()
-                    ? 'bg-sky-500 hover:bg-sky-400 text-slate-950 cursor-pointer active:scale-95 shadow-sky-500/25'
-                    : 'bg-slate-800 text-slate-600 border border-slate-700/50 cursor-not-allowed'
+                    ? 'bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-slate-950 cursor-pointer active:scale-95 shadow-[var(--primary-glow)]'
+                    : 'bg-slate-800 text-slate-600 border border-[var(--card-border)]/50 cursor-not-allowed'
                 }
               `}
             >
@@ -359,8 +359,8 @@ export default function FieldVisibilityPanel(props: Props) {
         {/* Custom Fields List */}
         {customFieldDefs.length === 0 ? (
           <div className="text-center py-8 border border-dashed border-[var(--card-border)] rounded-2xl bg-slate-900/30">
-            <p className="text-[0.8rem] text-slate-300 font-bold">Nenhum campo personalizado cadastrado.</p>
-            <p className="text-[0.7rem] text-slate-500 mt-1">Adicione novos campos personalizados acima para adaptar a vistoria ao fluxo da sua empresa.</p>
+            <p className="text-[0.8rem] text-[var(--text-main)] font-bold">Nenhum campo personalizado cadastrado.</p>
+            <p className="text-[0.7rem] text-[var(--text-muted)] mt-1">Adicione novos campos personalizados acima para adaptar a vistoria ao fluxo da sua empresa.</p>
           </div>
         ) : (
           <div className={`grid gap-2 pr-1 custom-scrollbar min-h-0 ${isModal ? 'grid-cols-1 md:grid-cols-2 max-h-[50vh] overflow-y-auto' : 'flex-1 overflow-y-auto content-start'}`}>
@@ -403,18 +403,18 @@ export default function FieldVisibilityPanel(props: Props) {
                     animateDragEnd(itemRefs.current[d.id])
                   }}
                   className={`
-                    flex items-center gap-2 p-2 rounded-xl border transition-all duration-150 group touch-none select-none min-w-0 bg-slate-900/80 border-[var(--card-border)] hover:border-slate-700
+                    flex items-center gap-2 p-2 rounded-xl border transition-all duration-150 group touch-none select-none min-w-0 bg-[var(--card-bg-solid)] border-[var(--card-border)] hover:border-[var(--card-border)]
                     ${
                       isDragging
-                        ? 'opacity-40 bg-sky-500/20 border-sky-400 scale-[0.98]'
+                        ? 'opacity-40 bg-[var(--primary)]/20 border-sky-400 scale-[0.98]'
                         : isOver
-                        ? 'bg-sky-500/25 border-sky-400 ring-2 ring-sky-400/50 scale-[1.01]'
+                        ? 'bg-[var(--primary)]/25 border-sky-400 ring-2 ring-sky-400/50 scale-[1.01]'
                         : ''
                     }
                   `}
                 >
                   <div
-                    className="w-5 h-9 flex items-center justify-center text-slate-500 group-hover:text-sky-400 cursor-grab active:cursor-grabbing shrink-0 text-lg font-mono transition-colors rounded-lg hover:bg-sky-500/10"
+                    className="w-5 h-9 flex items-center justify-center text-[var(--text-muted)] group-hover:text-[var(--primary)] cursor-grab active:cursor-grabbing shrink-0 text-lg font-mono transition-colors rounded-lg hover:bg-[var(--primary)]/10"
                     title="Segure e arraste com o dedo ou mouse"
                   >
                     ⠿
@@ -438,24 +438,24 @@ export default function FieldVisibilityPanel(props: Props) {
                         onRenameCustomField(d.id, editingCustomLabel)
                         setEditingCustomId(null)
                       }}
-                      className="flex-1 px-2 py-1 text-[0.82rem] bg-slate-950 border border-sky-400/60 rounded-lg text-slate-100 outline-none focus:ring-2 ring-sky-400/40"
+                      className="flex-1 px-2 py-1 text-[0.82rem] bg-[var(--bg-main)] border border-[var(--primary)]/60 rounded-lg text-[var(--text-main)] outline-none focus:ring-2 ring-sky-400/40"
                       aria-label={`Renomear ${d.label}`}
                     />
                   ) : (
-                    <span className="field-mgr-label flex-1 text-[0.82rem] text-slate-100 font-bold truncate">
+                    <span className="field-mgr-label flex-1 text-[0.82rem] text-[var(--text-main)] font-bold truncate">
                       {d.label}
                     </span>
                   )}
 
                   <div className="flex items-center gap-1 shrink-0">
-                    <div className="inline-flex rounded-lg border border-slate-700/60 overflow-hidden divide-x divide-slate-700/60 shrink-0">
+                    <div className="inline-flex rounded-lg border border-[var(--card-border)]/60 overflow-hidden divide-x divide-[var(--card-border)] shrink-0">
                       <button
                         type="button"
                         onClick={() => onMoveCustomField(d.id, -1)}
                         disabled={i === 0}
                         title="Mover para cima"
                         aria-label={`Mover ${d.label} para cima`}
-                        className="bg-slate-800/90 hover:bg-sky-500/30 text-sky-300 w-9 h-9 flex items-center justify-center text-sm font-bold transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+                        className="bg-[var(--card-bg)] hover:bg-[var(--primary)]/30 text-[var(--primary)] w-9 h-9 flex items-center justify-center text-sm font-bold transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
                       >
                         ↑
                       </button>
@@ -465,7 +465,7 @@ export default function FieldVisibilityPanel(props: Props) {
                         disabled={i === customFieldDefs.length - 1}
                         title="Mover para baixo"
                         aria-label={`Mover ${d.label} para baixo`}
-                        className="bg-slate-800/90 hover:bg-sky-500/30 text-sky-300 w-9 h-9 flex items-center justify-center text-sm font-bold transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
+                        className="bg-[var(--card-bg)] hover:bg-[var(--primary)]/30 text-[var(--primary)] w-9 h-9 flex items-center justify-center text-sm font-bold transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
                       >
                         ↓
                       </button>
@@ -479,7 +479,7 @@ export default function FieldVisibilityPanel(props: Props) {
                       }}
                       title="Renomear campo"
                       aria-label={`Renomear ${d.label}`}
-                      className="w-9 h-9 flex items-center justify-center rounded-lg text-sky-400 hover:bg-sky-500/20 hover:text-sky-300 transition-colors border border-transparent hover:border-sky-500/30 shrink-0"
+                      className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--primary)] hover:bg-[var(--primary)]/20 hover:text-[var(--primary)] transition-colors border border-transparent hover:border-[var(--primary)]/30 shrink-0"
                     >
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                         <path d="M12 20h9" />
@@ -500,7 +500,7 @@ export default function FieldVisibilityPanel(props: Props) {
                       }}
                       title="Excluir campo"
                       aria-label={`Excluir ${d.label}`}
-                      className="w-9 h-9 flex items-center justify-center rounded-lg text-rose-400 hover:bg-rose-500/20 hover:text-rose-300 transition-colors border border-transparent hover:border-rose-500/30 shrink-0"
+                      className="w-9 h-9 flex items-center justify-center rounded-lg text-[var(--severity-high)] hover:bg-[var(--severity-high)]/20 hover:text-[var(--severity-high)] transition-colors border border-transparent hover:border-[var(--severity-high)]/30 shrink-0"
                     >
                       <TrashIcon />
                     </button>
@@ -523,20 +523,20 @@ export default function FieldVisibilityPanel(props: Props) {
         className={`
           ${
             anyHidden
-              ? 'bg-sky-500/20 border-sky-500/60 text-sky-300 shadow-[0_0_15px_rgba(14,165,233,0.3)] ring-1 ring-sky-400/40'
-              : 'bg-slate-900/80 border-slate-700/60 text-slate-300 hover:bg-slate-800 hover:text-white hover:border-slate-600'
+              ? 'bg-[var(--primary)]/20 border-sky-500/60 text-[var(--primary)] shadow-[0_0_15px_rgba(14,165,233,0.3)] ring-1 ring-sky-400/40'
+              : 'bg-[var(--card-bg-solid)] border-[var(--card-border)]/60 text-[var(--text-main)] hover:bg-[var(--color-hover)] hover:text-white hover:border-slate-600'
           }
           border rounded-xl px-3.5 py-2 cursor-pointer font-bold text-[0.78rem] flex items-center gap-2 backdrop-blur-md transition-all shadow-md active:scale-95
         `}
       >
-        <IconSettings size={15} className={anyHidden ? 'text-sky-400 animate-spin-slow' : 'text-slate-400'} />
+        <IconSettings size={15} className={anyHidden ? 'text-[var(--primary)] animate-spin-slow' : 'text-[var(--text-muted)]'} />
         <span>Campos</span>
         {anyHidden ? (
-          <span className="bg-sky-500/30 text-sky-200 px-1.5 py-0.5 rounded-full text-[0.68rem] font-extrabold border border-sky-400/40">
+          <span className="bg-[var(--primary)]/30 text-[var(--primary-hover)] px-1.5 py-0.5 rounded-full text-[0.68rem] font-extrabold border border-sky-400/40">
             {hiddenCount} oculto{hiddenCount > 1 ? 's' : ''}
           </span>
         ) : (
-          <span className="text-[0.68rem] text-slate-500 font-semibold">({totalStandard})</span>
+          <span className="text-[0.68rem] text-[var(--text-muted)] font-semibold">({totalStandard})</span>
         )}
       </button>
 
@@ -546,7 +546,7 @@ export default function FieldVisibilityPanel(props: Props) {
           <>
             {/* Backdrop só no mobile, para fechar tocando fora */}
             <div
-              className="fixed inset-0 z-[99991] bg-slate-950/60 backdrop-blur-sm sm:hidden"
+              className="fixed inset-0 z-[99991] bg-[var(--bg-main)]/60 backdrop-blur-sm sm:hidden"
               onClick={onToggleOpen}
               aria-hidden="true"
             />
@@ -555,7 +555,7 @@ export default function FieldVisibilityPanel(props: Props) {
               fixed inset-x-0 bottom-0 z-[99992] w-full max-h-[85dvh] rounded-t-2xl rounded-b-none border-x-0 border-b-0
                             sm:absolute sm:inset-auto sm:top-[calc(100%+10px)] sm:right-0 sm:bottom-auto sm:z-[600] sm:w-[365px] sm:max-h-[min(70vh,560px)] sm:[max-height:min(70vh,560px,calc(100vh-var(--fm-top,0px)-1.5rem))] sm:rounded-2xl sm:border sm:overflow-hidden
               flex flex-col
-              bg-slate-950/98 border border-sky-500/30 p-4 shadow-[0_-10px_50px_rgba(0,0,0,0.8)] sm:shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-2xl ring-1 ring-white/10 animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200"
+              bg-[var(--bg-main)] border border-[var(--primary)]/30 p-4 shadow-[0_-10px_50px_rgba(0,0,0,0.8)] sm:shadow-[0_20px_50px_rgba(0,0,0,0.8)] backdrop-blur-2xl ring-1 ring-white/10 animate-in fade-in slide-in-from-bottom-4 sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200"
           >
             {/* Grabber visual do bottom sheet (mobile) */}
             <div className="mx-auto mb-2 h-1 w-10 rounded-full bg-slate-700 sm:hidden shrink-0" aria-hidden="true" />
@@ -563,10 +563,10 @@ export default function FieldVisibilityPanel(props: Props) {
             {/* Header */}
             <div className="flex items-start justify-between gap-2 pb-3 mb-3 border-b border-[var(--card-border)]/80 shrink-0">
               <div className="min-w-0">
-                <div className="text-[0.82rem] font-black text-sky-400 tracking-wide uppercase flex items-center gap-1.5">
+                <div className="text-[0.82rem] font-black text-[var(--primary)] tracking-wide uppercase flex items-center gap-1.5">
                   <span className="truncate">⚙️ Gerenciar Campos</span>
                 </div>
-                <p className="text-[0.68rem] text-slate-400 font-medium mt-0.5 select-none">
+                <p className="text-[0.68rem] text-[var(--text-muted)] font-medium mt-0.5 select-none">
                   Segure no <span className="text-slate-200 font-bold">⠿</span> para arrastar
                 </p>
               </div>
@@ -579,7 +579,7 @@ export default function FieldVisibilityPanel(props: Props) {
                     onToggleOpen()
                     setIsFullModalOpen(true)
                   }}
-                  className="hidden sm:flex bg-sky-500/15 hover:bg-sky-500/30 border border-sky-500/40 text-sky-300 rounded-xl px-2.5 py-1 text-[0.68rem] font-extrabold transition-all items-center gap-1 cursor-pointer active:scale-95"
+                  className="hidden sm:flex bg-[var(--primary)]/15 hover:bg-[var(--primary)]/30 border border-[var(--primary)]/40 text-[var(--primary)] rounded-xl px-2.5 py-1 text-[0.68rem] font-extrabold transition-all items-center gap-1 cursor-pointer active:scale-95"
                   title="Abrir gerenciador em tela inteira"
                 >
                   🖥️ Tela Cheia
@@ -589,7 +589,7 @@ export default function FieldVisibilityPanel(props: Props) {
                   type="button"
                   onClick={onToggleOpen}
                   aria-label="Fechar gerenciador de campos"
-                  className="sm:hidden w-9 h-9 flex items-center justify-center rounded-xl border border-slate-700 bg-slate-900 text-slate-300 active:scale-95"
+                  className="sm:hidden w-9 h-9 flex items-center justify-center rounded-xl border border-[var(--card-border)] bg-slate-900 text-[var(--text-main)] active:scale-95"
                 >
                   ✕
                 </button>
@@ -597,18 +597,18 @@ export default function FieldVisibilityPanel(props: Props) {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex bg-slate-900/90 p-1 rounded-xl border border-[var(--card-border)]/80 mb-3 gap-1 select-none shrink-0">
+            <div className="flex bg-[var(--card-bg)] p-1 rounded-xl border border-[var(--card-border)]/80 mb-3 gap-1 select-none shrink-0">
               <button
                 type="button"
                 onClick={() => setActiveTab('standard')}
                 className={`flex-1 min-w-0 py-2 px-2 rounded-lg text-[0.73rem] font-bold transition-all flex items-center justify-center gap-1.5 ${
                   activeTab === 'standard'
-                    ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20 font-black'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-[var(--primary)] text-slate-950 shadow-md shadow-[var(--primary-glow)] font-black'
+                    : 'text-[var(--text-muted)] hover:text-slate-200 hover:bg-[var(--color-hover)]/50'
                 }`}
               >
                 <span className="truncate">📋 Padrão</span>
-                <span className={`px-1.5 rounded-full text-[0.62rem] shrink-0 ${activeTab === 'standard' ? 'bg-slate-950/20 text-slate-950 font-black' : 'bg-slate-800 text-slate-400'}`}>
+                <span className={`px-1.5 rounded-full text-[0.62rem] shrink-0 ${activeTab === 'standard' ? 'bg-[var(--bg-main)]/20 text-slate-950 font-black' : 'bg-slate-800 text-[var(--text-muted)]'}`}>
                   {visibleStandard}/{totalStandard}
                 </span>
               </button>
@@ -618,13 +618,13 @@ export default function FieldVisibilityPanel(props: Props) {
                 onClick={() => setActiveTab('custom')}
                 className={`flex-1 min-w-0 py-2 px-2 rounded-lg text-[0.73rem] font-bold transition-all flex items-center justify-center gap-1.5 ${
                   activeTab === 'custom'
-                    ? 'bg-sky-500 text-slate-950 shadow-md shadow-sky-500/20 font-black'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ? 'bg-[var(--primary)] text-slate-950 shadow-md shadow-[var(--primary-glow)] font-black'
+                    : 'text-[var(--text-muted)] hover:text-slate-200 hover:bg-[var(--color-hover)]/50'
                 }`}
               >
                 <span className="truncate">✨ Personalizados</span>
                 {customFieldDefs.length > 0 && (
-                  <span className={`px-1.5 rounded-full text-[0.62rem] shrink-0 ${activeTab === 'custom' ? 'bg-slate-950/20 text-slate-950 font-black' : 'bg-slate-800 text-slate-400'}`}>
+                  <span className={`px-1.5 rounded-full text-[0.62rem] shrink-0 ${activeTab === 'custom' ? 'bg-[var(--bg-main)]/20 text-slate-950 font-black' : 'bg-slate-800 text-[var(--text-muted)]'}`}>
                     {customFieldDefs.length}
                   </span>
                 )}
@@ -639,7 +639,7 @@ export default function FieldVisibilityPanel(props: Props) {
               <button
                 type="button"
                 onClick={onToggleOpen}
-                className="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-black py-2.5 rounded-xl text-[0.8rem] transition-all shadow-lg shadow-sky-500/20 active:scale-95"
+                className="w-full bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-slate-950 font-black py-2.5 rounded-xl text-[0.8rem] transition-all shadow-lg shadow-[var(--primary-glow)] active:scale-95"
               >
                 Concluído
               </button>
@@ -656,37 +656,42 @@ export default function FieldVisibilityPanel(props: Props) {
 
       {/* Large Modal / Full Page Drawer */}
       {isFullModalOpen && (
-        <div className="fixed inset-0 z-[999] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
-          <div className="field-manager-panel w-full max-w-4xl max-h-[90vh] bg-slate-950 border border-sky-500/30 rounded-2xl p-6 shadow-[0_25px_60px_rgba(0,0,0,0.9)] ring-1 ring-white/10 flex flex-col space-y-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Gerenciador de Campos em Tela Cheia"
+          className="fixed inset-0 z-[999] bg-[var(--bg-main)]/85 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200"
+        >
+          <div className="field-manager-panel w-full max-w-4xl max-h-[90vh] bg-[var(--bg-main)] border border-[var(--primary)]/30 rounded-2xl p-6 shadow-[0_25px_60px_rgba(0,0,0,0.9)] ring-1 ring-white/10 flex flex-col space-y-4">
             
             {/* Modal Header */}
             <div className="flex items-center justify-between pb-4 border-b border-[var(--card-border)]/80">
               <div>
                 <h2 className="text-xl font-black text-white tracking-wide flex items-center gap-2">
-                  <span className="text-sky-400">⚙️ Gerenciador de Campos em Tela Cheia</span>
+                  <span className="text-[var(--primary)]">⚙️ Gerenciador de Campos em Tela Cheia</span>
                 </h2>
-                <p className="text-xs text-slate-400 mt-1">
-                  Segure com o dedo no celular ou clique e arraste com o mouse nos ícones <span className="text-sky-300 font-bold">⠿</span> para organizar a ordem.
+                <p className="text-xs text-[var(--text-muted)] mt-1">
+                  Segure com o dedo no celular ou clique e arraste com o mouse nos ícones <span className="text-[var(--primary)] font-bold">⠿</span> para organizar a ordem.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsFullModalOpen(false)}
-                className="bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                className="bg-slate-900 hover:bg-[var(--color-hover)] border border-[var(--card-border)] text-[var(--text-main)] hover:text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer"
               >
                 ✕ Concluído
               </button>
             </div>
 
             {/* Modal Tabs */}
-            <div className="flex bg-slate-900/90 p-1.5 rounded-2xl border border-[var(--card-border)]/80 gap-2 max-w-md">
+            <div className="flex bg-[var(--card-bg)] p-1.5 rounded-2xl border border-[var(--card-border)]/80 gap-2 max-w-md">
               <button
                 type="button"
                 onClick={() => setActiveTab('standard')}
                 className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   activeTab === 'standard'
-                    ? 'bg-sky-500 text-slate-950 font-black shadow-lg shadow-sky-500/25'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-[var(--primary)] text-slate-950 font-black shadow-lg shadow-[var(--primary-glow)]'
+                    : 'text-[var(--text-muted)] hover:text-slate-200'
                 }`}
               >
                 <span>📋 Campos Padrão ({visibleStandard}/{totalStandard})</span>
@@ -697,8 +702,8 @@ export default function FieldVisibilityPanel(props: Props) {
                 onClick={() => setActiveTab('custom')}
                 className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
                   activeTab === 'custom'
-                    ? 'bg-sky-500 text-slate-950 font-black shadow-lg shadow-sky-500/25'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-[var(--primary)] text-slate-950 font-black shadow-lg shadow-[var(--primary-glow)]'
+                    : 'text-[var(--text-muted)] hover:text-slate-200'
                 }`}
               >
                 <span>✨ Personalizados ({customFieldDefs.length})</span>
@@ -715,7 +720,7 @@ export default function FieldVisibilityPanel(props: Props) {
               <button
                 type="button"
                 onClick={() => setIsFullModalOpen(false)}
-                className="bg-sky-500 hover:bg-sky-400 text-slate-950 font-black px-6 py-2.5 rounded-xl text-xs transition-all shadow-lg shadow-sky-500/20 active:scale-95 cursor-pointer"
+                className="bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-slate-950 font-black px-6 py-2.5 rounded-xl text-xs transition-all shadow-lg shadow-[var(--primary-glow)] active:scale-95 cursor-pointer"
               >
                 Salvar e Voltar para a Vistoria
               </button>
