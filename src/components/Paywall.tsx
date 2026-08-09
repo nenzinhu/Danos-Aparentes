@@ -39,7 +39,7 @@ export default function Paywall({ status, onSignOut }: Props) {
       <div
         ref={cardRef}
         tabIndex={-1}
-        className="w-full max-w-md rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-8 text-center shadow-[var(--glass-shadow)] backdrop-blur-xl"
+        className="w-full max-w-md rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-8 text-center shadow-[var(--glass-shadow)] backdrop-blur-xl"
       >
         <div aria-hidden className="text-4xl mb-3">{status === 'past_due' ? '⚠️' : '⏳'}</div>
         <h1 id="paywall-title" className="text-xl font-extrabold text-[var(--text-main)] mb-3">

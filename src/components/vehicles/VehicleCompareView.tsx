@@ -33,7 +33,7 @@ function categoryPill(cat: ComparisonItem['category']) {
     case 'severityChanged':
       return <span className={`${base} bg-amber-500/15 text-amber-300 border border-amber-500/30`}>Alterado</span>
     case 'removedOrRepaired':
-      return <span className={`${base} bg-violet-500/15 text-violet-300 border border-violet-500/30`}>Não identificado</span>
+      return <span className={`${base} bg-[var(--primary)]/15 text-violet-300 border border-[var(--primary)]/30`}>Não identificado</span>
     case 'uncertain':
       return <span className={`${base} bg-orange-500/15 text-orange-300 border border-orange-500/30`}>Incerto</span>
   }
@@ -506,7 +506,7 @@ export default function VehicleCompareView({
                           type="button"
                           disabled={aiBusyKey === item.identityKey}
                           onClick={() => { void askAiSuggest(item) }}
-                          className="px-3 py-2 rounded-lg text-xs font-bold border border-violet-500/30 text-violet-300 hover:bg-violet-500/10 disabled:opacity-50"
+                          className="px-3 py-2 rounded-lg text-xs font-bold border border-[var(--primary)]/30 text-violet-300 hover:bg-violet-500/10 disabled:opacity-50"
                           title="Classifica a foto atual — não cria avaria sozinha"
                         >
                           {aiBusyKey === item.identityKey ? 'IA…' : 'Sugerir (IA)'}

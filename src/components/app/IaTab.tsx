@@ -143,7 +143,7 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
     <div className="w-full flex flex-col gap-6 animate-in fade-in duration-300">
       
       {/* Top Banner / Status */}
-      <div className="bg-slate-900/60 border border-white/5 rounded-2xl p-5 flex flex-wrap justify-between items-center gap-4 backdrop-blur-md">
+      <div className="bg-[var(--card-bg)]/60 border border-white/5 rounded-2xl p-5 flex flex-wrap justify-between items-center gap-4 backdrop-blur-md">
         <div>
           <h3 className="text-base font-extrabold text-white flex items-center gap-2">
             <span className="text-xl">🤖</span> Assistente IA Interativo
@@ -166,7 +166,7 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
       </div>
 
       {/* Main Chat Interface */}
-      <div className="bg-slate-900/40 border border-white/5 rounded-3xl flex flex-col overflow-hidden h-[600px] backdrop-blur-lg">
+      <div className="bg-[var(--panel-bg)] border border-white/5 rounded-2xl flex flex-col overflow-hidden h-[600px] backdrop-blur-lg">
         
         {/* Messages List */}
         <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar-thin scrollbar-thumb-white/5 scrollbar-track-transparent">
@@ -244,7 +244,7 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
         </div>
 
         {/* Ações do painel */}
-        <div className="px-6 py-3 bg-slate-900/60 border-t border-white/5 flex flex-wrap gap-2 items-center">
+        <div className="px-6 py-3 bg-[var(--card-bg)]/60 border-t border-white/5 flex flex-wrap gap-2 items-center">
           <span className="text-[10px] font-mono-data text-slate-500 mr-2">AÇÕES:</span>
           <button
             onClick={() => handleQuickAction('diagnostic')}

@@ -363,7 +363,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
         {onToggleCollapse && (
           <button
             onClick={onToggleCollapse}
-            className="bg-sky-500/10 border border-sky-500/20 rounded-lg px-3.5 py-1.5 cursor-pointer text-[var(--primary)] font-bold text-[0.75rem] hover:bg-sky-500/20 transition-colors inline-flex items-center gap-1"
+            className="bg-sky-500/10 border border-[var(--primary)]/20 rounded-lg px-3.5 py-1.5 cursor-pointer text-[var(--primary)] font-bold text-[0.75rem] hover:bg-sky-500/20 transition-colors inline-flex items-center gap-1"
           >
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 4l4 4 4-4"/></svg>
             Expandir
@@ -435,7 +435,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
           {onToggleCollapse && (
             <button
               onClick={onToggleCollapse}
-              className="bg-sky-500/10 border border-sky-500/20 rounded-lg px-3 py-1.5 cursor-pointer text-slate-400 font-bold text-[0.75rem] hover:bg-sky-500/20 transition-colors backdrop-blur-sm inline-flex items-center gap-1"
+              className="bg-sky-500/10 border border-[var(--primary)]/20 rounded-lg px-3 py-1.5 cursor-pointer text-slate-400 font-bold text-[0.75rem] hover:bg-sky-500/20 transition-colors backdrop-blur-sm inline-flex items-center gap-1"
             >
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 8l4-4 4 4"/></svg>
               Minimizar

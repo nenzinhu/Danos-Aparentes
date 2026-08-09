@@ -9,7 +9,7 @@ import type { DamageType, Severity } from '../types'
 const ThreeDamageCanvas = dynamic(() => import('./ThreeDamageCanvas'), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center rounded-3xl border border-slate-800 bg-slate-950/90" style={{ width: 244, height: 210 }}>
+    <div className="flex items-center justify-center rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg-solid)]" style={{ width: 244, height: 210 }}>
       <span className="text-xs text-slate-500">Carregando 3D…</span>
     </div>
   ),
@@ -73,20 +73,20 @@ export default function DamageProfileCard({
   const borderClass = isScratch
     ? isSelected
       ? 'border-emerald-500 ring-4 ring-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.4)] scale-105'
-      : 'border-slate-800 hover:border-emerald-500/50'
+      : 'border-[var(--card-border)] hover:border-emerald-500/50'
     : isDent
     ? isSelected
       ? 'border-amber-500 ring-4 ring-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.4)] scale-105'
-      : 'border-slate-800 hover:border-amber-500/50'
+      : 'border-[var(--card-border)] hover:border-amber-500/50'
     : isSelected
     ? 'border-rose-500 ring-4 ring-rose-500/30 shadow-[0_0_30px_rgba(244,63,94,0.4)] scale-105'
-    : 'border-slate-800 hover:border-rose-500/50'
+    : 'border-[var(--card-border)] hover:border-rose-500/50'
 
   return (
     <div
       onClick={onClick}
       className={`
-        relative flex flex-col items-center justify-center p-1.5 rounded-3xl border-2 overflow-hidden transition-all duration-300 cursor-pointer select-none bg-slate-950/90 shadow-2xl group
+        relative flex flex-col items-center justify-center p-1.5 rounded-2xl border-2 overflow-hidden transition-all duration-300 cursor-pointer select-none bg-[var(--card-bg-solid)] shadow-2xl group
         ${borderClass}
         ${className}
       `}

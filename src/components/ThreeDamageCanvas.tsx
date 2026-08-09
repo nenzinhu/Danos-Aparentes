@@ -308,7 +308,7 @@ export default function ThreeDamageCanvas({
 
   return (
     <div
-      className={`relative flex flex-col items-center justify-between p-3 rounded-3xl border border-slate-800 bg-slate-950/90 shadow-2xl backdrop-blur-xl select-none group ${className}`}
+      className={`relative flex flex-col items-center justify-between p-3 rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] shadow-2xl backdrop-blur-xl select-none group ${className}`}
       style={{ width: `${width + 24}px` }}
     >
       {/* Top Pill Badge */}

@@ -17,7 +17,7 @@ function StepVisual({ step }: { step: ManualStep }) {
         {step.images.map((img) => (
           <div
             key={img.src}
-            className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-slate-900/60 border border-white/5"
+            className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-[var(--card-bg)]/60 border border-white/5"
           >
             <Image
               src={img.src}
@@ -147,8 +147,8 @@ export default function FeaturesSlidesModal({ isOpen, onClose }: FeaturesSlidesM
 
   return (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="w-full max-w-3xl bg-slate-900/95 border border-sky-500/20 rounded-3xl overflow-hidden shadow-2xl shadow-sky-950/40 flex flex-col relative max-h-[92vh] animate-in zoom-in-95 slide-in-from-bottom-4 duration-300">
-        <div className="h-1 w-full bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 shrink-0" />
+      <div className="w-full max-w-3xl bg-[var(--card-bg)]/95 border border-[var(--primary)]/20 rounded-2xl overflow-hidden shadow-2xl shadow-[var(--glass-shadow)] flex flex-col relative max-h-[92vh] animate-in zoom-in-95 slide-in-from-bottom-4 duration-300">
+        <div className="h-1 w-full bg-gradient-to-r from-[var(--primary)] via-[var(--primary-hover)] to-[var(--signal)] shrink-0" />
 
         <div className="px-5 sm:px-7 pt-5 pb-2 border-b border-white/5 shrink-0">
           <div className="flex items-start justify-between gap-4">
@@ -177,7 +177,7 @@ export default function FeaturesSlidesModal({ isOpen, onClose }: FeaturesSlidesM
           className="flex-1 overflow-y-auto min-h-0 px-5 sm:px-7 py-5 animate-in fade-in slide-in-from-right-3 duration-200 motion-reduce:animate-none"
         >
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] gap-5 items-start">
-            <div className="relative rounded-2xl border border-sky-500/20 bg-gradient-to-b from-slate-950/80 to-slate-950/40 p-4 sm:p-5 overflow-hidden shadow-inner">
+            <div className="relative rounded-2xl border border-[var(--primary)]/20 bg-gradient-to-b from-slate-950/80 to-slate-950/40 p-4 sm:p-5 overflow-hidden shadow-inner">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(14,165,233,0.1)_0%,transparent_55%)] pointer-events-none" />
               <StepVisual step={step} />
               <p className="relative mt-3 text-xs text-slate-400 leading-relaxed font-outfit border-t border-white/5 pt-3">
@@ -189,10 +189,10 @@ export default function FeaturesSlidesModal({ isOpen, onClose }: FeaturesSlidesM
               {step.highlights.map((h, i) => (
                 <div
                   key={i}
-                  className="flex gap-3 p-3 rounded-xl bg-slate-950/50 border border-white/5 hover:border-sky-500/20 transition-colors"
+                  className="flex gap-3 p-3 rounded-xl bg-slate-950/50 border border-white/5 hover:border-[var(--primary)]/20 transition-colors"
                 >
                   <span
-                    className="w-9 h-9 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center shrink-0"
+                    className="w-9 h-9 rounded-lg bg-sky-500/10 border border-[var(--primary)]/20 flex items-center justify-center shrink-0"
                     aria-hidden
                   >
                     <svg

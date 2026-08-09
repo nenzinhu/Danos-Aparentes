@@ -539,10 +539,10 @@ export const CATEGORY_STYLE: Record<
   },
   ia: {
     label: 'IA',
-    badge: 'bg-violet-500/15 text-violet-300 border-violet-500/30',
+    badge: 'bg-[var(--primary)]/15 text-violet-300 border-[var(--primary)]/30',
     dot: 'bg-violet-400',
     ring: 'ring-violet-500/20',
-    iconBg: 'bg-violet-500/15 text-violet-300',
+    iconBg: 'bg-[var(--primary)]/15 text-violet-300',
   },
   comparacao: {
     label: 'Comparação',

@@ -79,7 +79,7 @@ export function OperationTypeToggle({
         className={`${base} ${
           value === 'entrada'
             ? 'border-emerald-400/60 bg-emerald-500/15 text-emerald-300'
-            : 'border-white/10 bg-slate-900/60 text-[var(--text-muted)] hover:bg-slate-800'
+            : 'border-white/10 bg-[var(--card-bg)]/60 text-[var(--text-muted)] hover:bg-slate-800'
         }`}
       >
         <EntradaIcon size={18} />
@@ -92,7 +92,7 @@ export function OperationTypeToggle({
         className={`${base} ${
           value === 'retorno'
             ? 'border-sky-400/60 bg-sky-500/15 text-sky-300'
-            : 'border-white/10 bg-slate-900/60 text-[var(--text-muted)] hover:bg-slate-800'
+            : 'border-white/10 bg-[var(--card-bg)]/60 text-[var(--text-muted)] hover:bg-slate-800'
         }`}
       >
         <SaidaIcon size={18} />

@@ -24,7 +24,7 @@ const STEPS = [
     text: 'Na aba Dossiê Técnico, revise os danos, capture a localização e colete as assinaturas.',
   },
   {
-    icon: <IconDocument size={20} className="text-purple-400" />,
+    icon: <IconDocument size={20} className="text-[var(--primary)]" />,
     title: 'Emita o dossiê técnico',
     text: 'Exporte o dossiê com hash, QR Code e GPS. Nova versão do histórico do veículo.',
   },
@@ -48,7 +48,7 @@ export default function InspectionCoachMarks({ isOpen, onClose }: Props) {
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex items-center gap-2">
-          <span className="shrink-0 p-1.5 rounded-lg bg-sky-500/10 border border-sky-500/20">{current.icon}</span>
+          <span className="shrink-0 p-1.5 rounded-lg bg-sky-500/10 border border-[var(--primary)]/20">{current.icon}</span>
           <span className="font-outfit font-extrabold text-sm text-[var(--text-main)]">{current.title}</span>
         </div>
         <button

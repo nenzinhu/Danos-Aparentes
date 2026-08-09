@@ -295,7 +295,7 @@ function PlanCard({
         <div
           ref={glowRef}
           aria-hidden
-          className="absolute -inset-3 rounded-3xl bg-[var(--primary)] blur-2xl opacity-0 -z-10 pointer-events-none"
+          className="absolute -inset-3 rounded-2xl bg-[var(--primary)] blur-2xl opacity-0 -z-10 pointer-events-none"
         />
       )}
       <div

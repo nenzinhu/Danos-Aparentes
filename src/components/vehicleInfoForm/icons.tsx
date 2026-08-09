@@ -39,7 +39,7 @@ export function InspectionDataIcon({ size = 16 }: { size?: number }) {
 export function Chip({ icon, label, color }: { icon: string; label: string; color: string }) {
   const colorClasses: Record<string, string> = {
     sky: 'bg-sky-500/15 border-sky-500/30 text-sky-400',
-    violet: 'bg-violet-500/15 border-violet-500/30 text-violet-400',
+    violet: 'bg-[var(--primary)]/15 border-[var(--primary)]/30 text-[var(--signal)]',
     orange: 'bg-orange-500/15 border-orange-500/30 text-orange-400',
     green: 'bg-green-500/15 border-green-500/30 text-green-400',
   }

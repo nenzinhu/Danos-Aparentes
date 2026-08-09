@@ -88,7 +88,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full" aria-hidden="true" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-600/10 blur-[120px] rounded-full" aria-hidden="true" />
 
-      <div className="w-full max-w-md bg-slate-900/60 border border-slate-800 rounded-3xl p-8 backdrop-blur-2xl shadow-2xl relative z-10">
+      <div className="w-full max-w-md bg-[var(--card-bg)]/60 border border-[var(--card-border)] rounded-2xl p-8 backdrop-blur-2xl shadow-2xl relative z-10">
         <div className="flex justify-center mb-8">
           <div className="p-3 bg-slate-800/50 rounded-2xl border border-slate-700/50 shadow-inner">
             <Logo size={42} textClassName="text-slate-100" />
@@ -119,7 +119,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
               required
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full bg-slate-950/50 border border-slate-800 text-slate-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-slate-600"
+              className="w-full bg-slate-950/50 border border-[var(--card-border)] text-slate-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-slate-600"
             />
           </div>
 
@@ -147,7 +147,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
                 minLength={6}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full bg-slate-950/50 border border-slate-800 text-slate-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-slate-600"
+                className="w-full bg-slate-950/50 border border-[var(--card-border)] text-slate-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-slate-600"
               />
             </div>
           )}
@@ -175,7 +175,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
           </button>
         </form>
 
-        <nav className="mt-8 pt-6 border-t border-slate-800 flex justify-center text-sm font-medium" aria-label="Alternar modo de autenticação">
+        <nav className="mt-8 pt-6 border-t border-[var(--card-border)] flex justify-center text-sm font-medium" aria-label="Alternar modo de autenticação">
           {mode === 'login' ? (
             <p className="text-slate-400">
               Não tem uma conta?{' '}

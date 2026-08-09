@@ -57,7 +57,7 @@ export default function PdfPreviewSection() {
                 ✕ Fechar [Esc]
               </button>
             </div>
-            <div className="bg-slate-950 p-2 sm:p-4 rounded-b-xl border border-slate-800 w-full flex justify-center">
+            <div className="bg-slate-950 p-2 sm:p-4 rounded-b-xl border border-[var(--card-border)] w-full flex justify-center">
               <Image
                 src={selectedImage}
                 alt="Visualização ampliada do laudo de vistoria"
@@ -172,7 +172,7 @@ export default function PdfPreviewSection() {
                   />
                   {/* Badge Overlay */}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-                    <span className="px-4 py-2 bg-slate-950/90 text-white font-bold text-xs rounded-xl border border-slate-700 shadow-2xl flex items-center gap-2">
+                    <span className="px-4 py-2 bg-[var(--card-bg-solid)] text-white font-bold text-xs rounded-xl border border-slate-700 shadow-2xl flex items-center gap-2">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
                       Clique para expandir em HD
                     </span>

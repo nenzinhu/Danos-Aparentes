@@ -39,7 +39,7 @@ export default function TermosPage() {
 
         <h1 className="text-2xl font-extrabold mb-6">Termos de Uso</h1>
 
-        <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+        <div className="bg-[var(--card-bg)]/60 border border-[var(--card-border)] rounded-2xl p-6 shadow-2xl">
           <LegalContent doc="terms" />
         </div>
       </div>

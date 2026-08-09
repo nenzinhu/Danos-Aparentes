@@ -384,7 +384,7 @@ export default function VehicleDetailView({
           onClick={() => {
             void handleHydrate()
           }}
-          className="px-4 py-2.5 rounded-xl text-xs font-bold border border-violet-500/30 text-violet-300 hover:bg-violet-500/10 disabled:opacity-50 transition-colors duration-200"
+          className="px-4 py-2.5 rounded-xl text-xs font-bold border border-[var(--primary)]/30 text-violet-300 hover:bg-violet-500/10 disabled:opacity-50 transition-colors duration-200"
           title="Baixa dossiês completos da nuvem para este dispositivo"
         >
           {hydrateBusy ? 'Sincronizando…' : 'Sincronizar histórico'}

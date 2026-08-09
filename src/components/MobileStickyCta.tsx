@@ -32,7 +32,7 @@ export default function MobileStickyCta({
   if (!showSticky) return null
 
   return (
-    <div className="md:hidden fixed bottom-0 inset-x-0 z-[99980] p-3 bg-slate-950/95 border-t border-sky-500/20 backdrop-blur-md pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+    <div className="md:hidden fixed bottom-0 inset-x-0 z-[99980] p-3 bg-slate-950/95 border-t border-[var(--primary)]/20 backdrop-blur-md pb-[max(0.75rem,env(safe-area-inset-bottom))]">
       <LandingCtaLink
         id={`${heroCtaId}-sticky`}
         eventSource={eventSource}

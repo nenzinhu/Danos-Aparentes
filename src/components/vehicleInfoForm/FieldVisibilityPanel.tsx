@@ -257,7 +257,7 @@ export default function FieldVisibilityPanel(props: Props) {
                         : isOver
                         ? 'bg-sky-500/25 border-sky-400 ring-2 ring-sky-400/50 scale-[1.01]'
                         : isVisible
-                        ? 'bg-slate-900/80 border-slate-800 hover:bg-slate-800/90 hover:border-slate-700'
+                        ? 'bg-slate-900/80 border-[var(--card-border)] hover:bg-slate-800/90 hover:border-slate-700'
                         : 'bg-slate-950/50 border-slate-900/80 opacity-55 hover:opacity-90'
                     }
                   `}
@@ -336,7 +336,7 @@ export default function FieldVisibilityPanel(props: Props) {
                 }
               }}
               placeholder="Ex: Odômetro, Chassi..."
-              className={`${inputClasses} flex-1 basis-[min(160px,100%)] px-3 py-2 text-[0.82rem] bg-slate-950/90 border-slate-700 text-slate-100 placeholder:text-slate-500 rounded-xl focus:border-sky-400`}
+              className={`${inputClasses} flex-1 basis-[min(160px,100%)] px-3 py-2 text-[0.82rem] bg-[var(--card-bg-solid)] border-slate-700 text-slate-100 placeholder:text-slate-500 rounded-xl focus:border-sky-400`}
             />
             <button
               type="button"
@@ -358,7 +358,7 @@ export default function FieldVisibilityPanel(props: Props) {
 
         {/* Custom Fields List */}
         {customFieldDefs.length === 0 ? (
-          <div className="text-center py-8 border border-dashed border-slate-800 rounded-2xl bg-slate-900/30">
+          <div className="text-center py-8 border border-dashed border-[var(--card-border)] rounded-2xl bg-slate-900/30">
             <p className="text-[0.8rem] text-slate-300 font-bold">Nenhum campo personalizado cadastrado.</p>
             <p className="text-[0.7rem] text-slate-500 mt-1">Adicione novos campos personalizados acima para adaptar a vistoria ao fluxo da sua empresa.</p>
           </div>
@@ -403,7 +403,7 @@ export default function FieldVisibilityPanel(props: Props) {
                     animateDragEnd(itemRefs.current[d.id])
                   }}
                   className={`
-                    flex items-center gap-2 p-2 rounded-xl border transition-all duration-150 group touch-none select-none min-w-0 bg-slate-900/80 border-slate-800 hover:border-slate-700
+                    flex items-center gap-2 p-2 rounded-xl border transition-all duration-150 group touch-none select-none min-w-0 bg-slate-900/80 border-[var(--card-border)] hover:border-slate-700
                     ${
                       isDragging
                         ? 'opacity-40 bg-sky-500/20 border-sky-400 scale-[0.98]'
@@ -561,7 +561,7 @@ export default function FieldVisibilityPanel(props: Props) {
             <div className="mx-auto mb-2 h-1 w-10 rounded-full bg-slate-700 sm:hidden shrink-0" aria-hidden="true" />
 
             {/* Header */}
-            <div className="flex items-start justify-between gap-2 pb-3 mb-3 border-b border-slate-800/80 shrink-0">
+            <div className="flex items-start justify-between gap-2 pb-3 mb-3 border-b border-[var(--card-border)]/80 shrink-0">
               <div className="min-w-0">
                 <div className="text-[0.82rem] font-black text-sky-400 tracking-wide uppercase flex items-center gap-1.5">
                   <span className="truncate">⚙️ Gerenciar Campos</span>
@@ -597,7 +597,7 @@ export default function FieldVisibilityPanel(props: Props) {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex bg-slate-900/90 p-1 rounded-xl border border-slate-800/80 mb-3 gap-1 select-none shrink-0">
+            <div className="flex bg-slate-900/90 p-1 rounded-xl border border-[var(--card-border)]/80 mb-3 gap-1 select-none shrink-0">
               <button
                 type="button"
                 onClick={() => setActiveTab('standard')}
@@ -635,7 +635,7 @@ export default function FieldVisibilityPanel(props: Props) {
             {renderFieldList(false)}
 
             {/* Ação de fechar fixa no rodapé (mobile) */}
-            <div className="pt-3 mt-3 border-t border-slate-800/80 shrink-0 sm:hidden pb-[env(safe-area-inset-bottom)]">
+            <div className="pt-3 mt-3 border-t border-[var(--card-border)]/80 shrink-0 sm:hidden pb-[env(safe-area-inset-bottom)]">
               <button
                 type="button"
                 onClick={onToggleOpen}
@@ -657,10 +657,10 @@ export default function FieldVisibilityPanel(props: Props) {
       {/* Large Modal / Full Page Drawer */}
       {isFullModalOpen && (
         <div className="fixed inset-0 z-[999] bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
-          <div className="field-manager-panel w-full max-w-4xl max-h-[90vh] bg-slate-950 border border-sky-500/30 rounded-3xl p-6 shadow-[0_25px_60px_rgba(0,0,0,0.9)] ring-1 ring-white/10 flex flex-col space-y-4">
+          <div className="field-manager-panel w-full max-w-4xl max-h-[90vh] bg-slate-950 border border-sky-500/30 rounded-2xl p-6 shadow-[0_25px_60px_rgba(0,0,0,0.9)] ring-1 ring-white/10 flex flex-col space-y-4">
             
             {/* Modal Header */}
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800/80">
+            <div className="flex items-center justify-between pb-4 border-b border-[var(--card-border)]/80">
               <div>
                 <h2 className="text-xl font-black text-white tracking-wide flex items-center gap-2">
                   <span className="text-sky-400">⚙️ Gerenciador de Campos em Tela Cheia</span>
@@ -679,7 +679,7 @@ export default function FieldVisibilityPanel(props: Props) {
             </div>
 
             {/* Modal Tabs */}
-            <div className="flex bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800/80 gap-2 max-w-md">
+            <div className="flex bg-slate-900/90 p-1.5 rounded-2xl border border-[var(--card-border)]/80 gap-2 max-w-md">
               <button
                 type="button"
                 onClick={() => setActiveTab('standard')}
@@ -711,7 +711,7 @@ export default function FieldVisibilityPanel(props: Props) {
             </div>
 
             {/* Modal Footer */}
-            <div className="pt-3 border-t border-slate-800/80 flex justify-end">
+            <div className="pt-3 border-t border-[var(--card-border)]/80 flex justify-end">
               <button
                 type="button"
                 onClick={() => setIsFullModalOpen(false)}

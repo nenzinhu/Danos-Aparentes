@@ -91,7 +91,7 @@ export default function PranchetaRetrabalhoAdsPage() {
           </div>
         </div>
 
-        <section className="mb-8 rounded-3xl border border-[var(--card-border)] bg-[linear-gradient(135deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-6">
+        <section className="mb-8 rounded-2xl border border-[var(--card-border)] bg-[linear-gradient(135deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-6">
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="rounded-2xl border border-[var(--card-border)] bg-black/10 p-4">
               <p className="text-[0.7rem] font-extrabold uppercase tracking-[0.16em] text-[var(--text-muted)]">
@@ -127,7 +127,7 @@ export default function PranchetaRetrabalhoAdsPage() {
           {ADS.map((ad, index) => (
             <article
               key={ad.headline}
-              className="rounded-3xl border border-[var(--card-border)] bg-[var(--card-bg)] p-6 shadow-[0_10px_40px_rgba(0,0,0,0.16)]"
+              className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-6 shadow-[0_10px_40px_rgba(0,0,0,0.16)]"
             >
               <div className="mb-5 flex items-center justify-between gap-3">
                 <span className="inline-flex rounded-full border border-[var(--sheet-line)] px-3 py-1 text-[0.68rem] font-extrabold uppercase tracking-[0.14em] text-[var(--signal-bright)]">

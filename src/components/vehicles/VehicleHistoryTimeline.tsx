@@ -608,7 +608,7 @@ export default function VehicleHistoryTimeline({
                           {item.statusLabel}
                         </span>
                         {item.aiResultLabel && (
-                          <span className="inline-flex rounded-full border border-violet-500/30 bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-200">
+                          <span className="inline-flex rounded-full border border-[var(--primary)]/30 bg-violet-500/10 px-2 py-0.5 text-[10px] font-bold text-violet-200">
                             {item.aiResultLabel}
                           </span>
                         )}

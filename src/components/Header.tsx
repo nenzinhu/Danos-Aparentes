@@ -25,9 +25,9 @@ const PRO_BENEFITS = [
   { icon: <IconDocument className="text-sky-400" size={18} />, title: 'PDF Profissional', desc: 'Laudo com hash SHA-256 e QR Code de autenticidade' },
   { icon: <IconSignature className="text-emerald-400" size={18} />, title: 'Assinatura Digital', desc: 'Vistoriador e cliente assinam na tela do celular' },
   { icon: <IconGps className="text-amber-400" size={18} />, title: '100% Offline', desc: 'Funciona sem internet, sincroniza quando conectar' },
-  { icon: <IconShieldCheck className="text-indigo-400" size={18} />, title: 'Marca Própria', desc: 'Logo e nome da empresa em todos os relatórios' },
+  { icon: <IconShieldCheck className="text-[var(--primary)]" size={18} />, title: 'Marca Própria', desc: 'Logo e nome da empresa em todos os relatórios' },
   { icon: <IconSearch className="text-cyan-400" size={18} />, title: 'Consulta de Placas', desc: 'Preenchimento automático dos dados do veículo' },
-  { icon: <IconTeam className="text-purple-400" size={18} />, title: 'Envio por WhatsApp', desc: 'Compartilhe o laudo em 1 clique diretamente pelo app' },
+  { icon: <IconTeam className="text-[var(--primary)]" size={18} />, title: 'Envio por WhatsApp', desc: 'Compartilhe o laudo em 1 clique diretamente pelo app' },
   { icon: <IconSparkles className="text-pink-400" size={18} />, title: 'Painel de Estatísticas', desc: 'Dashboard com histórico e análise das vistorias' },
   { icon: <IconSparkles className="text-sky-400" size={18} />, title: 'Voz Antoni PT-BR', desc: 'Narração das peças via ElevenLabs em português' },
 ]

@@ -40,7 +40,7 @@ export default function PrivacidadePage() {
 
         <h1 className="text-2xl font-extrabold mb-6">Política de Privacidade</h1>
 
-        <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+        <div className="bg-[var(--card-bg)]/60 border border-[var(--card-border)] rounded-2xl p-6 shadow-2xl">
           <LegalContent doc="privacy" />
         </div>
       </div>

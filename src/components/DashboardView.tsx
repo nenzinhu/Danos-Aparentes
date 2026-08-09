@@ -227,7 +227,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard }
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Análises por IA</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.aiAnalyses}</div>
           <div style={{ fontSize: '0.72rem', color: '#a78bfa', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <IconSparkles size={12} className="text-violet-400" /> Inteligência aplicada
+            <IconSparkles size={12} className="text-[var(--signal)]" /> Inteligência aplicada
           </div>
         </div>
 
