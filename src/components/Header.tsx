@@ -42,12 +42,19 @@ function ProBenefitsButton({
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const btnRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
   const pos = useAnchoredMenu(open, btnRef, 340, 'right')
 
   useEffect(() => {
     if (!open) return
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+      const t = e.target as Node
+      // O menu é renderizado em portal no body (fora do ref). Sem este check,
+      // clicar no botão interno fechava o menu no mousedown e o onClick nunca
+      // disparava (o nó sumia antes do click subir).
+      if (ref.current?.contains(t)) return
+      if (menuRef.current?.contains(t)) return
+      setOpen(false)
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
@@ -76,9 +83,10 @@ function ProBenefitsButton({
         {open && pos && (
           <div
             role="dialog"
-            aria-label="Benefícios do plano"
-            style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
-            className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] shadow-[var(--elevation-hover)] p-4 text-left"
+              aria-label="Benefícios do plano"
+              ref={menuRef}
+              style={{ position: 'fixed', top: pos.top, left: pos.left, width: pos.width, zIndex: 9999 }}
+              className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] shadow-[var(--elevation-hover)] p-4 text-left"
           >
           <p className="ds-label mb-3">Recursos Pro</p>
           <ul className="space-y-2.5 max-h-64 overflow-y-auto">

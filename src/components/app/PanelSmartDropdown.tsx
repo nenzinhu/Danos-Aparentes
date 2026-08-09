@@ -33,7 +33,13 @@ export default function PanelSmartDropdown({ onSelect }: PanelSmartDropdownProps
   useEffect(() => {
     if (!open) return
     const onDoc = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false)
+      const t = e.target as Node
+      // O menu é renderizado em portal no body (fora do wrapRef). Sem este
+      // check, clicar num item fechava o menu no mousedown e o onClick nunca
+      // disparava (o nó sumia antes do click subir).
+      if (wrapRef.current?.contains(t)) return
+      if (menuRef.current?.contains(t)) return
+      setOpen(false)
     }
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setOpen(false)
