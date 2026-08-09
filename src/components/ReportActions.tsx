@@ -200,56 +200,6 @@ export default function ReportActions({
         </div>
       )}
 
-      {onConfirmReview && mayReview && (
-        <div
-          className={`rounded-xl p-3 border ${
-            isReviewed
-              ? 'bg-emerald-500/10 border-emerald-500/25'
-              : 'bg-amber-500/10 border-amber-500/25'
-          }`}
-        >
-          <p className="text-[0.78rem] font-bold text-[var(--text-main)] mb-1">
-            {isReviewed ? 'Revisão confirmada' : 'Revisão humana obrigatória'}
-          </p>
-          <p className="text-[0.72rem] text-[var(--text-muted)] mb-2.5 leading-relaxed">
-            {isReviewed
-              ? 'Conteúdo congelado para emissão. Reabra a revisão se precisar editar avarias ou dados.'
-              : 'Confirme que revisou avarias, fotos, GPS e assinaturas antes de gerar o PDF. Sem isso o PDF não é gerado.'}
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {!isReviewed ? (
-              <button
-                type="button"
-                disabled={loading === 'review'}
-                onClick={() =>
-                  void handle('review', async () => {
-                    await onConfirmReview()
-                  }, '✅ Revisão confirmada — agora você pode emitir o PDF')
-                }
-                className="text-xs px-3 py-1.5 rounded-lg font-bold border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 transition-all"
-              >
-                {loading === 'review' ? 'Confirmando…' : 'Confirmar revisão'}
-              </button>
-            ) : (
-              onClearReview && (
-                <button
-                  type="button"
-                  disabled={loading === 'clear-review'}
-                  onClick={() =>
-                    void handle('clear-review', async () => {
-                      await onClearReview()
-                    }, '📝 Revisão reaberta — edite e confirme de novo')
-                  }
-                  className="text-xs px-3 py-1.5 rounded-lg font-bold border border-[var(--panel-border)] bg-transparent text-[var(--text-muted)] hover:bg-white/5 transition-all"
-                >
-                  {loading === 'clear-review' ? 'Reabrindo…' : 'Reabrir revisão'}
-                </button>
-              )
-            )}
-          </div>
-        </div>
-      )}
-
       {!mayReview && (
         <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed px-0.5">
           Perfil inspetor: você pode gerar o PDF do próprio laudo. A auditoria do gestor fica na aba Equipe.

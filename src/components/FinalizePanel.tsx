@@ -1,5 +1,5 @@
 'use client'
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import type { GeoLocation, VehicleInfo } from '../types'
 import Button from './ui/Button'
 
@@ -14,8 +14,9 @@ interface Props {
 }
 
 /**
- * GPS da vistoria — fica depois da revisão de avarias, imediatamente antes
- * de gerar o PDF. A certificação digital vive em ReportActions (card único).
+ * GPS da vistoria — capturado automaticamente ao abrir o card (sem botão manual,
+ * sem aba de "localizar"). A coordenada entra no laudo PDF junto do hash e do QR Code.
+ * A certificação digital vive em ReportActions (card único).
  */
 export default function FinalizePanel({
   info,
@@ -79,80 +80,77 @@ export default function FinalizePanel({
     setGeoError('')
   }, [info, onChange])
 
+  // Captura automática ao montar (uma vez), salvo se já houver coordenada.
+  useEffect(() => {
+    if (!showGeo) return
+    if (info.geo) { setGeoStatus('done'); return }
+    captureGeo()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if (!showGeo) return null
+
   return (
-    <div className="space-y-4">
-      {showGeo && (
-        <div className="rounded-2xl border border-sky-500/25 bg-gradient-to-br from-sky-700/10 to-blue-900/5 p-4">
-          <div className="flex items-center justify-between gap-2 mb-2.5">
-            <div className="inline-flex items-center gap-1.5 text-[0.7rem] font-black text-sky-400 tracking-wider uppercase">
-              📍 Localização da Vistoria (GPS)
-            </div>
-            {info.geo && (
-              <button
-                type="button"
-                onClick={clearGeo}
-                className="text-[0.7rem] font-bold text-red-400 hover:text-red-300 transition-colors"
-              >
-                Remover
-              </button>
+    <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-sm space-y-3">
+      <div className="flex items-center justify-between gap-2">
+        <div className="inline-flex items-center gap-1.5 text-[0.72rem] font-black text-[var(--primary)] tracking-wider uppercase">
+          📍 Localização da Vistoria (GPS)
+        </div>
+        {info.geo && (
+          <button
+            type="button"
+            onClick={clearGeo}
+            className="text-[0.7rem] font-bold text-red-400 hover:text-red-300 transition-colors"
+          >
+            Remover
+          </button>
+        )}
+      </div>
+
+      {!info.geo ? (
+        <div className="flex items-center gap-2 text-[0.78rem] text-[var(--text-muted)]">
+          <span className="animate-pulse">⏳</span>
+          {geoStatus === 'error' ? (
+            <span className="text-red-400 font-semibold">{geoError}</span>
+          ) : (
+            <span>Localizando automaticamente…</span>
+          )}
+        </div>
+      ) : (
+        <div className="animate-in fade-in slide-in-from-bottom-1 duration-300 ease-out motion-reduce:animate-none">
+          <div className="flex flex-wrap items-center gap-1.5 mb-2">
+            <span className="inline-flex items-center gap-1 bg-[var(--success)]/15 border border-[var(--success)]/30 text-[var(--success)] rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold">
+              ✓ Localização registrada
+            </span>
+            {typeof info.geo.accuracy === 'number' && (
+              <span className="inline-flex items-center gap-1 bg-[var(--primary)]/15 border border-[var(--primary)]/30 text-[var(--primary)] rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold">
+                ± {info.geo.accuracy} m
+              </span>
             )}
           </div>
-
-          {!info.geo ? (
-            <>
-              <p className="text-[0.78rem] text-slate-400 leading-relaxed mb-3">
-                Capture o GPS do local onde a vistoria foi feita. A coordenada entra no laudo PDF junto do hash e do QR Code.
-              </p>
-              <Button
-                type="button"
-                variant="primary"
-                onClick={captureGeo}
-                loading={geoStatus === 'loading'}
-                className="w-full"
-              >
-                {geoStatus === 'loading' ? 'Obtendo localização…' : '📡 Capturar localização atual'}
-              </Button>
-              {geoStatus === 'error' && (
-                <p className="text-[0.75rem] text-red-400 font-semibold mt-2">{geoError}</p>
-              )}
-            </>
-          ) : (
-            <div className="animate-in fade-in slide-in-from-bottom-1 duration-300 ease-out motion-reduce:animate-none">
-              <div className="flex flex-wrap items-center gap-1.5 mb-2">
-                <span className="inline-flex items-center gap-1 bg-green-500/15 border border-green-500/30 text-green-400 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold">
-                  ✓ Localização registrada
-                </span>
-                {typeof info.geo.accuracy === 'number' && (
-                  <span className="inline-flex items-center gap-1 bg-sky-500/15 border border-sky-500/30 text-sky-400 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold">
-                    ± {info.geo.accuracy} m
-                  </span>
-                )}
-              </div>
-              <p className="font-mono text-[0.8rem] text-[var(--text-main)] font-bold">
-                {info.geo.lat.toFixed(6)}, {info.geo.lng.toFixed(6)}
-              </p>
-              {info.geo.address && (
-                <p className="text-[0.75rem] text-slate-400 mt-1 leading-relaxed">{info.geo.address}</p>
-              )}
-              <div className="flex flex-wrap gap-3 mt-2.5">
-                <a
-                  href={`https://www.google.com/maps?q=${info.geo.lat},${info.geo.lng}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[0.75rem] font-bold text-sky-400 hover:text-sky-300 transition-colors"
-                >
-                  🗺️ Ver no mapa
-                </a>
-                <button
-                  type="button"
-                  onClick={captureGeo}
-                  className="text-[0.75rem] font-bold text-slate-400 hover:text-slate-200 transition-colors"
-                >
-                  ↻ Atualizar
-                </button>
-              </div>
-            </div>
+          <p className="font-mono text-[0.8rem] text-[var(--text-main)] font-bold">
+            {info.geo.lat.toFixed(6)}, {info.geo.lng.toFixed(6)}
+          </p>
+          {info.geo.address && (
+            <p className="text-[0.75rem] text-[var(--text-muted)] mt-1 leading-relaxed">{info.geo.address}</p>
           )}
+          <div className="flex flex-wrap gap-3 mt-2.5">
+            <a
+              href={`https://www.google.com/maps?q=${info.geo.lat},${info.geo.lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[0.75rem] font-bold text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors"
+            >
+              🗺️ Ver no mapa
+            </a>
+            <button
+              type="button"
+              onClick={captureGeo}
+              className="text-[0.75rem] font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
+            >
+              ↻ Atualizar
+            </button>
+          </div>
         </div>
       )}
     </div>

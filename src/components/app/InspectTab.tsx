@@ -650,23 +650,18 @@ export default function InspectTab({
               )}
             </div>
 
-            <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-sm">
-              <p className="ds-label mb-1">Assinaturas</p>
-              <p className="ds-h3 mb-3">GPS e assinaturas</p>
-              <FinalizePanel info={vehicleInfo} onChange={onVehicleInfoChange} inspectionId={inspectionId} accessToken={accessToken} />
-            </div>
+            <FinalizePanel info={vehicleInfo} onChange={onVehicleInfoChange} inspectionId={inspectionId} accessToken={accessToken} />
 
             {mayReview && onCompleteReview && onReopenReview && (
-              <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-sm">
-                <InspectionReviewPanel
-                  reviewedAt={reviewedAt}
-                  reviewNotes={reviewNotes}
-                  contentStale={reviewContentStale}
-                  busy={reviewBusy}
-                  onCompleteReview={onCompleteReview}
-                  onReopenReview={onReopenReview}
-                />
-              </div>
+              <InspectionReviewPanel
+                reviewedAt={reviewedAt}
+                reviewNotes={reviewNotes}
+                reviewerName={decidedByName}
+                contentStale={reviewContentStale}
+                busy={reviewBusy}
+                onCompleteReview={onCompleteReview}
+                onReopenReview={onReopenReview}
+              />
             )}
           </div>
 
