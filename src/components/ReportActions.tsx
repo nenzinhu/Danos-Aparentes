@@ -206,31 +206,35 @@ export default function ReportActions({
         </p>
       )}
 
-      <div className="flex flex-col gap-1.5 mb-1 bg-sky-950/15 border border-sky-500/10 rounded-xl p-2.5">
-        <label htmlFor="pdf-theme-select" className="text-[0.7rem] font-bold text-[var(--text-muted)] uppercase tracking-wider">Modelo de Layout PDF</label>
-        <select
-          id="pdf-theme-select"
-          value={pdfTheme}
-          onChange={(e) => handleThemeChange(e.target.value as PdfTheme)}
-          className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg font-outfit text-[0.82rem] font-medium outline-none focus:border-sky-500/40 transition-all cursor-pointer"
-        >
-          <option value="modern">🎨 Modelo Moderno (Padrão)</option>
-          <option value="editorial">📖 Modelo Editorial (Poppins & Lora)</option>
-          <option value="tecnico">🔬 Modelo Técnico / Forense (Mono)</option>
-          <option value="corporativo">🏛️ Modelo Corporativo (Azul & Dourado)</option>
-          <option value="minimalista">⚪ Modelo Minimalista (Preto & Branco)</option>
-          <option value="vibrante">🌈 Modelo Vibrante (Roxo & Rosa)</option>
-        </select>
-      </div>
+      {/* Card: Aparência do PDF (layout + seções personalizadas) */}
+      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)]/40 p-3 space-y-3">
+        <h3 className="text-[0.7rem] font-bold uppercase tracking-wider text-[var(--text-muted)]">Aparência do PDF</h3>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="pdf-theme-select" className="text-[0.72rem] font-semibold text-[var(--text-muted)]">Modelo de Layout</label>
+          <select
+            id="pdf-theme-select"
+            value={pdfTheme}
+            onChange={(e) => handleThemeChange(e.target.value as PdfTheme)}
+            className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg font-outfit text-[0.82rem] font-medium outline-none focus:border-sky-500/40 transition-all cursor-pointer"
+          >
+            <option value="modern">🎨 Moderno (Padrão)</option>
+            <option value="editorial">📖 Editorial (Poppins & Lora)</option>
+            <option value="tecnico">🔬 Técnico / Forense (Mono)</option>
+            <option value="corporativo">🏛️ Corporativo (Azul & Dourado)</option>
+            <option value="minimalista">⚪ Minimalista (Preto & Branco)</option>
+            <option value="vibrante">🌈 Vibrante (Roxo & Rosa)</option>
+          </select>
+        </div>
 
-      <PdfSectionsPanel
-        open={showSectionsAccordion}
-        onToggle={() => setShowSectionsAccordion(v => !v)}
-        sectionsConfig={sectionsConfig}
-        onChange={updateSectionsConfig}
-        disclosureScope={disclosureScope}
-        onDisclosureChange={updateDisclosureScope}
-      />
+        <PdfSectionsPanel
+          open={showSectionsAccordion}
+          onToggle={() => setShowSectionsAccordion(v => !v)}
+          sectionsConfig={sectionsConfig}
+          onChange={updateSectionsConfig}
+          disclosureScope={disclosureScope}
+          onDisclosureChange={updateDisclosureScope}
+        />
+      </section>
 
       {/* Botão primário — Gerar Laudo PDF (sempre visível; desabilita em disclosure) */}
       <CertifySignatureCard
@@ -243,84 +247,88 @@ export default function ReportActions({
         compact
       />
 
-      {/* Disclosure progressivo: exportação secundária só após as 4 fotos */}
-      {photosReady ? (
-        <div className="flex flex-col gap-2">
-          <button
-            onClick={() => handle('wp', async () => sendWhatsApp(vehicleInfo, damages))}
-            disabled={loading !== null}
-            className={`${btnBase} bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-60`}
-          >
-            {loading === 'wp' ? <span className="animate-pulse">⏳</span> : <IconWhatsApp />}
-            Enviar resumo via WhatsApp
-          </button>
+      {/* Card: Compartilhar — exportação secundária (só após as 4 fotos) */}
+      <section className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)]/40 p-3 space-y-3">
+        <h3 className="text-[0.7rem] font-bold uppercase tracking-wider text-[var(--text-muted)]">Compartilhar</h3>
 
-          <div className="grid grid-cols-2 gap-2">
+        {photosReady ? (
+          <div className="flex flex-col gap-2">
             <button
-              onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, '📋 Copiado!')}
+              onClick={() => handle('wp', async () => sendWhatsApp(vehicleInfo, damages))}
               disabled={loading !== null}
-              title="Copiar Relatório"
-              className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
+              className={`${btnBase} bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-60`}
             >
-              {loading === 'copy' ? <span className="text-xl animate-pulse">⏳</span> : <IconCopy />}
-              <span className="text-[0.72rem]">Copiar</span>
+              {loading === 'wp' ? <span className="animate-pulse">⏳</span> : <IconWhatsApp />}
+              Enviar resumo via WhatsApp
             </button>
 
-            <button
-              onClick={() => handle('txt', async () => downloadTxt(vehicleInfo, damages), '📝 TXT baixado!')}
-              disabled={loading !== null}
-              title="Bloco de Notas (TXT)"
-              className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
-            >
-              {loading === 'txt' ? <span className="text-xl animate-pulse">⏳</span> : <IconTxt />}
-              <span className="text-[0.72rem]">TXT</span>
-            </button>
-          </div>
-
-          <button
-            onClick={() => setShowBadgePanel(v => !v)}
-            disabled={!reportHash}
-            title={reportHash ? 'Selo embutível do laudo' : 'Gere o PDF primeiro para liberar o selo'}
-            className={`${btnBase} bg-sky-500/10 border border-sky-500/30 text-sky-400 hover:bg-sky-500/20 disabled:opacity-40`}
-          >
-            <IconSeal />
-            Selo do laudo
-          </button>
-
-          {showBadgePanel && reportHash && (
-            <div className="flex flex-col gap-2 bg-sky-950/15 border border-sky-500/10 rounded-xl p-2.5">
-              <div className="flex items-center gap-3">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/selo-laudo-verificado.svg" alt="Laudo Verificado" width={56} height={56} />
-                <p className="text-[0.72rem] text-[var(--text-muted)] leading-snug">
-                  Cole este código no site ou anúncio do veículo para exibir o selo de autenticidade.
-                </p>
-              </div>
-              <textarea
-                readOnly
-                value={buildBadgeSnippet(reportHash)}
-                onFocus={(e) => e.currentTarget.select()}
-                rows={3}
-                className="w-full bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] px-3 py-2 rounded-lg font-mono text-[0.7rem] outline-none resize-none"
-              />
+            <div className="grid grid-cols-2 gap-2">
               <button
-                onClick={() => handle('badge-copy', async () => {
-                  await navigator.clipboard.writeText(buildBadgeSnippet(reportHash))
-                }, '📋 Código copiado!')}
+                onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, '📋 Copiado!')}
                 disabled={loading !== null}
-                className={`${btnBase} justify-center bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
+                title="Copiar Relatório"
+                className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
               >
-                {loading === 'badge-copy' ? <span className="animate-pulse">⏳</span> : <IconCopy />}
-                Copiar código
+                {loading === 'copy' ? <span className="text-xl animate-pulse">⏳</span> : <IconCopy />}
+                <span className="text-[0.72rem]">Copiar</span>
+              </button>
+
+              <button
+                onClick={() => handle('txt', async () => downloadTxt(vehicleInfo, damages), '📝 TXT baixado!')}
+                disabled={loading !== null}
+                title="Bloco de Notas (TXT)"
+                className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
+              >
+                {loading === 'txt' ? <span className="text-xl animate-pulse">⏳</span> : <IconTxt />}
+                <span className="text-[0.72rem]">TXT</span>
               </button>
             </div>
-          )}
-        </div>
-      ) : (
-        <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed px-0.5 py-1">
-          Capture as 4 fotos dos lados (Frontal, Traseira, Esquerda e Direita) para liberar o compartilhamento e o selo do laudo.
-        </p>
-      )}
+
+            <button
+              onClick={() => setShowBadgePanel(v => !v)}
+              disabled={!reportHash}
+              title={reportHash ? 'Selo embutível do laudo' : 'Gere o PDF primeiro para liberar o selo'}
+              className={`${btnBase} bg-sky-500/10 border border-sky-500/30 text-sky-400 hover:bg-sky-500/20 disabled:opacity-40`}
+            >
+              <IconSeal />
+              Selo do laudo
+            </button>
+
+            {showBadgePanel && reportHash && (
+              <div className="flex flex-col gap-2 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] rounded-xl p-2.5">
+                <div className="flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/selo-laudo-verificado.svg" alt="Laudo Verificado" width={56} height={56} />
+                  <p className="text-[0.72rem] text-[var(--text-muted)] leading-snug">
+                    Cole este código no site ou anúncio do veículo para exibir o selo de autenticidade.
+                  </p>
+                </div>
+                <textarea
+                  readOnly
+                  value={buildBadgeSnippet(reportHash)}
+                  onFocus={(e) => e.currentTarget.select()}
+                  rows={3}
+                  className="w-full bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] px-3 py-2 rounded-lg font-mono text-[0.7rem] outline-none resize-none"
+                />
+                <button
+                  onClick={() => handle('badge-copy', async () => {
+                    await navigator.clipboard.writeText(buildBadgeSnippet(reportHash))
+                  }, '📋 Código copiado!')}
+                  disabled={loading !== null}
+                  className={`${btnBase} justify-center bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
+                >
+                  {loading === 'badge-copy' ? <span className="animate-pulse">⏳</span> : <IconCopy />}
+                  Copiar código
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed px-0.5 py-1">
+            Capture as 4 fotos dos lados (Frontal, Traseira, Esquerda e Direita) para liberar o compartilhamento e o selo do laudo.
+          </p>
+        )}
+      </section>
 
       {reportHash && (
         <div className="rounded-xl p-4 mt-2 border border-emerald-500/30 bg-emerald-500/10 flex flex-col items-center gap-3 text-center">
