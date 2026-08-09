@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import type { VehicleInfo, VehicleChecklist } from '../../types'
 import SpeechButton from '../SpeechButton'
 import { ResolvedPhoto } from '../ResolvedPhoto'
@@ -21,14 +22,19 @@ interface Props {
 }
 
 const CHECKLIST_ITEMS: { key: keyof VehicleChecklist; label: string; icon: string; options: string[] }[] = [
-  { key: 'tires', label: 'Estado dos Pneus', icon: '🛞', options: ['Bons (OK)', 'Desgastados', 'Substituir'] },
-  { key: 'fuelLevel', label: 'Nível de Combustível', icon: '⛽', options: ['Vazio (Reserva)', '1/4', '1/2', '3/4', 'Cheio'] },
-  { key: 'windshield', label: 'Para-brisa & Vidros', icon: '🪟', options: ['Sem trincas (OK)', 'Trincado', 'Com riscos'] },
-  { key: 'jackAndWrench', label: 'Macaco & Chave de Roda', icon: '🔧', options: ['Presente', 'Ausente'] },
-  { key: 'warningTriangle', label: 'Triângulo de Segurança', icon: '⚠️', options: ['Presente', 'Ausente'] },
-  { key: 'crlvDocument', label: 'Documento (CRLV/CNH)', icon: '📄', options: ['Regular (OK)', 'Pendente'] },
-  { key: 'headlights', label: 'Faróis & Lanternas', icon: '💡', options: ['Funcionando (OK)', 'Lâmpada Queimada', 'Lente Quebrada'] },
+  { key: 'tires', label: 'Pneus', icon: '🛞', options: ['Bons (OK)', 'Desgastados', 'Substituir'] },
+  { key: 'fuelLevel', label: 'Combustível', icon: '⛽', options: ['Vazio (Reserva)', '1/4', '1/2', '3/4', 'Cheio'] },
+  { key: 'windshield', label: 'Vidros', icon: '🪟', options: ['Sem trincas (OK)', 'Trincado', 'Com riscos'] },
+  { key: 'jackAndWrench', label: 'Macaco/Ch.', icon: '🔧', options: ['Presente', 'Ausente'] },
+  { key: 'warningTriangle', label: 'Triângulo', icon: '⚠️', options: ['Presente', 'Ausente'] },
+  { key: 'crlvDocument', label: 'Documento', icon: '📄', options: ['Regular (OK)', 'Pendente'] },
+  { key: 'headlights', label: 'Faróis/Lant.', icon: '💡', options: ['Funcionando (OK)', 'Lâmpada Queimada', 'Lente Quebrada'] },
 ]
+
+/** Opção "OK" de cada item (a que contém "OK"), usada no "Marcar Todos como OK". */
+const OK_OPTION: Partial<Record<keyof VehicleChecklist, string>> = Object.fromEntries(
+  CHECKLIST_ITEMS.map(i => [i.key, i.options.find(o => o.includes('OK'))]),
+) as Partial<Record<keyof VehicleChecklist, string>>
 
 /** Observações, Fotos e Checklist de Pátio / Segurança. */
 export default function WizardStepExtras({
@@ -38,7 +44,19 @@ export default function WizardStepExtras({
 }: Props) {
 
   const checklist = info.checklist || {}
+  const [open, setOpen] = useState(false)
 
+  const verifiedCount = CHECKLIST_ITEMS.filter(i => checklist[i.key]).length
+  const allOk = CHECKLIST_ITEMS.every(i => checklist[i.key] === OK_OPTION[i.key])
+
+  const markAllOk = () => {
+    const next = { ...checklist }
+    for (const item of CHECKLIST_ITEMS) {
+      const ok = OK_OPTION[item.key]
+      if (ok) next[item.key] = ok
+    }
+    onChange({ ...info, checklist: next })
+  }
   const toggleChecklistItem = (key: keyof VehicleChecklist, val: string) => {
     const currentVal = checklist[key]
     const newVal = currentVal === val ? '' : val
@@ -53,57 +71,75 @@ export default function WizardStepExtras({
 
   return (
     <>
-      {/* Checklist de Segurança & Pátio (Opcional) */}
-      <div className="bg-slate-900/90 border border-sky-500/25 rounded-2xl p-4 mb-4 space-y-3 shadow-md">
-        <div className="flex items-center justify-between">
-          <label className="text-[0.8rem] font-extrabold text-sky-400 uppercase tracking-wide flex items-center gap-1.5">
+      {/* Checklist de Segurança & Pátio (Opcional) — Accordion */}
+      <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-xl mb-4 overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setOpen(o => !o)}
+          className="w-full flex items-center justify-between gap-2 px-3 py-2.5 text-left"
+        >
+          <span className="flex items-center gap-1.5 text-[0.78rem] font-extrabold text-[var(--primary)] uppercase tracking-wide">
             <span>📋 Checklist de Pátio & Segurança</span>
-          </label>
-          <span className="text-[0.65rem] text-slate-400 font-semibold bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">
-            Opcional
+            <span className="text-[0.62rem] font-semibold bg-[var(--btn-secondary-bg)] text-[var(--text-muted)] px-2 py-0.5 rounded-full border border-[var(--btn-secondary-border)]">
+              Opcional
+            </span>
           </span>
-        </div>
-        <p className="text-[0.7rem] text-slate-400 mb-2">
-          Selecione os itens verificados no pátio. Eles serão incluídos na seção do laudo PDF.
-        </p>
+          <span className="flex items-center gap-2 shrink-0">
+            <span className={`text-[0.66rem] font-bold ${allOk ? 'text-emerald-400' : 'text-[var(--text-muted)]'}`}>
+              {verifiedCount === 0 ? 'Nenhum item alterado' : allOk ? 'Tudo OK ✓' : `${verifiedCount} de ${CHECKLIST_ITEMS.length} verificados`}
+            </span>
+            <span className={`text-[var(--text-muted)] transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
+          </span>
+        </button>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {CHECKLIST_ITEMS.map((item) => {
-            const currentSelected = checklist[item.key] || ''
+        {open && (
+          <div className="px-3 pb-3 pt-1 border-t border-[var(--card-border)]">
+            <div className="flex justify-end mb-2">
+              <button
+                type="button"
+                onClick={markAllOk}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[0.68rem] font-bold bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/25 transition-colors"
+              >
+                ⚡ Marcar Todos como OK
+              </button>
+            </div>
 
-            return (
-              <div key={item.key} className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 space-y-1.5">
-                <div className="text-[0.74rem] font-bold text-slate-200 flex items-center gap-1.5">
-                  <span>{item.icon}</span>
-                  <span>{item.label}</span>
-                </div>
-                <div className="flex flex-wrap gap-1">
-                  {item.options.map((opt) => {
-                    const isSelected = currentSelected === opt
-
-                    return (
-                      <button
-                        key={opt}
-                        type="button"
-                        onClick={() => toggleChecklistItem(item.key, opt)}
-                        className={`
-                          px-2 py-1 rounded-lg text-[0.68rem] font-bold transition-all border cursor-pointer active:scale-95
-                          ${
-                            isSelected
-                              ? 'bg-sky-500/20 border-sky-400 text-sky-300 shadow-[0_0_10px_rgba(14,165,233,0.2)]'
-                              : 'bg-slate-900/80 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
-                          }
-                        `}
-                      >
-                        {isSelected ? '✓ ' : ''}{opt}
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-            )
-          })}
-        </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-2">
+              {CHECKLIST_ITEMS.map((item) => {
+                const currentSelected = checklist[item.key] || ''
+                return (
+                  <div key={item.key} className="flex items-center justify-between gap-2 py-0.5">
+                    <span className="text-[0.72rem] font-bold text-[var(--text-main)] flex items-center gap-1.5 shrink-0">
+                      <span>{item.icon}</span>
+                      <span>{item.label}</span>
+                    </span>
+                    {/* Segmented control encavalado */}
+                    <div className="flex rounded-lg border border-[var(--btn-secondary-border)] overflow-hidden bg-[var(--btn-secondary-bg)]">
+                      {item.options.map((opt, oi) => {
+                        const isSelected = currentSelected === opt
+                        return (
+                          <button
+                            key={opt}
+                            type="button"
+                            onClick={() => toggleChecklistItem(item.key, opt)}
+                            title={opt}
+                            className={`px-1.5 py-1 text-[0.62rem] font-bold whitespace-nowrap transition-colors border-l border-[var(--btn-secondary-border)] first:border-l-0 ${
+                              isSelected
+                                ? 'bg-[var(--primary)]/20 text-[var(--primary)]'
+                                : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'
+                            }`}
+                          >
+                            {opt.replace(' (OK)', '').replace(' (Reserva)', '')}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       <div>
