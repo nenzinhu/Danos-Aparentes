@@ -26,6 +26,10 @@ import AppLoadingShell from '@/src/components/app/AppLoadingShell'
 const DashboardView = dynamic(() => import('@/src/components/DashboardView'), {
   loading: () => <AppLoadingShell />,
 })
+const FleetHistoryDashboard = dynamic(
+  () => import('@/src/components/FleetHistoryDashboard'),
+  { loading: () => <AppLoadingShell /> },
+)
 const InspectTab = dynamic(() => import('@/src/components/app/InspectTab'), {
   loading: () => <AppLoadingShell />,
 })
@@ -254,11 +258,16 @@ export default function AppAuthenticatedShell({
           <ErrorBoundary>
           <main className="w-full max-w-7xl px-4 sm:px-5 flex flex-col gap-5 mt-3">
             {shell.activeTab === 'dashboard' ? (
-              <DashboardView
-                saved={saved}
-                accessToken={session?.access_token}
-                showAuditDashboard={tenantRole === 'solo' || tenantRole === 'owner'}
-              />
+              <>
+                <DashboardView
+                  saved={saved}
+                  accessToken={session?.access_token}
+                  showAuditDashboard={tenantRole === 'solo' || tenantRole === 'owner'}
+                />
+                <div className="mt-6">
+                  <FleetHistoryDashboard saved={saved} />
+                </div>
+              </>
             ) : shell.activeTab === 'team' ? (
               <TeamTab
                 accessToken={session?.access_token}
