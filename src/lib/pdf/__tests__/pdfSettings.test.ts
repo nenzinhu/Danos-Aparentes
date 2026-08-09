@@ -174,10 +174,8 @@ describe('PdfSettings — Customization & Layout Modes (M1 & M2)', () => {
     const hashOccurrences = (html.match(new RegExp(hash, 'g')) || []).length
     // Seals (×2) + footer extremity (+ geo short-hash is abbreviated, not full)
     expect(hashOccurrences).toBeGreaterThanOrEqual(2)
-    expect(html).toContain('Escaneie o QR Code para atestar')
-    // URL de verificação fica no QR (imagem); o hash aparece em texto no selo.
+    // O hash aparece em texto no selo de autenticidade (sem QR Code).
     expect(html).toContain(hash)
-    expect(html).toContain('data:image/')
   })
 
   it('keeps a single authenticity seal when layoutMode is single-page', async () => {
