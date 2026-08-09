@@ -49,12 +49,12 @@ export type PdfThemeId = 'modern' | 'editorial' | 'tecnico' | 'corporativo' | 'm
 
 export const THEMES = {
   modern: {
-    fontMain: "'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-    fontTitle: "'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif",
-    bgMain: '#ffffff', textMain: '#111827', textMuted: '#6B7280',
-    accentColor: '#1E293B', borderColor: '#E5E7EB', borderLight: '#F9FAFB', cardBg: '#ffffff',
-    headerBg: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
-    colorStripe: 'linear-gradient(90deg, #1E293B 0%, #334155 50%, #64748B 100%)',
+    fontMain: "'Times New Roman', Georgia, 'Liberation Serif', serif",
+    fontTitle: "'Times New Roman', Georgia, 'Liberation Serif', serif",
+    bgMain: '#ffffff', textMain: '#000000', textMuted: '#444444',
+    accentColor: '#000000', borderColor: '#000000', borderLight: '#cccccc', cardBg: '#ffffff',
+    headerBg: 'linear-gradient(135deg, #111111 0%, #333333 100%)',
+    colorStripe: 'linear-gradient(90deg, #000000 0%, #555555 50%, #000000 100%)',
   },
   editorial: {
     fontMain: "'Lora', Georgia, serif",
@@ -118,10 +118,10 @@ export function pillBadge(label: string, color: string, bg: string, theme: PdfTh
   return `<span style="display:inline-block;padding:${pad};background:${bg};border:1px solid ${color}22;color:${color};font-size:${size};font-weight:700;border-radius:999px;text-transform:uppercase;letter-spacing:0.04em;font-family:${theme.fontTitle};white-space:nowrap;margin:1px 2px 1px 0;line-height:1.35;">${label}</span>`
 }
 
-export function sectionTitle(text: string, theme: PdfTheme): string {
-  return `<div class="sec-title" style="margin-top:6px; margin-bottom:4px; display:flex; align-items:center;">
-    <div class="sec-title-bar" style="width:3px; height:11px; background:${theme.accentColor}; border-radius:2px; margin-right:7px;"></div>
-    <span class="sec-title-text" style="font-size:8.5px; font-weight:800; color:${theme.textMain}; text-transform:uppercase; letter-spacing:0.07em; font-family:${theme.fontTitle};">${text}</span>
+export function sectionTitle(text: string, theme: PdfTheme, num?: number): string {
+  const label = num ? `${num}. ${text}` : text
+  return `<div class="sec-title" style="margin:10px 0 6px; text-align:center;">
+    <span class="sec-title-text" style="font-size:10px; font-weight:800; color:${theme.textMain}; text-transform:uppercase; letter-spacing:0.08em; font-family:${theme.fontTitle}; border-bottom:1px solid ${theme.accentColor}; padding-bottom:3px; display:inline-block;">${label}</span>
   </div>`
 }
 

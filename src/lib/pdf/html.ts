@@ -245,8 +245,10 @@ export async function buildFullHtml(
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400..700;1,400..700&family=Outfit:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+  @page { size: A4; margin: 3cm 2cm 2cm 3cm; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif; font-size:11px; color:#111827; background:#FFFFFF; -webkit-font-smoothing: antialiased; }
+  body { font-family:'Times New Roman', Georgia, 'Liberation Serif', serif; font-size:12px; line-height:1.5; color:#000000; background:#FFFFFF; -webkit-font-smoothing: antialiased; text-align:justify; }
+  .page-container { font-family:'Times New Roman', Georgia, 'Liberation Serif', serif; }
   .nobreak { page-break-inside:avoid; break-inside:avoid; display:block; }
   .pagebreak { page-break-before:always; break-before:page; }
   .part { fill:#bcd4e8 !important; stroke:#4a6080; stroke-width:1; }
@@ -254,6 +256,7 @@ export async function buildFullHtml(
   .part.damage-medium { fill:#FCD34D !important; }
   .part.damage-high   { fill:#FCA5A5 !important; }
   @media print {
+    @page { @bottom-center { content: counter(page); font-family:'Times New Roman',serif; font-size:10px; } }
     .nobreak, .card-wrapper, .damage-table, .stat-box, .svg-cell-wrapper { page-break-inside: avoid; break-inside: avoid; }
   }
   ${effectiveLayoutMode === 'single-page' ? `
@@ -293,7 +296,7 @@ export async function buildFullHtml(
 </style>
 </head>
 <body class="theme-${pdfTheme} layout-${effectiveLayoutMode}" style="background:${theme.bgMain};">
-<div class="page-container theme-${pdfTheme} layout-${effectiveLayoutMode}" style="width:794px;background:${theme.bgMain};color:${theme.textMain};font-family:${theme.fontMain};position:relative;">
+<div class="page-container theme-${pdfTheme} layout-${effectiveLayoutMode}" style="width:100%; max-width:100%; background:${theme.bgMain}; color:${theme.textMain}; font-family:${theme.fontMain}; position:relative; line-height:1.5;">
   ${settings?.watermark ? `<div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:none;z-index:999;">
     <span style="font-size:110px;font-weight:900;letter-spacing:0.05em;color:${theme.accentColor};opacity:0.14;transform:rotate(-32deg);white-space:nowrap;font-family:${theme.fontTitle};text-transform:uppercase;">${escapeHtml(settings.watermark)}</span>
   </div>` : ''}
