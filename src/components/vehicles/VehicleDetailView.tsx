@@ -10,6 +10,7 @@ import {
 import { appendAuditEvent } from '@/src/lib/audit/auditLog'
 import { VehicleIconSvg } from '@/src/components/VehicleSelector'
 import VehicleHistoryTimeline from './VehicleHistoryTimeline'
+import VehicleLifeHistory from './VehicleLifeHistory'
 
 type RemoteInspection = {
   id: string
@@ -362,6 +363,9 @@ export default function VehicleDetailView({
           </p>
         </div>
       </header>
+
+      {/* 2b. Histórico de Vida (eixo mensal + FIPE mês-referência + gráficos %) */}
+      <VehicleLifeHistory vehicle={vehicle} intel={intel} />
 
       {/* 3. Ações */}
       <div className="flex flex-wrap gap-2">
