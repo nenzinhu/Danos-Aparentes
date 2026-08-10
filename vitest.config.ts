@@ -9,7 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['src/**/*.test.ts', 'lib/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'lib/**/*.test.ts'],
     env: {
       // Valores fake só para permitir que módulos como api/_lib/stripeClient.ts
       // e api/_lib/supabaseAdmin.ts sejam importados nos testes sem estourar
