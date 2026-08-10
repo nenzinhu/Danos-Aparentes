@@ -61,7 +61,14 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard }
   useEffect(() => {
     const el = kpiRef.current
     if (!el) return
+    // Respeita prefers-reduced-motion: mostra os cards sem animar (WIG).
+    const reduce = typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const ctx = gsap.context(() => {
+      if (reduce) {
+        gsap.set('.dash-kpi-card', { opacity: 1, y: 0, scale: 1 })
+        return
+      }
       gsap.fromTo('.dash-kpi-card',
         { opacity: 0, y: 24, scale: 0.96 },
         { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.1, ease: 'back.out(1.4)', delay: 0.1 }

@@ -34,6 +34,14 @@ const nextConfig = {
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]
   },
+  async redirects() {
+    // Consolidar URLs sobrepostas de B2B/gestão de frota em uma canônica.
+    // Evita concorrência de SEO e mega-menu fragmentado no header.
+    return [
+      { source: '/frotas', destination: '/historico-de-frotas', permanent: true },
+      { source: '/historico/frotas', destination: '/historico-de-frotas', permanent: true },
+    ]
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     // Qualidades customizadas usadas por next/image (DiffCompareSection usa 85,

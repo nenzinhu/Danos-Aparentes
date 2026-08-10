@@ -42,13 +42,13 @@ const NAV: NavGroup[] = [
   },
   {
     id: 'segmentos',
-    label: 'Segmentos',
+    label: 'Soluções',
     blurb: 'A mesma plataforma, a dor do seu ICP',
     items: [
       { href: '/locadoras', label: 'Para Locadoras', blurb: 'Retirada × devolução' },
       { href: '/oficinas', label: 'Para Oficinas', blurb: 'Entrada × saída' },
       { href: '/seguradoras', label: 'Para Seguradoras', blurb: 'QR anti-fraude' },
-      { href: '/frotas', label: 'Para Frotas', blurb: 'Offline no pátio' },
+      { href: '/historico-de-frotas', label: 'Para Frotas', blurb: 'Offline no pátio' },
     ],
   },
   {
