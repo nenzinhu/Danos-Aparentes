@@ -1,7 +1,7 @@
 'use client'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { SavedReport } from '../types'
-import { groupReportsByVehicle } from '../lib/vehicleEvidence/groupReports'
+import { computeFleetKpis } from '../lib/vehicleEvidence/fleetKpis'
 import {
   IconChart,
   IconFolder,
@@ -23,61 +23,13 @@ function statusColor(s: Status): string {
   return '#ef4444'
 }
 
-function pct(n: number, d: number): number {
-  return d > 0 ? Math.round((n / d) * 100) : 0
-}
-
 /**
  * Dashboard de Gestão de Históricos (visão de gestor de frota / operador B2B).
  * Calcula os 5 KPIs North Star a partir dos laudos locais (offline-first).
- * - Hist. completo: % veículos com ≥2 inspeções (entrada+saída comparáveis)
- * - Danos novos: Σ newDamagesOnLast / veículos comparados (leading risk)
- * - Cobertura evidências: % inspeções com alguma foto (dano ou vista)
- * - Dossiês emitidos: count status='issued'
- * - Integridade: % inspeções com issued_hash (selo de integridade)
+ * Lógica de cálculo em computeFleetKpis (testável); aqui só o render.
  */
 export default function FleetHistoryDashboard({ saved }: Props) {
-  const kpis = useMemo(() => {
-    const groups = groupReportsByVehicle(saved)
-    const totalVehicles = groups.length
-
-    const completeHistory = groups.filter((g) => g.reports.length >= 2).length
-    const compared = groups.filter((g) => g.reports.length >= 2)
-    const newDamages = compared.reduce((a, g) => a + g.newDamagesOnLast, 0)
-
-    let withPhoto = 0
-    let withHash = 0
-    let issued = 0
-    for (const r of saved) {
-      const damagePhotos = r.damages.reduce(
-        (a, d) => a + (d.photos?.length ?? 0),
-        0,
-      )
-      const views = r.vehicleInfo?.viewPhotos
-        ? Object.values(r.vehicleInfo.viewPhotos).filter((v) => Array.isArray(v) && v.length > 0).length
-        : 0
-      if (damagePhotos + views > 0) withPhoto++
-      if (r.issuedHash && r.issuedHash.length > 0) withHash++
-      if (r.status === 'issued') issued++
-    }
-
-    const histCompletePct = pct(completeHistory, totalVehicles)
-    const evidencePct = pct(withPhoto, saved.length)
-    const integrityPct = pct(withHash, saved.length)
-    const damageRate = compared.length > 0 ? newDamages / compared.length : 0
-
-    return {
-      totalVehicles,
-      completeHistory,
-      histCompletePct,
-      newDamages,
-      compared: compared.length,
-      damageRate,
-      evidencePct,
-      issued,
-      integrityPct,
-    }
-  }, [saved])
+  const kpis = computeFleetKpis(saved)
 
   if (saved.length === 0) {
     return (

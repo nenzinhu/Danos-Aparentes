@@ -115,3 +115,21 @@ export function findVehicleSummary(
 ): VehicleHistorySummary | null {
   return groupReportsByVehicle(reports, opts).find((v) => v.id === vehicleId) ?? null
 }
+
+/**
+ * Conta quantas evidências fotográficas um laudo tem:
+ * fotos de avarias + vistas com foto (viewPhotos é Record<ViewType, string> — cada
+ * valor é a URL da foto daquela vista, não um array).
+ * Usado por DashboardView e FleetHistoryDashboard para manter o cálculo consistente.
+ */
+export function countEvidencePhotos(report: SavedReport): number {
+  const damagePhotos = report.damages.reduce(
+    (acc, d) => acc + (d.photos?.length ?? 0),
+    0,
+  )
+  const viewPhotos = report.vehicleInfo?.viewPhotos
+  const viewCount = viewPhotos
+    ? Object.values(viewPhotos).filter((v) => typeof v === 'string' && v.length > 0).length
+    : 0
+  return damagePhotos + viewCount
+}
