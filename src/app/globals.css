@@ -949,20 +949,21 @@ html.light .glass-card .text-slate-500 {
   color: #334155;
 }
 
-/* Painel "Gerenciar Campos" é sempre fundo escuro (slate-950) — labels
-   precisam ficar claros mesmo quando o form pai está em html.light. */
+/* Painel "Gerenciar Campos" segue o tema (no modo claro o card é creme, não
+   escuro). Forçar cor clara fixa tornava os labels invisíveis no modo claro.
+   Usar os tokens do tema mantém contraste correto nos dois modos. */
 html.light .glass-card .field-manager-panel label,
 html.light .glass-card .field-manager-panel label span,
 html.light .glass-card .field-manager-panel .field-mgr-label,
 html.light .glass-card .field-manager-panel .text-slate-100,
 html.light .glass-card .field-manager-panel .text-slate-200,
 html.light .glass-card .field-manager-panel .text-slate-300 {
-  color: #f1f5f9 !important;
+  color: var(--text-main) !important;
 }
 html.light .glass-card .field-manager-panel .text-slate-400,
 html.light .glass-card .field-manager-panel .text-slate-500,
 html.light .glass-card .field-manager-panel .line-through {
-  color: #94a3b8 !important;
+  color: var(--text-muted) !important;
 }
 html.light .glass-card .field-manager-panel .text-sky-300,
 html.light .glass-card .field-manager-panel .text-sky-400 {
