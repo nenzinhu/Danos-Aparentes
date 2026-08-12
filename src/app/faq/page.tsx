@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import FaqAccordion from '@/src/components/FaqAccordion'
+import BreadcrumbJsonLd from '@/src/components/BreadcrumbJsonLd'
 import { FAQ_PLAIN } from '@/src/components/faqData'
 
 const FAQ_DESCRIPTION =
@@ -47,6 +48,7 @@ export default function FaqPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
+      <BreadcrumbJsonLd items={[{ name: 'Início', path: '/' }, { name: 'Perguntas Frequentes', path: '/faq' }]} />
       <div className="w-full max-w-2xl">
         <Link
           href="/"
