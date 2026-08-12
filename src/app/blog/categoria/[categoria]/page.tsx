@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getCategories, getCategoryDescription, getPostsByCategorySlug } from '@/src/content/blog'
+import { getCategories, getCategoryDescription, getPostsByCategorySlug, mapCategory } from '@/src/content/blog'
 import { BlogPostCard } from '@/src/components/BlogPostCard'
 
 const SITE_URL = 'https://danosaparentes.com.br'
@@ -18,7 +18,7 @@ export async function generateMetadata({
   const { categoria } = await params
   const posts = getPostsByCategorySlug(categoria)
   if (posts.length === 0) return {}
-  const categoryName = posts[0].category
+  const categoryName = mapCategory(posts[0].category)
   const title = `Artigos sobre ${categoryName} | Blog Danos Aparentes`
   const description = getCategoryDescription(categoryName)
   const url = `/blog/categoria/${categoria}`
@@ -39,7 +39,7 @@ export default async function BlogCategoryPage({
   const { categoria } = await params
   const posts = getPostsByCategorySlug(categoria)
   if (posts.length === 0) notFound()
-  const categoryName = posts[0].category
+  const categoryName = mapCategory(posts[0].category)
 
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',

@@ -63,7 +63,7 @@ export default function VehicleHistoryTimelineSection() {
       <div className="max-w-6xl mx-auto py-20 px-6">
         <Reveal className="text-center mb-12 flex flex-col items-center">
           <p className="font-mono-data text-[12px] tracking-[0.28em] text-[var(--signal-bright)] uppercase mb-3">
-            Linha do Tempo Veicular
+            Histórico · Linha do Tempo Veicular
           </p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.92] text-[var(--text-main)] [text-wrap:balance] max-w-4xl">
             Cada inspeção vira um evento. Toda a vida útil do veículo, documentada.

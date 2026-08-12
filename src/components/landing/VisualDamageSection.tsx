@@ -27,7 +27,7 @@ export default function VisualDamageSection() {
         <Reveal className="text-center mb-10 flex flex-col items-center">
           <div className="inline-flex items-center gap-2 font-mono-data text-[11px] tracking-[0.2em] text-[var(--signal-bright)] uppercase mb-3">
             <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
-            Registro visual
+            Evidência · Registro visual
             <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
           </div>
           <span className="mb-4 inline-flex items-center gap-2 rounded-lg border border-[var(--signal-bright)]/35 bg-[color-mix(in_srgb,var(--signal)_12%,transparent)] px-3 py-1.5 font-mono-data text-[10px] uppercase tracking-[0.18em] text-[var(--signal-bright)]">

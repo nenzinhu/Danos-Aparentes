@@ -85,7 +85,7 @@ export default function IaFlowSlider() {
       <div className="max-w-6xl mx-auto py-20 px-6">
         <Reveal className="text-center mb-10 flex flex-col items-center">
           <p className="font-mono-data text-[12px] tracking-[0.28em] text-[var(--signal-bright)] uppercase mb-3">
-            Inteligência Artificial
+            Inteligência · Análise de Imagens
           </p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
             A IA é protagonista: de evidência a histórico em segundos

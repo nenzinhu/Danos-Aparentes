@@ -78,7 +78,7 @@ export default function HowItWorksHistorySection() {
       <Reveal className="text-center mb-10 flex flex-col items-center">
         <div className="inline-flex items-center gap-2 font-mono-data text-[11px] tracking-[0.2em] text-[var(--signal-bright)] uppercase mb-4">
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
-          Como funciona
+          Registre · Como funciona
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
         </div>
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">

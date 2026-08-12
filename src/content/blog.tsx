@@ -4500,7 +4500,7 @@ export function getRelatedPosts(post: BlogPost, limit = 3): BlogPost[] {
   const others = BLOG_POSTS.filter(p => p.slug !== post.slug)
   const byDateDesc = (a: BlogPost, b: BlogPost) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0)
 
-  const sameCategory = others.filter(p => p.category === post.category).sort(byDateDesc)
+  const sameCategory = others.filter(p => mapCategory(p.category) === mapCategory(post.category)).sort(byDateDesc)
   const sameTag = others
     .filter(p => p.category !== post.category && p.tags.some(tag => post.tags.includes(tag)))
     .sort(byDateDesc)
@@ -4517,12 +4517,62 @@ export function categorySlug(category: string): string {
     .replace(/(^-|-$)/g, '')
 }
 
+/**
+ * Consolidação de categorias do blog (missão SEO):
+ * as ~20 categorias antigas viram 6 temas semânticos.
+ * Mantém a relação semântica sem tag spam (item 6).
+ */
+export const BLOG_CATEGORY_MAP: Record<string, string> = {
+  // Histórico Veicular
+  Frota: 'Histórico Veicular',
+  Locadora: 'Histórico Veicular',
+  'Histórico de Veículo': 'Histórico Veicular',
+  Estacionamento: 'Histórico Veicular',
+  Depósito: 'Histórico Veicular',
+  Concessionária: 'Histórico Veicular',
+  Guincho: 'Histórico Veicular',
+  // Avarias e Danos
+  Oficina: 'Avarias e Danos',
+  Laudo: 'Avarias e Danos',
+  Validade: 'Avarias e Danos',
+  // Vistoria
+  Vistoria: 'Vistoria',
+  Operação: 'Vistoria',
+  Valet: 'Vistoria',
+  'Boas práticas': 'Vistoria',
+  Profissionalismo: 'Vistoria',
+  Produtividade: 'Vistoria',
+  Acessibilidade: 'Vistoria',
+  // Comparação
+  Comparativo: 'Comparação',
+  // Inteligência
+  Tecnologia: 'Inteligência',
+  // Gestão
+  Seguro: 'Gestão',
+  Despachante: 'Gestão',
+}
+
+/** Categoria consolidada de um post (fallback: a própria categoria). */
+export function mapCategory(category: string): string {
+  return BLOG_CATEGORY_MAP[category] ?? category
+}
+
+export const BLOG_CATEGORIES: { name: string; slug: string }[] = [
+  { name: 'Histórico Veicular', slug: 'historico-veicular' },
+  { name: 'Avarias e Danos', slug: 'avarias-e-danos' },
+  { name: 'Vistoria', slug: 'vistoria' },
+  { name: 'Comparação', slug: 'comparacao' },
+  { name: 'Inteligência', slug: 'inteligencia' },
+  { name: 'Gestão', slug: 'gestao' },
+]
+
 export function getCategories(): { name: string; slug: string }[] {
-  const seen = new Map<string, string>()
-  for (const post of BLOG_POSTS) {
-    if (!seen.has(post.category)) seen.set(post.category, categorySlug(post.category))
-  }
-  return Array.from(seen, ([name, slug]) => ({ name, slug }))
+  return BLOG_CATEGORIES
+}
+
+/** Slug da categoria consolidada de um post. */
+export function postCategorySlug(post: BlogPost): string {
+  return categorySlug(mapCategory(post.category))
 }
 
 BLOG_POSTS.push(
@@ -5084,7 +5134,12 @@ BLOG_POSTS.push(
 // rastrear. Cada descrição aqui é específica do assunto da categoria — não um
 // template genérico repetido.
 const CATEGORY_DESCRIPTIONS: Record<string, string> = {
+  'Histórico Veicular': 'Histórico digital do veículo: como registrar, acumular e consultar o estado do carro ao longo do tempo — da locadora ao estacionamento. Leia os artigos.',
+  'Avarias e Danos': 'Identificação e documentação de avarias: do amassado à raspagem, como o laudo descreve o dano e protege a operação. Guias práticos. Confira.',
   Vistoria: 'Como registrar avarias no diagrama do veículo — do clique na peça ao laudo em PDF. Guias de retirada, devolução e conferência no pátio. Leia os artigos.',
+  Comparação: 'Comparação entre momentos do veículo: antes e depois, entrada e saída, para identificar o que mudou no histórico. Artigos lado a lado. Leia já.',
+  Inteligência: 'Inteligência histórica veicular: IA na análise de imagens, organização de dados e sugestão de descrições para revisão humana. Veja os artigos.',
+  Gestão: 'Gestão de danos e frotas: processos, escala e controle de avarias para locadoras, seguradoras e operadores. Artigos para a operação. Confira.',
   Tecnologia: 'Tecnologia da vistoria digital: PWA offline, PDF no navegador, hash de integridade e decisões técnicas para vistoriar sem internet no pátio. Veja os artigos.',
   Locadora: 'Vistoria para locadoras: laudo white-label, padrão entre unidades e cobrança de avarias na devolução. Artigos práticos para frota de aluguel. Confira.',
   Laudo: 'Laudo de vistoria: o que precisa constar, como fica no PDF e como protege a operação em disputa com o cliente. Guias sobre validade e apresentação. Leia.',
@@ -5106,7 +5161,7 @@ export function getCategoryDescription(name: string): string {
 }
 
 export function getPostsByCategorySlug(slug: string): BlogPost[] {
-  return BLOG_POSTS.filter(p => categorySlug(p.category) === slug)
+  return BLOG_POSTS.filter(p => postCategorySlug(p) === slug)
 }
 
 export function formatDate(iso: string): string {

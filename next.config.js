@@ -40,6 +40,27 @@ const nextConfig = {
     return [
       { source: '/frotas', destination: '/historico-de-frotas', permanent: true },
       { source: '/historico/frotas', destination: '/historico-de-frotas', permanent: true },
+      // Consolidação de categorias do blog (missão SEO): ~20 categorias antigas
+      // -> 6 temas semânticos. 301 para preservar o SEO das URLs indexadas.
+      { source: '/blog/categoria/acessibilidade', destination: '/blog/categoria/vistoria', permanent: true },
+      { source: '/blog/categoria/boas-praticas', destination: '/blog/categoria/vistoria', permanent: true },
+      { source: '/blog/categoria/comparativo', destination: '/blog/categoria/comparacao', permanent: true },
+      { source: '/blog/categoria/concessionaria', destination: '/blog/categoria/historico-veicular', permanent: true },
+      { source: '/blog/categoria/deposito', destination: '/blog/categoria/historico-veicular', permanent: true },
+      { source: '/blog/categoria/despachante', destination: '/blog/categoria/gestao', permanent: true },
+      { source: '/blog/categoria/estacionamento', destination: '/blog/categoria/historico-veicular', permanent: true },
+      { source: '/blog/categoria/frota', destination: '/blog/categoria/historico-veicular', permanent: true },
+      { source: '/blog/categoria/guincho', destination: '/blog/categoria/historico-veicular', permanent: true },
+      { source: '/blog/categoria/laudo', destination: '/blog/categoria/avarias-e-danos', permanent: true },
+      { source: '/blog/categoria/locadora', destination: '/blog/categoria/historico-veicular', permanent: true },
+      { source: '/blog/categoria/oficina', destination: '/blog/categoria/avarias-e-danos', permanent: true },
+      { source: '/blog/categoria/operacao', destination: '/blog/categoria/vistoria', permanent: true },
+      { source: '/blog/categoria/produtividade', destination: '/blog/categoria/vistoria', permanent: true },
+      { source: '/blog/categoria/profissionalismo', destination: '/blog/categoria/vistoria', permanent: true },
+      { source: '/blog/categoria/seguro', destination: '/blog/categoria/gestao', permanent: true },
+      { source: '/blog/categoria/tecnologia', destination: '/blog/categoria/inteligencia', permanent: true },
+      { source: '/blog/categoria/valet', destination: '/blog/categoria/vistoria', permanent: true },
+      { source: '/blog/categoria/validade', destination: '/blog/categoria/avarias-e-danos', permanent: true },
     ]
   },
   images: {
