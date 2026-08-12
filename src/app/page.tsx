@@ -25,6 +25,8 @@ import {
   B2B_HERO_SUBTITLE,
   B2B_CTA_DEMO,
   B2B_CTA_PLATFORM,
+  B2B_CTA_CREATE_HISTORY,
+  SEO_PRIMARY,
 } from '../lib/b2bPositioning';
 import { SOCIAL_PROOF_QUOTES } from '../lib/socialProof';
 
@@ -193,7 +195,7 @@ function HeroCopy() {
 
       {reduceMotion ? (
         <h1 className="mt-5 text-xl max-[400px]:text-2xl sm:text-3xl lg:text-[2.35rem] tracking-tight font-semibold text-[var(--text-main)] leading-[1.12] sm:leading-[1.08] [text-wrap:balance] max-w-xl">
-          {B2B_PRODUCT_LINE}
+          {SEO_PRIMARY}
         </h1>
       ) : (
         <GsapTextReveal
@@ -201,7 +203,7 @@ function HeroCopy() {
           split="words"
           className="mt-5 text-xl max-[400px]:text-2xl sm:text-3xl lg:text-[2.35rem] tracking-tight font-semibold text-[var(--text-main)] leading-[1.12] sm:leading-[1.08] [text-wrap:balance] max-w-xl"
         >
-          {B2B_PRODUCT_LINE}
+          {SEO_PRIMARY}
         </GsapTextReveal>
       )}
 
@@ -230,11 +232,11 @@ function HeroCopy() {
       <motion.div variants={reduceMotion ? undefined : heroCopyItem} className="pt-7 flex flex-wrap gap-3">
         <Link
           id="hero-primary-cta"
-          href="/demo"
+          href="/app"
           className="group/cta cursor-pointer px-8 py-4 min-h-12 text-white font-black rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-2.5 transition-colors duration-150 hover:opacity-95 active:opacity-90 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
           style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
         >
-          {B2B_CTA_DEMO}
+          {B2B_CTA_CREATE_HISTORY}
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-150 group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </Link>
         <a
@@ -412,7 +414,7 @@ export default function LandingPage() {
           {[
             ['⚡', 'Funciona 100% offline'],
             ['🤖', 'IA descreve avarias'],
-            ['📜', 'PDF com validade jurídica'],
+            ['📜', 'Histórico documentado e rastreável'],
             ['💬', 'Envia via WhatsApp em 1 clique'],
           ].map(([icon, label]) => (
             <div key={label} className="flex items-center justify-center gap-2">

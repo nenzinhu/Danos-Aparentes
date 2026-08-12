@@ -24,10 +24,11 @@ export const B2B_VALUE_PROPS = [
 ] as const
 
 export const B2B_HERO_SUBTITLE =
-  'Registre inspeções, organize evidências, acompanhe a evolução dos danos, utilize Inteligência Artificial e gere laudos profissionais em poucos minutos.'
+  'Registre inspeções, organize evidências, acompanhe a evolução dos danos e compare cada momento do veículo com a ajuda da Inteligência Artificial.'
 
 export const B2B_CTA_DEMO = 'Solicitar Demonstração'
 export const B2B_CTA_PLATFORM = 'Conhecer Plataforma'
+export const B2B_CTA_CREATE_HISTORY = 'Criar meu primeiro histórico'
 export const B2B_TRIAL_CTA = 'Começar 7 dias grátis — sem cartão'
 export const B2B_TRIAL_CTA_SHORT = 'Testar 7 dias grátis'
 
@@ -70,3 +71,64 @@ export const AI_STATUS = {
 } as const
 
 export type B2bVertical = 'locadoras' | 'oficinas' | 'frotas' | 'seguradoras'
+
+/**
+ * Hierarquia de termos para SEO (missão: Histórico Digital do Veículo).
+ * PRIMÁRIO domina título/descrição; SECUNDÁRIOS e TERCIÁRIOS entram em
+ * keywords e reforçam a relação semântica sem keyword stuffing.
+ * Termos de vistoria/laudo ficam como portas de entrada (item 3).
+ */
+export const SEO_PRIMARY = 'Histórico Digital do Veículo'
+
+export const SEO_SECONDARY = [
+  'Histórico Veicular',
+  'Inteligência Histórica Veicular',
+  'Histórico de Avarias',
+  'Histórico de Danos',
+] as const
+
+export const SEO_TERTIARY = [
+  'Comparação de Vistorias',
+  'Registro de Avarias',
+  'Evidências Fotográficas',
+  'Rastreabilidade Veicular',
+  'Gestão de Danos Veiculares',
+  'Gestão de Frotas',
+] as const
+
+/** Termos de entrada — pesquisas reais, não dominam a identidade (item 3). */
+export const SEO_ENTRY_TERMS = [
+  'Vistoria Veicular',
+  'Vistoria Digital',
+  'Laudo de Vistoria',
+  'Danos em Veículos',
+  'Avarias em Veículos',
+  'Checklist Veicular',
+] as const
+
+export const SEO_KEYWORDS = [
+  SEO_PRIMARY,
+  ...SEO_SECONDARY,
+  ...SEO_TERTIARY,
+  ...SEO_ENTRY_TERMS,
+  'Danos Aparentes',
+] as const
+
+/** Títulos por página — padrão "[Tema] | Danos Aparentes" (item 7). */
+export const SEO_PAGE_TITLES = {
+  home: 'Danos Aparentes | Histórico Digital do Veículo',
+  historico: 'Histórico Digital do Veículo | Danos Aparentes',
+  comparacao: 'Comparação de Vistorias | Danos Aparentes',
+  historicoAvarias: 'Histórico de Avarias | Danos Aparentes',
+  frotas: 'Gestão de Danos em Frotas | Danos Aparentes',
+} as const
+
+/** Categorias do blog reestruturadas (item 5) — mantém slug curto. */
+export const BLOG_CATEGORIES: { name: string; slug: string }[] = [
+  { name: 'Histórico Veicular', slug: 'historico-veicular' },
+  { name: 'Avarias e Danos', slug: 'avarias-e-danos' },
+  { name: 'Vistoria', slug: 'vistoria' },
+  { name: 'Comparação', slug: 'comparacao' },
+  { name: 'Inteligência', slug: 'inteligencia' },
+  { name: 'Gestão', slug: 'gestao' },
+]

@@ -16,45 +16,66 @@ import {
 
 const FEATURES = [
   {
-    icon: IconSparkles,
-    title: 'Inteligência Artificial',
-    desc: 'Analisa imagens e sugere automaticamente a descrição dos danos.',
-  },
-  {
-    icon: IconFolder,
-    title: 'Histórico Inteligente',
-    desc: 'Toda inspeção permanece registrada para consultas futuras.',
-  },
-  {
-    icon: IconTrend,
-    title: 'Linha do Tempo',
-    desc: 'Visualize toda a evolução do veículo em uma linha do tempo veicular.',
+    icon: IconCar,
+    group: 'Registre',
+    title: 'Identidade do Veículo',
+    desc: 'Placa, dados e contexto da operação vinculados a cada registro.',
   },
   {
     icon: IconPin,
+    group: 'Registre',
     title: 'Evidências Digitais',
     desc: 'Fotos, vídeos, documentos e observações organizados e rastreáveis.',
   },
   {
+    icon: IconSparkles,
+    group: 'Registre',
+    title: 'Inteligência Artificial',
+    desc: 'Analisa imagens e sugere a descrição dos danos para revisão humana.',
+  },
+  {
+    icon: IconTrend,
+    group: 'Compare',
+    title: 'Linha do Tempo Veicular',
+    desc: 'Visualize a evolução do veículo em uma linha do tempo contínua.',
+  },
+  {
     icon: IconBarChart,
+    group: 'Compare',
     title: 'Comparação entre Inspeções',
-    desc: 'Compare qualquer inspeção realizada ao longo do tempo.',
+    desc: 'Compare qualquer inspeção e audite o que mudou ao longo do tempo.',
   },
   {
     icon: IconDocument,
+    group: 'Comprove',
     title: 'Dossiê Técnico',
-    desc: 'Gere laudos profissionais em PDF com autenticidade verificável.',
-  },
-  {
-    icon: IconCar,
-    title: 'Gestão de Frota',
-    desc: 'Controle milhares de veículos sob a mesma memória digital.',
+    desc: 'Gere o relatório do histórico em PDF com QR Code e hash para verificação.',
   },
   {
     icon: IconSearch,
+    group: 'Comprove',
     title: 'Auditoria',
     desc: 'Rastreabilidade completa das alterações e eventos do veículo.',
   },
+  {
+    icon: IconFolder,
+    group: 'Preserve',
+    title: 'Histórico Inteligente',
+    desc: 'Toda inspeção permanece registrada — constrói a memória digital do veículo.',
+  },
+  {
+    icon: IconCar,
+    group: 'Preserve',
+    title: 'Gestão de Frota',
+    desc: 'Mantenha milhares de veículos sob a mesma memória digital.',
+  },
+] as const
+
+const GROUPS = [
+  { id: 'Registre', blurb: 'Capture o estado do veículo em cada momento.' },
+  { id: 'Compare', blurb: 'Descubra o que mudou entre inspeções.' },
+  { id: 'Comprove', blurb: 'Tenha evidências organizadas e verificáveis.' },
+  { id: 'Preserve', blurb: 'Construa o histórico contínuo do veículo.' },
 ] as const
 
 const SITE_URL = 'https://danosaparentes.com.br'
@@ -97,44 +118,59 @@ export default function FeaturesGridSection() {
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
         </div>
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
-          Inteligência histórica em cada camada do veículo
+          Registre, compare, comprove e preserve
         </h2>
         <p className="mt-4 max-w-2xl text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-          Transformamos inspeções em inteligência, fotos em evidências e danos em histórico permanente.
+          Cada registro vira uma camada do histórico: capture o estado, descubra o que mudou, tenha evidências organizadas e construa a memória digital do veículo.
         </p>
       </Reveal>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-10 lg:gap-14 items-start">
         <Reveal>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 list-none m-0 p-0">
-            {FEATURES.map((f) => {
-              const Icon = f.icon
+            {GROUPS.map((g) => {
+              const items = FEATURES.filter((f) => f.group === g.id)
               return (
-                <li
-                  key={f.title}
-                  className="group rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/50 p-5 transition-all duration-200 hover:border-[var(--primary)]/35 hover:bg-[var(--panel-bg)]/80 hover:-translate-y-0.5"
-                >
-                  <div className="flex items-start gap-3.5">
-                    <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[var(--card-border)] bg-[var(--btn-secondary-bg)] text-[var(--signal-bright)] transition-colors group-hover:border-[var(--primary)]/40">
-                      <Icon size={18} />
-                    </span>
-                    <div>
-                      <h3 className="text-sm font-bold text-[var(--text-main)] leading-snug">{f.title}</h3>
-                      <p className="mt-1.5 text-xs sm:text-[13px] text-[var(--text-muted)] leading-relaxed">
-                        {f.desc}
-                      </p>
-                    </div>
+                <li key={g.id} className="rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/40 p-4 sm:p-5">
+                  <div className="mb-3 flex items-baseline justify-between gap-2">
+                    <h3 className="font-display text-base sm:text-lg font-bold uppercase tracking-tight text-[var(--signal-bright)]">
+                      {g.id}
+                    </h3>
                   </div>
+                  <p className="mb-3 text-[11px] sm:text-xs text-[var(--text-muted)] leading-snug">
+                    {g.blurb}
+                  </p>
+                  <ul className="grid grid-cols-1 gap-3 list-none m-0 p-0">
+                    {items.map((f) => {
+                      const Icon = f.icon
+                      return (
+                        <li
+                          key={f.title}
+                          className="group flex items-start gap-3 rounded-xl border border-[var(--card-border)] bg-[var(--panel-bg)]/50 p-3.5 transition-all duration-200 hover:border-[var(--primary)]/35 hover:bg-[var(--panel-bg)]/80"
+                        >
+                          <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[var(--card-border)] bg-[var(--btn-secondary-bg)] text-[var(--signal-bright)] transition-colors group-hover:border-[var(--primary)]/40">
+                            <Icon size={18} />
+                          </span>
+                          <div>
+                            <h4 className="text-sm font-bold text-[var(--text-main)] leading-snug">{f.title}</h4>
+                            <p className="mt-1 text-xs sm:text-[13px] text-[var(--text-muted)] leading-relaxed">
+                              {f.desc}
+                            </p>
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ul>
                 </li>
               )
             })}
           </ul>
           <Link
             id="home-features-cta"
-            href="/demo"
+            href="/app"
             className="mt-8 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none"
           >
-            Solicitar Demonstração
+            Criar meu primeiro histórico
           </Link>
         </Reveal>
 

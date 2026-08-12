@@ -5,11 +5,11 @@ import ChatSupportWidget from '@/src/components/ChatSupportWidget'
 import B2bHistoricoSection from '@/src/components/B2bHistoricoSection'
 import MobileStickyCta from '@/src/components/MobileStickyCta'
 import { HistoricoHeroCtas, HistoricoFinalCta } from '@/src/components/HistoricoCtas'
-import { B2B_BRAND, B2B_CATEGORY_SHORT, B2B_PRODUCT_LINE } from '@/src/lib/b2bPositioning'
+import { B2B_BRAND, SEO_PRIMARY } from '@/src/lib/b2bPositioning'
 
-const TITLE = `${B2B_CATEGORY_SHORT} | ${B2B_BRAND}`
+const TITLE = `${SEO_PRIMARY} | ${B2B_BRAND}`
 const DESCRIPTION =
-  'Histórico inteligente por placa: compare inspeções na linha do tempo, dossiê técnico com hash SHA-256 + QR, offline. 7 dias grátis sem cartão.'
+  'Registre o estado do veículo em diferentes momentos e compare o que mudou. Evidências organizadas, rastreáveis e prontas para comprovar cada avaria.'
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -118,7 +118,7 @@ const faqJsonLd = {
 const softwareJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: `${B2B_BRAND} — ${B2B_PRODUCT_LINE}`,
+  name: `${B2B_BRAND} — ${SEO_PRIMARY}`,
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web, Android, iOS (PWA)',
   url: 'https://danosaparentes.com.br/historico',
@@ -152,7 +152,7 @@ export default function HistoricoProdutoPage() {
             Produto · plataforma
           </span>
           <h1 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] max-w-3xl [text-wrap:balance]">
-            {B2B_PRODUCT_LINE}
+            {SEO_PRIMARY}
           </h1>
           <p className="text-sm sm:text-base text-[var(--text-muted)] mt-4 max-w-2xl leading-relaxed">
             Pare de tratar cada inspeção como um PDF isolado. Acumule eventos por placa, compare na
