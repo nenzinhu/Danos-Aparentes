@@ -8,6 +8,7 @@ import type { BlogPost } from '@/src/content/blog'
 // e dimensions explícitas (evita CLS).
 export function BlogCover({
   cover,
+  title,
   className = '',
   emojiClass = 'text-6xl',
   children,
@@ -15,6 +16,7 @@ export function BlogCover({
   sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px',
 }: {
   cover: BlogPost['cover']
+  title?: string
   className?: string
   emojiClass?: string
   children?: React.ReactNode
@@ -23,6 +25,11 @@ export function BlogCover({
 }) {
   const hasPhoto = Boolean(cover.image)
   const coverImage = cover.image
+  // Alt text descritivo para SEO de imagem (recomendação: alt em imagens de conteúdo).
+  // Quando o chamador passa o título do post, usa-o; senão usa o padrão do blog.
+  const coverAlt = title
+    ? `${title} — capa do artigo Danos Aparentes`
+    : 'Capa do artigo sobre vistoria veicular Danos Aparentes'
 
   return (
     <div
@@ -33,8 +40,7 @@ export function BlogCover({
         <>
           <Image
             src={coverImage}
-            alt=""
-            aria-hidden="true"
+            alt={coverAlt}
             fill
             priority={priority}
             loading={priority ? undefined : 'lazy'}

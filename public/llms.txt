@@ -1,65 +1,53 @@
 # Danos Aparentes
 
-> PWA de vistoria veicular digital para vistoriadores autônomos, oficinas, locadoras, frotistas e concessionárias no Brasil: marque avarias em diagramas do veículo, anexe fotos com GPS/timestamp, colha assinatura digital e gere laudos em PDF com hash SHA-256 e QR Code de verificação — funciona 100% offline.
+> Plataforma brasileira de Inteligência Histórica Veicular. Registra, compara e comprova o estado do veículo ao longo do tempo — com fotos, avarias, evidências, GPS, hash SHA-256, QR Code e laudos em PDF verificáveis.
 
-Danos Aparentes é desenvolvido e operado por Jeferson da Silva, em Florianópolis/SC. O produto é novo — ainda não há histórico público de clientes — e por isso a credibilidade é construída por verificabilidade técnica: cada laudo gerado carrega um hash de integridade e um QR Code que permitem conferir o documento sem depender da palavra da empresa. O site publica guias práticos sobre vistoria veicular, laudos de avaria e processos de pátio, escritos a partir da experiência de construir a ferramenta.
+## O que é
+A Danos Aparentes transforma vistorias em papel e planilhas em uma memória digital permanente do veículo. Cada inspeção vira um evento na linha do tempo: entrada, uso, retorno, reparo e transferência — comparável no tempo por placa.
 
-## Produto
+## Para quem é
+- Locadoras e rent-a-car (controle de avarias na retirada e devolução)
+- Frotas e frotistas corporativos
+- Oficinas e centros automotivos
+- Seguradoras e peritos de sinistro
+- Transportadoras e operadores de carga
+- Concessionárias de seminovos
+- Vistoriadores independentes e despachantes
 
-- [Página inicial](https://danosaparentes.com.br/): Visão geral do produto — vistoria offline-first, diagramas por vista do veículo (frontal, traseira, laterais), consulta automática de placa, laudo em PDF com hash e QR Code.
-- [Planos](https://danosaparentes.com.br/planos): Preços — Starter R$ 29,90/mês (20 laudos), Pro R$ 49,90/mês (80 laudos + marca no PDF), Corporativo a partir de R$ 299/mês (Start/Growth/Enterprise); 7 dias grátis sem cartão; FAQ de objeções.
-- [Preços (markdown)](https://danosaparentes.com.br/pricing.md): Tabela machine-readable dos planos e limites (espelho de /planos).
-- [Demonstração](https://danosaparentes.com.br/demo): Fluxo interativo de vistoria no diagrama do veículo.
-- [Histórico e evidência](https://danosaparentes.com.br/historico): Comparação entrada × saída por placa.
-- [Perguntas frequentes](https://danosaparentes.com.br/faq): Central de dúvidas sobre uso offline, GPS, assinatura digital, dados e conta.
-- [Sobre](https://danosaparentes.com.br/sobre): Quem opera o produto e posicionamento.
-- [Media Kit / Imprensa](https://danosaparentes.com.br/imprensa): Logos, screenshots, cores e contato para jornalistas.
+## Problema que resolve
+Sem prova padronizada, a cobrança de avaria na devolução vira discussão ou processo. A plataforma registra o estado com data/hora, GPS, assinatura e hash — e gera PDF Antes × Depois pronto para enviar.
 
-## Por segmento
+## Recursos principais
+- Histórico digital do veículo (linha do tempo por placa)
+- Marcação de danos no diagrama SVG do veículo (lado, peça, severidade)
+- Fotos e evidências com geolocalização e carimbo de data/hora
+- Inteligência Artificial sugestiva (o vistoriador confirma; nada grava sozinho)
+- Laudo em PDF com hash SHA-256, QR Code e verificação pública
+- Comparação Antes × Depois entre inspeções
+- Funciona 100% offline no pátio (sincroniza depois)
+- Envio do laudo via WhatsApp em um clique
 
-- [Locadoras](https://danosaparentes.com.br/locadoras): Wedge principal — prova na retirada×devolução; diagrama, GPS, assinatura, PDF com hash/QR; trial sem cartão.
-- [Oficinas](https://danosaparentes.com.br/oficinas): Laudo de entrada/saída com marca própria.
-- [Frotas](https://danosaparentes.com.br/frotas): Padronização multi-vistoriador e offline no pátio.
-- [Seguradoras](https://danosaparentes.com.br/seguradoras): Registro de avarias aparentes e documento verificável.
+## Páginas de referência
+- Início: https://danosaparentes.com.br/
+- Planos: https://danosaparentes.com.br/planos
+- Locadoras: https://danosaparentes.com.br/locadoras
+- Frotas: https://danosaparentes.com.br/frotas
+- Oficinas: https://danosaparentes.com.br/oficinas
+- Seguradoras: https://danosaparentes.com.br/seguradoras
+- Histórico: https://danosaparentes.com.br/historico
+- Sobre: https://danosaparentes.com.br/sobre
+- FAQ: https://danosaparentes.com.br/faq
+- Blog: https://danosaparentes.com.br/blog
+- Verificar dossiê: https://danosaparentes.com.br/verify
 
-## Guias — como fazer laudo e vistoria
+## Blog (conteúdo de autoridade)
+- https://danosaparentes.com.br/blog/como-provar-avaria-no-valet
+- https://danosaparentes.com.br/blog/historico-veicular-digital-o-que-e
+- https://danosaparentes.com.br/blog/vistoria-veicular-historico-e-ia
+- https://danosaparentes.com.br/blog/laudo-de-vistoria-com-assinatura-digital
+- https://danosaparentes.com.br/blog/qr-code-e-hash-no-laudo-de-avarias
+- https://danosaparentes.com.br/blog/vistoria-foto-gps-hash-sha256-eliminar-contestacoes
 
-- [Como fazer um laudo de vistoria veicular](https://danosaparentes.com.br/blog/como-fazer-laudo-de-vistoria-veicular): Guia completo — o que é, quando é exigido, passo a passo e erros que invalidam o laudo.
-- [Laudo cautelar vs. laudo de avarias](https://danosaparentes.com.br/blog/laudo-cautelar-vs-laudo-de-avarias): Diferença entre os dois tipos de laudo e quando usar cada um.
-- [Como provar avarias pré-existentes](https://danosaparentes.com.br/blog/avarias-preexistentes-como-provar): Como documentar o estado do veículo para evitar disputa de responsabilidade.
-- [Checklist de vistoria de devolução de locadora](https://danosaparentes.com.br/blog/checklist-vistoria-devolucao-locadora): Passo a passo para padronizar a devolução de veículos alugados.
-- [Como fotografar avarias corretamente](https://danosaparentes.com.br/blog/como-fotografar-avarias): Boas práticas de enquadramento, contexto e metadados de foto.
-- [Vistoria nas 4 vistas do veículo](https://danosaparentes.com.br/blog/vistoria-nas-4-vistas-do-veiculo): Por que percorrer o veículo em ordem fixa (frente, laterais, traseira) reduz erro.
-
-## Guias — por tipo de veículo
-
-- [Vistoria de moto](https://danosaparentes.com.br/blog/vistoria-de-moto): Pontos de atenção específicos para motocicletas.
-- [Vistoria de caminhão](https://danosaparentes.com.br/blog/vistoria-de-caminhao): Vistoria de veículos de carga.
-- [Vistoria de ônibus](https://danosaparentes.com.br/blog/vistoria-de-onibus): Vistoria de veículos de transporte coletivo.
-- [Vistoria de seminovos para concessionárias](https://danosaparentes.com.br/blog/vistoria-de-seminovos-para-concessionarias): Vistoria na entrada de veículos usados.
-
-## Guias — operação, frota e equipe
-
-- [Padronizar vistoria de frota entre vistoriadores](https://danosaparentes.com.br/blog/vistoria-de-frota-padronizar-equipe): Como reduzir divergência entre diferentes vistoriadores de uma mesma operação.
-- [Como reduzir prejuízo com avarias não cobradas na frota](https://danosaparentes.com.br/blog/como-reduzir-prejuizo-com-avarias-na-frota): Impacto financeiro de avaria não documentada.
-- [Como treinar um vistoriador novo rapidamente](https://danosaparentes.com.br/blog/como-treinar-um-novo-vistoriador-rapidamente): Onboarding de equipe de vistoria.
-- [Vistoria sem papel](https://danosaparentes.com.br/blog/vistoria-sem-papel): Migração de processo em papel para digital.
-- [Vistoria na chuva sem retrabalho](https://danosaparentes.com.br/blog/vistoria-na-chuva-sem-retrabalho): Vistoria offline em condições adversas de conectividade.
-
-## Guias — o laudo em si (segurança e formato)
-
-- [QR Code e hash no laudo de avarias](https://danosaparentes.com.br/blog/qr-code-e-hash-no-laudo-de-avarias): Como a verificação técnica do laudo funciona.
-- [Laudo de vistoria com assinatura digital](https://danosaparentes.com.br/blog/laudo-de-vistoria-com-assinatura-digital): Como a assinatura na tela substitui a assinatura em papel.
-- [Laudo com logo da empresa no PDF](https://danosaparentes.com.br/blog/laudo-com-logo-da-empresa-no-pdf): Personalização (white-label) do documento gerado.
-- [Laudo white-label para locadoras](https://danosaparentes.com.br/blog/laudo-white-label-para-locadoras): Uso do laudo com identidade própria da empresa.
-- [6 modelos de PDF para o laudo de vistoria](https://danosaparentes.com.br/blog/6-modelos-de-pdf-para-o-laudo-de-vistoria): Comparação de formatos de laudo disponíveis.
-- [Consulta automática de placa](https://danosaparentes.com.br/blog/consulta-automatica-de-placa): Como o preenchimento automático de dados do veículo funciona.
-
-## Trust
-
-- [Segurança do laudo (hash, assinatura, GPS)](https://danosaparentes.com.br/#seguranca): Explicação técnica de como cada laudo comprova sua própria integridade.
-- [Verificação pública de laudo](https://danosaparentes.com.br/verify): Conferência de hash/QR.
-- [Media Kit](https://danosaparentes.com.br/imprensa): Assets oficiais da marca para imprensa.
-- [Política de Privacidade](https://danosaparentes.com.br/privacidade)
-- [Termos de Uso](https://danosaparentes.com.br/termos)
-- [Suporte](https://danosaparentes.com.br/suporte)
+## Contato
+- E-mail: suporte@danosaparentes.com.br
+- WhatsApp: (48) 99203-2348

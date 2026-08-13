@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import type { BlogPost } from '@/src/content/blog'
-import { formatDate, mapCategory, postCategorySlug } from '@/src/content/blog'
+import { formatDate } from '@/src/content/blog'
 import { BlogCover } from './BlogCover'
 
 // Card de post reutilizado no índice do blog, na seção "Do blog" da
@@ -17,10 +17,10 @@ export function BlogPostCard({
       href={`/blog/${post.slug}`}
       className="group block glass-card overflow-hidden transition-all hover:border-sky-500/40 focus-visible:ring-2 ring-[var(--primary)] outline-none"
     >
-      <BlogCover cover={post.cover} className={coverHeightClass} emojiClass="text-4xl" />
+      <BlogCover cover={post.cover} title={post.title} className={coverHeightClass} emojiClass="text-4xl" />
       <div className="p-5">
         <span className="text-[0.6rem] font-extrabold uppercase tracking-widest text-[var(--signal-bright)]">
-          {mapCategory(post.category)}
+          {post.category}
         </span>
         <h3 className="font-display text-lg font-bold leading-tight mt-1 text-[var(--text-main)] group-hover:text-[var(--primary-hover)] transition-colors">
           {post.title}

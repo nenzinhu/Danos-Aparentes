@@ -22,11 +22,6 @@ import type { Metadata, Viewport } from 'next'
 import CookieConsentBanner from '@/src/components/CookieConsentBanner'
 import AnalyticsScripts from '@/src/components/AnalyticsScripts'
 import ChunkErrorReload from '@/src/components/ChunkErrorReload'
-import {
-  B2B_BRAND,
-  SEO_PRIMARY,
-  SEO_KEYWORDS,
-} from '../lib/b2bPositioning'
 
 const outfit = Outfit({ subsets: ['latin'], display: 'swap', variable: '--font-outfit' })
 const sairaCondensed = Saira_Condensed({
@@ -44,14 +39,10 @@ const plexMono = IBM_Plex_Mono({
 
 const SITE_URL = 'https://danosaparentes.com.br'
 
-const HOME_TITLE = `${B2B_BRAND} | ${SEO_PRIMARY}`
-const HOME_DESCRIPTION =
-  'Registre, compare e acompanhe tudo o que muda no veículo ao longo do tempo. Fotos, avarias, evidências e relatórios organizados em um histórico digital rastreável.'
-
 export const metadata: Metadata = {
-  title: HOME_TITLE,
-  description: HOME_DESCRIPTION,
-  keywords: [...SEO_KEYWORDS],
+  title: 'Danos Aparentes | Inteligência Histórica Veicular',
+  description:
+    'A primeira Plataforma Brasileira de Inteligência Histórica Veicular. Memória digital, evidências, linha do tempo e dossiês técnicos com IA.',
   metadataBase: new URL(SITE_URL),
   // Canonical da home. Páginas internas definem o seu próprio em
   // `alternates.canonical` — sempre adicione um ao criar rota nova.
@@ -82,6 +73,25 @@ export const metadata: Metadata = {
   authors: [{ name: 'Danos Aparentes', url: SITE_URL }],
   creator: 'Danos Aparentes',
   publisher: 'Danos Aparentes',
+  keywords: [
+    'inteligência histórica veicular',
+    'histórico de veículo',
+    'memória digital do veículo',
+    'evidências digitais',
+    'dossiê técnico veicular',
+    'linha do tempo veicular',
+    'histórico de avarias',
+    'plataforma de inspeção veicular',
+    'controle de danos',
+    'vistoria de veículos',
+    'inspeção de veículos',
+    'histórico de danos veiculares',
+    'vistoria de locadora',
+    'vistoria de frota',
+    'comparação de avarias',
+    'danos aparentes',
+    'laudo de vistoria',
+  ],
 
   // ── Open Graph ──────────────────────────────────────────────
   // NÃO definir `url` aqui: em Next.js o openGraph do layout raiz é
@@ -96,8 +106,9 @@ export const metadata: Metadata = {
   // canonical — senão o GSC vê canônico próprio + og:url=/ e reporta
   // "Google escolheu canônico diferente" (caso /suporte e /privacidade).
   openGraph: {
-    title: HOME_TITLE,
-    description: HOME_DESCRIPTION,
+    title: 'Danos Aparentes | Inteligência Histórica Veicular',
+    description:
+      'A primeira Plataforma Brasileira de Inteligência Histórica Veicular. Memória digital, evidências, linha do tempo e dossiês com IA.',
     url: '/',
     siteName: 'Danos Aparentes',
     images: [
@@ -105,7 +116,7 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Danos Aparentes — Histórico Digital do Veículo',
+        alt: 'Danos Aparentes — Inteligência Histórica Veicular',
       },
     ],
     locale: 'pt_BR',
@@ -115,8 +126,9 @@ export const metadata: Metadata = {
   // ── Twitter / X ─────────────────────────────────────────────
   twitter: {
     card: 'summary_large_image',
-    title: HOME_TITLE,
-    description: HOME_DESCRIPTION,
+    title: 'Danos Aparentes | Inteligência Histórica Veicular',
+    description:
+      'A primeira Plataforma Brasileira de Inteligência Histórica Veicular. Memória digital, evidências, linha do tempo e dossiês com IA.',
     images: ['/og-image.jpg'],
   },
 
@@ -157,8 +169,6 @@ export default function RootLayout({
       <head>
         {/* ── DNS-prefetch para scripts de terceiros (não-bloqueantes) ─── */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://connect.facebook.net" />
-        <link rel="dns-prefetch" href="https://analytics.tiktok.com" />
         <link rel="dns-prefetch" href="https://cdn.posthog.com" />
 
         {/* ── LCP: preload do SVG da logo que é o elemento LCP real ──────
@@ -220,17 +230,30 @@ export default function RootLayout({
                   name: 'Danos Aparentes',
                   url: SITE_URL,
                   logo: `${SITE_URL}/logo-full.png`,
+                  image: `${SITE_URL}/og-image.jpg`,
+                  sameAs: [
+                    'https://www.linkedin.com/company/danosaparentes',
+                    'https://www.instagram.com/danosaparentes',
+                    'https://www.youtube.com/@danosaparentes',
+                    'https://x.com/danosaparentes',
+                    'https://www.facebook.com/danosaparentes',
+                  ],
                   description:
                     'Histórico digital do veículo: registre, compare e comprove o estado com fotos, avarias, evidências e relatórios organizados em cada vistoria.',
+                  foundingDate: '2025',
                   founder: {
                     '@type': 'Person',
                     name: 'Jeferson',
                     jobTitle: 'Proprietário',
+                    sameAs: [
+                      'https://www.linkedin.com/in/jeferson-danosaparentes',
+                      'https://www.instagram.com/jeferson.danosaparentes',
+                    ],
                   },
                   contactPoint: {
                     '@type': 'ContactPoint',
                     email: 'suporte@danosaparentes.com.br',
-                    telephone: '+5548992032348',
+                    telephone: '+554****2348',
                     contactType: 'customer support',
                     areaServed: 'BR',
                     availableLanguage: ['Portuguese'],
@@ -267,7 +290,7 @@ export default function RootLayout({
                   '@type': 'WebPage',
                   '@id': `${SITE_URL}/#webpage`,
                   url: SITE_URL,
-                  name: 'Danos Aparentes | Histórico Digital do Veículo',
+                  name: 'Danos Aparentes | Inteligência Histórica Veicular',
                   isPartOf: { '@id': `${SITE_URL}/#website` },
                   about: { '@id': `${SITE_URL}/#organization` },
                   primaryImageOfPage: {

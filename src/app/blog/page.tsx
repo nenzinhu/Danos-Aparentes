@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { BLOG_POSTS, formatDate, mapCategory } from '@/src/content/blog'
+import { BLOG_POSTS, formatDate } from '@/src/content/blog'
 import { BlogCover } from '@/src/components/BlogCover'
 import { BlogPostCard } from '@/src/components/BlogPostCard'
 
@@ -68,9 +68,9 @@ export default function BlogIndexPage() {
             href={`/blog/${featured.slug}`}
             className="group block glass-card overflow-hidden mb-8 transition-all hover:border-sky-500/40 focus-visible:ring-2 ring-[var(--primary)] outline-none"
           >
-            <BlogCover cover={featured.cover} className="h-44 sm:h-52">
+            <BlogCover cover={featured.cover} title={featured.title} className="h-44 sm:h-52">
               <span className="cover-badge absolute top-4 left-4 text-[0.62rem] font-extrabold uppercase tracking-widest bg-black/40 text-white px-2.5 py-1 rounded-full backdrop-blur-sm">
-                {mapCategory(featured.category)}
+                {featured.category}
               </span>
               <span className="absolute top-4 right-4 text-[0.6rem] font-bold uppercase tracking-wider bg-[var(--signal-bright)] text-black px-2.5 py-1 rounded-full">
                 Destaque
