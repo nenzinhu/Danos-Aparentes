@@ -31,6 +31,7 @@ export const B2B_CTA_PLATFORM = 'Conhecer Plataforma'
 export const B2B_CTA_CREATE_HISTORY = 'Criar meu primeiro histórico'
 export const B2B_TRIAL_CTA = 'Começar teste grátis'
 export const B2B_TRIAL_CTA_SHORT = 'Testar 7 dias grátis'
+export const B2B_CTA_TRIAL_SHORT = 'Começar grátis'
 
 /** Copy de conversão (brief de redesign SaaS B2B). */
 export const B2B_HERO_HEADLINE_CONVERSION = 'Saiba exatamente quando um dano aconteceu.'

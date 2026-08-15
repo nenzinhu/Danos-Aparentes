@@ -27,6 +27,7 @@ import {
   B2B_CTA_PLATFORM,
   B2B_CTA_CREATE_HISTORY,
   B2B_TRIAL_CTA,
+  B2B_CTA_TRIAL_SHORT,
   B2B_PROBLEM_TITLE,
   B2B_FINAL_HEADLINE,
   B2B_FINAL_SUB,
@@ -55,6 +56,11 @@ const DiffCompareSection = dynamic(() => import('../components/landing/DiffCompa
 const PricingSection = dynamic(() => import('../components/PricingSection'));
 const SocialProofSection = dynamic(() => import('../components/SocialProofSection'));
 const FAQSection = dynamic(() => import('../components/FAQSection'));
+const SolutionEvidenceSection = dynamic(() => import('../components/landing/SolutionEvidenceSection'));
+const DemoCorollaSection = dynamic(() => import('../components/landing/DemoCorollaSection'));
+const IntegritySection = dynamic(() => import('../components/landing/IntegritySection'));
+const RoiSection = dynamic(() => import('../components/landing/RoiSection'));
+const CnhSection = dynamic(() => import('../components/landing/CnhSection'));
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'));
 const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'));
 const FinalCtaSection = dynamic(() => import('../components/FinalCtaSection'));
@@ -249,7 +255,7 @@ function HeroCopy() {
           className="group/cta cursor-pointer px-8 py-4 min-h-12 text-white font-black rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-2.5 transition-colors duration-150 hover:opacity-95 active:opacity-90 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
           style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
         >
-          {B2B_TRIAL_CTA}
+          {B2B_CTA_TRIAL_SHORT}
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-150 group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </Link>
         <a
@@ -385,8 +391,8 @@ export default function LandingPage() {
               eventSource="home"
               className="gsap-header-item px-3 sm:px-5 py-2 sm:py-2.5 bg-primary hover:bg-primary-hover text-white text-xs sm:text-sm font-bold rounded-xl shadow-xl shadow-[var(--primary)]/15 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none"
             >
-              <span className="sm:hidden">Demo</span>
-              <span className="hidden sm:inline">Solicitar Demo</span>
+              <span className="sm:hidden">Grátis</span>
+              <span className="hidden sm:inline">{B2B_CTA_TRIAL_SHORT}</span>
             </LandingCtaLink>
           </nav>
         </div>
@@ -458,13 +464,18 @@ export default function LandingPage() {
 
       {/* JORNADA OTIMIZADA: dor -> diferencial -> prova -> IA -> valor -> planos */}
       <ProblemSection />
+      <SolutionEvidenceSection />
       <VehicleHistoryTimelineSection />
       <AntesDepoisSection />
       <HowItWorksHistorySection />
+      <DemoCorollaSection />
       <VisualDamageSection />
       <IaFlowSlider />
       <DiffCompareSection />
       <EvidenceContextSection />
+      <IntegritySection />
+      <CnhSection />
+      <RoiSection />
       <PdfPreviewSection />
       <AudienceSection />
       <FeaturesGridSection />

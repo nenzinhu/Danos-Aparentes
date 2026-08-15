@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import LandingCtaLink from './LandingCtaLink'
 import Reveal from './Reveal'
-import { B2B_FINAL_HEADLINE, B2B_FINAL_SUB, B2B_TRIAL_CTA } from '@/src/lib/b2bPositioning'
+import { B2B_FINAL_HEADLINE, B2B_FINAL_SUB, B2B_CTA_TRIAL_SHORT } from '@/src/lib/b2bPositioning'
 
 export default function FinalCtaSection() {
   return (
@@ -36,7 +36,7 @@ export default function FinalCtaSection() {
             className="group/cta px-10 py-5 text-white font-black text-base sm:text-lg rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-2.5 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
             style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
           >
-            <span>{B2B_TRIAL_CTA}</span>
+            <span>{B2B_CTA_TRIAL_SHORT}</span>
             <svg
               aria-hidden="true"
               width="22"
