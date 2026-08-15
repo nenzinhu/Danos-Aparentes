@@ -182,16 +182,17 @@ export default function FirstInspectionOnboarding({
       <p className="text-xs text-[var(--text-muted)] mb-3">{current.hint}</p>
 
       <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => { void handlePrimary() }}
-          disabled={saving || (activeStep === 'finalizar' && !hasPlate)}
-          className="px-4 py-2 rounded-xl text-xs font-black text-white bg-[var(--primary)] hover:opacity-90 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {activeStep === 'dados' && 'Ir para Identidade do Veículo'}
-          {activeStep === 'diagrama' && 'Abrir diagrama'}
-          {activeStep === 'finalizar' && (saving ? 'Salvando…' : 'Salvar primeira inspeção')}
-        </button>
+        {activeStep !== 'dados' && (
+          <button
+            type="button"
+            onClick={() => { void handlePrimary() }}
+            disabled={saving || (activeStep === 'finalizar' && !hasPlate)}
+            className="px-4 py-2 rounded-xl text-xs font-black text-white bg-[var(--primary)] hover:opacity-90 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {activeStep === 'diagrama' && 'Abrir diagrama'}
+            {activeStep === 'finalizar' && (saving ? 'Salvando…' : 'Salvar primeira inspeção')}
+          </button>
+        )}
         {activeStep === 'diagrama' && !hasDamages && (
           <button
             type="button"

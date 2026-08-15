@@ -69,7 +69,7 @@ export function useInspectionWorkflow({
   const [viewType, setViewType] = useState<ViewType>('lateral-left')
   const [visitedViews, setVisitedViews] = useState<ViewType[]>(['lateral-left'])
   const [vehicleInfo, setVehicleInfo] = useState<VehicleInfo>(EMPTY_INFO)
-  const [formCollapsed, setFormCollapsed] = useState(false)
+  const [formCollapsed, setFormCollapsed] = useState(true)
   const [formResetToken, setFormResetToken] = useState(0)
   const [previousReport, setPreviousReport] = useState<PreviousReportSummary | null>(null)
   const [previousSavedReport, setPreviousSavedReport] = useState<SavedReport | null>(null)

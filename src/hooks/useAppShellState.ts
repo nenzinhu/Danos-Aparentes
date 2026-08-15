@@ -71,7 +71,7 @@ export function useAppShellState({ openPortal }: UseAppShellStateOptions) {
 
   useEffect(() => {
     const saved = localStorage.getItem('darkMode')
-    const isDark = saved !== null ? saved !== 'false' : window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? true
+    const isDark = saved !== null ? saved !== 'false' : true
     setDarkMode(isDark)
   }, [])
 

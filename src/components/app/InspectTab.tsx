@@ -323,7 +323,6 @@ export default function InspectTab({
       )}
 
       <div className="flex flex-col items-center gap-3">
-        <StepProgress current={section} />
         <div
           role="tablist"
           aria-label="Etapas da inspeção"
