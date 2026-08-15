@@ -1,15 +1,16 @@
 'use client'
 
 import Reveal from '../Reveal'
+import { B2B_PROBLEM_TITLE } from '@/src/lib/b2bPositioning'
 
 const WANTS = [
-  'Como estava há 2 anos',
+  'Veículo entrou sem dano e saiu danificado',
+  'Cliente contesta uma cobrança',
+  'Oficina recebe veículo já danificado',
+  'Empresa não descobre quando a avaria ocorreu',
   'Quantos danos teve',
   'Quem dirigia',
   'Qual oficina mexeu',
-  'Quantas vezes foi batido',
-  'Evolução dos danos',
-  'Valor perdido',
   'Fotos de todas as entregas',
 ]
 
@@ -26,16 +27,16 @@ export default function ProblemSection() {
             O problema
           </div>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance]">
-            Imagine uma empresa com 1.500 carros
+            {B2B_PROBLEM_TITLE}
           </h2>
           <p className="mt-5 text-sm sm:text-base text-[var(--text-muted)] leading-relaxed max-w-lg">
-            Ela não quer somente saber como o carro está hoje.
+            O problema não é apenas registrar o dano. É ter evidências para comprovar quando e onde ele aconteceu.
           </p>
           <p className="mt-3 text-sm sm:text-base text-[var(--text-main)] leading-relaxed max-w-lg font-semibold">
-            Ela quer saber o histórico completo de cada veículo.
+            Sem histórico, toda devolução vira discussão — ou processo.
           </p>
           <p className="mt-6 text-sm text-[var(--text-muted)] leading-relaxed max-w-lg">
-            O Danos Aparentes organiza essas informações em um só lugar — para locadoras, frotas, oficinas e quem precisa
+            O Danos Aparentes organiza cada inspeção em uma linha do tempo auditável — para locadoras, frotas, oficinas e quem precisa
             provar o que mudou.
           </p>
         </Reveal>

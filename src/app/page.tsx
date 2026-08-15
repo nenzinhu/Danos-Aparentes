@@ -26,8 +26,14 @@ import {
   B2B_CTA_DEMO,
   B2B_CTA_PLATFORM,
   B2B_CTA_CREATE_HISTORY,
+  B2B_TRIAL_CTA,
+  B2B_PROBLEM_TITLE,
+  B2B_FINAL_HEADLINE,
+  B2B_FINAL_SUB,
+  B2B_HERO_HEADLINE_CONVERSION,
+  B2B_HERO_SUB_CONVERSION,
   SEO_PRIMARY,
-} from '../lib/b2bPositioning';
+} from '../lib/b2bPositioning'
 import { SOCIAL_PROOF_QUOTES } from '../lib/socialProof';
 
 /** Sticky CTA depends on viewport — keep client-only. */
@@ -226,17 +232,24 @@ function HeroCopy() {
         variants={reduceMotion ? undefined : heroCopyItem}
         className="mt-3 font-display text-lg sm:text-xl font-semibold text-[var(--signal-bright)] tracking-tight [text-wrap:balance]"
       >
-        A plataforma que preserva toda a história de um veículo.
+        {B2B_HERO_HEADLINE_CONVERSION}
+      </motion.p>
+
+      <motion.p
+        variants={reduceMotion ? undefined : heroCopyItem}
+        className="mt-2 max-w-lg text-sm text-[var(--text-muted)] leading-relaxed"
+      >
+        {B2B_HERO_SUB_CONVERSION}
       </motion.p>
 
       <motion.div variants={reduceMotion ? undefined : heroCopyItem} className="pt-7 flex flex-wrap gap-3">
         <Link
           id="hero-primary-cta"
-          href="/app"
+          href="/planos"
           className="group/cta cursor-pointer px-8 py-4 min-h-12 text-white font-black rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-2.5 transition-colors duration-150 hover:opacity-95 active:opacity-90 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
           style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
         >
-          {B2B_CTA_CREATE_HISTORY}
+          {B2B_TRIAL_CTA}
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-150 group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </Link>
         <a

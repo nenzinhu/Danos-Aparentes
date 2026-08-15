@@ -29,8 +29,18 @@ export const B2B_HERO_SUBTITLE =
 export const B2B_CTA_DEMO = 'Solicitar Demonstração'
 export const B2B_CTA_PLATFORM = 'Conhecer Plataforma'
 export const B2B_CTA_CREATE_HISTORY = 'Criar meu primeiro histórico'
-export const B2B_TRIAL_CTA = 'Começar 7 dias grátis — sem cartão'
+export const B2B_TRIAL_CTA = 'Começar teste grátis'
 export const B2B_TRIAL_CTA_SHORT = 'Testar 7 dias grátis'
+
+/** Copy de conversão (brief de redesign SaaS B2B). */
+export const B2B_HERO_HEADLINE_CONVERSION = 'Saiba exatamente quando um dano aconteceu.'
+export const B2B_HERO_SUB_CONVERSION =
+  'Registre cada inspeção com fotos, evidências, localização e data/hora. Compare o histórico do veículo e tenha provas organizadas para evitar disputas e prejuízos.'
+export const B2B_PROBLEM_TITLE = 'Quem causou o dano?'
+export const B2B_FINAL_HEADLINE = 'Pare de discutir sobre quando o dano aconteceu.'
+export const B2B_FINAL_SUB =
+  'Comece a criar hoje o histórico digital dos seus veículos. Teste grátis, sem cartão.'
+export const B2B_CTA_TRIAL = B2B_TRIAL_CTA
 
 /** Vocabulário interno da UI (labels). */
 export const UI_LABELS = {
