@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react'
 import { VehicleInfo, CustomField, VehicleType } from '../types'
 import Button from './ui/Button'
-import WizardStepper from './WizardStepper'
+import { WIZARD_STEPS } from './WizardStepper'
 import type { WizardStep } from './wizardTypes'
 import { IconDocument } from './ui/AnimatedIcons'
 import { storePhotoEvidence } from '../lib/photoEvidence'
@@ -444,10 +444,12 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
         </div>
       </div>
 
-      <p className="text-[0.72rem] font-bold text-slate-500 mb-1">
+      <p className="text-[0.72rem] font-bold text-slate-500 mb-3">
         Passo {wizardStep} de 3
+        {WIZARD_STEPS.find(s => s.step === wizardStep)?.label && (
+          <span className="text-[var(--text-muted)] font-semibold"> · {WIZARD_STEPS.find(s => s.step === wizardStep)?.label}</span>
+        )}
       </p>
-      <WizardStepper current={wizardStep} maxVisited={maxVisited} onStepClick={goToStep} />
 
       <div
         key={renderedStep}
