@@ -60,7 +60,6 @@ const PricingSection = dynamic(() => import('../components/PricingSection'));
 const SocialProofSection = dynamic(() => import('../components/SocialProofSection'));
 const FAQSection = dynamic(() => import('../components/FAQSection'));
 const SolutionEvidenceSection = dynamic(() => import('../components/landing/SolutionEvidenceSection'));
-const DemoCorollaSection = dynamic(() => import('../components/landing/DemoCorollaSection'));
 const IntegritySection = dynamic(() => import('../components/landing/IntegritySection'));
 const RoiSection = dynamic(() => import('../components/landing/RoiSection'));
 const CnhSection = dynamic(() => import('../components/landing/CnhSection'));
@@ -463,7 +462,6 @@ export default function LandingPage() {
       <HeroMicroMessage />
       <SocialProofSection vertical="home" />
       <ProblemSection />
-      <DemoCorollaSection />
       <VehicleHistoryTimelineSection />
       <AntesDepoisSection />
       <EuConsigoProvarSection />
