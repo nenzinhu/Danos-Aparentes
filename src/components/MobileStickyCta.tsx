@@ -1,46 +1,18 @@
 'use client'
-import { useEffect, useState } from 'react'
-import LandingCtaLink from './LandingCtaLink'
-import { B2B_CTA_DEMO } from '@/src/lib/b2bPositioning'
-import type { FunnelCtaSource } from '@/src/lib/analytics/events'
 
-interface Props {
-  heroCtaId?: string
-  eventSource?: FunnelCtaSource | string
-}
+import Link from 'next/link'
+import { B2B_CTA_TRIAL_SHORT } from '@/src/lib/b2bPositioning'
 
-export default function MobileStickyCta({
-  heroCtaId = 'hero-primary-cta',
-  eventSource = 'sticky',
-}: Props) {
-  const [showSticky, setShowSticky] = useState(false)
-
-  useEffect(() => {
-    const el = document.getElementById(heroCtaId)
-    if (!el) {
-      setShowSticky(true)
-      return
-    }
-    const observer = new IntersectionObserver(
-      ([entry]) => setShowSticky(!entry.isIntersecting),
-      { threshold: 0.1 },
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [heroCtaId])
-
-  if (!showSticky) return null
-
+export default function MobileStickyCta(_props?: { heroCtaId?: string; eventSource?: string }) {
   return (
-    <div className="md:hidden fixed bottom-0 inset-x-0 z-[99980] p-3 bg-slate-950/95 border-t border-[var(--primary)]/20 backdrop-blur-md pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-      <LandingCtaLink
-        id={`${heroCtaId}-sticky`}
-        eventSource={eventSource}
-        className="block w-full py-3.5 text-center text-white font-black rounded-xl shadow-lg shadow-sky-500/20 text-sm"
+    <div className="lg:hidden fixed bottom-0 inset-x-0 z-40 px-3 pb-3 pt-2 bg-[linear-gradient(to_top,var(--bg-main)_70%,transparent)] border-t border-[var(--card-border)]/50">
+      <Link
+        href="/planos"
+        className="block w-full text-center px-6 py-3.5 text-white font-black rounded-xl shadow-xl shadow-[var(--primary)]/25"
         style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
       >
-        {B2B_CTA_DEMO}
-      </LandingCtaLink>
+        {B2B_CTA_TRIAL_SHORT}
+      </Link>
     </div>
   )
 }

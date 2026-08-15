@@ -88,7 +88,7 @@ export default function IaFlowSlider() {
             Inteligência · Análise de Imagens
           </p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
-            A IA é protagonista: de evidência a histórico em segundos
+            IA que acelera. Você continua no controle.
           </h2>
           <p className="mt-4 text-sm sm:text-base text-[var(--text-muted)] max-w-2xl leading-relaxed">
             Analisa imagens, detecta danos, gera descrições e atualiza o histórico — com revisão

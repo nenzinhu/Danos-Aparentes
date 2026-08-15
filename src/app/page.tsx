@@ -26,7 +26,10 @@ import {
   B2B_CTA_DEMO,
   B2B_CTA_PLATFORM,
   B2B_CTA_CREATE_HISTORY,
-  B2B_TRIAL_CTA,
+  B2B_HERO_HEADLINE_A,
+  B2B_HERO_SUB,
+  B2B_HERO_EYEBROW,
+  B2B_TRIAL_BADGE,
   B2B_CTA_TRIAL_SHORT,
   B2B_PROBLEM_TITLE,
   B2B_FINAL_HEADLINE,
@@ -61,6 +64,7 @@ const DemoCorollaSection = dynamic(() => import('../components/landing/DemoCorol
 const IntegritySection = dynamic(() => import('../components/landing/IntegritySection'));
 const RoiSection = dynamic(() => import('../components/landing/RoiSection'));
 const CnhSection = dynamic(() => import('../components/landing/CnhSection'));
+const HeroMicroMessage = dynamic(() => import('../components/landing/HeroMicroMessage'));
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'));
 const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'));
 const FinalCtaSection = dynamic(() => import('../components/FinalCtaSection'));
@@ -207,7 +211,7 @@ function HeroCopy() {
 
       {reduceMotion ? (
         <h1 className="mt-5 text-xl max-[400px]:text-2xl sm:text-3xl lg:text-[2.35rem] tracking-tight font-semibold text-[var(--text-main)] leading-[1.12] sm:leading-[1.08] [text-wrap:balance] max-w-xl">
-          {SEO_PRIMARY}
+          {B2B_HERO_HEADLINE_A}
         </h1>
       ) : (
         <GsapTextReveal
@@ -215,14 +219,13 @@ function HeroCopy() {
           split="words"
           className="mt-5 text-xl max-[400px]:text-2xl sm:text-3xl lg:text-[2.35rem] tracking-tight font-semibold text-[var(--text-main)] leading-[1.12] sm:leading-[1.08] [text-wrap:balance] max-w-xl"
         >
-          {SEO_PRIMARY}
+          {B2B_HERO_HEADLINE_A}
         </GsapTextReveal>
       )}
 
       {reduceMotion ? (
         <p className="mt-4 max-w-lg text-base lg:text-lg text-[var(--text-muted)] leading-relaxed">
-          <span className="font-semibold text-[var(--text-main)]">Muito mais que uma vistoria.</span>{' '}
-          Centralize todo o histórico do veículo em uma plataforma inteligente. {B2B_HERO_SUBTITLE}
+          {B2B_HERO_SUB}
         </p>
       ) : (
         <GsapSplitSubline
@@ -230,7 +233,7 @@ function HeroCopy() {
           delay={350}
           className="mt-4 max-w-lg text-base lg:text-lg text-[var(--text-muted)] leading-relaxed"
         >
-          Muito mais que uma vistoria. Centralize todo o histórico do veículo em uma plataforma inteligente. Registre inspeções, organize evidências, acompanhe a evolução dos danos, utilize Inteligência Artificial e gere laudos profissionais em poucos minutos.
+          Registre, compare e comprove o estado de cada veículo com fotos, evidências, localização, data, hora e histórico completo.
         </GsapSplitSubline>
       )}
 
@@ -238,14 +241,7 @@ function HeroCopy() {
         variants={reduceMotion ? undefined : heroCopyItem}
         className="mt-3 font-display text-lg sm:text-xl font-semibold text-[var(--signal-bright)] tracking-tight [text-wrap:balance]"
       >
-        {B2B_HERO_HEADLINE_CONVERSION}
-      </motion.p>
-
-      <motion.p
-        variants={reduceMotion ? undefined : heroCopyItem}
-        className="mt-2 max-w-lg text-sm text-[var(--text-muted)] leading-relaxed"
-      >
-        {B2B_HERO_SUB_CONVERSION}
+        {B2B_HERO_EYEBROW}
       </motion.p>
 
       <motion.div variants={reduceMotion ? undefined : heroCopyItem} className="pt-7 flex flex-wrap gap-3">
@@ -259,10 +255,10 @@ function HeroCopy() {
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-150 group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </Link>
         <a
-          href="#como-funciona"
+          href="#demonstracao"
           className="px-6 py-4 min-h-12 rounded-xl border border-[var(--card-border)] text-sm font-bold text-[var(--text-main)] hover:bg-[var(--btn-secondary-bg)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none inline-flex items-center"
         >
-          {B2B_CTA_PLATFORM}
+          {B2B_CTA_DEMO}
         </a>
       </motion.div>
 
@@ -270,7 +266,7 @@ function HeroCopy() {
         variants={reduceMotion ? undefined : heroCopyItem}
         className="mt-4 text-sm font-semibold text-[var(--text-muted)]"
       >
-        ✓ Memória digital permanente • ✓ Evidências rastreáveis • ✓ Auditoria completa
+        {B2B_TRIAL_BADGE}
       </motion.p>
 
       <motion.ul
@@ -462,13 +458,15 @@ export default function LandingPage() {
         </div>
       </aside>
 
-      {/* JORNADA OTIMIZADA: dor -> diferencial -> prova -> IA -> valor -> planos */}
+      {/* JORNADA OTIMIZADA (brief HOME): valor -> micro -> prova -> dor -> prova visual -> historico -> ia -> integridade -> cnh -> roi -> segmentos -> planos -> faq -> cta */}
+      <HeroMicroMessage />
+      <SocialProofSection vertical="home" />
       <ProblemSection />
-      <SolutionEvidenceSection />
+      <DemoCorollaSection />
       <VehicleHistoryTimelineSection />
       <AntesDepoisSection />
       <HowItWorksHistorySection />
-      <DemoCorollaSection />
+      <SolutionEvidenceSection />
       <VisualDamageSection />
       <IaFlowSlider />
       <DiffCompareSection />
@@ -476,10 +474,9 @@ export default function LandingPage() {
       <IntegritySection />
       <CnhSection />
       <RoiSection />
-      <PdfPreviewSection />
       <AudienceSection />
       <FeaturesGridSection />
-      <SocialProofSection vertical="home" />
+      <PdfPreviewSection />
       <PricingSection />
       <FAQSection items={FAQ_ITEMS} />
       <FinalCtaSection />

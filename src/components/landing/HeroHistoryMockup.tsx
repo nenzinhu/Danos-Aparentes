@@ -6,15 +6,12 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const EVENTS = [
-  { tone: 'ok' as const, label: 'Entrega', sub: 'Primeira inspeção', date: '12 JAN 2026' },
-  { tone: 'ok' as const, label: 'Primeira Inspeção', sub: 'Evento na linha do tempo', date: '15 JAN 2026' },
-  { tone: 'warn' as const, label: 'Reparo', sub: 'Evento de oficina', date: '18 JAN 2026' },
-  { tone: 'alert' as const, label: 'Nova Inspeção', sub: 'Porta dianteira direita · Amassado', date: '20 JAN 2026' },
+  { tone: 'ok' as const, label: 'Entrega', sub: 'Sem danos', date: '05 AGO 2026' },
+  { tone: 'alert' as const, label: 'Devolução', sub: 'Novo risco identificado', date: '15 AGO 2026' },
 ]
 
 const DOT: Record<(typeof EVENTS)[number]['tone'], string> = {
   ok: 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.45)]',
-  warn: 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.4)]',
   alert: 'bg-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.45)]',
 }
 
@@ -93,15 +90,15 @@ export default function HeroHistoryMockup() {
         <div className="flex items-center justify-between gap-3 px-5 py-4 border-b border-[var(--card-border)]">
           <div className="min-w-0">
             <p className="font-display text-lg font-bold uppercase tracking-tight text-[var(--text-main)] leading-none">
-              Chevrolet Onix
+              Toyota Corolla
             </p>
             <p className="mt-1.5 font-mono-data text-[11px] tracking-[0.22em] text-[var(--signal-bright)]">
-              ABC1D23
+              ABC-1234
             </p>
           </div>
           <div className="shrink-0 rounded-lg border border-[var(--card-border)] px-2.5 py-1.5 text-center">
             <p className="font-mono-data text-[9px] uppercase tracking-wider text-[var(--text-muted)]">Placa</p>
-            <p className="font-mono-data text-xs font-semibold tracking-widest text-[var(--text-main)]">ABC1D23</p>
+            <p className="font-mono-data text-xs font-semibold tracking-widest text-[var(--text-main)]">ABC-1234</p>
           </div>
         </div>
 

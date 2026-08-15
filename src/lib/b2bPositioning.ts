@@ -33,7 +33,18 @@ export const B2B_TRIAL_CTA = 'Começar teste grátis'
 export const B2B_TRIAL_CTA_SHORT = 'Testar 7 dias grátis'
 export const B2B_CTA_TRIAL_SHORT = 'Começar grátis'
 
-/** Copy de conversão (brief de redesign SaaS B2B). */
+/** Copy de conversão (brief de redesign HOME SaaS B2B). */
+export const B2B_HERO_HEADLINE_A = 'Saiba exatamente o que mudou em cada veículo.'
+export const B2B_HERO_HEADLINE_B = 'Pare de discutir sobre quando o dano aconteceu.'
+export const B2B_HERO_SUB =
+  'Registre, compare e comprove o estado de cada veículo com fotos, evidências, localização, data, hora e histórico completo.'
+export const B2B_HERO_EYEBROW = 'HISTÓRICO DIGITAL DO VEÍCULO'
+export const B2B_HERO_MICRO = [
+  'Você sabe o que mudou.',
+  'Você sabe quando mudou.',
+  'Você tem a evidência.',
+]
+export const B2B_TRIAL_BADGE = '7 dias grátis • Sem cartão de crédito'
 export const B2B_HERO_HEADLINE_CONVERSION = 'Saiba exatamente quando um dano aconteceu.'
 export const B2B_HERO_SUB_CONVERSION =
   'Registre cada inspeção com fotos, evidências, localização e data/hora. Compare o histórico do veículo e tenha provas organizadas para evitar disputas e prejuízos.'
