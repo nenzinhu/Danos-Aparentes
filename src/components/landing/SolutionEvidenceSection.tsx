@@ -59,7 +59,7 @@ export default function SolutionEvidenceSection() {
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
         </div>
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
-          Transforme cada inspeção em uma evidência.
+          Tudo o que você precisa para construir um histórico confiável.
         </h2>
         <p className="mt-4 max-w-2xl text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
           {B2B_PRODUCT_LINE} Cada recurso existe para uma única razão: provar quando e onde um dano aconteceu.

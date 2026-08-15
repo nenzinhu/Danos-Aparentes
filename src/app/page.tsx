@@ -64,6 +64,7 @@ const DemoCorollaSection = dynamic(() => import('../components/landing/DemoCorol
 const IntegritySection = dynamic(() => import('../components/landing/IntegritySection'));
 const RoiSection = dynamic(() => import('../components/landing/RoiSection'));
 const CnhSection = dynamic(() => import('../components/landing/CnhSection'));
+const EuConsigoProvarSection = dynamic(() => import('../components/landing/EuConsigoProvarSection'));
 const HeroMicroMessage = dynamic(() => import('../components/landing/HeroMicroMessage'));
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'));
 const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'));
@@ -465,6 +466,7 @@ export default function LandingPage() {
       <DemoCorollaSection />
       <VehicleHistoryTimelineSection />
       <AntesDepoisSection />
+      <EuConsigoProvarSection />
       <HowItWorksHistorySection />
       <SolutionEvidenceSection />
       <VisualDamageSection />

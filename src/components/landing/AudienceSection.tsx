@@ -52,7 +52,7 @@ export default function AudienceSection() {
             Feito para
           </p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
-            Para quem o prejuízo de um dano não comprovado é caro.
+            Uma plataforma. Diferentes operações.
           </h2>
           <p className="mt-4 text-sm text-[var(--text-muted)] max-w-xl leading-relaxed">
             Do check-out da locadora à vistoria independente — o mesmo histórico digital, comparável no tempo, pronto para cobrar ou defender.
