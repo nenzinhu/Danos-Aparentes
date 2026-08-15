@@ -5,64 +5,28 @@ import Reveal from '../Reveal'
 
 const STEPS = [
   {
-    id: 'veiculo',
+    id: 'inspecione',
     n: '1',
-    title: 'Selecione o veículo',
-    body: 'Abra o histórico de um veículo pela placa ou crie um novo — ele vira a memória digital daquele ativo.',
+    title: 'Inspecione',
+    body: 'Registre o estado do veículo na entrada, na saída ou a qualquer momento — com data, hora, local e responsável. Uma linha do tempo começa a ser construída.',
   },
   {
-    id: 'inspecao',
+    id: 'documente',
     n: '2',
-    title: 'Registre a inspeção',
-    body: 'Abra uma nova inspeção vinculada à Identidade do Veículo — com data, hora, local e contexto da operação.',
+    title: 'Documente',
+    body: 'Fotografe, marque o dano no diagrama do veículo e deixe a IA sugerir a descrição. Cada avaria vira uma evidência com GPS, hora e rastreabilidade.',
   },
   {
-    id: 'danos',
+    id: 'compare',
     n: '3',
-    title: 'Marque os danos sobre o veículo',
-    body: 'Toque no diagrama interativo e registre cada dano com localização precisa (lado, peça), severidade e responsável.',
+    title: 'Compare',
+    body: 'Coloque inspeções lado a lado e veja o que existia antes e o que há agora. O sistema revela danos novos, reparos e a evolução de cada avaria.',
   },
   {
-    id: 'evidencias',
+    id: 'comprove',
     n: '4',
-    title: 'Fotografe e anexe evidências',
-    body: 'Fotos, vídeos e documentos viram evidências digitais organizadas — com data, hora e rastreabilidade.',
-  },
-  {
-    id: 'ia',
-    n: '5',
-    title: 'A IA analisa as imagens',
-    body: 'A IA sugere a descrição e o nível de confiança do dano. A decisão final de registrar é sempre sua.',
-  },
-  {
-    id: 'confirmar',
-    n: '6',
-    title: 'Você confirma e salva',
-    body: 'Revise a sugestão da IA, confirme ou corrija, e a informação entra no histórico do veículo.',
-  },
-  {
-    id: 'historico',
-    n: '7',
-    title: 'Uma nova camada é acrescentada',
-    body: 'Cada inspeção NÃO substitui a anterior — ela soma uma camada permanente à memória digital do veículo.',
-  },
-  {
-    id: 'comparar',
-    n: '8',
-    title: 'Faça uma nova inspeção',
-    body: 'Na entrega, devolução ou qualquer novo momento, registre de novo. O histórico continua crescendo.',
-  },
-  {
-    id: 'comparacao',
-    n: '9',
-    title: 'Compare os momentos',
-    body: 'Na Linha do Tempo Veicular, coloque inspeções lado a lado e veja o que existia antes e o que há agora.',
-  },
-  {
-    id: 'alteracoes',
-    n: '10',
-    title: 'Identifique as alterações',
-    body: 'A comparação revela o que mudou — um novo dano, um reparo ou a evolução de uma avaria já conhecida.',
+    title: 'Comprove',
+    body: 'Gere o dossiê técnico com hash, QR e verificação pública. Tenha provas organizadas para cobrar, defender ou fechar sem discussão.',
   },
 ] as const
 
@@ -82,11 +46,11 @@ export default function HowItWorksHistorySection() {
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
         </div>
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
-          Da inspeção à memória digital do veículo
+          De inspeção a prova: 4 passos para parar de discutir dano
         </h2>
         <p className="mt-4 max-w-2xl text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-          Cada etapa adiciona inteligência ao histórico. Não é um checklist — é a construção contínua do
-          patrimônio digital do veículo.
+          Cada etapa transforma uma inspeção em evidência. Não é um checklist — é a construção contínua do
+          histórico que prova quando e onde cada dano aconteceu.
         </p>
       </Reveal>
 
