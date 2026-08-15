@@ -100,7 +100,7 @@ export default function Demo() {
             </div>
             <div className='rounded-lg overflow-hidden border border-white/10'>
               <img
-                src='/samples/corolla-abc-1234-1.jpg'
+                src='/samples/corolla-abc-1234-2.jpg'
                 alt='Toyota Corolla ABC-1234 — vista traseira na inspeção'
                 className='w-full h-32 object-cover'
                 loading='lazy'
@@ -108,7 +108,7 @@ export default function Demo() {
             </div>
             <div className='rounded-lg overflow-hidden border border-white/10'>
               <img
-                src='/samples/corolla-abc-1234-2.jpg'
+                src='/samples/corolla-abc-1234-1.jpg'
                 alt='Toyota Corolla ABC-1234 — detalhe da avaria'
                 className='w-full h-32 object-cover'
                 loading='lazy'

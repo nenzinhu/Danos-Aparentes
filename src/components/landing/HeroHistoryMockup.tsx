@@ -106,7 +106,7 @@ export default function HeroHistoryMockup() {
           {/* Foto real da inspeção — Toyota Corolla ABC-1234 */}
           <div className="relative rounded-xl overflow-hidden border border-[var(--card-border)] bg-black/40 mb-4">
             <img
-              src="/samples/corolla-abc-1234-1.jpg"
+              src="/samples/corolla-abc-1234-2.jpg"
               alt="Toyota Corolla ABC-1234 — vista traseira na inspeção"
               className="w-full h-40 object-cover"
               loading="lazy"
@@ -162,7 +162,7 @@ export default function HeroHistoryMockup() {
           </ul>
           <div className="mt-2 rounded-lg overflow-hidden border border-[var(--card-border)]">
             <img
-              src="/samples/corolla-abc-1234-2.jpg"
+              src="/samples/corolla-abc-1234-1.jpg"
               alt="Toyota Corolla ABC-1234 — detalhe da avaria"
               className="w-full h-24 object-cover"
               loading="lazy"
