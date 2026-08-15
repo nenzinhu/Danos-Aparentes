@@ -72,21 +72,52 @@ export default function Demo() {
       </h2>
 
       <div className='flex-1 min-h-0 grid place-items-center'>
-        <div className='w-full max-w-4xl glass-card p-8 aspect-video flex items-center justify-center'>
-          <VehicleViewer.Root
-            vehicleType='car'
-            viewType='lateral-left'
-            damages={damages}
-            onAddDamage={handleAddDamage}
-            onRemoveDamageFromPart={handleRemoveDamageFromPart}
-            speak={speak}
-            speakHover={speakHover}
-          >
-            <VehicleViewer.Viewport />
-            <VehicleViewer.FloatingDamage />
-            <VehicleViewer.Controls />
-            <VehicleViewer.FullscreenOverlay />
-          </VehicleViewer.Root>
+        <div className='w-full max-w-5xl grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4'>
+          <div className='glass-card p-8 aspect-video flex items-center justify-center'>
+            <VehicleViewer.Root
+              vehicleType='car'
+              viewType='lateral-left'
+              damages={damages}
+              onAddDamage={handleAddDamage}
+              onRemoveDamageFromPart={handleRemoveDamageFromPart}
+              speak={speak}
+              speakHover={speakHover}
+            >
+              <VehicleViewer.Viewport />
+              <VehicleViewer.FloatingDamage />
+              <VehicleViewer.Controls />
+              <VehicleViewer.FullscreenOverlay />
+            </VehicleViewer.Root>
+          </div>
+
+          {/* Evidência real da inspeção — Toyota Corolla ABC-1234 */}
+          <aside className='glass-card p-4 flex flex-col gap-3 self-center'>
+            <div className='flex items-center justify-between gap-2'>
+              <p className='font-display text-sm font-bold uppercase tracking-tight text-[#e8f4ff] leading-none'>
+                Toyota Corolla
+              </p>
+              <span className='font-mono-data text-[11px] tracking-[0.2em] text-[#7dd3fc]'>ABC-1234</span>
+            </div>
+            <div className='rounded-lg overflow-hidden border border-white/10'>
+              <img
+                src='/samples/corolla-abc-1234-1.jpg'
+                alt='Toyota Corolla ABC-1234 — vista traseira na inspeção'
+                className='w-full h-32 object-cover'
+                loading='lazy'
+              />
+            </div>
+            <div className='rounded-lg overflow-hidden border border-white/10'>
+              <img
+                src='/samples/corolla-abc-1234-2.jpg'
+                alt='Toyota Corolla ABC-1234 — detalhe da avaria'
+                className='w-full h-32 object-cover'
+                loading='lazy'
+              />
+            </div>
+            <p className='text-[10px] text-slate-400 leading-snug'>
+              Fotos anexadas à inspeção · Traseira · Evidência comprovatória
+            </p>
+          </aside>
         </div>
       </div>
 
