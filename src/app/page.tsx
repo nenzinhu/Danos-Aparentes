@@ -51,6 +51,7 @@ const AntesDepoisSection = dynamic(() => import('../components/landing/AntesDepo
 const HowItWorksHistorySection = dynamic(() => import('../components/landing/HowItWorksHistorySection'));
 const VehicleHistoryTimelineSection = dynamic(() => import('../components/landing/VehicleHistoryTimelineSection'));
 const VisualDamageSection = dynamic(() => import('../components/landing/VisualDamageSection'));
+const LiveDemoCarousel = dynamic(() => import('../components/landing/LiveDemoCarousel'));
 const IaFlowSlider = dynamic(() => import('../components/landing/IaFlowSlider'));
 const AudienceSection = dynamic(() => import('../components/landing/AudienceSection'));
 const FeaturesGridSection = dynamic(() => import('../components/landing/FeaturesGridSection'));
@@ -468,6 +469,7 @@ export default function LandingPage() {
       <HowItWorksHistorySection />
       <SolutionEvidenceSection />
       <VisualDamageSection />
+      <LiveDemoCarousel />
       <IaFlowSlider />
       <DiffCompareSection />
       <EvidenceContextSection />
