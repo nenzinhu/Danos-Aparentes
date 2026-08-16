@@ -148,7 +148,7 @@ export default function HeroHistoryMockup() {
         <div className="mx-5 mb-5 rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 space-y-2">
           <p className="text-xs font-bold text-rose-300">1 nova avaria identificada</p>
           <p className="text-[11px] text-[var(--text-muted)]">
-            Porta dianteira direita · Amassado · 20 JAN 2026
+            Para-choque traseiro · Avaria na tinta do veículo · 20 JAN 2026
           </p>
           <ul className="flex flex-wrap gap-1.5 list-none m-0 p-0">
             {['Foto anexada', 'IA analisou', 'Validado pelo vistoriador'].map((tag) => (
