@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import Reveal from '../Reveal'
 
 const SEM = [
@@ -19,14 +20,14 @@ const COM = [
 
 /**
  * Seção de prova financeira (ilustrativa).
- * Valores são EXEMPLO HIPOTÉTICO — nunca presentedos como dado real da empresa.
+ * Valores são SIMULAÇÃO — não apresentados como dado real da empresa.
  */
 export default function RoiSection() {
   const [frota, setFrota] = useState(500)
-  const [custo, setCusto] = useState(1500)
+  const [avariasMes, setAvariasMes] = useState(2)
+  const [custo, setCusto] = useState(800)
 
-  const danosMes = 1 // exemplo: 1 dano não identificado por mês
-  const prejuizoMes = danosMes * custo
+  const prejuizoMes = avariasMes * custo
   const prejuizoAno = prejuizoMes * 12
 
   const fmt = (v: number) =>
@@ -54,17 +55,17 @@ export default function RoiSection() {
       <Reveal>
         <div className="relative rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/50 overflow-hidden px-4 sm:px-8 py-8 sm:py-10">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 lg:gap-8">
-            {/* Simulador ilustrativo */}
+            {/* Calculadora de ROI / Prejuízo Invisível */}
             <div className="rounded-xl border border-[var(--card-border)] bg-[var(--bg-main)]/70 px-5 py-6">
               <h3 className="font-display text-lg font-bold uppercase tracking-tight text-[var(--text-main)] mb-1">
-                Exemplo ilustrativo
+                Calculadora de ROI
               </h3>
               <p className="text-[11px] text-[var(--text-muted)] mb-5 leading-snug">
-                Ajuste os valores para sua operação. Os números são uma <strong className="text-[var(--signal-bright)]">simulação</strong>, não um dado real da empresa.
+                Ajuste os valores para sua operação.
               </p>
 
               <label className="block mb-4">
-                <span className="text-xs font-semibold text-[var(--text-main)]">Veículos na frota</span>
+                <span className="text-xs font-semibold text-[var(--text-main)]">Tamanho da frota</span>
                 <input
                   type="range"
                   min={10}
@@ -73,37 +74,60 @@ export default function RoiSection() {
                   value={frota}
                   onChange={(e) => setFrota(Number(e.target.value))}
                   className="mt-2 w-full accent-[var(--primary)]"
-                  aria-label="Quantidade de veículos na frota"
+                  aria-label="Tamanho da frota"
                 />
                 <span className="mt-1 block font-mono-data text-sm text-[var(--signal-bright)]">{frota} veículos</span>
               </label>
 
-              <label className="block">
-                <span className="text-xs font-semibold text-[var(--text-main)]">Custo médio de 1 avaria não comprovada</span>
+              <label className="block mb-4">
+                <span className="text-xs font-semibold text-[var(--text-main)]">Avarias não cobradas por mês</span>
                 <input
                   type="range"
-                  min={200}
-                  max={10000}
-                  step={100}
-                  value={custo}
-                  onChange={(e) => setCusto(Number(e.target.value))}
+                  min={0}
+                  max={50}
+                  step={1}
+                  value={avariasMes}
+                  onChange={(e) => setAvariasMes(Number(e.target.value))}
                   className="mt-2 w-full accent-[var(--primary)]"
-                  aria-label="Custo médio de uma avaria não comprovada"
+                  aria-label="Avarias não cobradas por mês"
+                />
+                <span className="mt-1 block font-mono-data text-sm text-[var(--signal-bright)]">{avariasMes} / mês</span>
+              </label>
+
+              <label className="block">
+                <span className="text-xs font-semibold text-[var(--text-main)]">Custo médio por reparo (R$)</span>
+                <input
+                  type="number"
+                  min={0}
+                  step={50}
+                  value={custo}
+                  onChange={(e) => setCusto(Math.max(0, Number(e.target.value)))}
+                  className="mt-2 w-full rounded-xl border border-[var(--card-border)] bg-[var(--panel-bg)] px-3 py-2 font-mono-data text-sm text-[var(--text-main)] outline-none focus-visible:ring-2 ring-[var(--primary)]"
+                  aria-label="Custo médio por reparo em reais"
                 />
                 <span className="mt-1 block font-mono-data text-sm text-[var(--signal-bright)]">{fmt(custo)}</span>
               </label>
 
               <div className="mt-6 space-y-2 border-t border-[var(--card-border)] pt-4">
-                <FlowRow label={`${frota} veículos`} />
-                <FlowRow label="1 dano não identificado por mês" />
-                <FlowRow label={`${fmt(prejuizoMes)} de prejuízo potencial / mês`} />
+                <div className="flex items-center">
+                  <span className="text-xs font-semibold text-[var(--text-main)] w-full">Prejuízo Mensal</span>
+                  <span className="font-mono-data text-base font-black text-[var(--signal-bright)]">{fmt(prejuizoMes)}</span>
+                </div>
                 <div className="flex items-center justify-between rounded-lg bg-[var(--signal)]/10 border border-[var(--signal-bright)]/30 px-3 py-2.5">
-                  <span className="text-xs font-bold text-[var(--text-main)]">Prejuízo potencial / ano</span>
+                  <span className="text-xs font-bold text-[var(--text-main)]">Prejuízo Anual</span>
                   <span className="font-mono-data text-base font-black text-[var(--signal-bright)]">{fmt(prejuizoAno)}</span>
                 </div>
               </div>
+
+              <Link
+                href="/planos"
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none"
+              >
+                Proteger minha frota agora
+              </Link>
+
               <p className="mt-3 text-[10px] text-[var(--text-muted)] leading-snug">
-                Cálculo: 1 dano/mês × custo médio × 12. Exemplo hipotético para fins de demonstração.
+                Simulação baseada em custos médios de mercado.
               </p>
             </div>
 
@@ -145,16 +169,5 @@ export default function RoiSection() {
         </div>
       </Reveal>
     </section>
-  )
-}
-
-function FlowRow({ label }: { label: string }) {
-  return (
-    <div className="flex items-center gap-2 text-[13px] text-[var(--text-muted)]">
-      <span aria-hidden className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--primary)]/15 text-[var(--primary)] text-[10px] font-black">
-        ↓
-      </span>
-      <span className="leading-snug">{label}</span>
-    </div>
   )
 }
