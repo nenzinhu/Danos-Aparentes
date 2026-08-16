@@ -90,6 +90,7 @@ export default function RoiSection() {
                   onChange={(e) => setAvariasMes(Number(e.target.value))}
                   className="mt-2 w-full accent-[var(--primary)]"
                   aria-label="Avarias não cobradas por mês"
+                  aria-valuetext={`${avariasMes} avarias por mês`}
                 />
                 <span className="mt-1 block font-mono-data text-sm text-[var(--signal-bright)]">{avariasMes} / mês</span>
               </label>
@@ -121,7 +122,8 @@ export default function RoiSection() {
 
               <Link
                 href="/planos"
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none"
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none transition-opacity hover:opacity-95 active:opacity-90"
+                style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
               >
                 Proteger minha frota agora
               </Link>

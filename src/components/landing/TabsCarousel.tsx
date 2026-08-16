@@ -42,6 +42,12 @@ export default function TabsCarousel({ tabs, id, ariaLabel = 'Seções' }: Props
     const max = el.scrollWidth - el.clientWidth - 2
     setCanPrev(el.scrollLeft > 2)
     setCanNext(el.scrollLeft < max)
+    // Mobile: sincroniza aba ativa com o card mais próximo da esquerda
+    if (window.innerWidth < 768) {
+      const cards = Array.from(el.querySelectorAll<HTMLElement>('[data-card]'))
+      const idx = cards.findIndex((c) => c.offsetLeft - el.scrollLeft >= -8)
+      if (idx >= 0 && idx !== active) setActive(idx)
+    }
   }
 
   const scrollByCard = (dir: 1 | -1) => {
