@@ -48,6 +48,17 @@ const HOME_TITLE = `Vistoria de veículos, histórico e laudo de avarias | ${B2B
 const HOME_DESCRIPTION =
   'Registre o estado do veículo, compare inspeções e tenha um histórico digital com evidências, fotos, GPS, data/hora e dossiê técnico em PDF. Comece grátis.'
 
+// BreadcrumbList Schema — melhora navegação no Google
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+    { '@type': 'ListItem', position: 2, name: 'Planos', item: `${SITE_URL}/planos` },
+    { '@type': 'ListItem', position: 3, name: 'Sobre', item: `${SITE_URL}/sobre` },
+  ],
+}
+
 export const metadata: Metadata = {
   title: HOME_TITLE,
   description: HOME_DESCRIPTION,
@@ -206,6 +217,9 @@ export default function RootLayout({
         <meta name="dc.rights" content="Copyright 2026, Danos Aparentes. Lei 9.610/98 - Brasil." />
         <meta name="dc.language" content="pt-BR" />
         <meta name="dc.type" content="Software / Web Application" />
+
+        {/* BreadcrumbList Schema */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
         {/* ── Organization + WebSite (Knowledge Graph) ── */}
         <script

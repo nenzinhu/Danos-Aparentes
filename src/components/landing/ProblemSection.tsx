@@ -26,10 +26,7 @@ export default function ProblemSection() {
             {B2B_PROBLEM_TITLE}
           </h2>
           <p className="mt-5 text-sm sm:text-base text-[var(--text-muted)] leading-relaxed max-w-lg">
-            O problema não é apenas registrar o dano. É ter evidências para comprovar quando e onde ele aconteceu.
-          </p>
-          <p className="mt-3 text-sm sm:text-base text-[var(--text-main)] leading-relaxed max-w-lg font-semibold">
-            Sem histórico, toda devolução vira discussão — ou processo.
+            O problema não é apenas registrar o dano. É ter evidências para comprovar quando e onde ele aconteceu. Sem histórico, toda devolução vira discussão — ou processo.
           </p>
         </Reveal>
 

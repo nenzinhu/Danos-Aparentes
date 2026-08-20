@@ -69,7 +69,7 @@ export default function VehicleHistoryTimelineSection() {
             Cada inspeção vira um evento. Toda a vida útil do veículo, documentada.
           </h2>
           <p className="mt-4 text-sm sm:text-base text-[var(--text-muted)] max-w-2xl leading-relaxed">
-            O PDF é uma saída. O histórico é o produto.
+            O PDF é uma saída. O histórico é o produto. Cada inspeção documentada constrói uma linha do tempo auditável que prova quando cada dano aconteceu.
           </p>
         </Reveal>
 

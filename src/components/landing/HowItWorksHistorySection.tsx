@@ -71,11 +71,45 @@ const STEPS: CarouselTabItem[] = [
 ]
 
 export default function HowItWorksHistorySection() {
+  // HowTo Schema para SEO/AEO
+  const howToJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'Como funciona o Danos Aparentes',
+    description: 'Registre inspeções, compare estados do veículo e gere evidências verificáveis em quatro passos.',
+    step: [
+      {
+        '@type': 'HowToStep',
+        name: 'Inspecione',
+        text: 'Veículo, responsável, data/hora e geolocalização. Cada inspeção inicia a linha do tempo.',
+      },
+      {
+        '@type': 'HowToStep',
+        name: 'Documente',
+        text: 'Transforme o dano em evidência: fotos com metadados, peças marcadas no diagrama e validação visual.',
+      },
+      {
+        '@type': 'HowToStep',
+        name: 'Compare',
+        text: 'Descubra o que mudou: Antes × Depois, avarias novas versus reparadas.',
+      },
+      {
+        '@type': 'HowToStep',
+        name: 'Comprove',
+        text: 'QR Code, Hash SHA-256 e PDF rastreável. Tenha provas organizadas para cobrar, defender ou fechar sem discussão.',
+      },
+    ],
+  }
+
   return (
     <section
       id="como-funciona"
       className="w-full max-w-6xl mx-auto py-16 sm:py-20 px-6 z-10 relative border-t border-[var(--card-border)]/40"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+      />
       <Reveal className="text-center mb-10 flex flex-col items-center">
         <div className="inline-flex items-center gap-2 font-mono-data text-[11px] tracking-[0.2em] text-[var(--signal-bright)] uppercase mb-4">
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
