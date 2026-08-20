@@ -168,7 +168,7 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onSignOut, syncS
           <button
             type="button"
             onClick={onOpenSaved}
-            title="Ver vistorias salvas"
+            title="Ver inspeções salvas"
             className={buttonVariants({ variant: 'secondary', size: 'sm', className: 'h-8 !py-0 !px-3 text-[0.7rem]' })}
           >
             Salvas

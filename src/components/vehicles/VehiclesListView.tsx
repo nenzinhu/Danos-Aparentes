@@ -44,9 +44,9 @@ export default function VehiclesListView({
         </p>
         <Link
           href="/app"
-          className="inline-block mt-4 text-sm font-bold text-sky-400 hover:underline"
+          className="inline-block mt-4 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm hover:opacity-95 transition-opacity"
         >
-          Ir para nova vistoria →
+          Criar primeira inspeção →
         </Link>
       </div>
     )
@@ -73,10 +73,10 @@ export default function VehiclesListView({
           <Link
             key={v.id}
             href={`/app/vehicles/${encodeURIComponent(v.id)}`}
-            className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] p-4 flex items-center justify-between gap-4 hover:border-sky-500/40 transition-colors"
+            className="group rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] p-4 flex items-center justify-between gap-4 hover:border-sky-500/40 transition-all hover:shadow-lg hover:shadow-sky-500/10"
           >
             <div className="min-w-0 flex-1">
-              <p className="font-display text-xl font-bold tracking-wide">{v.plate || '—'}</p>
+              <p className="font-display text-xl font-bold tracking-wide text-[var(--text-main)]">{v.plate || '—'}</p>
               <p
                 className="text-xs text-[var(--text-muted)] mt-0.5 truncate"
                 title={
@@ -93,19 +93,21 @@ export default function VehiclesListView({
                 <span className="font-bold text-sky-300">Só na nuvem</span>
               ) : (
                 <span className="font-bold tabular-nums text-[var(--text-main)]">
-                  {v.reports.length} {plural(v.reports.length, 'vistoria', 'vistorias')}
+                  {v.reports.length} {plural(v.reports.length, 'inspeção', 'inspeções')}
                 </span>
               )}
               <span className="tabular-nums text-[var(--text-muted)]">
                 {v.activeDamageCount} {plural(v.activeDamageCount, 'dano', 'danos')} na última
               </span>
               {v.newDamagesOnLast > 0 && (
-                <span className="font-bold text-amber-400 tabular-nums">
+                <span className="inline-flex items-center gap-1 font-bold text-amber-400 tabular-nums">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
                   +{v.newDamagesOnLast} {plural(v.newDamagesOnLast, 'novo', 'novos')}
                 </span>
               )}
               <span className="text-[var(--text-muted)]/70">Última: {formatDate(v.lastInspectedAt)}</span>
             </div>
+            <svg aria-hidden className="w-5 h-5 text-[var(--text-muted)] group-hover:text-sky-400 transition-colors shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
           </Link>
         ))
       )}

@@ -430,9 +430,12 @@ export default function VehicleDetailView({
         </p>
       )}
       {qrUrl && (
-        <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] p-3 text-xs break-all">
-          <p className="font-bold text-[var(--text-muted)] mb-1">Link público do prontuário:</p>
-          <a href={qrUrl} className="text-sky-400 hover:underline" target="_blank" rel="noreferrer">
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs">
+          <p className="font-bold text-emerald-300 mb-1 flex items-center gap-2">
+            <svg aria-hidden className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12l5 5L20 7"/></svg>
+            Link copiado para a área de transferência
+          </p>
+          <a href={qrUrl} className="text-sky-400 hover:underline break-all" target="_blank" rel="noreferrer">
             {qrUrl}
           </a>
           <p className="text-[var(--text-muted)] mt-2">
