@@ -155,7 +155,7 @@ export default function PricingCards({ salesViaChat = false }: { salesViaChat?: 
         cardRef={starterRef}
         name="Starter"
         planId="starter"
-        headline="Autônomo / Pequenas frotas"
+        headline="Para começar"
         tagline="Organize o pátio com histórico digital."
         basePrice={STARTER_BASE_PRICE}
         vistoriasLimit={PLANS.starter.laudosPerMonth!}
@@ -179,7 +179,7 @@ export default function PricingCards({ salesViaChat = false }: { salesViaChat?: 
         basePrice={PRO_BASE_PRICE}
         vistoriasLimit={PLANS.pro.laudosPerMonth!}
         popular
-        popularBadge="🏆 Melhor custo-benefício"
+        popularBadge="Melhor custo-benefício"
         trialCtaLabel="Testar Pro grátis"
         features={[
           'Tudo do Starter',
@@ -189,70 +189,26 @@ export default function PricingCards({ salesViaChat = false }: { salesViaChat?: 
         ]}
       />
 
-      <div
-        ref={corpRef}
-        className="glass-card flex flex-col justify-between p-8 relative overflow-hidden group border border-[var(--card-border)]/50 hover:border-[var(--primary)]/20 transition-all duration-300"
-      >
-        <div
-          ref={corpBarRef}
-          aria-hidden
-          className="absolute top-0 left-0 w-full h-[3px] bg-[var(--primary)] z-10"
-        />
-        <div>
-          <PlanCover src={PLANS.corporativo.imageSrc} alt={PLANS.corporativo.imageAlt} />
-          <h3 className="plan-text-anim text-xl font-extrabold text-[var(--text-main)] tracking-wide">
-            Frotas / Enterprise
-          </h3>
-          <p className="plan-text-anim text-xs font-extrabold uppercase tracking-wide text-[var(--signal-bright)] mt-1">
-            Frotas e locadoras
-          </p>
-          <p className="plan-text-anim text-sm text-[var(--text-muted)] mt-1">
-            Para grandes volumes, múltiplos usuários e integração.
-          </p>
-
-          <div className="my-6 min-h-[72px] flex flex-col justify-center">
-            <span className="plan-price-anim text-3xl font-black text-[var(--text-main)] tracking-tight">
-              Sob Consulta
-            </span>
-          </div>
-
-          <ul className="space-y-3 border-t border-[var(--card-border)]/40 pt-5">
-            {[
-              'Vistorias ilimitadas / Usuários múltiplos',
-              'Acesso via API & Suporte Dedicado',
-              'SLA de atendimento prioritário',
-            ].map((feat) => (
-              <li key={feat} className="plan-feature-anim flex items-start gap-3 text-sm text-[var(--text-main)]">
-                <span className="text-[var(--signal-bright)] mt-0.5" aria-hidden>
-                  ✓
-                </span>
+      <div className="hidden md:flex items-center">
+        <div className="h-full w-full rounded-2xl border border-dashed border-[var(--card-border)] bg-[var(--panel-bg)]/25 p-8 flex flex-col items-center justify-center text-center gap-4">
+          <p className="font-display text-xl font-bold uppercase tracking-tight text-[var(--text-main)]">Frotas / Enterprise</p>
+          <p className="text-sm text-[var(--text-muted)] leading-relaxed">Para grandes volumes, múltiplos usuários e integração.</p>
+          <p className="text-2xl font-black text-[var(--text-main)] tracking-tight">Sob consulta</p>
+          <ul className="space-y-2 text-left text-sm text-[var(--text-main)]">
+            {['Vistorias ilimitadas / usuários múltiplos', 'Acesso via API & suporte dedicado', 'SLA de atendimento prioritário'].map((feat) => (
+              <li key={feat} className="flex items-start gap-2.5">
+                <span className="text-[var(--signal-bright)] mt-0.5" aria-hidden>✓</span>
                 <span>{feat}</span>
               </li>
             ))}
           </ul>
-        </div>
-
-        <div className="mt-8 space-y-3">
-          {salesViaChat ? (
-            <button
-              type="button"
-              onClick={() => openChatSupport({ intent: 'vendas', segment: 'home' })}
-              className={buttonVariants({ variant: 'primary', size: 'lg', className: 'w-full shadow-lg shadow-[var(--primary)]/25' })}
-            >
-              Falar com Consultor
-            </button>
-          ) : (
-            <a
-              href={whatsappLink(
-                'Olá! Quero falar com um consultor sobre o plano Frotas / Enterprise do Danos Aparentes.',
-              )}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={buttonVariants({ variant: 'primary', size: 'lg', className: 'w-full shadow-lg shadow-[var(--primary)]/25' })}
-            >
-              Falar com Consultor
-            </a>
-          )}
+          <button
+            type="button"
+            onClick={() => openChatSupport({ intent: 'vendas', segment: 'home' })}
+            className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full shadow-lg shadow-[var(--primary)]/25' })}
+          >
+            Falar com Consultor
+          </button>
         </div>
       </div>
     </div>
