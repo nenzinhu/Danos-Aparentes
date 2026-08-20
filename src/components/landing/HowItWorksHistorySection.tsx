@@ -13,8 +13,9 @@ const STEPS: CarouselTabItem[] = [
         <h3 className="mt-2 font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[var(--text-main)] [text-wrap:balance]">
           Inspecione
         </h3>
-        <p className="mt-4 text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-          Veículo, responsável, data/hora e geolocalização. Cada inspeção inicia a linha do tempo do veículo.
+        <p className="mt-4 max-w-2xl text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
+          Veículo, responsável, data/hora e geolocalização. Cada inspeção inicia a
+          linha do tempo. Mais tarde, compare e comprove o que mudou.
         </p>
       </>
     ),
