@@ -3,13 +3,13 @@
 import Reveal from '../Reveal'
 
 const ITEMS = [
-  { label: 'Hash SHA-256', desc: 'Impede alteração silenciosa do registro.' },
-  { label: 'QR Code', desc: 'Qualquer pessoa verifica a autenticidade do laudo.' },
-  { label: 'Data e hora', desc: 'Momento exato em que o estado foi registrado.' },
-  { label: 'GPS', desc: 'Onde a inspeção aconteceu.' },
-  { label: 'Fotografias', desc: 'Prova visual vinculada à peça e ao dano.' },
-  { label: 'Assinatura', desc: 'Quem registrou e quem confirmou.' },
-  { label: 'Histórico', desc: 'Todas as versões do documento, em ordem.' },
+  { label: 'Hash SHA-256', detail: 'Impede alteração silenciosa do registro.' },
+  { label: 'QR Code', detail: 'Qualquer pessoa verifica a autenticidade do laudo.' },
+  { label: 'Data e hora', detail: 'Momento exato em que o estado foi registrado.' },
+  { label: 'GPS', detail: 'Onde a inspeção aconteceu.' },
+  { label: 'Fotografias', detail: 'Prova visual vinculada à peça e ao dano.' },
+  { label: 'Assinatura', detail: 'Quem registrou e quem confirmou.' },
+  { label: 'Histórico', detail: 'Todas as versões do documento, em ordem.' },
 ]
 
 export default function IntegritySection() {
@@ -44,7 +44,7 @@ export default function IntegritySection() {
                 className="rounded-xl border border-[var(--card-border)] bg-[var(--panel-bg)]/60 px-5 py-3.5"
               >
                 <p className="text-sm font-bold text-[var(--text-main)]">{it.label}</p>
-                <p className="mt-1 text-xs text-[var(--text-muted)] leading-relaxed">{it.desc}</p>
+                <p className="mt-1 text-xs text-[var(--text-muted)] leading-relaxed">{it.detail}</p>
               </li>
             ))}
           </ul>
