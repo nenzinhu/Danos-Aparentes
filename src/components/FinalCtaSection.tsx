@@ -30,13 +30,13 @@ export default function FinalCtaSection() {
         </p>
 
         <div className="flex flex-col items-center justify-center gap-3 mt-9">
-          <LandingCtaLink
+          <Link
             id="home-final-cta"
-            eventSource="home_final"
+            href="/planos"
             className="group/cta px-10 py-5 text-white font-black text-base sm:text-lg rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-2.5 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
             style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
           >
-            <span>{B2B_CTA_TRIAL_SHORT}</span>
+            <span>Começar grátis</span>
             <svg
               aria-hidden="true"
               width="22"
@@ -51,7 +51,7 @@ export default function FinalCtaSection() {
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </LandingCtaLink>
+          </Link>
           <Link
             href="/demo"
             className="px-8 py-4 min-h-11 rounded-xl border border-[var(--card-border)] text-sm font-bold text-[var(--text-main)] hover:bg-[var(--btn-secondary-bg)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none inline-flex items-center"

@@ -433,7 +433,7 @@ export default function LandingTopNav() {
         })}
       </ul>
 
-      {/* Mobile trigger — botão só-ícone para não espremer o logo/Dossiês no header */}
+      {/* Mobile trigger */}
       <button
         type="button"
         className="lg:hidden inline-flex items-center justify-center h-10 w-10 shrink-0 rounded-xl border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--text-main)] cursor-pointer"
