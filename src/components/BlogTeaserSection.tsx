@@ -17,11 +17,10 @@ export default function BlogTeaserSection() {
             Do blog
           </span>
           <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
-            Vistoria sem achismo
+            Histórico veicular sem achismo
           </h2>
           <p className="text-sm text-[var(--text-muted)] leading-relaxed mt-3 max-w-xl">
-            Conhecimento para quem transforma vistorias em evidências e histórico veicular
-            confiável.
+            Guias curtos para registrar, comparar e provar o estado do veículo.
           </p>
         </div>
         <Link
