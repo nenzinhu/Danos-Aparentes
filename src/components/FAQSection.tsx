@@ -71,10 +71,10 @@ export default function FAQSection({ items }: Props) {
     <section id="faq" className="w-full max-w-5xl mx-auto py-16 px-6 z-10 relative border-t border-[var(--card-border)]/40 mt-12">
       <Reveal className="text-center mb-10 flex flex-col items-center">
         <h2 className="font-display text-4xl lg:text-5xl font-bold uppercase tracking-tight text-[var(--text-main)]">
-          Central de Ajuda
+          Perguntas frequentes
         </h2>
         <p className="text-sm text-[var(--text-muted)] mt-3 max-w-lg">
-          Respostas diretas sobre histórico digital, vistorias, planos, PDF, IA e funcionamento offline.
+          Histórico digital, vistorias, planos, PDF, IA e funcionamento offline.
         </p>
       </Reveal>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

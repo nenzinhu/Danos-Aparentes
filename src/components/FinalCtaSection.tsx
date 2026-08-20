@@ -23,16 +23,16 @@ export default function FinalCtaSection() {
 
       <Reveal className="max-w-3xl mx-auto text-center relative">
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance]">
-          {B2B_FINAL_HEADLINE}
+          Comece a criar o histórico digital dos seus veículos.
         </h2>
         <p className="text-sm sm:text-base text-[var(--text-muted)] mt-5 max-w-xl mx-auto leading-relaxed">
-          {B2B_FINAL_SUB}
+          Teste grátis por 7 dias, sem cartão. Se quiser, veja a plataforma em ação antes.
         </p>
 
         <div className="flex flex-col items-center justify-center gap-3 mt-9">
-          <Link
+          <LandingCtaLink
             id="home-final-cta"
-            href="/planos"
+            eventSource="home_final"
             className="group/cta px-10 py-5 text-white font-black text-base sm:text-lg rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-2.5 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
             style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
           >
@@ -51,12 +51,12 @@ export default function FinalCtaSection() {
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </Link>
+          </LandingCtaLink>
           <Link
             href="/demo"
             className="px-8 py-4 min-h-11 rounded-xl border border-[var(--card-border)] text-sm font-bold text-[var(--text-main)] hover:bg-[var(--btn-secondary-bg)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none inline-flex items-center"
           >
-            Solicitar Demonstração
+            Ver como funciona
           </Link>
         </div>
       </Reveal>
