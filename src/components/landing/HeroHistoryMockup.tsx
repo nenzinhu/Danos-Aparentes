@@ -6,7 +6,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const EVENTS = [
-  { tone: 'ok' as const, label: 'Inspeção anterior', sub: 'Porta OK', date: '05 AGO 2026' },
+  { tone: 'ok' as const, label: 'Inspeção anterior', sub: 'Para-Choque Traseiro OK', date: '05 AGO 2026' },
   { tone: 'alert' as const, label: 'Nova inspeção', sub: 'Avaria identificada', date: '15 AGO 2026' },
 ]
 
@@ -115,7 +115,7 @@ export default function HeroHistoryMockup() {
                   loading="lazy"
                 />
               </div>
-              <p className="mt-2 text-xs font-semibold text-emerald-200/90">Porta OK</p>
+              <p className="mt-2 text-xs font-semibold text-emerald-200/90">Para-Choque Traseiro OK</p>
             </div>
             <div className="rounded-xl border border-rose-400/25 bg-rose-500/10 p-3">
               <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-rose-200/90 mb-2">Depois</p>
@@ -127,7 +127,7 @@ export default function HeroHistoryMockup() {
                   loading="lazy"
                 />
               </div>
-              <p className="mt-2 text-xs font-semibold text-rose-200/90">Porta: amassado</p>
+              <p className="mt-2 text-xs font-semibold text-rose-200/90">Para-Choque Traseiro: Avaria na pintura</p>
             </div>
           </div>
 
