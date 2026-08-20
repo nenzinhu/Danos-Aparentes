@@ -1,14 +1,13 @@
 'use client';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export function useGsapScrollAnimations() {
-  useEffect(() => {
+  const initScrollAnimations = useCallback(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-
       // --- 1. SPOTLIGHT CURSOR GLOW NOS CARDS (.spotlight-card / .gsap-card) ---
       const cards = document.querySelectorAll<HTMLElement>('.spotlight-card, .gsap-card');
       cards.forEach((card) => {
@@ -200,12 +199,38 @@ export function useGsapScrollAnimations() {
           });
         });
       });
-
     });
 
     return () => {
       ctx.revert();
     };
   }, []);
+
+  useEffect(() => {
+    let started = false;
+    const start = () => {
+      if (started) return
+      started = true;
+      const cleanup = initScrollAnimations()
+      return cleanup
+    }
+
+    // Efeitos leves do hero podem rodar no mount sem custo.
+    // ScrollTriggers mais pesados começam no primeiro scroll/interação.
+    const onScrollOrTouch = () => start(), { once: true } as const
+    window.addEventListener('scroll', onScrollOrTouch, { passive: true, once: true })
+    window.addEventListener('touchmove', onScrollOrTouch, { passive: true, once: true })
+    window.addEventListener('keydown', onScrollOrTouch, { once: true })
+
+    // Fallback: se o usuário não rolar/interagir em até 1.2s, inicia assim mesmo.
+    const fallback = setTimeout(() => start(), 1200)
+
+    return () => {
+      window.removeEventListener('scroll', onScrollOrTouch)
+      window.removeEventListener('touchmove', onScrollOrTouch)
+      window.removeEventListener('keydown', onScrollOrTouch)
+      clearTimeout(fallback)
+    }
+  }, [initScrollAnimations])
 }
 

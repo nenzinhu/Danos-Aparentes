@@ -262,6 +262,9 @@ function PdfZoomLightbox({
   const [index, setIndex] = useState(initialIndex)
   const [scale, setScale] = useState(1)
   const page = pages[index]
+  const dialogRef = useRef<HTMLDivElement | null>(null)
+  const startXRef = useRef<number | null>(null)
+  const startYRef = useRef<number | null>(null)
 
   const setIndexSync = useCallback(
     (i: number) => {
@@ -275,9 +278,98 @@ function PdfZoomLightbox({
   useEffect(() => {
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+
+    const trapFocus = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        onClose()
+        return
+      }
+      if (e.key !== 'Tab') return
+      const root = dialogRef.current
+      if (!root) return
+      const focusable = Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.offsetParent !== null)
+      if (!focusable.length) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (e.shiftKey) {
+        if (document.activeElement === first || !root.contains(document.activeElement)) {
+          e.preventDefault()
+          last.focus()
+        }
+      } else {
+        if (document.activeElement === last || !root.contains(document.activeElement)) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    }
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-      if (e.key === 'ArrowLeft') {
+      trapFocus(e)
+    }
+    window.addEventListener('keydown', onKey)
+
+    return () => {
+      document.body.style.overflow = prev
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [onClose])
+
+  useEffect(() => {
+    const root = dialogRef.current
+    if (!root) return
+    const first = root.querySelector<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    )
+    if (first) queueMicrotask(() => first.focus())
+  }, [])
+
+  useEffect(() => {
+    if ('scrollBehavior' in document.documentElement.style) {
+      document.documentElement.style.scrollBehavior = 'auto'
+    }
+    return () => {
+      if ('scrollBehavior' in document.documentElement.style) {
+        document.documentElement.style.scrollBehavior = ''
+      }
+    }
+  }, [])
+
+  const wheelRef = useRef<number>(0)
+  const onWheel = useCallback(
+    (e: React.WheelEvent) => {
+      const container = e.currentTarget
+      const now = Date.now()
+      if (now - wheelRef.current < 80) {
+        e.preventDefault()
+      } else {
+        wheelRef.current = now
+      }
+    },
+    [],
+  )
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    startXRef.current = e.clientX
+    startYRef.current = e.clientY
+  }
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (startXRef.current == null || startYRef.current == null) return
+    const dx = e.clientX - startXRef.current
+    const dy = e.clientY - startYRef.current
+    const absDx = Math.abs(dx)
+    const absDy = Math.abs(dy)
+    if (Math.max(absDx, absDy) < 6) {
+      if (e.target === e.currentTarget) onClose()
+      return
+    }
+    if (absDx > absDy && absDx > 24) {
+      if (dx < -12) {
         setIndex((i) => {
           const n = (i - 1 + pages.length) % pages.length
           onPageChange(n)
@@ -285,7 +377,7 @@ function PdfZoomLightbox({
           return n
         })
       }
-      if (e.key === 'ArrowRight') {
+      if (dx > 12) {
         setIndex((i) => {
           const n = (i + 1) % pages.length
           onPageChange(n)
@@ -293,18 +385,14 @@ function PdfZoomLightbox({
           return n
         })
       }
-      if (e.key === '+' || e.key === '=') setScale((s) => Math.min(4, Number((s + 0.25).toFixed(2))))
-      if (e.key === '-' || e.key === '_') setScale((s) => Math.max(1, Number((s - 0.25).toFixed(2))))
     }
-    window.addEventListener('keydown', onKey)
-    return () => {
-      document.body.style.overflow = prev
-      window.removeEventListener('keydown', onKey)
-    }
-  }, [onClose, onPageChange, pages.length])
+    startXRef.current = null
+    startYRef.current = null
+  }
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label="Zoom do PDF"
@@ -366,6 +454,9 @@ function PdfZoomLightbox({
 
       <div
         className="flex-1 overflow-auto overscroll-contain p-4"
+        onWheel={onWheel}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
         onClick={(e) => {
           if (e.target === e.currentTarget) onClose()
         }}
@@ -388,8 +479,9 @@ function PdfZoomLightbox({
           />
         </div>
       </div>
+
       <p className="shrink-0 text-center py-2 font-mono-data text-[10px] uppercase tracking-wider text-white/50">
-        Scroll · + / − · Esc · PDF nativo em Abrir PDF
+        Scroll · + / − · Esc · toque no fundo para fechar
       </p>
     </div>
   )

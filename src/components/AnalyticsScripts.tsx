@@ -6,6 +6,8 @@ import { analyticsEnabled, initGoogleAds, initPixels, trackPageView } from '@/sr
 import { initPostHog } from '@/src/lib/analytics/posthog'
 import { hasMarketingConsent } from '@/src/lib/analytics/consent'
 
+const LAST_PV_PATH_KEY = 'da-last-pv-path'
+
 export default function AnalyticsScripts() {
   const pathname = usePathname()
 
@@ -27,7 +29,11 @@ export default function AnalyticsScripts() {
   }, [])
 
   useEffect(() => {
-    if (analyticsEnabled()) trackPageView()
+    if (!analyticsEnabled()) return
+    const last = typeof window !== 'undefined' ? sessionStorage.getItem(LAST_PV_PATH_KEY) : null
+    if (last === pathname) return
+    trackPageView()
+    try { sessionStorage.setItem(LAST_PV_PATH_KEY, pathname) } catch {}
   }, [pathname])
 
   return null
