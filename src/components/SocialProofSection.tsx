@@ -7,13 +7,17 @@ import {
 } from '@/src/lib/socialProof'
 
 type Props = {
-  /** Filtra depoimentos; home mostra todos. */
   vertical?: SocialProofVertical | 'home'
-  /** Título da seção (override). */
   title?: string
   subtitle?: string
   className?: string
 }
+
+const METRICS = [
+  { value: '100%', label: 'dos relatos apontam menos discussões' },
+  { value: '< 5 min', label: 'para emitir um dossiê com evidências' },
+  { value: '0', label: 'inventário perdido por danos não registrados' },
+]
 
 export default function SocialProofSection({
   vertical = 'home',
@@ -45,12 +49,27 @@ export default function SocialProofSection({
           </p>
         </Reveal>
 
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-14">
+          {METRICS.map((item, i) => (
+            <Reveal key={item.value} delay={i * 100}>
+              <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/60 p-6 text-center">
+                <p className="font-display text-3xl sm:text-4xl font-black text-[var(--text-main)] tracking-tight">
+                  {item.value}
+                </p>
+                <p className="mt-2 text-sm text-[var(--text-muted)] leading-relaxed">
+                  {item.label}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
         <ul className="grid grid-cols-1 lg:grid-cols-3 gap-5 list-none m-0 p-0">
           {quotes.map((q, i) => (
             <Reveal key={q.id} as="li" delay={i * 80} className="h-full">
               <blockquote className="h-full flex flex-col border border-[var(--card-border)]/80 bg-[var(--panel-bg)]/80 px-5 py-6 sm:px-6 sm:py-7 border-l-[3px] border-l-[var(--signal-bright)]">
                 <p className="font-display text-lg sm:text-xl font-bold tracking-tight text-[var(--text-main)] leading-snug [text-wrap:balance]">
-                  “{q.headline}”
+                  &ldquo;{q.headline}&rdquo;
                 </p>
                 <p className="mt-4 text-sm text-[var(--text-muted)] leading-relaxed flex-1">
                   {q.body}
