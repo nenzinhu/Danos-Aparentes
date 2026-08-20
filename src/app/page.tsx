@@ -226,7 +226,7 @@ function HeroCopy() {
 
       {reduceMotion ? (
         <p className="mt-4 max-w-lg text-base lg:text-lg text-[var(--text-muted)] leading-relaxed">
-          {B2B_HERO_SUB}
+          Registre o estado do veículo, compare inspeções e tenha evidências organizadas em um histórico digital. Você consegue provar quando o dano apareceu.
         </p>
       ) : (
         <GsapSplitSubline
@@ -234,7 +234,7 @@ function HeroCopy() {
           delay={350}
           className="mt-4 max-w-lg text-base lg:text-lg text-[var(--text-muted)] leading-relaxed"
         >
-          Registre, compare e comprove o estado de cada veículo com fotos, evidências, localização, data, hora e histórico completo.
+          Registre o estado do veículo, compare inspeções e tenha evidências organizadas em um histórico digital. Você consegue provar quando o dano apareceu.
         </GsapSplitSubline>
       )}
 

@@ -1,36 +1,36 @@
 /**
  * Posicionamento oficial — Danos Aparentes
- * Categoria: Plataforma Brasileira de Inteligência Histórica Veicular
+ * Categoria: Plataforma de histórico e evidência veicular
  *
  * Não vender como "sistema/app de vistoria".
- * Reforçar: memória digital, evidências, linha do tempo, dossiê, IA.
+ * Reforçar: memória digital, evidências, linha do tempo, comparação, prova.
  */
 export const B2B_BRAND = 'Danos Aparentes'
 
 /** Headline canônica (hero / OG / pitch). */
 export const B2B_PRODUCT_LINE =
-  'A primeira Plataforma Brasileira de Inteligência Histórica Veicular.'
+  'Plataforma de histórico e evidência veicular.'
 
-export const B2B_CATEGORY_SHORT = 'Inteligência Histórica Veicular'
+export const B2B_CATEGORY_SHORT = 'Histórico Veicular Digital'
 
 export const B2B_TAGLINE =
-  'Muito mais que uma vistoria. Centralize todo o histórico do veículo em uma plataforma inteligente.'
+  'Saiba exatamente o que mudou em cada veículo.'
 
 export const B2B_VALUE_PROPS = [
-  'Transformamos inspeções em inteligência.',
-  'Transformamos fotos em evidências.',
-  'Transformamos danos em histórico.',
-  'Transformamos veículos em ativos digitais documentados.',
+  'Cada inspeção vira um evento no histórico do veículo.',
+  'Fotos, data, local e assinatura viram evidência.',
+  'Compare versões e identifique mudanças com precisão.',
+  'Comprove o estado do veículo com documento verificável.',
 ] as const
 
 export const B2B_HERO_SUBTITLE =
-  'Registre inspeções, organize evidências, acompanhe a evolução dos danos e compare cada momento do veículo com a ajuda da Inteligência Artificial.'
+  'Registre o estado do veículo, compare inspeções e tenha evidências organizadas em um histórico digital. Você consegue provar quando o dano apareceu.'
 
-export const B2B_CTA_DEMO = 'Solicitar Demonstração'
-export const B2B_CTA_PLATFORM = 'Conhecer Plataforma'
+export const B2B_CTA_DEMO = 'Ver como funciona'
+export const B2B_CTA_PLATFORM = 'Conhecer a plataforma'
 export const B2B_CTA_CREATE_HISTORY = 'Criar meu primeiro histórico'
-export const B2B_TRIAL_CTA = 'Começar teste grátis'
-export const B2B_TRIAL_CTA_SHORT = 'Testar 7 dias grátis'
+export const B2B_TRIAL_CTA = 'Começar grátis'
+export const B2B_TRIAL_CTA_SHORT = 'Começar grátis'
 export const B2B_CTA_TRIAL_SHORT = 'Começar grátis'
 
 /** Copy de conversão (brief de redesign HOME SaaS B2B). */
@@ -82,7 +82,7 @@ export const SYSTEM_MESSAGES = {
   dossierIssued: 'Dossiê técnico emitido — alterações exigem nova versão.',
 } as const
 
-/** Status de IA (protagonista). */
+/** Status de IA (apoio, não protagonista). */
 export const AI_STATUS = {
   analyzing: 'IA analisando imagens...',
   detecting: 'Detectando danos...',

@@ -6,8 +6,8 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 const EVENTS = [
-  { tone: 'ok' as const, label: 'Entrega', sub: 'Sem danos', date: '05 AGO 2026' },
-  { tone: 'alert' as const, label: 'Devolução', sub: 'Novo risco identificado', date: '15 AGO 2026' },
+  { tone: 'ok' as const, label: 'Inspeção anterior', sub: 'Porta OK', date: '05 AGO 2026' },
+  { tone: 'alert' as const, label: 'Nova inspeção', sub: 'Avaria identificada', date: '15 AGO 2026' },
 ]
 
 const DOT: Record<(typeof EVENTS)[number]['tone'], string> = {
@@ -17,7 +17,7 @@ const DOT: Record<(typeof EVENTS)[number]['tone'], string> = {
 
 /**
  * Composição visual própria do produto — mockup SaaS de histórico por placa.
- * Não é stock photo; é UI ilustrativa do posicionamento.
+ * Agora com foco em antes/depois e mudança identificada.
  */
 export default function HeroHistoryMockup() {
   const reduceMotion = useReducedMotion()
@@ -103,23 +103,56 @@ export default function HeroHistoryMockup() {
         </div>
 
         <div className="px-5 pt-4 pb-2">
-          {/* Foto real da inspeção — Toyota Corolla ABC-1234 */}
-          <div className="relative rounded-xl overflow-hidden border border-[var(--card-border)] bg-black/40 mb-4">
-            <img
-              src="/samples/corolla-abc-1234-2.jpg"
-              alt="Toyota Corolla ABC-1234 — vista traseira na inspeção"
-              className="w-full h-40 object-cover"
-              loading="lazy"
-            />
-            <div className="absolute inset-x-0 bottom-0 px-3 py-1.5 bg-gradient-to-t from-black/70 to-transparent">
-              <p className="font-mono-data text-[9px] uppercase tracking-wider text-rose-200/90">
-                Traseira · Evidência anexada
-              </p>
+          {/* Antes / Depois */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/10 p-3">
+              <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-emerald-200/90 mb-2">Antes</p>
+              <div className="rounded-lg overflow-hidden border border-[var(--card-border)] bg-black/40">
+                <img
+                  src="/samples/corolla-abc-1234-2.jpg"
+                  alt="Toyota Corolla ABC-1234 — inspeção anterior sem avarias"
+                  className="w-full h-24 object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <p className="mt-2 text-xs font-semibold text-emerald-200/90">Porta OK</p>
+            </div>
+            <div className="rounded-xl border border-rose-400/25 bg-rose-500/10 p-3">
+              <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-rose-200/90 mb-2">Depois</p>
+              <div className="rounded-lg overflow-hidden border border-[var(--card-border)] bg-black/40">
+                <img
+                  src="/samples/corolla-abc-1234-1.jpg"
+                  alt="Toyota Corolla ABC-1234 — inspeção atual com avaria"
+                  className="w-full h-24 object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <p className="mt-2 text-xs font-semibold text-rose-200/90">Porta: amassado</p>
             </div>
           </div>
 
+          {/* Resultado da comparação */}
+          <div className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 space-y-2">
+            <p className="text-xs font-bold text-rose-300">Mudança identificada</p>
+            <p className="text-[11px] text-[var(--text-muted)]">
+              Nova avaria entre inspeções, com evidência e data registrada.
+            </p>
+            <ul className="flex flex-wrap gap-1.5 list-none m-0 p-0">
+              {['Foto anexada', 'IA analisou', 'Validado pelo vistoriador'].map((tag) => (
+                <li
+                  key={tag}
+                  className="font-mono-data text-[9px] uppercase tracking-wider px-2 py-0.5 rounded border border-rose-400/25 text-rose-200/90"
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="mx-5 mb-5">
           <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)] mb-3">
-            Memória Digital
+            Histórico Digital
           </p>
           <ul ref={listRef} className="space-y-0 m-0 p-0 list-none">
             {EVENTS.map((ev, i) => (
@@ -143,31 +176,6 @@ export default function HeroHistoryMockup() {
               </li>
             ))}
           </ul>
-        </div>
-
-        <div className="mx-5 mb-5 rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 space-y-2">
-          <p className="text-xs font-bold text-rose-300">1 nova avaria identificada</p>
-          <p className="text-[11px] text-[var(--text-muted)]">
-            Para-choque traseiro · Avaria na tinta do veículo · 20 JAN 2026
-          </p>
-          <ul className="flex flex-wrap gap-1.5 list-none m-0 p-0">
-            {['Foto anexada', 'IA analisou', 'Validado pelo vistoriador'].map((tag) => (
-              <li
-                key={tag}
-                className="font-mono-data text-[9px] uppercase tracking-wider px-2 py-0.5 rounded border border-rose-400/25 text-rose-200/90"
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-2 rounded-lg overflow-hidden border border-[var(--card-border)]">
-            <img
-              src="/samples/corolla-abc-1234-1.jpg"
-              alt="Toyota Corolla ABC-1234 — detalhe da avaria"
-              className="w-full h-24 object-cover"
-              loading="lazy"
-            />
-          </div>
         </div>
       </div>
     </motion.div>
