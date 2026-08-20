@@ -422,27 +422,6 @@ export default function LandingPage() {
         </div>
       </main>
 
-      {/* Trust strip — diferenciais mais fortes logo no topo */}
-      <section
-        aria-label="Diferenciais"
-        className="w-full z-10 relative border-y border-[var(--card-border)]/50 bg-[var(--panel-bg)]/70 backdrop-blur-sm"
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-8 py-4 grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-          {[
-            ['⚡', 'Funciona 100% offline'],
-            ['🤖', 'IA descreve avarias'],
-            ['📜', 'Histórico documentado e rastreável'],
-            ['💬', 'Envia via WhatsApp em 1 clique'],
-          ].map(([icon, label]) => (
-            <div key={label} className="flex items-center justify-center gap-2">
-              <span aria-hidden className="text-lg">{icon}</span>
-              <span className="text-[0.78rem] sm:text-sm font-bold text-[var(--text-main)] leading-tight">{label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Destaque rápido — prova social (detalhe na seção completa antes dos planos) */}
       <aside
         aria-label="Destaque de prova social"
         className="w-full z-10 relative border-y border-[var(--card-border)]/50 bg-[var(--panel-bg)]/70 backdrop-blur-sm"
@@ -460,7 +439,7 @@ export default function LandingPage() {
         </div>
       </aside>
 
-      {/* JORNADA OTIMIZADA (brief HOME): valor -> micro -> prova -> dor -> prova visual -> historico -> ia -> integridade -> cnh -> roi -> segmentos -> planos -> faq -> cta */}
+      {/* Prova social no fluxo principal */}
       <HeroMicroMessage />
       <SocialProofSection vertical="home" />
       <ProblemSection />
