@@ -44,9 +44,9 @@ const plexMono = IBM_Plex_Mono({
 
 const SITE_URL = 'https://danosaparentes.com.br'
 
-const HOME_TITLE = `${B2B_BRAND} | ${SEO_PRIMARY}`
+const HOME_TITLE = `Vistoria de veículos, histórico e laudo de avarias | ${B2B_BRAND}`
 const HOME_DESCRIPTION =
-  'Registre, compare e acompanhe tudo o que muda no veículo ao longo do tempo. Fotos, avarias, evidências e relatórios organizados em um histórico digital rastreável.'
+  'Registre o estado do veículo, compare inspeções e tenha um histórico digital com evidências, fotos, GPS, data/hora e dossiê técnico em PDF. Comece grátis.'
 
 export const metadata: Metadata = {
   title: HOME_TITLE,

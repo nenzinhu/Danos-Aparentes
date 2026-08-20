@@ -19,6 +19,11 @@ const AUDIENCES = [
     impact: 'Corte custo oculto de avarias entre motoristas e turnos.',
   },
   {
+    title: 'Revendas',
+    desc: 'Registre o estado do veículo em cada etapa da operação.',
+    impact: 'Evite contestação pós-venda e proteja o estoque.',
+  },
+  {
     title: 'Seguradoras',
     desc: 'Organize evidências do estado do veículo.',
     impact: 'Reduza contestação com dossiê verificável e fotos vinculadas.',
@@ -39,18 +44,18 @@ export default function AudienceSection() {
       <div className="max-w-6xl mx-auto py-20 px-6">
         <Reveal className="text-center mb-10 flex flex-col items-center">
           <p className="font-mono-data text-[12px] tracking-[0.28em] text-[var(--signal-bright)] uppercase mb-3">
-            Para quem é
+            Feito para
           </p>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
             Quem precisa provar o estado do veículo.
           </h2>
           <p className="mt-4 text-sm text-[var(--text-muted)] max-w-2xl leading-relaxed">
-            O mesmo histórico digital, comparável no tempo, serve para operações de check-out, oficina, frota, seguro e vistoria.
+            Histórico digital comparável para locadoras, frotas, oficinas e revendas.
           </p>
         </Reveal>
 
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 list-none m-0 p-0">
-          {AUDIENCES.map((a, i) => (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 list-none m-0 p-0">
+          {AUDIENCES.filter(a => ['Locadoras','Frotas','Oficinas','Revendas'].includes(a.title)).map((a, i) => (
             <Reveal key={a.title} as="li" delay={i * 40} className="h-full">
               <div className="h-full rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/45 px-5 py-5 flex flex-col">
                 <h3 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[var(--text-main)]">

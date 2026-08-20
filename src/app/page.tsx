@@ -66,6 +66,7 @@ const RoiSection = dynamic(() => import('../components/landing/RoiSection'));
 const CnhSection = dynamic(() => import('../components/landing/CnhSection'));
 const EuConsigoProvarSection = dynamic(() => import('../components/landing/EuConsigoProvarSection'));
 const HeroMicroMessage = dynamic(() => import('../components/landing/HeroMicroMessage'));
+const ThreeStepsSection = dynamic(() => import('../components/landing/ThreeStepsSection'));
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'));
 const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'));
 const FinalCtaSection = dynamic(() => import('../components/FinalCtaSection'));
@@ -440,6 +441,35 @@ export default function LandingPage() {
 
       {/* Prova social no fluxo principal */}
       <HeroMicroMessage />
+      <ThreeStepsSection />
+      <section
+        aria-label="Começar"
+        className="w-full z-10 relative border-y border-[var(--card-border)]/50 bg-[var(--panel-bg)]/70 backdrop-blur-sm"
+      >
+        <div className="max-w-4xl mx-auto px-6 py-10 sm:py-12 flex flex-col items-center text-center gap-4">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)]">
+            Comece o histórico do seu primeiro veículo grátis.
+          </h2>
+          <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-2xl leading-relaxed">
+            Registre inspeções, compare alterações e gere evidências em minutos.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link
+              id="mid-page-cta"
+              href="/planos"
+              className="px-6 py-4 min-h-12 rounded-xl bg-primary hover:bg-primary-hover text-white text-sm font-black shadow-xl shadow-[var(--primary)]/25 inline-flex items-center gap-2.5 transition-colors outline-none focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)]"
+            >
+              Começar grátis
+            </Link>
+            <a
+              href="#como-funciona"
+              className="px-6 py-4 min-h-12 rounded-xl border border-[var(--card-border)] text-sm font-bold text-[var(--text-main)] hover:bg-[var(--btn-secondary-bg)] transition-colors inline-flex items-center outline-none focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)]"
+            >
+              Ver como funciona
+            </a>
+          </div>
+        </div>
+      </section>
       <SocialProofSection vertical="home" />
       <ProblemSection />
       <VehicleHistoryTimelineSection />
