@@ -62,7 +62,7 @@ const STEPS: CarouselTabItem[] = [
           Comprove
         </h3>
         <p className="mt-4 text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-          De &quot;eu acho&quot; para &quot;eu consigo provar&quot;: QR Code, Hash SHA-256 e PDF rastreável.
+          De "eu acho" para "eu consigo provar": QR Code, Hash SHA-256 e PDF rastreável.
           Tenha provas organizadas para cobrar, defender ou fechar sem discussão.
         </p>
       </>

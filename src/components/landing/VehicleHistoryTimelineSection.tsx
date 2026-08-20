@@ -69,7 +69,7 @@ export default function VehicleHistoryTimelineSection() {
             Cada inspeção vira um evento. Toda a vida útil do veículo, documentada.
           </h2>
           <p className="mt-4 text-sm sm:text-base text-[var(--text-muted)] max-w-2xl leading-relaxed">
-            Entrega, primeira inspeção, reparo, nova inspeção, venda, novo proprietário — a Memória Digital acompanha o patrimônio do veículo.
+            O PDF é uma saída. O histórico é o produto.
           </p>
         </Reveal>
 
@@ -147,7 +147,7 @@ export default function VehicleHistoryTimelineSection() {
                   Registrada, datada e pronta para o laudo PDF.
                 </p>
               </div>
-              <p className="text-sm text-[var(--text-muted)] leading-relaxed pt-1">
+              <p className="text-sm text-[var(--text-muted)] leading-relaxed pt-1 font-semibold">
                 O histórico é o produto. O PDF é uma das saídas.
               </p>
             </div>

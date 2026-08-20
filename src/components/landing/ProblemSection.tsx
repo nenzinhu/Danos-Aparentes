@@ -8,10 +8,6 @@ const WANTS = [
   'Cliente contesta uma cobrança',
   'Oficina recebe veículo já danificado',
   'Empresa não descobre quando a avaria ocorreu',
-  'Quantos danos teve',
-  'Quem dirigia',
-  'Qual oficina mexeu',
-  'Fotos de todas as entregas',
 ]
 
 export default function ProblemSection() {
@@ -35,16 +31,9 @@ export default function ProblemSection() {
           <p className="mt-3 text-sm sm:text-base text-[var(--text-main)] leading-relaxed max-w-lg font-semibold">
             Sem histórico, toda devolução vira discussão — ou processo.
           </p>
-          <p className="mt-6 text-sm text-[var(--text-muted)] leading-relaxed max-w-lg">
-            O Danos Aparentes organiza cada inspeção em uma linha do tempo auditável — para locadoras, frotas, oficinas e quem precisa
-            provar o que mudou.
-          </p>
         </Reveal>
 
         <Reveal delay={100}>
-          <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-[var(--signal-bright)] mb-4">
-            O que a frota precisa responder
-          </p>
           <ul className="space-y-2 list-none m-0 p-0">
             {WANTS.map((item) => (
               <li
@@ -55,6 +44,9 @@ export default function ProblemSection() {
               </li>
             ))}
           </ul>
+          <p className="mt-4 text-sm text-[var(--text-muted)] leading-relaxed max-w-lg">
+            O Danos Aparentes organiza cada inspeção em uma linha do tempo auditável — para locadoras, frotas, oficinas e quem precisa provar o que mudou.
+          </p>
         </Reveal>
       </div>
     </section>
