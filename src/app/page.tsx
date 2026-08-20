@@ -212,7 +212,7 @@ function HeroCopy() {
 
       {reduceMotion ? (
         <h1 className="mt-5 text-xl max-[400px]:text-2xl sm:text-3xl lg:text-[2.35rem] tracking-tight font-semibold text-[var(--text-main)] leading-[1.12] sm:leading-[1.08] [text-wrap:balance] max-w-xl">
-          {B2B_HERO_HEADLINE_A}
+          {B2B_HERO_HEADLINE_CONVERSION}
         </h1>
       ) : (
         <GsapTextReveal
@@ -220,13 +220,13 @@ function HeroCopy() {
           split="words"
           className="mt-5 text-xl max-[400px]:text-2xl sm:text-3xl lg:text-[2.35rem] tracking-tight font-semibold text-[var(--text-main)] leading-[1.12] sm:leading-[1.08] [text-wrap:balance] max-w-xl"
         >
-          {B2B_HERO_HEADLINE_A}
+          {B2B_HERO_HEADLINE_CONVERSION}
         </GsapTextReveal>
       )}
 
       {reduceMotion ? (
         <p className="mt-4 max-w-lg text-base lg:text-lg text-[var(--text-muted)] leading-relaxed">
-          Registre o estado do veículo, compare inspeções e tenha evidências organizadas em um histórico digital. Você consegue provar quando o dano apareceu.
+          {B2B_HERO_SUB_CONVERSION}
         </p>
       ) : (
         <GsapSplitSubline
@@ -234,7 +234,7 @@ function HeroCopy() {
           delay={350}
           className="mt-4 max-w-lg text-base lg:text-lg text-[var(--text-muted)] leading-relaxed"
         >
-          Registre o estado do veículo, compare inspeções e tenha evidências organizadas em um histórico digital. Você consegue provar quando o dano apareceu.
+          {B2B_HERO_SUB_CONVERSION}
         </GsapSplitSubline>
       )}
 
@@ -246,15 +246,16 @@ function HeroCopy() {
       </motion.p>
 
       <motion.div variants={reduceMotion ? undefined : heroCopyItem} className="pt-7 flex flex-wrap gap-3">
-        <Link
+        <LandingCtaLink
           id="hero-primary-cta"
+          eventSource="home_hero"
           href="/planos"
           className="group/cta cursor-pointer px-8 py-4 min-h-12 text-white font-black rounded-xl shadow-2xl shadow-[var(--primary)]/25 inline-flex items-center gap-2.5 transition-colors duration-150 hover:opacity-95 active:opacity-90 focus-visible:ring-2 ring-[var(--primary)] ring-offset-4 ring-offset-[var(--bg-main)] outline-none"
           style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
         >
           {B2B_CTA_TRIAL_SHORT}
           <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-150 group-hover/cta:translate-x-1"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </Link>
+        </LandingCtaLink>
         <a
           href="#demonstracao"
           className="px-6 py-4 min-h-12 rounded-xl border border-[var(--card-border)] text-sm font-bold text-[var(--text-main)] hover:bg-[var(--btn-secondary-bg)] transition-colors focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none inline-flex items-center"
