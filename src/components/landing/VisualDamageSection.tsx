@@ -32,14 +32,13 @@ export default function VisualDamageSection() {
           </div>
           <span className="mb-4 inline-flex items-center gap-2 rounded-lg border border-[var(--signal-bright)]/35 bg-[color-mix(in_srgb,var(--signal)_12%,transparent)] px-3 py-1.5 font-mono-data text-[10px] uppercase tracking-[0.18em] text-[var(--signal-bright)]">
             <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-[var(--signal-bright)] shadow-[0_0_8px_var(--signal-glow)]" />
-            Demo ao vivo · igual ao app
+            Demo interativa
           </span>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
-            Mapeamento Visual SVG sem complicação
+            Marque a avaria e gere a evidência
           </h2>
           <p className="mt-4 text-sm text-[var(--text-muted)] max-w-2xl leading-relaxed">
-            O vistoriador identifica a área da avaria diretamente no diagrama visual do veículo e registra o dano no
-            local correspondente. Toque no SVG abaixo — igual ao app.
+            Toque nas peças para marcar o dano, registre a foto e gere um histórico comparável. Igual ao app.
           </p>
         </Reveal>
 
