@@ -185,7 +185,18 @@ const FAQ_ITEMS = [
   },
 ];
 
-// Speakable Schema — diz ao Google quais partes ler em voz alta
+// FAQ Schema na home — AEO (featured snippets)
+const homeFaqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ_ITEMS.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+}
+
+// Speakable Schema
 const speakableJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',
@@ -346,6 +357,8 @@ export default function LandingPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(PRICING_FAQ_JSONLD) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSONLD) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(BREADCRUMB_JSONLD) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homeFaqJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }} />
       <IntroVideo />
 
       <style dangerouslySetInnerHTML={{ __html: `

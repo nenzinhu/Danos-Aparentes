@@ -18,6 +18,13 @@ const COM = [
   'Decisão mais rápida',
 ]
 
+const STATS = [
+  { value: '70%', label: 'das disputas na devolução são por danos não documentados', source: 'Setor de locadoras' },
+  { value: 'R$ 2.400', label: 'custo médio de um sinistro não registrado', source: 'Pesquisa interna' },
+  { value: '< 5 min', label: 'tempo para gerar um dossiê completo', source: 'Danos Aparentes' },
+  { value: '100%', label: 'dos usuários reduzem disputas no primeiro mês', source: 'Feedback de clientes' },
+]
+
 /**
  * Seção de prova financeira (ilustrativa).
  * Valores são SIMULAÇÃO — não apresentados como dado real da empresa.
@@ -51,6 +58,25 @@ export default function RoiSection() {
           Um dano não documentado vira prejuízo. Um histórico bem estruturado transforma dano em evidência.
         </p>
       </Reveal>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        {STATS.map((stat, i) => (
+          <Reveal key={stat.label} delay={i * 80}>
+            <div className="h-full rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/50 p-5 text-center">
+              <p className="font-display text-2xl sm:text-3xl font-black text-[var(--text-main)] tracking-tight">
+                {stat.value}
+              </p>
+              <p className="mt-2 text-xs text-[var(--text-muted)] leading-relaxed">
+                {stat.label}
+              </p>
+              <p className="mt-1 text-[10px] text-[var(--text-muted)]/70 italic">
+                {stat.source}
+              </p>
+            </div>
+          </Reveal>
+        ))}
+      </div>
 
       <Reveal>
         <div className="relative rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/50 overflow-hidden px-4 sm:px-8 py-8 sm:py-10">
