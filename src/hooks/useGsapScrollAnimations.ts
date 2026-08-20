@@ -88,19 +88,22 @@ function initScrollAnimations() {
     }
 
     // --- 5. SCROLLTRIGGER STAGGER ENTRADA DE CARDS (.gsap-card) ---
-    gsap.from('.gsap-card', {
-      opacity: 0,
-      y: 45,
-      scale: 0.95,
-      duration: 0.8,
-      stagger: 0.15,
-      ease: 'back.out(1.4)',
-      scrollTrigger: {
-        trigger: '.gsap-cards-container',
-        start: 'top 85%',
-        toggleActions: 'play none none reverse',
-      },
-    });
+    const cardsContainer = document.querySelector('.gsap-cards-container')
+    if (cardsContainer) {
+      gsap.from('.gsap-card', {
+        opacity: 0,
+        y: 45,
+        scale: 0.95,
+        duration: 0.8,
+        stagger: 0.15,
+        ease: 'back.out(1.4)',
+        scrollTrigger: {
+          trigger: cardsContainer,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse',
+        },
+      })
+    }
 
     // --- 6. CONTADORES NUMÉRICOS DE PERFORMANCE (.gsap-counter) ---
     const counters = document.querySelectorAll('.gsap-counter');
@@ -125,32 +128,42 @@ function initScrollAnimations() {
     });
 
     // --- 7. AMBIENT BACKGROUND GLOW ORBS (.bg-glow-orb) ---
-    gsap.to('.bg-glow-orb-1', {
-      y: '-=40',
-      x: '+=30',
-      duration: 6,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-    });
+    const glowOrb1 = document.querySelector('.bg-glow-orb-1')
+    const glowOrb2 = document.querySelector('.bg-glow-orb-2')
 
-    gsap.to('.bg-glow-orb-2', {
-      y: '+=50',
-      x: '-=35',
-      duration: 8,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-    });
+    if (glowOrb1) {
+      gsap.to('.bg-glow-orb-1', {
+        y: '-=40',
+        x: '+=30',
+        duration: 6,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      })
+    }
+
+    if (glowOrb2) {
+      gsap.to('.bg-glow-orb-2', {
+        y: '+=50',
+        x: '-=35',
+        duration: 8,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      })
+    }
 
     // --- REVELAÇÕES ADICIONAIS DE HERO E TÍTULOS ---
-    gsap.from('.gsap-hero-item', {
-      opacity: 0,
-      y: 35,
-      duration: 0.9,
-      stagger: 0.15,
-      ease: 'power3.out',
-    });
+    const heroItems = document.querySelectorAll('.gsap-hero-item')
+    if (heroItems.length) {
+      gsap.from('.gsap-hero-item', {
+        opacity: 0,
+        y: 35,
+        duration: 0.9,
+        stagger: 0.15,
+        ease: 'power3.out',
+      })
+    }
 
     gsap.utils.toArray<HTMLElement>('.gsap-section-title').forEach((el) => {
       gsap.from(el, {
