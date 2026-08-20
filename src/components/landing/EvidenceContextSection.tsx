@@ -27,7 +27,7 @@ export default function EvidenceContextSection() {
           Um histórico com evidências verificáveis.
         </h2>
         <p className="mt-4 text-sm text-[var(--text-muted)] max-w-2xl leading-relaxed">
-          Reúna informações que ajudam a contextualizar o estado do veículo no momento da vistoria.
+          Cada registro reúne informações que ajudam a contextualizar o estado do veículo no momento da inspeção.
         </p>
       </Reveal>
 

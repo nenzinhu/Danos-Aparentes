@@ -14,8 +14,7 @@ const STEPS: CarouselTabItem[] = [
           Inspecione
         </h3>
         <p className="mt-4 text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-          Crie o ponto de partida: veículo, responsável, data/hora e geolocalização. Cada inspeção inicia a
-          linha do tempo da Memória Digital do veículo.
+          Veículo, responsável, data/hora e geolocalização. Cada inspeção inicia a linha do tempo do veículo.
         </p>
       </>
     ),

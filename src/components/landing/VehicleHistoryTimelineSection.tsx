@@ -8,7 +8,7 @@ const TIMELINE = [
     tone: 'ok' as const,
     date: '12 JAN 2026',
     title: 'Entrega',
-    desc: 'Primeira inspeção — baseline do patrimônio digital',
+    desc: 'Primeira inspeção — base do histórico digital',
     meta: ['8 danos mapeados', '24 evidências'],
   },
   {

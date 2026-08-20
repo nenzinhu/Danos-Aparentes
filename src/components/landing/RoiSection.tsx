@@ -48,7 +48,7 @@ export default function RoiSection() {
           Quanto custa não identificar um dano?
         </h2>
         <p className="mt-4 max-w-2xl text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-          Um dano não documentado pode se transformar em prejuízo. Um histórico bem estruturado transforma o dano em evidência.
+          Um dano não documentado vira prejuízo. Um histórico bem estruturado transforma dano em evidência.
         </p>
       </Reveal>
 
@@ -125,7 +125,7 @@ export default function RoiSection() {
                 className="mt-5 inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-bold shadow-xl shadow-[var(--primary)]/15 focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] outline-none transition-opacity hover:opacity-95 active:opacity-90"
                 style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
               >
-                Proteger minha frota agora
+                Proteger minha frota
               </Link>
 
               <p className="mt-3 text-[10px] text-[var(--text-muted)] leading-snug">

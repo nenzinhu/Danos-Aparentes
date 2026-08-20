@@ -11,7 +11,7 @@ export const B2B_BRAND = 'Danos Aparentes'
 export const B2B_PRODUCT_LINE =
   'Plataforma de histórico e evidência veicular.'
 
-export const B2B_CATEGORY_SHORT = 'Histórico Veicular Digital'
+export const B2B_CATEGORY_SHORT = 'Inteligência Histórica Veicular'
 
 export const B2B_TAGLINE =
   'Saiba exatamente o que mudou em cada veículo.'
@@ -24,7 +24,7 @@ export const B2B_VALUE_PROPS = [
 ] as const
 
 export const B2B_HERO_SUBTITLE =
-  'Registre o estado do veículo, compare inspeções e tenha evidências organizadas em um histórico digital. Você consegue provar quando o dano apareceu.'
+  'Registre inspeções, compare o estado do veículo ao longo do tempo e tenha evidências organizadas para comprovar o que mudou.'
 
 export const B2B_CTA_DEMO = 'Ver como funciona'
 export const B2B_CTA_PLATFORM = 'Conhecer a plataforma'
@@ -47,7 +47,7 @@ export const B2B_HERO_MICRO = [
 export const B2B_TRIAL_BADGE = '7 dias grátis • Sem cartão de crédito'
 export const B2B_HERO_HEADLINE_CONVERSION = 'Saiba exatamente quando um dano aconteceu.'
 export const B2B_HERO_SUB_CONVERSION =
-  'Registre cada inspeção com fotos, evidências, localização e data/hora. Compare o histórico do veículo e tenha provas organizadas para evitar disputas e prejuízos.'
+  'Cada inspeção vira um evento no histórico do veículo, com fotos, localização e data/hora. Compare e comprove o que mudou.'
 export const B2B_PROBLEM_TITLE = 'Quem causou o dano?'
 export const B2B_FINAL_HEADLINE = 'Pare de discutir sobre quando o dano aconteceu.'
 export const B2B_FINAL_SUB =
