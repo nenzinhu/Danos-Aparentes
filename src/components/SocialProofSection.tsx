@@ -78,8 +78,9 @@ export default function SocialProofSection({
                   <cite className="not-italic block font-semibold text-[var(--text-main)] text-sm">
                     {q.name}
                   </cite>
-                  <p className="mt-0.5 text-xs text-[var(--text-muted)] leading-snug">{q.role}</p>
-                </footer>
+                  <p className="mt-2 text-xs text-[var(--text-muted)] leading-snug">{q.role}</p>
+                  <span className="sr-only">depoimento de {q.name}.</span>
+                  </footer>
               </blockquote>
             </Reveal>
           ))}

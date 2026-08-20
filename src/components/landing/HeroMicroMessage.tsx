@@ -25,7 +25,7 @@ export default function HeroMicroMessage() {
           ))}
         </div>
         <p className="mt-4 max-w-2xl text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-          Danos Aparentes transforma inspeções isoladas em um histórico contínuo e verificável do veículo.
+          Inspeções isoladas viram histórico contínuo e verificável do veículo.
         </p>
       </Reveal>
     </section>
