@@ -44,6 +44,7 @@ export default function PdfPreviewSection() {
           onClick={() => setSelectedImage(null)}
           role="dialog"
           aria-label="Visualização ampliada do laudo"
+          aria-modal="true"
         >
           <div className="relative max-w-5xl max-h-[92vh] w-full flex flex-col items-center overflow-auto" onClick={e => e.stopPropagation()}>
             <div className="w-full flex justify-between items-center bg-slate-900/90 text-white px-4 py-3 rounded-t-xl border-b border-slate-700">

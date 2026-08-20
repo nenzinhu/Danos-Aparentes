@@ -156,13 +156,13 @@ export default function PricingCards({ salesViaChat = false }: { salesViaChat?: 
         name="Starter"
         planId="starter"
         headline="Autônomo / Pequenas frotas"
-        tagline="Ideal para quem está começando e quer organizar o pátio."
+        tagline="Organize o pátio com histórico digital."
         basePrice={STARTER_BASE_PRICE}
         vistoriasLimit={PLANS.starter.laudosPerMonth!}
         popular={false}
-        trialCtaLabel="Começar Teste Grátis"
+        trialCtaLabel="Começar grátis"
         features={[
-          `Até ${PLANS.starter.laudosPerMonth} vistorias por mês`,
+          `Até ${PLANS.starter.laudosPerMonth} vistorias/mês`,
           'Diagrama visual + Fotos',
           'Assinatura digital & GPS',
           'Funcionamento offline',
@@ -175,16 +175,16 @@ export default function PricingCards({ salesViaChat = false }: { salesViaChat?: 
         name="Pro"
         planId="pro"
         headline="Mais escolhido"
-        tagline="Sua marca em destaque com vistorias ampliadas."
+        tagline="Marca personalizada no PDF e IA para descrição de avarias."
         basePrice={PRO_BASE_PRICE}
         vistoriasLimit={PLANS.pro.laudosPerMonth!}
         popular
-        popularBadge="🏆 Melhor Custo-Benefício"
-        trialCtaLabel="Testar Plano Pro Grátis"
+        popularBadge="🏆 Melhor custo-benefício"
+        trialCtaLabel="Testar Pro grátis"
         features={[
-          'Tudo do Starter +',
-          `Até ${PLANS.pro.laudosPerMonth} vistorias por mês`,
-          'Sua logo e marca personalizada no PDF',
+          'Tudo do Starter',
+          `Até ${PLANS.pro.laudosPerMonth} vistorias/mês`,
+          'Logo e marca no PDF',
           'IA para descrição de avarias',
         ]}
       />

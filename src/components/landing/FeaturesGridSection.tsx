@@ -133,7 +133,7 @@ export default function FeaturesGridSection() {
           Registre, compare, comprove e preserve
         </h2>
         <p className="mt-4 max-w-2xl text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-          Cada registro vira uma camada do histórico: capture o estado, descubra o que mudou, tenha evidências organizadas e construa a memória digital do veículo.
+          Cada inspeção vira uma camada do histórico. Veja como funciona na prática.
         </p>
       </Reveal>
 
