@@ -59,6 +59,18 @@ const breadcrumbJsonLd = {
   ],
 }
 
+// Speakable Schema — diz ao Google quais partes ler em voz alta
+const speakableJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Danos Aparentes | Histórico Digital do Veículo',
+  speakable: {
+    '@type': 'SpeakableSpecification',
+    cssSelector: ['.speakable', 'h1', 'h2'],
+  },
+  url: 'https://danosaparentes.com.br/',
+}
+
 export const metadata: Metadata = {
   title: HOME_TITLE,
   description: HOME_DESCRIPTION,
@@ -218,7 +230,8 @@ export default function RootLayout({
         <meta name="dc.language" content="pt-BR" />
         <meta name="dc.type" content="Software / Web Application" />
 
-        {/* BreadcrumbList Schema */}
+        {/* Speakable + BreadcrumbList Schema */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(speakableJsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
 
         {/* ── Organization + WebSite (Knowledge Graph) ── */}

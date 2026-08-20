@@ -67,6 +67,7 @@ const CnhSection = dynamic(() => import('../components/landing/CnhSection'));
 const EuConsigoProvarSection = dynamic(() => import('../components/landing/EuConsigoProvarSection'));
 const HeroMicroMessage = dynamic(() => import('../components/landing/HeroMicroMessage'));
 const ThreeStepsSection = dynamic(() => import('../components/landing/ThreeStepsSection'));
+const DefinitionsSection = dynamic(() => import('../components/landing/DefinitionsSection'));
 const PdfPreviewSection = dynamic(() => import('../components/PdfPreviewSection'));
 const BlogTeaserSection = dynamic(() => import('../components/BlogTeaserSection'));
 const FinalCtaSection = dynamic(() => import('../components/FinalCtaSection'));
@@ -183,6 +184,18 @@ const FAQ_ITEMS = [
     a: 'Com um único clique você gera o PDF e envia pelo WhatsApp ou e-mail — antes mesmo do cliente sair do pátio.',
   },
 ];
+
+// Speakable Schema — diz ao Google quais partes ler em voz alta
+const speakableJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Danos Aparentes | Histórico Digital do Veículo',
+  speakable: {
+    '@type': 'SpeakableSpecification',
+    cssSelector: ['.speakable', 'h1', 'h2'],
+  },
+  url: 'https://danosaparentes.com.br/',
+};
 
 const PRICING_FAQ_JSONLD = {
   '@context': 'https://schema.org',
@@ -442,6 +455,7 @@ export default function LandingPage() {
       {/* Prova social no fluxo principal */}
       <HeroMicroMessage />
       <ThreeStepsSection />
+      <DefinitionsSection />
       <section
         aria-label="Começar"
         className="w-full z-10 relative border-y border-[var(--card-border)]/50 bg-[var(--panel-bg)]/70 backdrop-blur-sm"

@@ -6,7 +6,7 @@ import { B2B_PRODUCT_LINE } from '@/src/lib/b2bPositioning'
 const FEATURES = [
   {
     title: 'Fotos e vídeos',
-    benefit: 'Registre visualmente o estado real do veículo — não dependa de memória ou palavra.',
+    benefit: 'Registre visualmente o estado real do veículo.',
     body: 'Cada avaria vira uma imagem vinculada à peça, com data, hora e GPS.',
   },
   {
@@ -46,6 +46,21 @@ const FEATURES = [
   },
 ]
 
+const STEPS = [
+  { n: '01', title: 'Inspecione', desc: 'Veículo, responsável, data/hora e geolocalização.' },
+  { n: '02', title: 'Documente', desc: 'Fotos com metadados, peças marcadas no diagrama.' },
+  { n: '03', title: 'Compare', desc: 'Antes × Depois, avarias novas versus reparadas.' },
+  { n: '04', title: 'Comprove', desc: 'QR Code, Hash SHA-256 e PDF rastreável.' },
+]
+
+const BENEFITS = [
+  'Reduza disputas na devolução de veículos',
+  'Evite cobranças indevidas por danos pré-existentes',
+  'Tenha provas organizadas para processos judiciais',
+  'Agilize o tempo de inspeção em até 50%',
+  'Padronize processos entre filiais e equipes',
+]
+
 export default function SolutionEvidenceSection() {
   return (
     <section
@@ -66,7 +81,8 @@ export default function SolutionEvidenceSection() {
         </p>
       </Reveal>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 list-none m-0 p-0">
+      {/* Features Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 list-none m-0 p-0 mb-12">
         {FEATURES.map((f, i) => (
           <Reveal key={f.title} as="div" delay={i * 40} className="h-full">
             <div className="h-full rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/45 px-5 py-5 flex flex-col scroll-mt-28">
@@ -83,6 +99,39 @@ export default function SolutionEvidenceSection() {
           </Reveal>
         ))}
       </div>
+
+      {/* How it works steps */}
+      <Reveal>
+        <h3 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[var(--text-main)] mb-6 text-center">
+          Como funciona em 4 passos
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {STEPS.map((step) => (
+            <div key={step.n} className="rounded-xl border border-[var(--card-border)] bg-[var(--bg-main)]/50 p-4">
+              <span className="font-mono-data text-[11px] tracking-[0.18em] text-[var(--signal-bright)]">{step.n}</span>
+              <h4 className="mt-1 font-display text-lg font-bold text-[var(--text-main)]">{step.title}</h4>
+              <p className="mt-1 text-xs text-[var(--text-muted)] leading-relaxed">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </Reveal>
+
+      {/* Benefits list */}
+      <Reveal delay={200}>
+        <div className="mt-12 rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/40 p-6 sm:p-8">
+          <h3 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-[var(--text-main)] mb-4">
+            Benefícios para sua operação
+          </h3>
+          <ul className="space-y-3">
+            {BENEFITS.map((b) => (
+              <li key={b} className="flex items-start gap-3">
+                <span className="mt-1 w-1.5 h-1.5 rounded-full bg-[var(--signal-bright)] shrink-0" />
+                <span className="text-sm text-[var(--text-main)] leading-relaxed">{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Reveal>
     </section>
   )
 }
