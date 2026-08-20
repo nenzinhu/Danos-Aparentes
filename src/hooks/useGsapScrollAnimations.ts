@@ -217,7 +217,7 @@ export function useGsapScrollAnimations() {
 
     // Efeitos leves do hero podem rodar no mount sem custo.
     // ScrollTriggers mais pesados começam no primeiro scroll/interação.
-    const onScrollOrTouch = () => start(), { once: true } as const
+    const onScrollOrTouch = () => start()
     window.addEventListener('scroll', onScrollOrTouch, { passive: true, once: true })
     window.addEventListener('touchmove', onScrollOrTouch, { passive: true, once: true })
     window.addEventListener('keydown', onScrollOrTouch, { once: true })
