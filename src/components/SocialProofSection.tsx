@@ -13,12 +13,6 @@ type Props = {
   className?: string
 }
 
-const METRICS = [
-  { value: '100%', label: 'dos relatos apontam menos discussões' },
-  { value: '< 5 min', label: 'para emitir um dossiê com evidências' },
-  { value: '0', label: 'inventário perdido por danos não registrados' },
-]
-
 export default function SocialProofSection({
   vertical = 'home',
   title = 'Quem usa, prova o estado do veículo.',
@@ -49,21 +43,6 @@ export default function SocialProofSection({
           </p>
         </Reveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-14">
-          {METRICS.map((item, i) => (
-            <Reveal key={item.value} delay={i * 100}>
-              <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/60 p-6 text-center">
-                <p className="font-display text-3xl sm:text-4xl font-black text-[var(--text-main)] tracking-tight">
-                  {item.value}
-                </p>
-                <p className="mt-2 text-sm text-[var(--text-muted)] leading-relaxed">
-                  {item.label}
-                </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
         <ul className="grid grid-cols-1 lg:grid-cols-3 gap-5 list-none m-0 p-0">
           {quotes.map((q, i) => (
             <Reveal key={q.id} as="li" delay={i * 80} className="h-full">
@@ -78,9 +57,8 @@ export default function SocialProofSection({
                   <cite className="not-italic block font-semibold text-[var(--text-main)] text-sm">
                     {q.name}
                   </cite>
-                  <p className="mt-2 text-xs text-[var(--text-muted)] leading-snug">{q.role}</p>
-                  <span className="sr-only">depoimento de {q.name}.</span>
-                  </footer>
+                  <p className="mt-0.5 text-xs text-[var(--text-muted)] leading-snug">{q.role}</p>
+                </footer>
               </blockquote>
             </Reveal>
           ))}
