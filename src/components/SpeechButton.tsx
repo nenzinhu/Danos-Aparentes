@@ -42,9 +42,11 @@ export default function SpeechButton({ onTranscript, style }: Props) {
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null)
 
   useEffect(() => {
-    if (getSpeechRecognitionCtor()) {
-      setSupported(true)
-    }
+    // Adia um tick: setState sincrono no effect causa render em cascata no SSR/hydratacao.
+    const t = setTimeout(() => {
+      if (getSpeechRecognitionCtor()) setSupported(true)
+    }, 0)
+    return () => clearTimeout(t)
   }, [])
 
   const toggleListening = () => {

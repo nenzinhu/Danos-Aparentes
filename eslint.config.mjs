@@ -1,7 +1,7 @@
 import nextConfig from 'eslint-config-next'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
 
-export default [
+const config = [
   {
     ignores: [
       '.next/**',
@@ -24,3 +24,5 @@ export default [
     },
   },
 ]
+
+export default config

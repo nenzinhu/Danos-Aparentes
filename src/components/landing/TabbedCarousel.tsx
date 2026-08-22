@@ -54,7 +54,6 @@ export default function TabbedCarousel({ tabs, cta, id }: Props) {
     if (!el) return
     el.scrollTo({ left: 0, behavior: 'auto' })
     updateArrows()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 
   const scrollByCard = (dir: 1 | -1) => {

@@ -36,7 +36,7 @@ function makeReport(overrides: Partial<SavedReport> = {}): SavedReport {
 
 function setup(overrides: Partial<Parameters<typeof useInspectionWorkflow>[0]> = {}) {
   const spies = {
-    addDamage: vi.fn(async () => {}),
+    addDamage: vi.fn(async (_d: Damage) => {}),
     removeDamage: vi.fn(async () => {}),
     updateDamage: vi.fn(async () => {}),
     clearDamages: vi.fn(async () => {}),
@@ -83,7 +83,7 @@ describe('useInspectionWorkflow', () => {
       hook.result.current.handleAddDamage('car-ll-door', 'Porta', 'scratch', 'Risco')
     })
     expect(spies.addDamage).toHaveBeenCalledTimes(1)
-    const d = spies.addDamage.mock.calls[0][0] as Damage
+    const d = spies.addDamage.mock.calls[0]?.[0] as unknown as Damage
     expect(d.vehicle).toBe('car')
     expect(d.view).toBe('lateral-left')
     expect(d.partId).toBe('car-ll-door')
