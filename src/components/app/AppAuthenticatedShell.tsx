@@ -233,7 +233,7 @@ export default function AppAuthenticatedShell({
     >
       <DirectionalTransition>
         <PhotoUploadProgressBar />
-        <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center pb-10">
+        <div className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)] flex flex-col items-center pb-24 md:pb-10">
           <ViewTransition name="persistent-nav" default="none">
             <Header
               darkMode={shell.darkMode}
@@ -265,7 +265,8 @@ export default function AppAuthenticatedShell({
           </ViewTransition>
 
           <ErrorBoundary>
-          <main className="w-full max-w-7xl px-4 sm:px-5 flex flex-col gap-5 mt-3">
+          <main className="w-full max-w-7xl px-4 sm:px-5 mt-3">
+          <div key={shell.activeTab} className="flex flex-col gap-5 animate-in fade-in slide-in-from-bottom-2 duration-200 motion-reduce:animate-none">
             {shell.activeTab === 'dashboard' ? (
               <>
                 <DashboardView
@@ -372,7 +373,8 @@ export default function AppAuthenticatedShell({
                 onReturnHome={() => shell.setActiveTab('dashboard')}
               />
             )}
-          </main>
+          </div>
+      </main>
           </ErrorBoundary>
 
           <AppShellOverlays

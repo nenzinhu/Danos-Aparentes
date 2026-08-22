@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import { IconCar } from '@/src/components/ui/AnimatedIcons'
+import TabEmptyState from '@/src/components/app/TabEmptyState'
 import type { VehicleHistorySummaryWithCloud } from '@/src/lib/vehicleEvidence'
 import { normalizePlate } from '@/src/lib/reportComparison'
 
@@ -38,17 +40,18 @@ export default function VehiclesListView({
 
   if (vehicles.length === 0) {
     return (
-      <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] p-8 text-center">
-        <p className="text-sm text-[var(--text-muted)]">
-          Nenhum veículo com placa válida no histórico local ainda.
-        </p>
+      <TabEmptyState
+        icon={<IconCar size={30} />}
+        title="Seu histórico começa na primeira vistoria"
+        description="Cada veículo vistoriado ganha uma linha do tempo própria: avarias, fotos, GPS e dossiês — tudo por placa, pronto para comparar na próxima inspeção."
+      >
         <Link
           href="/app"
-          className="inline-block mt-4 px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm hover:opacity-95 transition-opacity"
+          className="inline-block px-6 py-3 min-h-12 rounded-xl bg-primary text-white font-bold text-sm hover:opacity-95 transition-opacity"
         >
           Criar primeira inspeção →
         </Link>
-      </div>
+      </TabEmptyState>
     )
   }
 

@@ -176,10 +176,17 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard }
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
           <IconChart size={56} className="text-sky-400" />
         </div>
-        <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 8, color: '#f8fafc' }}>Nenhum dado para exibir</h3>
+        <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 8, color: '#f8fafc' }}>Seus dossiês aparecem aqui</h3>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: 400, margin: '0 auto 24px' }}>
           Para visualizar a gestão histórica e as métricas da plataforma, registre e salve sua primeira inspeção.
         </p>
+        <a
+          href="/app"
+          className="inline-block px-6 py-3 min-h-12 rounded-xl font-black text-sm text-white transition-opacity hover:opacity-95"
+          style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
+        >
+          Criar primeira inspeção →
+        </a>
       </div>
     )
   }
