@@ -17,12 +17,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = getPost(slug)
   if (!post) return {}
   const url = `/blog/${post.slug}`
+  // Título H1 (post.title) fica intacto para GEO; o <title> da aba/serp é
+  // capado em ~66 chars (corte em borda de palavra) para não truncar em SERP.
+  const baseTitle = `${post.title} | Blog Danos Aparentes`
+  const TITLE_CAP = 66
+  const seoTitle = baseTitle.length > TITLE_CAP
+    ? baseTitle.slice(0, baseTitle.lastIndexOf(' ', TITLE_CAP)).trimEnd() + '…'
+    : baseTitle
   // Cada post usa a própria capa no OG/Twitter — antes todos compartilhavam
   // a mesma imagem genérica do site, então o preview social/rich-result
   // era idêntico para os 35+ artigos.
   const ogImage = post.cover.image || '/og-image.jpg'
   return {
-    title: `${post.title} | Blog Danos Aparentes`,
+    title: seoTitle,
     description: post.excerpt,
     keywords: post.tags,
     alternates: { canonical: url },

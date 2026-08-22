@@ -18,7 +18,7 @@ const ROUTES: {
   { path: '/historico-de-frotas', priority: 0.9, changeFrequency: 'weekly', lastModified: '2026-08-03' },
   { path: '/oficinas', priority: 0.9, changeFrequency: 'weekly', lastModified: '2026-07-12' },
   { path: '/seguradoras', priority: 0.9, changeFrequency: 'weekly', lastModified: '2026-07-12' },
-  { path: '/frotas', priority: 0.9, changeFrequency: 'weekly', lastModified: '2026-07-12' },
+  // /frotas consolida em /historico-de-frotas via redirect 301 (next.config.js)
   { path: '/sobre', priority: 0.7, changeFrequency: 'monthly', lastModified: '2026-08-04' },
   { path: '/imprensa', priority: 0.55, changeFrequency: 'monthly', lastModified: '2026-08-03' },
   { path: '/faq', priority: 0.8, changeFrequency: 'monthly', lastModified: '2026-08-04' },

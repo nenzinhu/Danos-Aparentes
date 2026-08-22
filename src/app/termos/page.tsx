@@ -4,7 +4,7 @@ import LegalContent from '@/src/components/LegalContent'
 
 const TITLE = 'Termos de Uso | Danos Aparentes'
 const DESCRIPTION =
-  'Termos de Uso do aplicativo Danos Aparentes — vistoria digital de avarias veiculares.'
+  'Termos de Uso do aplicativo Danos Aparentes: vistoria digital de avarias veiculares. Regras de uso, criação de contas, planos, pagamentos e responsabilidades.'
 
 export const metadata: Metadata = {
   title: TITLE,

@@ -10,7 +10,7 @@ const PRESS_EMAIL = LEGAL_CONTACT_EMAIL
 
 const TITLE = 'Media Kit | Imprensa — Danos Aparentes'
 const DESCRIPTION =
-  'Media kit da Danos Aparentes: overview da marca, logos, screenshots, cores, tipografia e contato para imprensa.'
+  'Media kit da Danos Aparentes: overview da marca, logos, screenshots, cores, tipografia e contatos para jornalistas, veículos de imprensa e parcerias de mídia.'
 
 export const metadata: Metadata = {
   title: TITLE,

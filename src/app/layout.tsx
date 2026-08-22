@@ -184,12 +184,11 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://analytics.tiktok.com" />
         <link rel="dns-prefetch" href="https://cdn.posthog.com" />
 
-        {/* ── LCP: preload do SVG da logo que é o elemento LCP real ──────
-            O Lighthouse identificou /brand/logo-full.svg como LCP.
-            Preloading como fetch + tipo correto garante descoberta imediata. */}
-        <link rel="preload" href="/brand/logo-full.svg" as="image" type="image/svg+xml" fetchPriority="high" />
-        {/* Mantém preload da logo.png para fallbacks e outros usos */}
-        <link rel="preload" href="/logo.png" as="image" type="image/png" />
+        {/* Sem preload global da logo: /brand/logo-full.svg só é renderizada
+            pelo componente Logo (login/app) e /logo.png é uso raro. Preload
+            global custava 2 requisições desperdiçadas por página + warning
+            de "preloaded but not used" em /app e rotas institucionais. */}
+
         <style dangerouslySetInnerHTML={{ __html: `
           :root { color-scheme: dark; }
           html.light { color-scheme: light; }
@@ -254,6 +253,10 @@ export default function RootLayout({
                     name: 'Jeferson',
                     jobTitle: 'Proprietário',
                   },
+                  sameAs: [
+                    'https://www.linkedin.com/company/danos-aparentes',
+                    'https://www.instagram.com/danosaparentes',
+                  ],
                   address: {
                     '@type': 'PostalAddress',
                     addressLocality: 'Florianópolis',

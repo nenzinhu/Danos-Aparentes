@@ -14,6 +14,8 @@
     "db:migrate:api": "node scripts/apply-migrations-api.mjs",
     "check:sync-schema": "node scripts/check-sync-schema.mjs",
     "check:gtm-ops": "node scripts/check-gtm-ops.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
+    "postbuild": "node scripts/indexnow.mjs",
     "setup:stripe-plans": "node scripts/setup-stripe-plans.mjs",
     "configure:stripe": "node scripts/configure-stripe-billing.mjs",
     "configure:stripe:vercel": "node scripts/configure-stripe-billing.mjs --redeploy",

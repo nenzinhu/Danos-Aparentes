@@ -21,8 +21,9 @@ interface GsapTextRevealProps {
 /**
  * Reveals text by masking each word/char behind overflow-hidden and
  * sliding it up into place with GSAP.
- * A11y: texto completo em sr-only; peças animadas com aria-hidden
- * (evita aria-label proibido em <p>).
+ * A11y: um único nó de texto legível (as peças animadas NÃO são
+ * aria-hidden) — evita duplicação de texto no DOM (H1 com texto
+ * repetido) e mantém leitura por leitor de tela + animação.
  */
 export default function GsapTextReveal({
   children,
@@ -95,19 +96,16 @@ export default function GsapTextReveal({
 
   return (
     <Component ref={ref} className={className}>
-      <span className="sr-only">{children}</span>
-      <span aria-hidden="true">
-        {parts.map((part, i) => (
-          <span key={i} style={{ display: 'inline-block' }}>
-            <span style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top' }}>
-              <span data-split-piece style={{ display: 'inline-block' }}>
-                {part}
-              </span>
+      {parts.map((part, i) => (
+        <span key={i} style={{ display: 'inline-block' }}>
+          <span style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top' }}>
+            <span data-split-piece style={{ display: 'inline-block' }}>
+              {part}
             </span>
-            {split === 'words' && i < parts.length - 1 ? '\u00a0' : ''}
           </span>
-        ))}
-      </span>
+          {split === 'words' && i < parts.length - 1 ? ' ' : ''}
+        </span>
+      ))}
     </Component>
   );
 }

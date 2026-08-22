@@ -4,7 +4,7 @@ import LegalContent from '@/src/components/LegalContent'
 
 const TITLE = 'Política de Privacidade | Danos Aparentes'
 const DESCRIPTION =
-  'Política de Privacidade do Danos Aparentes — como tratamos seus dados conforme a LGPD (Lei nº 13.709/2018).'
+  'Política de Privacidade do Danos Aparentes: como coletamos, usamos, armazenamos e protegemos seus dados conforme a LGPD (Lei nº 13.709/2018).'
 
 export const metadata: Metadata = {
   title: TITLE,
