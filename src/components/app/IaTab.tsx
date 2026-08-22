@@ -119,7 +119,7 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
       setMessages(prev => [...prev, {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `⚠️ **Erro de Conexão:** Não foi possível obter resposta da Inteligência Artificial. Por favor, verifique se a chave \`GEMINI_API_KEY\` está corretamente configurada no arquivo \`.env\` do projeto.\n\n*Detalhes do erro: ${err instanceof Error ? err.message : 'Erro Desconhecido'}*`,
+        content: `⚠️ **Erro de Conexão:** Não foi possível obter resposta da Inteligência Artificial. Por favor, tente novamente em instantes.\n\n*Detalhes do erro: ${err instanceof Error ? err.message : 'Erro Desconhecido'}*`,
         timestamp: new Date()
       }]);
     } finally {
