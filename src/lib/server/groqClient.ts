@@ -33,7 +33,13 @@ export interface GroqCompletionOptions {
   temperature?: number
   maxTokens?: number
   topP?: number
+  /** Ferramentas do modelo compound (groq/compound): web_search, code_interpreter, visit_website. */
+  compoundTools?: string[]
+  stream?: boolean
 }
+
+/** Tools habilitadas por padrão no modelo compound, conforme exemplo Groq. */
+const DEFAULT_COMPOUND_TOOLS = ['web_search', 'code_interpreter', 'visit_website']
 
 const MAX_ATTEMPTS = 3
 
@@ -46,13 +52,24 @@ export async function callGroqChat(
   }
 
   const model = options.model || getGroqModel()
-  const payload = JSON.stringify({
+  const isCompound = model.startsWith('groq/') || model.includes('compound')
+  const compoundTools = options.compoundTools ?? (isCompound ? DEFAULT_COMPOUND_TOOLS : [])
+
+  const payload: Record<string, unknown> = {
     model,
     messages: options.messages,
     temperature: options.temperature ?? 0.6,
     max_tokens: options.maxTokens ?? 2048,
     top_p: options.topP ?? 0.95,
-  })
+  }
+
+  if (compoundTools.length > 0) {
+    payload.compound_custom = {
+      tools: { enabled_tools: compoundTools },
+    }
+  }
+
+  const body = JSON.stringify(payload)
 
   try {
     for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
@@ -62,7 +79,7 @@ export async function callGroqChat(
           Authorization: `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
-        body: payload,
+        body: body,
       })
 
       if (res.ok) {

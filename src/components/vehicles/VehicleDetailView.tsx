@@ -8,6 +8,7 @@ import {
   type VehicleHistorySummaryWithCloud,
 } from '@/src/lib/vehicleEvidence'
 import { appendAuditEvent } from '@/src/lib/audit/auditLog'
+import type { FipePublicSummary } from '@/src/types'
 import { VehicleIconSvg } from '@/src/components/VehicleSelector'
 import VehicleHistoryTimeline from './VehicleHistoryTimeline'
 import VehicleLifeHistory from './VehicleLifeHistory'
@@ -51,6 +52,9 @@ export default function VehicleDetailView({
   const [remoteInspections, setRemoteInspections] = useState<RemoteInspection[]>([])
   const [hydrateBusy, setHydrateBusy] = useState(false)
   const [hydrateMsg, setHydrateMsg] = useState<string | null>(null)
+  const [fipeBusy, setFipeBusy] = useState(false)
+  const [fipeError, setFipeError] = useState<string | null>(null)
+  const [fipeOverride, setFipeOverride] = useState<FipePublicSummary | null>(null)
 
   useEffect(() => {
     if (!accessToken || vehicle.id.startsWith('local:')) {
@@ -80,6 +84,7 @@ export default function VehicleDetailView({
     vehicle.cloudOnly || cloudOnlyInspections.length > 0 || vehicle.reports.length === 0
 
   const fipe =
+    fipeOverride ??
     vehicle.fipe ??
     [...vehicle.reports].reverse().find((r) => r.vehicleInfo.fipe)?.vehicleInfo.fipe
 
@@ -192,6 +197,34 @@ export default function VehicleDetailView({
       setQrError(e instanceof Error ? e.message : 'Erro ao gerar QR')
     } finally {
       setQrBusy(false)
+    }
+  }
+
+  async function handleFipeLookup() {
+    const plate = vehicle.plate?.replace(/[^A-Za-z0-9]/g, '').toUpperCase()
+    if (!plate) {
+      setFipeError('Este veículo não possui placa para consulta FIPE.')
+      return
+    }
+    setFipeBusy(true)
+    setFipeError(null)
+    try {
+      const res = await fetch(`/api/plate-lookup?plate=${encodeURIComponent(plate)}`, {
+        headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || !data.fipePublic) {
+        throw new Error(data.error || 'Não foi possível obter a tabela FIPE deste veículo.')
+      }
+      setFipeOverride(data.fipePublic as FipePublicSummary)
+      void appendAuditEvent({
+        event_type: 'vehicle_fipe_consulted',
+        metadata: { vehicle_id: vehicle.id, plate },
+      })
+    } catch (e) {
+      setFipeError(e instanceof Error ? e.message : 'Erro ao consultar a FIPE.')
+    } finally {
+      setFipeBusy(false)
     }
   }
 
@@ -404,6 +437,17 @@ export default function VehicleDetailView({
         >
           {qrBusy ? 'Gerando QR…' : 'QR do veículo'}
         </button>
+        <button
+          type="button"
+          disabled={fipeBusy}
+          onClick={() => {
+            void handleFipeLookup()
+          }}
+          className="px-4 py-2.5 rounded-xl text-xs font-bold border border-[var(--card-border)] hover:border-emerald-500/40 text-emerald-300 disabled:opacity-50 transition-colors duration-200"
+          title="Consulta a tabela FIPE (valor de referência) pelo número da placa"
+        >
+          {fipeBusy ? 'Consultando FIPE…' : fipe ? 'Atualizar FIPE' : 'Consultar FIPE'}
+        </button>
         <Link
           href="/app/vehicles"
           className="px-4 py-2.5 rounded-xl text-xs font-bold text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors duration-200"
@@ -428,6 +472,11 @@ export default function VehicleDetailView({
       {qrError && (
         <p className="text-xs text-amber-300 border border-amber-500/30 rounded-xl px-3 py-2 bg-amber-500/10">
           {qrError}
+        </p>
+      )}
+      {fipeError && (
+        <p className="text-xs text-amber-300 border border-amber-500/30 rounded-xl px-3 py-2 bg-amber-500/10">
+          {fipeError}
         </p>
       )}
       {qrUrl && (
