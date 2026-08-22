@@ -84,7 +84,9 @@ export async function callGroqChat(
 
       if (res.ok) {
         const data = await res.json()
-        const content = data?.choices?.[0]?.message?.content || ''
+        let content = data?.choices?.[0]?.message?.content || ''
+        // Remove blocos de "thinking" de modelos Qwen 3 / reasoning que vazam para o output.
+        content = content.replace(/<think>[\s\S]*?<\/think>/gi, '').trim()
         return { ok: true, content }
       }
 
