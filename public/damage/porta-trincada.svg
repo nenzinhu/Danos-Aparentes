@@ -1,0 +1,158 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 300" width="420" height="300" role="img" aria-label="Porta de veículo com painel estilhaçado">
+  <title>Quebrado / Trincado — porta de veículo</title>
+  <defs>
+    <linearGradient id="P-paint" x1="0" y1="0" x2="0.25" y2="1">
+      <stop offset="0" stop-color="#eef1f5"/>
+      <stop offset="0.18" stop-color="#cbd2da"/>
+      <stop offset="0.42" stop-color="#e6eaef"/>
+      <stop offset="0.62" stop-color="#9aa4b1"/>
+      <stop offset="0.82" stop-color="#c2cad3"/>
+      <stop offset="1" stop-color="#6b7480"/>
+    </linearGradient>
+    <linearGradient id="P-horizon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f1621" stop-opacity="0"/>
+      <stop offset="0.4" stop-color="#0f1621" stop-opacity="0.40"/>
+      <stop offset="0.6" stop-color="#0f1621" stop-opacity="0.40"/>
+      <stop offset="1" stop-color="#0f1621" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="P-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="P-glass" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#333d4a"/>
+      <stop offset="0.35" stop-color="#161d27"/>
+      <stop offset="0.7" stop-color="#3c4653"/>
+      <stop offset="1" stop-color="#0d131b"/>
+    </linearGradient>
+    <linearGradient id="P-chrome" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.45" stop-color="#ccd2da"/>
+      <stop offset="0.55" stop-color="#69737f"/>
+      <stop offset="1" stop-color="#e8ecf1"/>
+    </linearGradient>
+    <linearGradient id="P-handle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6f8fa"/>
+      <stop offset="0.5" stop-color="#b8c0ca"/>
+      <stop offset="1" stop-color="#6c7681"/>
+    </linearGradient>
+    <linearGradient id="P-sill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8b95a1"/>
+      <stop offset="1" stop-color="#454e5b"/>
+    </linearGradient>
+    <linearGradient id="P-bare" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.4" stop-color="#dfe4ea"/>
+      <stop offset="0.7" stop-color="#9aa3af"/>
+      <stop offset="1" stop-color="#f1f4f7"/>
+    </linearGradient>
+
+    <filter id="P-noise" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.1"/></feComponentTransfer>
+    </filter>
+    <filter id="P-blur6"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="P-blur2"><feGaussianBlur stdDeviation="2"/></filter>
+    <filter id="P-blur1"><feGaussianBlur stdDeviation="1"/></filter>
+    <filter id="P-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0b1018" flood-opacity="0.4"/>
+    </filter>
+
+    <!-- SILHUETA DA PORTA: coluna A inclinada, teto curvo, cintura, soleira -->
+    <path id="P-door" d="M40 168 C 40 150 46 140 58 132 L 128 62 C 136 54 146 50 158 50 L 316 50 C 332 50 342 58 348 72 L 366 128 C 370 140 372 152 372 164 L 372 246 C 372 262 362 272 346 273 L 66 279 C 50 280 40 270 40 254 Z"/>
+    <clipPath id="P-clip"><use href="#P-door"/></clipPath>
+    <path id="P-glass-shape" d="M62 140 L136 76 C 142 70 149 67 157 67 L312 67 C 322 67 329 72 333 81 L349 132 Z"/>
+  </defs>
+
+  <ellipse cx="212" cy="288" rx="168" ry="12" fill="#0b1018" opacity="0.32" filter="url(#P-blur6)"/>
+
+  <g filter="url(#P-shadow)">
+    <use href="#P-door" fill="url(#P-paint)"/>
+    <g clip-path="url(#P-clip)">
+      <rect x="30" y="120" width="360" height="70" fill="url(#P-sky)" opacity="0.55"/>
+      <rect x="30" y="196" width="360" height="56" fill="url(#P-horizon)"/>
+
+      <!-- JANELA -->
+      <use href="#P-glass-shape" fill="#171d26"/>
+      <use href="#P-glass-shape" fill="url(#P-glass)"/>
+      <path d="M78 132 L146 82 L188 82 L104 138 Z" fill="#ffffff" opacity="0.10"/>
+      <path d="M232 130 L300 80 L322 82 L262 132 Z" fill="#ffffff" opacity="0.07"/>
+      <use href="#P-glass-shape" fill="none" stroke="#0d1219" stroke-width="7" opacity="0.9"/>
+      <use href="#P-glass-shape" fill="none" stroke="url(#P-chrome)" stroke-width="2.6"/>
+
+      <!-- linha de cintura -->
+      <path d="M46 150 C 150 142 280 142 372 152" stroke="#0d1219" stroke-width="6" fill="none" opacity="0.55"/>
+      <path d="M46 146 C 150 138 280 138 372 148" stroke="url(#P-chrome)" stroke-width="3" fill="none"/>
+
+      <!-- retrovisor -->
+      <g filter="url(#P-shadow)">
+        <path d="M58 132 C 44 128 34 118 34 108 C 34 100 42 96 52 98 L74 104 C 82 106 86 112 84 120 L80 132 Z" fill="url(#P-handle)"/>
+        <path d="M40 106 C 46 100 58 100 68 104 L74 108 C 62 104 50 104 42 110 Z" fill="#ffffff" opacity="0.7"/>
+      </g>
+
+      <!-- vinco lateral -->
+      <path d="M44 206 C 150 196 280 194 374 202" stroke="#ffffff" stroke-width="2.6" fill="none" opacity="0.6"/>
+      <path d="M44 211 C 150 201 280 199 374 207" stroke="#2a323d" stroke-width="3" fill="none" opacity="0.4"/>
+
+      <!-- soleira -->
+      <path d="M40 252 C 150 244 280 244 374 250 L374 288 L40 288 Z" fill="url(#P-sill)" opacity="0.55"/>
+      <path d="M40 252 C 150 244 280 244 374 250" stroke="#ffffff" stroke-width="1.6" fill="none" opacity="0.4"/>
+
+      <!-- MACANETA -->
+      <g filter="url(#P-shadow)">
+        <rect x="236" y="168" width="82" height="20" rx="10" fill="#7f8995" opacity="0.5"/>
+        <path d="M240 166 h68 c8 0 13 5 13 11 0 6 -5 11 -13 11 h-68 c-8 0 -13 -5 -13 -11 0 -6 5 -11 13 -11 z" fill="url(#P-handle)"/>
+        <path d="M242 169 h62 c4 0 7 2 7 5 0 -4 -3 -5 -7 -5 z" fill="#ffffff" opacity="0.85"/>
+        <ellipse cx="230" cy="178" rx="8" ry="9" fill="#1b222b" opacity="0.7"/>
+      </g>
+      <ellipse cx="344" cy="196" rx="5" ry="6" fill="#2c343f" opacity="0.8"/>
+
+      <!-- ================== DANO ================== -->
+      <g transform="translate(198,206) scale(0.8,0.68) translate(-150,-250)">
+
+      <!-- ================== VIDRO / PAINEL ESTILHAÇADO ================== -->
+      <g>
+        <ellipse cx="150" cy="250" rx="96" ry="84" fill="#0b1018" opacity="0.13" filter="url(#P-blur6)"/>
+
+        <!-- trincas radiais -->
+        <path d="M 150 250 L 178.9 249.6 L 193.2 249.5 L 236 248.9 L 273.9 248.5 M 150 250 L 174.4 262.3 L 195 272.6 L 215.5 282.9 L 243.8 297.1 M 150 250 L 160.1 267.7 L 173.7 291.4 L 183.7 308.8 L 209.1 353.1 M 150 250 L 154 277.8 L 157.6 303.3 L 159.6 317.4 L 163.5 344.9 M 150 250 L 139.2 276.1 L 131.3 295 L 125.9 308.1 L 117.4 328.6 M 150 250 L 129 266.3 L 108.2 282.4 L 83 302 L 63.6 317 M 150 250 L 124.4 258.1 L 100.8 265.5 L 77 273 L 37.6 285.4 M 150 250 L 127.9 244.9 L 96.6 237.7 L 62.7 229.9 L 53.9 227.9 M 150 250 L 134.5 236.4 L 112.9 217.5 L 94.5 201.3 L 83.4 191.6 M 150 250 L 142.7 226.8 L 136.8 207.7 L 124.2 167.6 L 121.9 160.3 M 150 250 L 150.2 229.9 L 150.4 193.6 L 150.6 167.2 L 150.9 134 M 150 250 L 162.1 231.9 L 182 201.9 L 184.2 198.5 L 211.6 157.4 M 150 250 L 169.5 237.8 L 198.2 219.8 L 209.2 212.9 L 227 201.8" stroke="#05080d" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <!-- anéis de fratura -->
+        <path d="M 193.2 249.5 L 195 272.6 L 173.7 291.4 L 157.6 303.3 L 131.3 295 L 108.2 282.4 L 100.8 265.5 L 96.6 237.7 L 112.9 217.5 L 136.8 207.7 L 150.4 193.6 L 182 201.9 L 198.2 219.8 Z M 236 248.9 L 215.5 282.9 L 183.7 308.8 L 159.6 317.4 L 125.9 308.1 L 83 302 L 77 273 L 62.7 229.9 L 94.5 201.3 L 124.2 167.6 L 150.6 167.2 L 184.2 198.5 L 209.2 212.9 Z M 273.9 248.5 L 243.8 297.1 L 209.1 353.1 L 163.5 344.9 L 117.4 328.6 L 63.6 317 L 37.6 285.4 L 53.9 227.9 L 83.4 191.6 L 121.9 160.3 L 150.9 134 L 211.6 157.4 L 227 201.8 Z" stroke="#05080d" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
+        <!-- trincas secundárias curtas -->
+        <path d="M 194.1 261.05 L 178.9 249.6 M 165.65 297.35 L 160.1 267.7 M 119.75 288.7 L 139.2 276.1 M 98.7 251.6 L 124.4 258.1 M 124.85 212.6 L 134.5 236.4 M 166.2 197.75 L 150.2 229.9 M 195.7 234.65 L 169.5 237.8 M 225.75 265.9 L 193.2 249.5 M 171.65 313.1 L 173.7 291.4 M 104.45 305.05 L 131.3 295 M 69.85 251.45 L 100.8 265.5 M 109.35 184.45 L 112.9 217.5 M 167.4 182.85 L 150.4 193.6 M 222.6 230.9 L 198.2 219.8" stroke="#05080d" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.95"/>
+        <!-- realce claro nas arestas -->
+        <g transform="translate(-1.1,-1.1)" opacity="0.75" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M 150 250 L 178.9 249.6 L 193.2 249.5 L 236 248.9 L 273.9 248.5 M 150 250 L 174.4 262.3 L 195 272.6 L 215.5 282.9 L 243.8 297.1 M 150 250 L 160.1 267.7 L 173.7 291.4 L 183.7 308.8 L 209.1 353.1 M 150 250 L 154 277.8 L 157.6 303.3 L 159.6 317.4 L 163.5 344.9 M 150 250 L 139.2 276.1 L 131.3 295 L 125.9 308.1 L 117.4 328.6 M 150 250 L 129 266.3 L 108.2 282.4 L 83 302 L 63.6 317 M 150 250 L 124.4 258.1 L 100.8 265.5 L 77 273 L 37.6 285.4 M 150 250 L 127.9 244.9 L 96.6 237.7 L 62.7 229.9 L 53.9 227.9 M 150 250 L 134.5 236.4 L 112.9 217.5 L 94.5 201.3 L 83.4 191.6 M 150 250 L 142.7 226.8 L 136.8 207.7 L 124.2 167.6 L 121.9 160.3 M 150 250 L 150.2 229.9 L 150.4 193.6 L 150.6 167.2 L 150.9 134 M 150 250 L 162.1 231.9 L 182 201.9 L 184.2 198.5 L 211.6 157.4 M 150 250 L 169.5 237.8 L 198.2 219.8 L 209.2 212.9 L 227 201.8" stroke-width="0.9"/>
+          <path d="M 193.2 249.5 L 195 272.6 L 173.7 291.4 L 157.6 303.3 L 131.3 295 L 108.2 282.4 L 100.8 265.5 L 96.6 237.7 L 112.9 217.5 L 136.8 207.7 L 150.4 193.6 L 182 201.9 L 198.2 219.8 Z M 236 248.9 L 215.5 282.9 L 183.7 308.8 L 159.6 317.4 L 125.9 308.1 L 83 302 L 77 273 L 62.7 229.9 L 94.5 201.3 L 124.2 167.6 L 150.6 167.2 L 184.2 198.5 L 209.2 212.9 Z M 273.9 248.5 L 243.8 297.1 L 209.1 353.1 L 163.5 344.9 L 117.4 328.6 L 63.6 317 L 37.6 285.4 L 53.9 227.9 L 83.4 191.6 L 121.9 160.3 L 150.9 134 L 211.6 157.4 L 227 201.8 Z" stroke-width="0.7"/>
+        </g>
+
+        <!-- cratera do impacto -->
+        <ellipse cx="150" cy="250" rx="34" ry="31" fill="#05080d" opacity="0.65" filter="url(#P-blur2)"/>
+        <path d="M150 224 L170 238 L176 260 L164 278 L140 280 L126 264 L130 238 Z" fill="#05080d"/>
+        <path d="M150 230 L164 242 L168 260 L158 272 L140 273 L132 260 L135 242 Z" fill="#000000"/>
+        <path d="M148 232 L158 242 L160 256" stroke="#4b5563" stroke-width="1.2" fill="none" opacity="0.75"/>
+
+        <!-- lascas soltas -->
+        <g stroke="#0d131b" stroke-width="0.7" opacity="0.9">
+          <polygon points="118,212 131,206 126,222" fill="#e9edf2"/>
+          <polygon points="180,212 193,220 178,226" fill="#dfe4ea"/>
+          <polygon points="186,280 200,286 184,294" fill="#eef1f5"/>
+          <polygon points="110,280 124,288 108,294" fill="#e2e7ed"/>
+          <polygon points="148,304 160,314 142,316" fill="#e9edf2"/>
+          <polygon points="166,194 176,188 174,202" fill="#f2f5f8"/>
+        </g>
+      </g>
+
+      
+      </g>
+
+      <rect x="20" y="30" width="390" height="270" filter="url(#P-noise)" opacity="0.9"/>
+      <path d="M34 40 L64 40 L64 292 L34 292 Z" fill="#0b1018" opacity="0.2" filter="url(#P-blur6)"/>
+      <path d="M350 40 L382 40 L382 292 L350 292 Z" fill="#0b1018" opacity="0.22" filter="url(#P-blur6)"/>
+      <path d="M30 250 L390 244 L390 292 L30 292 Z" fill="#0b1018" opacity="0.18" filter="url(#P-blur6)"/>
+    </g>
+    <use href="#P-door" fill="none" stroke="#2a323d" stroke-width="1.6" opacity="0.85"/>
+    <use href="#P-door" fill="none" stroke="#ffffff" stroke-width="0.9" opacity="0.35" transform="translate(0,1.6)"/>
+  </g>
+</svg>

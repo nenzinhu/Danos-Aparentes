@@ -1,0 +1,174 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 300" width="420" height="300" role="img" aria-label="Porta de veículo com riscos profundos na lataria">
+  <title>Risco / Arranhado — porta de veículo</title>
+  <defs>
+    <linearGradient id="P-paint" x1="0" y1="0" x2="0.25" y2="1">
+      <stop offset="0" stop-color="#eef1f5"/>
+      <stop offset="0.18" stop-color="#cbd2da"/>
+      <stop offset="0.42" stop-color="#e6eaef"/>
+      <stop offset="0.62" stop-color="#9aa4b1"/>
+      <stop offset="0.82" stop-color="#c2cad3"/>
+      <stop offset="1" stop-color="#6b7480"/>
+    </linearGradient>
+    <linearGradient id="P-horizon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f1621" stop-opacity="0"/>
+      <stop offset="0.4" stop-color="#0f1621" stop-opacity="0.40"/>
+      <stop offset="0.6" stop-color="#0f1621" stop-opacity="0.40"/>
+      <stop offset="1" stop-color="#0f1621" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="P-sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="P-glass" x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#333d4a"/>
+      <stop offset="0.35" stop-color="#161d27"/>
+      <stop offset="0.7" stop-color="#3c4653"/>
+      <stop offset="1" stop-color="#0d131b"/>
+    </linearGradient>
+    <linearGradient id="P-chrome" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.45" stop-color="#ccd2da"/>
+      <stop offset="0.55" stop-color="#69737f"/>
+      <stop offset="1" stop-color="#e8ecf1"/>
+    </linearGradient>
+    <linearGradient id="P-handle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6f8fa"/>
+      <stop offset="0.5" stop-color="#b8c0ca"/>
+      <stop offset="1" stop-color="#6c7681"/>
+    </linearGradient>
+    <linearGradient id="P-sill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8b95a1"/>
+      <stop offset="1" stop-color="#454e5b"/>
+    </linearGradient>
+    <linearGradient id="P-bare" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.4" stop-color="#dfe4ea"/>
+      <stop offset="0.7" stop-color="#9aa3af"/>
+      <stop offset="1" stop-color="#f1f4f7"/>
+    </linearGradient>
+
+    <filter id="P-noise" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="7" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.1"/></feComponentTransfer>
+    </filter>
+    <filter id="P-blur6"><feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="P-blur2"><feGaussianBlur stdDeviation="2"/></filter>
+    <filter id="P-blur1"><feGaussianBlur stdDeviation="1"/></filter>
+    <filter id="P-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-color="#0b1018" flood-opacity="0.4"/>
+    </filter>
+
+    <!-- SILHUETA DA PORTA: coluna A inclinada, teto curvo, cintura, soleira -->
+    <path id="P-door" d="M40 168 C 40 150 46 140 58 132 L 128 62 C 136 54 146 50 158 50 L 316 50 C 332 50 342 58 348 72 L 366 128 C 370 140 372 152 372 164 L 372 246 C 372 262 362 272 346 273 L 66 279 C 50 280 40 270 40 254 Z"/>
+    <clipPath id="P-clip"><use href="#P-door"/></clipPath>
+    <path id="P-glass-shape" d="M62 140 L136 76 C 142 70 149 67 157 67 L312 67 C 322 67 329 72 333 81 L349 132 Z"/>
+  </defs>
+
+  <ellipse cx="212" cy="288" rx="168" ry="12" fill="#0b1018" opacity="0.32" filter="url(#P-blur6)"/>
+
+  <g filter="url(#P-shadow)">
+    <use href="#P-door" fill="url(#P-paint)"/>
+    <g clip-path="url(#P-clip)">
+      <rect x="30" y="120" width="360" height="70" fill="url(#P-sky)" opacity="0.55"/>
+      <rect x="30" y="196" width="360" height="56" fill="url(#P-horizon)"/>
+
+      <!-- JANELA -->
+      <use href="#P-glass-shape" fill="#171d26"/>
+      <use href="#P-glass-shape" fill="url(#P-glass)"/>
+      <path d="M78 132 L146 82 L188 82 L104 138 Z" fill="#ffffff" opacity="0.10"/>
+      <path d="M232 130 L300 80 L322 82 L262 132 Z" fill="#ffffff" opacity="0.07"/>
+      <use href="#P-glass-shape" fill="none" stroke="#0d1219" stroke-width="7" opacity="0.9"/>
+      <use href="#P-glass-shape" fill="none" stroke="url(#P-chrome)" stroke-width="2.6"/>
+
+      <!-- linha de cintura -->
+      <path d="M46 150 C 150 142 280 142 372 152" stroke="#0d1219" stroke-width="6" fill="none" opacity="0.55"/>
+      <path d="M46 146 C 150 138 280 138 372 148" stroke="url(#P-chrome)" stroke-width="3" fill="none"/>
+
+      <!-- retrovisor -->
+      <g filter="url(#P-shadow)">
+        <path d="M58 132 C 44 128 34 118 34 108 C 34 100 42 96 52 98 L74 104 C 82 106 86 112 84 120 L80 132 Z" fill="url(#P-handle)"/>
+        <path d="M40 106 C 46 100 58 100 68 104 L74 108 C 62 104 50 104 42 110 Z" fill="#ffffff" opacity="0.7"/>
+      </g>
+
+      <!-- vinco lateral -->
+      <path d="M44 206 C 150 196 280 194 374 202" stroke="#ffffff" stroke-width="2.6" fill="none" opacity="0.6"/>
+      <path d="M44 211 C 150 201 280 199 374 207" stroke="#2a323d" stroke-width="3" fill="none" opacity="0.4"/>
+
+      <!-- soleira -->
+      <path d="M40 252 C 150 244 280 244 374 250 L374 288 L40 288 Z" fill="url(#P-sill)" opacity="0.55"/>
+      <path d="M40 252 C 150 244 280 244 374 250" stroke="#ffffff" stroke-width="1.6" fill="none" opacity="0.4"/>
+
+      <!-- MACANETA -->
+      <g filter="url(#P-shadow)">
+        <rect x="236" y="168" width="82" height="20" rx="10" fill="#7f8995" opacity="0.5"/>
+        <path d="M240 166 h68 c8 0 13 5 13 11 0 6 -5 11 -13 11 h-68 c-8 0 -13 -5 -13 -11 0 -6 5 -11 13 -11 z" fill="url(#P-handle)"/>
+        <path d="M242 169 h62 c4 0 7 2 7 5 0 -4 -3 -5 -7 -5 z" fill="#ffffff" opacity="0.85"/>
+        <ellipse cx="230" cy="178" rx="8" ry="9" fill="#1b222b" opacity="0.7"/>
+      </g>
+      <ellipse cx="344" cy="196" rx="5" ry="6" fill="#2c343f" opacity="0.8"/>
+
+      <!-- ================== DANO ================== -->
+      <g transform="translate(196,208) scale(0.86,0.72) translate(-150,-250)">
+
+      <!-- ================== RISCOS PROFUNDOS ================== -->
+      <g>
+        <!-- sombra difusa ao redor da área raspada -->
+        <ellipse cx="150" cy="240" rx="86" ry="58" fill="#0b1018" opacity="0.16" filter="url(#P-blur6)"/>
+
+        <!-- risco 1 — garra afilada nas duas pontas -->
+        <g>
+          <path d="M74 300 C 94 262 122 226 158 196 C 174 183 190 173 202 168 C 191 178 176 190 160 205 C 128 234 100 268 82 302 Z"
+                fill="#05080d" opacity="0.75" filter="url(#P-blur2)" transform="translate(3,4)"/>
+          <path d="M76 298 C 96 260 124 224 159 195 C 174 182 190 173 201 169 C 190 177 176 189 161 203 C 129 232 102 266 84 300 Z"
+                fill="url(#P-bare)"/>
+          <path d="M76 298 C 96 260 124 224 159 195 C 174 182 190 173 201 169" stroke="#ffffff" stroke-width="1.2" fill="none" opacity="0.95"/>
+          <path d="M84 300 C 102 266 129 232 161 203 C 176 189 190 177 201 169" stroke="#1b222b" stroke-width="1.6" fill="none" opacity="0.85"/>
+        </g>
+        <!-- risco 2 — o mais profundo (central) -->
+        <g>
+          <path d="M96 316 C 116 276 148 236 186 206 C 202 193 218 184 230 180 C 216 191 200 204 184 219 C 150 249 122 285 104 320 Z"
+                fill="#05080d" opacity="0.75" filter="url(#P-blur2)" transform="translate(3,4)"/>
+          <path d="M98 314 C 118 274 150 234 187 205 C 203 192 218 184 229 181 C 216 190 200 202 185 217 C 151 247 124 283 106 318 Z"
+                fill="url(#P-bare)"/>
+          <path d="M98 314 C 118 274 150 234 187 205 C 203 192 218 184 229 181" stroke="#ffffff" stroke-width="1.5" fill="none" opacity="0.98"/>
+          <path d="M106 318 C 124 283 151 247 185 217 C 200 202 216 190 229 181" stroke="#1b222b" stroke-width="1.8" fill="none" opacity="0.85"/>
+        </g>
+        <!-- risco 3 -->
+        <g>
+          <path d="M124 328 C 144 292 174 256 208 228 C 222 217 234 210 244 206 C 232 215 219 225 206 238 C 176 266 150 298 132 330 Z"
+                fill="#05080d" opacity="0.7" filter="url(#P-blur2)" transform="translate(3,4)"/>
+          <path d="M126 326 C 146 290 176 254 209 227 C 223 216 234 210 243 207 C 232 214 219 224 207 236 C 177 264 152 296 134 328 Z"
+                fill="url(#P-bare)"/>
+          <path d="M126 326 C 146 290 176 254 209 227 C 223 216 234 210 243 207" stroke="#ffffff" stroke-width="1.2" fill="none" opacity="0.92"/>
+        </g>
+
+        <!-- micro-riscos finos -->
+        <g stroke="#ffffff" stroke-width="0.9" fill="none" opacity="0.7">
+          <path d="M92 288 C 110 256 138 224 172 198"/>
+          <path d="M116 304 C 134 272 162 242 196 216"/>
+          <path d="M140 318 C 158 288 186 260 218 236"/>
+          <path d="M70 296 C 88 264 114 234 146 208" opacity="0.35"/>
+        </g>
+        <!-- lascas de tinta levantadas -->
+        <g fill="#f4f7fa" stroke="#8d97a4" stroke-width="0.6">
+          <polygon points="120,258 130,250 127,264"/>
+          <polygon points="164,220 175,214 171,228"/>
+          <polygon points="196,196 205,190 202,203"/>
+          <polygon points="146,282 154,276 152,288"/>
+        </g>
+      </g>
+
+
+      
+      </g>
+
+      <rect x="20" y="30" width="390" height="270" filter="url(#P-noise)" opacity="0.9"/>
+      <path d="M34 40 L64 40 L64 292 L34 292 Z" fill="#0b1018" opacity="0.2" filter="url(#P-blur6)"/>
+      <path d="M350 40 L382 40 L382 292 L350 292 Z" fill="#0b1018" opacity="0.22" filter="url(#P-blur6)"/>
+      <path d="M30 250 L390 244 L390 292 L30 292 Z" fill="#0b1018" opacity="0.18" filter="url(#P-blur6)"/>
+    </g>
+    <use href="#P-door" fill="none" stroke="#2a323d" stroke-width="1.6" opacity="0.85"/>
+    <use href="#P-door" fill="none" stroke="#ffffff" stroke-width="0.9" opacity="0.35" transform="translate(0,1.6)"/>
+  </g>
+</svg>

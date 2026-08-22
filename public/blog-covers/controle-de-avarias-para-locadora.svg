@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 828 352" width="828" height="352" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Controle de avarias para locadora: laudo de retirada versus devolução">
+  <defs>
+    <linearGradient id="card-Controledeav" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e0f2fe"/><stop offset="1" stop-color="#bae6fd"/>
+    </linearGradient>
+    <linearGradient id="header-Controledeav" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0c4a6e"/><stop offset="1" stop-color="#0369a1"/>
+    </linearGradient>
+    <linearGradient id="badge-Controledeav" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1FB6FF"/><stop offset="1" stop-color="#0369a1"/>
+    </linearGradient>
+    <radialGradient id="glow-Controledeav" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#38bdf8" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#38bdf8" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft-Controledeav" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#000" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <ellipse cx="414" cy="185" rx="230" ry="150" fill="url(#glow-Controledeav)"/>
+  
+      
+  <g transform="rotate(-8 294 172)" filter="url(#soft-Controledeav)">
+    <path d="M220 52 H334 L378 96 V282 A10 10 0 0 1 368 292 H220 A10 10 0 0 1 210 282 V62 A10 10 0 0 1 220 52 Z" fill="url(#card-Controledeav)"/>
+    <path d="M334 52 V86 A10 10 0 0 0 344 96 H378 Z" fill="#c3cede"/>
+    <rect x="210" y="52" width="168" height="40" rx="10" fill="url(#header-Controledeav)"/>
+    <rect x="210" y="72" width="168" height="20" fill="url(#header-Controledeav)"/>
+    <text x="232" y="78" font-family="sans-serif" font-weight="800" font-size="12" fill="#fff">RETIRADA</text>
+    <rect x="232" y="112" width="178" height="7" rx="3.5" fill="#94a3b8"/>
+<rect x="232" y="130" width="150" height="7" rx="3.5" fill="#94a3b8"/>
+    <line x1="232" y1="218" x2="356" y2="218" stroke="#c3cede" stroke-width="1.5"/>
+    <text x="232" y="240" font-family="monospace" font-size="10" fill="#1e3a5f" opacity="0.85">check-out · hash ✓</text>
+  </g>
+      
+  <g transform="rotate(6 494 182)" filter="url(#soft-Controledeav)">
+    <path d="M420 62 H534 L578 106 V292 A10 10 0 0 1 568 302 H420 A10 10 0 0 1 410 292 V72 A10 10 0 0 1 420 62 Z" fill="url(#card-Controledeav)"/>
+    <path d="M534 62 V96 A10 10 0 0 0 544 106 H578 Z" fill="#c3cede"/>
+    <rect x="410" y="62" width="168" height="40" rx="10" fill="url(#header-Controledeav)"/>
+    <rect x="410" y="82" width="168" height="20" fill="url(#header-Controledeav)"/>
+    <text x="432" y="88" font-family="sans-serif" font-weight="800" font-size="12" fill="#fff">DEVOLUÇÃO</text>
+    <rect x="432" y="112" width="178" height="7" rx="3.5" fill="#94a3b8"/>
+<rect x="432" y="130" width="150" height="7" rx="3.5" fill="#94a3b8"/>
+    <line x1="432" y1="228" x2="556" y2="228" stroke="#c3cede" stroke-width="1.5"/>
+    <text x="432" y="250" font-family="monospace" font-size="10" fill="#1e3a5f" opacity="0.85">check-in · QR ✓</text>
+  </g>
+      <g filter="url(#soft-Controledeav)">
+        <circle cx="414" cy="176" r="28" fill="url(#badge-Controledeav)"/>
+        <path d="M404 176 L411 183 L426 166" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <g opacity="0.95">
+        <rect x="318" y="28" width="192" height="26" rx="13" fill="#0c4a6e"/>
+        <text x="414" y="46" font-family="sans-serif" font-weight="800" font-size="11" fill="#fff" text-anchor="middle">CONTROLE DE AVARIAS · LOCADORA</text>
+      </g>
+      <g transform="translate(620 210)" opacity="0.9">
+        <ellipse cx="0" cy="36" rx="54" ry="8" fill="#000" opacity="0.2"/>
+        <rect x="-48" y="0" width="96" height="32" rx="6" fill="#0369a1"/>
+        <rect x="18" y="4" width="28" height="20" rx="3" fill="#7dd3fc" opacity="0.85"/>
+        <circle cx="-28" cy="36" r="10" fill="#0f172a"/>
+        <circle cx="28" cy="36" r="10" fill="#0f172a"/>
+        <text x="0" y="-8" font-family="sans-serif" font-size="9" fill="#0c4a6e" font-weight="700" text-anchor="middle">placa · prova</text>
+      </g>
+</svg>

@@ -1,0 +1,97 @@
+node_modules/
+dist/
+.vite/
+
+# Next.js
+.next/
+/out/
+next-env.d.ts
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local env
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+.superpowers/
+
+.vercel
+.env*
+
+esc-skills-main/
+scratch/
+
+# Cursor / geradores locais
+.cursor/
+
+# VideoForge (artefatos gerados — scripts ficam versionados)
+videoforge/out/
+videoforge/cache/
+videoforge/remotion/node_modules/
+
+# Template de ambiente deve ser versionado
+!.env.example
+
+# Pastas de skills/monorepos auxiliares (não fazem parte do build)
+open-design-main/
+laudo-3d-mockup.html
+public/laudo-3d-mockup.html
+Claude-Skills-main/
+.agents/skills/
+
+# HyperFrames (artefatos gerados por projeto de vídeo — composições e docs ficam versionados)
+videos/*/renders/
+videos/*/snapshots*/
+videos/*/.thumbnails/
+videos/*/.hyperframes/backup/
+
+# Relatórios de auditoria pontuais (regeráveis, não são fonte)
+.lighthouse-reports/
+
+# Pastas pesadas e artefatos locais
+damage-model/
+remotion-danos-aparentes/
+outputs/
+/PDF/
+deliverables/
+DANOSAPARENTES/
+run-local.bat
+motion.css
+motion_spec.md
+tsconfig.tsbuildinfo
+
+
+.vercel
+.env*
+
+.vercel
+.env*
+
+tmp/
+
+.vercel
+.env*
+
+.vercel
+.env*
+.aider*
+
+.vercel
+.env*
+
+# Pastas auxiliares locais (nao fazem parte do build)
+open-design-tmp/
+entregas/
+juntos/
+labs/
+analysis/
+videoforge/

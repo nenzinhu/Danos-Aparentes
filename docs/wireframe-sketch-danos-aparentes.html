@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wireframe Sketch — Danos Aparentes (Locadoras)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Comic Neue', cursive;
+      background: #FFFFFF;
+      color: #666666;
+      line-height: 1.7;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Architects Daughter', cursive;
+      color: #000000;
+      line-height: 1.3;
+    }
+    h1 { font-size: 36px; margin-bottom: 16px; }
+    h2 { font-size: 28px; margin-bottom: 14px; }
+    h3 { font-size: 20px; margin-bottom: 10px; }
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    .section-label {
+      font-family: 'Architects Daughter', cursive;
+      font-size: 12px;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      padding: 4px 12px;
+      border-left: 3px solid #CCCCCC;
+      display: inline-block;
+    }
+    section { padding: 64px 0; }
+    .bg-cream { background: #FFFDF7; }
+    .bg-rose { background: #FFF5F3; }
+    .bg-white { background: #FFFFFF; }
+    .bg-mint { background: #F2FAF6; }
+    .bg-ice { background: #EDF4FF; }
+    .bg-lavender { background: #F5F0FF; }
+    .bg-peach { background: #FFF8F0; }
+    .bg-gray { background: #F5F5F5; }
+    .bg-footer { background: #1a1a1a; color: #ccc; }
+    .bg-footer h3, .bg-footer a { color: #fff; }
+    .card {
+      border: 3px solid #000000;
+      border-radius: 12px;
+      padding: 24px;
+      background: #FFFFFF;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .cta-button {
+      font-family: 'Comic Neue', cursive;
+      font-weight: 700;
+      background: #E0E0E0;
+      border: 2px solid #000000;
+      border-radius: 20px;
+      box-shadow: 4px 4px 0px #000000;
+      padding: 14px 32px;
+      cursor: pointer;
+      font-size: 16px;
+      color: #000000;
+      display: inline-block;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .cta-button:hover {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #000000;
+    }
+    .cta-button.primary { background: #F0F4F8; }
+    .cta-ghost {
+      display: inline-block;
+      margin-left: 16px;
+      color: #000;
+      font-weight: 700;
+      text-decoration: underline;
+      font-family: 'Comic Neue', cursive;
+    }
+    .image-placeholder {
+      background: #F0F4F8;
+      border: 3px dashed #CCCCCC;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      border-radius: 8px;
+      gap: 12px;
+    }
+    .image-placeholder .x-mark { font-size: 48px; color: #CCCCCC; font-weight: 700; }
+    .image-placeholder .direction {
+      background: #FFF9C4;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: #555;
+      border-radius: 6px;
+      text-align: center;
+      max-width: 85%;
+      font-style: italic;
+    }
+    input, select {
+      font-family: 'Comic Neue', cursive;
+      border: 2px solid #CCCCCC;
+      border-radius: 8px;
+      padding: 14px 16px;
+      width: 100%;
+      font-size: 14px;
+      color: #555;
+      background: #fff;
+      outline: none;
+      margin-bottom: 16px;
+    }
+    input:focus, select:focus { border-color: #000; }
+    .trust-text { text-align: center; font-size: 12px; color: #999; margin-top: 12px; }
+    .icon { font-size: 28px; margin-bottom: 12px; color: #000000; display: block; }
+    .icon-alert { color: #D90429; }
+    .hero { padding: 80px 0 60px; }
+    .hero h1 { max-width: 820px; }
+    .hero p { font-size: 17px; max-width: 640px; margin-bottom: 28px; line-height: 1.8; }
+    .brand-mark {
+      font-family: 'Architects Daughter', cursive;
+      font-size: 18px;
+      color: #000;
+      margin-bottom: 20px;
+      display: block;
+    }
+    .trust-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .trust-badge {
+      border: 2px solid #000;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      background: #fff;
+      color: #333;
+    }
+    .trust-badge.honest { background: #FFF9C4; }
+    .sketch-badge {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #FFF9C4;
+      border: 2px solid #000;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-family: 'Architects Daughter', cursive;
+      font-size: 12px;
+      color: #000;
+      box-shadow: 3px 3px 0 #000;
+      z-index: 999;
+    }
+    .text-center { text-align: center; }
+    .mt-20 { margin-top: 20px; }
+    .mb-20 { margin-bottom: 20px; }
+    .quote-block {
+      border-left: 4px solid #000;
+      padding: 16px 20px;
+      background: #fff;
+      margin-top: 24px;
+      font-size: 15px;
+    }
+    .quote-block .source {
+      font-size: 12px;
+      color: #888;
+      margin-top: 10px;
+      font-family: 'Comic Neue', cursive;
+    }
+    .label-warn {
+      display: inline-block;
+      background: #FFF9C4;
+      border: 1px solid #000;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      color: #000;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .step-num {
+      font-family: 'Architects Daughter', cursive;
+      font-size: 32px;
+      color: #000;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .contrast-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .contrast-bad { border-color: #D90429; }
+    .price { font-family: 'Architects Daughter', cursive; font-size: 28px; color: #000; }
+    .faq-item {
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+    .faq-item strong { color: #000; display: block; margin-bottom: 6px; }
+    .split-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+      margin-top: 24px;
+    }
+    [data-animate] { opacity: 0; }
+    [data-animate].is-visible {
+      animation-fill-mode: both;
+      animation-duration: 0.7s;
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    [data-animate="fade-up"].is-visible { animation-name: fadeInUp; }
+    [data-animate="fade-scale"].is-visible { animation-name: fadeInScale; }
+    [data-animate="slide-left"].is-visible { animation-name: slideInLeft; }
+    [data-animate="slide-right"].is-visible { animation-name: slideInRight; }
+    [data-stagger] > *:nth-child(1) { --delay: 0s; }
+    [data-stagger] > *:nth-child(2) { --delay: 0.12s; }
+    [data-stagger] > *:nth-child(3) { --delay: 0.24s; }
+    [data-stagger] > *:nth-child(4) { --delay: 0.36s; }
+    [data-stagger] > * { opacity: 0; }
+    [data-stagger].is-visible > * {
+      animation: fadeInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-delay: var(--delay, 0s);
+    }
+    @media (max-width: 768px) {
+      section { padding: 40px 0; }
+      h1 { font-size: 28px; }
+      h2 { font-size: 24px; }
+      .hero { padding: 48px 0 40px; }
+      .hero h1 { font-size: 28px; }
+      .cards-grid, .contrast-grid, .split-2 { grid-template-columns: 1fr; }
+      .cta-button { width: 100%; text-align: center; }
+      .cta-ghost { display: block; margin: 16px 0 0; text-align: center; }
+      .sketch-badge { font-size: 10px; padding: 6px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sketch-badge">📐 Wireframe Sketch — Baixa Fidelidade</div>
+
+  <!-- HERO / P -->
+  <section class="hero bg-cream">
+    <div class="container">
+      <span class="section-label">P — Problem · Hero</span>
+      <div data-animate="fade-up">
+        <span class="brand-mark">Danos Aparentes</span>
+        <h1>Chega de discutir amassado que já existia no carro.</h1>
+        <p>
+          Vistoria digital na retirada e na devolução: diagrama, foto com GPS,
+          assinatura na tela e PDF com hash SHA-256 + QR — prova no ato, não discussão no balcão.
+        </p>
+        <a href="#form" class="cta-button primary">Começar 7 dias grátis — sem cartão →</a>
+        <a href="#demo" class="cta-ghost">Ver um laudo real com QR</a>
+        <div class="trust-bar">
+          <span class="trust-badge"><i class="fas fa-shield-alt"></i> Hash SHA-256 + QR</span>
+          <span class="trust-badge"><i class="fas fa-wifi"></i> Offline no pátio</span>
+          <span class="trust-badge"><i class="fas fa-gift"></i> 7 dias grátis sem cartão</span>
+          <span class="trust-badge honest"><i class="fas fa-hand"></i> App novo — sem depoimentos inventados</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A — AMPLIFY -->
+  <section class="bg-rose">
+    <div class="container">
+      <span class="section-label">A — Amplify</span>
+      <h2 data-animate="fade-up">Sem vistoria de entrada comparável, a cobrança vira discussão — e às vezes, processo.</h2>
+      <div class="cards-grid mt-20" data-animate="fade-up" data-stagger>
+        <div class="card">
+          <i class="fas fa-exclamation-triangle icon icon-alert"></i>
+          <h3>“Já estava assim.”</h3>
+          <p>Cliente nega dano novo. Sem laudo de retirada no mesmo padrão, você discute — não compara.</p>
+        </div>
+        <div class="card">
+          <i class="fas fa-mobile-alt icon icon-alert"></i>
+          <h3>Foto no WhatsApp / só na devolução</h3>
+          <p>Sem par entrega×devolução, o ônus da prova fica frágil.</p>
+        </div>
+        <div class="card">
+          <i class="fas fa-clipboard-list icon icon-alert"></i>
+          <h3>Cada vistoriador, um jeito</h3>
+          <p>Prancheta diferente por pessoa = laudos incomparáveis entre filiais.</p>
+        </div>
+      </div>
+      <div class="quote-block" data-animate="fade-up">
+        <span class="label-warn">Prova do PROBLEMA no mercado — não é cliente do app</span>
+        <p>
+          “A ausência de uma checagem feita pela locadora antes da entrega do veículo ao cliente
+          impossibilita que se faça a necessária comparação entre o estado do carro antes e depois da locação.”
+        </p>
+        <p class="source">Fonte: ConJur, 07/03/2024 — linkar na versão final</p>
+      </div>
+      <div class="image-placeholder mt-20" data-animate="fade-scale">
+        <span class="direction">Direção: balcão de locadora / devolução contestada — sem badges promo por cima</span>
+        <span class="x-mark">✕</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- S — SOLUTION -->
+  <section class="bg-white">
+    <div class="container">
+      <span class="section-label">S — Story / Solution</span>
+      <h2 data-animate="fade-up">Laudo de avarias aparentes que prova a si mesmo.</h2>
+      <p data-animate="fade-up">Mesmo padrão na retirada e na devolução. Em minutos, no celular — inclusive sem sinal.</p>
+      <div class="steps" data-animate="fade-up" data-stagger>
+        <div class="card">
+          <div class="step-num">01</div>
+          <i class="fas fa-car-side icon"></i>
+          <h3>Diagrama</h3>
+          <p>Marque a peça no mesmo padrão entre vistoriadores.</p>
+        </div>
+        <div class="card">
+          <div class="step-num">02</div>
+          <i class="fas fa-map-marker-alt icon"></i>
+          <h3>GPS + timestamp</h3>
+          <p>Bloqueia o argumento “essa foto foi depois”.</p>
+        </div>
+        <div class="card">
+          <div class="step-num">03</div>
+          <i class="fas fa-signature icon"></i>
+          <h3>Assinatura no ato</h3>
+          <p>Vistoriador + cliente na tela — não 12 dias depois.</p>
+        </div>
+        <div class="card">
+          <div class="step-num">04</div>
+          <i class="fas fa-qrcode icon"></i>
+          <h3>Hash + QR</h3>
+          <p>PDF selado. Se editar, o hash quebra.</p>
+        </div>
+      </div>
+      <div class="contrast-grid" data-animate="fade-scale">
+        <div class="card contrast-bad">
+          <h3><i class="fas fa-times-circle icon-alert"></i> Antes</h3>
+          <p>Prancheta · WhatsApp · PDF editável · discussão no balcão</p>
+        </div>
+        <div class="card">
+          <h3><i class="fas fa-check-circle"></i> Com o mecanismo</h3>
+          <p>Laudo verificável · comparação entrega×devolução · sem claim de ROI inventado</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- T — PROVA HONESTA -->
+  <section class="bg-ice" id="demo">
+    <div class="container">
+      <span class="section-label">T — Testimony* (honesto)</span>
+      <h2 data-animate="fade-up">Prova do que existe hoje — sem cases inventados.</h2>
+      <div class="split-2 mt-20">
+        <div class="card" data-animate="slide-left">
+          <i class="fas fa-file-pdf icon"></i>
+          <h3>Demo do produto</h3>
+          <p>Escaneie o QR deste laudo demo. Confira o hash. É prova do <strong>mecanismo</strong> — não um depoimento.</p>
+          <div class="image-placeholder mt-20" style="min-height:160px">
+            <span class="direction">Inserir PDF demo + QR de verificação pública live</span>
+            <span class="x-mark">✕</span>
+          </div>
+          <a href="#" class="cta-button primary mt-20" style="margin-top:16px">Abrir verificação pública →</a>
+        </div>
+        <div data-animate="slide-right">
+          <div class="card mb-20">
+            <span class="label-warn">Não é depoimento de cliente</span>
+            <h3>Problema de mercado</h3>
+            <p>ConJur (2024) e TJDFT (2022): cobrança sem vistoria prévia / unilateral. Citar fonte no rodapé.</p>
+          </div>
+          <div class="card" style="background:#FFF9C4">
+            <i class="fas fa-handshake icon"></i>
+            <h3>Honesty strip</h3>
+            <p>
+              <strong>App novo.</strong> Ainda não temos histórico público de clientes.
+              Preferimos trial + laudo verificável a depoimento falso.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- O — OFFER -->
+  <section class="bg-lavender">
+    <div class="container">
+      <span class="section-label">O — Offer</span>
+      <h2 class="text-center" data-animate="fade-up">Comece pelo plano que cabe no volume da sua base.</h2>
+      <div class="cards-grid mt-20" data-animate="fade-up" data-stagger>
+        <div class="card">
+          <h3>Starter</h3>
+          <p class="price">R$ 29,90<span style="font-size:14px;color:#666">/mês</span></p>
+          <p>20 laudos · ≈ R$ 1,50/laudo · Ideal para testar na devolução.</p>
+        </div>
+        <div class="card">
+          <h3>Pro</h3>
+          <p class="price">R$ 49,90<span style="font-size:14px;color:#666">/mês</span></p>
+          <p>80 laudos · white-label (logo no PDF) · ≈ R$ 0,62/laudo.</p>
+        </div>
+        <div class="card">
+          <h3>Corporativo</h3>
+          <p class="price">from R$ 299<span style="font-size:14px;color:#666">/mês</span></p>
+          <p>Multi-usuário · piloto via WhatsApp · sem case inventado para fechar.</p>
+        </div>
+      </div>
+      <p class="text-center mt-20" data-animate="fade-up">
+        7 dias grátis <strong>sem cartão</strong>. Cancele no portal. PIX no SME.
+      </p>
+      <p class="text-center mt-20" data-animate="fade-scale">
+        <a href="#form" class="cta-button primary">Quero testar na minha locadora →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="bg-gray">
+    <div class="container">
+      <span class="section-label">Objeções</span>
+      <h2 data-animate="fade-up">Perguntas que locadoras fazem antes de testar</h2>
+      <div class="mt-20" data-animate="fade-up">
+        <div class="faq-item">
+          <strong>O laudo tem validade jurídica?</strong>
+          Registro documental forte (hash, QR, GPS, assinaturas). Valor probatório depende do contrato/jurídico — não prometemos sentença ganha.
+        </div>
+        <div class="faq-item">
+          <strong>Foto no WhatsApp na devolução não basta?</strong>
+          Sem vistoria de entrada comparável, a cobrança fica frágil (ver ConJur). Oferta = par retirada×devolução.
+        </div>
+        <div class="faq-item">
+          <strong>Vocês têm cases / depoimentos?</strong>
+          Ainda não públicos. App novo. Oferecemos laudo demo + trial — sem inventar.
+        </div>
+        <div class="faq-item">
+          <strong>Funciona no pátio sem internet?</strong>
+          Sim — PWA offline + sync.
+        </div>
+        <div class="faq-item">
+          <strong>Precisa treinar a equipe?</strong>
+          Diagrama guia; primeira vistoria em minutos. <em>[claim de produto — validar no onboarding]</em>
+        </div>
+        <div class="faq-item">
+          <strong>Já tenho laudo cautelar.</strong>
+          Cautelar ≠ laudo de avarias aparentes (entrega/devolução).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- R — FORM -->
+  <section class="bg-peach" id="form">
+    <div class="container">
+      <span class="section-label">R — Response · Conversão</span>
+      <h2 class="text-center" data-animate="fade-up">Ative 7 dias grátis e faça a primeira vistoria na sua base</h2>
+      <div style="max-width:500px;margin:24px auto 0" data-animate="fade-up">
+        <input type="text" placeholder="Seu nome" />
+        <input type="email" placeholder="Seu melhor e-mail" />
+        <input type="tel" placeholder="WhatsApp com DDD" />
+        <input type="text" placeholder="Nome da empresa / locadora" />
+        <select>
+          <option value="">Seu cargo</option>
+          <option>Dono / sócio</option>
+          <option>Gerente de operações / pátio</option>
+          <option>Coordenador de vistoria</option>
+          <option>Outro</option>
+        </select>
+        <select>
+          <option value="">Segmento da empresa</option>
+          <option selected>Locadora</option>
+          <option>Frota de aluguel</option>
+          <option>Oficina</option>
+          <option>Gestão de frota</option>
+          <option>Outro</option>
+        </select>
+        <select>
+          <option value="">Principal desafio</option>
+          <option>Disputa “já estava assim”</option>
+          <option>Padronizar vistoriadores</option>
+          <option>Substituir WhatsApp / papel</option>
+          <option>White-label no PDF</option>
+          <option>Offline no pátio</option>
+          <option>Outro</option>
+        </select>
+        <input type="text" placeholder="Volume aproximado de devoluções/mês (opcional)" />
+        <button type="button" class="cta-button primary" style="width:100%">Quero meu trial de 7 dias →</button>
+        <p class="trust-text">🔒 Dados confidenciais. Sem cartão no trial. Resposta em até 1 dia útil se Corp.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <section class="bg-footer" style="padding:40px 0">
+    <div class="container text-center">
+      <h3>Danos Aparentes</h3>
+      <p style="margin:12px 0">WhatsApp · danosaparentes.com.br</p>
+      <p style="font-size:13px">
+        <a href="#">Planos</a> · <a href="#">Privacidade</a> · <a href="#">Verificar laudo</a>
+      </p>
+      <p style="margin-top:16px;font-size:12px;color:#888">© 2026 Danos Aparentes — Wireframe Sketch (baixa fidelidade)</p>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const els = document.querySelectorAll('[data-animate], [data-stagger]');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+      els.forEach(el => observer.observe(el));
+    });
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
+</body>
+</html>

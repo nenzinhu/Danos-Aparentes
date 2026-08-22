@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Danos Aparentes — Vistoria digital que prova a si mesma | Locadoras</title>
+  <meta name="description" content="Pare de discutir amassado que já existia. Vistoria na retirada e na devolução com diagrama, GPS, assinaturas e PDF com hash SHA-256 + QR. 7 dias grátis sem cartão." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&family=Saira+Condensed:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    /* ============================================================
+       LANDING OFICIAL — Danos Aparentes
+       Base: IBM Carbon (ciano #1FB6FF / marinho #020617 / âmbar #ffb938)
+       + abas de segmento + accordion FAQ (UX do logievents, re-tematizada)
+       + disclaimer jurídico visível + laudo demo real (selo + hash)
+       ============================================================ */
+    :root {
+      --bg: #020617;
+      --bg-02: #0a1428;
+      --layer-01: #0d1b33;
+      --layer-02: #14263f;
+      --line: rgba(232, 244, 255, 0.12);
+      --line-strong: rgba(232, 244, 255, 0.22);
+      --text: #e8f4ff;
+      --text-secondary: #7a9bbf;
+      --text-helper: #56708f;
+      --accent: #1FB6FF;
+      --accent-hover: #72C5EE;
+      --accent-press: #0e8fce;
+      --signal: #ffb938;
+      --font-display: 'Saira Condensed', sans-serif;
+      --font-body: 'Outfit', system-ui, sans-serif;
+      --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+      --radius: 0px;
+      --btn-h: 48px;
+      --shadow-float: 0 2px 6px rgba(0, 0, 0, 0.4);
+      --maxw: 1100px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body); font-weight: 400;
+      background: var(--bg); color: var(--text);
+      line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 {
+      font-family: var(--font-display); font-weight: 700;
+      line-height: 1.12; color: var(--text); letter-spacing: 0.005em;
+    }
+    h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); }
+    h2 { font-size: clamp(1.55rem, 3.2vw, 2.35rem); line-height: 1.2; }
+    h3 { font-size: 1.2rem; font-family: var(--font-body); font-weight: 600; line-height: 1.35; }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    .text-center { text-align: center; }
+    .accent-text { color: var(--accent); }
+    .signal-text { color: var(--signal); }
+
+    /* Botões (Carbon: 0px, 48px) */
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      height: var(--btn-h); padding: 14px 20px;
+      font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+      text-decoration: none; border: 1px solid transparent; border-radius: var(--radius);
+      cursor: pointer; transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+      white-space: nowrap;
+    }
+    .btn i { font-size: 0.85em; }
+    .btn-primary { background: var(--accent); color: #020617; padding-right: 48px; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-primary:active { background: var(--accent-press); }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--line-strong); }
+    .btn-ghost:hover { background: var(--layer-01); border-color: var(--accent); color: var(--accent); }
+    .btn.full-width { width: 100%; justify-content: center; padding-right: 20px; }
+
+    /* Tag pill */
+    .tag {
+      display: inline-block; padding: 4px 12px; border-radius: 24px;
+      font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.04em; background: rgba(31, 182, 255, 0.12);
+      color: var(--accent); text-transform: uppercase;
+    }
+
+    /* Header sticky (Carbon masthead escuro) */
+    .navbar {
+      position: fixed; top: 16px; left: 16px; right: 16px;
+      background: rgba(10, 20, 40, 0.92); backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px); border: 1px solid var(--line);
+      border-radius: var(--radius); z-index: 100; padding: 12px 24px;
+      transition: box-shadow 0.3s ease, background 0.3s ease;
+    }
+    .navbar.scrolled { box-shadow: var(--shadow-float); background: rgba(2, 6, 23, 0.96); }
+    .navbar-inner { display: flex; align-items: center; justify-content: space-between; max-width: var(--maxw); margin: 0 auto; }
+    .navbar-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; color: var(--text); text-decoration: none; letter-spacing: 0.02em; }
+    .navbar-cta { background: var(--accent); color: #020617; padding: 10px 20px; border-radius: var(--radius); text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: background 0.18s ease; }
+    .navbar-cta:hover { background: var(--accent-hover); }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    @media (max-width: 768px) { .nav-links { display: none; } }
+
+    /* Hero */
+    .hero { position: relative; padding: 148px 0 88px; background: var(--bg); }
+    .brand-hero { font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 1.85rem); font-weight: 700; color: var(--text); margin-bottom: 16px; letter-spacing: 0.03em; }
+    .hero h1 { margin: 14px 0 4px; max-width: 760px; }
+    .hero-sub { font-size: 1.1rem; color: var(--text-secondary); max-width: 620px; margin: 20px 0 32px; line-height: 1.7; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+    .trust-bar { display: flex; gap: 12px; margin-top: 48px; flex-wrap: wrap; }
+    .trust-item { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 24px; background: var(--layer-01); border: 1px solid var(--line); color: var(--text-secondary); font-size: 0.82rem; }
+    .trust-item i { color: var(--accent); flex-shrink: 0; }
+    .trust-item.honesty { color: var(--text); border-color: var(--line-strong); }
+    .trust-item.honesty i { color: var(--signal); }
+
+    /* Disclaimer jurídico visível (P2) */
+    .disclaimer {
+      max-width: 760px; margin: 40px auto 0; padding: 14px 18px;
+      border-left: 3px solid var(--signal); background: rgba(255, 185, 56, 0.07);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;
+    }
+    .disclaimer strong { color: var(--text); }
+
+    section { padding: 96px 0; position: relative; }
+    .section-alt { background: var(--bg-02); }
+    .section-head { margin-bottom: 44px; }
+    .section-sub { color: var(--text-secondary); font-size: 1.05rem; max-width: 640px; margin-bottom: 40px; line-height: 1.7; }
+    .section-sub.center { margin-left: auto; margin-right: auto; text-align: center; }
+
+    /* Cards flat */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .card { background: var(--layer-01); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; transition: background 0.2s ease, border-color 0.2s ease; }
+    .card:hover { background: var(--layer-02); border-color: var(--accent); }
+    .icon { font-size: 22px; color: var(--accent); margin-bottom: 14px; display: inline-block; }
+    .card h3 { margin-bottom: 8px; }
+    .card p { color: var(--text-secondary); font-size: 0.95rem; }
+    .tag-e { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-helper); letter-spacing: 0.04em; margin-top: 14px; display: block; }
+
+    .quote-block { margin-top: 40px; padding: 28px 32px; border-left: 3px solid var(--accent); background: var(--layer-01); border-radius: 0 var(--radius) var(--radius) 0; }
+    .quote-block blockquote { font-size: 1.05rem; color: var(--text); line-height: 1.65; margin-bottom: 16px; }
+    .quote-meta { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-helper); line-height: 1.6; }
+    .quote-meta a { color: var(--accent); }
+
+    .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+    .step { padding: 24px; }
+    .step-num { font-family: var(--font-display); font-size: 2rem; color: var(--accent); line-height: 1; margin-bottom: 10px; }
+    .step h3 { margin-bottom: 6px; }
+    .step p { color: var(--text-secondary); font-size: 0.9rem; }
+
+    .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .contrast-before { border-color: var(--line); opacity: 0.85; }
+    .contrast-after { border-color: rgba(31, 182, 255, 0.4); background: rgba(31, 182, 255, 0.04); }
+    .contrast-label { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-helper); margin-bottom: 10px; }
+
+    /* TABS (segmentos) - re-tematizadas em ciano */
+    .tabs { background: var(--layer-01); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; max-width: 920px; margin: 0 auto; }
+    .tabs-triggers { display: flex; gap: 6px; flex-wrap: wrap; background: var(--bg-02); padding: 6px; border-radius: var(--radius); }
+    .tab-trigger { flex: 1 1 auto; min-width: 140px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 18px; border: none; background: transparent; cursor: pointer; font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; color: var(--text-secondary); border-radius: var(--radius); transition: background 0.2s, color 0.2s; }
+    .tab-trigger i { color: var(--text-helper); font-size: 0.9em; transition: color 0.2s; }
+    .tab-trigger:hover { color: var(--text); }
+    .tab-trigger[aria-selected="true"] { background: var(--accent); color: #020617; box-shadow: var(--shadow-float); }
+    .tab-trigger[aria-selected="true"] i { color: #020617; }
+    .tab-panel { display: none; padding: 36px 28px 12px; animation: fadeUp 0.4s ease; }
+    .tab-panel.active { display: block; }
+    .tab-panel h3 { font-size: 1.6rem; margin-bottom: 12px; }
+    .tab-panel p { color: var(--text-secondary); margin-bottom: 18px; max-width: 620px; }
+    .tab-feats { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 22px 0; }
+    .tab-feat { display: flex; gap: 12px; align-items: flex-start; background: var(--bg-02); padding: 16px; border-radius: var(--radius); border: 1px solid var(--line); }
+    .tab-feat i { color: var(--accent); margin-top: 3px; }
+    .tab-feat strong { display: block; font-size: 0.95rem; color: var(--text); }
+    .tab-feat span { font-size: 0.85rem; color: var(--text-helper); }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Laudo demo real (P2) - substitui placeholder */
+    .laudo-demo { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; background: var(--bg-02); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+    .laudo-demo .selo { width: 96px; height: 96px; flex-shrink: 0; }
+    .laudo-demo .info { flex: 1; min-width: 260px; }
+    .laudo-demo h4 { font-family: var(--font-body); font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+    .laudo-demo .hash { font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); word-break: break-all; background: rgba(31,182,255,0.08); padding: 8px 12px; border-radius: var(--radius); border: 1px solid var(--line); }
+    .laudo-demo .meta { font-size: 0.8rem; color: var(--text-secondary); margin-top: 8px; }
+
+    /* Pricing */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; max-width: 920px; margin-left: auto; margin-right: auto; }
+    .price { font-family: var(--font-display); font-size: 2.2rem; color: var(--text); margin: 8px 0; }
+    .price span { font-size: 1rem; color: var(--text-helper); font-family: var(--font-body); font-weight: 400; }
+    .price-meta { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; }
+    .price-note { color: var(--text-helper); font-size: 0.82rem; }
+    .pricing-featured { border-color: var(--accent); background: rgba(31, 182, 255, 0.06); }
+    .risk-line { text-align: center; color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 28px; }
+    .risk-line i { color: var(--signal); }
+    .risk-line strong { color: var(--text); }
+    .offer-cta-wrap { text-align: center; }
+
+    /* Accordion FAQ (chevron) */
+    .accordion { max-width: 760px; margin: 0 auto; }
+    .acc-item { border-bottom: 1px solid var(--line); }
+    .acc-trigger { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 4px; background: transparent; border: none; cursor: pointer; font-family: var(--font-body); font-size: 1.05rem; font-weight: 600; color: var(--text); text-align: left; }
+    .acc-trigger .chev { flex-shrink: 0; color: var(--accent); transition: transform 0.3s ease; font-size: 1.1rem; }
+    .acc-item.open .acc-trigger .chev { transform: rotate(180deg); }
+    .acc-panel { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .acc-panel-inner { padding: 0 4px 22px; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; }
+    .acc-panel-inner strong { color: var(--text); }
+
+    /* Form (Carbon: inputs bottom-border) */
+    .form-card { max-width: 520px; margin: 0 auto; }
+    .form-card label { display: block; font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: 0.32px; text-transform: uppercase; }
+    .field { margin-bottom: 20px; }
+    input, select { font-family: var(--font-body); width: 100%; height: 48px; padding: 12px 0; background: transparent; border: none; border-bottom: 2px solid var(--line-strong); border-radius: var(--radius); color: var(--text); font-size: 0.95rem; outline: none; transition: border-color 0.2s ease; }
+    input::placeholder { color: var(--text-helper); }
+    input:focus, select:focus { border-bottom-color: var(--accent); }
+    select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a9bbf' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0 center; padding-right: 24px; cursor: pointer; }
+    select option { background: #0a1428; color: var(--text); }
+    .form-trust { text-align: center; font-size: 0.8rem; color: var(--text-helper); margin-top: 18px; }
+    .form-trust i { color: var(--signal); }
+
+    /* Footer */
+    .footer { padding: 48px 0 32px; border-top: 1px solid var(--line); text-align: center; }
+    .footer-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; margin-bottom: 12px; }
+    .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px 24px; margin-bottom: 20px; }
+    .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.85rem; cursor: pointer; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { font-size: 0.78rem; color: var(--text-helper); margin-bottom: 8px; }
+    .footer-credit a { color: var(--text-helper); font-size: 0.75rem; }
+
+    /* Animações */
+    [data-animate] { opacity: 0; }
+    [data-animate].is-visible { animation-fill-mode: both; animation-duration: 0.75s; animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+    [data-animate="fade-up"].is-visible { animation-name: fadeInUp; }
+    [data-animate="fade-scale"].is-visible { animation-name: fadeInScale; }
+    [data-animate="slide-left"].is-visible { animation-name: slideInLeft; }
+    [data-animate="slide-right"].is-visible { animation-name: slideInRight; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInScale { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
+    @keyframes slideInLeft { from { opacity: 0; transform: translateX(-32px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: translateX(0); } }
+
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } [data-animate] { opacity: 1 !important; } }
+
+    @media (max-width: 900px) { .steps { grid-template-columns: 1fr 1fr; } .pricing-grid { grid-template-columns: 1fr; max-width: 400px; } .proof-grid, .contrast-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) {
+      section { padding: 64px 0; } .hero { padding: 120px 0 60px; }
+      .steps { grid-template-columns: 1fr; } .trust-bar { flex-direction: column; gap: 12px; }
+      .trust-item { max-width: none; } .btn.full-width, .btn-primary.full-width { width: 100%; justify-content: center; }
+      .cta-row { flex-direction: column; align-items: stretch; }
+      .navbar { top: 8px; left: 8px; right: 8px; padding: 10px 16px; }
+      .tab-trigger { min-width: 120px; flex: 1 1 40%; }
+      .laudo-demo { flex-direction: column; text-align: center; }
+    }
+    @media (max-width: 480px) { h1 { font-size: 1.85rem; } .card { padding: 20px; } }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" aria-label="Principal">
+    <div class="navbar-inner">
+      <a class="navbar-logo" href="#top">Danos Aparentes</a>
+      <div class="nav-links">
+        <a href="#segmentos">Soluções</a>
+        <a href="#como">Como funciona</a>
+        <a href="#planos">Planos</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a class="navbar-cta" href="#form">Trial 7 dias →</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="container">
+      <div data-animate="fade-up">
+        <p class="brand-hero">Danos Aparentes</p>
+        <span class="tag">Para locadoras · prova na devolução</span>
+        <h1>Chega de discutir amassado que <span class="accent-text">já existia</span> no carro.</h1>
+        <p class="hero-sub">Vistoria digital na retirada e na devolução: diagrama, foto com GPS, assinatura na tela e PDF com hash SHA-256 + QR — prova no ato, não discussão no balcão.</p>
+        <div class="cta-row">
+          <a href="#form" class="btn btn-primary">Começar 7 dias grátis — sem cartão <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+          <a href="#demo" class="btn btn-ghost">Ver um laudo real com QR</a>
+        </div>
+      </div>
+      <div class="trust-bar" data-animate="fade-up">
+        <div class="trust-item"><i class="fas fa-shield-halved" aria-hidden="true"></i> Hash SHA-256 + QR público</div>
+        <div class="trust-item"><i class="fas fa-wifi" aria-hidden="true"></i> Offline no pátio</div>
+        <div class="trust-item"><i class="fas fa-calendar-check" aria-hidden="true"></i> 7 dias grátis sem cartão</div>
+        <div class="trust-item honesty"><i class="fas fa-hand" aria-hidden="true"></i> App novo — sem depoimentos inventados</div>
+      </div>
+      <div class="disclaimer" data-animate="fade-up">
+        <strong>Complemento documental.</strong> O laudo é um registro forte (hash, QR, GPS, assinaturas), mas o valor probatório final depende do contrato e do seu jurídico — não prometemos sentença ganha.
+      </div>
+    </div>
+  </section>
+
+  <!-- SEGMENTOS (TABS) -->
+  <section class="section-alt" id="segmentos">
+    <div class="container">
+      <div class="section-head">
+        <span class="tag">Para cada operação</span>
+        <h2 data-animate="fade-up">Uma vistoria, todos os seus frontes.</h2>
+        <p class="section-sub" data-animate="fade-up">Mesmo laudo verificável — do balcão de locadora ao pátio de frota. Escolha seu segmento.</p>
+      </div>
+      <div class="tabs" data-animate="fade-up">
+        <div class="tabs-triggers" role="tablist" aria-label="Segmentos">
+          <button class="tab-trigger" role="tab" aria-selected="true" data-tab="locadora"><i class="fas fa-car-side"></i> Locadora</button>
+          <button class="tab-trigger" role="tab" aria-selected="false" data-tab="frota"><i class="fas fa-truck"></i> Frota de aluguel</button>
+          <button class="tab-trigger" role="tab" aria-selected="false" data-tab="oficina"><i class="fas fa-wrench"></i> Oficina</button>
+          <button class="tab-trigger" role="tab" aria-selected="false" data-tab="gestao"><i class="fas fa-clipboard-list"></i> Gestão de frota</button>
+        </div>
+
+        <div class="tab-panel active" id="panel-locadora" role="tabpanel">
+          <h3>Locadora: pare de brigar no balcão.</h3>
+          <p>Sem vistoria de entrada comparável, a cobrança de avaria vira discussão — e às vezes, processo. O laudo retirada×devolução no mesmo padrão resolve na hora.</p>
+          <div class="tab-feats">
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>Par retirada×devolução</strong><span>Mesmo diagrama, mesma vista, entre vistoriadores.</span></div></div>
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>White-label no PDF</strong><span>Sua marca no documento (plano Pro+).</span></div></div>
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>Prova jurídica</strong><span>Hash + QR + GPS + assinaturas.</span></div></div>
+          </div>
+          <a href="#form" class="btn btn-primary">Testar na minha locadora <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+
+        <div class="tab-panel" id="panel-frota" role="tabpanel">
+          <h3>Frota de aluguel: padronize todos os pátios.</h3>
+          <p>Cada vistoriador, um jeito = laudos incomparáveis entre filiais. O app guia o fluxo e sincroniza offline.</p>
+          <div class="tab-feats">
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>PWA offline</strong><span>Funciona no pátio sem sinal, sync depois.</span></div></div>
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>Multi-usuário</strong><span>Equipes e filiais no mesmo padrão.</span></div></div>
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>Comparável entre base</strong><span>Laudos 100% iguais para auditoria.</span></div></div>
+          </div>
+          <a href="#form" class="btn btn-primary">Testar na frota <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+
+        <div class="tab-panel" id="panel-oficina" role="tabpanel">
+          <h3>Oficina: laudo de entrada que protege você.</h3>
+          <p>Cliente nega dano novo? Com laudo de entrada no mesmo padrão, você compara — não discute. PDF selado contra disputas.</p>
+          <div class="tab-feats">
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>Entrada documentada</strong><span>Foto com GPS trava o "depois".</span></div></div>
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>Assinatura dual</strong><span>Você + cliente na tela, no ato.</span></div></div>
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>QR verificável</strong><span>Cliente confere a integridade.</span></div></div>
+          </div>
+          <a href="#form" class="btn btn-primary">Testar na oficina <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+
+        <div class="tab-panel" id="panel-gestao" role="tabpanel">
+          <h3>Gestão de frota: visibilidade de ponta a ponta.</h3>
+          <p>Seu parque circula entre motoristas e terceiros. Cada handover vira laudo comparável — e a auditoria fica trivial.</p>
+          <div class="tab-feats">
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>Handover auditável</strong><span>Toda transferência com laudo.</span></div></div>
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>Relatórios</strong><span>Histórico por placa, por período.</span></div></div>
+            <div class="tab-feat"><i class="fas fa-check"></i><div><strong>Integração</strong><span>Exporta para seu sistema (sob conversa).</span></div></div>
+          </div>
+          <a href="#form" class="btn btn-primary">Falar com especialista <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AMPLIFY -->
+  <section class="hero" id="amplify">
+    <div class="container">
+      <div class="section-head">
+        <h2 data-animate="fade-up">Sem vistoria de entrada comparável, a cobrança de avaria vira discussão — e às vezes, processo.</h2>
+        <p class="section-sub" data-animate="fade-up">Três falhas que transformam devolução em briga no balcão.</p>
+      </div>
+      <div class="cards-grid" data-animate="fade-up">
+        <div class="card"><i class="fas fa-triangle-exclamation icon" aria-hidden="true"></i><h3>"Já estava assim."</h3><p>Cliente nega dano novo. Sem laudo de retirada no mesmo padrão, você discute — não compara.</p><span class="tag-e">[E-problema]</span></div>
+        <div class="card"><i class="fas fa-mobile-screen icon" aria-hidden="true"></i><h3>Foto no WhatsApp / vistoria só na devolução</h3><p>Sem par entrega×devolução, o ônus da prova fica frágil.</p><span class="tag-e">[E]</span></div>
+        <div class="card"><i class="fas fa-clipboard-list icon" aria-hidden="true"></i><h3>Cada vistoriador, um jeito</h3><p>Prancheta diferente por pessoa = laudos incomparáveis entre filiais.</p><span class="tag-e">[E-produto]</span></div>
+      </div>
+      <div class="quote-block" data-animate="fade-up">
+        <blockquote>"A ausência de uma checagem feita pela locadora antes da entrega do veículo ao cliente impossibilita que se faça a necessária comparação entre o estado do carro antes e depois da locação."</blockquote>
+        <p class="quote-meta">Prova do problema no mercado — não é cliente Danos Aparentes.<br />Fonte: <a href="https://www.conjur.com.br/2024-mar-07/sem-vistoria-previa-locadora-nao-pode-cobrar-multa-por-dano-em-veiculo/" target="_blank" rel="noopener noreferrer">ConJur, 07/03/2024</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="section-alt" id="como">
+    <div class="container">
+      <div class="section-head">
+        <h2 data-animate="fade-up">Laudo de avarias aparentes que prova a si mesmo.</h2>
+        <p class="section-sub" data-animate="fade-up">Mesmo padrão na retirada e na devolução. Em minutos, no celular — inclusive sem sinal.</p>
+      </div>
+      <div class="steps" data-animate="fade-up">
+        <div class="card step"><div class="step-num">01</div><h3>Marque no diagrama</h3><p>Mesma peça, mesma vista, entre vistoriadores.</p></div>
+        <div class="card step"><div class="step-num">02</div><h3>Foto com GPS + timestamp</h3><p>Bloqueia o argumento "essa foto foi depois".</p></div>
+        <div class="card step"><div class="step-num">03</div><h3>Assinatura dual no ato</h3><p>Vistoriador + cliente na tela — não "12 dias depois".</p></div>
+        <div class="card step"><div class="step-num">04</div><h3>PDF selado</h3><p>Hash SHA-256 + QR público. Se editar o PDF, o hash quebra.</p></div>
+      </div>
+      <div class="contrast-grid" data-animate="fade-up">
+        <div class="card contrast-before"><p class="contrast-label">Antes</p><h3>Prancheta / WhatsApp / PDF editável</h3><p>Foto solta discute. Formatos diferentes por pessoa. Sem integridade verificável.</p></div>
+        <div class="card contrast-after"><p class="contrast-label">Depois (mecanismo)</p><h3>Laudo verificável</h3><p>Par entrega×devolução no mesmo padrão — sem claim de ROI de cliente.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROVA (laudo demo real) -->
+  <section class="hero" id="demo">
+    <div class="container">
+      <div class="section-head text-center">
+        <span class="tag">Sem cases inventados</span>
+        <h2 data-animate="fade-up">Prova do que existe hoje.</h2>
+        <p class="section-sub center" data-animate="fade-up">Mecanismo demonstrável + prova do problema no mercado. Zero depoimentos fictícios.</p>
+      </div>
+      <div class="cards-grid" data-animate="fade-up">
+        <div class="card">
+          <h3>Laudo demo — verificável de verdade</h3>
+          <p>Exemplo real de selo + hash. Confira a integridade na verificação pública.</p>
+          <div class="laudo-demo" style="margin-top:16px;">
+            <img class="selo" src="../public/selo-laudo-verificado.svg" alt="Selo Laudo Verificado" />
+            <div class="info">
+              <h4>Laudo ABC-1234 · retirada</h4>
+              <div class="hash">SHA-256: 9f2c…e7b1a4d8c0f3e5b6a7d8c9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9</div>
+              <p class="meta">Assinatura dual · GPS -23.5505,-46.6333 · 2026-08-20 14:32</p>
+            </div>
+          </div>
+          <a href="https://danosaparentes.com.br/verify" class="btn btn-primary" target="_blank" rel="noopener noreferrer" style="margin-top:16px;">Abrir verificação pública <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+          <span class="tag-e">[E-produto]</span>
+        </div>
+        <div class="card">
+          <i class="fas fa-gavel icon"></i>
+          <h3>Como a Justiça trata falta de vistoria prévia</h3>
+          <p>Prova do problema no mercado — <strong>não são clientes Danos Aparentes</strong>.</p>
+          <ul style="margin-top:12px; color:var(--text-secondary); font-size:0.9rem; line-height:1.7;">
+            <li><strong>ConJur, 07/03/2024</strong> — ausência de checagem prévia impossibilita comparação. <a href="https://www.conjur.com.br/2024-mar-07/sem-vistoria-previa-locadora-nao-pode-cobrar-multa-por-dano-em-veiculo/" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">Abrir →</a></li>
+            <li><strong>TJDFT, 26/01/2022</strong> — cobrança após vistoria que "não constatou avaria". <a href="https://www.tjdft.jus.br/institucional/imprensa/noticias/2022/janeiro/locadora-e-condenada-a-devolver-valores-pagos-indevidamente" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">Abrir →</a></li>
+          </ul>
+          <span class="tag-e">[E-jurídico]</span>
+        </div>
+      </div>
+      <div class="card" style="margin-top:20px; text-align:center; padding:32px;" data-animate="fade-scale">
+        <p style="font-size:1.05rem; color:var(--text); max-width:720px; margin:0 auto;"><strong>App novo.</strong> Ainda não temos histórico público de clientes. Preferimos trial + laudo verificável a depoimento falso.</p>
+        <span class="tag-e">[E] honesty</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANOS -->
+  <section class="section-alt" id="planos">
+    <div class="container">
+      <div class="section-head text-center">
+        <span class="tag">Preços literais</span>
+        <h2 data-animate="fade-up">Comece pelo plano que cabe no volume da sua base.</h2>
+        <p class="section-sub center" data-animate="fade-up">Sem "mais popular" inventado.</p>
+      </div>
+      <div class="pricing-grid" data-animate="fade-up">
+        <div class="card"><h3>Starter</h3><p class="price">R$ 29,90<span>/mês</span></p><p class="price-meta">20 laudos · ≈ R$ 1,50/laudo</p><p class="price-note">Ideal para testar o fluxo na devolução.</p><a href="#form" class="btn btn-ghost full-width">Testar Starter</a></div>
+        <div class="card pricing-featured"><h3>Pro</h3><p class="price">R$ 49,90<span>/mês</span></p><p class="price-meta">80 laudos · white-label (logo no PDF)</p><p class="price-note">≈ R$ 0,62/laudo · marca no documento.</p><a href="#form" class="btn btn-primary full-width">Testar Pro</a></div>
+        <div class="card"><h3>Corporativo</h3><p class="price">R$ 299<span>+/mês</span></p><p class="price-meta">Multi-usuário · piloto sob conversa</p><p class="price-note">Sem case inventado para fechar. WhatsApp.</p><a href="#form" class="btn btn-ghost full-width">Falar com a gente</a></div>
+      </div>
+      <p class="risk-line" data-animate="fade-up"><i class="fas fa-lock" aria-hidden="true"></i> 7 dias grátis <strong>sem cartão</strong>. Cancele no portal. PIX disponível no SME.</p>
+      <div class="offer-cta-wrap" data-animate="fade-up">
+        <a href="#form" class="btn btn-primary">Quero testar na minha locadora <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ (ACCORDION) -->
+  <section class="hero" id="faq">
+    <div class="container">
+      <div class="section-head text-center">
+        <span class="tag">Dúvidas reais</span>
+        <h2 data-animate="fade-up">Perguntas que locadoras fazem antes de testar</h2>
+        <p class="section-sub center" data-animate="fade-up">Objeções antecipadas — com nuance, sem absolutos jurídicos.</p>
+      </div>
+      <div class="accordion" id="faq-acc" data-animate="fade-up">
+        <div class="acc-item"><button class="acc-trigger" type="button">O laudo tem validade jurídica? <i class="fas fa-chevron-down chev"></i></button><div class="acc-panel"><div class="acc-panel-inner">Registro documental forte (hash, QR, GPS, assinaturas). Valor probatório depende do contrato e do seu jurídico — <strong>não</strong> prometemos sentença ganha.</div></div></div>
+        <div class="acc-item"><button class="acc-trigger" type="button">Foto no WhatsApp na devolução não basta? <i class="fas fa-chevron-down chev"></i></button><div class="acc-panel"><div class="acc-panel-inner">Sem vistoria de entrada comparável, a cobrança fica frágil (ver ConJur). Nossa oferta é o par retirada×devolução no mesmo padrão.</div></div></div>
+        <div class="acc-item"><button class="acc-trigger" type="button">Vocês têm cases / depoimentos? <i class="fas fa-chevron-down chev"></i></button><div class="acc-panel"><div class="acc-panel-inner">Ainda não públicos. App novo. Oferecemos laudo demo + trial — sem inventar.</div></div></div>
+        <div class="acc-item"><button class="acc-trigger" type="button">Funciona no pátio sem internet? <i class="fas fa-chevron-down chev"></i></button><div class="acc-panel"><div class="acc-panel-inner">Sim — PWA offline + sync quando voltar o sinal.</div></div></div>
+        <div class="acc-item"><button class="acc-trigger" type="button">Precisa treinar a equipe? <i class="fas fa-chevron-down chev"></i></button><div class="acc-panel"><div class="acc-panel-inner">O diagrama guia o fluxo; a primeira vistoria costuma ser em minutos.</div></div></div>
+        <div class="acc-item"><button class="acc-trigger" type="button">Já tenho laudo cautelar. <i class="fas fa-chevron-down chev"></i></button><div class="acc-panel"><div class="acc-panel-inner">Cautelar ≠ laudo de avarias aparentes na entrega/devolução. São finalidades diferentes.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="section-alt" id="form">
+    <div class="container">
+      <div class="section-head text-center">
+        <h2 data-animate="fade-up">Ative 7 dias grátis e faça a primeira vistoria na sua base</h2>
+        <p class="section-sub center" data-animate="fade-up">Sem cartão. Sem depoimento inventado. Só o fluxo na sua devolução.</p>
+      </div>
+      <form class="form-card card" data-animate="fade-scale" action="https://danosaparentes.com.br/app?mode=signup&utm_source=landing&utm_medium=site" method="post" target="_blank" rel="noopener noreferrer">
+        <div class="field"><label for="nome">Nome completo</label><input id="nome" name="nome" type="text" placeholder="Seu nome" required autocomplete="name" /></div>
+        <div class="field"><label for="email">E-mail</label><input id="email" name="email" type="email" placeholder="voce@locadora.com.br" required autocomplete="email" /></div>
+        <div class="field"><label for="whatsapp">WhatsApp com DDD</label><input id="whatsapp" name="whatsapp" type="tel" placeholder="(11) 99999-9999" required autocomplete="tel" /></div>
+        <div class="field"><label for="empresa">Empresa</label><input id="empresa" name="empresa" type="text" placeholder="Nome da locadora" required autocomplete="organization" /></div>
+        <div class="field"><label for="cargo">Cargo</label><select id="cargo" name="cargo" required aria-label="Cargo"><option value="">Selecione</option><option value="dono">Dono/sócio</option><option value="ops">Gerente de operações/pátio</option><option value="vistoria">Coordenador de vistoria</option><option value="outro">Outro</option></select></div>
+        <div class="field"><label for="segmento">Segmento</label><select id="segmento" name="segmento" required aria-label="Segmento da empresa"><option value="">Selecione</option><option value="locadora" selected>Locadora</option><option value="frota-aluguel">Frota de aluguel</option><option value="oficina">Oficina</option><option value="gestao-frota">Gestão de frota</option><option value="outro">Outro</option></select></div>
+        <div class="field"><label for="desafio">Principal desafio</label><select id="desafio" name="desafio" required aria-label="Principal desafio"><option value="">Selecione</option><option value="ja-estava">Disputa "já estava assim"</option><option value="padronizar">Padronizar vistoriadores</option><option value="whatsapp">Substituir WhatsApp/papel</option><option value="white-label">White-label no PDF</option><option value="offline">Offline no pátio</option><option value="outro">Outro</option></select></div>
+        <div class="field"><label for="volume">Volume aproximado de devoluções/mês <span style="color:var(--text-helper)">(opcional)</span></label><input id="volume" name="volume" type="text" placeholder="Ex.: 40–80" /></div>
+        <button type="submit" class="btn btn-primary full-width">Quero meu trial de 7 dias <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+        <p class="form-trust"><i class="fas fa-lock" aria-hidden="true"></i> Dados confidenciais. Sem cartão no trial. Resposta em até 1 dia útil no WhatsApp se Corporativo.</p>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-logo">Danos Aparentes</p>
+      <div class="footer-links">
+        <a href="#planos">Planos</a>
+        <a href="https://danosaparentes.com.br" target="_blank" rel="noopener noreferrer">Site</a>
+        <a href="https://danosaparentes.com.br/verify" target="_blank" rel="noopener noreferrer">Verificar laudo</a>
+        <a href="https://danosaparentes.com.br" target="_blank" rel="noopener noreferrer">Privacidade</a>
+      </div>
+      <p class="footer-copy">© 2026 Danos Aparentes — Vistoria veicular digital para locadoras</p>
+      <p class="footer-credit"><a href="https://gui.marketing/" target="_blank" rel="noopener noreferrer">gui.marketing</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // TABS (segmentos)
+    const triggers = document.querySelectorAll('.tab-trigger');
+    const panels = document.querySelectorAll('.tab-panel');
+    triggers.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-tab');
+        triggers.forEach(t => t.setAttribute('aria-selected', t === btn ? 'true' : 'false'));
+        panels.forEach(p => p.classList.toggle('active', p.id === 'panel-' + id));
+      });
+    });
+    // ACCORDION (FAQ)
+    document.querySelectorAll('#faq-acc .acc-item').forEach(item => {
+      const trigger = item.querySelector('.acc-trigger');
+      const panel = item.querySelector('.acc-panel');
+      trigger.addEventListener('click', () => {
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('#faq-acc .acc-item').forEach(other => { other.classList.remove('open'); other.querySelector('.acc-panel').style.maxHeight = null; });
+        if (!isOpen) { item.classList.add('open'); panel.style.maxHeight = panel.scrollHeight + 'px'; }
+      });
+    });
+    // ANIMAÇÃO + navbar scroll (mantido da original)
+    document.addEventListener('DOMContentLoaded', () => {
+      const els = document.querySelectorAll('[data-animate]');
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        els.forEach(el => { el.style.opacity = '1'; el.classList.add('is-visible'); });
+      } else {
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); } });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        els.forEach(el => obs.observe(el));
+      }
+      window.addEventListener('scroll', () => {
+        const n = document.querySelector('.navbar');
+        if (window.scrollY > 50) n.classList.add('scrolled'); else n.classList.remove('scrolled');
+      }, { passive: true });
+    });
+  </script>
+</body>
+</html>
