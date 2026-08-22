@@ -29,11 +29,15 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    setReturnTo(getSafeReturnTo(params.get('returnTo')))
-    if (params.get('mode') === 'signup') {
-      setMode('signup')
-      trackSignupStart({ source: 'app_query' })
-    }
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    const t = setTimeout(() => {
+      setReturnTo(getSafeReturnTo(params.get('returnTo')))
+      if (params.get('mode') === 'signup') {
+        setMode('signup')
+        trackSignupStart({ source: 'app_query' })
+      }
+    }, 0)
+    return () => clearTimeout(t)
   }, [])
 
   async function handleSubmit(e: React.FormEvent) {

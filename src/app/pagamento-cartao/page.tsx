@@ -67,7 +67,8 @@ function PagamentoCartaoInner() {
     if (authLoading || !session || autoStarted.current) return
     if (searchParams.get('autostart') !== '1') return
     autoStarted.current = true
-    void goStripe()
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    setTimeout(() => { void goStripe() }, 0)
   }, [authLoading, session, searchParams, goStripe])
 
   if (authLoading) {

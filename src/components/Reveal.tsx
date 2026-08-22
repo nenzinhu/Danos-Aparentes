@@ -23,8 +23,9 @@ export default function Reveal({ children, delay = 0, className = '', as = 'div'
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) {
-      setVisible(true);
-      return;
+      // Adia um tick para não chamar setState sincronamente dentro do effect.
+      const t = setTimeout(() => setVisible(true), 0);
+      return () => clearTimeout(t);
     }
 
     const observer = new IntersectionObserver(

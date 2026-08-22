@@ -78,9 +78,17 @@ function RootComponent({
   const [compareMode, setCompareMode] = useState(false)
 
   // Trocar vista → sempre 100% e cadeado travado até o usuário destrancar.
+  // O destravamento do pan acontece durante o render (padrão "adjust state on
+  // prop change"); o reset do zoom fica no effect abaixo.
+  const viewResetKey = `${vehicleType}:${viewType}`
+  const [appliedViewResetKey, setAppliedViewResetKey] = useState(viewResetKey)
+  if (appliedViewResetKey !== viewResetKey) {
+    setAppliedViewResetKey(viewResetKey)
+    setPanLocked(true)
+  }
+
   useEffect(() => {
     reset()
-    setPanLocked(true)
   }, [viewType, vehicleType]) // eslint-disable-line react-hooks/exhaustive-deps -- reset is stable enough per render; lock on view/vehicle change
 
   const prevViewRef = useRef<ViewType>(viewType)
@@ -119,7 +127,6 @@ function RootComponent({
   // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
   const orbitDir = orbitDirRef.current
 
-  // eslint-disable-next-line react-hooks/refs -- refs accessed here to keep orbitDir synchronous with AnimatePresence
   const contextValue = useMemo(() => ({
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
     accessToken, previousReport, onToast,
@@ -128,10 +135,9 @@ function RootComponent({
     onViewTypeChange, onGoToDossier,
   }), [
     vehicleType, viewType, damages, onAddDamage, onAddDamageDetailed, onRemoveDamageFromPart, speak, speakHover,
-    accessToken, previousReport, onToast, fullscreen, selectedPart, orbitDir, outlineMode, panLocked, scale, zoomIn, zoomOut, reset, onViewTypeChange, onGoToDossier
+    accessToken, previousReport, onToast, fullscreen, selectedPart, orbitDir, outlineMode, panLocked, compareMode, scale, zoomIn, zoomOut, reset, onViewTypeChange, onGoToDossier
   ])
 
-  // eslint-disable-next-line react-hooks/refs -- context value intentionally includes refs for consumer components
   return (
     // eslint-disable-next-line react-hooks/refs -- context value intentionally includes refs for consumer components
     <VehicleViewerContext.Provider value={contextValue}>

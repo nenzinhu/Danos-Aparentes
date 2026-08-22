@@ -90,14 +90,13 @@ export default function VehicleCompareView({
   const [pdfBusy, setPdfBusy] = useState(false)
   const [aiBusyKey, setAiBusyKey] = useState<string | null>(null)
   const [aiSuggestions, setAiSuggestions] = useState<Record<string, CompareAiSuggestion>>({})
-  const [hydrateBusy, setHydrateBusy] = useState(false)
+  const [hydrateBusy, setHydrateBusy] = useState(reports.length < 2)
 
   const scope = tenantScopeKey(tenantId, userId)
 
   useEffect(() => {
     if (reports.length >= 2) return
     let cancelled = false
-    setHydrateBusy(true)
     void import('@/src/lib/vehicleEvidence/hydrateVehicleReports')
       .then(({ hydrateVehicleReportsLocally }) =>
         hydrateVehicleReportsLocally(userId, vehicleId, accessToken),
@@ -115,20 +114,31 @@ export default function VehicleCompareView({
     }
   }, [vehicleId, userId, reports.length, onHydrated, accessToken])
 
-  useEffect(() => {
+  // Aplica o deep link assim que os IDs ficam válidos — ajuste durante o
+  // render (padrão "adjust state on prop change"), sem setState sync em effect.
+  const deepLinkSig = `${deepLink.prevId}|${deepLink.currId}|${sorted.map((r) => r.id).join(',')}`
+  const [appliedDeepLinkSig, setAppliedDeepLinkSig] = useState('')
+  if (appliedDeepLinkSig !== deepLinkSig) {
+    setAppliedDeepLinkSig(deepLinkSig)
     if (deepLink.prevId && sorted.some((r) => r.id === deepLink.prevId)) {
       setPrevId(deepLink.prevId)
     }
     if (deepLink.currId && sorted.some((r) => r.id === deepLink.currId)) {
       setCurrId(deepLink.currId)
     }
-  }, [deepLink.prevId, deepLink.currId, sorted])
+  }
 
   useEffect(() => {
     if (!prevId || !currId || prevId === currId) return
     const comparisonId = comparisonStorageId(prevId, currId)
     const local = getStoredComparison(comparisonId)
-    if (local) setReview(local)
+    // Adia um tick para não chamar setState sincronamente dentro do effect;
+    // a hidratação da nuvem (abaixo) continua sobrescrevendo quando existir.
+    if (local) {
+      setTimeout(() => {
+        if (!cancelled) setReview(local)
+      }, 0)
+    }
     let cancelled = false
     void hydrateComparisonFromCloud({
       comparisonId,

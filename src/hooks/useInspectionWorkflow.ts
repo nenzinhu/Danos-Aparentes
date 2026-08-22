@@ -149,23 +149,27 @@ export function useInspectionWorkflow({
 
   // FASE 10 — comparação ao vivo conforme avarias mudam
   useEffect(() => {
-    if (!previousSavedReport) {
-      setLiveCompare(null)
-      return
-    }
-    const current = draftReportFromState({
-      vehicleInfo,
-      damages: damages.filter((d) => d.vehicle === vehicleType),
-      vehicleType,
-      activeReportId,
-      vehicleId: previousSavedReport.vehicleId,
-    })
-    const preview = buildLiveComparePreview({
-      previous: previousSavedReport,
-      current,
-      userId: userId || 'local',
-    })
-    setLiveCompare(preview)
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    const t = setTimeout(() => {
+      if (!previousSavedReport) {
+        setLiveCompare(null)
+        return
+      }
+      const current = draftReportFromState({
+        vehicleInfo,
+        damages: damages.filter((d) => d.vehicle === vehicleType),
+        vehicleType,
+        activeReportId,
+        vehicleId: previousSavedReport.vehicleId,
+      })
+      const preview = buildLiveComparePreview({
+        previous: previousSavedReport,
+        current,
+        userId: userId || 'local',
+      })
+      setLiveCompare(preview)
+    }, 0)
+    return () => clearTimeout(t)
   }, [previousSavedReport, vehicleInfo, damages, vehicleType, activeReportId, userId])
 
   const handleAddDamage = useCallback((partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => {

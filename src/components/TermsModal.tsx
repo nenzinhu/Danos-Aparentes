@@ -12,9 +12,16 @@ export default function TermsModal({ isOpen, onClose, defaultTab = 'terms' }: Pr
   const modalRef = useRef<HTMLDivElement>(null)
   const [activeTab, setActiveTab] = useState<'terms' | 'privacy'>(defaultTab)
 
+  // Reset da aba ao abrir — ajuste durante o render (sem setState sync em effect).
+  const [appliedTabKey, setAppliedTabKey] = useState<string | null>(isOpen ? defaultTab : null)
+  const tabKey = isOpen ? defaultTab : null
+  if (tabKey !== appliedTabKey) {
+    setAppliedTabKey(tabKey)
+    if (tabKey !== null) setActiveTab(tabKey)
+  }
+
   useEffect(() => {
     if (isOpen) {
-      setActiveTab(defaultTab)
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
@@ -22,7 +29,7 @@ export default function TermsModal({ isOpen, onClose, defaultTab = 'terms' }: Pr
     return () => {
       document.body.style.overflow = ''
     }
-  }, [isOpen, defaultTab])
+  }, [isOpen])
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) { if (e.key === 'Escape') onClose() }

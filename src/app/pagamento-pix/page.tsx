@@ -132,7 +132,8 @@ function PagamentoPixContent() {
     if (!awaitingPix || !subscription) return
 
     if (subscription.pendingMonths > 0) {
-      setSawPendingCharge(true)
+      // Adia um tick para não chamar setState sincronamente dentro do effect.
+      setTimeout(() => setSawPendingCharge(true), 0)
       return
     }
 

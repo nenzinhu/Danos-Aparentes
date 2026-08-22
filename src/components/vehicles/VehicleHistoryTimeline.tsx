@@ -33,9 +33,16 @@ export default function VehicleHistoryTimeline({
 
   const inspectionIds = useMemo(() => vehicle.reports.map((r) => r.id), [vehicle.reports])
 
+  // Loading sobe durante o render quando a chave de busca muda (ajuste de
+  // estado por mudança de prop), sem setState síncrono dentro do effect.
+  const [lastFetch, setLastFetch] = useState({ id: vehicle.id, ids: inspectionIds })
+  if (lastFetch.id !== vehicle.id || lastFetch.ids !== inspectionIds) {
+    setLastFetch({ id: vehicle.id, ids: inspectionIds })
+    setLoading(true)
+  }
+
   useEffect(() => {
     let cancelled = false
-    setLoading(true)
     ;(async () => {
       const data = await listAuditEventsByVehicle({
         vehicleId: vehicle.id,
@@ -50,7 +57,7 @@ export default function VehicleHistoryTimeline({
     return () => {
       cancelled = true
     }
-  }, [vehicle.id, inspectionIds.join('|')])
+  }, [vehicle.id, inspectionIds])
 
   const stories = useMemo(
     () => buildStories(vehicle, cloudOnlyInspections, rows),

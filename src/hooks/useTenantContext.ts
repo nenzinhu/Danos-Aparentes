@@ -22,7 +22,8 @@ export function useTenantContext(userId?: string) {
   }, [userId])
 
   useEffect(() => {
-    void refresh()
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    void Promise.resolve().then(() => { void refresh() })
   }, [refresh])
 
   return { ...ctx, loading, refresh }

@@ -19,8 +19,12 @@ export default function IntroVideo() {
     return 'show';
   });
 
+  // Bot pula a animação já no estado inicial — capturado uma vez, sem depender
+  // de `phase` no effect (reiniciar a timeline a cada troca de fase a quebraria).
+  const doneAtMountRef = useRef(phase === 'done');
+
   useEffect(() => {
-    if (phase === 'done') return;
+    if (doneAtMountRef.current) return;
 
     // GSAP Timeline animation for Splash Screen
     const tl = gsap.timeline({

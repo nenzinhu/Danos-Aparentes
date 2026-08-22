@@ -22,21 +22,26 @@ export default function InspectionAuditTimeline({ inspectionId, issued }: Inspec
   useEffect(() => {
     if (!open || !inspectionId) return
     let cancelled = false
-    setLoading(true)
-    setError('')
-    void listAuditEventsByInspection(inspectionId)
-      .then((rows: AuditLogRow[]) => {
-        if (cancelled) return
-        setItems(presentAuditTimeline(rows))
-      })
-      .catch(() => {
-        if (!cancelled) setError('Não foi possível carregar o histórico desta inspeção.')
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    const t = setTimeout(() => {
+      if (cancelled) return
+      setLoading(true)
+      setError('')
+      void listAuditEventsByInspection(inspectionId)
+        .then((rows: AuditLogRow[]) => {
+          if (cancelled) return
+          setItems(presentAuditTimeline(rows))
+        })
+        .catch(() => {
+          if (!cancelled) setError('Não foi possível carregar o histórico desta inspeção.')
+        })
+        .finally(() => {
+          if (!cancelled) setLoading(false)
+        })
+    }, 0)
     return () => {
       cancelled = true
+      clearTimeout(t)
     }
   }, [open, inspectionId])
 

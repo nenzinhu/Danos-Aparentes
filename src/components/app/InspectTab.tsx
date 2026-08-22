@@ -262,16 +262,18 @@ export default function InspectTab({
     [allVehicleDamages, previousReport],
   )
 
-  const [confirmedNewIds, setConfirmedNewIds] = useState<Set<string>>(() => new Set())
+  const [confirmedNewIdsRaw, setConfirmedNewIds] = useState<Set<string>>(() => new Set())
 
-  useEffect(() => {
+  // Poda durante o render: mantém apenas confirmações de danos que ainda
+  // existem (padrão "adjust state on prop change"), sem setState em effect.
+  const confirmedNewIds = useMemo(() => {
     const ids = new Set(newDamages.map((d) => d.id))
-    setConfirmedNewIds((prev) => {
-      const next = new Set([...prev].filter((id) => ids.has(id)))
-      if (next.size === prev.size && [...prev].every((id) => next.has(id))) return prev
-      return next
-    })
-  }, [newDamages])
+    const next = new Set([...confirmedNewIdsRaw].filter((id) => ids.has(id)))
+    if (next.size === confirmedNewIdsRaw.size && [...confirmedNewIdsRaw].every((id) => next.has(id))) {
+      return confirmedNewIdsRaw
+    }
+    return next
+  }, [confirmedNewIdsRaw, newDamages])
 
   const allNewConfirmed =
     newDamages.length === 0 || newDamages.every((d) => confirmedNewIds.has(d.id))

@@ -74,10 +74,10 @@ export function Tabs({
   const tabEls = useRef<Map<string, HTMLButtonElement>>(new Map())
   const [tabs, setTabs] = useState<string[]>([])
 
-  const setValue = (v: string) => {
+  const setValue = useCallback((v: string) => {
     if (!isControlled) setInternal(v)
     onValueChange?.(v)
-  }
+  }, [isControlled, onValueChange])
 
   const registerTab = useCallback((v: string, el: HTMLButtonElement | null) => {
     if (el) {
@@ -91,7 +91,7 @@ export function Tabs({
 
   const ctx = useMemo<TabsContextValue>(
     () => ({ baseId, value, setValue, registerTab, tabs, orientation }),
-    [baseId, value, tabs, orientation, registerTab],
+    [baseId, value, setValue, tabs, orientation, registerTab],
   )
 
   return (

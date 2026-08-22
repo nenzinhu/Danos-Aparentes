@@ -58,7 +58,7 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
         }
       ]);
     }
-  }, [vehicleInfo, damages, vehicleType]);
+  }, [vehicleInfo, damages, vehicleType, messages.length]);
 
   // Scroll to bottom on new messages
   useEffect(() => {

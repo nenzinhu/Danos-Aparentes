@@ -168,7 +168,7 @@ export default function CertifySignatureCard({
       setError('Erro de conexão ao solicitar certificação.')
       setStatus('error')
     }
-  }, [inspectionId, accessToken, name, email, phone, channel, onEnsureInspectionId])
+  }, [inspectionId, accessToken, name, email, phone, channel, onEnsureInspectionId, vehicleInfo, damages, vehicleType])
 
   const handlePlain = useCallback(async () => {
     if (!onPlainPdf) return

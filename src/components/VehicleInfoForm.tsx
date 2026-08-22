@@ -66,12 +66,15 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   const filterRef = useRef<HTMLDivElement>(null)
   const lookupTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  useEffect(() => {
+  // Reset do wizard quando o token muda — ajuste durante o render (sem effect).
+  const [appliedResetToken, setAppliedResetToken] = useState(resetToken)
+  if (appliedResetToken !== resetToken) {
+    setAppliedResetToken(resetToken)
     setWizardStep(1)
     setMaxVisited(1)
     setRenderedStep(1)
     setIsStepLeaving(false)
-  }, [resetToken])
+  }
 
   // Duração da saída de um passo do wizard — mais rápida que a entrada
   // (200ms), como o resto do app.
