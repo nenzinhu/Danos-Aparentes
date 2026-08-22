@@ -11,7 +11,6 @@ import FaviconInertiaMark from '../components/FaviconInertiaMark';
 import LupaVehicleReveal from '../components/LupaVehicleReveal';
 import GsapTextReveal from '../components/GsapTextReveal';
 import GsapSplitSubline from '../components/GsapSplitSubline';
-import HeroHistoryMockup from '../components/landing/HeroHistoryMockup';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   heroCopyStage,
@@ -57,6 +56,8 @@ const AudienceSection = dynamic(() => import('../components/landing/AudienceSect
 const FeaturesGridSection = dynamic(() => import('../components/landing/FeaturesGridSection'));
 const EvidenceContextSection = dynamic(() => import('../components/landing/EvidenceContextSection'));
 const DiffCompareSection = dynamic(() => import('../components/landing/DiffCompareSection'));
+const HeroBeforeAfter = dynamic(() => import('../components/landing/HeroBeforeAfter'));
+const VerifyYourselfSection = dynamic(() => import('../components/landing/VerifyYourselfSection'));
 const PricingSection = dynamic(() => import('../components/PricingSection'));
 const SocialProofSection = dynamic(() => import('../components/SocialProofSection'));
 const FAQSection = dynamic(() => import('../components/FAQSection'));
@@ -444,7 +445,7 @@ export default function LandingPage() {
               <HeroCopy />
             </div>
             <div className="relative px-5 sm:px-8 py-8 lg:py-10 flex flex-col justify-center bg-[linear-gradient(160deg,transparent_40%,color-mix(in_srgb,var(--signal)_6%,transparent)_100%)]">
-              <HeroHistoryMockup />
+              <HeroBeforeAfter />
             </div>
           </div>
         </div>
@@ -466,6 +467,8 @@ export default function LandingPage() {
           </p>
         </div>
       </aside>
+
+      <VerifyYourselfSection />
 
       {/* Prova social no fluxo principal */}
       <HeroMicroMessage />

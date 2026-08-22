@@ -24,6 +24,7 @@ const ROUTES: {
   { path: '/faq', priority: 0.8, changeFrequency: 'monthly', lastModified: '2026-08-04' },
   { path: '/blog', priority: 0.8, changeFrequency: 'weekly', lastModified: '2026-07-23' },
   { path: '/demo', priority: 0.7, changeFrequency: 'monthly', lastModified: '2026-07-12' },
+  { path: '/selo', priority: 0.6, changeFrequency: 'monthly', lastModified: '2026-08-22' },
   { path: '/suporte', priority: 0.6, changeFrequency: 'monthly', lastModified: '2026-07-01' },
   { path: '/depoimentos', priority: 0.75, changeFrequency: 'monthly', lastModified: '2026-08-06' },
   { path: '/termos', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-01-15' },
