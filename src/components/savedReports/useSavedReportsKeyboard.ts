@@ -73,5 +73,5 @@ export function useSavedReportsKeyboard({
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, sorted, activeReportIndex, onClose, onLoad])
+  }, [isOpen, sorted, activeReportIndex, onClose, onLoad, setActiveReportIndex, setExpandedReportIds])
 }

@@ -1,7 +1,9 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import Image from 'next/image'
 import { VehicleType } from '../types';
+import type { Damage, DamageId } from '../types';
 import Reveal from './Reveal';
 import { VEHICLES, VehicleIconSvg } from './VehicleSelector';
 import {
@@ -15,13 +17,13 @@ export interface VehicleOption {
   name: string;
   /** Mesmo SVG do seletor do app (`/icons/vehicles/*.svg`). */
   icon: string;
-  mockDamages: any[];
+  mockDamages: Damage[];
 }
 
 const MOCK_BY_TYPE: Partial<Record<VehicleType, VehicleOption['mockDamages']>> = {
   car: [
     {
-      id: 'mock-1' as any,
+      id: 'mock-1' as DamageId,
       vehicle: 'car',
       view: 'lateral-left',
       partId: 'car-ll-door-front',
@@ -36,7 +38,7 @@ const MOCK_BY_TYPE: Partial<Record<VehicleType, VehicleOption['mockDamages']>> =
   ],
   car2d: [
     {
-      id: 'mock-car2d' as any,
+      id: 'mock-car2d' as DamageId,
       vehicle: 'car2d',
       view: 'lateral-left',
       partId: 'car2d-ll-door',
@@ -51,7 +53,7 @@ const MOCK_BY_TYPE: Partial<Record<VehicleType, VehicleOption['mockDamages']>> =
   ],
   moto: [
     {
-      id: 'mock-2' as any,
+      id: 'mock-2' as DamageId,
       vehicle: 'moto',
       view: 'lateral-left',
       partId: 'moto-ll-fuel-tank',
@@ -66,7 +68,7 @@ const MOCK_BY_TYPE: Partial<Record<VehicleType, VehicleOption['mockDamages']>> =
   ],
   motoneta: [
     {
-      id: 'mock-motoneta' as any,
+      id: 'mock-motoneta' as DamageId,
       vehicle: 'motoneta',
       view: 'lateral-left',
       partId: 'sco-ll-rear-body',
@@ -81,7 +83,7 @@ const MOCK_BY_TYPE: Partial<Record<VehicleType, VehicleOption['mockDamages']>> =
   ],
   truck: [
     {
-      id: 'mock-3' as any,
+      id: 'mock-3' as DamageId,
       vehicle: 'truck',
       view: 'lateral-left',
       partId: 'truck-ll-cargo-box',
@@ -96,7 +98,7 @@ const MOCK_BY_TYPE: Partial<Record<VehicleType, VehicleOption['mockDamages']>> =
   ],
   van: [
     {
-      id: 'mock-4' as any,
+      id: 'mock-4' as DamageId,
       vehicle: 'van',
       view: 'lateral-left',
       partId: 'van-ll-door-front',
@@ -111,7 +113,7 @@ const MOCK_BY_TYPE: Partial<Record<VehicleType, VehicleOption['mockDamages']>> =
   ],
   bus: [
     {
-      id: 'mock-5' as any,
+      id: 'mock-5' as DamageId,
       vehicle: 'bus',
       view: 'lateral-left',
       partId: 'bus-ll-body',
@@ -126,7 +128,7 @@ const MOCK_BY_TYPE: Partial<Record<VehicleType, VehicleOption['mockDamages']>> =
   ],
   microbus: [
     {
-      id: 'mock-microbus' as any,
+      id: 'mock-microbus' as DamageId,
       vehicle: 'microbus',
       view: 'lateral-left',
       partId: 'microbus-l-body',
@@ -249,7 +251,7 @@ export default function VehicleShowcaseSection() {
 
             {/* Preview: PNG do diagrama quando existir; senão o SVG do seletor */}
             <div ref={imgWrapRef} className="py-8">
-              <img
+              <Image
                 src={
                   activeVehicle === 'motoneta'
                     ? `/icons/vehicles/motoneta.svg`

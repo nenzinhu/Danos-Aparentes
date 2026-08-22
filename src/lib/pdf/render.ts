@@ -5,7 +5,7 @@ import type { PdfSettings, SvgPdfData } from './types'
 
 async function getHtml2Pdf() {
   const mod = await import('html2pdf.js')
-  return ((mod as any).default ?? mod) as any
+  return mod.default ?? mod
 }
 
 type PdfRuntimeProfile = {
@@ -135,8 +135,8 @@ async function renderMultiPage(html: string, filename: string, profile: PdfRunti
 }
 
 export async function generatePdf(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings): Promise<string> {
-  if (typeof window !== 'undefined' && (window as any).document?.fonts?.ready) {
-    await (window as any).document.fonts.ready
+  if (typeof window !== 'undefined' && window.document?.fonts?.ready) {
+    await window.document.fonts.ready
   }
   await yieldToMainThread()
   const profile = detectRuntimeProfile()
@@ -156,8 +156,8 @@ export async function generatePdf(info: VehicleInfo, damages: Damage[], svgData?
 }
 
 export async function generatePdfBlob(info: VehicleInfo, damages: Damage[], svgData?: SvgPdfData, settings?: PdfSettings): Promise<Blob> {
-  if (typeof window !== 'undefined' && (window as any).document?.fonts?.ready) {
-    await (window as any).document.fonts.ready
+  if (typeof window !== 'undefined' && window.document?.fonts?.ready) {
+    await window.document.fonts.ready
   }
   await yieldToMainThread()
   const profile = detectRuntimeProfile()

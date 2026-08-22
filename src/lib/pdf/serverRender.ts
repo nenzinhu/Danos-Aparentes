@@ -27,8 +27,7 @@ export async function renderHtmlToPdfBuffer(
     // Fontes web (Google Fonts no HTML do laudo) — best-effort.
     try {
       await page.evaluate(async () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const fonts = (document as any).fonts
+        const fonts = (document as Document & { fonts?: FontFaceSet }).fonts
         if (fonts?.ready) await fonts.ready
       })
     } catch { /* ignore */ }

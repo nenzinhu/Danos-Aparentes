@@ -50,7 +50,8 @@ export default function B2bMatchedHeroCopy({
       term: params.get('utm_term') || utms.term,
     }
     const resolved = resolveB2bMessageMatch(vertical, live)
-    setMatch(resolved)
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    setTimeout(() => setMatch(resolved), 0)
     if (resolved) {
       trackEvent('message_match', {
         source: vertical,

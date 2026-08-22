@@ -84,3 +84,13 @@ tmp/
 .vercel
 .env*
 .aider*
+archive/
+
+# Pastas auxiliares locais
+open-design-tmp/
+entregas/
+juntos/
+labs/
+analysis/
+videoforge/
+archive/

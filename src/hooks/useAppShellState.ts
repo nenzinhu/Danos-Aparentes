@@ -36,29 +36,33 @@ export function useAppShellState({ openPortal }: UseAppShellStateOptions) {
   useEffect(() => {
     if (typeof window === 'undefined') return
 
-    const justSignedUp = consumeJustSignedUp()
-    if (justSignedUp) {
-      // Produto primeiro: pula o tour longo e vai para a 1ª vistoria.
-      localStorage.setItem('app_tour_seen', 'true')
-      startOnboardingSession()
-      setShowActivationOnboarding(true)
-      return
-    }
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    const t = setTimeout(() => {
+      const justSignedUp = consumeJustSignedUp()
+      if (justSignedUp) {
+        // Produto primeiro: pula o tour longo e vai para a 1ª vistoria.
+        localStorage.setItem('app_tour_seen', 'true')
+        startOnboardingSession()
+        setShowActivationOnboarding(true)
+        return
+      }
 
-    if (localStorage.getItem('app_tour_seen') !== 'true') {
-      // Conta nova sem flag de signup (ex.: confirmou email depois): ativação > tour.
-      startOnboardingSession()
-      trackOnboardingStart({ source: 'first_app_open' })
-      localStorage.setItem('app_tour_seen', 'true')
-      setShowActivationOnboarding(true)
-      return
-    }
+      if (localStorage.getItem('app_tour_seen') !== 'true') {
+        // Conta nova sem flag de signup (ex.: confirmou email depois): ativação > tour.
+        startOnboardingSession()
+        trackOnboardingStart({ source: 'first_app_open' })
+        localStorage.setItem('app_tour_seen', 'true')
+        setShowActivationOnboarding(true)
+        return
+      }
 
-    // Usuário que ainda não salvou a 1ª vistoria (snooze só vale nesta sessão).
-    if (shouldShowFirstInspectionOnboarding(false)) {
-      startOnboardingSession()
-      setShowActivationOnboarding(true)
-    }
+      // Usuário que ainda não salvou a 1ª vistoria (snooze só vale nesta sessão).
+      if (shouldShowFirstInspectionOnboarding(false)) {
+        startOnboardingSession()
+        setShowActivationOnboarding(true)
+      }
+    }, 0)
+    return () => clearTimeout(t)
   }, [])
 
   useEffect(() => {
@@ -70,9 +74,13 @@ export function useAppShellState({ openPortal }: UseAppShellStateOptions) {
   }, [darkMode])
 
   useEffect(() => {
-    const saved = localStorage.getItem('darkMode')
-    const isDark = saved !== null ? saved !== 'false' : true
-    setDarkMode(isDark)
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    const t = setTimeout(() => {
+      const saved = localStorage.getItem('darkMode')
+      const isDark = saved !== null ? saved !== 'false' : true
+      setDarkMode(isDark)
+    }, 0)
+    return () => clearTimeout(t)
   }, [])
 
   // Enquanto o usuário nunca escolheu manualmente (sem 'darkMode' salvo),

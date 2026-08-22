@@ -2,6 +2,7 @@
 
 import React, {
   createContext,
+  useCallback,
   useContext,
   useId,
   useLayoutEffect,
@@ -73,12 +74,12 @@ export function Tabs({
   const tabEls = useRef<Map<string, HTMLButtonElement>>(new Map())
   const [tabs, setTabs] = useState<string[]>([])
 
-  const setValue = (v: string) => {
+  const setValue = useCallback((v: string) => {
     if (!isControlled) setInternal(v)
     onValueChange?.(v)
-  }
+  }, [isControlled, onValueChange])
 
-  const registerTab = (v: string, el: HTMLButtonElement | null) => {
+  const registerTab = useCallback((v: string, el: HTMLButtonElement | null) => {
     if (el) {
       tabEls.current.set(v, el)
       setTabs((prev) => (prev.includes(v) ? prev : [...prev, v]))
@@ -86,11 +87,11 @@ export function Tabs({
       tabEls.current.delete(v)
       setTabs((prev) => prev.filter((t) => t !== v))
     }
-  }
+  }, [])
 
   const ctx = useMemo<TabsContextValue>(
     () => ({ baseId, value, setValue, registerTab, tabs, orientation }),
-    [baseId, value, tabs, orientation],
+    [baseId, value, setValue, tabs, orientation, registerTab],
   )
 
   return (
@@ -184,7 +185,7 @@ export function Tab({ value, children, className, disabled }: TabProps) {
   useLayoutEffect(() => {
     registerTab(value, ref.current)
     return () => registerTab(value, null)
-  }, [value, ref.current])
+  }, [value, registerTab])
 
   return (
     <button

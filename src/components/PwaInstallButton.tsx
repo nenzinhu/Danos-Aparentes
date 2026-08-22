@@ -41,8 +41,9 @@ export default function PwaInstallButton() {
 
   useEffect(() => {
     if (isStandalone()) {
-      setInstalled(true)
-      return
+      // Adia um tick para não chamar setState sincronamente dentro do effect.
+      const t = setTimeout(() => setInstalled(true), 0)
+      return () => clearTimeout(t)
     }
     const onPrompt = (e: Event) => {
       e.preventDefault()

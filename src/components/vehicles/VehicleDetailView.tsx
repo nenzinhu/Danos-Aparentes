@@ -54,8 +54,9 @@ export default function VehicleDetailView({
 
   useEffect(() => {
     if (!accessToken || vehicle.id.startsWith('local:')) {
-      setRemoteInspections([])
-      return
+      // Adia um tick para não chamar setState sincronamente dentro do effect.
+      const t = setTimeout(() => setRemoteInspections([]), 0)
+      return () => clearTimeout(t)
     }
     let cancelled = false
     void fetch(`/api/vehicles/${encodeURIComponent(vehicle.id)}`, {

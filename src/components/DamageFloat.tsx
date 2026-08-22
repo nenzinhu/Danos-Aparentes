@@ -1,9 +1,9 @@
 'use client';
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import type { Damage, DamageType, Severity } from '../types'
-import { IconEraser, IconCamera, IconGallery, IconCheck, IconArrowLeft } from './ui/AnimatedIcons'
-import { IconScratchDamageBadge, IconDentDamageBadge, IconBrokenGlassSphere } from './ui/DamageTypeIcons'
+import { IconCamera, IconGallery, IconCheck, IconArrowLeft } from './ui/AnimatedIcons'
 import {
   appendAiDecision,
   recordHumanDecision,
@@ -14,9 +14,10 @@ import {
   formatEvidenceStatusLabel,
 } from '../lib/evidenceStatus'
 import { compressImage, fileToDataUrl } from '../lib/imageUtils'
-import { supabase, supabaseEnabled } from '../lib/supabase'
 import { isNewDamage, type PreviousReportSummary } from '../lib/reportComparison'
 import dynamic from 'next/dynamic'
+import { SEV, TYPES, EXIT_DURATION_MS, currentUserIdentity, type AiClassifyState, type ClassifyApiResponse } from './damageFloatLogic'
+import { TypePickerGrid, ClearDamageButton, SeverityGrid, AiSuggestionPanel } from './DamageFloatParts'
 
 const ThreeDamageCanvas = dynamic(() => import('./ThreeDamageCanvas'), {
   ssr: false,
@@ -42,58 +43,6 @@ interface Props {
   ) => void
   onClear: () => void
   onClose: () => void
-}
-
-const EXIT_DURATION_MS = 200
-
-const SEV: { value: Severity; label: string; color: string; bg: string; border: string }[] = [
-  { value: 'low',    label: 'Leve',  color: 'text-slate-600',  bg: 'bg-slate-500/15',  border: 'border-slate-500/45' },
-  { value: 'medium', label: 'Média', color: 'text-orange-600', bg: 'bg-orange-500/15', border: 'border-orange-500/45' },
-  { value: 'high',   label: 'Grave', color: 'text-red-600',    bg: 'bg-red-500/15',    border: 'border-red-500/45' },
-]
-
-const TYPES = [
-  { type: 'scratch' as const, label: 'Risco / Arranhado',    Badge: IconScratchDamageBadge, img: '/damage/porta-riscada.svg',  color: 'text-emerald-500', bg: 'bg-emerald-500/15', border: 'border-emerald-500/40' },
-  { type: 'dent' as const,    label: 'Amassado / Deformado', Badge: IconDentDamageBadge,    img: '/damage/porta-amassada.svg', color: 'text-amber-500',   bg: 'bg-amber-500/15',   border: 'border-amber-500/40' },
-  { type: 'broken' as const,  label: 'Quebrado / Trincado',  Badge: IconBrokenGlassSphere,  img: '/damage/porta-trincada.svg', color: 'text-red-500',     bg: 'bg-red-500/15',     border: 'border-red-500/40' },
-]
-
-type AiClassifyState =
-  | { status: 'idle' }
-  | { status: 'loading' }
-  | { status: 'done'; type: DamageType; severity: Severity; description: string }
-  | { status: 'error' }
-  | { status: 'auth-required' }
-
-type ClassifyApiResponse = {
-  type: DamageType
-  severity: Severity
-  description: string
-  confidence?: number | null
-  model?: string
-  modelVersion?: string
-  analyzedAt?: string
-}
-
-/**
- * `id` alimenta a trilha de auditoria (ai_decisions.decided_by, FK para
- * auth.users); `label` é o que aparece no badge "Confirmado por …" e no PDF,
- * por isso prefere nome/e-mail ao UUID.
- */
-async function currentUserIdentity(): Promise<{ id: string; label: string }> {
-  const fallback = { id: 'anonymous', label: 'anonymous' }
-  if (!supabaseEnabled || !supabase) return fallback
-  try {
-    const { data: { session } } = await supabase.auth.getSession()
-    const user = session?.user
-    if (!user?.id) return fallback
-    const meta = (user.user_metadata ?? {}) as Record<string, unknown>
-    const name = [meta.full_name, meta.name, user.email]
-      .find(v => typeof v === 'string' && v.trim()) as string | undefined
-    return { id: user.id, label: name?.trim() || user.id }
-  } catch {
-    return fallback
-  }
 }
 
 export default function DamageFloat({ partId, partName, position, currentType, accessToken, previousReport = null, onChoose, onClear, onClose }: Props) {
@@ -446,48 +395,9 @@ export default function DamageFloat({ partId, partName, position, currentType, a
       {/* ── STEP 1: escolher tipo ── */}
       {step === 1 && (
         <>
-          <div className="grid grid-cols-3 gap-2">
-            {TYPES.map((t, i) => {
-              const isActive = currentType === t.type
-              return (
-                <motion.button
-                  key={t.type}
-                  onClick={() => handlePickType(t.type, t.label)}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  aria-keyshortcuts={String(i + 1)}
-                  className={`relative flex flex-col items-center justify-center gap-1 min-h-[68px] sm:min-h-[64px] px-1.5 pt-4 pb-1.5 rounded-xl border-2 font-outfit text-xs font-bold transition-all duration-200 cursor-pointer focus-visible:ring-2 ring-[var(--primary)] outline-none ${
-                    isActive
-                      ? `${t.bg} ${t.border} text-[var(--text-main)] shadow-[inset_0_0_0_1px_var(--primary)]`
-                      : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] hover:border-[var(--text-muted)]/40'
-                  }`}
-                >
-                  <span className="absolute top-1.5 left-1/2 -translate-x-1/2 rounded-md border border-[var(--btn-secondary-border)] bg-[var(--card-bg-solid)] px-1.5 py-px font-mono-data text-[0.58rem] font-semibold tracking-wide text-[var(--text-muted)] tabular-nums">
-                    [{i + 1}]
-                  </span>
-                  <div className={`flex items-center justify-center overflow-hidden rounded-lg transition-transform duration-200 ${isActive ? 'scale-105' : ''}`}>
-                    <img src={t.img} alt={t.label} className="w-full h-[36px] sm:h-[32px] object-contain drop-shadow" />
-                  </div>
-                  <span className="text-[0.68rem] sm:text-[0.62rem] tracking-tight leading-tight text-center text-[var(--text-main)] px-0.5 font-extrabold">
-                    {t.label}
-                  </span>
-                  {isActive && (
-                    <span className="text-[0.55rem] uppercase font-black tracking-widest text-[var(--primary)]">Ativo</span>
-                  )}
-                </motion.button>
-              )
-            })}
-          </div>
+          <TypePickerGrid currentType={currentType} onPickType={handlePickType} />
 
-          <motion.button
-            onClick={() => closeThen(onClear)}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            className="mt-3.5 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border font-outfit text-xs font-bold transition-all duration-200 cursor-pointer bg-transparent hover:bg-[var(--btn-secondary-hover)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
-          >
-            <IconEraser className="text-[var(--text-muted)]" size={15} />
-            <span>Sem avaria / Limpar</span>
-          </motion.button>
+          <ClearDamageButton onClear={() => closeThen(onClear)} />
         </>
       )}
 
@@ -504,33 +414,14 @@ export default function DamageFloat({ partId, partName, position, currentType, a
             <IconArrowLeft size={14} className="text-[var(--text-muted)] shrink-0" />
             {(() => {
               const t = TYPES.find(t => t.type === chosenType.type)
-              return t ? <img src={t.img} alt={t.label} className="h-7 w-auto shrink-0 object-contain drop-shadow" /> : null
+              return t ? <Image src={t.img} alt={t.label} className="h-7 w-auto shrink-0 object-contain drop-shadow" width={28} height={28} /> : null
             })()}
             <span className="font-bold text-[var(--text-main)]">{chosenType.label}</span>
             <span className="ml-auto opacity-50 text-[10px]">alterar</span>
           </motion.button>
 
           {/* Severidade */}
-          <div className="mb-2.5">
-            <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Grau do dano</div>
-            <div className="grid grid-cols-3 gap-1">
-              {SEV.map(s => (
-                <motion.button
-                  key={s.value}
-                  onClick={() => setSeverity(s.value)}
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  className={`min-h-11 sm:min-h-9 py-2 rounded-lg text-[0.72rem] font-extrabold border transition-all cursor-pointer ${
-                    severity === s.value
-                      ? `${s.bg} ${s.border} ${s.color}`
-                      : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:bg-[var(--btn-secondary-hover)]'
-                  }`}
-                >
-                  {s.label}
-                </motion.button>
-              ))}
-            </div>
-          </div>
+          <SeverityGrid severity={severity} onChange={setSeverity} />
 
           {/* Nota */}
           <div className="mb-2.5">
@@ -556,7 +447,7 @@ export default function DamageFloat({ partId, partName, position, currentType, a
             />
             {photoPreview ? (
               <div className="relative">
-                <img src={photoPreview} alt="Prévia da foto da avaria" className="w-full h-20 object-cover rounded-lg border border-white/10" />
+                <Image src={photoPreview} alt="Prévia da foto da avaria" className="w-full h-20 object-cover rounded-lg border border-white/10" width={320} height={80} />
                 <button
                   onClick={() => {
                     setPhotoFile(null)
@@ -646,61 +537,15 @@ export default function DamageFloat({ partId, partName, position, currentType, a
                 </button>
               </div>
             )}
-            {showSuggestionPanel && (
-              <div className="mt-2.5 rounded-xl border border-sky-500/30 bg-sky-500/10 px-3 py-2.5 space-y-2">
-                <div className="flex items-center justify-between gap-2">
-                  <div>
-                    <span className="rounded-full border border-amber-500/35 bg-amber-500/15 px-2 py-1 text-[0.65rem] font-black text-amber-300">
-                      {formatEvidenceStatusLabel('sugerido')}
-                    </span>
-                    <p className="mt-1 text-[0.62rem] font-semibold text-[var(--text-muted)]">
-                      ainda não confirmado
-                    </p>
-                  </div>
-                  {aiOriginal?.confidence != null && (
-                    <span className="text-[0.65rem] font-bold tabular-nums text-[var(--text-muted)]">
-                      Confiança {Math.round(Number(aiOriginal.confidence) <= 1 ? Number(aiOriginal.confidence) * 100 : Number(aiOriginal.confidence))}%
-                    </span>
-                  )}
-                </div>
-                <div className="text-[0.78rem] font-bold text-[var(--text-main)]">
-                  {TYPES.find(t => t.type === aiState.type)?.label}
-                  {' · '}
-                  {SEV.find(s => s.value === aiState.severity)?.label}
-                </div>
-                {aiState.description && (
-                  <div>
-                    <p className="ds-label mb-0.5">Descrição sugerida</p>
-                    <p className="text-[0.7rem] text-[var(--text-muted)] leading-snug">{aiState.description}</p>
-                  </div>
-                )}
-                <div className="flex flex-wrap gap-1.5 pt-0.5">
-                  <button
-                    type="button"
-                    onClick={() => void handleAcceptSuggestion()}
-                    disabled={aiDecisionAppendPending}
-                    className="min-h-9 px-3 rounded-lg text-[0.65rem] font-black uppercase tracking-wide bg-primary text-white cursor-pointer disabled:cursor-wait disabled:opacity-60"
-                  >
-                    Aceitar
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void handleEditSuggestion()}
-                    disabled={aiDecisionAppendPending}
-                    className="min-h-9 px-3 rounded-lg text-[0.65rem] font-black uppercase tracking-wide border border-[var(--btn-secondary-border)] text-[var(--text-main)] cursor-pointer disabled:cursor-wait disabled:opacity-60"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void handleIgnoreSuggestion()}
-                    disabled={aiDecisionAppendPending}
-                    className="min-h-9 px-2.5 rounded-lg text-[0.65rem] font-bold text-[var(--text-muted)] underline underline-offset-2 cursor-pointer disabled:cursor-wait disabled:opacity-60"
-                  >
-                    Ignorar
-                  </button>
-                </div>
-              </div>
+            {aiState.status === 'done' && !editedManually && (
+              <AiSuggestionPanel
+                aiState={aiState}
+                aiOriginal={aiOriginal}
+                aiDecisionAppendPending={aiDecisionAppendPending}
+                onAccept={() => void handleAcceptSuggestion()}
+                onEdit={() => void handleEditSuggestion()}
+                onIgnore={() => void handleIgnoreSuggestion()}
+              />
             )}
           </div>
 

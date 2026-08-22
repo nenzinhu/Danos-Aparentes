@@ -69,10 +69,12 @@ export default function AppAuthenticatedShell({
     clearMergeNotice()
   }, [mergeNotice, clearMergeNotice, shell])
 
+  const { showToast } = shell
+
   const onSyncPermanentFailure = useCallback((dropped: DroppedSyncItem[]) => {
     if (dropped.length === 0) return
-    shell.showToast(formatSyncFailureToast(dropped))
-  }, [shell.showToast])
+    showToast(formatSyncFailureToast(dropped))
+  }, [showToast])
 
   const { status: syncStatus, lastError: syncLastError, tryFlush } = useSyncStatus(session?.user.id, {
     onPermanentFailure: onSyncPermanentFailure,
@@ -173,6 +175,7 @@ export default function AppAuthenticatedShell({
     }
   }
 
+  const setActiveReportId = inspection.setActiveReportId
   const handleConfirmReview = useCallback(async () => {
     let id = inspection.activeReportId
     if (!id) {
@@ -180,7 +183,7 @@ export default function AppAuthenticatedShell({
         status: 'complete',
       })
       id = report.id
-      inspection.setActiveReportId(id)
+      setActiveReportId(id)
     } else {
       await saveReport(inspection.vehicleInfo, damages, inspection.vehicleType, {
         id,
@@ -198,7 +201,7 @@ export default function AppAuthenticatedShell({
     inspection.activeReportId,
     inspection.vehicleInfo,
     inspection.vehicleType,
-    inspection.setActiveReportId,
+    setActiveReportId,
     damages,
     saveReport,
     markReviewComplete,

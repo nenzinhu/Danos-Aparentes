@@ -3,7 +3,7 @@ import { manualIconSvg } from './manualIcons'
 
 async function getHtml2Pdf() {
   const mod = await import('html2pdf.js')
-  return ((mod as any).default ?? mod) as any
+  return mod.default ?? mod
 }
 
 const BRAND = '#0ea5e9'
@@ -123,8 +123,8 @@ const MANUAL_OPTS = {
 }
 
 export async function generateManualPdf(): Promise<void> {
-  if (typeof window !== 'undefined' && (window as any).document?.fonts?.ready) {
-    await (window as any).document.fonts.ready
+  if (typeof window !== 'undefined' && window.document?.fonts?.ready) {
+    await window.document.fonts.ready
   }
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
   const html2pdf = await getHtml2Pdf()

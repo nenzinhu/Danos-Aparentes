@@ -333,7 +333,9 @@ export default function LandingPage() {
   useEffect(() => {
     const saved = localStorage.getItem('darkMode');
     const isDark = saved !== null ? saved !== 'false' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setDarkMode(isDark);
+    // Adia um tick: evita setState sincrono no effect (cascata de renders).
+    const t = setTimeout(() => setDarkMode(isDark), 0);
+    return () => clearTimeout(t);
   }, []);
 
   const toggleDarkMode = () => {

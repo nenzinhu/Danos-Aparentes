@@ -28,10 +28,12 @@ export default function LandingCtaLink({
   const [href, setHref] = useState('/app?mode=signup')
 
   useEffect(() => {
-    setHref(appendUtmsToPath('/app?mode=signup'))
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    const t = setTimeout(() => setHref(appendUtmsToPath('/app?mode=signup')), 0)
     // ponytail: warm /app RSC+JS while user reads landing — trades idle bandwidth for faster tap-to-login.
     router.prefetch('/app')
     router.prefetch('/app?mode=signup')
+    return () => clearTimeout(t)
   }, [router])
 
   return (

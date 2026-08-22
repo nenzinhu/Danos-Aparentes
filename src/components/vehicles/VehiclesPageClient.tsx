@@ -60,8 +60,9 @@ export default function VehiclesPageClient({ mode }: { mode: Mode }) {
   useEffect(() => {
     const token = session?.access_token
     if (!token) {
-      setRemoteVehicles([])
-      return
+      // Adia um tick para não chamar setState sincronamente dentro do effect.
+      const t = setTimeout(() => setRemoteVehicles([]), 0)
+      return () => clearTimeout(t)
     }
     let cancelled = false
     void fetch('/api/vehicles', {

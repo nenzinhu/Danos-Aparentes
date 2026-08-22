@@ -40,15 +40,6 @@ export default function TabbedCarousel({ tabs, cta, id }: Props) {
   const current = tabs[active]
   const items = current?.items ?? []
 
-  // Sincroniza o scroll do scroller ao trocar de tab (desktop e mobile).
-  useEffect(() => {
-    const el = scrollerRef.current
-    if (!el) return
-    el.scrollTo({ left: 0, behavior: 'auto' })
-    updateArrows()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active])
-
   const updateArrows = () => {
     const el = scrollerRef.current
     if (!el) return
@@ -56,6 +47,14 @@ export default function TabbedCarousel({ tabs, cta, id }: Props) {
     setCanPrev(el.scrollLeft > 2)
     setCanNext(el.scrollLeft < max)
   }
+
+  // Sincroniza o scroll do scroller ao trocar de tab (desktop e mobile).
+  useEffect(() => {
+    const el = scrollerRef.current
+    if (!el) return
+    el.scrollTo({ left: 0, behavior: 'auto' })
+    updateArrows()
+  }, [active])
 
   const scrollByCard = (dir: 1 | -1) => {
     const el = scrollerRef.current

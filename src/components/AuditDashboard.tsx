@@ -54,7 +54,8 @@ export default function AuditDashboard({ accessToken, enabled = true }: AuditDas
 
   useEffect(() => {
     if (!open) return
-    void load()
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    setTimeout(() => { void load() }, 0)
   }, [open, load])
 
   if (!enabled || !accessToken) return null

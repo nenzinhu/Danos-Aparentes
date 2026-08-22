@@ -10,7 +10,9 @@ export default function CookieConsentBanner() {
   const lastFocusedRef = useRef<Element | null>(null)
 
   useEffect(() => {
-    setVisible(getMarketingConsent() === 'unknown')
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    const t = setTimeout(() => setVisible(getMarketingConsent() === 'unknown'), 0)
+    return () => clearTimeout(t)
   }, [])
 
   useEffect(() => {

@@ -30,7 +30,9 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    if (isOpen) {
+    if (!isOpen) return
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    const t = setTimeout(() => {
       setCompanyName(localStorage.getItem('company_name') || '')
       setCompanyLogo(localStorage.getItem('company_logo') || '')
       setCompanyColor(localStorage.getItem('company_color') || '#2563eb')
@@ -44,7 +46,8 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
       setShowSignatures(localStorage.getItem('company_show_signatures') !== 'false')
       setCustomFooterText(localStorage.getItem('company_custom_footer_text') || '')
       setLogoError(null)
-    }
+    }, 0)
+    return () => clearTimeout(t)
   }, [isOpen])
 
   if (!isOpen) return null

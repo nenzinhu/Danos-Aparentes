@@ -23,7 +23,7 @@ export default function FinalizePanel({
   onChange,
   showGeo = true,
 }: Props) {
-  const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
+  const [geoStatus, setGeoStatus] = useState<'idle' | 'loading' | 'done' | 'error'>(() => (info.geo ? 'done' : 'idle'))
   const [geoError, setGeoError] = useState('')
 
   const set = useCallback((field: keyof VehicleInfo, value: string) => {
@@ -93,8 +93,10 @@ export default function FinalizePanel({
   // Captura automática ao montar (uma vez), salvo se já houver coordenada.
   useEffect(() => {
     if (!showGeo) return
-    if (info.geo) { setGeoStatus('done'); return }
-    captureGeo()
+    if (info.geo) return
+    // Adia um tick para não chamar setState sincronamente dentro do effect.
+    const t = setTimeout(captureGeo, 0)
+    return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

@@ -248,5 +248,5 @@ export function useGsapScrollAnimations() {
       window.removeEventListener('keydown', onScrollOrTouch)
       clearTimeout(fallback)
     }
-  }, [initScrollAnimations])
+  }, [])
 }

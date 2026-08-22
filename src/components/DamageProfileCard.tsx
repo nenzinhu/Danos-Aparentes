@@ -92,6 +92,8 @@ export default function DamageProfileCard({
       `}
     >
       <div className="relative w-full overflow-hidden rounded-2xl">
+        {/* src é blob/data URL dinâmico — next/image não se aplica */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={imgSrc}
           alt={imgAlt}

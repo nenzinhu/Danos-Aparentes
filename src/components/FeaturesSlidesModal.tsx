@@ -114,9 +114,12 @@ export default function FeaturesSlidesModal({ isOpen, onClose }: FeaturesSlidesM
   const [currentSlide, setCurrentSlide] = useState(0);
   const [downloading, setDownloading] = useState(false);
 
-  useEffect(() => {
+  // Reset do slide ao abrir — ajuste durante o render (sem effect/setState sync).
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) setCurrentSlide(0);
-  }, [isOpen]);
+  }
 
   if (!isOpen) return null;
 
