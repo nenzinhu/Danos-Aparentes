@@ -33,6 +33,7 @@ const FleetHistoryDashboard = dynamic(
 const InspectTab = dynamic(() => import('@/src/components/app/InspectTab'), {
   loading: () => <AppLoadingShell />,
 })
+const IaTab = dynamic(() => import('@/src/components/app/IaTab'))
 const TeamTab = dynamic(() => import('@/src/components/app/TeamTab'), {
   loading: () => <AppLoadingShell />,
 })
@@ -213,6 +214,9 @@ export default function AppAuthenticatedShell({
     await clearReviewReport(inspection.activeReportId)
   }, [inspection.activeReportId, clearReviewReport])
 
+  const vehiclesByGroup = useMemo(() => groupReportsByVehicle(saved), [saved])
+  const unsyncedCount = useMemo(() => saved.filter((r) => r.syncedAt == null).length, [saved])
+
   return (
     <AppAuthGate
       session={session}
@@ -253,6 +257,8 @@ export default function AppAuthenticatedShell({
                   onOpenSettings={() => shell.setSettingsModal(true)}
                   onOpenTutorial={() => shell.setTutorialOpen(true)}
                   showTeamTab={subscription?.isCorporate ?? false}
+                  vehiclesCount={vehiclesByGroup.length}
+                  unsyncedCount={unsyncedCount}
                 />
               }
             />
@@ -277,8 +283,16 @@ export default function AppAuthenticatedShell({
                 onToast={shell.showToast}
                 showAuditDashboard={tenantRole === 'owner'}
               />
+            ) : shell.activeTab === 'ia' ? (
+              <IaTab
+                vehicleInfo={inspection.vehicleInfo}
+                damages={damages}
+                vehicleType={inspection.vehicleType}
+                onToast={shell.showToast}
+                accessToken={session?.access_token}
+              />
             ) : shell.activeTab === 'vehicles' ? (
-              <VehiclesListView vehicles={groupReportsByVehicle(saved)} />
+              <VehiclesListView vehicles={vehiclesByGroup} />
             ) : (
               <InspectTab
                 vehicleType={inspection.vehicleType}

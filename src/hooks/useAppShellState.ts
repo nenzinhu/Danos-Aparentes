@@ -8,7 +8,20 @@ import {
   startOnboardingSession,
 } from '../lib/onboarding'
 
-export type AppTab = 'inspect' | 'dashboard' | 'team' | 'vehicles'
+export type AppTab = 'inspect' | 'dashboard' | 'team' | 'vehicles' | 'ia'
+
+const APP_TAB_STORAGE_KEY = 'app_last_tab'
+
+/** Aba inicial por perfil de uso: campo (touch) vai direto vistoriar; gestores caem em Veículos. */
+function smartInitialTab(): AppTab {
+  if (typeof window === 'undefined') return 'inspect'
+  const last = window.localStorage.getItem(APP_TAB_STORAGE_KEY)
+  if (last === 'inspect' || last === 'dashboard' || last === 'team' || last === 'vehicles' || last === 'ia') {
+    return last
+  }
+  const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches ?? false
+  return coarsePointer ? 'inspect' : 'vehicles'
+}
 
 interface UseAppShellStateOptions {
   openPortal: () => Promise<void>
@@ -25,7 +38,16 @@ export function useAppShellState({ openPortal }: UseAppShellStateOptions) {
   const [savedModal, setSavedModal] = useState(false)
   const [settingsModal, setSettingsModal] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<AppTab>('inspect')
+  const [activeTab, setActiveTab] = useState<AppTab>(smartInitialTab)
+
+  // Memoriza a última aba usada — na volta, o app abre onde o usuário parou.
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(APP_TAB_STORAGE_KEY, activeTab)
+    } catch {
+      /* storage indisponível (modo privado) — ignora */
+    }
+  }, [activeTab])
   const [termsOpen, setTermsOpen] = useState(false)
   const [termsTab, setTermsTab] = useState<'terms' | 'privacy'>('terms')
   const [tutorialOpen, setTutorialOpen] = useState(false)
