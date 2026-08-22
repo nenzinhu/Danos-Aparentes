@@ -44,7 +44,7 @@ const plexMono = IBM_Plex_Mono({
 
 const SITE_URL = 'https://danosaparentes.com.br'
 
-const HOME_TITLE = `Vistoria de veículos, histórico e laudo de avarias | ${B2B_BRAND}`
+const HOME_TITLE = `Vistoria veicular com laudo e histórico | ${B2B_BRAND}`
 const HOME_DESCRIPTION =
   'Registre o estado do veículo, compare inspeções e tenha um histórico digital com evidências, fotos, GPS, data/hora e dossiê técnico em PDF. Comece grátis.'
 
@@ -254,6 +254,13 @@ export default function RootLayout({
                     name: 'Jeferson',
                     jobTitle: 'Proprietário',
                   },
+                  address: {
+                    '@type': 'PostalAddress',
+                    addressLocality: 'Florianópolis',
+                    addressRegion: 'SC',
+                    addressCountry: 'BR',
+                  },
+                  areaServed: { '@type': 'Country', name: 'Brasil' },
                   contactPoint: {
                     '@type': 'ContactPoint',
                     email: 'suporte@danosaparentes.com.br',

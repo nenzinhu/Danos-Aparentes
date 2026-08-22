@@ -5,11 +5,12 @@ const DESCRIPTION =
   'Verifique a autenticidade de um dossiê técnico do Danos Aparentes pelo código ou QR Code e confirme que o documento não foi adulterado.'
 
 // A página /verify é client component e não pode exportar metadata.
-// Este layout fornece título, descrição, canonical e OG próprios para SEO.
+// Página utilitária de verificação de dossiê (acessada via QR Code): sem valor
+// de aquisição orgânica — noindex e fora do sitemap.
 export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
-  alternates: { canonical: '/verify' },
+  robots: { index: false, follow: true },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
