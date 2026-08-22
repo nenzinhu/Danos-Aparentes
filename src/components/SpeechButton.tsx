@@ -1,6 +1,36 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react'
 
+interface SpeechRecognitionResultItem {
+  transcript: string
+}
+
+interface SpeechRecognitionEvent {
+  resultIndex: number
+  results: ArrayLike<ArrayLike<SpeechRecognitionResultItem> & { isFinal: boolean }>
+}
+
+interface SpeechRecognitionLike {
+  lang: string
+  interimResults: boolean
+  maxAlternatives: number
+  continuous: boolean
+  start(): void
+  stop(): void
+  onstart: (() => void) | null
+  onend: (() => void) | null
+  onerror: ((event: { error: string }) => void) | null
+  onresult: ((event: SpeechRecognitionEvent) => void) | null
+}
+
+type SpeechRecognitionCtor = new () => SpeechRecognitionLike
+
+function getSpeechRecognitionCtor(): SpeechRecognitionCtor | undefined {
+  if (typeof window === 'undefined') return undefined
+  const w = window as unknown as Record<string, unknown>
+  return (w.SpeechRecognition ?? w.webkitSpeechRecognition) as SpeechRecognitionCtor | undefined
+}
+
 interface Props {
   onTranscript: (text: string) => void
   style?: React.CSSProperties
@@ -9,19 +39,16 @@ interface Props {
 export default function SpeechButton({ onTranscript, style }: Props) {
   const [isListening, setIsListening] = useState(false)
   const [supported, setSupported] = useState(false)
-  const recognitionRef = useRef<any>(null)
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null)
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-      if (SpeechRecognition) {
-        setSupported(true)
-      }
+    if (getSpeechRecognitionCtor()) {
+      setSupported(true)
     }
   }, [])
 
   const toggleListening = () => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    const SpeechRecognition = getSpeechRecognitionCtor()
     if (!SpeechRecognition) return
 
     if (isListening) {
@@ -48,12 +75,12 @@ export default function SpeechButton({ onTranscript, style }: Props) {
         setIsListening(false)
       }
 
-      recognition.onerror = (event: any) => {
+      recognition.onerror = (event) => {
         console.error('Speech recognition error:', event.error)
         setIsListening(false)
       }
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event) => {
         let newTranscript = ''
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           if (event.results[i].isFinal) {
