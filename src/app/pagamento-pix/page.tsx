@@ -12,7 +12,7 @@ import { loginUrlWithReturnTo } from '@/src/lib/safeReturnTo'
 import { PLANS, PIX_PURCHASABLE_PLANS, parsePixPlan, planDisplayName } from '@/src/lib/billing/plans'
 
 const DURATION_OPTIONS = [1, 3, 6, 12] as const
-const PIX_PROVIDER = 'asaas' as const
+const PIX_PROVIDER = 'mercadopago' as const
 
 const PLAN_FEATURES: Record<PixPurchasablePlan, string[]> = {
   starter: [

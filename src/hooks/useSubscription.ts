@@ -143,7 +143,7 @@ export function useSubscription(userId?: string, accessToken?: string) {
 
   const startPixCheckout = useCallback(async (
     durationMonths = 1,
-    provider: 'mercadopago' | 'asaas' = 'asaas',
+    provider: 'mercadopago' | 'asaas' = 'mercadopago',
     plan: PixPurchasablePlan = 'pro',
   ): Promise<{ qrCode: string; copyPaste: string; provider: string }> => {
     if (!accessToken) throw new Error('Não autenticado')
