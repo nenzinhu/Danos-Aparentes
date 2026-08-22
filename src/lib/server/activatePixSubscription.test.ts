@@ -61,7 +61,7 @@ describe('activatePixSubscriptionByChargeId', () => {
   })
 
   it('ativa active_pix e zera pending_months', async () => {
-    const result = await activatePixSubscriptionByChargeId('asaas:pay_123')
+    const result = await activatePixSubscriptionByChargeId('mp:pay_123')
     expect(result.ok).toBe(true)
     expect(result.userId).toBe('user-1')
   })
@@ -73,14 +73,14 @@ describe('activatePixSubscriptionByChargeId', () => {
       pending_months: 0,
       status: 'active_pix',
     }
-    const result = await activatePixSubscriptionByChargeId('asaas:pay_123')
+    const result = await activatePixSubscriptionByChargeId('mp:pay_123')
     expect(result.ok).toBe(true)
     expect(result.userId).toBe('user-1')
   })
 
   it('retorna 404 se cobrança não existe', async () => {
     state.sub = null
-    const result = await activatePixSubscriptionByChargeId('asaas:missing')
+    const result = await activatePixSubscriptionByChargeId('mp:missing')
     expect(result.ok).toBe(false)
     expect(result.status).toBe(404)
   })

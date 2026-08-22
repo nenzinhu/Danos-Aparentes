@@ -5,11 +5,11 @@ import { parsePixPlan, type PlanTierId } from '@/src/lib/billing/plans'
 export type ActivatePixOptions = {
   /** Fallback quando pix_charge_id não bate (ex.: externalReference = user_id|plan). */
   userIdFallback?: string
-  /** Plano embutido no externalReference do Asaas. */
+  /** Plano embutido no externalReference do provedor PIX. */
   planTierFallback?: PlanTierId
 }
 
-/** Parse `userId` ou `userId|plan` do externalReference Asaas. */
+/** Parse `userId` ou `userId|plan` do externalReference do provedor PIX. */
 export function parsePixExternalReference(raw: string | null | undefined): {
   userId?: string
   plan?: PlanTierId
@@ -25,7 +25,7 @@ export function parsePixExternalReference(raw: string | null | undefined): {
 }
 
 /**
- * Ativa assinatura PIX após confirmação do provedor (MP ou Asaas).
+ * Ativa assinatura PIX após confirmação do provedor (Mercado Pago).
  * Idempotente: se já estiver active_pix com pending_months=0, só confirma.
  */
 export async function activatePixSubscriptionByChargeId(
@@ -65,7 +65,7 @@ export async function activatePixSubscriptionByChargeId(
     return { ok: false, error: 'Failed to find subscription', status: 500 }
   }
 
-  // Fallback: cobrança criada no Asaas com externalReference = user_id(|plan).
+  // Fallback: cobrança criada com externalReference = user_id(|plan).
   if (!sub && options.userIdFallback) {
     let fallback = await supabaseAdmin
       .from('subscriptions')

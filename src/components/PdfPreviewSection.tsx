@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 import Reveal from './Reveal';
 
@@ -222,12 +223,12 @@ export default function PdfPreviewSection() {
                 <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Personalize o cabeçalho com a sua marca e cores institucionais.</p>
               </div>
               <div className="flex flex-wrap items-center gap-2 shrink-0">
-                <a
+                <Link
                   href="/#marca-no-pdf"
                   className="px-4 py-2.5 border border-[var(--card-border)] hover:border-[var(--primary)]/40 text-[var(--text-main)] text-xs font-bold rounded-xl transition-all cursor-pointer"
                 >
                   Ver exemplo de marca
-                </a>
+                </Link>
                 <a
                   href="/app"
                   className="px-4 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow-lg shadow-[var(--primary)]/20 transition-all cursor-pointer"

@@ -10,10 +10,9 @@ const fullProd = {
   STRIPE_WEBHOOK_SECRET: 'whsec_x',
   STRIPE_PRICE_ID: 'price_pro',
   STRIPE_PRICE_ID_STARTER: 'price_starter',
-  PIX_PROVIDER: 'asaas',
-  ASAAS_API_KEY: 'asaas_key',
-  ASAAS_WEBHOOK_TOKEN: 'tok',
-  ASAAS_API_URL: 'https://api.asaas.com',
+  PIX_PROVIDER: 'mercadopago',
+  PIX_MERCADO_PAGO_ACCESS_TOKEN: 'mp_token',
+  PIX_WEBHOOK_SECRET: 'pix_secret',
   CRON_SECRET: 'cron',
   SIGNATURE_LINK_SECRET: 'sig',
 }
@@ -26,36 +25,22 @@ describe('evaluateGtmOps', () => {
     expect(r.summary.criticalFail).toBe(0)
   })
 
-  it('falha se webhook Asaas ausente', () => {
-    const { ASAAS_WEBHOOK_TOKEN: _, ...rest } = fullProd
+  it('exige token MP quando PIX_PROVIDER=mercadopago', () => {
+    const { PIX_MERCADO_PAGO_ACCESS_TOKEN: _, ...rest } = fullProd
     const r = evaluateGtmOps(rest)
     expect(r.criticalOk).toBe(false)
-    expect(r.checks.some((c) => c.id === 'asaas_webhook' && !c.ok)).toBe(true)
+    expect(r.checks.some((c) => c.id === 'pix_mp_token' && !c.ok)).toBe(true)
+  })
+
+  it('usa mercadopago como provider default', () => {
+    const { PIX_PROVIDER: _, ...rest } = fullProd
+    const r = evaluateGtmOps(rest)
+    expect(r.checks.some((c) => c.id === 'pix_mp_token')).toBe(true)
   })
 
   it('falha se produção + Stripe test', () => {
     const r = evaluateGtmOps({ ...fullProd, STRIPE_SECRET_KEY: 'sk_test_abc' })
     expect(r.criticalOk).toBe(false)
     expect(r.checks.some((c) => c.id === 'stripe_mode_vs_base' && !c.ok)).toBe(true)
-  })
-
-  it('falha se produção + Asaas sandbox', () => {
-    const r = evaluateGtmOps({
-      ...fullProd,
-      ASAAS_API_URL: 'https://api-sandbox.asaas.com',
-    })
-    expect(r.criticalOk).toBe(false)
-    expect(r.checks.some((c) => c.id === 'asaas_sandbox_vs_prod' && !c.ok)).toBe(true)
-  })
-
-  it('exige secrets MP quando PIX_PROVIDER=mercadopago', () => {
-    const r = evaluateGtmOps({
-      ...fullProd,
-      PIX_PROVIDER: 'mercadopago',
-      PIX_MERCADO_PAGO_ACCESS_TOKEN: '',
-      PIX_WEBHOOK_SECRET: '',
-    })
-    expect(r.checks.some((c) => c.id === 'pix_mp_token' && !c.ok)).toBe(true)
-    expect(r.checks.some((c) => c.id === 'asaas_key')).toBe(false)
   })
 })

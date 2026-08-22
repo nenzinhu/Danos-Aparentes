@@ -1,5 +1,6 @@
 // Posts do blog (conteúdo). A API pública (getPost, categorias, datas) vive em ./blog.
 import React from 'react'
+import Link from 'next/link'
 import Image from 'next/image'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import VehicleViewsDemo from '@/src/components/blog/VehicleViewsDemo'
@@ -211,11 +212,11 @@ export const BLOG_POSTS: BlogPost[] = [
         <ul>
           <li>
             <strong>Locadora:</strong> entrega sem laudo = devolução frágil (
-            <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</a>).
+            <Link href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</Link>).
           </li>
           <li>
             <strong>Frota:</strong> saída da base sem registro = prejuízo absorvido na volta (
-            <a href="/blog/controle-avarias-frota-entrada-saida">entrada e saída de frota</a>).
+            <Link href="/blog/controle-avarias-frota-entrada-saida">entrada e saída de frota</Link>).
           </li>
           <li>
             <strong>Oficina / seminovos:</strong> “recebi limpo” sem prova = cliente questiona o orçamento.
@@ -240,7 +241,7 @@ export const BLOG_POSTS: BlogPost[] = [
           </li>
           <li>
             <strong>Integridade</strong> — documento que não dá para editar depois sem deixar rastro (
-            <a href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash</a>).
+            <Link href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash</Link>).
           </li>
         </ul>
 
@@ -255,12 +256,12 @@ export const BLOG_POSTS: BlogPost[] = [
           <li>
             <strong>Percorra as 4 vistas mesmo sem avaria</strong> — frente, laterais e traseira; confirme
             visualmente que não há risco, amassado ou trinca aparente (
-            <a href="/blog/vistoria-nas-4-vistas-do-veiculo">4 vistas do veículo</a>).
+            <Link href="/blog/vistoria-nas-4-vistas-do-veiculo">4 vistas do veículo</Link>).
           </li>
           <li>
             <strong>Registre fotos de contexto (recomendado)</strong> — uma foto aberta por lado sob boa
             luz (
-            <a href="/blog/como-fotografar-avarias">como fotografar avarias</a>).
+            <Link href="/blog/como-fotografar-avarias">como fotografar avarias</Link>).
           </li>
           <li>
             <strong>Declare “sem danos aparentes” e assine</strong> — feche sem peças marcadas, colha
@@ -286,7 +287,7 @@ export const BLOG_POSTS: BlogPost[] = [
           </li>
           <li>
             <strong>PDF editável sem selo</strong> — qualquer alteração posterior derruba a confiança (
-            <a href="/blog/vistoria-sem-papel">vistoria sem papel</a>).
+            <Link href="/blog/vistoria-sem-papel">vistoria sem papel</Link>).
           </li>
         </ul>
 
@@ -298,13 +299,13 @@ export const BLOG_POSTS: BlogPost[] = [
         </p>
         <p>
           Para cobrar com método, combine este laudo com o fluxo de{' '}
-          <a href="/blog/cobranca-avaria-devolucao-locadora">cobrança de avaria na devolução</a> e, se
+          <Link href="/blog/cobranca-avaria-devolucao-locadora">cobrança de avaria na devolução</Link> e, se
           precisar argumentar pré-existência no sentido inverso, veja{' '}
-          <a href="/blog/como-provar-amassado-pre-existente-locacao">amassado pré-existente</a>.
+          <Link href="/blog/como-provar-amassado-pre-existente-locacao">amassado pré-existente</Link>.
         </p>
         <p>
           Quer padronizar entrega e devolução na rede? Veja o fluxo para{' '}
-          <a href="/locadoras">locadoras</a> ou teste o laudo digital em minutos.
+          <Link href="/locadoras">locadoras</Link> ou teste o laudo digital em minutos.
         </p>
       </>
     ),
@@ -516,7 +517,7 @@ export const BLOG_POSTS: BlogPost[] = [
           Repare no cabeçalho: o laudo sai com a <strong>logo e o nome da sua empresa</strong> —
           concessionária, locadora ou despachante. É um documento <em>white-label</em>, que você
           personaliza uma vez nas configurações e passa a usar em todas as vistorias. Veja também o{' '}
-          <a href="/#laudo">modelo completo na página inicial</a> ou gere o seu direto no aplicativo, em
+          <Link href="/#laudo">modelo completo na página inicial</Link> ou gere o seu direto no aplicativo, em
           poucos toques.
         </p>
       </>
@@ -587,12 +588,12 @@ BLOG_POSTS.push(
         <p>
           E o documento sai com a <strong>logo e o nome da sua locadora</strong> no cabeçalho, reforçando
           a sua marca a cada entrega e devolução. Veja como é um{' '}
-          <a href="/#laudo">Relatório de Vistoria Veicular</a> pronto, ou{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">aprenda o passo a passo do laudo</a>.
+          <Link href="/#laudo">Relatório de Vistoria Veicular</Link> pronto, ou{' '}
+          <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">aprenda o passo a passo do laudo</Link>.
         </p>
         <p>
           Gerenciando vários vistoriadores e várias filiais? Veja{' '}
-          <a href="/locadoras">como padronizar a vistoria em toda a sua frota</a>.
+          <Link href="/locadoras">como padronizar a vistoria em toda a sua frota</Link>.
         </p>
       </>
     ),
@@ -653,7 +654,7 @@ BLOG_POSTS.push(
           <strong>cautelar</strong>. Precisa <strong>registrar o estado</strong> numa entrega,
           devolução ou sinistro para responsabilizar por danos? É o <strong>laudo de avarias</strong> —
           e é exatamente esse que você gera no Danos Aparentes, com diagrama, fotos com GPS e validação
-          por hash/QR. <a href="/blog/como-fazer-laudo-de-vistoria-veicular">Veja como fazer um</a>.
+          por hash/QR. <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">Veja como fazer um</Link>.
         </p>
       </>
     ),
@@ -711,7 +712,7 @@ BLOG_POSTS.push(
 
         <p>
           Quer o passo a passo geral? Leia o{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a>.
+          <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</Link>.
         </p>
       </>
     ),
@@ -755,7 +756,7 @@ BLOG_POSTS.push(
 
         <p>
           Trabalha com frota? Veja também o{' '}
-          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</a>.
+          <Link href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</Link>.
         </p>
       </>
     ),
@@ -799,7 +800,7 @@ BLOG_POSTS.push(
 
         <p>
           Veja também o{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a>.
+          <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</Link>.
         </p>
       </>
     ),
@@ -884,7 +885,7 @@ BLOG_POSTS.push(
         </ul>
         <p>
           Veja como tudo se junta no{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a>.
+          <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</Link>.
         </p>
       </>
     ),
@@ -932,9 +933,9 @@ BLOG_POSTS.push(
 
         <p>
           Trabalha com locação? Veja também o{' '}
-          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</a>{' '}
+          <Link href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</Link>{' '}
           e como o{' '}
-          <a href="/locadoras">sistema de vistoria para locadora e frota</a> resolve isso na prática.
+          <Link href="/locadoras">sistema de vistoria para locadora e frota</Link> resolve isso na prática.
         </p>
       </>
     ),
@@ -982,7 +983,7 @@ BLOG_POSTS.push(
 
         <p>
           Não confunda com a vistoria de procedência: veja a diferença entre{' '}
-          <a href="/blog/laudo-cautelar-vs-laudo-de-avarias">laudo cautelar e laudo de avarias</a>.
+          <Link href="/blog/laudo-cautelar-vs-laudo-de-avarias">laudo cautelar e laudo de avarias</Link>.
         </p>
       </>
     ),
@@ -1076,9 +1077,9 @@ const RAIN_POSTS: BlogPost[] = [
         <p>
           Com um fluxo digital, a chuva deixa de ser gatilho para confusão. A equipe ganha consistência, o
           laudo sai mais rápido e a prova fica mais forte. Para complementar, veja também{' '}
-          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a>,{' '}
-          <a href="/blog/vistoria-sem-papel">como sair da prancheta para o laudo digital</a> e{' '}
-          <a href="/blog/antes-e-depois-da-vistoria-digital">o antes e depois da vistoria digital</a>.
+          <Link href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</Link>,{' '}
+          <Link href="/blog/vistoria-sem-papel">como sair da prancheta para o laudo digital</Link> e{' '}
+          <Link href="/blog/antes-e-depois-da-vistoria-digital">o antes e depois da vistoria digital</Link>.
         </p>
       </>
     ),
@@ -1156,9 +1157,9 @@ const RAIN_POSTS: BlogPost[] = [
           O cliente entende melhor um laudo visual, organizado e enviado rápido. Isso reduz ruído na
           devolução e melhora a percepção de profissionalismo da sua operação. Se quiser aprofundar esse
           contraste, leia também{' '}
-          <a href="/blog/vistoria-na-chuva-sem-retrabalho">como vistoriar na chuva sem retrabalho</a>,{' '}
-          <a href="/blog/erros-de-transcricao-na-vistoria">como evitar erros de transcrição</a> e{' '}
-          <a href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</a>.
+          <Link href="/blog/vistoria-na-chuva-sem-retrabalho">como vistoriar na chuva sem retrabalho</Link>,{' '}
+          <Link href="/blog/erros-de-transcricao-na-vistoria">como evitar erros de transcrição</Link> e{' '}
+          <Link href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</Link>.
         </p>
       </>
     ),
@@ -1235,8 +1236,8 @@ BLOG_POSTS.unshift(
           Eliminar a redigitação reduz o tempo por veículo, diminui falhas de transcrição e libera a equipe
           para vistoriar mais. Também melhora a percepção do cliente, porque o documento sai mais rápido e
           com aparência profissional. Se quiser complementar esse tema, veja também o artigo sobre{' '}
-          <a href="/blog/vistoria-sem-papel">vistoria sem papel</a> e o guia de{' '}
-          <a href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</a>.
+          <Link href="/blog/vistoria-sem-papel">vistoria sem papel</Link> e o guia de{' '}
+          <Link href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</Link>.
         </p>
       </>
     ),
@@ -1305,8 +1306,8 @@ BLOG_POSTS.unshift(
         <p>
           Erro de transcrição custa tempo, credibilidade e dinheiro. Um laudo inconsistente é mais fácil de
           contestar e mais difícil de defender. Para aprofundar a origem desse retrabalho, veja também{' '}
-          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
-          <a href="/blog/avarias-preexistentes-como-provar">como provar avarias preexistentes</a>.
+          <Link href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</Link> e{' '}
+          <Link href="/blog/avarias-preexistentes-como-provar">como provar avarias preexistentes</Link>.
         </p>
       </>
     ),
@@ -1391,8 +1392,8 @@ BLOG_POSTS.unshift(
         <p>
           A vistoria sem papel reduz tempo, organiza melhor a prova e melhora a experiência do cliente. Se
           você quiser aprofundar o lado operacional, leia também{' '}
-          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
-          <a href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</a>.
+          <Link href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</Link> e{' '}
+          <Link href="/blog/como-fazer-mais-vistorias-por-dia">como fazer mais vistorias por dia</Link>.
         </p>
       </>
     ),
@@ -1457,8 +1458,8 @@ BLOG_POSTS.unshift(
         <p>
           Quando a equipe segue o mesmo método, entrega e devolução passam a conversar entre si. Isso reduz
           retrabalho, encurta discussão e fortalece a cobrança. Para complementar, veja também o artigo{' '}
-          <a href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</a> e
-          o guia sobre <a href="/blog/erros-de-transcricao-na-vistoria">erros de transcrição na vistoria</a>.
+          <Link href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</Link> e
+          o guia sobre <Link href="/blog/erros-de-transcricao-na-vistoria">erros de transcrição na vistoria</Link>.
         </p>
       </>
     ),
@@ -1536,8 +1537,8 @@ BLOG_POSTS.unshift(
         </ul>
         <p>
           Se quiser atuar na raiz do problema, siga com{' '}
-          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
-          <a href="/blog/vistoria-sem-papel">como sair da prancheta para o laudo digital</a>.
+          <Link href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</Link> e{' '}
+          <Link href="/blog/vistoria-sem-papel">como sair da prancheta para o laudo digital</Link>.
         </p>
       </>
     ),
@@ -1632,7 +1633,7 @@ BLOG_POSTS.unshift(
         <p>
           Esse método é o que transforma a expressão <em>avaria preexistente</em> em algo verificável, não em
           uma alegação. Se quiser aprofundar o fluxo completo, veja também o{' '}
-          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</a>.
+          <Link href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução para locadoras</Link>.
         </p>
 
         <h2 id="erros">Erros que enfraquecem a cobrança</h2>
@@ -1645,7 +1646,7 @@ BLOG_POSTS.unshift(
         <p>
           Se sua operação quer parar de absorver pequenos reparos que somam no fim do mês, a prioridade é
           simples: registrar bem a retirada para cobrar com segurança na devolução. Comece pelo{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</a>.
+          <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">guia completo do laudo de vistoria</Link>.
         </p>
       </>
     ),
@@ -1729,8 +1730,8 @@ BLOG_POSTS.unshift(
         <p>
           Se o seu objetivo é reduzir discussão na devolução, comece fortalecendo a entrega. Depois, complemente
           com o{' '}
-          <a href="/blog/como-fotografar-avarias">guia de fotos de avarias à prova de contestação</a> e o{' '}
-          <a href="/blog/vistoria-de-frota-padronizar-equipe">artigo sobre padronização da equipe</a>.
+          <Link href="/blog/como-fotografar-avarias">guia de fotos de avarias à prova de contestação</Link> e o{' '}
+          <Link href="/blog/vistoria-de-frota-padronizar-equipe">artigo sobre padronização da equipe</Link>.
         </p>
       </>
     ),
@@ -1814,8 +1815,8 @@ BLOG_POSTS.unshift(
         <p>
           Se esses números melhoram, sua operação está ficando mais protegida. Se continuam iguais, o problema
           não é apenas o dano: é a forma de registrar. Vale seguir com o{' '}
-          <a href="/blog/avarias-preexistentes-como-provar">artigo sobre avarias preexistentes</a> e o{' '}
-          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</a> para fechar o processo.
+          <Link href="/blog/avarias-preexistentes-como-provar">artigo sobre avarias preexistentes</Link> e o{' '}
+          <Link href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</Link> para fechar o processo.
         </p>
       </>
     ),
@@ -1985,8 +1986,8 @@ BLOG_POSTS.unshift(
         <p>
           Não é só estética: é o mesmo fluxo de prova (fotos, assinatura, QR) com apresentação
           institucional. Veja também a{' '}
-          <a href="/#marca-no-pdf">prévia na página inicial</a> e o{' '}
-          <a href="/#laudo">modelo completo do laudo</a>.
+          <Link href="/#marca-no-pdf">prévia na página inicial</Link> e o{' '}
+          <Link href="/#laudo">modelo completo do laudo</Link>.
         </p>
 
         <h2 id="quando">Quando isso faz mais diferença</h2>
@@ -2006,8 +2007,8 @@ BLOG_POSTS.unshift(
         </ul>
         <p>
           Para ir além da marca, combine com o{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">passo a passo do laudo</a> e o guia de{' '}
-          <a href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash</a>.
+          <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">passo a passo do laudo</Link> e o guia de{' '}
+          <Link href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash</Link>.
         </p>
       </>
     ),
@@ -2079,8 +2080,8 @@ BLOG_POSTS.unshift(
         </p>
         <p>
           Para entender esse complemento, vale seguir com{' '}
-          <a href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash no laudo de avarias</a> e o guia
-          sobre <a href="/blog/avarias-preexistentes-como-provar">como provar avarias preexistentes</a>.
+          <Link href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash no laudo de avarias</Link> e o guia
+          sobre <Link href="/blog/avarias-preexistentes-como-provar">como provar avarias preexistentes</Link>.
         </p>
 
         <h2 id="quando-usar">Quando isso faz mais diferença</h2>
@@ -2154,8 +2155,8 @@ BLOG_POSTS.unshift(
         <p>
           Quando o documento combina apresentação profissional com mecanismos de validação, ele ganha peso
           operacional. Para aprofundar, veja também{' '}
-          <a href="/blog/laudo-de-vistoria-com-assinatura-digital">laudo com assinatura digital</a> e{' '}
-          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">como colocar sua logo e nome no PDF</a>.
+          <Link href="/blog/laudo-de-vistoria-com-assinatura-digital">laudo com assinatura digital</Link> e{' '}
+          <Link href="/blog/laudo-com-logo-da-empresa-no-pdf">como colocar sua logo e nome no PDF</Link>.
         </p>
       </>
     ),
@@ -2228,8 +2229,8 @@ BLOG_POSTS.unshift(
         <p>
           O cliente tende a confiar mais quando o documento parece parte oficial da operação. Para seguir
           nesse tema, veja também{' '}
-          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</a> e{' '}
-          <a href="/blog/como-entregar-um-pdf-de-vistoria-mais-profissional">como entregar um PDF de vistoria mais profissional</a>.
+          <Link href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</Link> e{' '}
+          <Link href="/blog/como-entregar-um-pdf-de-vistoria-mais-profissional">como entregar um PDF de vistoria mais profissional</Link>.
         </p>
       </>
     ),
@@ -2296,9 +2297,9 @@ BLOG_POSTS.unshift(
         <p>
           Um PDF mais profissional ajuda o cliente a entender melhor o processo e confiar mais no registro.
           Para aprofundar, vale seguir com{' '}
-          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</a>,{' '}
-          <a href="/blog/laudo-white-label-para-locadoras">laudo white-label para locadoras</a> e{' '}
-          <a href="/blog/laudo-de-vistoria-com-assinatura-digital">laudo com assinatura digital</a>.
+          <Link href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</Link>,{' '}
+          <Link href="/blog/laudo-white-label-para-locadoras">laudo white-label para locadoras</Link> e{' '}
+          <Link href="/blog/laudo-de-vistoria-com-assinatura-digital">laudo com assinatura digital</Link>.
         </p>
       </>
     ),
@@ -2362,8 +2363,8 @@ BLOG_POSTS.unshift(
           Na prática, o vistoriador aponta a câmera para o código de barras uma única vez e três campos são
           preenchidos de uma vez: nome, CPF e habilitação. Isso segue a mesma lógica de outras melhorias do
           app — ver também{' '}
-          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
-          <a href="/blog/erros-de-transcricao-na-vistoria">erros de transcrição na vistoria</a>.
+          <Link href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</Link> e{' '}
+          <Link href="/blog/erros-de-transcricao-na-vistoria">erros de transcrição na vistoria</Link>.
         </p>
       </>
     ),
@@ -2421,11 +2422,11 @@ BLOG_POSTS.unshift(
           A visão do gestor mostra veículo, placa, quantidade de avarias e o e-mail do inspetor responsável
           por cada laudo, com opção de baixar o PDF completo. É a mesma lógica de padronização de equipe já
           discutida em{' '}
-          <a href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</a>
+          <Link href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</Link>
           {' '}e em{' '}
-          <a href="/blog/como-padronizar-equipe-de-vistoria-e-acabar-com-o-retrabalho">
+          <Link href="/blog/como-padronizar-equipe-de-vistoria-e-acabar-com-o-retrabalho">
             como padronizar a equipe e acabar com o retrabalho
-          </a>, agora com um painel dedicado a isso.
+          </Link>, agora com um painel dedicado a isso.
         </p>
       </>
     ),
@@ -2484,9 +2485,9 @@ BLOG_POSTS.unshift(
         <p>
           Se um comprador reclamar de um dano meses depois, o laudo de entrada mostra se aquela avaria já
           existia antes da revenda. Para aprofundar esse tema, veja também{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">como fazer um laudo de vistoria veicular</a>
+          <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">como fazer um laudo de vistoria veicular</Link>
           {' '}e{' '}
-          <a href="/blog/avarias-preexistentes-como-provar">avarias preexistentes: como provar</a>.
+          <Link href="/blog/avarias-preexistentes-como-provar">avarias preexistentes: como provar</Link>.
         </p>
       </>
     ),
@@ -2541,10 +2542,10 @@ BLOG_POSTS.unshift(
 
         <h2 id="acompanhamento">Como acompanhar a evolução</h2>
         <p>
-          Em equipes com <a href="/blog/plano-corporativo-gestao-de-equipe-vistoriadores">Plano Corporativo</a>,
+          Em equipes com <Link href="/blog/plano-corporativo-gestao-de-equipe-vistoriadores">Plano Corporativo</Link>,
           o gestor consegue ver os laudos do novo inspetor assim que ele começa a vistoriar, sem precisar
           pedir print ou PDF por WhatsApp. Para aprofundar a padronização da equipe, veja também{' '}
-          <a href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</a>.
+          <Link href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</Link>.
         </p>
       </>
     ),
@@ -2610,8 +2611,8 @@ BLOG_POSTS.unshift(
           A voz pode ser trocada nas configurações de leitura por voz do app, junto com velocidade e tom da
           fala. Essa mesma engine de voz também é usada para ler outras informações da vistoria — veja mais
           sobre como o app reduz digitação e retrabalho em{' '}
-          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a> e{' '}
-          <a href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH: autofill de nome e CPF</a>.
+          <Link href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</Link> e{' '}
+          <Link href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH: autofill de nome e CPF</Link>.
         </p>
       </>
     ),
@@ -2667,8 +2668,8 @@ BLOG_POSTS.unshift(
         <p>
           Multiplicado por dezenas de vistorias no mês, esse único campo poupado por veículo representa
           bastante tempo de equipe. Para seguir nesse tema de produtividade, veja também{' '}
-          <a href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH: autofill de nome e CPF</a> e{' '}
-          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a>.
+          <Link href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH: autofill de nome e CPF</Link> e{' '}
+          <Link href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</Link>.
         </p>
       </>
     ),
@@ -2728,8 +2729,8 @@ BLOG_POSTS.unshift(
         <p>
           A troca é feita direto na tela de exportação do relatório, antes de gerar o PDF — sem precisar
           reconfigurar nada além disso. Pra completar a personalização, veja também{' '}
-          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</a> e{' '}
-          <a href="/blog/laudo-white-label-para-locadoras">laudo white-label para locadoras</a>.
+          <Link href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</Link> e{' '}
+          <Link href="/blog/laudo-white-label-para-locadoras">laudo white-label para locadoras</Link>.
         </p>
       </>
     ),
@@ -2786,9 +2787,9 @@ BLOG_POSTS.unshift(
         <p>
           Menos tempo por vistoria, menos dúvida sobre qual peça foi marcada e um histórico visual pronto
           pra qualquer contestação. Para aprofundar esse fluxo, veja também{' '}
-          <a href="/blog/vistoria-por-voz-nome-da-peca-ao-clicar">vistoria por voz: o app fala o nome da peça ao clicar</a>
+          <Link href="/blog/vistoria-por-voz-nome-da-peca-ao-clicar">vistoria por voz: o app fala o nome da peça ao clicar</Link>
           {' '}e{' '}
-          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de vistoria de devolução para locadoras</a>.
+          <Link href="/blog/checklist-vistoria-devolucao-locadora">checklist de vistoria de devolução para locadoras</Link>.
         </p>
       </>
     ),
@@ -2991,13 +2992,13 @@ BLOG_POSTS.unshift(
           Enviar o laudo no mesmo ato da devolução reduz “eu não recebi” e “não vi as fotos”. O PDF sai com
           a <strong>logo e o nome da sua locadora</strong> — documento white-label, não um arquivo genérico.
           Veja também o guia de{' '}
-          <a href="/blog/laudo-white-label-para-locadoras">laudo white-label para locadoras</a>.
+          <Link href="/blog/laudo-white-label-para-locadoras">laudo white-label para locadoras</Link>.
         </p>
 
         <h2 id="custo">1 laudo terceirizado vs vistoria no fluxo diário</h2>
         <p>
           Um laudo avulso terceirizado já chega perto do valor de um mês do{' '}
-          <a href="/planos">Plano Pro</a>. Na operação de locadora, a vistoria precisa estar no fluxo
+          <Link href="/planos">Plano Pro</Link>. Na operação de locadora, a vistoria precisa estar no fluxo
           diário — retirada e devolução, todos os dias — não só em casos excepcionais. Quanto mais a
           prova fica no processo, menos você depende de “fazer um laudo especial” depois da briga.
         </p>
@@ -3023,10 +3024,10 @@ BLOG_POSTS.unshift(
         </ol>
         <p>
           Quer o fluxo completo da operação? Veja a página de{' '}
-          <a href="/locadoras">vistoria digital para locadoras</a> e o{' '}
-          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</a>. Para o caso
+          <Link href="/locadoras">vistoria digital para locadoras</Link> e o{' '}
+          <Link href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</Link>. Para o caso
           clássico do “já existia”, leia também{' '}
-          <a href="/blog/avarias-preexistentes-como-provar">como provar avarias preexistentes</a>.
+          <Link href="/blog/avarias-preexistentes-como-provar">como provar avarias preexistentes</Link>.
         </p>
       </>
     ),
@@ -3163,7 +3164,7 @@ BLOG_POSTS.unshift(
           Um PDF com logo, peças marcadas, fotos e validação transmite método. Em funilaria, mecânica
           rápida ou multi-serviço, isso diferencia a casa que “anota no caderno” da que documenta o
           veículo como operação séria. Configure a marca uma vez e use em toda entrada — veja{' '}
-          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</a>.
+          <Link href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa no PDF</Link>.
         </p>
 
         <h2 id="passo-a-passo">Passo a passo prático</h2>
@@ -3186,9 +3187,9 @@ BLOG_POSTS.unshift(
         </ol>
         <p>
           Para fotos que sustentam o laudo, use o guia{' '}
-          <a href="/blog/como-fotografar-avarias">como fotografar avarias à prova de contestação</a>. Para
+          <Link href="/blog/como-fotografar-avarias">como fotografar avarias à prova de contestação</Link>. Para
           o fluxo geral do documento, veja{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">como fazer laudo de vistoria veicular</a>.
+          <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">como fazer laudo de vistoria veicular</Link>.
         </p>
       </>
     ),
@@ -3299,7 +3300,7 @@ BLOG_POSTS.unshift(
           O fluxo nasce e termina no aparelho. Você não precisa “passar a limpo” depois: o que foi marcado
           no diagrama já vira o PDF. Isso corta erro de transcrição e libera o dia para mais casos. Se
           redigitação é a dor da sua operação, veja também{' '}
-          <a href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</a>.
+          <Link href="/blog/como-eliminar-redigitacao-na-vistoria-veicular">como eliminar a redigitação</Link>.
         </p>
 
         <h2 id="padrao">Padrão único para vários casos — menos erro, mais velocidade</h2>
@@ -3342,9 +3343,9 @@ BLOG_POSTS.unshift(
         </ol>
         <p>
           Para acelerar ainda mais a identificação, veja o{' '}
-          <a href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH com autofill</a>. Para o
+          <Link href="/blog/scanner-de-cnh-autofill-nome-cpf">scanner de CNH com autofill</Link>. Para o
           documento em si, o guia{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">como fazer laudo de vistoria</a> fecha o
+          <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">como fazer laudo de vistoria</Link> fecha o
           método.
         </p>
       </>
@@ -3470,7 +3471,7 @@ BLOG_POSTS.unshift(
           Quando cada unidade ou motorista usa um formulário diferente, o gestor não consegue consolidar
           nada. Um padrão único de laudo digital cria um <strong>histórico comparável</strong> por placa:
           o que já existia, o que é novo, em qual data. Para padronizar a equipe, veja também{' '}
-          <a href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</a>.
+          <Link href="/blog/vistoria-de-frota-padronizar-equipe">vistoria de frota: como padronizar a equipe</Link>.
         </p>
 
         <Cta />
@@ -3486,7 +3487,7 @@ BLOG_POSTS.unshift(
         <p>
           O PDF com logo e nome da frota reforça que o processo é institucional. Útil em auditoria
           interna, entrega a terceiros e alinhamento com oficinas parceiras. Detalhes em{' '}
-          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa</a>.
+          <Link href="/blog/laudo-com-logo-da-empresa-no-pdf">laudo com logo da empresa</Link>.
         </p>
         <LaudoSheet />
 
@@ -3495,10 +3496,10 @@ BLOG_POSTS.unshift(
           Com os laudos centralizados, o gestor enxerga padrão: quais veículos mais sofrem dano, quais
           rotas ou motoristas concentram ocorrência, onde o processo de saída está falhando. Isso alimenta
           ação — não só arquivo. Para o lado financeiro, leia{' '}
-          <a href="/blog/como-reduzir-prejuizo-com-avarias-na-frota">como reduzir prejuízo com avarias na frota</a>
+          <Link href="/blog/como-reduzir-prejuizo-com-avarias-na-frota">como reduzir prejuízo com avarias na frota</Link>
           . Para equipe multi-vistoriador, o{' '}
-          <a href="/planos">Plano Corporativo</a> e a página de{' '}
-          <a href="/locadoras">locadoras e frotistas</a> mostram o encaixe operacional.
+          <Link href="/planos">Plano Corporativo</Link> e a página de{' '}
+          <Link href="/locadoras">locadoras e frotistas</Link> mostram o encaixe operacional.
         </p>
         <ol>
           <li>
@@ -3568,7 +3569,7 @@ BLOG_POSTS.push(
 
         <p>
           Trabalha com frota inteira, não só locação avulsa? Veja também o{' '}
-          <a href="/frotas">app de vistoria de frota que funciona offline</a>.
+          <Link href="/frotas">app de vistoria de frota que funciona offline</Link>.
         </p>
       </>
     ),
@@ -3681,7 +3682,7 @@ BLOG_POSTS.push(
 
         <p>
           Trabalha com seguradora ou corretora? Veja também a{' '}
-          <a href="/seguradoras">página de vistoria com QR Code anti-fraude para seguradoras</a>.
+          <Link href="/seguradoras">página de vistoria com QR Code anti-fraude para seguradoras</Link>.
         </p>
       </>
     ),
@@ -3890,9 +3891,9 @@ BLOG_POSTS.push(
         </ol>
         <p>
           Quer aprofundar só um pilar? Veja também{' '}
-          <a href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash no laudo de avarias</a>,{' '}
-          <a href="/blog/laudo-com-logo-da-empresa-no-pdf">logo da empresa no PDF</a> e{' '}
-          <a href="/blog/laudo-de-vistoria-com-assinatura-digital">assinatura digital no laudo</a>.
+          <Link href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash no laudo de avarias</Link>,{' '}
+          <Link href="/blog/laudo-com-logo-da-empresa-no-pdf">logo da empresa no PDF</Link> e{' '}
+          <Link href="/blog/laudo-de-vistoria-com-assinatura-digital">assinatura digital no laudo</Link>.
         </p>
       </>
     ),
@@ -4042,9 +4043,9 @@ BLOG_POSTS.unshift(
         </ul>
         <p>
           Passo a passo do laudo:{' '}
-          <a href="/blog/como-fazer-laudo-de-vistoria-veicular">
+          <Link href="/blog/como-fazer-laudo-de-vistoria-veicular">
             como fazer laudo de vistoria veicular
-          </a>
+          </Link>
           .
         </p>
 
@@ -4057,11 +4058,11 @@ BLOG_POSTS.unshift(
         <ul>
           <li>
             <strong>Locadoras:</strong> cobram só o dano novo — veja{' '}
-            <a href="/blog/controle-de-avarias-para-locadora">controle de avarias para locadora</a>.
+            <Link href="/blog/controle-de-avarias-para-locadora">controle de avarias para locadora</Link>.
           </li>
           <li>
             <strong>Frotas:</strong> sabem em qual turno a avaria nasceu —{' '}
-            <a href="/blog/sistema-check-in-check-out-frota">check-in e check-out de frota</a>.
+            <Link href="/blog/sistema-check-in-check-out-frota">check-in e check-out de frota</Link>.
           </li>
           <li>
             <strong>Oficinas e peritos:</strong> documentam estado de entrada e resultado sem
@@ -4117,7 +4118,7 @@ BLOG_POSTS.unshift(
         </ol>
         <p>
           Quer a visão de produto:{' '}
-          <a href="/historico">Histórico e Evidência</a>.
+          <Link href="/historico">Histórico e Evidência</Link>.
         </p>
 
         <h2 id="cta">Próximo passo</h2>
@@ -4129,7 +4130,7 @@ BLOG_POSTS.unshift(
         <p>
           <strong>Teste 7 dias grátis</strong> em{' '}
           <a href="https://danosaparentes.com.br/app">danosaparentes.com.br/app</a> ou comece pelo
-          plano em <a href="/planos">danosaparentes.com.br/planos</a>. Faça a primeira vistoria
+          plano em <Link href="/planos">danosaparentes.com.br/planos</Link>. Faça a primeira vistoria
           hoje e compare na próxima — é aí que a prova aparece.
         </p>
 
@@ -4222,7 +4223,7 @@ BLOG_POSTS.unshift(
         </ol>
         <p>
           No Danos Aparentes esse ciclo vira laudo white-label com hash e QR. Veja a landing de{' '}
-          <a href="/historico-de-frotas">histórico de frotas e locadoras</a> para o fluxo completo.
+          <Link href="/historico-de-frotas">histórico de frotas e locadoras</Link> para o fluxo completo.
         </p>
 
         <h2 id="provar">Como provar dano em carro alugado</h2>
@@ -4237,9 +4238,9 @@ BLOG_POSTS.unshift(
         <p>
           Com isso, a discussão deixa de ser “quem tem razão” e passa a ser “o que os dois laudos
           mostram”. Há um guia irmão sobre{' '}
-          <a href="/blog/como-provar-amassado-pre-existente-locacao">
+          <Link href="/blog/como-provar-amassado-pre-existente-locacao">
             amassado pré-existente na locação
-          </a>
+          </Link>
           .
         </p>
 
@@ -4248,16 +4249,16 @@ BLOG_POSTS.unshift(
           Controle de avarias escala quando cada veículo tem linha do tempo: contratos anteriores,
           danos já cobrados, estado na última devolução. O histórico por placa evita repetir erro e
           acelera a próxima retirada. No app, a área de veículos e a página de{' '}
-          <a href="/historico">Histórico e Evidência</a> concentram essa visão.
+          <Link href="/historico">Histórico e Evidência</Link> concentram essa visão.
         </p>
 
         <RecursosLaudo />
 
         <p>
           Opera frota própria além da locação? Veja também o{' '}
-          <a href="/blog/sistema-check-in-check-out-frota">
+          <Link href="/blog/sistema-check-in-check-out-frota">
             sistema de check-in e check-out de frota
-          </a>
+          </Link>
           .
         </p>
       </>
@@ -4339,7 +4340,7 @@ BLOG_POSTS.unshift(
         </p>
         <p>
           Locadoras vivem o mesmo ciclo com outro nome: retirada e devolução. O guia de{' '}
-          <a href="/blog/controle-de-avarias-para-locadora">controle de avarias para locadora</a>{' '}
+          <Link href="/blog/controle-de-avarias-para-locadora">controle de avarias para locadora</Link>{' '}
           cobre o ângulo comercial; aqui o foco é operação de frota.
         </p>
 
@@ -4362,8 +4363,8 @@ BLOG_POSTS.unshift(
           Check-in/check-out isolado vira arquivo morto. Com <strong>histórico por placa</strong>, a
           frota enxerga linha do tempo: último estado, danos recorrentes, quem usou. É a base para
           manutenção preventiva e para disputa com terceiros. Explore a página{' '}
-          <a href="/historico-de-frotas">Histórico de frotas</a> e o produto{' '}
-          <a href="/historico">Histórico e Evidência</a>.
+          <Link href="/historico-de-frotas">Histórico de frotas</Link> e o produto{' '}
+          <Link href="/historico">Histórico e Evidência</Link>.
         </p>
 
         <h2 id="offline">Offline no pátio</h2>
@@ -4377,11 +4378,11 @@ BLOG_POSTS.unshift(
 
         <p>
           Quer o ângulo de locação e cobrança? Leia{' '}
-          <a href="/blog/controle-de-avarias-para-locadora">
+          <Link href="/blog/controle-de-avarias-para-locadora">
             controle de avarias para locadora
-          </a>{' '}
+          </Link>{' '}
           e a landing de{' '}
-          <a href="/frotas">vistoria de frota offline</a>.
+          <Link href="/frotas">vistoria de frota offline</Link>.
         </p>
       </>
     ),

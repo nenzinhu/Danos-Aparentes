@@ -59,6 +59,8 @@ export default function LandingPromoVideo() {
 
         <Reveal delay={80} className="flex flex-col items-center lg:items-end">
           <div className="relative w-full max-w-[280px] overflow-hidden rounded-2xl border border-[var(--card-border)] bg-black shadow-xl group">
+            {/* poster estático de vídeo; manter <img> simples */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={POSTER}
               alt={TITLE}

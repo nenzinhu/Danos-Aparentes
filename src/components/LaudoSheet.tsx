@@ -11,6 +11,8 @@ export function LaudoSheet() {
         rel="noopener noreferrer"
         className="group block mx-auto max-w-[420px] rounded-xl overflow-hidden shadow-2xl ring-1 ring-black/10 transition-transform motion-safe:hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-[var(--primary)] outline-none"
       >
+        {/* markup espelha o laudo PDF — <img> mantém paridade com o render do PDF */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/exemplos/modelo-relatorio.webp"
           alt="Exemplo real do PDF de Relatório de Vistoria Veicular gerado pelo app, com cabeçalho personalizável (logo e nome da empresa), identificação do veículo, diagrama de danos, detalhamento das avarias, galeria fotográfica, assinaturas e hash de validação."

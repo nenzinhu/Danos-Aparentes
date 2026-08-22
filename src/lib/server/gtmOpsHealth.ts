@@ -49,11 +49,6 @@ function stripeMode(secretKey: string): 'live' | 'test' | 'unknown' {
   return 'unknown'
 }
 
-function asaasIsSandbox(apiUrl: string): boolean {
-  const u = (apiUrl || 'https://api-sandbox.asaas.com').toLowerCase()
-  return u.includes('sandbox')
-}
-
 /** Avalia env sem expor secrets — só booleanos + mensagens. */
 export function evaluateGtmOps(env: EnvBag = process.env): GtmOpsReport {
   const checks: GtmCheck[] = []
@@ -97,13 +92,10 @@ export function evaluateGtmOps(env: EnvBag = process.env): GtmOpsReport {
   req('stripe_price_starter', 'STRIPE_PRICE_ID_STARTER', 'critical', 'plano Starter')
 
   // —— Critical: PIX (provider) ——
-  const provider = (value(env, 'PIX_PROVIDER') || 'asaas').toLowerCase()
+  const provider = (value(env, 'PIX_PROVIDER') || 'mercadopago').toLowerCase()
   if (provider === 'mercadopago') {
     req('pix_mp_token', 'PIX_MERCADO_PAGO_ACCESS_TOKEN', 'critical', 'PIX MP')
     req('pix_mp_webhook', 'PIX_WEBHOOK_SECRET', 'critical', 'webhook MP não valida')
-  } else {
-    req('asaas_key', 'ASAAS_API_KEY', 'critical', 'PIX Asaas (default BR)')
-    req('asaas_webhook', 'ASAAS_WEBHOOK_TOKEN', 'critical', 'pago PIX sem ativar acesso')
   }
 
   // —— Critical: lifecycle / links ——
@@ -139,34 +131,6 @@ export function evaluateGtmOps(env: EnvBag = process.env): GtmOpsReport {
     })
   }
 
-  if (provider !== 'mercadopago') {
-    const asaasUrl = value(env, 'ASAAS_API_URL') || 'https://api-sandbox.asaas.com'
-    const sandbox = asaasIsSandbox(asaasUrl)
-    if (prodLike && sandbox) {
-      push({
-        id: 'asaas_sandbox_vs_prod',
-        level: 'critical',
-        ok: false,
-        detail:
-          'BASE_URL de produção com Asaas sandbox (ASAAS_API_URL default ou *sandbox*). Use https://api.asaas.com',
-      })
-    } else if (prodLike && !sandbox) {
-      push({
-        id: 'asaas_sandbox_vs_prod',
-        level: 'critical',
-        ok: true,
-        detail: 'Asaas API de produção',
-      })
-    } else {
-      push({
-        id: 'asaas_sandbox_vs_prod',
-        level: 'recommended',
-        ok: true,
-        detail: sandbox ? 'Asaas sandbox (ok em dev)' : 'Asaas produção com BASE_URL não-prod',
-      })
-    }
-  }
-
   // —— Recommended ——
   req('stripe_price_corp', 'STRIPE_PRICE_ID_CORPORATE', 'recommended', 'tier corporativo no webhook')
   req('smtp_host', 'SMTP_HOST', 'recommended', 'welcome + trial ending')
@@ -196,10 +160,6 @@ export function evaluateGtmOps(env: EnvBag = process.env): GtmOpsReport {
         : 'SENTRY_DSN / NEXT_PUBLIC_SENTRY_DSN ausente — erros pagamento/PDF em prod',
     })
   }
-  if (provider !== 'mercadopago' && prodLike) {
-    req('asaas_cpf', 'ASAAS_DEFAULT_CPF', 'recommended', 'cliente Asaas sem CPF do user')
-  }
-
   // —— Funil / growth ——
   req(
     'posthog',
