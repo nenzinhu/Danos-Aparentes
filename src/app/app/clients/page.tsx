@@ -41,16 +41,28 @@ export default function ClientsPage({ userId }: { userId?: string }) {
             Cadastro reutilizável — pré-preenche inspeções em 1 clique.
           </p>
         </div>
-        <div className="relative w-full sm:w-72">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]">
-            <IconSearch size={15} />
-          </span>
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar nome, placa, marca..."
-            className="w-full rounded-xl border border-[var(--btn-secondary-border)] bg-[var(--bg-main)]/60 pl-9 pr-3 py-2.5 text-sm text-[var(--text-main)] outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/30"
-          />
+        <div className="flex items-center gap-2 flex-wrap">
+          {clients.length > 0 && (
+            <div className="relative w-full sm:w-72">
+              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]">
+                <IconSearch size={15} />
+              </span>
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Buscar nome, placa, marca..."
+                className="w-full rounded-xl border border-[var(--btn-secondary-border)] bg-[var(--bg-main)]/60 pl-9 pr-3 py-2.5 text-sm text-[var(--text-main)] outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/30"
+              />
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={() => router.push('/app')}
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-black text-white shadow-lg shadow-[var(--primary)]/20 transition-opacity hover:opacity-95"
+            style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
+          >
+            <IconCar size={15} /> Novo Cliente
+          </button>
         </div>
       </div>
 

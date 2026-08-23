@@ -90,36 +90,49 @@ export default function CookieConsentBanner() {
     setVisible(false)
   }
 
+  function dismiss() {
+    setVisible(false)
+  }
+
   if (!visible) return null
 
   return (
     <div
       ref={bannerRef}
       role="dialog"
-      aria-modal="true"
       aria-label="Preferências de cookies"
       className="fixed bottom-20 right-4 z-[100] w-[min(22rem,calc(100vw-2rem))] p-4 rounded-2xl bg-slate-950/95 border border-slate-700 backdrop-blur-md shadow-2xl"
     >
-      <div className="flex flex-col gap-3">
-        <p className="text-xs text-slate-300 leading-relaxed">
-          Usamos cookies de marketing (Meta e TikTok) para medir cadastros vindos de anúncios.{' '}
-          <Link href="/privacidade" className="text-sky-400 underline">
-            Política de Privacidade
-          </Link>.
-        </p>
-        <div className="flex gap-2 shrink-0 justify-end">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={reject}
-            className="!text-slate-200 !border-slate-600 !bg-slate-800 hover:!bg-slate-700"
-          >
-            Recusar
-          </Button>
-          <Button variant="primary" size="sm" onClick={accept}>
-            Aceitar
-          </Button>
+      <div className="flex items-start gap-2">
+        <div className="flex-1 flex flex-col gap-3">
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Usamos cookies de marketing (Meta e TikTok) para medir cadastros vindos de anúncios.{' '}
+            <Link href="/privacidade" className="text-sky-400 underline">
+              Política de Privacidade
+            </Link>.
+          </p>
+          <div className="flex gap-2 shrink-0 justify-end">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={reject}
+              className="!text-slate-200 !border-slate-600 !bg-slate-800 hover:!bg-slate-700"
+            >
+              Recusar
+            </Button>
+            <Button variant="primary" size="sm" onClick={accept}>
+              Aceitar
+            </Button>
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="Fechar aviso de cookies"
+          className="shrink-0 w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white text-sm font-bold flex items-center justify-center transition-colors"
+        >
+          ✕
+        </button>
       </div>
     </div>
   )

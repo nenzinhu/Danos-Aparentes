@@ -360,7 +360,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
 
   const summary = useMemo(() => [info.owner, info.plate, info.brand].filter(Boolean).join(' • '), [info.owner, info.plate, info.brand])
 
-  if (collapsed) {
+  if (collapsed && summary) {
     return (
       <div className="flex items-center justify-between font-outfit">
         <div>
