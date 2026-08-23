@@ -9,7 +9,7 @@ export const B2B_BRAND = 'Danos Aparentes'
 
 /** Headline canônica (hero / OG / pitch). */
 export const B2B_PRODUCT_LINE =
-  'Plataforma de histórico e evidência veicular.'
+  'Plataforma de Memória Digital do Veículo.'
 
 export const B2B_CATEGORY_SHORT = 'Inteligência Histórica Veicular'
 
@@ -17,14 +17,14 @@ export const B2B_TAGLINE =
   'Saiba exatamente o que mudou em cada veículo.'
 
 export const B2B_VALUE_PROPS = [
-  'Cada inspeção vira um evento no histórico do veículo.',
+  'Cada inspeção vira um registro na memória digital do veículo.',
   'Fotos, data, local e assinatura viram evidência.',
   'Compare versões e identifique mudanças com precisão.',
   'Comprove o estado do veículo com documento verificável.',
 ] as const
 
 export const B2B_HERO_SUBTITLE =
-  'Registre inspeções, compare o estado do veículo ao longo do tempo e tenha evidências organizadas para comprovar o que mudou.'
+  'Crie a memória digital de cada veículo: registre inspeções, compare estados ao longo do tempo e mantenha as evidências organizadas para comprovar o que mudou.'
 
 export const B2B_CTA_DEMO = 'Ver como funciona'
 export const B2B_CTA_PLATFORM = 'Conhecer a plataforma'
@@ -37,22 +37,30 @@ export const B2B_CTA_TRIAL_SHORT = 'Começar grátis'
 export const B2B_HERO_HEADLINE_A = 'Saiba exatamente o que mudou em cada veículo.'
 export const B2B_HERO_HEADLINE_B = 'Pare de discutir sobre quando o dano aconteceu.'
 export const B2B_HERO_SUB =
-  'Registre, compare e comprove o estado de cada veículo com fotos, evidências, localização, data, hora e histórico completo.'
-export const B2B_HERO_EYEBROW = 'HISTÓRICO DIGITAL DO VEÍCULO'
+  'Crie a memória digital do veículo: registre, compare e comprove o estado com fotos, evidências, localização e data/hora.'
+export const B2B_HERO_EYEBROW = 'MEMÓRIA DIGITAL DO VEÍCULO'
 export const B2B_HERO_MICRO = [
+  'Cada veículo tem uma memória.',
   'Você sabe o que mudou.',
-  'Você sabe quando mudou.',
   'Você tem a evidência.',
 ]
 export const B2B_TRIAL_BADGE = '7 dias grátis • Sem cartão de crédito'
 export const B2B_HERO_HEADLINE_CONVERSION = 'Saiba exatamente quando um dano aconteceu.'
 export const B2B_HERO_SUB_CONVERSION =
-  'Cada inspeção vira um evento no histórico do veículo, com fotos, localização e data/hora. Compare e comprove o que mudou.'
+  'Cada inspeção vira um registro na Memória Digital do veículo, com fotos, localização e data/hora. Compare versões e comprove o que mudou — com IA, GPS, QR Code e Hash para validar a evidência.'
 export const B2B_PROBLEM_TITLE = 'Quem causou o dano?'
 export const B2B_FINAL_HEADLINE = 'Pare de discutir sobre quando o dano aconteceu.'
 export const B2B_FINAL_SUB =
-  'Comece a criar hoje o histórico digital dos seus veículos. Teste grátis, sem cartão.'
+  'Comece grátis: cadastre o veículo, inspecione e gere o histórico digital. Teste grátis, sem cartão.'
 export const B2B_CTA_TRIAL = B2B_TRIAL_CTA
+
+/** Fluxo explícito do produto — do cadastro à evidência. */
+export const B2B_FLOW_STEPS = [
+  'Comece grátis',
+  'Cadastre o veículo',
+  'Inspecione com evidências',
+  'Gere o histórico',
+] as const
 
 /** Vocabulário interno da UI (labels). */
 export const UI_LABELS = {

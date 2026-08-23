@@ -4,16 +4,16 @@ import Reveal from '../Reveal'
 
 const STEPS = [
   {
-    title: 'Registre',
-    body: 'Faça a inspeção e registre o estado do veículo com fotos, localização e data/hora.',
+    title: 'Cadastre o veículo',
+    body: 'Comece grátis e registre a placa. Os dados do veículo se organizam na memória digital.',
   },
   {
-    title: 'Compare',
-    body: 'Acompanhe a linha do tempo e compare inspeções para identificar o que mudou.',
+    title: 'Inspecione com evidências',
+    body: 'Fotografe, marque GPS, assine na tela e deixe a IA descrever a avaria — tudo vira prova.',
   },
   {
-    title: 'Comprove',
-    body: 'Gere um dossiê com evidências, QR Code e assinatura para apresentar e validar.',
+    title: 'Gere o histórico',
+    body: 'Acompanhe a linha do tempo e exporte o dossiê em PDF com QR Code e Hash para validar.',
   },
 ]
 

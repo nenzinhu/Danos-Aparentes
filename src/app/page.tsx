@@ -483,7 +483,7 @@ export default function LandingPage() {
             Comece o histórico do seu primeiro veículo grátis.
           </h2>
           <p className="text-sm sm:text-base text-[var(--text-muted)] max-w-2xl leading-relaxed">
-            Registre inspeções, compare alterações e gere evidências em minutos.
+            Em quatro passos: <strong className="text-[var(--text-main)] font-semibold">comece grátis, cadastre o veículo, inspecione com evidências e gere o histórico</strong>. Registre, compare alterações e comprove tudo em minutos.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <Link
