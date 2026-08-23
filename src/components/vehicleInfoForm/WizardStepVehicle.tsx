@@ -85,7 +85,7 @@ export default function WizardStepVehicle({
       </div>
 
       {(show('brand') || show('color') || show('ano')) && (
-        <div className="grid grid-cols-1 sm:grid-cols-[4fr_3fr_3fr] gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-[4fr_3fr_3fr] gap-2 mb-2">
           {show('brand') && (
             <div>
               <label htmlFor="brand-input" className={labelClasses}>Marca</label>
@@ -108,7 +108,7 @@ export default function WizardStepVehicle({
       )}
 
       {(show('vehicleTypeDesc') || show('km') || show('city') || show('state')) && (
-        <div className="grid grid-cols-1 sm:grid-cols-[7fr_7fr_4fr_2fr] gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-[7fr_7fr_4fr_2fr] gap-2 mb-2">
           {show('vehicleTypeDesc') && (
             <div>
               <label htmlFor="vehicle-type-select" className={labelClasses}>Tipo</label>

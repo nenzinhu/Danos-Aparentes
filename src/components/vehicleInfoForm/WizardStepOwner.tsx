@@ -40,7 +40,7 @@ export default function WizardStepOwner({
       <>
       {/* Linha 1: Nº OS / Referência (40%) + Perfil do Relatório (60%) */}
       {(show('profile') || show('ref')) && (
-        <div className="grid grid-cols-1 sm:grid-cols-[2fr_3fr] gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-[2fr_3fr] gap-2 mb-2">
           {show('ref') && (
             <div>
               <label htmlFor="ref-input" className={labelClasses}>Nº OS / Ref</label>
@@ -71,7 +71,7 @@ export default function WizardStepOwner({
 
       {/* Linha 2: Proprietário / Cliente (60%) + Telefone + [ ] Estrangeiro (40%) */}
       {(show('owner') || show('phone')) && (
-        <div className="grid grid-cols-1 sm:grid-cols-[3fr_2fr] gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-[3fr_2fr] gap-2 mb-2">
           {show('owner') && (
             <div>
               <label htmlFor="owner-input" className={labelClasses}>
@@ -116,7 +116,7 @@ export default function WizardStepOwner({
 
       {/* Linha 3: CPF + [ ] Estrangeiro (35%) + Nº CNH + ícone câmera (45%) + Categoria CNH (20%) */}
       {(show('cpf') || show('cnh') || show('cnhCategory')) && (
-        <div className="grid grid-cols-1 sm:grid-cols-[7fr_9fr_4fr] gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-[7fr_9fr_4fr] gap-2 mb-2">
           {show('cpf') && (
             <div className="max-w-[10rem]">
               <label htmlFor="cpf-input" className={`${labelClasses} flex items-center justify-between gap-2`}>
