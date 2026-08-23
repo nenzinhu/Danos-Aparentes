@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseEnabled } from '@/src/lib/supabase';
-import { getClientIp, getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
+import { getClientIp, getUserFromRequest } from '@/src/lib/server/auth';
 import { callGroqVision, getGroqApiKey, GROQ_VISION_MODEL, GROQ_VISION_MODEL_VERSION } from '@/src/lib/server/groqVision';
 import { callQwenVision, getQwenApiKey, QWEN_VISION_MODEL, QWEN_VISION_MODEL_VERSION } from '@/src/lib/server/qwenVision';
 import { parseImageDataUrl } from '@/src/lib/server/geminiVision';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
 
-/** Classificação de dano por foto via IA — assinante autenticado (~25 / 10 min). */
+/** Classificação de dano por foto via IA — autenticado (free, trial ou assinante). */
 const DAMAGE_CLASSIFY_LIMIT_PER_USER = 25;
 /** Demo/local sem Supabase: limite básico por IP. */
 const DAMAGE_CLASSIFY_LIMIT_PER_IP = 10;
@@ -38,17 +38,13 @@ export async function POST(req: NextRequest) {
       if (!user) {
         return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
       }
-      const [hasAccess, rate] = await Promise.all([
-        userHasActiveSubscription(user.id),
-        checkRateLimit(
-          `damage-classify:${user.id}`,
-          DAMAGE_CLASSIFY_LIMIT_PER_USER,
-          DAMAGE_CLASSIFY_WINDOW_MS,
-        ),
-      ]);
-      if (!hasAccess) {
-        return NextResponse.json({ error: 'Assinatura inativa' }, { status: 403 });
-      }
+      const rate = await checkRateLimit(
+        `damage-classify:${user.id}`,
+        DAMAGE_CLASSIFY_LIMIT_PER_USER,
+        DAMAGE_CLASSIFY_WINDOW_MS,
+      );
+      // IA de classificação de avaria está liberada para free, trial (7 dias) e
+      // assinantes — o rate limit por usuário é a proteção contra abuso.
       if (!rate.allowed) {
         return NextResponse.json(
           { error: 'Muitas análises em pouco tempo. Tente novamente em instantes.' },
