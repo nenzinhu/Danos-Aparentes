@@ -22,10 +22,14 @@ import {
 
 import AuditDashboard from './AuditDashboard'
 
+import DashboardHero from './DashboardHero'
+
 interface Props {
   saved: SavedReport[]
   accessToken?: string
   showAuditDashboard?: boolean
+  userName?: string
+  onNewInspection?: () => void
 }
 
 const VEHICLE_NAME: Record<VehicleType, string> = {
@@ -56,7 +60,7 @@ function getReportVehicleType(r: SavedReport): VehicleType {
   return resolveVehicleType(r.vehicleInfo.vehicleTypeDesc, r.damages)
 }
 
-export default function DashboardView({ saved, accessToken, showAuditDashboard }: Props) {
+export default function DashboardView({ saved, accessToken, showAuditDashboard, userName, onNewInspection }: Props) {
   const kpiRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     const el = kpiRef.current
@@ -172,21 +176,30 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard }
 
   if (saved.length === 0) {
     return (
-      <div style={{ textAlign: 'center', padding: '64px 16px', background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 24, backdropFilter: 'blur(16px)' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-          <IconChart size={56} className="text-sky-400" />
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <DashboardHero
+          savedCount={0}
+          vehiclesMonitored={0}
+          dossiersIssued={0}
+          userName={userName}
+          onNewInspection={onNewInspection}
+        />
+        <div style={{ textAlign: 'center', padding: '64px 16px', background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 24, backdropFilter: 'blur(16px)' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+            <IconChart size={56} className="text-sky-400" />
+          </div>
+          <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 8, color: '#f8fafc' }}>Seus dossiês aparecem aqui</h3>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: 400, margin: '0 auto 24px' }}>
+            Para visualizar a gestão histórica e as métricas da plataforma, registre e salve sua primeira inspeção.
+          </p>
+          <a
+            href="/app"
+            className="inline-block px-6 py-3 min-h-12 rounded-xl font-black text-sm text-white transition-opacity hover:opacity-95"
+            style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
+          >
+            Criar primeira inspeção →
+          </a>
         </div>
-        <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 8, color: '#f8fafc' }}>Seus dossiês aparecem aqui</h3>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: 400, margin: '0 auto 24px' }}>
-          Para visualizar a gestão histórica e as métricas da plataforma, registre e salve sua primeira inspeção.
-        </p>
-        <a
-          href="/app"
-          className="inline-block px-6 py-3 min-h-12 rounded-xl font-black text-sm text-white transition-opacity hover:opacity-95"
-          style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
-        >
-          Criar primeira inspeção →
-        </a>
       </div>
     )
   }
@@ -202,7 +215,14 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard }
 
   return (
     <div ref={kpiRef} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      
+      <DashboardHero
+        savedCount={stats.totalReports}
+        vehiclesMonitored={stats.vehiclesMonitored}
+        dossiersIssued={stats.dossiersIssued}
+        userName={userName}
+        onNewInspection={onNewInspection}
+      />
+
       {/* ── KPI GRID ────────────────────────────────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
         

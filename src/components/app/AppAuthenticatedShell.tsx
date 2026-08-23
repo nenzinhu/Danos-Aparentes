@@ -270,10 +270,20 @@ export default function AppAuthenticatedShell({
             {shell.activeTab === 'dashboard' ? (
               <>
                 <DashboardView
-                  saved={saved}
-                  accessToken={session?.access_token}
-                  showAuditDashboard={tenantRole === 'solo' || tenantRole === 'owner'}
-                />
+                    saved={saved}
+                    accessToken={session?.access_token}
+                    showAuditDashboard={tenantRole === 'solo' || tenantRole === 'owner'}
+                    userName={
+                      (session?.user.user_metadata?.full_name as string | undefined) ||
+                      (session?.user.user_metadata?.name as string | undefined) ||
+                      session?.user.email?.split('@')[0] ||
+                      undefined
+                    }
+                    onNewInspection={() => {
+                      inspection.selectPurpose('entrada')
+                      shell.setActiveTab('inspect')
+                    }}
+                  />
                 <div className="mt-6">
                   <FleetHistoryDashboard saved={saved} />
                 </div>
