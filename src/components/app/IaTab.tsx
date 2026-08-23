@@ -156,13 +156,32 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
         {/* Badge do Veículo Atual */}
         <div className="flex items-center gap-3 bg-slate-950/60 border border-white/5 rounded-xl px-4 py-2 text-xs">
           <div className="text-slate-400">
-            Veículo: <span className="font-bold text-sky-400">{vehicleInfo.brand || VEHICLE_NAME[vehicleType]}</span>
+            Veículo: <span className={`font-bold ${vehicleInfo.plate ? 'text-sky-400' : 'text-amber-400'}`}>{vehicleInfo.brand || VEHICLE_NAME[vehicleType]}</span>
           </div>
           <div className="w-px h-4 bg-white/10" />
           <div className="text-slate-400">
             Avarias: <span className="font-bold text-rose-400">{damages.length}</span>
           </div>
         </div>
+      </div>
+
+      {/* Alerta de placa não informada */}
+      {!vehicleInfo.plate && (
+        <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 px-5 py-3 flex items-center gap-3 text-xs text-amber-200">
+          <span className="text-base">⚠️</span>
+          <span>
+            <strong className="font-bold">Placa não informada.</strong> Informe a placa do veículo em <em>Dados do Veículo</em> para uma análise mais precisa do histórico.
+          </span>
+        </div>
+      )}
+
+      {/* Indicador de análise em tempo real */}
+      <div className="flex items-center gap-2 text-[0.7rem] text-slate-400">
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500" />
+        </span>
+        Analisando em tempo real os dados da vistoria ativa…
       </div>
 
       {/* Main Chat Interface */}

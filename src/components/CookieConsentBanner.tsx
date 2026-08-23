@@ -98,16 +98,16 @@ export default function CookieConsentBanner() {
       role="dialog"
       aria-modal="true"
       aria-label="Preferências de cookies"
-      className="fixed bottom-0 inset-x-0 z-[100] p-4 bg-slate-950/95 border-t border-slate-700 backdrop-blur-md"
+      className="fixed bottom-4 right-4 z-[100] w-[min(22rem,calc(100vw-2rem))] p-4 rounded-2xl bg-slate-950/95 border border-slate-700 backdrop-blur-md shadow-2xl"
     >
-      <div className="max-w-3xl mx-auto flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3">
         <p className="text-xs text-slate-300 leading-relaxed">
           Usamos cookies de marketing (Meta e TikTok) para medir cadastros vindos de anúncios.{' '}
           <Link href="/privacidade" className="text-sky-400 underline">
             Política de Privacidade
-          </Link>
+          </Link>.
         </p>
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-2 shrink-0 justify-end">
           <Button
             variant="secondary"
             size="sm"

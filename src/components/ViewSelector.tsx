@@ -54,7 +54,7 @@ function ViewSelectorComponent({ current, onChange, visited }: Props) {
               style={{ width: `${(visitedCount / VIEWS.length) * 100}%` }}
             />
           </div>
-          <span>{visitedCount} de {VIEWS.length} vistas vistas</span>
+          <span>{visitedCount} de {VIEWS.length} vistas concluídas</span>
         </div>
       )}
     </div>

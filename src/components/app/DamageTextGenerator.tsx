@@ -293,8 +293,9 @@ export default function DamageTextGenerator({
               {ref ? (
                 <ResolvedPhoto refOrDataUrl={ref} alt={VIEW_NAME[view]} className="absolute inset-0 w-full h-full object-cover" />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-[0.62rem] font-bold text-[var(--text-muted)] px-2 text-center">
-                  {VIEW_NAME[view]}
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-[var(--text-muted)]">
+                  <span className="text-2xl font-bold opacity-40">+</span>
+                  <span className="text-[0.62rem] font-bold px-2 text-center">{VIEW_NAME[view]}</span>
                 </div>
               )}
               <span className="absolute bottom-1.5 left-1.5 text-[0.6rem] font-bold bg-black/55 text-white px-1.5 py-0.5 rounded">
@@ -306,9 +307,14 @@ export default function DamageTextGenerator({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button type="button" variant="primary" size="md" onClick={handleGenerate} disabled={busy || !complete}>
+        <Button type="button" variant="primary" size="md" onClick={handleGenerate} disabled={busy || !complete} title={!complete ? 'Capture e confirme as 4 fotos antes de gerar o texto.' : undefined}>
           {busy ? 'Gerando…' : 'Gerar texto de danos'}
         </Button>
+        {!complete && (
+          <span className="self-center text-[0.7rem] font-bold text-amber-300/90">
+            Faltam fotos ({Object.keys(viewPhotos).length}/4)
+          </span>
+        )}
         {text && (
           <>
             <Button
