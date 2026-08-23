@@ -3,23 +3,6 @@
 import Reveal from '../Reveal'
 import LupaVehicleReveal from '../LupaVehicleReveal'
 
-const ANTES = [
-  'Fotos no WhatsApp',
-  'Planilhas',
-  'Papel',
-  'Discussões',
-  'Sem histórico',
-]
-
-const DEPOIS = [
-  'Histórico',
-  'PDF',
-  'QR Code',
-  'Hash',
-  'Assinaturas',
-  'Comparação',
-]
-
 export default function AntesDepoisSection() {
   return (
     <section
@@ -39,70 +22,55 @@ export default function AntesDepoisSection() {
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
         </div>
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
-          Do caos ao histórico verificável
+          Veja a diferença na prática
         </h2>
         <p className="mt-4 text-sm text-[var(--text-muted)] max-w-2xl leading-relaxed">
-          Troque WhatsApp, planilha e papel por um registro organizado — com PDF, QR Code, hash e comparação.
+          A mesma placa, duas inspeções. Na entrada, sem avarias. No retorno, a porta dianteira esquerda amassada aparece no dossiê — com foto, data/hora e hash. É assim que você prova o que mudou.
         </p>
       </Reveal>
 
       <Reveal>
-        <div className="relative rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/50 overflow-hidden px-4 sm:px-8 py-8 sm:py-10">
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-[linear-gradient(var(--grid-color)_1px,transparent_1px),linear-gradient(90deg,var(--grid-color)_1px,transparent_1px)] bg-[size:40px_40px] opacity-50 pointer-events-none"
-          />
-
-          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-            <div className="rounded-xl border border-[var(--card-border)] bg-[var(--bg-main)]/70 px-5 py-6">
-              <h3 className="text-center font-display text-lg sm:text-xl font-bold uppercase tracking-tight text-[var(--text-muted)] mb-5">
-                Sem histórico
-              </h3>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 list-none m-0 p-0">
-                {ANTES.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-center gap-2.5 text-sm font-semibold text-[var(--text-main)]"
-                  >
-                    <span
-                      aria-hidden
-                      className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[var(--card-border)] text-[11px] text-[var(--text-muted)]"
-                    >
-                      ×
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+          <figure className="flex flex-col rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)]/50 overflow-hidden">
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--card-border)]">
+              <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md border border-[var(--card-border)] text-[11px] text-[var(--text-muted)]">
+                ×
+              </span>
+              <figcaption className="font-display text-sm font-bold uppercase tracking-tight text-[var(--text-muted)]">
+                Entrada · Sem avarias
+              </figcaption>
             </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/landing/vistoria-entrada.png"
+              alt="Relatório de vistoria de entrada: veículo sem avarias registradas"
+              className="w-full h-auto object-contain bg-[var(--bg-main)]/70"
+              loading="lazy"
+            />
+          </figure>
 
-            <div className="rounded-xl border border-[var(--signal-bright)]/35 bg-[color-mix(in_srgb,var(--signal)_8%,transparent)] px-5 py-6">
-              <h3 className="text-center font-display text-lg sm:text-xl font-bold uppercase tracking-tight text-[var(--signal-bright)] mb-5">
-                Com Danos Aparentes
-              </h3>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 list-none m-0 p-0">
-                {DEPOIS.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-center gap-2.5 text-sm font-semibold text-[var(--text-main)]"
-                  >
-                    <span
-                      aria-hidden
-                      className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-black"
-                    >
-                      ✓
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+          <figure className="flex flex-col rounded-2xl border border-[var(--signal-bright)]/35 bg-[color-mix(in_srgb,var(--signal)_8%,transparent)] overflow-hidden">
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--signal-bright)]/25">
+              <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-black">
+                ✓
+              </span>
+              <figcaption className="font-display text-sm font-bold uppercase tracking-tight text-[var(--signal-bright)]">
+                Retorno · 1 avaria detectada
+              </figcaption>
             </div>
-          </div>
-
-          <p className="relative mt-8 text-center font-mono-data text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-[var(--text-muted)]">
-            Histórico como produto. PDF como saída.
-          </p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/landing/vistoria-retorno.png"
+              alt="Relatório de vistoria de retorno: avaria na porta dianteira esquerda detectada"
+              className="w-full h-auto object-contain bg-[var(--bg-main)]/70"
+              loading="lazy"
+            />
+          </figure>
         </div>
+
+        <p className="mt-8 text-center font-mono-data text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-[var(--text-muted)]">
+          Histórico como produto. PDF como saída.
+        </p>
       </Reveal>
     </section>
   )
