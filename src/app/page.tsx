@@ -7,7 +7,6 @@ import Link from 'next/link'
 import { LEGAL_CONTACT_EMAIL, LEGAL_CNPJ, LEGAL_COMPANY_NAME } from '../components/legalMeta';
 import LandingCtaLink from '../components/LandingCtaLink';
 import LandingTopNav from '../components/LandingTopNav';
-import FaviconInertiaMark from '../components/FaviconInertiaMark';
 import LupaVehicleReveal from '../components/LupaVehicleReveal';
 import GsapTextReveal from '../components/GsapTextReveal';
 import GsapSplitSubline from '../components/GsapSplitSubline';
@@ -379,10 +378,14 @@ export default function LandingPage() {
 
       <header className="site-header w-full px-4 sm:px-8 py-5 flex justify-between items-center gap-3 z-50 shrink-0">
         <div className="gsap-header-item flex items-center gap-2 sm:gap-3 min-w-0 shrink-0">
-          <FaviconInertiaMark size={44} />
-          <span className="hidden sm:inline font-extrabold tracking-tight uppercase whitespace-nowrap text-[var(--text-main)] text-lg">
-            Danos Aparentes
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/logo-full-dark.svg"
+            alt="Danos Aparentes"
+            width={150}
+            height={40}
+            className="h-8 sm:h-9 w-auto object-contain drop-shadow-[0_0_12px_rgba(56,189,248,0.25)]"
+          />
         </div>
 
         <div className="flex items-center gap-2 sm:gap-4 min-w-0">
