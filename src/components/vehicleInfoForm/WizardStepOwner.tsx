@@ -2,7 +2,7 @@
 import type { VehicleInfo } from '../../types'
 import { toTitleCase } from '../../lib/cnhBarcode'
 import CnhScanner from '../CnhScanner'
-import { inputClasses, labelClasses } from './constants'
+import { inputClasses, inputClassesAuto, labelClasses } from './constants'
 import { formatCNH, formatCPF, formatPhone } from './formatters'
 import { IconCamera } from '../ui/AnimatedIcons'
 
@@ -44,13 +44,13 @@ export default function WizardStepOwner({
           {show('ref') && (
             <div>
               <label htmlFor="ref-input" className={labelClasses}>Nº OS / Ref</label>
-              <input id="ref-input" className={inputClasses} value={info.ref} onChange={e => set('ref', e.target.value)} placeholder="Ex: 2026-00123" />
+              <input id="ref-input" className={inputClassesAuto} value={info.ref} onChange={e => set('ref', e.target.value)} placeholder="Ex: 2026-00123" />
             </div>
           )}
           {show('profile') && (
             <div className="sm:col-span-3">
               <label htmlFor="profile-select" className={labelClasses}>Perfil</label>
-              <select id="profile-select" className={inputClasses} value={info.profile} onChange={e => set('profile', e.target.value)}>
+              <select id="profile-select" className={inputClassesAuto} value={info.profile} onChange={e => set('profile', e.target.value)}>
                 <option value="">— Selecione —</option>
                 <option value="estacionamento">Estacionamento</option>
                 <option value="valet">Valet</option>
@@ -92,7 +92,7 @@ export default function WizardStepOwner({
               {info.phone?.startsWith('+') ? (
                 <input
                   id="phone-input"
-                  className={inputClasses}
+                  className={inputClassesAuto}
                   value={info.phone}
                   onChange={e => set('phone', '+' + e.target.value.replace(/[^0-9\s\-().]/g, '').replace(/^\+*/, ''))}
                   placeholder="+1 555 000-0000"
@@ -101,7 +101,7 @@ export default function WizardStepOwner({
               ) : (
                 <input
                   id="phone-input"
-                  className={inputClasses}
+                  className={inputClassesAuto}
                   value={info.phone}
                   onChange={e => set('phone', formatPhone(e.target.value))}
                   placeholder="(11) 99999-9999"
@@ -129,7 +129,7 @@ export default function WizardStepOwner({
               {info.cpf?.startsWith('EX-') ? (
                 <input
                   id="cpf-input"
-                  className={inputClasses}
+                  className={inputClassesAuto}
                   value={info.cpf.slice(3)}
                   onChange={e => set('cpf', 'EX-' + e.target.value)}
                   placeholder="Nº do documento estrangeiro"
@@ -137,7 +137,7 @@ export default function WizardStepOwner({
               ) : (
                 <input
                   id="cpf-input"
-                  className={inputClasses}
+                  className={inputClassesAuto}
                   value={info.cpf || ''}
                   onChange={e => set('cpf', formatCPF(e.target.value))}
                   placeholder="000.000.000-00"
@@ -155,7 +155,7 @@ export default function WizardStepOwner({
                 {info.cnh?.startsWith('EX-') ? (
                   <input
                     id="cnh-input"
-                    className={inputClasses}
+                    className={inputClassesAuto}
                     value={info.cnh.slice(3)}
                     onChange={e => set('cnh', 'EX-' + e.target.value)}
                     placeholder="Nº da carteira estrangeira"
@@ -163,7 +163,7 @@ export default function WizardStepOwner({
                 ) : (
                   <input
                     id="cnh-input"
-                    className={inputClasses}
+                    className={inputClassesAuto}
                     value={info.cnh || ''}
                     onChange={e => set('cnh', formatCNH(e.target.value))}
                     placeholder="Ex: 12345678900"
@@ -197,7 +197,7 @@ export default function WizardStepOwner({
               <label htmlFor="cnh-category-select" className={labelClasses}>Cat. CNH</label>
               <select
                 id="cnh-category-select"
-                className={inputClasses}
+                className={inputClassesAuto}
                 value={info.cnhCategory || ''}
                 onChange={e => set('cnhCategory', e.target.value)}
               >

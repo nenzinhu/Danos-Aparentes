@@ -1,6 +1,6 @@
 'use client'
 import type { VehicleInfo } from '../../types'
-import { UF_LIST, VEHICLE_TYPES, inputClasses, labelClasses, type FoundData } from './constants'
+import { UF_LIST, VEHICLE_TYPES, inputClasses, inputClassesAuto, labelClasses, type FoundData } from './constants'
 import { Chip } from './icons'
 
 export type PlateStatus = 'idle' | 'loading' | 'found' | 'error'
@@ -101,7 +101,7 @@ export default function WizardStepVehicle({
           {show('ano') && (
             <div className="max-w-[5rem]">
               <label htmlFor="ano-input" className={labelClasses}>Ano</label>
-              <input id="ano-input" className={inputClasses} value={info.ano || ''} onChange={e => set('ano', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))} placeholder="Ex: 2023" inputMode="numeric" maxLength={4} />
+              <input id="ano-input" className={inputClassesAuto} value={info.ano || ''} onChange={e => set('ano', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))} placeholder="Ex: 2023" inputMode="numeric" maxLength={4} />
             </div>
           )}
         </div>
@@ -112,7 +112,7 @@ export default function WizardStepVehicle({
           {show('vehicleTypeDesc') && (
             <div>
               <label htmlFor="vehicle-type-select" className={labelClasses}>Tipo</label>
-              <select id="vehicle-type-select" className={inputClasses} value={info.vehicleTypeDesc} onChange={e => set('vehicleTypeDesc', e.target.value)}>
+              <select id="vehicle-type-select" className={inputClassesAuto} value={info.vehicleTypeDesc} onChange={e => set('vehicleTypeDesc', e.target.value)}>
                 <option value="">— Selecione —</option>
                 {VEHICLE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
@@ -121,7 +121,7 @@ export default function WizardStepVehicle({
           {show('km') && (
             <div className="max-w-[8rem]">
               <label htmlFor="km-input" className={labelClasses}>KM</label>
-              <input id="km-input" className={inputClasses} value={info.km || ''} onChange={e => set('km', e.target.value.replace(/[^0-9]/g, ''))} placeholder="Ex: 45000" inputMode="numeric" />
+              <input id="km-input" className={inputClassesAuto} value={info.km || ''} onChange={e => set('km', e.target.value.replace(/[^0-9]/g, ''))} placeholder="Ex: 45000" inputMode="numeric" />
             </div>
           )}
           {show('city') && (
@@ -133,7 +133,7 @@ export default function WizardStepVehicle({
           {show('state') && (
             <div className="max-w-[4rem]">
               <label htmlFor="state-select" className={labelClasses}>UF</label>
-              <select id="state-select" className={inputClasses} value={info.state} onChange={e => set('state', e.target.value)}>
+              <select id="state-select" className={inputClassesAuto} value={info.state} onChange={e => set('state', e.target.value)}>
                 <option value="">—</option>
                 {UF_LIST.map(uf => <option key={uf} value={uf}>{uf}</option>)}
               </select>
