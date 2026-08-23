@@ -31,11 +31,12 @@ import Link from 'next/link'
 import FirstInspectionOnboarding from './FirstInspectionOnboarding'
 
 import { EntradaIcon, SaidaIcon } from '@/src/components/OperationTypeIcons'
-import { IconDocument, IconCar, IconSignature, IconFolder } from '@/src/components/ui/AnimatedIcons'
+import { IconDocument, IconCar, IconSignature, IconFolder, IconCamera } from '@/src/components/ui/AnimatedIcons'
 import Button from '@/src/components/ui/Button'
 import { buttonVariants } from '@/src/components/ui/buttonVariants'
+import DamageTextGenerator from './DamageTextGenerator'
 
-type InspectSection = 'dados' | 'diagrama' | 'finalizar'
+type InspectSection = 'dados' | 'diagrama' | 'analise' | 'finalizar'
 
 const INSPECT_SECTIONS: {
   id: InspectSection
@@ -45,10 +46,11 @@ const INSPECT_SECTIONS: {
 }[] = [
   { id: 'dados', label: 'Dados do Veículo', short: 'Veículo', icon: <IconDocument size={14} /> },
   { id: 'diagrama', label: 'Danos', short: 'Danos', icon: <IconCar size={14} /> },
+  { id: 'analise', label: 'Análise das Fotos', short: 'Fotos', icon: <IconCamera size={14} /> },
   { id: 'finalizar', label: 'Dossiê Técnico', short: 'Dossiê', icon: <IconSignature size={14} /> },
 ]
 
-const SECTION_ORDER: InspectSection[] = ['dados', 'diagrama', 'finalizar']
+const SECTION_ORDER: InspectSection[] = ['dados', 'diagrama', 'analise', 'finalizar']
 
 function sectionTabClass(active: boolean) {
   return `flex-1 min-h-10 px-2 sm:px-3 py-2 rounded-lg text-xs font-bold font-outfit transition-all cursor-pointer border ${
@@ -66,6 +68,9 @@ function sectionHint(purpose: InspectionPurpose | undefined, section: InspectSec
   }
   if (section === 'diagrama') {
     return 'Toque nas peças com dano e anexe evidências.'
+  }
+  if (section === 'analise') {
+    return 'Gere o laudo textual das avarias a partir das 4 fotos.'
   }
   return 'Assinaturas, revisão e dossiê técnico.'
 }
@@ -594,6 +599,15 @@ export default function InspectTab({
             </div>
           </div>
         </>
+      )}
+
+      {section === 'analise' && (
+        <DamageTextGenerator
+          info={vehicleInfo}
+          damages={allVehicleDamages}
+          accessToken={accessToken}
+          onToast={onToast}
+        />
       )}
 
       {section === 'finalizar' && (

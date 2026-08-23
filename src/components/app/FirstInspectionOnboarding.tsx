@@ -5,7 +5,7 @@ import { IconDocument, IconCar, IconSignature } from '../ui/AnimatedIcons'
 import { trackEvent } from '@/src/lib/analytics/events'
 import { completeOnboarding, dismissOnboarding } from '@/src/lib/onboarding'
 
-type InspectSection = 'dados' | 'diagrama' | 'finalizar'
+type InspectSection = 'dados' | 'diagrama' | 'analise' | 'finalizar'
 
 type Props = {
   hasPlate: boolean
