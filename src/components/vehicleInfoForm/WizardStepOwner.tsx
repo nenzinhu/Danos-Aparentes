@@ -101,7 +101,7 @@ export default function WizardStepOwner({
               ) : (
                 <input
                   id="phone-input"
-                  className={inputClasses}
+                  className={`${inputClasses} max-w-[11rem]`}
                   value={info.phone}
                   onChange={e => set('phone', formatPhone(e.target.value))}
                   placeholder="(11) 99999-9999"
@@ -137,7 +137,7 @@ export default function WizardStepOwner({
               ) : (
                 <input
                   id="cpf-input"
-                  className={inputClasses}
+                  className={`${inputClasses} max-w-[10rem]`}
                   value={info.cpf || ''}
                   onChange={e => set('cpf', formatCPF(e.target.value))}
                   placeholder="000.000.000-00"
@@ -163,7 +163,7 @@ export default function WizardStepOwner({
                 ) : (
                   <input
                     id="cnh-input"
-                    className={inputClasses}
+                    className={`${inputClasses} max-w-[9.5rem]`}
                     value={info.cnh || ''}
                     onChange={e => set('cnh', formatCNH(e.target.value))}
                     placeholder="Ex: 12345678900"
@@ -197,7 +197,7 @@ export default function WizardStepOwner({
               <label htmlFor="cnh-category-select" className={labelClasses}>Categoria CNH</label>
               <select
                 id="cnh-category-select"
-                className={inputClasses}
+                className={`${inputClasses} max-w-[5rem]`}
                 value={info.cnhCategory || ''}
                 onChange={e => set('cnhCategory', e.target.value)}
               >

@@ -101,7 +101,7 @@ export default function WizardStepVehicle({
           {show('ano') && (
             <div>
               <label htmlFor="ano-input" className={labelClasses}>Ano do Veículo</label>
-              <input id="ano-input" className={inputClasses} value={info.ano || ''} onChange={e => set('ano', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))} placeholder="Ex: 2023" inputMode="numeric" maxLength={4} />
+              <input id="ano-input" className={`${inputClasses} max-w-[5rem]`} value={info.ano || ''} onChange={e => set('ano', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))} placeholder="Ex: 2023" inputMode="numeric" maxLength={4} />
             </div>
           )}
         </div>
@@ -121,7 +121,7 @@ export default function WizardStepVehicle({
           {show('km') && (
             <div>
               <label htmlFor="km-input" className={labelClasses}>Quilometragem (KM)</label>
-              <input id="km-input" className={inputClasses} value={info.km || ''} onChange={e => set('km', e.target.value.replace(/[^0-9]/g, ''))} placeholder="Ex: 45000" inputMode="numeric" />
+              <input id="km-input" className={`${inputClasses} max-w-[8rem]`} value={info.km || ''} onChange={e => set('km', e.target.value.replace(/[^0-9]/g, ''))} placeholder="Ex: 45000" inputMode="numeric" />
             </div>
           )}
           {show('city') && (
@@ -133,7 +133,7 @@ export default function WizardStepVehicle({
           {show('state') && (
             <div>
               <label htmlFor="state-select" className={labelClasses}>UF</label>
-              <select id="state-select" className={inputClasses} value={info.state} onChange={e => set('state', e.target.value)}>
+              <select id="state-select" className={`${inputClasses} max-w-[4rem]`} value={info.state} onChange={e => set('state', e.target.value)}>
                 <option value="">—</option>
                 {UF_LIST.map(uf => <option key={uf} value={uf}>{uf}</option>)}
               </select>
