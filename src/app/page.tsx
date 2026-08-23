@@ -505,10 +505,10 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+      <AntesDepoisSection />
       <SocialProofSection vertical="home" />
       <ProblemSection />
       <VehicleHistoryTimelineSection />
-      <AntesDepoisSection />
       <EuConsigoProvarSection />
       <HowItWorksHistorySection />
       <SolutionEvidenceSection />
