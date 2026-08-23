@@ -606,6 +606,9 @@ export default function InspectTab({
           info={vehicleInfo}
           damages={allVehicleDamages}
           accessToken={accessToken}
+          onChange={onVehicleInfoChange}
+          inspectionId={inspectionId}
+          vehicleId={vehicleId}
           onToast={onToast}
         />
       )}

@@ -7,12 +7,19 @@ import { VIEW_PHOTO_ORDER, hasAllViewPhotos } from '@/src/lib/viewPhotos'
 import { TYPE_LABEL } from '@/src/components/app/viewPhotosCaptureLogic'
 import { ResolvedPhoto } from '@/src/components/ResolvedPhoto'
 import { suggestViewDamageFromPhoto } from '@/src/lib/viewDamageSuggestClient'
+import { storePhotoEvidence } from '@/src/lib/photoEvidence'
+import { deletePhotoRef } from '@/src/lib/photoStore'
+import { startPhotoUploadProgress, updatePhotoUploadProgress, finishPhotoUploadProgress } from '@/src/lib/photoUploadProgress'
 import Button from '@/src/components/ui/Button'
+import { IconCamera, IconGallery } from '@/src/components/ui/AnimatedIcons'
 
 type Props = {
   info: VehicleInfo
   damages: Damage[]
   accessToken?: string | null
+  onChange?: (info: VehicleInfo) => void
+  inspectionId?: string | null
+  vehicleId?: string | null
   onToast?: (msg: string) => void
   onUseText?: (text: string) => void
 }
@@ -23,13 +30,26 @@ const SEVERITY_PT: Record<string, string> = {
   high: 'grave',
 }
 
+type PendingItem = { ref: string; view: ViewType | '' }
+
 /**
- * Aba "Análise das Fotografias": compõe um laudo textual das avarias a partir
- * das fotos dos 4 lados (já analisadas pela IA) e dos danos marcados no diagrama.
+ * Aba "Análise das Fotografias": captura (câmera ou galeria) das 4 fotos,
+ * assinala o lado de cada uma e gera um laudo textual das avarias.
  */
-export default function DamageTextGenerator({ info, damages, accessToken, onToast, onUseText }: Props) {
+export default function DamageTextGenerator({
+  info,
+  damages,
+  accessToken,
+  onChange,
+  inspectionId,
+  vehicleId,
+  onToast,
+  onUseText,
+}: Props) {
   const [busy, setBusy] = useState(false)
   const [text, setText] = useState('')
+  const [pending, setPending] = useState<PendingItem[]>([])
+  const [saving, setSaving] = useState(false)
   const viewPhotos = info.viewPhotos || {}
   const complete = hasAllViewPhotos(info)
 
@@ -88,6 +108,63 @@ export default function DamageTextGenerator({ info, damages, accessToken, onToas
     [damagesByView, info.brand, info.plate],
   )
 
+  const handleFile = useCallback(
+    async (file: File) => {
+      if (pending.length >= 4) {
+        onToast?.('Já há 4 fotos no lote.')
+        return
+      }
+      setSaving(true)
+      startPhotoUploadProgress(1, 'Salvando foto…')
+      try {
+        const { optimizedRef } = await storePhotoEvidence(file, {
+          inspectionId: inspectionId || undefined,
+          vehicleId: vehicleId || undefined,
+        })
+        updatePhotoUploadProgress({ current: 1 })
+        setPending((prev) => [...prev, { ref: optimizedRef, view: '' }])
+      } catch (e) {
+        console.error(e)
+        onToast?.('Não foi possível salvar a foto.')
+      } finally {
+        finishPhotoUploadProgress()
+        setSaving(false)
+      }
+    },
+    [pending.length, inspectionId, vehicleId, onToast],
+  )
+
+  const removePending = (ref: string) => {
+    void deletePhotoRef(ref)
+    setPending((prev) => prev.filter((p) => p.ref !== ref))
+  }
+
+  const setPendingView = (ref: string, view: ViewType) => {
+    setPending((prev) => prev.map((p) => (p.ref === ref ? { ...p, view } : p)))
+  }
+
+  const confirmSides = useCallback(() => {
+    const missing = pending.find((p) => !p.view)
+    if (missing) {
+      onToast?.('Selecione o lado de todas as fotos.')
+      return
+    }
+    const viewPhotosNext: Partial<Record<ViewType, string>> = { ...viewPhotos }
+    for (const p of pending) {
+      if (p.view) viewPhotosNext[p.view] = p.ref
+    }
+    onChange?.({
+      ...info,
+      viewPhotos: viewPhotosNext,
+      pendingViewPhotoRefs: [],
+      viewSideSuggestions: undefined,
+      viewSidesConfirmedAt: new Date().toISOString(),
+      viewSidesConfirmedBy: 'Análise de Fotos',
+    })
+    setPending([])
+    onToast?.('Lados confirmados. Gere o texto de danos.')
+  }, [pending, viewPhotos, info, onChange, onToast])
+
   const handleGenerate = useCallback(async () => {
     if (!complete) {
       onToast?.('Capture e confirme as 4 fotos antes de gerar o texto.')
@@ -95,7 +172,6 @@ export default function DamageTextGenerator({ info, damages, accessToken, onToas
     }
     setBusy(true)
     try {
-      // Preenche com IA as vistas que ainda não têm dano marcado no diagrama.
       const extras: Partial<Record<ViewType, { type: string; severity: string; description: string }>> = {}
       for (const view of VIEW_PHOTO_ORDER) {
         if ((damagesByView[view]?.length ?? 0) > 0) continue
@@ -123,12 +199,88 @@ export default function DamageTextGenerator({ info, damages, accessToken, onToas
         <p className="ds-label">Análise das Fotografias</p>
         <p className="ds-h3 mt-0.5">Gerar texto de danos do veículo</p>
         <p className="ds-caption mt-1">
-          As 4 fotos dos lados são lidas pela IA e transformadas em um laudo textual das avarias,
-          pronto para copiar ou anexar ao dossiê.
+          Tire ou anexe as 4 fotos dos lados (frente, traseira, esquerda e direita), selecione o lado de
+          cada uma e gere o laudo textual das avarias.
         </p>
       </div>
 
-      {/* Pré-visualização dos 4 lados */}
+      {/* Captura: câmera ou galeria */}
+      {pending.length < 4 && (
+        <div className="flex flex-wrap gap-2 items-center">
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            id="dtg-camera"
+            onChange={(e) => {
+              const f = e.target.files?.[0]
+              if (f) void handleFile(f)
+              e.target.value = ''
+            }}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            id="dtg-gallery"
+            onChange={(e) => {
+              const files = Array.from(e.target.files || [])
+              for (const f of files) void handleFile(f)
+              e.target.value = ''
+            }}
+          />
+          <Button type="button" variant="primary" size="sm" disabled={saving} onClick={() => document.getElementById('dtg-camera')?.click()}>
+            <span className="inline-flex items-center gap-1.5"><IconCamera size={15} /> Câmera</span>
+          </Button>
+          <Button type="button" variant="secondary" size="sm" disabled={saving} onClick={() => document.getElementById('dtg-gallery')?.click()}>
+            <span className="inline-flex items-center gap-1.5"><IconGallery size={15} /> Galeria</span>
+          </Button>
+          <span className="text-[0.7rem] font-bold text-[var(--text-muted)] tabular-nums">
+            {pending.length}/4 no lote
+          </span>
+        </div>
+      )}
+
+      {/* Lote pendente: assinalar lados */}
+      {pending.length > 0 && (
+        <div className="space-y-2">
+          <p className="ds-label">Selecione o lado de cada foto</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {pending.map((p) => (
+              <div key={p.ref} className="relative rounded-xl overflow-hidden aspect-[3/4] bg-black/40 ring-1 ring-[var(--card-border)]">
+                <ResolvedPhoto refOrDataUrl={p.ref} alt="Foto" className="absolute inset-0 w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={() => removePending(p.ref)}
+                  className="absolute top-1.5 right-1.5 min-w-7 min-h-7 rounded-lg bg-black/55 text-white text-xs font-bold"
+                  aria-label="Remover foto"
+                >
+                  ✕
+                </button>
+                <div className="absolute bottom-0 left-0 right-0 bg-black/55 p-1">
+                  <select
+                    value={p.view}
+                    onChange={(e) => setPendingView(p.ref, e.target.value as ViewType)}
+                    className="w-full rounded-md bg-white/10 text-white text-[0.62rem] font-bold px-1 py-1 outline-none"
+                  >
+                    <option value="">Lado…</option>
+                    {VIEW_PHOTO_ORDER.map((v) => (
+                      <option key={v} value={v} className="text-black">{VIEW_NAME[v]}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            ))}
+          </div>
+          <Button type="button" variant="primary" size="md" onClick={confirmSides} disabled={pending.length < 1}>
+            Confirmar lados ({pending.length})
+          </Button>
+        </div>
+      )}
+
+      {/* Pré-visualização dos 4 lados confirmados */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {VIEW_PHOTO_ORDER.map((view) => {
           const ref = viewPhotos[view]
