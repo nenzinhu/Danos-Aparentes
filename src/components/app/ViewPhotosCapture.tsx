@@ -290,20 +290,31 @@ export default function ViewPhotosCapture({
         const results = await Promise.all(
           views.map(async (view) => {
             const photoRef = viewPhotos[view]
-            if (!photoRef) return { view, photoRef: null as string | null, suggestion: null }
-            const suggestion = await suggestViewDamageFromPhoto({
-              photoRef,
-              partName: VIEW_NAME[view],
-              accessToken,
-            })
-            return { view, photoRef, suggestion }
+            if (!photoRef) return { view, photoRef: null as string | null, suggestion: null, error: null }
+            try {
+              const suggestion = await suggestViewDamageFromPhoto({
+                photoRef,
+                partName: VIEW_NAME[view],
+                accessToken,
+              })
+              return { view, photoRef, suggestion, error: null }
+            } catch (e) {
+              return {
+                view,
+                photoRef,
+                suggestion: null,
+                error: e instanceof Error ? e.message : 'Erro desconhecido',
+              }
+            }
           }),
         )
 
         let found = 0
-        for (const { view, photoRef, suggestion } of results) {
+        const errors = new Set<string>()
+        for (const { view, photoRef, suggestion, error } of results) {
           setAnalyzingView(view)
           if (!photoRef) continue
+          if (error) { errors.add(error); continue }
           if (!suggestion || suggestion.noDamage) {
             if (opts?.onlyView) onToast?.('Nenhuma avaria aparente nesta foto.')
             continue
@@ -325,11 +336,13 @@ export default function ViewPhotosCapture({
           })
         }
         if (!opts?.onlyView) {
-          onToast?.(
-            found > 0
-              ? `IA encontrou ${found} possível(is) avaria(s). Revise e confirme cada uma.`
-              : 'IA não encontrou avarias aparentes nas 4 vistas.',
-          )
+          if (errors.size > 0) {
+            onToast?.(`IA não pôde analisar: ${[...errors][0]}`)
+          } else if (found > 0) {
+            onToast?.(`IA encontrou ${found} possível(is) avaria(s). Revise e confirme cada uma.`)
+          } else {
+            onToast?.('IA não encontrou avarias aparentes nas 4 vistas.')
+          }
         }
       } catch (e) {
         console.error(e)

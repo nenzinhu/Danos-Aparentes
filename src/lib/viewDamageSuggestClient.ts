@@ -12,6 +12,13 @@ export type ViewDamageSuggestion = {
   noDamage?: boolean
 }
 
+export class ViewDamageSuggestError extends Error {
+  constructor(message: string, public status?: number) {
+    super(message)
+    this.name = 'ViewDamageSuggestError'
+  }
+}
+
 function blobToDataUrl(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -58,7 +65,14 @@ export async function suggestViewDamageFromPhoto(input: {
     }),
   })
 
-  if (!res.ok) return null
+  if (!res.ok) {
+    let msg = 'Falha na análise de avarias.'
+    try {
+      const err = await res.json()
+      if (err?.error) msg = String(err.error)
+    } catch { /* ignore */ }
+    throw new ViewDamageSuggestError(msg, res.status)
+  }
   const data = await res.json().catch(() => null)
   if (!data) return null
   if (data.noDamage === true || data.type == null) {
