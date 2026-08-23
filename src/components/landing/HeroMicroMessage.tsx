@@ -25,7 +25,7 @@ export default function HeroMicroMessage() {
           ))}
         </div>
         <p className="mt-4 max-w-2xl text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-          Inspeções isoladas viram a memória digital contínua e verificável do veículo.
+          Cada registro carrega GPS, data/hora e assinatura — então qualquer disputa se resolve com prova, não com opinião.
         </p>
       </Reveal>
     </section>

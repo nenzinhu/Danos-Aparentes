@@ -117,11 +117,10 @@ export default function HowItWorksHistorySection() {
           <span aria-hidden="true" className="w-4 h-px bg-[var(--sheet-line)]" />
         </div>
         <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight leading-[0.95] text-[var(--text-main)] [text-wrap:balance] max-w-3xl">
-          Da inspeção à evidência em quatro passos.
+          Do registro à prova inquestionável.
         </h2>
         <p className="mt-4 max-w-2xl text-sm sm:text-base text-[var(--text-muted)] leading-relaxed">
-          Cada etapa transforma uma inspeção em evidência. Não é um checklist — é a construção contínua do
-          histórico que prova quando e onde cada dano aconteceu.
+          Cada inspeção vira um elo na linha do tempo do veículo. Juntas, as evidências formam um dossiê que ninguém contesta.
         </p>
       </Reveal>
 
