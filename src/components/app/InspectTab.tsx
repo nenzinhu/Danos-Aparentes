@@ -22,13 +22,13 @@ import NewDamagesInspectorConfirm from './NewDamagesInspectorConfirm'
 import ViewPhotosCapture from './ViewPhotosCapture'
 import { VEHICLE_NAME, VIEW_NAME } from './constants'
 import { isNewDamage, type PreviousReportSummary } from '@/src/lib/reportComparison'
+import { useClients } from '@/src/hooks/useClients'
 import { hasAllViewPhotos } from '@/src/lib/viewPhotos'
 import type { LiveComparePreview } from '@/src/lib/vehicleEvidence/liveCompare'
 import { buildCompareHref } from '@/src/lib/vehicleEvidence/compareDeepLink'
 import type { RetornoLookupKind } from '@/src/lib/inspectionPurpose'
 import Link from 'next/link'
 import FirstInspectionOnboarding from './FirstInspectionOnboarding'
-import ClientQuickFill from './ClientQuickFill'
 
 import { EntradaIcon, SaidaIcon } from '@/src/components/OperationTypeIcons'
 import { IconDocument, IconCar, IconSignature, IconFolder } from '@/src/components/ui/AnimatedIcons'
@@ -242,6 +242,12 @@ export default function InspectTab({
   const mayReview = userId ? canReviewReport(role, userId, userId) : true
   const evidenceActorLabel = decidedByName || vehicleInfo.owner || undefined
 
+  const clients = useClients(userId)
+  const handleSaveClient = useCallback(async () => {
+    const rec = await clients.createOrUpdate(clients.fromVehicleInfo(vehicleInfo))
+    if (rec) onToast?.(`${rec.owner || rec.plate} salvo nos clientes`)
+    else onToast?.('Não foi possível salvar (sem conexão)')
+  }, [clients, vehicleInfo, onToast])
   const handleWizardComplete = useCallback(() => {
     onWizardComplete()
     setSection('diagrama')
@@ -419,12 +425,6 @@ export default function InspectTab({
           ) : (
             <>
               <div>
-                <ClientQuickFill
-                  vehicleInfo={vehicleInfo}
-                  onVehicleInfoChange={onVehicleInfoChange}
-                  userId={userId}
-                  onToast={onToast}
-                />
                 <p className="ds-label mb-1 mt-3">Veículo</p>
                 <VehicleInfoForm
                   info={vehicleInfo}
@@ -435,6 +435,9 @@ export default function InspectTab({
                   resetToken={formResetToken}
                   onWizardComplete={handleWizardComplete}
                   onPlateConfirmed={onPlateConfirmed}
+                  userId={userId}
+                  onToast={onToast}
+                  onSaveClient={handleSaveClient}
                 />
               </div>
               {!formCollapsed && (

@@ -43,9 +43,13 @@ interface Props {
   onWizardComplete?: () => void
   /** Disparado quando a placa atinge o formato completo (7 caracteres), independente do resultado da busca de marca/modelo. */
   onPlateConfirmed?: (plate: string) => void
+  /** Cadastro rápido de clientes (Supabase). Quando ausente, o botão some. */
+  userId?: string
+  onToast?: (msg: string) => void
+  onSaveClient?: () => void
 }
 
-function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse, onVehicleTypeDetected, resetToken, onWizardComplete, onPlateConfirmed }: Props) {
+function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse, onVehicleTypeDetected, resetToken, onWizardComplete, onPlateConfirmed, userId, onToast, onSaveClient }: Props) {
   const [visibleFields, setVisibleFields] = useState<Record<string, boolean>>(loadFieldFilter)
   const [fieldOrder, setFieldOrder] = useState<string[]>(loadFieldOrder)
   const [filterOpen, setFilterOpen] = useState(false)
@@ -382,13 +386,31 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
     plateStatus === 'loading' ? 'border-yellow-500/50 shadow-[0_0_18px_rgba(234,179,8,0.2)]' :
     'border-sky-500/35 shadow-[0_0_18px_rgba(0,170,255,0.15)]'
 
+  const stepTitle =
+    renderedStep === 1 ? 'Dados do Cliente' : renderedStep === 2 ? 'Dados do Veículo' : 'Evidências do Veículo'
+  const visibleCount = Object.values(visibleFields).filter(Boolean).length
+
   return (
     <div className="font-outfit">
-      <div className="flex flex-wrap justify-between items-center gap-2 mb-4">
+      <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
         <div className="font-extrabold text-[0.95rem] flex items-center gap-2 min-w-0">
-          <IconDocument size={18} className="text-sky-400 shrink-0" /> <span className="truncate">Dados da Vistoria</span>
+          <IconDocument size={18} className="text-sky-400 shrink-0" />
+          <span className="truncate">{stepTitle}</span>
+          <span className="hidden sm:inline-flex items-center rounded-full bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] px-2 py-0.5 text-[0.62rem] font-bold text-[var(--text-muted)]">
+            {visibleCount} campos
+          </span>
         </div>
         <div className="flex gap-2 items-center relative flex-wrap min-w-0">
+          {onSaveClient && (
+            <button
+              type="button"
+              onClick={onSaveClient}
+              title="Salva cliente + veículo para reutilizar nas próximas inspeções"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--primary)]/30 bg-[var(--primary)]/10 px-3 py-1.5 text-[0.72rem] font-bold text-[var(--primary)] hover:bg-[var(--primary)]/20 transition-colors backdrop-blur-sm"
+            >
+              <IconDocument size={13} /> Salvar nos clientes
+            </button>
+          )}
           <FieldVisibilityPanel
             filterRef={filterRef}
             anyHidden={anyHidden}
