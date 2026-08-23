@@ -88,20 +88,20 @@ export default function WizardStepVehicle({
         <div className="grid grid-cols-1 sm:grid-cols-[4fr_3fr_3fr] gap-3 mb-3">
           {show('brand') && (
             <div>
-              <label htmlFor="brand-input" className={labelClasses}>Marca / Modelo</label>
+              <label htmlFor="brand-input" className={labelClasses}>Marca</label>
               <input id="brand-input" className={inputClasses} value={info.brand} onChange={e => set('brand', e.target.value)} placeholder="Ex: Toyota Corolla" />
             </div>
           )}
           {show('color') && (
             <div>
-              <label htmlFor="color-input" className={labelClasses}>Cor do Veículo</label>
+              <label htmlFor="color-input" className={labelClasses}>Cor</label>
               <input id="color-input" className={inputClasses} value={info.color} onChange={e => set('color', e.target.value)} placeholder="Ex: Prata, Preto" />
             </div>
           )}
           {show('ano') && (
-            <div>
-              <label htmlFor="ano-input" className={labelClasses}>Ano do Veículo</label>
-              <input id="ano-input" className={`${inputClasses} max-w-[5rem]`} value={info.ano || ''} onChange={e => set('ano', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))} placeholder="Ex: 2023" inputMode="numeric" maxLength={4} />
+            <div className="max-w-[5rem]">
+              <label htmlFor="ano-input" className={labelClasses}>Ano</label>
+              <input id="ano-input" className={inputClasses} value={info.ano || ''} onChange={e => set('ano', e.target.value.replace(/[^0-9]/g, '').slice(0, 4))} placeholder="Ex: 2023" inputMode="numeric" maxLength={4} />
             </div>
           )}
         </div>
@@ -111,7 +111,7 @@ export default function WizardStepVehicle({
         <div className="grid grid-cols-1 sm:grid-cols-[7fr_7fr_4fr_2fr] gap-3 mb-3">
           {show('vehicleTypeDesc') && (
             <div>
-              <label htmlFor="vehicle-type-select" className={labelClasses}>Tipo / Espécie</label>
+              <label htmlFor="vehicle-type-select" className={labelClasses}>Tipo</label>
               <select id="vehicle-type-select" className={inputClasses} value={info.vehicleTypeDesc} onChange={e => set('vehicleTypeDesc', e.target.value)}>
                 <option value="">— Selecione —</option>
                 {VEHICLE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
@@ -119,21 +119,21 @@ export default function WizardStepVehicle({
             </div>
           )}
           {show('km') && (
-            <div>
-              <label htmlFor="km-input" className={labelClasses}>Quilometragem (KM)</label>
-              <input id="km-input" className={`${inputClasses} max-w-[8rem]`} value={info.km || ''} onChange={e => set('km', e.target.value.replace(/[^0-9]/g, ''))} placeholder="Ex: 45000" inputMode="numeric" />
+            <div className="max-w-[8rem]">
+              <label htmlFor="km-input" className={labelClasses}>KM</label>
+              <input id="km-input" className={inputClasses} value={info.km || ''} onChange={e => set('km', e.target.value.replace(/[^0-9]/g, ''))} placeholder="Ex: 45000" inputMode="numeric" />
             </div>
           )}
           {show('city') && (
             <div>
-              <label htmlFor="city-input" className={labelClasses}>Cidade de Emplacamento</label>
+              <label htmlFor="city-input" className={labelClasses}>Cidade</label>
               <input id="city-input" className={inputClasses} value={info.city} onChange={e => set('city', e.target.value)} placeholder="Ex: São Paulo" />
             </div>
           )}
           {show('state') && (
-            <div>
+            <div className="max-w-[4rem]">
               <label htmlFor="state-select" className={labelClasses}>UF</label>
-              <select id="state-select" className={`${inputClasses} max-w-[4rem]`} value={info.state} onChange={e => set('state', e.target.value)}>
+              <select id="state-select" className={inputClasses} value={info.state} onChange={e => set('state', e.target.value)}>
                 <option value="">—</option>
                 {UF_LIST.map(uf => <option key={uf} value={uf}>{uf}</option>)}
               </select>

@@ -42,7 +42,7 @@ export const inputClasses =
   'w-full min-w-0 max-w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-2.5 py-1.5 text-[var(--input-color)] font-outfit text-[0.8rem] outline-none focus:border-[var(--primary)]/60 focus:ring-1 focus:ring-[var(--primary)]/30 transition-colors placeholder:text-[var(--text-muted)]/60 placeholder:font-normal'
 
 export const labelClasses =
-  'block text-[0.68rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1'
+  'block text-[0.66rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1'
 
 import type { FipePublicSummary, VehicleType } from '../../types'
 

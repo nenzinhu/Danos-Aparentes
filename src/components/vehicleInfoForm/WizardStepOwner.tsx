@@ -43,13 +43,13 @@ export default function WizardStepOwner({
         <div className="grid grid-cols-1 sm:grid-cols-[2fr_3fr] gap-3 mb-3">
           {show('ref') && (
             <div>
-              <label htmlFor="ref-input" className={labelClasses}>Nº da OS / Referência</label>
+              <label htmlFor="ref-input" className={labelClasses}>Nº OS / Ref</label>
               <input id="ref-input" className={inputClasses} value={info.ref} onChange={e => set('ref', e.target.value)} placeholder="Ex: 2026-00123" />
             </div>
           )}
           {show('profile') && (
             <div className="sm:col-span-3">
-              <label htmlFor="profile-select" className={labelClasses}>Perfil do Relatório</label>
+              <label htmlFor="profile-select" className={labelClasses}>Perfil</label>
               <select id="profile-select" className={inputClasses} value={info.profile} onChange={e => set('profile', e.target.value)}>
                 <option value="">— Selecione —</option>
                 <option value="estacionamento">Estacionamento</option>
@@ -75,15 +75,15 @@ export default function WizardStepOwner({
           {show('owner') && (
             <div>
               <label htmlFor="owner-input" className={labelClasses}>
-                Proprietário / Cliente <span className="text-[var(--severity-high)]" aria-hidden="true">*</span>
+                Proprietário <span className="text-[var(--severity-high)]" aria-hidden="true">*</span>
               </label>
               <input id="owner-input" className={inputClasses} value={info.owner} onChange={e => set('owner', toTitleCase(e.target.value))} placeholder="Ex: João Silva" required aria-required="true" />
             </div>
           )}
           {show('phone') && (
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-2 max-w-[11rem]">
               <label htmlFor="phone-input" className={`${labelClasses} flex items-center justify-between gap-2`}>
-                <span>Telefone (com DDD)</span>
+                <span>Telefone</span>
                 <ForeignToggle
                   checked={info.phone?.startsWith('+') || false}
                   onChange={(checked) => set('phone', checked ? '+' : '')}
@@ -101,7 +101,7 @@ export default function WizardStepOwner({
               ) : (
                 <input
                   id="phone-input"
-                  className={`${inputClasses} max-w-[11rem]`}
+                  className={inputClasses}
                   value={info.phone}
                   onChange={e => set('phone', formatPhone(e.target.value))}
                   placeholder="(11) 99999-9999"
@@ -118,7 +118,7 @@ export default function WizardStepOwner({
       {(show('cpf') || show('cnh') || show('cnhCategory')) && (
         <div className="grid grid-cols-1 sm:grid-cols-[7fr_9fr_4fr] gap-3 mb-3">
           {show('cpf') && (
-            <div>
+            <div className="max-w-[10rem]">
               <label htmlFor="cpf-input" className={`${labelClasses} flex items-center justify-between gap-2`}>
                 <span>CPF <span className="text-[var(--severity-high)]" aria-hidden="true">*</span></span>
                 <ForeignToggle
@@ -137,7 +137,7 @@ export default function WizardStepOwner({
               ) : (
                 <input
                   id="cpf-input"
-                  className={`${inputClasses} max-w-[10rem]`}
+                  className={inputClasses}
                   value={info.cpf || ''}
                   onChange={e => set('cpf', formatCPF(e.target.value))}
                   placeholder="000.000.000-00"
@@ -149,8 +149,8 @@ export default function WizardStepOwner({
             </div>
           )}
           {show('cnh') && (
-            <div>
-              <label htmlFor="cnh-input" className={labelClasses}>Nº da Habilitação (CNH)</label>
+            <div className="max-w-[9.5rem]">
+              <label htmlFor="cnh-input" className={labelClasses}>CNH</label>
               <div className="flex gap-2">
                 {info.cnh?.startsWith('EX-') ? (
                   <input
@@ -163,7 +163,7 @@ export default function WizardStepOwner({
                 ) : (
                   <input
                     id="cnh-input"
-                    className={`${inputClasses} max-w-[9.5rem]`}
+                    className={inputClasses}
                     value={info.cnh || ''}
                     onChange={e => set('cnh', formatCNH(e.target.value))}
                     placeholder="Ex: 12345678900"
@@ -193,11 +193,11 @@ export default function WizardStepOwner({
             </div>
           )}
           {show('cnhCategory') && (
-            <div>
-              <label htmlFor="cnh-category-select" className={labelClasses}>Categoria CNH</label>
+            <div className="max-w-[5rem]">
+              <label htmlFor="cnh-category-select" className={labelClasses}>Cat. CNH</label>
               <select
                 id="cnh-category-select"
-                className={`${inputClasses} max-w-[5rem]`}
+                className={inputClasses}
                 value={info.cnhCategory || ''}
                 onChange={e => set('cnhCategory', e.target.value)}
               >
