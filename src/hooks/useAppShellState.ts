@@ -8,7 +8,7 @@ import {
   startOnboardingSession,
 } from '../lib/onboarding'
 
-export type AppTab = 'inspect' | 'dashboard' | 'team' | 'vehicles' | 'ia'
+export type AppTab = 'inspect' | 'dashboard' | 'team' | 'vehicles' | 'ia' | 'clients'
 
 const APP_TAB_STORAGE_KEY = 'app_last_tab'
 
@@ -16,7 +16,7 @@ const APP_TAB_STORAGE_KEY = 'app_last_tab'
 function smartInitialTab(): AppTab {
   if (typeof window === 'undefined') return 'inspect'
   const last = window.localStorage.getItem(APP_TAB_STORAGE_KEY)
-  if (last === 'inspect' || last === 'dashboard' || last === 'team' || last === 'vehicles' || last === 'ia') {
+  if (last === 'inspect' || last === 'dashboard' || last === 'team' || last === 'vehicles' || last === 'ia' || last === 'clients') {
     return last
   }
   const coarsePointer = window.matchMedia?.('(pointer: coarse)').matches ?? false

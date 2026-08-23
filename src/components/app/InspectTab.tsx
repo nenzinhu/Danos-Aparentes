@@ -28,6 +28,7 @@ import { buildCompareHref } from '@/src/lib/vehicleEvidence/compareDeepLink'
 import type { RetornoLookupKind } from '@/src/lib/inspectionPurpose'
 import Link from 'next/link'
 import FirstInspectionOnboarding from './FirstInspectionOnboarding'
+import ClientQuickFill from './ClientQuickFill'
 
 import { EntradaIcon, SaidaIcon } from '@/src/components/OperationTypeIcons'
 import { IconDocument, IconCar, IconSignature, IconFolder } from '@/src/components/ui/AnimatedIcons'
@@ -418,7 +419,13 @@ export default function InspectTab({
           ) : (
             <>
               <div>
-                <p className="ds-label mb-1">Veículo</p>
+                <ClientQuickFill
+                  vehicleInfo={vehicleInfo}
+                  onVehicleInfoChange={onVehicleInfoChange}
+                  userId={userId}
+                  onToast={onToast}
+                />
+                <p className="ds-label mb-1 mt-3">Veículo</p>
                 <VehicleInfoForm
                   info={vehicleInfo}
                   onChange={onVehicleInfoChange}

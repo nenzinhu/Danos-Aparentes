@@ -41,6 +41,10 @@ const VehiclesListView = dynamic(
   () => import('@/src/components/vehicles/VehiclesListView'),
   { loading: () => <AppLoadingShell /> },
 )
+const ClientsPage = dynamic(
+  () => import('@/src/app/app/clients/page'),
+  { loading: () => <AppLoadingShell /> },
+)
 
 function formatSyncFailureToast(dropped: DroppedSyncItem[]): string {
   const first = dropped[0]
@@ -302,8 +306,8 @@ export default function AppAuthenticatedShell({
                 onToast={shell.showToast}
                 accessToken={session?.access_token}
               />
-            ) : shell.activeTab === 'vehicles' ? (
-              <VehiclesListView vehicles={vehiclesByGroup} />
+            ) : shell.activeTab === 'clients' ? (
+              <ClientsPage userId={session?.user.id} />
             ) : (
               <InspectTab
                 vehicleType={inspection.vehicleType}

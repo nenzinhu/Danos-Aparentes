@@ -2,13 +2,13 @@
 
 import React from 'react'
 import PwaInstallButton from '@/src/components/PwaInstallButton'
-import { IconCar, IconFolder, IconSparkles, IconTeam } from '@/src/components/ui/AnimatedIcons'
+import { IconCar, IconFolder, IconSparkles, IconTeam, IconDocument } from '@/src/components/ui/AnimatedIcons'
 import { buttonVariants } from '@/src/components/ui/buttonVariants'
 import NewInspectionDropdown from './NewInspectionDropdown'
 import { Tabs, TabsList, Tab } from '@/src/components/ui/Tabs'
 import type { InspectionPurpose } from '@/src/types'
 
-export type AppTabValue = 'inspect' | 'dashboard' | 'vehicles' | 'team' | 'ia'
+export type AppTabValue = 'inspect' | 'dashboard' | 'vehicles' | 'team' | 'ia' | 'clients'
 
 interface AppTabBarProps {
   activeTab: AppTabValue
@@ -78,6 +78,10 @@ export default function AppTabBar({
               <IconSparkles size={14} className={tabIconTone(activeTab === 'ia', 'text-violet-400')} />
               IA
             </Tab>
+            <Tab value="clients">
+              <IconDocument size={14} className={tabIconTone(activeTab === 'clients', 'text-[var(--signal-bright)]')} />
+              Clientes
+            </Tab>
             {showTeamTab && (
               <Tab value="team">
                 <IconTeam size={14} className={tabIconTone(activeTab === 'team', 'text-[var(--primary)]')} />
@@ -129,11 +133,12 @@ export default function AppTabBar({
       aria-label="Navegação principal do aplicativo"
       className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[var(--card-border)] bg-[var(--bg-main)]/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.35)]"
     >
-      <div className="grid grid-cols-5 items-stretch h-16 max-w-lg mx-auto">
+      <div className="grid grid-cols-6 items-stretch h-16 max-w-lg mx-auto">
         {([
           { value: 'vehicles', label: 'Veículos', icon: <IconCar size={20} className={activeTab === 'vehicles' ? 'text-sky-400' : 'text-slate-400'} />, badge: <TabBadge count={vehiclesCount} tone="cyan" /> },
           { value: 'dashboard', label: 'Dossiês', icon: <IconFolder size={20} className={activeTab === 'dashboard' ? 'text-emerald-400' : 'text-slate-400'} />, badge: unsyncedCount > 0 ? <TabBadge count={unsyncedCount} tone="green" /> : null },
           { value: '__new__', label: 'Nova', icon: <span className="flex h-11 w-11 -mt-4 items-center justify-center rounded-full text-white font-black text-2xl shadow-xl shadow-[var(--primary)]/30" style={{ backgroundImage: 'var(--primary-btn-gradient)' }}>+</span>, badge: null },
+          { value: 'clients', label: 'Clientes', icon: <IconDocument size={20} className={activeTab === 'clients' ? 'text-[var(--signal-bright)]' : 'text-slate-400'} />, badge: null },
           { value: 'ia', label: 'IA', icon: <IconSparkles size={20} className={activeTab === 'ia' ? 'text-violet-400' : 'text-slate-400'} />, badge: null },
           showTeamTab
             ? { value: 'team', label: 'Equipe', icon: <IconTeam size={20} className={activeTab === 'team' ? 'text-[var(--primary)]' : 'text-slate-400'} />, badge: null }
