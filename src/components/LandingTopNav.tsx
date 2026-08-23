@@ -286,7 +286,7 @@ export default function LandingTopNav() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/brand/logo-full.svg"
+          src="/brand/logo-full-dark.svg"
           alt="Danos Aparentes"
           width={150}
           height={40}
