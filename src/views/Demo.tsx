@@ -59,7 +59,7 @@ export default function Demo() {
   return (
     <div className='h-screen w-screen flex flex-col overflow-hidden font-outfit text-[#e8f4ff] p-5 bg-[#020617]'>
       <header className='flex items-center justify-between shrink-0 mb-4'>
-        <Logo size={28} />
+        <Logo size={28} textClassName="text-[#e8f4ff]" />
         <Link href='/app' className='border border-primary/40 text-primary font-bold text-xs px-4 py-2 rounded-lg hover:bg-primary/10 transition-all'>
           Entrar
         </Link>

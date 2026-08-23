@@ -32,7 +32,11 @@ export default function GsapLetterScanText({ text, className = '', fontSize }: P
       return
     }
 
-    gsap.set(letters, { scale: 0.55, opacity: 0.4, transformOrigin: 'center bottom' })
+    // Letras começam "dim" (opacity 0.85) e a lupa faz o pop para 1.
+    // Antes estava 0.4, o que deixava o nome da marca quase invisível
+    // (WCAG/legibilidade). 0.85 mantém o efeito de varredura, mas o texto
+    // "Danos Aparentes" continua legível o tempo todo.
+    gsap.set(letters, { scale: 0.55, opacity: 0.85, transformOrigin: 'center bottom' })
 
     const perStep = 0.11
     const growDuration = 0.16
@@ -45,7 +49,7 @@ export default function GsapLetterScanText({ text, className = '', fontSize }: P
       const t = i * perStep
       tl.to(lupa, { x: center, duration: perStep }, t)
       tl.to(letter, { scale: 1, opacity: 1, duration: growDuration, ease: 'back.out(2.5)' }, t)
-      tl.to(letter, { scale: 0.55, opacity: 0.4, duration: shrinkDuration, ease: 'power2.in' }, t + perStep * 0.85)
+      tl.to(letter, { scale: 0.55, opacity: 0.85, duration: shrinkDuration, ease: 'power2.in' }, t + perStep * 0.85)
     })
 
     // reset the lupa to the start instantly right before the loop repeats
