@@ -57,6 +57,7 @@ export async function suggestCompareDamageFromPhoto(input: {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-ai-model': (typeof localStorage !== 'undefined' && localStorage.getItem('da_ai_model')) || 'groq',
         Authorization: `Bearer ${input.accessToken}`,
       },
       body: JSON.stringify({

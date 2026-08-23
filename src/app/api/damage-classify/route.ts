@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseEnabled } from '@/src/lib/supabase';
 import { getClientIp, getUserFromRequest, userHasActiveSubscription } from '@/src/lib/server/auth';
 import { callGroqVision, getGroqApiKey, GROQ_VISION_MODEL, GROQ_VISION_MODEL_VERSION } from '@/src/lib/server/groqVision';
+import { callQwenVision, getQwenApiKey, QWEN_VISION_MODEL, QWEN_VISION_MODEL_VERSION } from '@/src/lib/server/qwenVision';
 import { parseImageDataUrl } from '@/src/lib/server/geminiVision';
 import { checkRateLimit } from '@/src/lib/server/rateLimit';
 
@@ -83,8 +84,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Formato de foto inválido' }, { status: 400 });
     }
 
-    if (!getGroqApiKey()) {
-      return NextResponse.json({ error: 'Chave GROQ_API_KEY não configurada' }, { status: 500 });
+    const requestedModel = req.headers.get('x-ai-model') === 'qwen' ? 'qwen' : 'groq'
+    const useQwen = requestedModel === 'qwen' && Boolean(getQwenApiKey())
+    const useGroq = requestedModel === 'groq' && Boolean(getGroqApiKey())
+
+    if (!useQwen && !useGroq) {
+      const missingKey = requestedModel === 'qwen' ? 'QWEN_API_KEY' : 'GROQ_API_KEY'
+      return NextResponse.json({ error: `Chave ${missingKey} não configurada` }, { status: 500 });
     }
 
     const noDamageRule = allowNoDamage
@@ -111,12 +117,28 @@ Regras para "severidade":
 "descricao": até 40 palavras, em Português, técnica e objetiva (tipo específico + extensão relativa à peça + profundidade/exposição aparente). NUNCA invente uma medida em cm/mm — descreva só proporção relativa à peça. NUNCA mencione preço, valor, custo ou qualquer cifra monetária.${noDamageRule}`;
 
     const imageDataUrl = `data:${parsed.mimeType};base64,${parsed.base64}`;
-    const groq = await callGroqVision(systemPrompt, imageDataUrl, 'damage-classify');
-    if (!groq.ok) {
-      return NextResponse.json({ error: groq.error }, { status: groq.status });
+
+    let ai: { ok: true; text: string } | { ok: false; status: number; error: string }
+    let modelId = GROQ_VISION_MODEL
+    let modelVersion = GROQ_VISION_MODEL_VERSION
+    if (useQwen) {
+      ai = await callQwenVision(systemPrompt, imageDataUrl, 'damage-classify')
+      modelId = QWEN_VISION_MODEL
+      modelVersion = QWEN_VISION_MODEL_VERSION
+    } else {
+      ai = await callGroqVision(systemPrompt, imageDataUrl, 'damage-classify')
+    }
+    if (!ai.ok) {
+      return NextResponse.json({ error: ai.error }, { status: ai.status });
     }
 
-    const cleaned = groq.text.replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
+    // Qwen (e alguns modelos) podem encapsular a resposta em <think>…</think> ou
+    // em bloco de código; removemos tudo que não seja o JSON final.
+    const cleaned = ai.text
+      .replace(/^```(?:json)?/i, '')
+      .replace(/```$/i, '')
+      .replace(/<think>[\s\S]*?<\/think>/i, '')
+      .trim();
 
     let parsedResult: {
       tipo_dano?: string | null
@@ -145,8 +167,8 @@ Regras para "severidade":
         description: '',
         noDamage: true,
         confidence: null,
-        model: GROQ_VISION_MODEL,
-        modelVersion: GROQ_VISION_MODEL_VERSION,
+        model: modelId,
+        modelVersion,
         analyzedAt,
       });
     }
@@ -161,8 +183,8 @@ Regras para "severidade":
       description,
       noDamage: false,
       confidence: null,
-      model: GROQ_VISION_MODEL,
-      modelVersion: GROQ_VISION_MODEL_VERSION,
+      model: modelId,
+      modelVersion,
       analyzedAt,
     });
   } catch (err) {

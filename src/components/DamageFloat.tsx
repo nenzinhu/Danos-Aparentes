@@ -61,6 +61,13 @@ export default function DamageFloat({ partId, partName, position, currentType, a
   const [aiState, setAiState] = useState<AiClassifyState>({ status: 'idle' })
   const [notesTouched, setNotesTouched] = useState(false)
   const [editedManually, setEditedManually] = useState(false)
+  const [aiModel, setAiModel] = useState<string>(
+    typeof localStorage !== 'undefined' ? localStorage.getItem('da_ai_model') || 'groq' : 'groq',
+  )
+  const chooseAiModel = (m: string) => {
+    setAiModel(m)
+    try { localStorage.setItem('da_ai_model', m) } catch { /* ignore */ }
+  }
   const [aiDecisionId, setAiDecisionId] = useState<string | null>(null)
   const [aiDecisionAppendPending, setAiDecisionAppendPending] = useState(false)
   const [aiOriginal, setAiOriginal] = useState<AiOriginalSuggestion | null>(null)
@@ -142,6 +149,7 @@ export default function DamageFloat({ partId, partName, position, currentType, a
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'x-ai-model': (typeof localStorage !== 'undefined' && localStorage.getItem('da_ai_model')) || 'groq',
           ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         },
         body: JSON.stringify({ photo: dataUrl, partName }),
@@ -436,6 +444,26 @@ export default function DamageFloat({ partId, partName, position, currentType, a
           </div>
 
           {/* Foto */}
+          <div className="mb-3">
+            <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Modelo de IA</div>
+            <div className="flex gap-1.5">
+              {(['groq', 'qwen'] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => chooseAiModel(m)}
+                  className={`flex-1 rounded-lg border px-2.5 py-1.5 text-[0.7rem] font-bold transition-colors ${
+                    aiModel === m
+                      ? 'border-[var(--primary)]/60 bg-[var(--primary)]/15 text-[var(--primary)]'
+                      : 'border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] text-[var(--text-muted)] hover:text-[var(--text-main)]'
+                  }`}
+                >
+                  {m === 'groq' ? 'Groq (Qwen 3.6)' : 'Qwen 3.7 Flash'}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="mb-3">
             <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1.5">Foto <span className="normal-case font-normal opacity-60">(opcional)</span></div>
             <input

@@ -48,6 +48,7 @@ export async function suggestViewDamageFromPhoto(input: {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'x-ai-model': (typeof localStorage !== 'undefined' && localStorage.getItem('da_ai_model')) || 'groq',
       ...(input.accessToken ? { Authorization: `Bearer ${input.accessToken}` } : {}),
     },
     body: JSON.stringify({
