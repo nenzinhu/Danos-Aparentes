@@ -5,7 +5,7 @@ import { IconDocument, IconCar, IconSignature } from '../ui/AnimatedIcons'
 import { trackEvent } from '@/src/lib/analytics/events'
 import { completeOnboarding, dismissOnboarding } from '@/src/lib/onboarding'
 
-type InspectSection = 'dados' | 'diagrama' | 'analise' | 'finalizar'
+type InspectSection = 'dados' | 'diagrama' | 'analise' | 'historico' | 'finalizar'
 
 type Props = {
   hasPlate: boolean
@@ -22,13 +22,13 @@ type Props = {
 const STEPS = [
   {
     id: 'dados' as const,
-    label: 'Identidade',
+    label: 'Identificação',
     hint: 'Digite a placa: marca e modelo preenchem sozinhos.',
     icon: IconDocument,
   },
   {
     id: 'diagrama' as const,
-    label: 'Danos',
+    label: 'Evidências',
     hint: 'Toque nas peças com dano, ou continue sem danos.',
     icon: IconCar,
   },

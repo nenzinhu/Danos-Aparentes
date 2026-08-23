@@ -31,12 +31,12 @@ import Link from 'next/link'
 import FirstInspectionOnboarding from './FirstInspectionOnboarding'
 
 import { EntradaIcon, SaidaIcon } from '@/src/components/OperationTypeIcons'
-import { IconDocument, IconCar, IconSignature, IconFolder, IconCamera } from '@/src/components/ui/AnimatedIcons'
+import { IconDocument, IconCar, IconSignature, IconFolder, IconCamera, IconSync } from '@/src/components/ui/AnimatedIcons'
 import Button from '@/src/components/ui/Button'
 import { buttonVariants } from '@/src/components/ui/buttonVariants'
 import DamageTextGenerator from './DamageTextGenerator'
 
-type InspectSection = 'dados' | 'diagrama' | 'analise' | 'finalizar'
+type InspectSection = 'dados' | 'diagrama' | 'analise' | 'historico' | 'finalizar'
 
 const INSPECT_SECTIONS: {
   id: InspectSection
@@ -44,38 +44,40 @@ const INSPECT_SECTIONS: {
   short: string
   icon: React.ReactNode
 }[] = [
-  { id: 'dados', label: 'Dados do Veículo', short: 'Veículo', icon: <IconDocument size={14} /> },
-  { id: 'diagrama', label: 'Danos', short: 'Danos', icon: <IconCar size={14} /> },
-  { id: 'analise', label: 'Análise das Fotos', short: 'Fotos', icon: <IconCamera size={14} /> },
-  { id: 'finalizar', label: 'Dossiê Técnico', short: 'Dossiê', icon: <IconSignature size={14} /> },
+  { id: 'dados', label: 'Identificação', short: 'ID', icon: <IconDocument size={14} /> },
+  { id: 'diagrama', label: 'Evidências', short: 'Evid.', icon: <IconCar size={14} /> },
+  { id: 'analise', label: 'Análise', short: 'Análise', icon: <IconCamera size={14} /> },
+  { id: 'historico', label: 'Histórico', short: 'Hist.', icon: <IconSync size={14} /> },
+  { id: 'finalizar', label: 'Dossiê', short: 'Dossiê', icon: <IconSignature size={14} /> },
 ]
 
-const SECTION_ORDER: InspectSection[] = ['dados', 'diagrama', 'analise', 'finalizar']
-
-function sectionTabClass(active: boolean) {
-  return `flex-1 min-h-10 px-2 sm:px-3 py-2 rounded-lg text-xs font-bold font-outfit transition-all cursor-pointer border ${
-    active
-      ? 'theme-tab-active bg-[var(--btn-secondary-bg)] border-[var(--primary)]/35 text-[var(--primary)] shadow-sm'
-      : 'theme-tab-idle text-[var(--text-muted)] hover:text-[var(--text-main)] border-transparent'
-  }`
-}
+const SECTION_ORDER: InspectSection[] = ['dados', 'diagrama', 'analise', 'historico', 'finalizar']
 
 function sectionHint(purpose: InspectionPurpose | undefined, section: InspectSection): string {
   if (section === 'dados') {
     return purpose === 'retorno'
-      ? 'Busque a inspeção anterior e confirme os Dados do Veículo.'
-      : 'Dados do Veículo, depois evidências dos 4 lados.'
+      ? 'Identifique a inspeção, o veículo e o responsável.'
+      : 'Identificação da vistoria, do veículo e do responsável.'
   }
   if (section === 'diagrama') {
-    return 'Toque nas peças com dano e anexe evidências.'
+    return 'Localize o dano no veículo, anexe a evidência (foto + descrição) e registre o contexto.'
   }
   if (section === 'analise') {
     return 'Gere o laudo textual das avarias a partir das 4 fotos.'
   }
-  return 'Assinaturas, revisão e dossiê técnico.'
+  if (section === 'historico') {
+    return 'Veja inspeções anteriores, evolução e comparação de registros.'
+  }
+  return 'Resumo consolidado, assinaturas, revisão e dossiê técnico.'
 }
 
-function StepProgress({ current }: { current: InspectSection }) {
+function StepProgress({
+  current,
+  onSelect,
+}: {
+  current: InspectSection
+  onSelect: (id: InspectSection) => void
+}) {
   const idx = SECTION_ORDER.indexOf(current)
   return (
     <div className="ds-step-rail mb-1" aria-hidden="true">
@@ -84,13 +86,14 @@ function StepProgress({ current }: { current: InspectSection }) {
           {i > 0 && (
             <div className={`ds-step-line ${i <= idx ? 'ds-step-line-done' : ''}`} />
           )}
-          <div
-            className={`ds-step-dot ${
-              i < idx ? 'ds-step-dot-done' : i === idx ? 'ds-step-dot-active' : 'ds-step-dot-idle'
-            }`}
+          <button
+            type="button"
+            onClick={() => onSelect(id)}
+            title={INSPECT_SECTIONS[i].label}
+            className={`ds-step-dot ${i < idx ? 'ds-step-dot-done' : i === idx ? 'ds-step-dot-active' : 'ds-step-dot-idle'}`}
           >
             {i < idx ? '✓' : i + 1}
-          </div>
+          </button>
         </React.Fragment>
       ))}
     </div>
@@ -336,33 +339,41 @@ export default function InspectTab({
         />
       )}
 
-      <div className="flex flex-col items-center gap-3">
-        <div
-          role="tablist"
-          aria-label="Etapas da inspeção"
-          className="theme-tabs bg-[var(--card-bg-solid)] border border-[var(--card-border)] rounded-xl p-1 flex gap-0.5 shadow-sm backdrop-blur-md w-full max-w-xl"
-        >
-          {INSPECT_SECTIONS.map(({ id, label, short, icon }) => (
-            <button
-              key={id}
-              type="button"
-              role="tab"
-              aria-selected={section === id}
-              onClick={() => goToSection(id)}
-              className={sectionTabClass(section === id)}
-            >
-              <span className="inline-flex items-center justify-center gap-1.5 w-full">
-                {icon}
-                <span className="hidden sm:inline">{label}</span>
-                <span className="sm:hidden">{short}</span>
-                {id === 'finalizar' && allVehicleDamages.length > 0 && (
-                  <span className="text-red-400 tabular-nums text-[0.65rem]">({allVehicleDamages.length})</span>
-                )}
-              </span>
-            </button>
-          ))}
+      <div className="flex flex-col items-center gap-2">
+        <div className="w-full max-w-2xl">
+          <StepProgress current={section} onSelect={goToSection} />
+          {/* Stepper horizontal com rótulos (scrollável no mobile) */}
+          <div
+            role="tablist"
+            aria-label="Etapas da inspeção"
+            className="mt-1 flex gap-1 overflow-x-auto no-scrollbar pb-1"
+          >
+            {INSPECT_SECTIONS.map(({ id, label, short, icon }) => {
+              const active = section === id
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => goToSection(id)}
+                  className={`shrink-0 flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[0.72rem] font-bold font-outfit whitespace-nowrap transition-all cursor-pointer border ${
+                    active
+                      ? 'bg-[var(--btn-secondary-bg)] border-[var(--primary)]/35 text-[var(--primary)] shadow-sm'
+                      : 'border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)]'
+                  }`}
+                >
+                  {icon}
+                  <span className="hidden sm:inline">{label}</span>
+                  <span className="sm:hidden">{short}</span>
+                </button>
+              )
+            })}
+          </div>
         </div>
-        <p className="ds-caption text-center px-2 -mt-0.5">{sectionHint(inspectionPurpose, section)}</p>
+        <p className="ds-caption text-center px-2 -mt-0.5">
+          Etapa {SECTION_ORDER.indexOf(section) + 1} de {SECTION_ORDER.length} · {sectionHint(inspectionPurpose, section)}
+        </p>
       </div>
 
       {section === 'dados' && (
@@ -446,58 +457,20 @@ export default function InspectTab({
                 />
               </div>
               {!formCollapsed && (
-                <div className="space-y-4">
-                  <ViewPhotosCapture
-                    info={vehicleInfo}
-                    onChange={onVehicleInfoChange}
-                    vehicleType={vehicleType}
-                    damages={allVehicleDamages}
-                    onAddDamageRecord={onAddDamageRecord}
-                    onUpdateDamage={onUpdateDamage}
-                    onRemoveDamage={onRemoveDamage}
-                    accessToken={accessToken}
-                    decidedByName={evidenceActorLabel}
-                    onToast={onToast}
-                    inspectionId={inspectionId}
-                    vehicleId={vehicleId}
-                  />
-                  <div className="flex justify-end pt-1">
-                    <Button type="button" variant="primary" size="md" onClick={() => goToSection('diagrama')}>
-                      Continuar para avarias →
-                    </Button>
-                  </div>
+                <div className="flex justify-end pt-1">
+                  <Button type="button" variant="primary" size="md" onClick={() => goToSection('diagrama')}>
+                    Continuar →
+                  </Button>
                 </div>
               )}
             </>
           )}
-          {previousReport && (
-            <div className="text-[0.8rem] px-3.5 py-3 rounded-xl bg-amber-500/8 border border-amber-500/20 text-amber-400">
-              Inspeção anterior em{' '}
-              <strong>{new Date(previousReport.updatedAt).toLocaleDateString('pt-BR')}</strong>
-              Avarias novas aparecem no laudo.
-              {liveCompare && (
-                <p className="mt-2 text-amber-200/90 ds-caption">
-                  Ao vivo: {liveCompare.result.summary.newDamages} novo(s),{' '}
-                  {liveCompare.result.summary.severityChanged} alterado(s).{' '}
-                  <Link
-                    href={buildCompareHref(liveCompare.vehicleId, {
-                      prevId: liveCompare.previousReportId,
-                    })}
-                    className="font-bold underline hover:text-amber-100"
-                  >
-                    Comparar →
-                  </Link>
-                </p>
-              )}
-            </div>
-          )}
-          {!formCollapsed && (
-            <div className="flex gap-2 pt-2 justify-between items-center flex-wrap">
-              <div className="flex gap-2 flex-wrap">
-                <button
-                  type="button"
-                  onClick={onOpenSaved}
-                  className={buttonVariants({ variant: 'secondary', size: 'sm', className: 'inline-flex items-center gap-1.5' })}
+          <div className="flex gap-2 pt-2 justify-between items-center flex-wrap">
+            <div className="flex gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={onOpenSaved}
+                className={buttonVariants({ variant: 'secondary', size: 'sm', className: 'inline-flex items-center gap-1.5' })}
                 >
                   <IconFolder size={14} /> Salvas
                 </button>
@@ -518,13 +491,12 @@ export default function InspectTab({
                 className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'inline-flex items-center gap-1.5 text-red-400' })}
               >
                 <ClearAllIcon /> Limpar
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+                </button>
+                </div>
+                </div>
+                )}
 
-      {section === 'diagrama' && (
+                {section === 'diagrama' && (
         <>
           <div className="flex flex-col gap-4 items-center">
             <div className="w-full">
@@ -544,14 +516,33 @@ export default function InspectTab({
               <div className="flex items-center gap-3 min-w-0">
                 <VehicleIconSvg type={vehicleType} size={28} />
                 <div className="min-w-0">
-                  <p className="ds-label">Diagrama</p>
+                  <p className="ds-label">Evidências</p>
                   <p className="ds-h3 truncate">{VEHICLE_NAME[vehicleType]} · {VIEW_NAME[viewType]}</p>
                 </div>
               </div>
-              <Button type="button" variant="primary" size="sm" onClick={() => goToSection('finalizar')}>
-                Ir para laudo →
+              <Button type="button" variant="primary" size="sm" onClick={() => goToSection('analise')}>
+                Ir para análise →
               </Button>
             </div>
+
+            {/* Fotos dos 4 lados — evidência visual associada à inspeção */}
+            <div className="mb-5">
+              <ViewPhotosCapture
+                info={vehicleInfo}
+                onChange={onVehicleInfoChange}
+                vehicleType={vehicleType}
+                damages={allVehicleDamages}
+                onAddDamageRecord={onAddDamageRecord}
+                onUpdateDamage={onUpdateDamage}
+                onRemoveDamage={onRemoveDamage}
+                accessToken={accessToken}
+                decidedByName={evidenceActorLabel}
+                onToast={onToast}
+                inspectionId={inspectionId}
+                vehicleId={vehicleId}
+              />
+            </div>
+
             <VehicleViewer.Root
               vehicleType={vehicleType}
               viewType={viewType}
@@ -581,7 +572,7 @@ export default function InspectTab({
             </VehicleViewer.Root>
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
               <p className="ds-caption max-w-md">
-                Evidências dos 4 lados em <strong className="text-[var(--text-main)]">Dados do Veículo</strong>
+                Evidências dos 4 lados em <strong className="text-[var(--text-main)]">Evidências</strong>
                 {hasAllViewPhotos(vehicleInfo)
                   ? ' · completas.'
                   : ` · faltam ${4 - Object.values(vehicleInfo.viewPhotos || {}).filter(Boolean).length}.`}
@@ -598,23 +589,112 @@ export default function InspectTab({
               <TtsSettings config={ttsConfig} onChange={onTtsConfigChange} onTest={onTtsTest} voices={voices} />
             </div>
           </div>
+
+          <div className="flex justify-between gap-2 pt-1">
+            <Button type="button" variant="ghost" size="md" onClick={() => goToSection('dados')}>
+              ← Voltar
+            </Button>
+            <Button type="button" variant="primary" size="md" onClick={() => goToSection('analise')}>
+              Continuar →
+            </Button>
+          </div>
         </>
       )}
 
       {section === 'analise' && (
-        <DamageTextGenerator
-          info={vehicleInfo}
-          damages={allVehicleDamages}
-          accessToken={accessToken}
-          onChange={onVehicleInfoChange}
-          inspectionId={inspectionId}
-          vehicleId={vehicleId}
-          onToast={onToast}
-        />
+        <>
+          <DamageTextGenerator
+            info={vehicleInfo}
+            damages={allVehicleDamages}
+            accessToken={accessToken}
+            onChange={onVehicleInfoChange}
+            inspectionId={inspectionId}
+            vehicleId={vehicleId}
+            onToast={onToast}
+          />
+          <div className="flex justify-between gap-2 pt-1">
+            <Button type="button" variant="ghost" size="md" onClick={() => goToSection('diagrama')}>
+              ← Voltar
+            </Button>
+            <Button type="button" variant="primary" size="md" onClick={() => goToSection('historico')}>
+              Continuar →
+            </Button>
+          </div>
+        </>
+      )}
+
+      {section === 'historico' && (
+        <div className="glass-card p-5 sm:p-7 space-y-5">
+          <div>
+            <p className="ds-label">Histórico do Veículo</p>
+            <p className="ds-h3 mt-0.5">Evolução e comparação de registros</p>
+            <p className="ds-caption mt-1">
+              Inspeções anteriores, entrada/saída, avarias e evidências — preparado para receber os dados.
+            </p>
+          </div>
+
+          {previousReport ? (
+            <div className="text-[0.8rem] px-3.5 py-3 rounded-xl bg-amber-500/8 border border-amber-500/20 text-amber-400">
+              Inspeção anterior em{' '}
+              <strong>{new Date(previousReport.updatedAt).toLocaleDateString('pt-BR')}</strong>
+              Avarias novas aparecem no laudo.
+              {liveCompare && (
+                <p className="mt-2 text-amber-200/90 ds-caption">
+                  Ao vivo: {liveCompare.result.summary.newDamages} novo(s),{' '}
+                  {liveCompare.result.summary.severityChanged} alterado(s).{' '}
+                  <Link
+                    href={buildCompareHref(liveCompare.vehicleId, {
+                      prevId: liveCompare.previousReportId,
+                    })}
+                    className="font-bold underline hover:text-amber-100"
+                  >
+                    Comparar →
+                  </Link>
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="text-[0.8rem] px-3.5 py-3 rounded-xl bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--text-muted)]">
+              Sem inspeções anteriores para este veículo ainda. O histórico será construído conforme novas vistorias forem registradas.
+            </div>
+          )}
+
+          {allVehicleDamages.length > 0 && (
+            <div className="rounded-xl border border-[var(--card-border)] bg-[var(--card-bg)] p-4">
+              <p className="ds-label mb-2">Avarias desta inspeção</p>
+              <DamageList
+                damages={allVehicleDamages}
+                onRemove={onRemoveDamage}
+                onUpdate={onUpdateDamage}
+                previousReport={previousReport}
+                inspectionId={inspectionId}
+                vehicleId={vehicleId}
+                onToast={onToast}
+              />
+            </div>
+          )}
+
+          <InspectionAuditTimeline inspectionId={inspectionId} issued={Boolean(publicCode)} />
+
+          <div className="flex justify-between gap-2 pt-1">
+            <Button type="button" variant="ghost" size="md" onClick={() => goToSection('analise')}>
+              ← Voltar
+            </Button>
+            <Button type="button" variant="primary" size="md" onClick={() => goToSection('finalizar')}>
+              Continuar →
+            </Button>
+          </div>
+        </div>
       )}
 
       {section === 'finalizar' && (
-        <div className="grid grid-cols-1 lg:grid-cols-[65fr_35fr] gap-5 items-start">
+        <>
+          <div className="flex justify-start pt-1">
+            <Button type="button" variant="ghost" size="md" onClick={() => goToSection('historico')}>
+              ← Voltar
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[65fr_35fr] gap-5 items-start">
           {/* COLUNA ESQUERDA — Captura de Dados (65%) */}
           <div className="space-y-4 min-w-0">
             <div className="rounded-2xl border border-[var(--card-border)] bg-[var(--card-bg)] p-5 sm:p-6 shadow-sm">
@@ -734,7 +814,8 @@ export default function InspectTab({
               issued={Boolean(publicCode)}
             />
           </div>
-        </div>
+          </div>
+        </>
       )}
     </>
   )
