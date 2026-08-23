@@ -98,7 +98,7 @@ export default function CookieConsentBanner() {
       role="dialog"
       aria-modal="true"
       aria-label="Preferências de cookies"
-      className="fixed bottom-4 right-4 z-[100] w-[min(22rem,calc(100vw-2rem))] p-4 rounded-2xl bg-slate-950/95 border border-slate-700 backdrop-blur-md shadow-2xl"
+      className="fixed bottom-20 right-4 z-[100] w-[min(22rem,calc(100vw-2rem))] p-4 rounded-2xl bg-slate-950/95 border border-slate-700 backdrop-blur-md shadow-2xl"
     >
       <div className="flex flex-col gap-3">
         <p className="text-xs text-slate-300 leading-relaxed">
