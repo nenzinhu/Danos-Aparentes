@@ -277,7 +277,22 @@ export default function LandingTopNav() {
   }, [mobileOpen])
 
   return (
-    <nav ref={rootRef} className="gsap-header-item relative flex items-center" aria-label="Navegação principal">
+    <nav ref={rootRef} className="gsap-header-item relative flex items-center gap-2" aria-label="Navegação principal">
+      {/* Logo da marca (link p/ home) */}
+      <Link
+        href="/"
+        aria-label="Danos Aparentes — página inicial"
+        className="flex items-center shrink-0"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/brand/logo-full.svg"
+          alt="Danos Aparentes"
+          width={150}
+          height={40}
+          className="h-8 w-auto object-contain drop-shadow-[0_0_12px_rgba(56,189,248,0.25)]"
+        />
+      </Link>
       {/* Desktop */}
       <ul className="desktop-nav hidden lg:flex items-center gap-1">
         {NAV.map(group => {
