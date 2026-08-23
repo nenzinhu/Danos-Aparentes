@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState, useRef } from 'react'
 import type { Damage, VehicleInfo, ViewType } from '@/src/types'
 import { VIEW_NAME } from '@/src/components/app/constants'
 import { VIEW_PHOTO_ORDER, hasAllViewPhotos } from '@/src/lib/viewPhotos'
@@ -125,7 +125,8 @@ export default function DamageTextGenerator({
         setPending((prev) => [...prev, { ref: optimizedRef, view: '' }])
       } catch (e) {
         console.error(e)
-        onToast?.('Não foi possível salvar a foto.')
+        const msg = e instanceof Error ? e.message : String(e)
+        onToast?.(`Não foi possível salvar a foto: ${msg.slice(0, 80)}`)
       } finally {
         finishPhotoUploadProgress()
         setSaving(false)
@@ -133,6 +134,11 @@ export default function DamageTextGenerator({
     },
     [pending.length, inspectionId, vehicleId, onToast],
   )
+
+  const cameraRef = useRef<HTMLInputElement>(null)
+  const galleryRef = useRef<HTMLInputElement>(null)
+  const openCamera = () => cameraRef.current?.click()
+  const openGallery = () => galleryRef.current?.click()
 
   const removePending = (ref: string) => {
     void deletePhotoRef(ref)
@@ -208,11 +214,11 @@ export default function DamageTextGenerator({
       {pending.length < 4 && (
         <div className="flex flex-wrap gap-2 items-center">
           <input
+            ref={cameraRef}
             type="file"
             accept="image/*"
             capture="environment"
-            className="hidden"
-            id="dtg-camera"
+            className="sr-only"
             onChange={(e) => {
               const f = e.target.files?.[0]
               if (f) void handleFile(f)
@@ -220,21 +226,21 @@ export default function DamageTextGenerator({
             }}
           />
           <input
+            ref={galleryRef}
             type="file"
             accept="image/*"
             multiple
-            className="hidden"
-            id="dtg-gallery"
+            className="sr-only"
             onChange={(e) => {
               const files = Array.from(e.target.files || [])
               for (const f of files) void handleFile(f)
               e.target.value = ''
             }}
           />
-          <Button type="button" variant="primary" size="sm" disabled={saving} onClick={() => document.getElementById('dtg-camera')?.click()}>
+          <Button type="button" variant="primary" size="sm" disabled={saving} onClick={openCamera}>
             <span className="inline-flex items-center gap-1.5"><IconCamera size={15} /> Câmera</span>
           </Button>
-          <Button type="button" variant="secondary" size="sm" disabled={saving} onClick={() => document.getElementById('dtg-gallery')?.click()}>
+          <Button type="button" variant="secondary" size="sm" disabled={saving} onClick={openGallery}>
             <span className="inline-flex items-center gap-1.5"><IconGallery size={15} /> Galeria</span>
           </Button>
           <span className="text-[0.7rem] font-bold text-[var(--text-muted)] tabular-nums">
