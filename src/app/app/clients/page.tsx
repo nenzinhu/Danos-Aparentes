@@ -23,7 +23,7 @@ export default function ClientsPage({ userId }: { userId?: string }) {
     );
   }, [clients, query]);
 
-  const useClient = (c: ClientRecord) => {
+  const handleUseClient = (c: ClientRecord) => {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem(FILL_KEY, c.id);
     }
@@ -120,7 +120,7 @@ export default function ClientsPage({ userId }: { userId?: string }) {
               </div>
               <button
                 type="button"
-                onClick={() => useClient(c)}
+                onClick={() => handleUseClient(c)}
                 className="mt-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-4 py-2.5 text-sm font-black text-white shadow-lg shadow-[var(--primary)]/20 transition-opacity hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-main)]"
                 style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
               >

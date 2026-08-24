@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 /**
  * Hero da home: destaque visual do relatório entrada vs retorno.
  * Layout baseado na referência de marketing: antes/depois lado a lado,
@@ -9,9 +11,10 @@ export default function HeroBeforeAfter() {
   return (
     <div className="flex flex-col gap-3 select-none">
       <div className="relative w-full aspect-[4/3] rounded-2xl border border-[var(--card-border)] overflow-hidden bg-[var(--panel-bg)] shadow-xl shadow-black/20">
-        <img
+        <Image
           src="/exemplos/hero-vistoria-entrada-retorno.png"
           alt="Relatório de vistoria entrada e retorno lado a lado: evidência comparável do estado do veículo no check-out e check-in"
+          fill
           className="w-full h-full object-cover object-top"
           draggable={false}
         />

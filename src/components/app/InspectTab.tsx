@@ -32,7 +32,7 @@ import FirstInspectionOnboarding from './FirstInspectionOnboarding'
 
 import { EntradaIcon, SaidaIcon } from '@/src/components/OperationTypeIcons'
 import { IconDocument, IconCar, IconSignature, IconFolder, IconCamera, IconSync } from '@/src/components/ui/AnimatedIcons'
-import Button from '@/src/components/ui/Button'
+import Button, { ButtonGroup } from '@/src/components/ui/Button'
 import { buttonVariants } from '@/src/components/ui/buttonVariants'
 import DamageTextGenerator from './DamageTextGenerator'
 
@@ -590,14 +590,14 @@ export default function InspectTab({
             </div>
           </div>
 
-          <div className="flex justify-between gap-2 pt-1">
+          <ButtonGroup align="between" className="pt-1">
             <Button type="button" variant="ghost" size="md" onClick={() => goToSection('dados')}>
               ← Voltar
             </Button>
             <Button type="button" variant="primary" size="md" onClick={() => goToSection('analise')}>
               Continuar →
             </Button>
-          </div>
+          </ButtonGroup>
         </>
       )}
 
@@ -612,14 +612,14 @@ export default function InspectTab({
             vehicleId={vehicleId}
             onToast={onToast}
           />
-          <div className="flex justify-between gap-2 pt-1">
+          <ButtonGroup align="between" className="pt-1">
             <Button type="button" variant="ghost" size="md" onClick={() => goToSection('diagrama')}>
               ← Voltar
             </Button>
             <Button type="button" variant="primary" size="md" onClick={() => goToSection('historico')}>
               Continuar →
             </Button>
-          </div>
+          </ButtonGroup>
         </>
       )}
 
@@ -676,24 +676,24 @@ export default function InspectTab({
 
           <InspectionAuditTimeline inspectionId={inspectionId} issued={Boolean(publicCode)} />
 
-          <div className="flex justify-between gap-2 pt-1">
+          <ButtonGroup align="between" className="pt-1">
             <Button type="button" variant="ghost" size="md" onClick={() => goToSection('analise')}>
               ← Voltar
             </Button>
             <Button type="button" variant="primary" size="md" onClick={() => goToSection('finalizar')}>
               Continuar →
             </Button>
-          </div>
+          </ButtonGroup>
         </div>
       )}
 
       {section === 'finalizar' && (
         <>
-          <div className="flex justify-start pt-1">
+          <ButtonGroup align="start" className="pt-1">
             <Button type="button" variant="ghost" size="md" onClick={() => goToSection('historico')}>
               ← Voltar
             </Button>
-          </div>
+          </ButtonGroup>
           <div className="grid grid-cols-1 lg:grid-cols-[65fr_35fr] gap-5 items-start">
           {/* COLUNA ESQUERDA — Captura de Dados (65%) */}
           <div className="space-y-4 min-w-0">

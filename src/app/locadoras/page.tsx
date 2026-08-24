@@ -1,5 +1,6 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { LaudoSheet } from '@/src/components/LaudoSheet'
 import {
   LocadorasHeroCtas,
@@ -155,7 +156,7 @@ export default function LocadorasPage() {
       <nav className="w-full sticky top-0 z-40 border-b border-[var(--card-border)]/40 bg-[var(--bg-main)]/90 backdrop-blur-md">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center gap-2.5 min-w-0 group">
-            <img src="/brand/logo-icon.svg" alt="" width={36} height={36} className="shrink-0" />
+            <Image src="/brand/logo-icon.svg" alt="" width={36} height={36} className="shrink-0" />
             <span className="font-display text-lg sm:text-xl font-bold uppercase tracking-tight truncate group-hover:opacity-90">
               Danos Aparentes
             </span>
@@ -178,7 +179,7 @@ export default function LocadorasPage() {
           />
 
           <div className="relative flex flex-col items-center gap-3 mb-5">
-            <img src="/brand/logo-icon.svg" alt="" width={56} height={56} />
+            <Image src="/brand/logo-icon.svg" alt="" width={56} height={56} />
             <p className="font-display text-2xl sm:text-3xl font-bold uppercase tracking-tight">
               {B2B_BRAND}
             </p>

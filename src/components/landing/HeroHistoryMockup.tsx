@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -108,11 +109,13 @@ export default function HeroHistoryMockup() {
             <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/10 p-3">
               <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-emerald-200/90 mb-2">Antes</p>
               <div className="rounded-lg overflow-hidden border border-[var(--card-border)] bg-black/40">
-                <img
+                <Image
                   src="/samples/corolla-abc-1234-2.jpg"
                   alt="Toyota Corolla ABC-1234 — inspeção anterior sem avarias"
                   className="w-full h-24 object-cover"
                   loading="lazy"
+                  width={400}
+                  height={96}
                 />
               </div>
               <p className="mt-2 text-xs font-semibold text-emerald-200/90">Para-Choque Traseiro OK</p>
@@ -120,11 +123,13 @@ export default function HeroHistoryMockup() {
             <div className="rounded-xl border border-rose-400/25 bg-rose-500/10 p-3">
               <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-rose-200/90 mb-2">Depois</p>
               <div className="rounded-lg overflow-hidden border border-[var(--card-border)] bg-black/40">
-                <img
+                <Image
                   src="/samples/corolla-abc-1234-1.jpg"
                   alt="Toyota Corolla ABC-1234 — inspeção atual com avaria"
                   className="w-full h-24 object-cover"
                   loading="lazy"
+                  width={400}
+                  height={96}
                 />
               </div>
               <p className="mt-2 text-xs font-semibold text-rose-200/90">Para-Choque Traseiro: Avaria na pintura</p>

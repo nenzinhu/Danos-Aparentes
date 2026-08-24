@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Damage, DamageType, ViewType } from '../../types'
 import { useTts } from '../../hooks/useTts'
 import { VehicleViewer } from '../VehicleViewer'
@@ -155,19 +156,23 @@ export default function LiveDemoCarousel() {
               <span className="font-mono-data text-[11px] tracking-[0.2em] text-[var(--signal-bright)]">ABC-1234</span>
             </div>
             <div className="rounded-xl overflow-hidden border border-[var(--card-border)]">
-              <img
+              <Image
                 src="/samples/corolla-abc-1234-2.jpg"
                 alt="Toyota Corolla ABC-1234 — vista traseira na inspeção"
                 className="w-full h-36 object-cover"
                 loading="lazy"
+                width={400}
+                height={144}
               />
             </div>
             <div className="rounded-xl overflow-hidden border border-[var(--card-border)]">
-              <img
+              <Image
                 src="/samples/corolla-abc-1234-1.jpg"
                 alt="Toyota Corolla ABC-1234 — detalhe da avaria no para-choque traseiro"
                 className="w-full h-36 object-cover"
                 loading="lazy"
+                width={400}
+                height={144}
               />
             </div>
             <p className="text-[10px] text-[var(--text-muted)] leading-snug">

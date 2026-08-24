@@ -22,7 +22,7 @@ import { suggestViewDamageFromPhoto } from '@/src/lib/viewDamageSuggestClient'
 import { classifyViewSides } from '@/src/lib/viewSideClassifyClient'
 import { ResolvedPhoto } from '@/src/components/ResolvedPhoto'
 import ViewSideConfirmPanel, { type ConfirmItem } from '@/src/components/app/ViewSideConfirmPanel'
-import Button from '@/src/components/ui/Button'
+import Button, { ButtonGroup } from '@/src/components/ui/Button'
 import PhotoFab from '@/src/components/PhotoFab'
 import ViewPhotoCard from '@/src/components/app/ViewPhotoCard'
 import {
@@ -504,7 +504,7 @@ export default function ViewPhotosCapture({
             </ul>
           )}
 
-          <div className="flex flex-wrap gap-2 items-center">
+          <ButtonGroup align="center" className="pt-2">
             <Button
               type="button"
               variant="primary"
@@ -532,7 +532,7 @@ export default function ViewPhotosCapture({
             {filled > 0 && pending.length === 0 && (
               <p className="ds-caption self-center">Ou use as fotos já confirmadas abaixo.</p>
             )}
-          </div>
+          </ButtonGroup>
         </div>
       )}
 

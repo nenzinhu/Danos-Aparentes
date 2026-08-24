@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 import { compressImage } from '../lib/imageUtils'
 import { db } from '../lib/db'
 import ConfirmModal from './ConfirmModal'
@@ -218,9 +219,11 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
                 {/* Preview Thumbnail */}
                 {companyLogo ? (
                   <div style={{ position: 'relative', height: 44, padding: '0 10px', background: 'rgba(0,0,0,0.35)', border: '1px solid rgba(0,220,255,0.4)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 10px rgba(0,220,255,0.2)', backdropFilter: 'blur(8px)', overflow: 'visible' }}>
-                    <img 
+                    <Image 
                       src={companyLogo} 
                       alt="Logo Preview" 
+                      width={120}
+                      height={36}
                       style={{ maxHeight: 36, maxWidth: 120, objectFit: 'contain' }}
                     />
                     <button
@@ -483,7 +486,7 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
               </div>
               <div style={{ textAlign: logoPosition, marginBottom: 6 }}>
                 {companyLogo ? (
-                  <img src={companyLogo} alt="Preview Logo" style={{ maxHeight: logoHeight, maxWidth: 140, objectFit: 'contain', display: 'inline-block' }} />
+                  <Image src={companyLogo} alt="Preview Logo" width={140} height={logoHeight} style={{ maxHeight: logoHeight, maxWidth: 140, objectFit: 'contain', display: 'inline-block' }} />
                 ) : (
                   <p style={{ fontSize: '0.82rem', fontWeight: 800, color: '#ffffff', textTransform: 'uppercase', margin: 0 }}>
                     {companyName || 'NOME DA SUA EMPRESA'}

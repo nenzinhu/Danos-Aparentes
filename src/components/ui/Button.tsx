@@ -1,6 +1,6 @@
 'use client'
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react'
-import { buttonVariants, type ButtonSize, type ButtonVariant } from './buttonVariants'
+import { buttonVariants, type ButtonSize, type ButtonVariant, type ButtonAlign } from './buttonVariants'
 
 /**
  * Sistema de botão do design system — fonte ÚNICA de estilo.
@@ -16,7 +16,7 @@ import { buttonVariants, type ButtonSize, type ButtonVariant } from './buttonVar
  * Raio = --radius-control (rounded-xl).
  */
 
-export type { ButtonVariant, ButtonSize }
+export type { ButtonVariant, ButtonSize, ButtonAlign }
 export { buttonVariants }
 
 function Spinner() {
@@ -31,12 +31,14 @@ function Spinner() {
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
   size?: ButtonSize
+  align?: ButtonAlign
+  fullWidth?: boolean
   loading?: boolean
   children: ReactNode
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', loading = false, disabled, className, children, ...rest },
+  { variant = 'primary', size = 'md', align, fullWidth, loading = false, disabled, className, children, ...rest },
   ref,
 ) {
   return (
@@ -44,7 +46,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       ref={ref}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
-      className={buttonVariants({ variant, size, className })}
+      className={buttonVariants({ variant, size, align, fullWidth, className })}
       {...rest}
     >
       {loading && <Spinner />}

@@ -130,7 +130,6 @@ function PagamentoPixContent() {
   // Confirma só o PIX gerado nesta sessão (não a assinatura que já existia).
   useEffect(() => {
     if (!awaitingPix || !subscription) return
-
     if (subscription.pendingMonths > 0) {
       setSawPendingCharge(true)
       return

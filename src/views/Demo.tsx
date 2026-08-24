@@ -1,5 +1,6 @@
-﻿'use client';
+'use client';
 import { useState } from 'react'
+import Image from 'next/image'
 import { Damage, DamageType } from '../types'
 import { useTts } from '../hooks/useTts'
 import { VehicleViewer } from '../components/VehicleViewer'
@@ -99,19 +100,23 @@ export default function Demo() {
               <span className='font-mono-data text-[11px] tracking-[0.2em] text-[#7dd3fc]'>ABC-1234</span>
             </div>
             <div className='rounded-lg overflow-hidden border border-white/10'>
-              <img
+              <Image
                 src='/samples/corolla-abc-1234-2.jpg'
                 alt='Toyota Corolla ABC-1234 — vista traseira na inspeção'
                 className='w-full h-32 object-cover'
                 loading='lazy'
+                width={400}
+                height={128}
               />
             </div>
             <div className='rounded-lg overflow-hidden border border-white/10'>
-              <img
+              <Image
                 src='/samples/corolla-abc-1234-1.jpg'
                 alt='Toyota Corolla ABC-1234 — detalhe da avaria'
                 className='w-full h-32 object-cover'
                 loading='lazy'
+                width={400}
+                height={128}
               />
             </div>
             <p className='text-[10px] text-slate-400 leading-snug'>

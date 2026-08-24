@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 
 /**
  * Botão compacto do logo da empresa (movido do Header para a barra de abas).
@@ -42,9 +43,11 @@ export default function CompanyLogoButton({ onClick, className = '' }: { onClick
           justifyContent: 'center',
           boxShadow: '0 0 10px rgba(0,220,255,0.2)',
         }}>
-          <img
+          <Image
             src={companyLogo}
             alt={companyName || 'Logo da empresa'}
+            width={90}
+            height={18}
             style={{ maxHeight: 18, maxWidth: 90, objectFit: 'contain' }}
           />
         </div>

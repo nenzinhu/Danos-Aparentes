@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import LandingCtaLink from '@/src/components/LandingCtaLink'
 import type { BlogPost } from '@/src/content/blog'
 
@@ -128,9 +129,9 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <p>
           Garagens subterrâneas costumam ter sinal fraco. Por isso a vistoria digital precisa funcionar{' '}
           <strong>100% offline</strong>, sincronizar depois e gerar PDF com{' '}
-          <a href="/blog/vistoria-foto-gps-hash-sha256-eliminar-contestacoes">hash e QR de validação</a>.
+          <Link href="/blog/vistoria-foto-gps-hash-sha256-eliminar-contestacoes">hash e QR de validação</Link>.
           Veja também o guia de{' '}
-          <a href="/blog/vistoria-entrega-veiculo">vistoria de entrega do veículo</a>.
+          <Link href="/blog/vistoria-entrega-veiculo">vistoria de entrega do veículo</Link>.
         </p>
       </>
     ),
@@ -202,7 +203,7 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <h2 id="definicao">O que é histórico veicular digital</h2>
         <p>
           É o prontuário vivo do veículo: cada vistoria vira um evento na{' '}
-          <a href="/blog/linha-do-tempo-veicular-comparar-inspecoes">linha do tempo veicular</a>, com
+          <Link href="/blog/linha-do-tempo-veicular-comparar-inspecoes">linha do tempo veicular</Link>, com
           diagrama, fotos, assinaturas e dossiê verificável.
         </p>
         <h2 id="componentes">O que compõe o prontuário</h2>
@@ -222,8 +223,8 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <p>
           Comece padronizando um checklist único para todos os inspetores. Use o mesmo diagrama em{' '}
           <strong>todas as unidades</strong>. Em 7 dias de trial você valida se a equipe adota no pátio.
-          Veja <a href="/frotas">soluções para frotas</a> ou{' '}
-          <a href="/locadoras">recursos para locadoras</a>.
+          Veja <Link href="/frotas">soluções para frotas</Link> ou{' '}
+          <Link href="/locadoras">recursos para locadoras</Link>.
         </p>
       </>
     ),
@@ -305,13 +306,13 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <p>
           Use diagrama de <strong>van</strong> (não carro) nas quatro vistas. Marque a peça no SVG,
           anexe foto e gere dossiê. Veja{' '}
-          <a href="/blog/vistoria-de-frota-padronizar-equipe">como padronizar a equipe</a>.
+          <Link href="/blog/vistoria-de-frota-padronizar-equipe">como padronizar a equipe</Link>.
         </p>
         <h2 id="escala">Escalar entre filiais</h2>
         <p>
           Com histórico por placa, a matriz compara vans de São Paulo e Recife no mesmo padrão. Ideal
           para operadores logísticos e{' '}
-          <a href="/frotas">gestão histórica de frota</a>.
+          <Link href="/frotas">gestão histórica de frota</Link>.
         </p>
       </>
     ),
@@ -383,7 +384,7 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <p>
           Diferente de um laudo avulso, o prontuário acumula eventos: entrega locação, retorno oficina,
           vistoria pátio. Cada evento alimenta a{' '}
-          <a href="/blog/historico-veicular-digital-o-que-e">linha do tempo veicular</a>.
+          <Link href="/blog/historico-veicular-digital-o-que-e">linha do tempo veicular</Link>.
         </p>
         <h2 id="estrutura">Estrutura do dossiê</h2>
         <ul>
@@ -397,7 +398,7 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <p>
           Dossiê técnico sério inclui <strong>hash SHA-256</strong> e QR de verificação — o documento
           comprova que não foi editado depois. Leia o guia{' '}
-          <a href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash no laudo</a>.
+          <Link href="/blog/qr-code-e-hash-no-laudo-de-avarias">QR Code e hash no laudo</Link>.
         </p>
         <h2 id="operacao">Operação no dia a dia</h2>
         <p>
@@ -484,13 +485,13 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <p>
           Luz artificial distorce cor — faça foto de detalhe com flash lateral. GPS confirma unidade do
           shopping. Veja{' '}
-          <a href="/blog/como-fotografar-avarias">como fotografar avarias</a> corretamente.
+          <Link href="/blog/como-fotografar-avarias">como fotografar avarias</Link> corretamente.
         </p>
         <h2 id="treinamento">Treinar a equipe</h2>
         <p>
           Turnover alto exige treino de 15 minutos: mesmo diagrama, mesma ordem de vistas. Artigo
           relacionado:{' '}
-          <a href="/blog/como-treinar-um-novo-vistoriador-rapidamente">treinar vistoriador rapidamente</a>.
+          <Link href="/blog/como-treinar-um-novo-vistoriador-rapidamente">treinar vistoriador rapidamente</Link>.
         </p>
       </>
     ),
@@ -578,14 +579,14 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <h2 id="comparativo">Comparativo entrada × saída</h2>
         <p>
           A plataforma exibe eventos lado a lado na{' '}
-          <a href="/blog/linha-do-tempo-veicular-comparar-inspecoes">linha do tempo</a>. O que importa
+          <Link href="/blog/linha-do-tempo-veicular-comparar-inspecoes">linha do tempo</Link>. O que importa
           é <strong>mesma peça, mesma data relativa, mesma câmera</strong>.
         </p>
         <h2 id="comunicacao">Comunicação com o cliente</h2>
         <p>
           Mostre o QR de verificação antes de discutir valor. Transparência técnica desarma conflito.
           Guia relacionado:{' '}
-          <a href="/blog/avarias-preexistentes-como-provar">avarias preexistentes — como provar</a>.
+          <Link href="/blog/avarias-preexistentes-como-provar">avarias preexistentes — como provar</Link>.
         </p>
       </>
     ),
@@ -669,7 +670,7 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <h2 id="cobranca">Usar na cobrança</h2>
         <p>
           Locadoras usam comparativo na devolução; frotas isolam motorista ou turno. Veja{' '}
-          <a href="/blog/cobranca-avaria-devolucao-locadora">cobrança de avaria na devolução</a>.
+          <Link href="/blog/cobranca-avaria-devolucao-locadora">cobrança de avaria na devolução</Link>.
         </p>
         <h2 id="kpis">KPIs para gestores</h2>
         <p>
@@ -742,8 +743,8 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <h2 id="cautelar-vs-aparente">Cautelar x avarias aparentes</h2>
         <p>
           Concessionárias e lojas de seminovos precisam dos dois ângulos. Veja{' '}
-          <a href="/blog/laudo-cautelar-vs-laudo-de-avarias">laudo cautelar x laudo de avarias</a> e{' '}
-          <a href="/blog/vistoria-de-seminovos-para-concessionarias">vistoria de seminovos</a>.
+          <Link href="/blog/laudo-cautelar-vs-laudo-de-avarias">laudo cautelar x laudo de avarias</Link> e{' '}
+          <Link href="/blog/vistoria-de-seminovos-para-concessionarias">vistoria de seminovos</Link>.
         </p>
         <h2 id="checklist">Checklist antes de fechar</h2>
         <ul>
@@ -761,7 +762,7 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <h2 id="pos-compra">Depois da compra</h2>
         <p>
           O laudo de compra vira evento zero do{' '}
-          <a href="/blog/historico-veicular-digital-o-que-e">histórico veicular</a>. Toda oficina ou
+          <Link href="/blog/historico-veicular-digital-o-que-e">histórico veicular</Link>. Toda oficina ou
           sinistro depois compara com esse baseline.
         </p>
       </>
@@ -851,8 +852,8 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <h2 id="cobranca">Cobrança com evidência</h2>
         <p>
           Mostre comparativo lado a lado. Cliente entende quando vê foto de entrega sem o dano. Guia:{' '}
-          <a href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</a> e{' '}
-          <a href="/locadoras">soluções para locadoras</a>.
+          <Link href="/blog/checklist-vistoria-devolucao-locadora">checklist de devolução</Link> e{' '}
+          <Link href="/locadoras">soluções para locadoras</Link>.
         </p>
         <h2 id="erros">Erros que anulam a prova</h2>
         <ul>
@@ -936,8 +937,8 @@ export const NEW_POSTS_202608: BlogPost[] = [
         </ul>
         <p>
           Diagramas específicos:{' '}
-          <a href="/blog/vistoria-de-caminhao">vistoria de caminhão</a> e{' '}
-          <a href="/blog/vistoria-van-utilitario-frota">van e utilitário</a>.
+          <Link href="/blog/vistoria-de-caminhao">vistoria de caminhão</Link> e{' '}
+          <Link href="/blog/vistoria-van-utilitario-frota">van e utilitário</Link>.
         </p>
         <Cta />
         <h2 id="embarcador">Prova para embarcador</h2>
@@ -948,7 +949,7 @@ export const NEW_POSTS_202608: BlogPost[] = [
         <h2 id="offline">Pátio sem internet</h2>
         <p>
           Leia{' '}
-          <a href="/blog/vistoria-de-frota-sem-internet">vistoria de frota sem internet</a> — requisito
+          <Link href="/blog/vistoria-de-frota-sem-internet">vistoria de frota sem internet</Link> — requisito
           básico em transportadora de médio porte.
         </p>
       </>

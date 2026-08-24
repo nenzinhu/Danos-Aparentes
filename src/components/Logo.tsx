@@ -1,5 +1,6 @@
 'use client';
 import { useRef } from 'react';
+import Image from 'next/image';
 import gsap from 'gsap';
 import GsapLetterScanText from './GsapLetterScanText';
 import LupaVehicleReveal, { SELECTOR_VEHICLES } from './LupaVehicleReveal';
@@ -57,7 +58,7 @@ export default function Logo({
       className={`flex items-center gap-2.5 cursor-pointer select-none ${className ?? ''}`}
     >
       {variant === 'full' ? (
-        <img
+        <Image
           ref={hoverRef as React.RefObject<HTMLImageElement>}
           src="/brand/logo-full.svg"
           alt="Danos Aparentes"

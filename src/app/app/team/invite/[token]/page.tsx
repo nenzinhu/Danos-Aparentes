@@ -23,7 +23,6 @@ function AcceptInvite() {
 
   useEffect(() => {
     if (!session?.access_token || state !== 'idle') return
-    setState('accepting')
     ;(async () => {
       try {
         const res = await fetch('/api/team-accept-invite', {
@@ -43,7 +42,7 @@ function AcceptInvite() {
         setState('error')
       }
     })()
-  }, [session, state, token, router])
+  }, [session?.access_token, state, token, router])
 
   if (supabaseEnabled && authLoading) {
     return <Centered>Carregando…</Centered>

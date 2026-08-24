@@ -89,7 +89,7 @@ export default function ParceriasPage() {
         </div>
 
         <p className="mt-8 text-xs text-[var(--text-muted)]">
-          Campanha "Better Together" · Danos Aparentes × gestão de frotas/locadoras.
+          Campanha &quot;Better Together&quot; · Danos Aparentes × gestão de frotas/locadoras.
         </p>
       </section>
     </main>

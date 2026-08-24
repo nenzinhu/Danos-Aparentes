@@ -1,5 +1,6 @@
 'use client'
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import { supabase, supabaseEnabled } from '../lib/supabase'
 import {
   isPublicCodeQuery,
@@ -472,7 +473,7 @@ export default function Verify() {
               {showDetails && (record?.company_name || record?.company_logo) && (
                 <div className="flex items-center gap-2 mb-1">
                   {record.company_logo && (
-                    <img src={record.company_logo} alt={record.company_name || 'Logo da empresa'} className="h-6 max-w-[120px] object-contain" />
+                    <Image src={record.company_logo} alt={record.company_name || 'Logo da empresa'} width={120} height={24} className="h-6 max-w-[120px] object-contain" />
                   )}
                   {record.company_name && (
                     <p className="text-xs font-bold uppercase tracking-wider opacity-70">Emitido por {record.company_name}</p>

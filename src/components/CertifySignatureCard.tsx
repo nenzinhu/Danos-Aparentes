@@ -1,6 +1,6 @@
 'use client'
 import { useState, useCallback } from 'react'
-import Button from './ui/Button'
+import Button, { ButtonGroup } from './ui/Button'
 import { IconShieldCheck } from './ui/AnimatedIcons'
 
 type Mode = 'certified' | 'plain'
@@ -311,6 +311,16 @@ export default function CertifySignatureCard({
               className="w-full"
             >
               {status === 'loading' ? 'Enviando para Assinafy…' : '🔐 Gerar PDF com certificação digital'}
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={() => { void handlePlain() }}
+              loading={status === 'loading'}
+              disabled={!onPlainPdf || !canExportPlainPdf}
+              className="w-full"
+            >
+              {status === 'loading' ? 'Gerando PDF…' : '📄 Gerar PDF sem certificação'}
             </Button>
           </div>
         </>

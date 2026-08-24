@@ -47,17 +47,15 @@ function DonutMix({
   const size = 96
   const r = 30
   const c = 2 * Math.PI * r
-  let offset = 0
-  const arcs = segments.map((s) => {
+  const arcs = segments.reduce<Array<{ label: string; pct: number; color: string; dash: string; off: number }>>((acc, s) => {
     const len = (s.pct / 100) * c
-    const arc = {
+    acc.push({
       ...s,
       dash: `${len} ${c - len}`,
-      off: -offset,
-    }
-    offset += len
-    return arc
-  })
+      off: -acc.reduce((sum, a) => sum + (a.pct / 100) * c, 0),
+    })
+    return acc
+  }, [])
   const desc = segments.map((s) => `${s.label} ${s.pct}%`).join(', ')
   return (
     <div className="flex items-center gap-3">

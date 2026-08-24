@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 export default function ComparativoPage() {
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-[#F5F0E8]">
@@ -26,7 +28,7 @@ export default function ComparativoPage() {
         <section className="mt-6 grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 items-center">
           <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#1a1a1a] shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
             <div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-[#C44536]/85 text-white text-xs font-bold border border-white/15 backdrop-blur z-10">ANTES — ENTRADA / CHECK-OUT</div>
-            <img src="/exemplos/hero-vistoria-entrada-retorno.png" alt="Relatório de vistoria entrada e retorno lado a lado: evidência comparável do estado do veículo no check-out e check-in" className="w-full h-full object-cover object-top transition-opacity duration-700 opacity-0" draggable="false" onLoad={(e) => (e.currentTarget.style.opacity = '1')} />
+            <Image src="/exemplos/hero-vistoria-entrada-retorno.png" alt="Relatório de vistoria entrada e retorno lado a lado: evidência comparável do estado do veículo no check-out e check-in" fill className="w-full h-full object-cover object-top transition-opacity duration-700 opacity-0" draggable="false" onLoad={(e) => (e.currentTarget.style.opacity = '1')} />
           </div>
           <div className="flex flex-col items-center gap-2 text-[#F5F0E8]">
             <div className="w-[2px] h-16 bg-gradient-to-b from-transparent via-[#C8933F] to-transparent rounded-full"></div>
@@ -35,7 +37,7 @@ export default function ComparativoPage() {
           </div>
           <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#1a1a1a] shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
             <div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-[#C8933F]/85 text-white text-xs font-bold border border-white/15 backdrop-blur z-10">DEPOIS — RETORNO / CHECK-IN</div>
-            <img src="/exemplos/hero-vistoria-entrada-retorno.png" alt="Relatório de vistoria entrada e retorno lado a lado: evidência comparável do estado do veículo no check-out e check-in" className="w-full h-full object-cover object-top transition-opacity duration-700 opacity-0" draggable="false" onLoad={(e) => (e.currentTarget.style.opacity = '1')} />
+            <Image src="/exemplos/hero-vistoria-entrada-retorno.png" alt="Relatório de vistoria entrada e retorno lado a lado: evidência comparável do estado do veículo no check-out e check-in" fill className="w-full h-full object-cover object-top transition-opacity duration-700 opacity-0" draggable="false" onLoad={(e) => (e.currentTarget.style.opacity = '1')} />
           </div>
         </section>
 

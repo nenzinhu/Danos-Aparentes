@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import type { Damage, DamageType, Severity } from '@/src/types'
 import { formatEvidenceStatusLabel } from '@/src/lib/evidenceStatus'
-import Button from '@/src/components/ui/Button'
+import Button, { ButtonGroup } from '@/src/components/ui/Button'
 
 const TYPE_OPTIONS: { type: DamageType; label: string }[] = [
   { type: 'scratch', label: 'Risco / Arranhado' },
@@ -86,7 +86,7 @@ export default function ViewDamageTagPanel({ damage, decidedByName, onUpdate }: 
           </p>
 
           {status === 'sugerido' && !editing && (
-            <div className="flex flex-wrap gap-1.5 pt-1">
+            <ButtonGroup align="center" className="pt-1">
               <Button type="button" variant="primary" size="sm" onClick={() => stampConfirm({})}>
                 Aceitar
               </Button>
@@ -120,7 +120,7 @@ export default function ViewDamageTagPanel({ damage, decidedByName, onUpdate }: 
               <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>
                 Fechar
               </Button>
-            </div>
+            </ButtonGroup>
           )}
 
           {status === 'confirmado' && !editing && (
@@ -169,7 +169,7 @@ export default function ViewDamageTagPanel({ damage, decidedByName, onUpdate }: 
                 rows={3}
                 className="w-full rounded-lg border border-[var(--card-border)] bg-transparent px-2 py-1.5 text-sm"
               />
-              <div className="flex gap-2">
+              <ButtonGroup align="center" className="pt-1">
                 <Button
                   type="button"
                   variant="primary"
@@ -188,7 +188,7 @@ export default function ViewDamageTagPanel({ damage, decidedByName, onUpdate }: 
                 <Button type="button" variant="ghost" size="sm" onClick={() => setEditing(false)}>
                   Cancelar
                 </Button>
-              </div>
+              </ButtonGroup>
             </div>
           )}
         </div>

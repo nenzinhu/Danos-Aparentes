@@ -2,6 +2,7 @@
 
 import { useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -188,7 +189,7 @@ export default function BrandOnPdfSection() {
           </div>
           <div className="p-3 sm:p-4 flex-1 flex items-center justify-center">
             <div className={FRAME_CLASS}>
-              <img
+              <Image
                 src="/identidade-empresa-config-pdf.webp"
                 alt="Tela Identidade da Empresa: nome, logotipo, cor da marca e alinhamento no PDF"
                 width={960}
@@ -215,7 +216,7 @@ export default function BrandOnPdfSection() {
           </div>
           <div className="p-3 sm:p-4 flex-1 flex items-center justify-center">
             <div className={`${FRAME_CLASS} bg-white`}>
-              <img
+              <Image
                 src="/exemplo-laudo-pdf-marca.webp"
                 alt="Exemplo de relatório de vistoria veicular em PDF com logo e nome da empresa no cabeçalho"
                 width={900}

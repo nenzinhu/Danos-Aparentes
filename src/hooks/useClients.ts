@@ -145,6 +145,7 @@ export function useClients(userId?: string): UseClientsResult {
   }, [userId]);
 
   useEffect(() => {
+    if (!load) return
     void load();
   }, [load]);
 

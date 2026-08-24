@@ -50,7 +50,7 @@ export default function DamageTextGenerator({
   const [text, setText] = useState('')
   const [pending, setPending] = useState<PendingItem[]>([])
   const [saving, setSaving] = useState(false)
-  const viewPhotos = info.viewPhotos || {}
+  const viewPhotos = useMemo(() => info.viewPhotos || {}, [info.viewPhotos])
   const complete = hasAllViewPhotos(info)
 
   const damagesByView = useMemo(() => {

@@ -62,7 +62,7 @@ export default function ClientQuickFill({ vehicleInfo, onVehicleInfoChange, user
   };
 
   const saveCurrent = async () => {
-    const rec = await createOrUpdate(useClientsPlateInput(vehicleInfo));
+    const rec = await createOrUpdate(clientsPlateInput(vehicleInfo));
     if (rec) onToast?.(`${rec.owner || rec.plate} salvo nos clientes`);
     else onToast?.('Não foi possível salvar (sem conexão)');
   };
@@ -142,7 +142,7 @@ export default function ClientQuickFill({ vehicleInfo, onVehicleInfoChange, user
 }
 
 /** Converte VehicleInfo -> ClientInput sem importar o tipo interno do hook (evita acoplamento). */
-function useClientsPlateInput(info: VehicleInfo) {
+function clientsPlateInput(info: VehicleInfo) {
   return {
     owner: info.owner ?? '',
     phone: info.phone ?? '',

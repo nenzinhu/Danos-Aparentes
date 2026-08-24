@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { resolvePhotoUrl } from '../lib/photoStore'
 
 export function ResolvedPhoto({
@@ -27,5 +28,5 @@ export function ResolvedPhoto({
     return <div className={`bg-black/20 animate-pulse ${className ?? ''}`} aria-hidden="true" />
   }
 
-  return <img src={src} alt={alt} className={className} onClick={onClick} />
+  return <Image src={src} alt={alt} className={className} onClick={onClick} width={800} height={600} />
 }
