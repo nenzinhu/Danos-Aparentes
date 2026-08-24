@@ -45,7 +45,6 @@ const MobileStickyCta = dynamic(() => import('../components/MobileStickyCta'), {
 const IntroVideo = dynamic(() => import('../components/IntroVideo'), { ssr: false });
 const ChatSupportWidget = dynamic(() => import('../components/ChatSupportWidget'), { ssr: false });
 const ProblemSection = dynamic(() => import('../components/landing/ProblemSection'));
-const AntesDepoisSection = dynamic(() => import('../components/landing/AntesDepoisSection'));
 const HowItWorksHistorySection = dynamic(() => import('../components/landing/HowItWorksHistorySection'));
 const VehicleHistoryTimelineSection = dynamic(() => import('../components/landing/VehicleHistoryTimelineSection'));
 const VisualDamageSection = dynamic(() => import('../components/landing/VisualDamageSection'));
@@ -505,7 +504,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <AntesDepoisSection />
       <SocialProofSection vertical="home" />
       <ProblemSection />
       <VehicleHistoryTimelineSection />
