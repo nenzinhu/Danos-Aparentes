@@ -61,7 +61,12 @@ export async function POST(req: NextRequest) {
         content: String(m.content).slice(0, MAX_MESSAGE_LENGTH),
       }))
 
-    if (history.length === 0 || history[history.length - 1].role !== 'user') {
+    if (history.length === 0) {
+      return NextResponse.json({ error: 'Nenhuma mensagem válida enviada' }, { status: 400 })
+    }
+
+    const last = history[history.length - 1]
+    if (!last || last.role !== 'user') {
       return NextResponse.json({ error: 'Nenhuma mensagem válida enviada' }, { status: 400 })
     }
 

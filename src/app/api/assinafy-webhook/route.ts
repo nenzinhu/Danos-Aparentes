@@ -54,18 +54,18 @@ const EVENT_STATUS: Partial<Record<AssinafyEvent, string>> = {
 function extractDocumentId(payload: Record<string, unknown>): string | null {
   // Tenta caminhos comuns do payload da Assinafy.
   const candidates = [
-    (payload.documentId as string) || '',
-    (payload.document_id as string) || '',
-    (payload.document as { id?: string })?.id || '',
-    (payload.data as { documentId?: string })?.documentId || '',
-    (payload.data as { document?: { id?: string } })?.document?.id || '',
+    (payload['documentId'] as string) || '',
+    (payload['document_id'] as string) || '',
+    (payload['document'] as { id?: string })?.id || '',
+    (payload['data'] as { documentId?: string })?.['documentId'] || '',
+    (payload['data'] as { document?: { id?: string } })?.document?.id || '',
   ]
   return candidates.find((c) => c && c.trim().length > 0)?.trim() || null
 }
 
 export async function POST(req: NextRequest) {
   if (!supabaseAdmin) {
-    return NextResponse.json({ error: 'Supabase não configurado' }, { status: 500 })
+    return NextResponse.json({ error: 'Supabase não configurada' }, { status: 500 })
   }
 
   let payload: Record<string, unknown>
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
   }
 
-  const event = (payload.event || payload.type || payload.eventType) as AssinafyEvent
+  const event = (payload['event'] || payload['type'] || payload['eventType']) as AssinafyEvent
   if (!event || !(event in EVENT_STATUS)) {
     // Evento não mapeado — confirma recebimento para a Assinafy não reenviar.
     return NextResponse.json({ received: true, ignored: true })
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
   const status = EVENT_STATUS[event] as string
   const patch: Record<string, unknown> = { assinafy_cert_status: status }
   if (status === 'certified') {
-    patch.assinafy_certified_at = new Date().toISOString()
+    patch['assinafy_certified_at'] = new Date().toISOString()
   }
 
   const { error } = await supabaseAdmin

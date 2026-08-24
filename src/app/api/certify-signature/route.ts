@@ -96,8 +96,8 @@ export async function POST(req: NextRequest) {
     // 2. Gera o PDF do laudo no servidor
     const settings: PdfSettings = {
       inspectionId,
-      publicCode: report.publicCode,
-      laudoVersion: report.laudoVersion,
+      ...(report.publicCode ? { publicCode: report.publicCode } : {}),
+      ...(typeof report.laudoVersion === 'number' ? { laudoVersion: report.laudoVersion } : {}),
     }
     const svgData: SvgPdfData = { svgCaptures: {} }
     const { html } = await buildFullHtml(info, damages, svgData, settings)
