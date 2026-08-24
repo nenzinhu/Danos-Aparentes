@@ -146,9 +146,9 @@ export function buildSeveritySummary(
 export function parseSeveritySummary(raw: unknown): SeveritySummary | null {
   if (!raw || typeof raw !== 'object') return null
   const o = raw as Record<string, unknown>
-  const low = typeof o.low === 'number' ? o.low : 0
-  const medium = typeof o.medium === 'number' ? o.medium : 0
-  const high = typeof o.high === 'number' ? o.high : 0
+  const low = typeof o['low'] === 'number' ? o['low'] : 0
+  const medium = typeof o['medium'] === 'number' ? o['medium'] : 0
+  const high = typeof o['high'] === 'number' ? o['high'] : 0
   if (low + medium + high === 0 && !('low' in o)) return null
   return { low, medium, high }
 }

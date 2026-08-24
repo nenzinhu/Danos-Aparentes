@@ -44,8 +44,8 @@ export function comparePdfUpload(args: ComparePdfUploadArgs): PublicVerifyOutcom
     // Located by exact pdf_hash → bytes match the registered PDF.
     return resolveVerifyOutcome({
       found: true,
-      inspectionStatus: record.inspection_status,
-      isSupersededVersion: record.is_superseded_version,
+      inspectionStatus: record.inspection_status ?? null,
+      isSupersededVersion: record.is_superseded_version ?? false,
       integrityMismatch: false,
     })
   }
@@ -55,6 +55,8 @@ export function comparePdfUpload(args: ComparePdfUploadArgs): PublicVerifyOutcom
     // Legacy row without pdf_hash: cannot confirm file integrity.
     return resolveVerifyOutcome({
       found: true,
+      inspectionStatus: record.inspection_status ?? null,
+      isSupersededVersion: record.is_superseded_version ?? false,
       integrityMismatch: true,
     })
   }
@@ -62,8 +64,8 @@ export function comparePdfUpload(args: ComparePdfUploadArgs): PublicVerifyOutcom
   const mismatch = storedPdf.toLowerCase() !== uploadedPdfHash.toLowerCase()
   return resolveVerifyOutcome({
     found: true,
-    inspectionStatus: record.inspection_status,
-    isSupersededVersion: record.is_superseded_version,
+    inspectionStatus: record.inspection_status ?? null,
+    isSupersededVersion: record.is_superseded_version ?? false,
     integrityMismatch: mismatch,
   })
 }
