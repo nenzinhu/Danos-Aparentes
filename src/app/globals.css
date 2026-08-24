@@ -272,59 +272,55 @@ html.light textarea:focus-visible {
 
 html.light {
   color-scheme: light;
-  --bg-main: #faf9f5;
-  --bg-gradient: radial-gradient(ellipse 120% 80% at 50% -10%, #faf9f5 0%, #e8e6dc 70%, #d8d6cc 100%);
-  --card-bg: rgba(232, 230, 220, 0.85);
-  --card-bg-solid: rgba(238, 236, 227, 0.97);
+  --bg-main: #f5f2eb;
+  --bg-gradient: radial-gradient(ellipse 120% 80% at 50% -10%, #f5f2eb 0%, #ebe7dd 70%, #e2ded5 100%);
+  --card-bg: rgba(235, 231, 221, 0.85);
+  --card-bg-solid: rgba(238, 234, 224, 0.97);
   --card-border: rgba(176, 174, 165, 0.35);
   --glass-shadow: 0 8px 40px 0 rgba(20, 20, 19, 0.06), 0 0 0 1px rgba(176, 174, 165, 0.15);
   --text-main: #141413;
   --text-muted: #44433f;
-  --primary: #9e4428;
-  --primary-hover: #85361e;
-  --primary-glow: rgba(158, 68, 40, 0.35);
-  /* Severidade no tema claro: as cores do tema escuro ficam entre 2.4:1 e 3.6:1
-     sobre #faf9f5. Estes tons mantêm a mesma leitura (cinza / laranja / vermelho)
-     com >=4.5:1 tanto no fundo quanto sobre o card. */
+  --primary: #b85c3f;
+  --primary-hover: #a34b30;
+  --primary-glow: rgba(184, 92, 63, 0.35);
   --severity-low: #556072;
   --severity-medium: #b1360a;
   --severity-high: #c81e1e;
-  --neon-blue: #6a9bcc;
-  --neon-cyan: #788c5d;
-  --neon-glow-sm: 0 0 10px rgba(217, 119, 87, 0.25);
-  --color-clean: #e8e6dc;
+  --neon-blue: #2563eb;
+  --neon-cyan: #3b82f6;
+  --neon-glow-sm: 0 0 10px rgba(37, 99, 235, 0.25);
+  --neon-glow-lg: 0 0 30px rgba(37, 99, 235, 0.18), 0 0 60px rgba(37, 99, 235, 0.08);
+  --color-clean: #ebe7dd;
   --color-hover: #b0aea5;
-  --input-bg: #faf9f5;
+  --input-bg: #f5f2eb;
   --input-border: #b0aea5;
   --input-color: #141413;
-  --panel-bg: rgba(232, 230, 220, 0.4);
+  --panel-bg: rgba(235, 231, 221, 0.4);
   --panel-border: rgba(176, 174, 165, 0.2);
-  --tooltip-bg: #faf9f5;
+  --tooltip-bg: #f5f2eb;
   --tooltip-border: #b0aea5;
   --tooltip-color: #141413;
   --part-stroke: #b0aea5;
-  --btn-secondary-bg: rgba(176, 174, 165, 0.12);
-  --btn-secondary-border: rgba(176, 174, 165, 0.28);
-  --btn-secondary-hover: rgba(176, 174, 165, 0.2);
-  --scrollbar-track: rgba(232, 230, 220, 0.4);
-  --scrollbar-thumb: rgba(176, 174, 165, 0.5);
-  --grid-color: rgba(217, 119, 87, 0.035);
-  --header-title-gradient: linear-gradient(135deg, #141413 0%, #d97757 100%);
-  --primary-btn-gradient: linear-gradient(135deg, var(--primary) 0%, #a34b30 100%);
+  --btn-secondary-bg: rgba(37, 99, 235, 0.07);
+  --btn-secondary-border: rgba(37, 99, 235, 0.18);
+  --btn-secondary-hover: rgba(37, 99, 235, 0.14);
+  --scrollbar-track: rgba(235, 231, 221, 0.4);
+  --scrollbar-thumb: rgba(37, 99, 235, 0.18);
+  --grid-color: rgba(37, 99, 235, 0.035);
+  --header-title-gradient: linear-gradient(135deg, #141413 0%, #b85c3f 100%);
+  --primary-btn-gradient: linear-gradient(135deg, var(--primary) 0%, #c76e4f 100%);
   --primary-badge-text: #a34b30;
   --elevenlabs-badge: #065f46;
-  --signal: #b06d12;
-  --signal-bright: #8a5508;
-  --signal-glow: rgba(138, 85, 8, 0.22);
-  --sheet-line: rgba(138, 85, 8, 0.5);
+  --signal: #2563eb;
+  --signal-bright: #3b82f6;
+  --signal-glow: rgba(37, 99, 235, 0.35);
+  --sheet-line: rgba(37, 99, 235, 0.5);
 
-  /* Sucesso / positivo no modo claro: verde escuro legivel (>=4.5:1 sobre fundo claro) */
   --success: #15803d;
   --success-bright: #166534;
   --success-bg: rgba(21, 128, 61, 0.1);
   --success-border: rgba(21, 128, 61, 0.28);
 
-  /* Callouts legíveis sobre o diagrama no modo claro */
   --damage-select-stroke: #0e7490;
   --damage-select-fill: rgba(14, 116, 144, 0.16);
   --damage-select-text: #0f172a;
