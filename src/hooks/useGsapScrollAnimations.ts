@@ -18,35 +18,7 @@ function initScrollAnimations() {
       card.addEventListener('mousemove', handleMouseMove);
     });
 
-    // --- 2. HERO TILT 3D COM PERSPECTIVA (.gsap-hero-3d) ---
-    const heroContainer = document.querySelector<HTMLElement>('.gsap-hero-container');
-    const hero3D = document.querySelector<HTMLElement>('.gsap-hero-3d');
-    if (heroContainer && hero3D) {
-      heroContainer.addEventListener('mousemove', (e) => {
-        const rect = heroContainer.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const percentX = (e.clientX - centerX) / (rect.width / 2);
-        const percentY = (e.clientY - centerY) / (rect.height / 2);
-
-        gsap.to(hero3D, {
-          rotationY: percentX * 8,
-          rotationX: -percentY * 8,
-          duration: 0.5,
-          ease: 'power2.out',
-          transformPerspective: 1200,
-        });
-      });
-
-      heroContainer.addEventListener('mouseleave', () => {
-        gsap.to(hero3D, {
-          rotationX: 0,
-          rotationY: 0,
-          duration: 0.8,
-          ease: 'power2.out',
-        });
-      });
-    }
+    // --- 2. (REMOVIDO) HERO TILT 3D COM PERSPECTIVA ---
 
     // --- 3. ATRAÇÃO MAGNÉTICA NOS BOTÕES CTA (.gsap-btn-magnetic, .gsap-btn) ---
     const magneticBtns = document.querySelectorAll<HTMLElement>('.gsap-btn-magnetic, .gsap-btn');

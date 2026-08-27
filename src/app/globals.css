@@ -1223,12 +1223,7 @@ html.light .theme-segment .theme-segment-active {
   opacity: 1;
 }
 
-/* 2. 3D Hero Container */
-.gsap-hero-3d {
-  perspective: 1200px;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
+/* 2. (REMOVIDO) 3D Hero Container */
 
 /* 4. Scanner Laser Pericial */
 .pdf-scan-container {

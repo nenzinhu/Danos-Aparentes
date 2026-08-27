@@ -428,7 +428,7 @@ export default function LandingPage() {
       </header>
 
       <main id="main-content" tabIndex={-1} className="hero-section gsap-hero-container flex-1 flex items-center justify-center px-4 sm:px-8 py-6 z-10 relative outline-none">
-        <div className="gsap-hero-3d sheet-frame max-w-7xl w-full">
+        <div className="sheet-frame max-w-7xl w-full">
           <span aria-hidden="true" className="crop-tr" />
           <span aria-hidden="true" className="crop-br" />
 
