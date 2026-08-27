@@ -32,7 +32,8 @@ import FirstInspectionOnboarding from './FirstInspectionOnboarding'
 
 import { EntradaIcon, SaidaIcon } from '@/src/components/OperationTypeIcons'
 import { IconDocument, IconCar, IconSignature, IconFolder, IconCamera, IconSync } from '@/src/components/ui/AnimatedIcons'
-import Button, { ButtonGroup } from '@/src/components/ui/Button'
+import Button from '@/src/components/ui/Button'
+import { ButtonGroup } from '@/src/components/ui/ButtonGroup'
 import { buttonVariants } from '@/src/components/ui/buttonVariants'
 import DamageTextGenerator from './DamageTextGenerator'
 

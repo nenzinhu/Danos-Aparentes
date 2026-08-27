@@ -1,6 +1,6 @@
 'use client';
 
-import type { Vehicle } from '@/types';
+import type { Vehicle } from '@/src/types/index';
 
 type Props = {
   vehicle: Vehicle;

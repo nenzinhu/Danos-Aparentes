@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import type { Inspection, DiffResult, VerifyOutcome, PdfVerifyRecord } from '@/types';
-import { VerifyOutcomeSchema, PdfVerifyRecordSchema } from '@/lib/validation/schemas';
+import type { Inspection, DiffResult, VerifyOutcome, PdfVerifyRecord } from '@/src/types/index';
+import { VerifyOutcomeSchema, PdfVerifyRecordSchema } from '@/src/lib/validation/schemas';
 
 export function useInspectionDiff(
   before: Inspection | null,

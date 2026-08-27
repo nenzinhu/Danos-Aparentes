@@ -1,4 +1,4 @@
-import type { Vehicle, DamageRecord, Inspection, DiffResult } from '@/types';
+import type { Vehicle, DamageRecord, Inspection, DiffResult } from '@/src/types/index';
 
 type ClassValue = string | false | null | undefined;
 

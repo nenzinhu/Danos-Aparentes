@@ -57,6 +57,7 @@ export function useTts(accessToken?: string) {
       speechSynthesis.addEventListener('voiceschanged', load)
       return () => speechSynthesis.removeEventListener('voiceschanged', load)
     }
+    return
   }, [])
 
   useEffect(() => {

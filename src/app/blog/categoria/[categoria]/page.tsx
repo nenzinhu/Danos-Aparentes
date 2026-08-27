@@ -18,7 +18,9 @@ export async function generateMetadata({
   const { categoria } = await params
   const posts = getPostsByCategorySlug(categoria)
   if (posts.length === 0) return {}
-  const categoryName = mapCategory(posts[0].category)
+  const firstPost = posts[0]
+  if (!firstPost) return {}
+  const categoryName = mapCategory(firstPost.category)
   const title = `Artigos sobre ${categoryName} | Blog Danos Aparentes`
   const description = getCategoryDescription(categoryName)
   const url = `/blog/categoria/${categoria}`
@@ -39,7 +41,9 @@ export default async function BlogCategoryPage({
   const { categoria } = await params
   const posts = getPostsByCategorySlug(categoria)
   if (posts.length === 0) notFound()
-  const categoryName = mapCategory(posts[0].category)
+  const firstPost = posts[0]
+  if (!firstPost) notFound()
+  const categoryName = mapCategory(firstPost.category)
 
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',

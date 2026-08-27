@@ -1,6 +1,7 @@
 'use client'
 import { useState, useCallback } from 'react'
-import Button, { ButtonGroup } from './ui/Button'
+import Button from './ui/Button'
+import { ButtonGroup } from './ui/ButtonGroup'
 import { IconShieldCheck } from './ui/AnimatedIcons'
 
 type Mode = 'certified' | 'plain'

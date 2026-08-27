@@ -1,6 +1,7 @@
 'use client';
 
 import { Component, type ReactNode } from 'react';
+import type { AppError } from '@/src/lib/types';
 
 type Props = {
   fallback?: ReactNode;

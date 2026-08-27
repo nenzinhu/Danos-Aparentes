@@ -52,6 +52,7 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
       }, 0)
       return () => clearTimeout(timer)
     }
+    return
   }, [isOpen])
 
   const getCloudState = (id: string) => cloudStateOf(id, pendingIds, supabaseEnabled)

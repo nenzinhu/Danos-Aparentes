@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import type { Damage, DamageType, Severity } from '@/src/types'
 import { formatEvidenceStatusLabel } from '@/src/lib/evidenceStatus'
-import Button, { ButtonGroup } from '@/src/components/ui/Button'
+import Button from '@/src/components/ui/Button'
+import { ButtonGroup } from '@/src/components/ui/ButtonGroup'
 
 const TYPE_OPTIONS: { type: DamageType; label: string }[] = [
   { type: 'scratch', label: 'Risco / Arranhado' },

@@ -1,7 +1,8 @@
 'use client'
 import { useState, useCallback, useEffect } from 'react'
 import type { GeoLocation, VehicleInfo } from '../types'
-import Button, { ButtonGroup } from './ui/Button'
+import Button from './ui/Button'
+import { ButtonGroup } from './ui/ButtonGroup'
 
 interface Props {
   info: VehicleInfo

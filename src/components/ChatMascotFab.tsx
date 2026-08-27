@@ -200,6 +200,7 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
           pulse.kill()
         }
       }
+      return
     },
     { dependencies: [open, attention], scope: rootRef },
   )

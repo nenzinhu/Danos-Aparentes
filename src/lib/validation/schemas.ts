@@ -11,9 +11,9 @@ import type {
   DiffResult,
   VerifyOutcome,
   PdfVerifyRecord,
-} from '@/types';
+} from '@/src/types/index';
 
-export const GeoLocationSchema: z.ZodType<GeoLocation> = z.object({
+export const GeoLocationSchema = z.object({
   lat: z.number(),
   lng: z.number(),
 });

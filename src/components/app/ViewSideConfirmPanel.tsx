@@ -5,7 +5,8 @@ import { VIEW_TAB_SHORT } from '@/src/components/app/constants'
 import { VIEW_PHOTO_ORDER } from '@/src/lib/viewPhotos'
 import { canConfirmSideAssignments } from '@/src/lib/viewSideAssign'
 import { ResolvedPhoto } from '@/src/components/ResolvedPhoto'
-import Button, { ButtonGroup } from '@/src/components/ui/Button'
+import Button from '@/src/components/ui/Button'
+import { ButtonGroup } from '@/src/components/ui/ButtonGroup'
 
 export type ConfirmItem = {
   photoRef: string
