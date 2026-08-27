@@ -107,11 +107,11 @@ export default function FirstInspectionOnboarding({
   return (
     <aside
       aria-label="Ativação: primeira inspeção"
-      className="w-full rounded-2xl border border-sky-500/30 bg-sky-500/5 p-4 sm:p-5 mb-2"
+      className="w-full rounded-2xl border border-[var(--primary)]/30 bg-[var(--primary)]/5 p-4 sm:p-5 mb-2"
     >
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
-          <p className="text-[10px] font-extrabold tracking-[0.16em] uppercase text-sky-400 mb-1">
+          <p className="text-[10px] font-extrabold tracking-[0.16em] uppercase text-[var(--primary)] mb-1">
             Sua primeira inspeção · ~3 min
           </p>
           <h2 className="font-outfit font-extrabold text-sm sm:text-base text-[var(--text-main)]">
@@ -155,22 +155,22 @@ export default function FirstInspectionOnboarding({
               key={step.id}
               className={`flex items-center gap-2 rounded-xl px-3 py-2 border text-left ${
                 isDone
-                  ? 'border-emerald-500/30 bg-emerald-500/10'
+                  ? 'border-[var(--success)]/30 bg-[var(--success)]/10'
                   : isActive
-                    ? 'border-sky-500/40 bg-sky-500/10'
+                    ? 'border-[var(--primary)]/40 bg-[var(--primary)]/10'
                     : 'border-[var(--card-border)]/50 bg-[var(--card-bg-solid)]/40'
               }`}
             >
               <span
                 className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black ${
-                  isDone ? 'bg-emerald-500 text-white' : 'bg-[var(--btn-secondary-bg)] text-[var(--text-muted)]'
+                  isDone ? 'bg-[var(--success)] text-white' : 'bg-[var(--btn-secondary-bg)] text-[var(--text-muted)]'
                 }`}
               >
                 {isDone ? '✓' : i + 1}
               </span>
               <span className="min-w-0">
                 <span className="flex items-center gap-1 text-xs font-bold text-[var(--text-main)]">
-                  <Icon size={12} className={isActive ? 'text-sky-400' : 'text-[var(--text-muted)]'} />
+                  <Icon size={12} className={isActive ? 'text-[var(--primary)]' : 'text-[var(--text-muted)]'} />
                   {step.label}
                 </span>
               </span>

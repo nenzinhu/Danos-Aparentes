@@ -111,7 +111,7 @@ export function AiSuggestionPanel({
   onIgnore: () => void
 }) {
   return (
-    <div className="mt-2.5 rounded-xl border border-sky-500/30 bg-sky-500/10 px-3 py-2.5 space-y-2">
+    <div className="mt-2.5 rounded-xl border border-[var(--primary)]/30 bg-[var(--primary)]/10 px-3 py-2.5 space-y-2">
       <div className="flex items-center justify-between gap-2">
         <div>
           <span className="rounded-full border border-amber-500/35 bg-amber-500/15 px-2 py-1 text-[0.65rem] font-black text-amber-300">

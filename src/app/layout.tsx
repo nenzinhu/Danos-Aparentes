@@ -114,7 +114,7 @@ export const metadata: Metadata = {
   // Cada página define o próprio `openGraph.url` (ou herda só title/
   // description/images). A home usa `alternates.canonical: '/'`.
   // ── Open Graph ──────────────────────────────────────────────
-  // `url: '/'` vale para a home (page.tsx é client e não exporta metadata).
+  // `url: '/'` vale para a home (page.tsx exporta metadata no Server Component).
   // Páginas internas DEVEM sobrescrever `openGraph.url` junto com o
   // canonical — senão o GSC vê canônico próprio + og:url=/ e reporta
   // "Google escolheu canônico diferente" (caso /suporte e /privacidade).

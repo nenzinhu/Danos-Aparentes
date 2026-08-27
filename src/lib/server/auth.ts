@@ -30,7 +30,7 @@ export async function getUserFromRequest(req: NextRequest): Promise<User | null>
         return req.cookies.getAll()
       },
       setAll() {
-        // Route Handler: cookies de refresh ficam a cargo do middleware.
+        // Route Handler: cookies de refresh ficam a cargo do proxy (proxy.ts).
       },
     },
   })

@@ -104,8 +104,8 @@ export default function DiffCompareSection() {
       </div>
 
       <Reveal delay={100} className="mt-8">
-        <div className="rounded-2xl border border-rose-400/30 bg-rose-500/5 px-5 py-5 sm:px-6">
-          <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-rose-400">O que mudou</p>
+        <div className="rounded-2xl border border-[var(--severity-high)]/30 bg-[var(--severity-high)]/5 px-5 py-5 sm:px-6">
+          <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-[var(--severity-high)]">O que mudou</p>
           <p className="mt-2 text-lg font-bold text-[var(--text-main)]">
             Porta dianteira esquerda · Amassado / Deformado · Grave
           </p>
@@ -147,14 +147,14 @@ function PdfReportCarousel({
   return (
     <article
       className={`rounded-2xl border overflow-hidden bg-[var(--panel-bg)]/40 ${
-        isAntes ? 'border-emerald-500/25' : 'border-rose-500/30'
+        isAntes ? 'border-[var(--success)]/25' : 'border-[var(--severity-high)]/30'
       }`}
     >
       <header className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[var(--card-border)]">
         <div>
           <p
             className={`font-mono-data text-[10px] uppercase tracking-[0.18em] ${
-              isAntes ? 'text-emerald-400' : 'text-rose-400'
+              isAntes ? 'text-[var(--success)]' : 'text-[var(--severity-high)]'
             }`}
           >
             {isAntes ? 'Antes' : 'Depois'}
@@ -164,8 +164,8 @@ function PdfReportCarousel({
         <span
           className={`shrink-0 rounded-lg border px-2.5 py-1 font-mono-data text-[9px] uppercase tracking-wider ${
             isAntes
-              ? 'border-emerald-500/35 bg-emerald-500/10 text-emerald-300'
-              : 'border-rose-500/40 bg-rose-500/10 text-rose-300'
+              ? 'border-[var(--success)]/35 bg-[var(--success)]/10 text-[var(--success)]'
+              : 'border-[var(--severity-high)]/40 bg-[var(--severity-high)]/10 text-[var(--severity-high)]'
           }`}
         >
           {badge}
@@ -192,8 +192,8 @@ function PdfReportCarousel({
               className={`min-h-9 px-3 rounded-lg border text-[11px] font-bold uppercase tracking-wide focus-visible:ring-2 ring-[var(--primary)] outline-none transition-colors ${
                 i === page
                   ? isAntes
-                    ? 'border-emerald-500/45 bg-emerald-500/15 text-emerald-300'
-                    : 'border-rose-500/45 bg-rose-500/15 text-rose-300'
+                    ? 'border-[var(--success)]/45 bg-[var(--success)]/15 text-[var(--success)]'
+                    : 'border-[var(--severity-high)]/45 bg-[var(--severity-high)]/15 text-[var(--severity-high)]'
                   : 'border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]'
               }`}
             >
@@ -407,7 +407,7 @@ function PdfZoomLightbox({
               onClick={() => setIndexSync(i)}
               className={`min-h-10 px-3 rounded-lg border text-xs font-bold uppercase tracking-wide ${
                 i === index
-                  ? 'border-sky-400/50 bg-sky-500/20 text-sky-300'
+                  ? 'border-[var(--primary)]/50 bg-[var(--primary)]/20 text-[var(--primary)]'
                   : 'border-white/15 text-white/70 hover:text-white'
               }`}
             >

@@ -64,7 +64,7 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
         }
         aria-pressed={panLocked}
         aria-label={panLocked ? 'Destravar diagrama' : 'Travar diagrama'}
-        className={`${btnBase} px-2 py-1 flex items-center gap-1 ${panLocked ? 'bg-amber-500/25 border-amber-400/50 text-amber-300' : ''}`}
+        className={`${btnBase} px-2 py-1 flex items-center gap-1 ${panLocked ? 'bg-[var(--signal)]/25 border-[var(--signal)]/50 text-[var(--signal-bright)]' : ''}`}
       >
         <LockIcon locked={panLocked} />
       </button>
@@ -108,7 +108,7 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
             }
             aria-pressed={panLocked}
             aria-label={panLocked ? 'Destravar diagrama' : 'Travar diagrama'}
-            className={`${btnBase} px-2.5 py-1.5 flex items-center gap-1 shrink-0 ${panLocked ? 'bg-amber-500/25 border-amber-400/50 text-amber-300' : ''}`}
+            className={`${btnBase} px-2.5 py-1.5 flex items-center gap-1 shrink-0 ${panLocked ? 'bg-[var(--signal)]/25 border-[var(--signal)]/50 text-[var(--signal-bright)]' : ''}`}
           >
             <LockIcon locked={panLocked} />
           </button>
@@ -117,7 +117,7 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
             onClick={() => setOutlineMode(!outlineMode)}
             title='Ver só o contorno, sem cores'
             aria-pressed={outlineMode}
-            className={`${btnBase} px-3 py-1.5 text-[0.75rem] shrink-0 ${outlineMode ? 'bg-sky-500/25 border-sky-400/50 text-sky-300' : ''}`}
+            className={`${btnBase} px-3 py-1.5 text-[0.75rem] shrink-0 ${outlineMode ? 'bg-[var(--primary)]/25 border-[var(--primary)]/50 text-[var(--primary)]' : ''}`}
           >
             ◇ Contorno
           </button>
@@ -134,7 +134,7 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
         onClick={() => setOutlineMode(!outlineMode)}
         title='Ver só o contorno, sem cores'
         aria-pressed={outlineMode}
-        className={`${btnBase} px-2 py-1 text-[0.75rem] ${outlineMode ? 'bg-sky-500/25 border-sky-400/50 text-sky-300' : ''}`}
+        className={`${btnBase} px-2 py-1 text-[0.75rem] ${outlineMode ? 'bg-[var(--primary)]/25 border-[var(--primary)]/50 text-[var(--primary)]' : ''}`}
       >
         ◇ Contorno
       </button>
@@ -143,7 +143,7 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
         onClick={() => setCompareMode(!compareMode)}
         title='Comparar entrada (recebido) vs saída (devolvido)'
         aria-pressed={compareMode}
-        className={`${btnBase} px-2 py-1 text-[0.7rem] flex items-center gap-1 ${compareMode ? 'bg-emerald-500/25 border-emerald-400/50 text-emerald-300' : ''}`}
+        className={`${btnBase} px-2 py-1 text-[0.7rem] flex items-center gap-1 ${compareMode ? 'bg-[var(--success)]/25 border-emerald-400/50 text-[var(--success)]' : ''}`}
       >
         <svg width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round'>
           <path d='M7 4 L3 8 L7 12' />
@@ -157,7 +157,7 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
         type="button"
         onClick={openFullscreen}
         title='Tela cheia'
-        className={`${btnBase} px-2 py-1 flex items-center gap-1 bg-sky-500/10 border-sky-500/30 text-sky-500 text-[0.72rem] hover:bg-sky-500/20`}
+        className={`${btnBase} px-2 py-1 flex items-center gap-1 bg-[var(--primary)]/10 border-[var(--primary)]/30 text-[var(--primary)] text-[0.72rem] hover:bg-[var(--primary)]/20`}
       >
         <svg width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5'><path d='M8 3H5a2 2 0 00-2 2v3'/><path d='M21 8V5a2 2 0 00-2-2h-3'/><path d='M3 16v3a2 2 0 002 2h3'/><path d='M16 21h3a2 2 0 002-2v-3'/></svg>
         Tela cheia

@@ -71,7 +71,7 @@ export default function IntroVideo() {
         perspective: 1000,
       }}
     >
-      <div ref={ringRef} className="absolute w-[280px] h-[280px] rounded-full border border-sky-400/30 shadow-[0_0_50px_rgba(56,189,248,0.25)] pointer-events-none" />
+      <div ref={ringRef} className="absolute w-[280px] h-[280px] rounded-full border border-[var(--primary)]/30 shadow-[0_0_50px_var(--primary-glow)] pointer-events-none" />
       <div ref={logoRef}>
         <Logo size={160} variant="full" className="drop-shadow-[0_0_40px_rgba(31,182,255,0.5)]" />
       </div>

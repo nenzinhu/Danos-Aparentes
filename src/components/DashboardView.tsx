@@ -45,8 +45,8 @@ const VEHICLE_NAME: Record<VehicleType, string> = {
 }
 
 const VEHICLE_COLOR: Record<VehicleType, string> = {
-  car: '#38bdf8', // sky-400
-  car2d: '#0ea5e9', // sky-500
+  car: '#06B6D4', // primary
+  car2d: '#22D3EE', // primary-hover
   moto: '#a855f7', // purple-500
   motoneta: '#c084fc', // purple-400
   truck: '#eab308', // yellow-500
@@ -186,7 +186,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
         />
         <div style={{ textAlign: 'center', padding: '64px 16px', background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 24, backdropFilter: 'blur(16px)' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
-            <IconChart size={56} className="text-sky-400" />
+            <IconChart size={56} className="text-[var(--primary)]" />
           </div>
           <h3 style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 8, color: '#f8fafc' }}>Seus dossiês aparecem aqui</h3>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: 400, margin: '0 auto 24px' }}>
@@ -230,7 +230,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Veículos Monitorados</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.vehiclesMonitored}</div>
           <div style={{ fontSize: '0.72rem', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <IconCar size={12} className="text-sky-400" /> Memória digital ativa
+            <IconCar size={12} className="text-[var(--primary)]" /> Memória digital ativa
           </div>
         </div>
 
@@ -238,7 +238,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Inspeções Realizadas</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.totalReports}</div>
           <div style={{ fontSize: '0.72rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <IconFolder size={12} className="text-emerald-400" /> Eventos do histórico
+            <IconFolder size={12} className="text-[var(--success)]" /> Eventos do histórico
           </div>
         </div>
 
@@ -269,7 +269,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Dossiês Emitidos</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.dossiersIssued}</div>
           <div style={{ fontSize: '0.72rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <IconSparkles size={12} className="text-emerald-400" /> {stats.activeHistories} históricos ativos
+            <IconSparkles size={12} className="text-[var(--success)]" /> {stats.activeHistories} históricos ativos
           </div>
         </div>
 
@@ -283,7 +283,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
           <div style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Históricos Ativos</div>
           <div style={{ fontSize: '2rem', fontWeight: 900, color: '#f8fafc', fontFamily: 'Outfit,sans-serif' }}>{stats.activeHistories}</div>
           <div style={{ fontSize: '0.72rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <IconSparkles size={12} className="text-emerald-400" /> {stats.cleanReportsPct}% inspeções sem danos
+            <IconSparkles size={12} className="text-[var(--success)]" /> {stats.cleanReportsPct}% inspeções sem danos
           </div>
         </div>
 
@@ -294,7 +294,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
             <div>
               <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
-                <IconBolt size={16} className="text-amber-400" /> Novos danos (última inspeção)
+                <IconBolt size={16} className="text-[var(--signal)]" /> Novos danos (última inspeção)
               </h4>
               <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
                 Comparação estrutural entre as duas últimas inspeções do mesmo veículo
@@ -394,7 +394,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
         <div style={{ background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24, backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
             <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <IconCar size={16} className="text-sky-400" /> Frota Vistoriada
+              <IconCar size={16} className="text-[var(--primary)]" /> Frota Vistoriada
             </h4>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Quantidade de vistorias registradas por categoria</span>
           </div>
@@ -426,7 +426,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
       <div style={{ background: 'rgba(15,23,42,0.45)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 20, padding: 24, backdropFilter: 'blur(16px)', display: 'flex', flexDirection: 'column', gap: 14 }}>
         <div>
           <h4 style={{ fontWeight: 800, fontSize: '0.95rem', color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
-            <IconPin size={16} className="text-amber-400" /> Top 5 Peças com Mais Avarias
+            <IconPin size={16} className="text-[var(--signal)]" /> Top 5 Peças com Mais Avarias
           </h4>
           <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Componentes com maior frequência de incidência de danos</span>
         </div>
@@ -555,7 +555,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
           {/* Uptime SLO & Health */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, background: 'rgba(0,0,0,0.08)', borderRadius: 12, padding: 16, border: '1px solid rgba(255,255,255,0.02)' }}>
             <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: 4 }}>
-              <IconBarChart size={12} className="text-sky-400" /> Indicadores de Observabilidade (SLO)
+              <IconBarChart size={12} className="text-[var(--primary)]" /> Indicadores de Observabilidade (SLO)
             </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: '0.72rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -582,7 +582,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
           {/* Applied Optimization Impacts */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, background: 'rgba(0,0,0,0.08)', borderRadius: 12, padding: 16, border: '1px solid rgba(255,255,255,0.02)' }}>
             <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#cbd5e1', display: 'flex', alignItems: 'center', gap: 4 }}>
-              <IconTrend size={12} className="text-emerald-400" /> Impacto de Otimizações Aplicadas
+              <IconTrend size={12} className="text-[var(--success)]" /> Impacto de Otimizações Aplicadas
             </span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: '0.7rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -608,7 +608,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
         {/* Diagnostic Text */}
         <div style={{ background: 'rgba(0,170,255,0.04)', border: '1px solid rgba(0,170,255,0.08)', borderRadius: 12, padding: '12px 16px', fontSize: '0.72rem', color: '#38bdf8', lineHeight: '1.4' }}>
           <span style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-            <IconBulb size={14} className="text-sky-300" />
+            <IconBulb size={14} className="text-[var(--primary)]" />
             <span><strong>Dica de Performance:</strong> O sistema está rodando em ambiente local. O tempo de renderização (LCP) medido na primeira carga é acelerado pela injeção do CSS Crítico e do script de tema assíncrono no head. Para uma medição pura dos Web Vitals, execute o build de produção (`npm run build`) e acesse em uma janela anônima (sem extensões de terceiros).</span>
           </span>
         </div>

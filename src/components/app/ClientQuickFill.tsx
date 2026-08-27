@@ -75,7 +75,7 @@ export default function ClientQuickFill({ vehicleInfo, onVehicleInfoChange, user
           Clientes & Veículos
         </p>
         {matchedByPlate && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 px-2 py-0.5 text-[0.65rem] font-bold text-emerald-300">
+          <span className="inline-flex items-center gap-1 rounded-full bg-[var(--success)]/15 border border-[var(--success)]/30 px-2 py-0.5 text-[0.65rem] font-bold text-[var(--success)]">
             <IconDocument size={11} /> Cadastrado
           </span>
         )}

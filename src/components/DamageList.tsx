@@ -168,7 +168,7 @@ export default function DamageList({
                   )}
                 </div>
                 {d.photos.length > 0 && (
-                  <span className="text-[0.72rem] text-[var(--primary)] bg-sky-500/10 px-2 py-0.5 rounded-md font-medium inline-flex items-center gap-1">
+                  <span className="text-[0.72rem] text-[var(--primary)] bg-[var(--primary)]/10 px-2 py-0.5 rounded-md font-medium inline-flex items-center gap-1">
                     <IconCamera size={13} /> {d.photos.length}
                   </span>
                 )}
@@ -230,7 +230,7 @@ export default function DamageList({
                       value={d.notes} 
                       onChange={e => onUpdate(d.id, { notes: e.target.value })}
                       placeholder="Observação sobre este dano..."
-                      className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg p-2.5 text-[var(--input-color)] font-outfit text-[0.82rem] resize-none min-height-[52px] outline-none focus:border-sky-500/50 transition-colors"
+                      className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg p-2.5 text-[var(--input-color)] font-outfit text-[0.82rem] resize-none min-height-[52px] outline-none focus:border-[var(--primary)]/50 transition-colors"
                     />
                   </div>
 
@@ -257,14 +257,14 @@ export default function DamageList({
                           {/* Caption/Tag */}
                           <div className="flex-1 min-w-0 flex flex-col gap-1">
                             <div className="text-[0.65rem] font-bold text-[var(--text-muted)] uppercase tracking-wider inline-flex items-center gap-1">
-                              <IconTag size={13} className="text-sky-400" /> Tag / Descrição da Foto
+                              <IconTag size={13} className="text-[var(--primary)]" /> Tag / Descrição da Foto
                             </div>
                             <textarea
                               value={photoNotes[i] ?? ''}
                               onChange={e => updatePhotoNote(d.id, i, e.target.value)}
                               placeholder="Ex.: Amassado na porta..."
                               rows={2}
-                              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg p-1.5 text-[var(--input-color)] font-outfit text-[0.78rem] resize-none outline-none focus:border-sky-500/40 transition-colors"
+                              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg p-1.5 text-[var(--input-color)] font-outfit text-[0.78rem] resize-none outline-none focus:border-[var(--primary)]/40 transition-colors"
                             />
                           </div>
                         </div>

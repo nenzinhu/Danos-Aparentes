@@ -12,8 +12,8 @@ const EVENTS = [
 ]
 
 const DOT: Record<(typeof EVENTS)[number]['tone'], string> = {
-  ok: 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.45)]',
-  alert: 'bg-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.45)]',
+  ok: 'bg-[var(--success)] shadow-[0_0_10px_color-mix(in_srgb,var(--success)_45%,transparent)]',
+  alert: 'bg-[var(--severity-high)] shadow-[0_0_10px_color-mix(in_srgb,var(--severity-high)_45%,transparent)]',
 }
 
 /**
@@ -106,8 +106,8 @@ export default function HeroHistoryMockup() {
         <div className="px-5 pt-4 pb-2">
           {/* Antes / Depois */}
           <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="rounded-xl border border-emerald-400/25 bg-emerald-500/10 p-3">
-              <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-emerald-200/90 mb-2">Antes</p>
+            <div className="rounded-xl border border-[var(--success)]/25 bg-[var(--success)]/10 p-3">
+              <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-[var(--success-bright)] mb-2">Antes</p>
               <div className="rounded-lg overflow-hidden border border-[var(--card-border)] bg-black/40">
                 <Image
                   src="/samples/corolla-abc-1234-2.jpg"
@@ -118,10 +118,10 @@ export default function HeroHistoryMockup() {
                   height={96}
                 />
               </div>
-              <p className="mt-2 text-xs font-semibold text-emerald-200/90">Para-Choque Traseiro OK</p>
+              <p className="mt-2 text-xs font-semibold text-[var(--success-bright)]">Para-Choque Traseiro OK</p>
             </div>
-            <div className="rounded-xl border border-rose-400/25 bg-rose-500/10 p-3">
-              <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-rose-200/90 mb-2">Depois</p>
+            <div className="rounded-xl border border-[var(--severity-high)]/25 bg-[var(--severity-high)]/10 p-3">
+              <p className="font-mono-data text-[10px] uppercase tracking-[0.18em] text-[var(--severity-high)] mb-2">Depois</p>
               <div className="rounded-lg overflow-hidden border border-[var(--card-border)] bg-black/40">
                 <Image
                   src="/samples/corolla-abc-1234-1.jpg"
@@ -132,13 +132,13 @@ export default function HeroHistoryMockup() {
                   height={96}
                 />
               </div>
-              <p className="mt-2 text-xs font-semibold text-rose-200/90">Para-Choque Traseiro: Avaria na pintura</p>
+              <p className="mt-2 text-xs font-semibold text-[var(--severity-high)]">Para-Choque Traseiro: Avaria na pintura</p>
             </div>
           </div>
 
           {/* Resultado da comparação */}
-          <div className="rounded-xl border border-rose-400/30 bg-rose-500/10 px-4 py-3 space-y-2">
-            <p className="text-xs font-bold text-rose-300">Mudança identificada</p>
+          <div className="rounded-xl border border-[var(--severity-high)]/30 bg-[var(--severity-high)]/10 px-4 py-3 space-y-2">
+            <p className="text-xs font-bold text-[var(--severity-high)]">Mudança identificada</p>
             <p className="text-[11px] text-[var(--text-muted)]">
               Nova avaria entre inspeções, com evidência e data registrada.
             </p>
@@ -146,7 +146,7 @@ export default function HeroHistoryMockup() {
               {['Foto anexada', 'IA analisou', 'Validado pelo vistoriador'].map((tag) => (
                 <li
                   key={tag}
-                  className="font-mono-data text-[9px] uppercase tracking-wider px-2 py-0.5 rounded border border-rose-400/25 text-rose-200/90"
+                  className="font-mono-data text-[9px] uppercase tracking-wider px-2 py-0.5 rounded border border-[var(--severity-high)]/25 text-[var(--severity-high)]"
                 >
                   {tag}
                 </li>

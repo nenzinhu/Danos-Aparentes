@@ -134,9 +134,9 @@ export default function IaFlowSlider() {
                 {'actions' in slide && slide.actions && (
                   <div className="mt-5 flex flex-wrap gap-2 justify-center">
                     {[
-                      { label: 'Aprovar', cls: 'border-emerald-500/40 text-emerald-400 bg-emerald-500/10' },
-                      { label: 'Editar', cls: 'border-amber-500/40 text-amber-400' },
-                      { label: 'Rejeitar', cls: 'border-rose-500/40 text-rose-400' },
+                      { label: 'Aprovar', cls: 'border-[var(--success)]/40 text-[var(--success)] bg-[var(--success)]/10' },
+                      { label: 'Editar', cls: 'border-amber-500/40 text-[var(--signal)]' },
+                      { label: 'Rejeitar', cls: 'border-[var(--severity-high)]/40 text-[var(--severity-high)]' },
                     ].map((b) => (
                       <span
                         key={b.label}
@@ -148,7 +148,7 @@ export default function IaFlowSlider() {
                   </div>
                 )}
                 {'validated' in slide && slide.validated && (
-                  <p className="mt-4 text-xs font-bold text-emerald-400">Validado pelo vistoriador</p>
+                  <p className="mt-4 text-xs font-bold text-[var(--success)]">Validado pelo vistoriador</p>
                 )}
               </div>
             )}

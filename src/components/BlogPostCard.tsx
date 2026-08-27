@@ -15,7 +15,7 @@ export function BlogPostCard({
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group block glass-card overflow-hidden transition-all hover:border-sky-500/40 focus-visible:ring-2 ring-[var(--primary)] outline-none"
+      className="group block glass-card overflow-hidden transition-all hover:border-[var(--primary)]/40 focus-visible:ring-2 ring-[var(--primary)] outline-none"
     >
       <BlogCover cover={post.cover} className={coverHeightClass} emojiClass="text-4xl" />
       <div className="p-5">

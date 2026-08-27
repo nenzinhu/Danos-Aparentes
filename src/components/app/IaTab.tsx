@@ -156,19 +156,18 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
         {/* Badge do Veículo Atual */}
         <div className="flex items-center gap-3 bg-slate-950/60 border border-white/5 rounded-xl px-4 py-2 text-xs">
           <div className="text-slate-400">
-            Veículo: <span className={`font-bold ${vehicleInfo.plate ? 'text-sky-400' : 'text-amber-400'}`}>{vehicleInfo.brand || VEHICLE_NAME[vehicleType]}</span>
+            Veículo: <span className={`font-bold ${vehicleInfo.plate ? 'text-[var(--primary)]' : 'text-[var(--signal-bright)]'}`}>{vehicleInfo.brand || VEHICLE_NAME[vehicleType]}</span>
           </div>
           <div className="w-px h-4 bg-white/10" />
           <div className="text-slate-400">
-            Avarias: <span className="font-bold text-rose-400">{damages.length}</span>
+            Avarias: <span className="font-bold text-[var(--severity-high)]">{damages.length}</span>
           </div>
         </div>
       </div>
 
       {/* Alerta de placa não informada */}
       {!vehicleInfo.plate && (
-        <div className="rounded-2xl border border-amber-500/40 bg-amber-500/10 px-5 py-3 flex items-center gap-3 text-xs text-amber-200">
-          <span className="text-base">⚠️</span>
+        <div className="rounded-2xl border border-[var(--signal)]/40 bg-[var(--signal)]/10 px-5 py-3 flex items-center gap-3 text-xs text-[var(--signal-bright)]">
           <span>
             <strong className="font-bold">Placa não informada.</strong> Informe a placa do veículo em <em>Dados do Veículo</em> para uma análise mais precisa do histórico.
           </span>
@@ -178,8 +177,8 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
       {/* Indicador de análise em tempo real */}
       <div className="flex items-center gap-2 text-[0.7rem] text-slate-400">
         <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--primary)] opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--primary)]" />
         </span>
         Analisando em tempo real os dados da vistoria ativa…
       </div>
@@ -205,7 +204,7 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
               <div
                 className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                   m.role === 'user'
-                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-tr-none shadow-lg shadow-sky-500/10'
+                    ? 'bg-primary text-[var(--bg-main)] rounded-tr-none shadow-lg shadow-[var(--primary)]/10'
                     : 'bg-slate-900 border border-white/5 text-slate-200 rounded-tl-none shadow-md'
                 }`}
               >
@@ -252,9 +251,9 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
                 Assistente IA escrevendo...
               </span>
               <div className="bg-slate-900 border border-white/5 text-slate-400 rounded-2xl rounded-tl-none px-5 py-3 text-sm flex items-center gap-2">
-                <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <span className="w-1.5 h-1.5 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-1.5 h-1.5 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-1.5 h-1.5 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
               </div>
             </div>
           )}
@@ -302,12 +301,12 @@ export default function IaTab({ vehicleInfo, damages, vehicleType, onToast, acce
             onChange={(e) => setInput(e.target.value)}
             placeholder="Pergunte sobre as avarias, peça dicas de reparo ou textos para o laudo..."
             disabled={loading}
-            className="flex-1 bg-slate-900 border border-white/5 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500/50 transition-all font-outfit"
+            className="flex-1 bg-slate-900 border border-white/5 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-[var(--primary)]/50 transition-all font-outfit"
           />
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="h-11 w-11 bg-sky-500 hover:bg-sky-400 text-white rounded-xl flex items-center justify-center transition-all disabled:opacity-40 disabled:hover:bg-sky-500 cursor-pointer"
+            className="h-11 w-11 bg-primary hover:bg-primary-hover text-[var(--bg-main)] rounded-xl flex items-center justify-center transition-all disabled:opacity-40 cursor-pointer"
             title="Enviar mensagem"
           >
             <svg

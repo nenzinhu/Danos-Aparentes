@@ -48,7 +48,7 @@ export default function DemoCorollaSection() {
               </div>
               <p className="mt-4 text-sm font-semibold text-[var(--text-main)]">
                 Para-choque traseiro:
-                <span className="text-emerald-400"> Sem danos</span>
+                <span className="text-[var(--success)]"> Sem danos</span>
               </p>
               <p className="mt-2 text-xs text-[var(--text-muted)] leading-relaxed">
                 Responsável: J. Silva · 14:32 · Local: Pátio A

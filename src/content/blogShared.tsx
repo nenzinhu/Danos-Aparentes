@@ -36,7 +36,7 @@ export interface BlogPost {
 
 export function Cta() {
   return (
-    <aside className="blog-cta not-prose my-10 rounded-2xl border border-sky-400/25 bg-slate-950 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.35)]">
+    <aside className="blog-cta not-prose my-10 rounded-2xl border border-[var(--primary)]/25 bg-slate-950 p-6 shadow-[0_8px_40px_rgba(0,0,0,0.35)]">
       <p className="blog-cta-eyebrow text-[0.7rem] font-extrabold uppercase tracking-widest text-amber-400 mb-2">
         Faça na prática
       </p>

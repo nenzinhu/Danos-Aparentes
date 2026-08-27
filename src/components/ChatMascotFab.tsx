@@ -241,12 +241,12 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
       <span
         ref={glowRef}
         aria-hidden
-        className="pointer-events-none absolute inset-[-12%] rounded-full bg-sky-400/30 blur-xl"
+        className="pointer-events-none absolute inset-[-12%] rounded-full bg-[var(--primary)]/30 blur-xl"
       />
       <span
         ref={ringRef}
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-full border border-sky-300/50"
+        className="pointer-events-none absolute inset-0 rounded-full border border-[var(--primary)]/40"
       />
 
       {[
@@ -261,7 +261,7 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
             sparkleRefs.current[i] = el
           }}
           aria-hidden
-          className={`pointer-events-none absolute ${pos} text-[8px] text-sky-100 drop-shadow-[0_0_3px_rgba(125,211,252,0.8)]`}
+          className={`pointer-events-none absolute ${pos} text-[8px] text-[var(--primary-hover)] drop-shadow-[0_0_3px_var(--primary-glow)]`}
         >
           ✦
         </span>
@@ -270,7 +270,7 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
       <span ref={floatRef} className="absolute inset-0 z-[1] block">
         <span
           ref={figureRef}
-          className="relative block h-full w-full overflow-hidden rounded-full bg-gradient-to-b from-sky-50 to-sky-200/90 shadow-[0_8px_18px_-4px_rgba(14,165,233,0.45)] ring-2 ring-white/80"
+          className="relative block h-full w-full overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--primary)_18%,white)] ring-2 ring-white/80"
         >
           <Image
             src={MASCOT_SRC}
@@ -286,7 +286,7 @@ export default function ChatMascotFab({ open, onToggle, attention = false }: Pro
       <span
         ref={badgeRef}
         aria-hidden
-        className="absolute -top-0.5 -left-0.5 z-[2] rounded-full bg-sky-950 px-1 py-px text-[7px] font-black uppercase tracking-wide text-white border border-sky-300/40 shadow-md"
+        className="absolute -top-0.5 -left-0.5 z-[2] rounded-full bg-[var(--bg-main)] px-1 py-px text-[7px] font-black uppercase tracking-wide text-[var(--primary)] border border-[var(--primary)]/40"
       >
         Ajuda
       </span>
@@ -328,7 +328,7 @@ export function ChatMascotAvatar({ className = '' }: { className?: string }) {
   return (
     <span
       ref={ref}
-      className={`relative inline-flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-sky-100 ring-2 ring-sky-300/40 shadow-md ${className}`}
+      className={`relative inline-flex h-10 w-10 shrink-0 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--primary)_12%,white)] ring-2 ring-[var(--primary)]/35 ${className}`}
     >
       <Image
         src={MASCOT_SRC}

@@ -23,15 +23,16 @@ interface AppTabBarProps {
   unsyncedCount?: number
 }
 
-function TabBadge({ count, tone }: { count: number; tone: 'cyan' | 'green' }) {
+/** Badge de contagem: cyan = ação; âmbar = dado estrutural (ex.: pendências de sync). */
+function TabBadge({ count, tone }: { count: number; tone: 'action' | 'signal' }) {
   if (count <= 0) return null
   return (
     <span
       aria-label={`${count} ${count === 1 ? 'item' : 'itens'}`}
       className={`ml-1.5 inline-flex min-w-[1.15rem] h-[1.15rem] items-center justify-center rounded-full px-1 text-[0.62rem] font-black tabular-nums ${
-        tone === 'cyan'
-          ? 'bg-sky-500/20 text-sky-300 border border-sky-400/30'
-          : 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30'
+        tone === 'action'
+          ? 'bg-[var(--primary)]/20 text-[var(--primary)] border border-[var(--primary)]/30'
+          : 'bg-[var(--signal)]/20 text-[var(--signal-bright)] border border-[var(--signal)]/30'
       }`}
     >
       {count > 99 ? '99+' : count}
@@ -40,9 +41,8 @@ function TabBadge({ count, tone }: { count: number; tone: 'cyan' | 'green' }) {
 }
 
 /**
- * Navegação principal do app, organizada por verbo do trabalho:
- * lugares (Veículos · Dossiês · IA · Equipe) + ação primária (+ Nova vistoria).
- * Cada aba tem cor de acento própria — o usuário sabe onde está pela cor.
+ * Navegação principal do app por verbo do trabalho.
+ * Acentos do DESIGN.md: primary (ação) ativo; signal só para dado/pendência.
  */
 export default function AppTabBar({
   activeTab,
@@ -54,8 +54,8 @@ export default function AppTabBar({
   vehiclesCount = 0,
   unsyncedCount = 0,
 }: AppTabBarProps) {
-  const tabIconTone = (active: boolean, tone: string) =>
-    active ? tone : 'text-slate-400'
+  const tabIconClass = (active: boolean) =>
+    active ? 'text-[var(--primary)]' : 'text-[var(--text-muted)]'
 
   return (
     <>
@@ -65,26 +65,26 @@ export default function AppTabBar({
         <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as AppTabValue)}>
           <TabsList aria-label="Navegação principal do aplicativo">
             <Tab value="vehicles">
-              <IconCar size={14} className={tabIconTone(activeTab === 'vehicles', 'text-sky-400')} />
+              <IconCar size={14} className={tabIconClass(activeTab === 'vehicles')} />
               Veículos
-              <TabBadge count={vehiclesCount} tone="cyan" />
+              <TabBadge count={vehiclesCount} tone="action" />
             </Tab>
             <Tab value="dashboard">
-              <IconFolder size={14} className={tabIconTone(activeTab === 'dashboard', 'text-emerald-400')} />
+              <IconFolder size={14} className={tabIconClass(activeTab === 'dashboard')} />
               Dossiês
-              {unsyncedCount > 0 && <TabBadge count={unsyncedCount} tone="green" />}
+              {unsyncedCount > 0 && <TabBadge count={unsyncedCount} tone="signal" />}
             </Tab>
             <Tab value="ia">
-              <IconSparkles size={14} className={tabIconTone(activeTab === 'ia', 'text-violet-400')} />
+              <IconSparkles size={14} className={tabIconClass(activeTab === 'ia')} />
               IA
             </Tab>
             <Tab value="clients">
-              <IconDocument size={14} className={tabIconTone(activeTab === 'clients', 'text-[var(--signal-bright)]')} />
+              <IconDocument size={14} className={tabIconClass(activeTab === 'clients')} />
               Clientes
             </Tab>
             {showTeamTab && (
               <Tab value="team">
-                <IconTeam size={14} className={tabIconTone(activeTab === 'team', 'text-[var(--primary)]')} />
+                <IconTeam size={14} className={tabIconClass(activeTab === 'team')} />
                 Equipe
               </Tab>
             )}
@@ -131,17 +131,17 @@ export default function AppTabBar({
     {/* Barra inferior no mobile: onde o polegar alcança. Espelha as abas + ação primária. */}
     <nav
       aria-label="Navegação principal do aplicativo"
-      className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[var(--card-border)] bg-[var(--bg-main)]/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.35)]"
+      className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[var(--card-border)] bg-[var(--bg-main)]/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)]"
     >
       <div className="grid grid-cols-6 items-stretch h-16 max-w-lg mx-auto">
         {([
-          { value: 'vehicles', label: 'Veículos', icon: <IconCar size={20} className={activeTab === 'vehicles' ? 'text-sky-400' : 'text-slate-400'} />, badge: <TabBadge count={vehiclesCount} tone="cyan" /> },
-          { value: 'dashboard', label: 'Dossiês', icon: <IconFolder size={20} className={activeTab === 'dashboard' ? 'text-emerald-400' : 'text-slate-400'} />, badge: unsyncedCount > 0 ? <TabBadge count={unsyncedCount} tone="green" /> : null },
-          { value: '__new__', label: 'Nova', icon: <span className="flex h-11 w-11 -mt-4 items-center justify-center rounded-full text-white font-black text-2xl shadow-xl shadow-[var(--primary)]/30" style={{ backgroundImage: 'var(--primary-btn-gradient)' }}>+</span>, badge: null },
-          { value: 'clients', label: 'Clientes', icon: <IconDocument size={20} className={activeTab === 'clients' ? 'text-[var(--signal-bright)]' : 'text-slate-400'} />, badge: null },
-          { value: 'ia', label: 'IA', icon: <IconSparkles size={20} className={activeTab === 'ia' ? 'text-violet-400' : 'text-slate-400'} />, badge: null },
+          { value: 'vehicles', label: 'Veículos', icon: <IconCar size={20} className={tabIconClass(activeTab === 'vehicles')} />, badge: <TabBadge count={vehiclesCount} tone="action" /> },
+          { value: 'dashboard', label: 'Dossiês', icon: <IconFolder size={20} className={tabIconClass(activeTab === 'dashboard')} />, badge: unsyncedCount > 0 ? <TabBadge count={unsyncedCount} tone="signal" /> : null },
+          { value: '__new__', label: 'Nova', icon: <span className="flex h-11 w-11 -mt-4 items-center justify-center rounded-full text-[var(--bg-main)] font-black text-2xl shadow-xl shadow-[var(--primary)]/30" style={{ backgroundImage: 'var(--primary-btn-gradient)' }}>+</span>, badge: null },
+          { value: 'clients', label: 'Clientes', icon: <IconDocument size={20} className={tabIconClass(activeTab === 'clients')} />, badge: null },
+          { value: 'ia', label: 'IA', icon: <IconSparkles size={20} className={tabIconClass(activeTab === 'ia')} />, badge: null },
           showTeamTab
-            ? { value: 'team', label: 'Equipe', icon: <IconTeam size={20} className={activeTab === 'team' ? 'text-[var(--primary)]' : 'text-slate-400'} />, badge: null }
+            ? { value: 'team', label: 'Equipe', icon: <IconTeam size={20} className={tabIconClass(activeTab === 'team')} />, badge: null }
             : { value: '__tutorial__', label: 'Ajuda', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-[var(--signal)]"><circle cx="12" cy="12" r="10" /><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12" y2="17" /></svg>, badge: null },
         ] satisfies Array<{ value: string; label: string; icon: React.ReactNode; badge: React.ReactNode }>).map((item) => (
           <button

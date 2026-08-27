@@ -138,7 +138,7 @@ export default function FinalizePanel({
             {typeof info.geo.accuracy === 'number' && (
               <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[0.72rem] font-bold border ${
                 info.geo.accuracy > 1000
-                  ? 'bg-amber-500/15 border-amber-500/30 text-amber-400'
+                  ? 'bg-[var(--signal)]/15 border-[var(--signal)]/30 text-[var(--signal)]'
                   : 'bg-[var(--primary)]/15 border-[var(--primary)]/30 text-[var(--primary)]'
               }`}>
                 ± {info.geo.accuracy} m{info.geo.accuracy > 1000 ? ' (baixa)' : ''}

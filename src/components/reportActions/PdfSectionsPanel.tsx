@@ -40,25 +40,23 @@ export default function PdfSectionsPanel({
   onDisclosureChange,
 }: Props) {
   return (
-    <div className="flex flex-col mb-1 bg-sky-950/15 border border-sky-500/10 rounded-xl overflow-hidden">
+    <div className="flex flex-col mb-1 bg-[var(--primary)]/[0.06] border border-[var(--primary)]/10 rounded-xl overflow-hidden">
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between px-3 py-2.5 text-[0.8rem] font-bold text-[var(--text-main)] hover:bg-sky-500/5 transition-all text-left"
+        className="w-full flex items-center justify-between px-3 py-2.5 text-[0.8rem] font-bold text-[var(--text-main)] hover:bg-[var(--primary)]/5 transition-all text-left"
       >
-        <span className="flex items-center gap-2">
-          <span>⚙️</span> Personalizar Seções do PDF
-        </span>
-        <span className="text-[0.7rem] text-sky-400">{open ? '▲' : '▼'}</span>
+        <span>Personalizar Seções do PDF</span>
+        <span className="text-[0.7rem] text-[var(--primary)]">{open ? '▲' : '▼'}</span>
       </button>
 
       {open && (
-        <div className="px-3 pb-3 pt-1 space-y-2 border-t border-sky-500/10 bg-black/20">
+        <div className="px-3 pb-3 pt-1 space-y-2 border-t border-[var(--primary)]/10 bg-black/20">
           <div className="flex gap-1.5 pt-1 pb-1">
             <button
               type="button"
               onClick={() => onChange(DEFAULT_SECTIONS)}
-              className="px-2 py-1 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 text-[0.68rem] font-bold rounded-md"
+              className="px-2 py-1 bg-[var(--primary)]/10 hover:bg-[var(--primary)]/20 text-[var(--primary)] text-[0.68rem] font-bold rounded-md"
             >
               Marcar Todas
             </button>
@@ -71,35 +69,35 @@ export default function PdfSectionsPanel({
                 showInteriorSection: false,
                 showSignatures: false,
               })}
-              className="px-2 py-1 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 text-[0.68rem] font-bold rounded-md"
+              className="px-2 py-1 bg-[var(--primary)]/10 hover:bg-[var(--primary)]/20 text-[var(--primary)] text-[0.68rem] font-bold rounded-md"
             >
               Apenas Essenciais
             </button>
             <button
               type="button"
               onClick={() => onChange(DEFAULT_SECTIONS)}
-              className="px-2 py-1 bg-white/5 hover:bg-white/10 text-slate-400 text-[0.68rem] font-bold rounded-md ml-auto"
+              className="px-2 py-1 bg-white/5 hover:bg-white/10 text-[var(--text-muted)] text-[0.68rem] font-bold rounded-md ml-auto"
             >
               Restaurar
             </button>
           </div>
 
           {SECTION_OPTIONS.map(sec => (
-            <label key={sec.key} className="flex items-center gap-2 cursor-pointer text-[0.76rem] text-[var(--text-main)] hover:text-sky-300 transition-colors">
+            <label key={sec.key} className="flex items-center gap-2 cursor-pointer text-[0.76rem] text-[var(--text-main)] hover:text-[var(--primary)] transition-colors">
               <input
                 type="checkbox"
                 checked={sectionsConfig[sec.key]}
                 onChange={e => onChange({ ...sectionsConfig, [sec.key]: e.target.checked })}
-                className="rounded bg-[var(--input-bg)] border-[var(--input-border)] text-sky-500 focus:ring-0 cursor-pointer"
+                className="rounded bg-[var(--input-bg)] border-[var(--input-border)] text-[var(--primary)] focus:ring-0 cursor-pointer"
               />
               <span>{sec.label}</span>
             </label>
           ))}
 
-          <div className="pt-2 mt-1 border-t border-sky-500/10 space-y-1.5">
+          <div className="pt-2 mt-1 border-t border-[var(--primary)]/10 space-y-1.5">
             <label
               htmlFor="disclosure-scope"
-              className="block text-[0.72rem] font-bold text-sky-300/90 uppercase tracking-wider"
+              className="block text-[0.72rem] font-bold text-[var(--signal-bright)] uppercase tracking-wider"
             >
               Divulgação pública do QR (/verify)
             </label>
@@ -115,7 +113,7 @@ export default function PdfSectionsPanel({
                 </option>
               ))}
             </select>
-            <p className="text-[0.68rem] text-slate-400 leading-relaxed">
+            <p className="text-[0.68rem] text-[var(--text-muted)] leading-relaxed">
               {DISCLOSURE_LABELS[disclosureScope].description}
             </p>
           </div>

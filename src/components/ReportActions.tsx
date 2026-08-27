@@ -31,6 +31,7 @@ import {
   type SectionVisibilityState,
 } from './reportActions/pdfExport'
 import type { DisclosureScope } from '../lib/verify/disclosureScope'
+import { useInspectionReviewIssue } from './app/InspectionReviewIssueContext'
 
 export { captureSvgs } from './reportActions/pdfExport'
 
@@ -48,11 +49,6 @@ interface Props {
   correctionReason?: string
   supersedesHash?: string
   inspectionPurpose?: 'entrada' | 'retorno'
-  onIssued?: (hash: string) => void
-  reviewedAt?: number
-  isReviewed?: boolean
-  onConfirmReview?: () => void | Promise<void>
-  onClearReview?: () => void | Promise<void>
   userId?: string
   /** Bloqueia PDF (ex.: avarias novas sem confirmação do vistoriador). */
   blockExportReason?: string | null
@@ -67,12 +63,12 @@ interface Props {
 export default function ReportActions({
   vehicleType, vehicleInfo, damages, onToast, hasAccess, accessToken,
   inspectionId, publicCode, laudoVersion, correctionReason, supersedesHash,
-  inspectionPurpose, onIssued,
-  reviewedAt, isReviewed, onConfirmReview, onClearReview, userId,
+  inspectionPurpose, userId,
   blockExportReason = null,
   onReturnHome, onEnsureInspectionId,
   photosReady = false,
 }: Props) {
+  const { reviewedAt, isReviewed, onIssued } = useInspectionReviewIssue()
   const { role } = useTenantContext(userId)
   const mayReview = userId ? canReviewReport(role, userId, userId) : true
   const [loading, setLoading] = useState<string | null>(null)
@@ -115,7 +111,7 @@ export default function ReportActions({
       if (successMsg && onToast && ok !== false) onToast(successMsg)
     } catch (e) {
       console.error(e)
-      if (onToast) onToast('❌ Erro ao gerar arquivo')
+      if (onToast) onToast('Erro ao gerar arquivo')
     } finally {
       setLoading(null)
     }
@@ -188,14 +184,14 @@ export default function ReportActions({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-sky-400/10 font-bold text-[0.95rem] text-[var(--text-main)]">
+      <div className="flex items-center gap-2 mb-3 pb-2.5 border-b border-[var(--primary)]/10 font-bold text-[0.95rem] text-[var(--text-main)]">
         <IconDamageList />
         <span>Exportar Relatório</span>
       </div>
 
       {blockExportReason && (
-        <div className="rounded-xl p-3 border bg-red-500/10 border-red-500/25">
-          <p className="text-[0.78rem] font-bold text-red-300 mb-1">PDF bloqueado</p>
+        <div className="rounded-xl p-3 border bg-[var(--severity-high)]/10 border-[var(--severity-high)]/25">
+          <p className="text-[0.78rem] font-bold text-[var(--severity-high)] mb-1">PDF bloqueado</p>
           <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed">{blockExportReason}</p>
         </div>
       )}
@@ -215,14 +211,14 @@ export default function ReportActions({
             id="pdf-theme-select"
             value={pdfTheme}
             onChange={(e) => handleThemeChange(e.target.value as PdfTheme)}
-            className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg font-outfit text-[0.82rem] font-medium outline-none focus:border-sky-500/40 transition-all cursor-pointer"
+            className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg font-outfit text-[0.82rem] font-medium outline-none focus:border-[var(--primary)]/40 transition-all cursor-pointer"
           >
-            <option value="modern">🎨 Moderno (Padrão)</option>
-            <option value="editorial">📖 Editorial (Poppins & Lora)</option>
-            <option value="tecnico">🔬 Técnico / Forense (Mono)</option>
-            <option value="corporativo">🏛️ Corporativo (Azul & Dourado)</option>
-            <option value="minimalista">⚪ Minimalista (Preto & Branco)</option>
-            <option value="vibrante">🌈 Vibrante (Roxo & Rosa)</option>
+            <option value="modern">Moderno (Padrão)</option>
+            <option value="editorial">Editorial (Poppins & Lora)</option>
+            <option value="tecnico">Técnico / Forense (Mono)</option>
+            <option value="corporativo">Corporativo (Azul & Dourado)</option>
+            <option value="minimalista">Minimalista (Preto & Branco)</option>
+            <option value="vibrante">Vibrante (Roxo & Rosa)</option>
           </select>
         </div>
 
@@ -242,7 +238,7 @@ export default function ReportActions({
         accessToken={accessToken}
         defaultName={vehicleInfo?.owner || undefined}
         onEnsureInspectionId={onEnsureInspectionId}
-        onPlainPdf={() => handle('pdf', handlePdf, '📄 PDF gerado!')}
+        onPlainPdf={() => handle('pdf', handlePdf, 'PDF gerado')}
         canExportPlainPdf={canExportOfficialPdf && photosReady}
         compact
       />
@@ -256,30 +252,30 @@ export default function ReportActions({
             <button
               onClick={() => handle('wp', async () => sendWhatsApp(vehicleInfo, damages))}
               disabled={loading !== null}
-              className={`${btnBase} bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-60`}
+              className={`${btnBase} bg-[var(--success)]/10 border border-[var(--success)]/30 text-[var(--success)] hover:bg-[var(--success)]/20 disabled:opacity-60`}
             >
-              {loading === 'wp' ? <span className="animate-pulse">⏳</span> : <IconWhatsApp />}
+              {loading === 'wp' ? <span className="animate-pulse">…</span> : <IconWhatsApp />}
               Enviar resumo via WhatsApp
             </button>
 
             <div className="grid grid-cols-2 gap-2">
               <button
-                onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, '📋 Copiado!')}
+                onClick={() => handle('copy', async () => { await copyReport(vehicleInfo, damages) }, 'Copiado')}
                 disabled={loading !== null}
                 title="Copiar Relatório"
                 className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
               >
-                {loading === 'copy' ? <span className="text-xl animate-pulse">⏳</span> : <IconCopy />}
+                {loading === 'copy' ? <span className="text-xl animate-pulse">…</span> : <IconCopy />}
                 <span className="text-[0.72rem]">Copiar</span>
               </button>
 
               <button
-                onClick={() => handle('txt', async () => downloadTxt(vehicleInfo, damages), '📝 TXT baixado!')}
+                onClick={() => handle('txt', async () => downloadTxt(vehicleInfo, damages), 'TXT baixado')}
                 disabled={loading !== null}
                 title="Bloco de Notas (TXT)"
                 className={`${btnBase} flex-col justify-center gap-1 bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] p-2.5 hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
               >
-                {loading === 'txt' ? <span className="text-xl animate-pulse">⏳</span> : <IconTxt />}
+                {loading === 'txt' ? <span className="text-xl animate-pulse">…</span> : <IconTxt />}
                 <span className="text-[0.72rem]">TXT</span>
               </button>
             </div>
@@ -288,7 +284,7 @@ export default function ReportActions({
               onClick={() => setShowBadgePanel(v => !v)}
               disabled={!reportHash}
               title={reportHash ? 'Selo embutível do laudo' : 'Gere o PDF primeiro para liberar o selo'}
-              className={`${btnBase} bg-sky-500/10 border border-sky-500/30 text-sky-400 hover:bg-sky-500/20 disabled:opacity-40`}
+              className={`${btnBase} bg-[var(--primary)]/10 border border-[var(--primary)]/30 text-[var(--primary)] hover:bg-[var(--primary)]/20 disabled:opacity-40`}
             >
               <IconSeal />
               Selo do laudo
@@ -313,11 +309,11 @@ export default function ReportActions({
                 <button
                   onClick={() => handle('badge-copy', async () => {
                     await navigator.clipboard.writeText(buildBadgeSnippet(reportHash))
-                  }, '📋 Código copiado!')}
+                  }, 'Código copiado')}
                   disabled={loading !== null}
                   className={`${btnBase} justify-center bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] text-[var(--text-main)] hover:bg-[var(--btn-secondary-hover)] disabled:opacity-60`}
                 >
-                  {loading === 'badge-copy' ? <span className="animate-pulse">⏳</span> : <IconCopy />}
+                  {loading === 'badge-copy' ? <span className="animate-pulse">…</span> : <IconCopy />}
                   Copiar código
                 </button>
               </div>
@@ -331,8 +327,8 @@ export default function ReportActions({
       </section>
 
       {reportHash && (
-        <div className="rounded-xl p-4 mt-2 border border-emerald-500/30 bg-emerald-500/10 flex flex-col items-center gap-3 text-center">
-          <div className="flex items-center gap-2 text-emerald-300 font-extrabold text-[0.95rem]">
+        <div className="rounded-xl p-4 mt-2 border border-[var(--success-border)] bg-[var(--success-bg)] flex flex-col items-center gap-3 text-center">
+          <div className="flex items-center gap-2 text-[var(--success)] font-extrabold text-[0.95rem]">
             <IconSeal />
             Dossiê emitido com sucesso
           </div>
@@ -344,9 +340,9 @@ export default function ReportActions({
             <button
               type="button"
               onClick={onReturnHome}
-              className="w-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white font-extrabold text-[0.85rem] py-2.5 px-4 rounded-xl shadow-lg shadow-emerald-500/20 hover:brightness-110 transition-all"
+              className="w-full bg-[var(--success)] text-[var(--bg-main)] font-extrabold text-[0.85rem] py-2.5 px-4 rounded-xl shadow-lg shadow-[var(--success)]/20 hover:brightness-110 transition-all"
             >
-              ↩️ Retornar ao Início
+              Retornar ao Início
             </button>
           )}
         </div>

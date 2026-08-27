@@ -47,7 +47,7 @@ export default function DamageProfileCard({
           partName={partName || 'Peça Selecionada'}
           width={220}
           height={180}
-          className={`${isSelected ? 'ring-4 ring-sky-500/40 border-sky-500 scale-105' : ''} ${className}`}
+          className={`${isSelected ? 'ring-4 ring-[var(--primary)]/40 border-[var(--primary)] scale-105' : ''} ${className}`}
         />
       </div>
     )
@@ -72,15 +72,15 @@ export default function DamageProfileCard({
   // Card highlight borders for selection
   const borderClass = isScratch
     ? isSelected
-      ? 'border-emerald-500 ring-4 ring-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.4)] scale-105'
-      : 'border-[var(--card-border)] hover:border-emerald-500/50'
+      ? 'border-[var(--success)] ring-4 ring-[var(--success)]/30 shadow-[0_0_30px_color-mix(in_srgb,var(--success)_40%,transparent)] scale-105'
+      : 'border-[var(--card-border)] hover:border-[var(--success)]/50'
     : isDent
     ? isSelected
       ? 'border-amber-500 ring-4 ring-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.4)] scale-105'
       : 'border-[var(--card-border)] hover:border-amber-500/50'
     : isSelected
-    ? 'border-rose-500 ring-4 ring-rose-500/30 shadow-[0_0_30px_rgba(244,63,94,0.4)] scale-105'
-    : 'border-[var(--card-border)] hover:border-rose-500/50'
+    ? 'border-rose-500 ring-4 ring-[var(--severity-high)]/30 shadow-[0_0_30px_color-mix(in_srgb,var(--severity-high)_40%,transparent)] scale-105'
+    : 'border-[var(--card-border)] hover:border-[var(--severity-high)]/50'
 
   return (
     <div
@@ -103,7 +103,7 @@ export default function DamageProfileCard({
         />
       </div>
       {partName && (
-        <div className="py-1 text-[0.62rem] font-bold text-sky-400 uppercase tracking-widest text-center truncate w-full px-2">
+        <div className="py-1 text-[0.62rem] font-bold text-[var(--primary)] uppercase tracking-widest text-center truncate w-full px-2">
           {partName}
         </div>
       )}

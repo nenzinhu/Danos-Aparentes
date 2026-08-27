@@ -78,7 +78,7 @@ export function OperationTypeToggle({
         aria-pressed={value === 'entrada'}
         className={`${base} ${
           value === 'entrada'
-            ? 'border-emerald-400/60 bg-emerald-500/15 text-emerald-300'
+            ? 'border-[var(--success)]/60 bg-[var(--success)]/15 text-[var(--success)]'
             : 'border-white/10 bg-[var(--card-bg)]/60 text-[var(--text-muted)] hover:bg-slate-800'
         }`}
       >
@@ -91,7 +91,7 @@ export function OperationTypeToggle({
         aria-pressed={value === 'retorno'}
         className={`${base} ${
           value === 'retorno'
-            ? 'border-sky-400/60 bg-sky-500/15 text-sky-300'
+            ? 'border-[var(--primary)]/60 bg-[var(--primary)]/15 text-[var(--primary)]'
             : 'border-white/10 bg-[var(--card-bg)]/60 text-[var(--text-muted)] hover:bg-slate-800'
         }`}
       >

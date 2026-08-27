@@ -60,7 +60,7 @@ export default function EuConsigoProvarSection() {
               <ul className="grid grid-cols-1 gap-3 list-none m-0 p-0">
                 {COM.map((item) => (
                   <li key={item} className="flex items-center gap-2.5 text-sm font-semibold text-[var(--text-main)]">
-                    <span aria-hidden className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-black">
+                    <span aria-hidden className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--success)]/20 text-[var(--success)] text-xs font-black">
                       ✓
                     </span>
                     {item}

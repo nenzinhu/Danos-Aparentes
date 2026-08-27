@@ -1,6 +1,6 @@
 'use client';
 import React, { Suspense, useState, useCallback, useMemo, useEffect } from 'react'
-import { VehicleType, ViewType, VehicleInfo, Damage, DamageType, Severity, InspectionPurpose, SavedReport } from '@/src/types'
+import { VehicleType, ViewType, VehicleInfo, Damage, InspectionPurpose, SavedReport } from '@/src/types'
 import VehicleSelector, { VehicleIconSvg } from '@/src/components/VehicleSelector'
 import ViewSelector from '@/src/components/ViewSelector'
 import { VehicleViewer } from '@/src/components/VehicleViewer'
@@ -14,8 +14,10 @@ import InspectionReviewPanel from '@/src/components/InspectionReviewPanel'
 import InspectionAuditTimeline from '@/src/components/InspectionAuditTimeline'
 import { useTenantContext } from '@/src/hooks/useTenantContext'
 import { canReviewReport } from '@/src/lib/auth/rbac'
-import { TtsConfig } from '@/src/types'
 import { ClearAllIcon } from './ClearAllIcon'
+import { useInspectionSession } from './InspectionSessionContext'
+import { useInspectionDamageActions } from './InspectionDamageActionsContext'
+import { useInspectionReviewIssue } from './InspectionReviewIssueContext'
 import RetornoLookupPanel from './RetornoLookupPanel'
 import NewDamagesAlert from './NewDamagesAlert'
 import NewDamagesInspectorConfirm from './NewDamagesInspectorConfirm'
@@ -101,7 +103,7 @@ function StepProgress({
   )
 }
 
-interface InspectTabProps {
+export interface InspectTabProps {
   vehicleType: VehicleType
   viewType: ViewType
   vehicleInfo: VehicleInfo
@@ -113,13 +115,6 @@ interface InspectTabProps {
   previousReport?: PreviousReportSummary | null
   liveCompare?: LiveComparePreview | null
   onPlateConfirmed?: (plate: string) => void
-  ttsConfig: TtsConfig
-  voices: SpeechSynthesisVoice[]
-  hasAccess: boolean
-  accessToken?: string
-  userId?: string
-  /** Nome/e-mail para auditoria de confirmação (não use UUID). */
-  decidedByName?: string
   onVehicleTypeChange: (type: VehicleType) => void
   onViewTypeChange: (view: ViewType) => void
   onVehicleInfoChange: (info: VehicleInfo) => void
@@ -134,26 +129,6 @@ interface InspectTabProps {
   onSelectPurpose?: (purpose: InspectionPurpose) => void
   onLookupRetorno?: (kind: RetornoLookupKind, value: string) => void | Promise<void>
   onClearRetornoBaseline?: () => void
-  onAddDamage: (partId: string, partName: string, type: DamageType, typeName: string, photoFile?: File) => void
-  onAddDamageDetailed?: (
-    partId: string,
-    partName: string,
-    type: DamageType,
-    typeName: string,
-    severity: Severity,
-    notes: string,
-    photoFile?: File,
-    evidence?: Pick<Damage, 'evidenceStatus' | 'evidenceDecidedBy' | 'evidenceDecidedAt' | 'aiDecisionId'>,
-  ) => void
-  onAddDamageRecord?: (damage: Damage) => void
-  onRemoveDamageFromPart: (partId: string) => void
-  onRemoveDamage: (id: string) => void
-  onUpdateDamage: (id: string, patch: Partial<Damage>) => void
-  onTtsConfigChange: (config: TtsConfig) => void
-  onTtsTest: () => void
-  speak: (text: string) => void
-  speakHover: (text: string) => void
-  onToast: (msg: string) => void
   inspectionId?: string | null
   vehicleId?: string | null
   publicCode?: string
@@ -162,16 +137,6 @@ interface InspectTabProps {
   laudoVersion?: number
   correctionReason?: string
   supersedesHash?: string
-  onIssued?: (hash: string) => void
-  reviewedAt?: number
-  reviewNotes?: string
-  reviewContentStale?: boolean
-  reviewBusy?: boolean
-  onCompleteReview?: (notes: string) => void | Promise<void>
-  onReopenReview?: () => void | Promise<void>
-  isReviewed?: boolean
-  onConfirmReview?: () => void | Promise<void>
-  onClearReview?: () => void | Promise<void>
   /** Guia de ativação (1ª inspeção). */
   showActivationOnboarding?: boolean
   savedReportCount?: number
@@ -192,12 +157,6 @@ export default function InspectTab({
   previousReport,
   liveCompare,
   onPlateConfirmed,
-  ttsConfig,
-  voices,
-  hasAccess,
-  accessToken,
-  userId,
-  decidedByName,
   onVehicleTypeChange,
   onViewTypeChange,
   onVehicleInfoChange,
@@ -212,17 +171,6 @@ export default function InspectTab({
   onSelectPurpose,
   onLookupRetorno,
   onClearRetornoBaseline,
-  onAddDamage,
-  onAddDamageDetailed,
-  onAddDamageRecord,
-  onRemoveDamageFromPart,
-  onRemoveDamage,
-  onUpdateDamage,
-  onTtsConfigChange,
-  onTtsTest,
-  speak,
-  speakHover,
-  onToast,
   inspectionId,
   vehicleId,
   publicCode,
@@ -230,21 +178,40 @@ export default function InspectTab({
   laudoVersion,
   correctionReason,
   supersedesHash,
-  onIssued,
-  reviewedAt,
-  reviewNotes,
-  reviewContentStale,
-  reviewBusy,
-  onCompleteReview,
-  onReopenReview,
-  isReviewed,
-  onConfirmReview,
-  onClearReview,
   showActivationOnboarding = false,
   savedReportCount = 0,
   onHideActivationOnboarding,
   onReturnHome,
 }: InspectTabProps) {
+  const {
+    ttsConfig,
+    voices,
+    hasAccess,
+    accessToken,
+    userId,
+    decidedByName,
+    onTtsConfigChange,
+    onTtsTest,
+    speak,
+    speakHover,
+    onToast,
+  } = useInspectionSession()
+  const {
+    onAddDamage,
+    onAddDamageDetailed,
+    onAddDamageRecord,
+    onRemoveDamageFromPart,
+    onRemoveDamage,
+    onUpdateDamage,
+  } = useInspectionDamageActions()
+  const {
+    reviewedAt,
+    reviewNotes,
+    reviewContentStale,
+    reviewBusy,
+    onCompleteReview,
+    onReopenReview,
+  } = useInspectionReviewIssue()
   const [section, setSection] = useState<InspectSection>('dados')
   const { role } = useTenantContext(userId)
   // Solo revisa o próprio laudo; owner revisa qualquer (rbac). Sem ownerId no SavedReport local.
@@ -479,7 +446,7 @@ export default function InspectTab({
                   <button
                     type="button"
                     onClick={onSaveDraft}
-                    className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'inline-flex items-center gap-1.5 text-emerald-400' })}
+                    className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'inline-flex items-center gap-1.5 text-[var(--success)]' })}
                     title="Salva prévia para abrir no celular"
                   >
                     <IconDocument size={14} /> Salvar prévia
@@ -635,19 +602,19 @@ export default function InspectTab({
           </div>
 
           {previousReport ? (
-            <div className="text-[0.8rem] px-3.5 py-3 rounded-xl bg-amber-500/8 border border-amber-500/20 text-amber-400">
+            <div className="text-[0.8rem] px-3.5 py-3 rounded-xl bg-[var(--signal)]/8 border border-[var(--signal)]/20 text-[var(--signal)]">
               Inspeção anterior em{' '}
               <strong>{new Date(previousReport.updatedAt).toLocaleDateString('pt-BR')}</strong>
               Avarias novas aparecem no laudo.
               {liveCompare && (
-                <p className="mt-2 text-amber-200/90 ds-caption">
+                <p className="mt-2 text-[var(--signal-bright)] ds-caption">
                   Ao vivo: {liveCompare.result.summary.newDamages} novo(s),{' '}
                   {liveCompare.result.summary.severityChanged} alterado(s).{' '}
                   <Link
                     href={buildCompareHref(liveCompare.vehicleId, {
                       prevId: liveCompare.previousReportId,
                     })}
-                    className="font-bold underline hover:text-amber-100"
+                    className="font-bold underline hover:text-[var(--signal-bright)]"
                   >
                     Comparar →
                   </Link>
@@ -721,7 +688,7 @@ export default function InspectTab({
               </div>
 
               {allVehicleDamages.length === 0 ? (
-                <p className="ds-caption px-3.5 py-3 rounded-xl bg-emerald-500/5 border border-emerald-500/20 text-emerald-400">
+                <p className="ds-caption px-3.5 py-3 rounded-xl bg-[var(--success)]/5 border border-[var(--success)]/20 text-[var(--success)]">
                   Nenhuma avaria. O PDF inclui diagrama e fotos dos 4 lados.
                 </p>
               ) : (
@@ -799,11 +766,6 @@ export default function InspectTab({
               correctionReason={correctionReason}
               supersedesHash={supersedesHash}
               inspectionPurpose={inspectionPurpose}
-              onIssued={onIssued}
-              reviewedAt={reviewedAt}
-              isReviewed={isReviewed}
-              onConfirmReview={onConfirmReview}
-              onClearReview={onClearReview}
               userId={userId}
               blockExportReason={blockExportReason}
               photosReady={hasAllViewPhotos(vehicleInfo)}

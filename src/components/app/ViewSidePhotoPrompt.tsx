@@ -111,7 +111,7 @@ export default function ViewSidePhotoPrompt({ view, currentPhoto, onSaved, onSki
             type="button"
             disabled={busy}
             onClick={() => galleryRef.current?.click()}
-            className="min-h-12 w-full rounded-xl font-bold text-sm border border-emerald-500/35 bg-emerald-500/10 text-emerald-300 inline-flex items-center justify-center gap-2 disabled:opacity-50"
+            className="min-h-12 w-full rounded-xl font-bold text-sm border border-[var(--success)]/35 bg-[var(--success)]/10 text-[var(--success)] inline-flex items-center justify-center gap-2 disabled:opacity-50"
           >
             <IconGallery size={18} />
             Anexar da galeria

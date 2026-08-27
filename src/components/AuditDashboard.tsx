@@ -107,14 +107,14 @@ export default function AuditDashboard({ accessToken, enabled = true }: AuditDas
               type="button"
               onClick={() => { void load() }}
               disabled={loading}
-              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-sky-500/10 border border-sky-500/25 text-sky-400 disabled:opacity-50"
+              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-[var(--primary)]/10 border border-[var(--primary)]/25 text-[var(--primary)] disabled:opacity-50"
             >
               {loading ? 'Carregando…' : 'Filtrar'}
             </button>
           </div>
 
           {error && (
-            <p className="text-[0.75rem] text-rose-400" role="alert">{error}</p>
+            <p className="text-[0.75rem] text-[var(--severity-high)]" role="alert">{error}</p>
           )}
           {!loading && !error && items.length === 0 && (
             <p className="text-[0.75rem] text-[var(--text-muted)]">Nenhum evento encontrado.</p>

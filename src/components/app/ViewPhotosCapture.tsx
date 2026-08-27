@@ -442,7 +442,7 @@ export default function ViewPhotosCapture({
     <div
       className={`rounded-2xl px-4 py-5 space-y-4 transition-colors ${
         complete
-          ? 'bg-emerald-500/[0.06] ring-1 ring-emerald-500/25'
+          ? 'bg-[var(--success)]/[0.06] ring-1 ring-[var(--success)]/25'
           : 'bg-[var(--panel-bg)] ring-1 ring-[var(--card-border)]'
       }`}
     >
@@ -460,7 +460,7 @@ export default function ViewPhotosCapture({
         <span
           className={`inline-flex items-center min-h-7 px-2.5 rounded-lg text-[0.7rem] font-bold tabular-nums ${
             complete
-              ? 'bg-emerald-500/15 text-emerald-300'
+              ? 'bg-[var(--success)]/15 text-[var(--success)]'
               : 'bg-white/[0.04] text-[var(--text-muted)]'
           }`}
         >
@@ -550,7 +550,7 @@ export default function ViewPhotosCapture({
       {showDone && (
         <>
           {analyzingView && (
-            <p className="text-xs font-semibold text-sky-400">
+            <p className="text-xs font-semibold text-[var(--primary)]">
               IA analisando avarias · {VIEW_TAB_SHORT[analyzingView]}… Confirme depois.
             </p>
           )}

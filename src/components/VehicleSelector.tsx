@@ -85,7 +85,7 @@ function VehicleSelectorComponent({ current, onChange }: Props) {
             onClick={() => onChange(v.id)}
             className={`relative min-w-0 py-2 px-1 rounded-[13px] cursor-pointer flex flex-col items-center gap-1 transition-all duration-200 active:scale-95 motion-reduce:active:scale-100 ${
               isActive
-                ? 'theme-segment-active text-white bg-gradient-to-br from-blue-800 via-blue-700 to-sky-700 shadow-[0_0_0_1px_rgba(0,210,255,0.4),0_4px_16px_rgba(0,160,255,0.45)]'
+                ? 'theme-segment-active text-[var(--bg-main)] bg-primary shadow-[0_0_0_1px_var(--primary-glow),0_4px_16px_var(--primary-glow)]'
                 : 'theme-segment-idle text-[var(--text-muted)] bg-transparent hover:bg-white/[0.04]'
             }`}
           >

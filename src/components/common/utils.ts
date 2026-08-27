@@ -1,25 +1,30 @@
-import type { Vehicle, DamageRecord, Inspection, DiffResult } from '@/src/types/index';
+import type { Vehicle, DamageRecord, DiffResult } from '@/src/types/index'
 
-type ClassValue = string | false | null | undefined;
+type ClassValue = string | false | null | undefined
 
 export function cn(...values: ClassValue[]) {
-  return values.filter(Boolean).join(' ');
+  return values.filter(Boolean).join(' ')
 }
 
+/** Cores de severidade alinhadas ao DESIGN.md (severity-*). */
 export function severityColor(severity: DamageRecord['severity']) {
-  if (severity === 'high') return 'text-red-700 bg-red-500/10';
-  if (severity === 'medium') return 'text-amber-700 bg-amber-500/10';
-  return 'text-emerald-700 bg-emerald-500/10';
+  if (severity === 'high') {
+    return 'text-[var(--severity-high)] bg-[color-mix(in_srgb,var(--severity-high)_12%,transparent)]'
+  }
+  if (severity === 'medium') {
+    return 'text-[var(--severity-medium)] bg-[color-mix(in_srgb,var(--severity-medium)_12%,transparent)]'
+  }
+  return 'text-[var(--severity-low)] bg-[color-mix(in_srgb,var(--severity-low)_12%,transparent)]'
 }
 
 export function severityLabel(severity: DamageRecord['severity']) {
-  if (severity === 'high') return 'Grave';
-  if (severity === 'medium') return 'Médio';
-  return 'Leve';
+  if (severity === 'high') return 'Grave'
+  if (severity === 'medium') return 'Médio'
+  return 'Leve'
 }
 
 export function plateDisplay(plate: string) {
-  return plate.toUpperCase();
+  return plate.toUpperCase()
 }
 
 export function diffSummary(diff: DiffResult) {
@@ -28,5 +33,8 @@ export function diffSummary(diff: DiffResult) {
     removed: diff.removed_damages.length,
     modified: diff.modified_damages.length,
     unchanged: diff.unchanged_damages.length,
-  };
+  }
 }
+
+/** @deprecated Preferir VehicleInfo / SavedReport em `@/src/types`. */
+export type { Vehicle }

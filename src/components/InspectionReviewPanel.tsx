@@ -32,7 +32,7 @@ export default function InspectionReviewPanel({
         className="w-full flex items-center justify-between gap-2 px-5 py-4 text-left"
       >
         <span className="flex items-center gap-2">
-          <span className={`text-[0.7rem] font-black uppercase tracking-wider ${reviewed ? 'text-[var(--success)]' : 'text-sky-400'}`}>
+          <span className={`text-[0.7rem] font-black uppercase tracking-wider ${reviewed ? 'text-[var(--success)]' : 'text-[var(--primary)]'}`}>
             Revisão humana{reviewed ? ' ✓' : ' (obrigatória)'}
           </span>
         </span>
@@ -53,7 +53,7 @@ export default function InspectionReviewPanel({
                 <p className="text-[0.72rem] text-[var(--text-muted)] mt-1 leading-relaxed">{reviewNotes}</p>
               )}
               {contentStale && (
-                <p className="text-[0.72rem] text-amber-400 mt-2">
+                <p className="text-[0.72rem] text-[var(--signal)] mt-2">
                   O conteúdo mudou após a revisão. Reabra para reconfirmar antes de emitir o PDF.
                 </p>
               )}
@@ -61,7 +61,7 @@ export default function InspectionReviewPanel({
                 type="button"
                 disabled={busy}
                 onClick={() => { void onReopenReview() }}
-                className="mt-2 text-xs px-3 py-1.5 rounded-lg font-bold border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 disabled:opacity-50"
+                className="mt-2 text-xs px-3 py-1.5 rounded-lg font-bold border border-[var(--signal)]/30 bg-[var(--signal)]/10 text-[var(--signal)] hover:bg-[var(--signal)]/20 disabled:opacity-50"
               >
                 Reabrir revisão
               </button>
@@ -78,14 +78,14 @@ export default function InspectionReviewPanel({
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={2}
-                className="w-full mb-3 bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg text-[0.82rem] outline-none focus:border-sky-500/40 resize-none"
+                className="w-full mb-3 bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg text-[0.82rem] outline-none focus:border-[var(--primary)]/40 resize-none"
                 placeholder="Ex.: conferido com cliente no pátio"
               />
               <button
                 type="button"
                 disabled={busy}
                 onClick={() => { void onCompleteReview(notes) }}
-                className="text-xs px-4 py-2 rounded-lg font-bold border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-50"
+                className="text-xs px-4 py-2 rounded-lg font-bold border border-[var(--success)]/30 bg-[var(--success)]/10 text-[var(--success)] hover:bg-[var(--success)]/20 disabled:opacity-50"
               >
                 Concluir revisão humana
               </button>

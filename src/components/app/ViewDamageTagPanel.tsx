@@ -58,8 +58,8 @@ export default function ViewDamageTagPanel({ damage, decidedByName, onUpdate }: 
         onClick={() => setOpen((v) => !v)}
         className={`inline-flex max-w-full items-center gap-1.5 rounded-lg px-2 py-1 text-[0.65rem] font-bold text-left transition-colors ${
           status === 'confirmado'
-            ? 'bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25'
-            : 'bg-amber-500/15 text-amber-300 hover:bg-amber-500/25'
+            ? 'bg-[var(--success)]/15 text-[var(--success)] hover:bg-[var(--success)]/25'
+            : 'bg-[var(--signal)]/15 text-[var(--signal-bright)] hover:bg-[var(--signal)]/25'
         }`}
       >
         <span className="truncate">{chipLabel}</span>

@@ -53,7 +53,7 @@ export default function SupportForm() {
           </p>
           <a
             href={`mailto:${LEGAL_CONTACT_EMAIL}`}
-            className="text-sm font-bold text-[var(--text-main)] hover:text-sky-400 transition-colors break-all"
+            className="text-sm font-bold text-[var(--text-main)] hover:text-[var(--primary)] transition-colors break-all"
           >
             {LEGAL_CONTACT_EMAIL}
           </a>
@@ -80,7 +80,7 @@ export default function SupportForm() {
               onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                 activeTab === tab.id
-                  ? 'theme-tab-active border-sky-500 text-sky-400 bg-sky-500/10'
+                  ? 'theme-tab-active border-[var(--primary)] text-[var(--primary)] bg-[var(--primary)]/10'
                   : 'theme-tab-idle border-transparent text-[var(--text-muted)] hover:text-[var(--text-main)] bg-transparent'
               }`}
             >
@@ -96,7 +96,7 @@ export default function SupportForm() {
           maxLength={MAX_CHARS}
           rows={6}
           placeholder="Descreva sua mensagem para o suporte..."
-          className="w-full resize-none rounded-2xl bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] focus:border-sky-500 focus:outline-none p-4 text-sm text-[var(--text-main)] placeholder:text-slate-500 transition-colors scrollbar-thin"
+          className="w-full resize-none rounded-2xl bg-[var(--btn-secondary-bg)] border border-[var(--btn-secondary-border)] focus:border-[var(--primary)] focus:outline-none p-4 text-sm text-[var(--text-main)] placeholder:text-slate-500 transition-colors scrollbar-thin"
         />
         <div className="flex items-center justify-between mt-2">
           <span

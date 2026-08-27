@@ -445,11 +445,13 @@ html.light .damage-tag span {
   .signal-dot { animation: none; }
 }
 
+/* DESIGN.md: CTA primary = fundo cyan + texto escuro (#0B0F17 / --bg-main) */
 .bg-primary,
 [style*="var(--primary-btn-gradient)"] {
-  color: #020617 !important;
+  color: var(--bg-main) !important;
 }
 
+/* Tema claro: primary terracota — texto claro para contraste AA */
 html.light .bg-primary,
 html.light [style*="var(--primary-btn-gradient)"] {
   color: #ffffff !important;

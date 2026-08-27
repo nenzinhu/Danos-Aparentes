@@ -196,7 +196,7 @@ export default function PdfPreviewSection() {
               href="/exemplos/modelo-relatorio-vistoria-veicular.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl border border-sky-500/30 bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 hover:border-sky-500/50 transition-all shadow-md focus-visible:ring-2 ring-[var(--primary)] outline-none"
+              className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl border border-[var(--primary)]/30 bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)]/20 hover:border-[var(--primary)]/50 transition-all shadow-md focus-visible:ring-2 ring-[var(--primary)] outline-none"
             >
               <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
               Baixar Modelo PDF 1 (Relatório Pericial)
@@ -205,7 +205,7 @@ export default function PdfPreviewSection() {
               href="/exemplos/modelo-verificacao-autenticidade.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all shadow-md focus-visible:ring-2 ring-emerald-500 outline-none"
+              className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2.5 rounded-xl border border-[var(--success)]/30 bg-[var(--success)]/10 text-[var(--success)] hover:bg-[var(--success)]/20 hover:border-[var(--success)]/50 transition-all shadow-md focus-visible:ring-2 ring-[var(--success)] outline-none"
             >
               <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
               Baixar Modelo PDF 2 (Certificado de Autenticidade)
@@ -217,7 +217,7 @@ export default function PdfPreviewSection() {
         <div className="lg:col-span-5 space-y-6">
           {/* Destaque do Call to Action curto */}
           <Reveal delay={300} className="pt-4">
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-primary/10 via-sky-500/10 to-transparent border border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-primary/10 via-[var(--primary)]/10 to-transparent border border-primary/20 flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
                 <p className="text-xs font-extrabold uppercase text-[var(--text-main)]">Quer ver seu logotipo neste laudo?</p>
                 <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Personalize o cabeçalho com a sua marca e cores institucionais.</p>

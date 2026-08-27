@@ -9,7 +9,7 @@ export const supabaseBrowserEnabled = Boolean(url && anonKey)
 
 let browserClient: SupabaseClient | null = null
 
-/** Cliente browser com sessão em cookies (sincroniza com o middleware). */
+/** Cliente browser com sessão em cookies (sincroniza com o proxy). */
 export function createBrowserSupabase(): SupabaseClient | null {
   if (!supabaseBrowserEnabled) return null
   if (!browserClient) {

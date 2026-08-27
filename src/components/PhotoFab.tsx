@@ -118,7 +118,7 @@ export default function PhotoFab({
       </div>
 
       {count >= 4 && (
-        <p className="text-[0.7rem] font-semibold text-emerald-300 text-center">
+        <p className="text-[0.7rem] font-semibold text-[var(--success)] text-center">
           4 fotos capturadas. Confirme os lados abaixo.
         </p>
       )}

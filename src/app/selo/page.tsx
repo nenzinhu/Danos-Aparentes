@@ -82,7 +82,7 @@ export default function SeloPage() {
           Copie o trecho abaixo e cole no HTML do seu site — vale para WordPress, Webflow, Wix ou
           qualquer página que aceite HTML. Disponível para clientes dos planos Pro e Corporativo.
         </p>
-        <pre className="rounded-2xl border border-[var(--card-border)] bg-slate-950 p-4 overflow-x-auto text-[11px] sm:text-xs leading-relaxed text-sky-200"><code>{EMBED_SNIPPET}</code></pre>
+        <pre className="rounded-2xl border border-[var(--card-border)] bg-slate-950 p-4 overflow-x-auto text-[11px] sm:text-xs leading-relaxed text-[var(--primary-hover)]"><code>{EMBED_SNIPPET}</code></pre>
         <div className="flex flex-wrap gap-3 pt-2">
           <Link
             href="/planos"

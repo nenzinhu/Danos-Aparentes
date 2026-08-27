@@ -53,7 +53,7 @@ export default function ViewPhotoCard({
         active
           ? 'ring-2 ring-[var(--primary)]/50'
           : src
-            ? 'ring-1 ring-emerald-500/30'
+            ? 'ring-1 ring-[var(--success)]/30'
             : 'ring-1 ring-[var(--card-border)]'
       }`}
     >
@@ -73,7 +73,7 @@ export default function ViewPhotoCard({
               title="Reanalisar avarias nesta foto"
               disabled={analyzingView !== null}
               onClick={() => onReanalyze(view)}
-              className="min-w-8 min-h-8 rounded-lg bg-black/55 text-sky-300 text-sm font-bold disabled:opacity-40"
+              className="min-w-8 min-h-8 rounded-lg bg-black/55 text-[var(--primary)] text-sm font-bold disabled:opacity-40"
               aria-label={`Reanalisar ${VIEW_NAME[view]}`}
             >
               {analyzingView === view ? '…' : '↻'}

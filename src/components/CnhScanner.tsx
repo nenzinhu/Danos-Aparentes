@@ -70,7 +70,7 @@ export default function CnhScanner({ onResult, onClose }: Props) {
   return (
     <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-sm bg-[var(--surface)] rounded-2xl overflow-hidden">
-        <div className="p-4 border-b border-sky-400/10 flex items-center justify-between">
+        <div className="p-4 border-b border-[var(--primary)]/10 flex items-center justify-between">
           <span className="font-bold text-[var(--text-main)]">Escanear CNH</span>
           <button onClick={onClose} className="text-[var(--text-muted)] text-xl leading-none">×</button>
         </div>
@@ -89,7 +89,7 @@ export default function CnhScanner({ onResult, onClose }: Props) {
             <p className="text-sm text-[var(--text-main)]">Não consegui ler o código de barras.</p>
             <button
               onClick={onClose}
-              className="w-full py-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-500 font-bold text-sm"
+              className="w-full py-2.5 rounded-xl bg-[var(--primary)]/10 border border-[var(--primary)]/30 text-[var(--primary)] font-bold text-sm"
             >
               Digitar manualmente
             </button>
@@ -101,7 +101,7 @@ export default function CnhScanner({ onResult, onClose }: Props) {
             <p className="text-sm text-[var(--text-main)]">Não foi possível acessar a câmera.</p>
             <button
               onClick={onClose}
-              className="w-full py-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-500 font-bold text-sm"
+              className="w-full py-2.5 rounded-xl bg-[var(--primary)]/10 border border-[var(--primary)]/30 text-[var(--primary)] font-bold text-sm"
             >
               Digitar manualmente
             </button>

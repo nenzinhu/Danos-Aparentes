@@ -81,7 +81,7 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
     <div className="flex flex-col gap-6">
       <div className="glass-card p-5">
         <h2 className="text-lg font-bold text-[var(--text-main)] mb-1 flex items-center gap-2">
-          <IconTeam className="text-sky-400" size={20} /> Equipe
+          <IconTeam className="text-[var(--primary)]" size={20} /> Equipe
         </h2>
         <p className="text-xs text-[var(--text-muted)] mb-4">
           Convide inspetores para a sua empresa. Ao aceitarem, os laudos deles aparecem aqui.
@@ -101,7 +101,7 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
             disabled={sending}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
-            className="px-4 py-2 rounded-lg text-sm font-bold bg-sky-500/10 border border-sky-500/25 text-sky-400 disabled:opacity-50 cursor-pointer"
+            className="px-4 py-2 rounded-lg text-sm font-bold bg-[var(--primary)]/10 border border-[var(--primary)]/25 text-[var(--primary)] disabled:opacity-50 cursor-pointer"
           >
             {sending ? 'Gerando…' : 'Convidar'}
           </motion.button>
@@ -114,7 +114,7 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
               onClick={() => handleCopy(inviteUrl)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-3 py-1.5 rounded-md bg-sky-500/10 border border-sky-500/25 text-sky-400 font-bold cursor-pointer"
+              className="px-3 py-1.5 rounded-md bg-[var(--primary)]/10 border border-[var(--primary)]/25 text-[var(--primary)] font-bold cursor-pointer"
             >
               Copiar link
             </motion.button>
@@ -126,7 +126,7 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
             {members.map(m => (
               <div key={`${m.invited_email}-${m.invited_at}`} className="flex items-center justify-between bg-black/10 border border-white/5 rounded-lg px-3 py-2 text-xs">
                 <span className="text-[var(--text-main)]">{m.invited_email}</span>
-                <span className={m.status === 'accepted' ? 'text-emerald-400 font-bold inline-flex items-center gap-1' : 'text-amber-400 font-bold inline-flex items-center gap-1'}>
+                <span className={m.status === 'accepted' ? 'text-[var(--success)] font-bold inline-flex items-center gap-1' : 'text-[var(--signal)] font-bold inline-flex items-center gap-1'}>
                   {m.status === 'accepted' ? <><IconCheck size={14} /> Ativo</> : '⏳ Pendente'}
                 </span>
               </div>
@@ -137,7 +137,7 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
 
       <div className="glass-card p-5">
         <h3 className="text-base font-bold text-[var(--text-main)] mb-3 flex items-center gap-2">
-          <IconDocument className="text-emerald-400" size={18} /> Dossiês da equipe
+          <IconDocument className="text-[var(--success)]" size={18} /> Dossiês da equipe
         </h3>
         {loading && <div className="text-xs text-[var(--text-muted)]">Carregando…</div>}
         {error && <div className="text-xs text-red-400">{error}</div>}
@@ -186,7 +186,7 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
                             `local:${String(tr.report.vehicleInfo.plate).toUpperCase().replace(/[^A-Z0-9]/g, '')}`,
                         )}/compare?curr=${encodeURIComponent(tr.report.id)}`}
                         onClick={(e) => e.stopPropagation()}
-                        className="px-3 py-1.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-bold no-underline"
+                        className="px-3 py-1.5 rounded-md bg-[var(--signal)]/10 border border-[var(--signal)]/20 text-[var(--signal-bright)] text-xs font-bold no-underline"
                         title="Abrir comparação no hub de veículos"
                       >
                         ⇄ Comparar
@@ -197,7 +197,7 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
                       disabled={downloadingId !== null}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold flex-shrink-0 disabled:opacity-50 inline-flex items-center gap-1 cursor-pointer"
+                      className="px-3 py-1.5 rounded-md bg-[var(--success)]/10 border border-[var(--success)]/20 text-[var(--success)] text-xs font-bold flex-shrink-0 disabled:opacity-50 inline-flex items-center gap-1 cursor-pointer"
                     >
                       {downloadingId === tr.report.id ? '⏳' : <><IconDocument size={14} /> PDF</>}
                     </motion.button>
@@ -206,10 +206,10 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
                 {isExpanded && (
                   <div className="mt-2.5 pt-2.5 border-t border-white/5 flex flex-col gap-1.5" onClick={e => e.stopPropagation()}>
                     <div className="text-[0.62rem] font-bold text-[var(--text-muted)] tracking-wider flex items-center gap-1">
-                      <IconDocument size={12} className="text-sky-400" /> AVARIAS DETALHADAS
+                      <IconDocument size={12} className="text-[var(--primary)]" /> AVARIAS DETALHADAS
                     </div>
                     {tr.report.damages.length === 0 ? (
-                      <div className="text-xs text-emerald-400 font-bold pl-2 flex items-center gap-1">
+                      <div className="text-xs text-[var(--success)] font-bold pl-2 flex items-center gap-1">
                         <IconSparkles size={14} /> Nenhuma avaria registrada neste laudo.
                       </div>
                     ) : (

@@ -17,7 +17,7 @@ export default function AppFooter({ onOpenTerms, onOpenPrivacy }: AppFooterProps
       <div className="w-full flex flex-col gap-1.5 text-center sm:text-left text-[0.65rem] opacity-75 leading-relaxed border-b border-[var(--panel-border)]/40 pb-6">
         <p>
           <strong>{LEGAL_COMPANY_NAME}</strong> | <strong>CNPJ:</strong> {LEGAL_CNPJ} | <strong>Contato:</strong>{' '}
-          <a href={`mailto:${LEGAL_CONTACT_EMAIL}`} className="text-sky-500 hover:underline">{LEGAL_CONTACT_EMAIL}</a>
+          <a href={`mailto:${LEGAL_CONTACT_EMAIL}`} className="text-[var(--primary)] hover:underline">{LEGAL_CONTACT_EMAIL}</a>
         </p>
         <p className="opacity-70">
           <strong>Aviso de Isenção:</strong> A consulta de dados de placas é realizada via API privada para fins de Identidade do Veículo e não possui qualquer vínculo, representação ou convênio com o DETRAN, Denatran ou órgãos governamentais.

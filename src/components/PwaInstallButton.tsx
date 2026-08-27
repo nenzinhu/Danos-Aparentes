@@ -82,7 +82,7 @@ export default function PwaInstallButton() {
       <button
         onClick={handleClick}
         title="Instalar o app na tela inicial"
-        className="px-4 py-2.5 rounded-lg text-xs font-bold font-outfit transition-all cursor-pointer text-emerald-400 border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 inline-flex items-center gap-2 shadow-md"
+        className="px-4 py-2.5 rounded-lg text-xs font-bold font-outfit transition-all cursor-pointer text-[var(--success)] border border-[var(--success)]/30 bg-[var(--success)]/10 hover:bg-[var(--success)]/20 inline-flex items-center gap-2 shadow-md"
       >
         <Logo size={16} />
         Instalar App
@@ -96,7 +96,7 @@ export default function PwaInstallButton() {
           onClick={() => setShowIosHelp(false)}
         >
           <div
-            className="max-w-sm w-full bg-slate-900 border border-emerald-500/30 rounded-2xl p-6 text-center shadow-2xl"
+            className="max-w-sm w-full bg-slate-900 border border-[var(--success)]/30 rounded-2xl p-6 text-center shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <Logo size={48} className="mx-auto mb-3" />
@@ -108,7 +108,7 @@ export default function PwaInstallButton() {
             </p>
             <button
               onClick={() => setShowIosHelp(false)}
-              className="mt-5 w-full py-2.5 rounded-lg font-bold text-sm bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/25 transition-all"
+              className="mt-5 w-full py-2.5 rounded-lg font-bold text-sm bg-[var(--success)]/15 border border-[var(--success)]/30 text-[var(--success)] hover:bg-[var(--success)]/25 transition-all"
             >
               Entendi
             </button>

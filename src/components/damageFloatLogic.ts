@@ -11,8 +11,8 @@ export const SEV: { value: Severity; label: string; color: string; bg: string; b
 ]
 
 export const TYPES = [
-  { type: 'scratch' as const, label: 'Risco / Arranhado',    Badge: IconScratchDamageBadge, img: '/damage/porta-riscada.svg',  color: 'text-emerald-500', bg: 'bg-emerald-500/15', border: 'border-emerald-500/40' },
-  { type: 'dent' as const,    label: 'Amassado / Deformado', Badge: IconDentDamageBadge,    img: '/damage/porta-amassada.svg', color: 'text-amber-500',   bg: 'bg-amber-500/15',   border: 'border-amber-500/40' },
+  { type: 'scratch' as const, label: 'Risco / Arranhado',    Badge: IconScratchDamageBadge, img: '/damage/porta-riscada.svg',  color: 'text-[var(--success)]', bg: 'bg-[var(--success)]/15', border: 'border-[var(--success)]/40' },
+  { type: 'dent' as const,    label: 'Amassado / Deformado', Badge: IconDentDamageBadge,    img: '/damage/porta-amassada.svg', color: 'text-amber-500',   bg: 'bg-[var(--signal)]/15',   border: 'border-amber-500/40' },
   { type: 'broken' as const,  label: 'Quebrado / Trincado',  Badge: IconBrokenGlassSphere,  img: '/damage/porta-trincada.svg', color: 'text-red-500',     bg: 'bg-red-500/15',     border: 'border-red-500/40' },
 ]
 

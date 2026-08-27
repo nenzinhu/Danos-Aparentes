@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React, { useMemo, ViewTransition, useEffect, useRef, useCallback, useState } from 'react'
 import { DirectionalTransition } from '@/src/app/DirectionalTransition'
 import { useDamages } from '@/src/hooks/useDamages'
@@ -15,42 +15,18 @@ import Header from '@/src/components/Header'
 import AppAuthGate from '@/src/components/app/AppAuthGate'
 import AppTabBar from '@/src/components/app/AppTabBar'
 import AppShellOverlays from '@/src/components/app/AppShellOverlays'
+import AppShellMainTabs from '@/src/components/app/AppShellMainTabs'
 import PhotoUploadProgressBar from '@/src/components/PhotoUploadProgressBar'
 import ErrorBoundary from '@/src/components/ErrorBoundary'
 import { useTenantContext } from '@/src/hooks/useTenantContext'
 import type { Session } from '@supabase/supabase-js'
 import { completeOnboarding } from '@/src/lib/onboarding'
-import dynamic from 'next/dynamic'
-import AppLoadingShell from '@/src/components/app/AppLoadingShell'
-
-const DashboardView = dynamic(() => import('@/src/components/DashboardView'), {
-  loading: () => <AppLoadingShell />,
-})
-const FleetHistoryDashboard = dynamic(
-  () => import('@/src/components/FleetHistoryDashboard'),
-  { loading: () => <AppLoadingShell /> },
-)
-const InspectTab = dynamic(() => import('@/src/components/app/InspectTab'), {
-  loading: () => <AppLoadingShell />,
-})
-const IaTab = dynamic(() => import('@/src/components/app/IaTab'))
-const TeamTab = dynamic(() => import('@/src/components/app/TeamTab'), {
-  loading: () => <AppLoadingShell />,
-})
-const VehiclesListView = dynamic(
-  () => import('@/src/components/vehicles/VehiclesListView'),
-  { loading: () => <AppLoadingShell /> },
-)
-const ClientsPage = dynamic(
-  () => import('@/src/app/app/clients/page'),
-  { loading: () => <AppLoadingShell /> },
-)
 
 function formatSyncFailureToast(dropped: DroppedSyncItem[]): string {
   const first = dropped[0]
   const shortId = first.reportId.slice(0, 8)
   const extra = dropped.length > 1 ? ` (+${dropped.length - 1} outro${dropped.length > 2 ? 's' : ''})` : ''
-  return `❌ Falha permanente ao sincronizar laudo ${shortId}${extra}`
+  return `Falha permanente ao sincronizar laudo ${shortId}${extra}`
 }
 
 export interface AppAuthenticatedShellProps {
@@ -97,7 +73,6 @@ export default function AppAuthenticatedShell({
     hadAccessRef.current = hasAccess
   }, [subscription?.hasAccess, tryFlush, refreshRemote])
 
-  // Já tem laudos → não mostrar checklist de ativação.
   const setShowActivation = shell.setShowActivationOnboarding
   const showActivation = shell.showActivationOnboarding
   useEffect(() => {
@@ -168,7 +143,7 @@ export default function AppAuthenticatedShell({
       inspection.handleLoadCorrection(draft)
       shell.setSavedModal(false)
     } catch (e) {
-      shell.showToast(e instanceof Error ? `❌ ${e.message}` : '❌ Não foi possível criar a correção')
+      shell.showToast(e instanceof Error ? e.message : 'Não foi possível criar a correção')
     }
   }
 
@@ -176,7 +151,7 @@ export default function AppAuthenticatedShell({
     try {
       await deleteReport(id)
     } catch (e) {
-      shell.showToast(e instanceof Error ? `❌ ${e.message}` : '❌ Não foi possível excluir')
+      shell.showToast(e instanceof Error ? e.message : 'Não foi possível excluir')
     }
   }
 
@@ -220,6 +195,11 @@ export default function AppAuthenticatedShell({
 
   const vehiclesByGroup = useMemo(() => groupReportsByVehicle(saved), [saved])
   const unsyncedCount = useMemo(() => saved.filter((r) => r.syncedAt == null).length, [saved])
+
+  const goInspectEntrada = useCallback(() => {
+    inspection.selectPurpose('entrada')
+    shell.setActiveTab('inspect')
+  }, [inspection, shell])
 
   return (
     <AppAuthGate
@@ -269,126 +249,105 @@ export default function AppAuthenticatedShell({
           </ViewTransition>
 
           <ErrorBoundary>
-          <main className="w-full max-w-7xl px-4 sm:px-5 mt-3">
-          <div key={shell.activeTab} className="flex flex-col gap-5 animate-in fade-in slide-in-from-bottom-2 duration-200 motion-reduce:animate-none">
-            {shell.activeTab === 'dashboard' ? (
-              <>
-                <DashboardView
-                    saved={saved}
-                    accessToken={session?.access_token}
-                    showAuditDashboard={tenantRole === 'solo' || tenantRole === 'owner'}
-                    userName={
+            <main className="w-full max-w-7xl px-4 sm:px-5 mt-3">
+              <div key={shell.activeTab} className="flex flex-col gap-5 animate-in fade-in slide-in-from-bottom-2 duration-200 motion-reduce:animate-none">
+                <AppShellMainTabs
+                  activeTab={shell.activeTab}
+                  session={session}
+                  tenantCanAudit={tenantRole === 'solo' || tenantRole === 'owner'}
+                  showTeamAudit={tenantRole === 'owner'}
+                  saved={saved}
+                  vehiclesByGroup={vehiclesByGroup}
+                  damages={damages}
+                  onToast={shell.showToast}
+                  onGoInspectEntrada={goInspectEntrada}
+                  ia={{
+                    vehicleInfo: inspection.vehicleInfo,
+                    vehicleType: inspection.vehicleType,
+                  }}
+                  inspectionSession={{
+                    ttsConfig,
+                    voices,
+                    onTtsConfigChange: setTtsConfig,
+                    onTtsTest: () => speak('Teste de voz da plataforma de Inteligência Histórica Veicular'),
+                    speak,
+                    speakHover,
+                    hasAccess: subscription?.hasAccess ?? false,
+                    accessToken: session?.access_token,
+                    userId: session?.user.id,
+                    decidedByName:
                       (session?.user.user_metadata?.full_name as string | undefined) ||
                       (session?.user.user_metadata?.name as string | undefined) ||
-                      session?.user.email?.split('@')[0] ||
-                      undefined
-                    }
-                    onNewInspection={() => {
-                      inspection.selectPurpose('entrada')
-                      shell.setActiveTab('inspect')
-                    }}
-                  />
-                <div className="mt-6">
-                  <FleetHistoryDashboard saved={saved} />
-                </div>
-              </>
-            ) : shell.activeTab === 'team' ? (
-              <TeamTab
-                accessToken={session?.access_token}
-                onToast={shell.showToast}
-                showAuditDashboard={tenantRole === 'owner'}
-              />
-            ) : shell.activeTab === 'ia' ? (
-              <IaTab
-                vehicleInfo={inspection.vehicleInfo}
-                damages={damages}
-                vehicleType={inspection.vehicleType}
-                onToast={shell.showToast}
-                accessToken={session?.access_token}
-              />
-            ) : shell.activeTab === 'clients' ? (
-              <ClientsPage userId={session?.user.id} />
-            ) : (
-              <InspectTab
-                vehicleType={inspection.vehicleType}
-                viewType={inspection.viewType}
-                vehicleInfo={inspection.vehicleInfo}
-                formCollapsed={inspection.formCollapsed}
-                formResetToken={inspection.formResetToken}
-                viewDamages={inspection.viewDamages}
-                allVehicleDamages={inspection.allVehicleDamages}
-                visitedViews={inspection.visitedViews}
-                previousReport={inspection.previousReport}
-                liveCompare={inspection.liveCompare}
-                onPlateConfirmed={inspection.handlePlateConfirmed}
-                ttsConfig={ttsConfig}
-                voices={voices}
-                hasAccess={subscription?.hasAccess ?? false}
-                accessToken={session?.access_token}
-                userId={session?.user.id}
-                decidedByName={
-                  (session?.user.user_metadata?.full_name as string | undefined) ||
-                  (session?.user.user_metadata?.name as string | undefined) ||
-                  session?.user.email ||
-                  undefined
-                }
-                onVehicleTypeChange={inspection.handleVehicleTypeChange}
-                onViewTypeChange={inspection.handleViewTypeChange}
-                onVehicleInfoChange={inspection.setVehicleInfo}
-                onToggleFormCollapse={inspection.toggleFormCollapse}
-                onWizardComplete={shell.onWizardComplete}
-                onSaveDraft={inspection.handleSaveDraft}
-                onEnsureInspectionId={async () => {
-                  if (inspection.activeReportId) return inspection.activeReportId
-                  await inspection.handleSaveDraft()
-                  return inspection.activeReportId
-                }}
-                onOpenSaved={shell.openSavedModal}
-                onClearAll={inspection.handleClearAll}
-                onClearDamages={inspection.handleClearDamages}
-                inspectionPurpose={inspection.inspectionPurpose}
-                previousSavedReport={inspection.previousSavedReport}
-                onSelectPurpose={inspection.selectPurpose}
-                onLookupRetorno={inspection.lookupRetorno}
-                onClearRetornoBaseline={inspection.clearRetornoBaseline}
-                onAddDamage={inspection.handleAddDamage}
-                onAddDamageDetailed={inspection.handleAddDamageDetailed}
-                onAddDamageRecord={inspection.handleAddDamageRecord}
-                onRemoveDamageFromPart={inspection.handleRemoveDamageFromPart}
-                onRemoveDamage={removeDamage}
-                onUpdateDamage={updateDamage}
-                onTtsConfigChange={setTtsConfig}
-                onTtsTest={() => speak('Teste de voz da plataforma de Inteligência Histórica Veicular')}
-                speak={speak}
-                speakHover={speakHover}
-                onToast={shell.showToast}
-                inspectionId={inspection.activeReportId}
-                vehicleId={activeSaved?.vehicleId ?? inspection.previousSavedReport?.vehicleId}
-                publicCode={activeSaved?.publicCode}
-                laudoVersion={activeSaved?.laudoVersion}
-                correctionReason={activeSaved?.correctionReason}
-                supersedesHash={
-                  activeSaved?.parentInspectionId
-                    ? saved.find(s => s.id === activeSaved.parentInspectionId)?.issuedHash
-                    : undefined
-                }
-                reviewedAt={activeSaved?.reviewedAt}
-                reviewNotes={activeSaved?.reviewNotes}
-                reviewContentStale={reviewStale}
-                onCompleteReview={(notes) => { void inspection.handleReviewComplete(notes) }}
-                onReopenReview={() => { void inspection.handleReopenReview() }}
-                onIssued={(hash) => { void inspection.handleIssued(hash) }}
-                isReviewed={Boolean(activeSaved?.reviewedAt && activeSaved?.reviewContentHash)}
-                onConfirmReview={handleConfirmReview}
-                onClearReview={handleClearReview}
-                showActivationOnboarding={shell.showActivationOnboarding}
-                savedReportCount={saved.length}
-                onHideActivationOnboarding={() => shell.setShowActivationOnboarding(false)}
-                onReturnHome={() => shell.setActiveTab('dashboard')}
-              />
-            )}
-          </div>
-      </main>
+                      session?.user.email ||
+                      undefined,
+                    onToast: shell.showToast,
+                  }}
+                  damageActions={{
+                    onAddDamage: inspection.handleAddDamage,
+                    onAddDamageDetailed: inspection.handleAddDamageDetailed,
+                    onAddDamageRecord: inspection.handleAddDamageRecord,
+                    onRemoveDamageFromPart: inspection.handleRemoveDamageFromPart,
+                    onRemoveDamage: removeDamage,
+                    onUpdateDamage: updateDamage,
+                  }}
+                  reviewIssue={{
+                    reviewedAt: activeSaved?.reviewedAt,
+                    reviewNotes: activeSaved?.reviewNotes,
+                    reviewContentStale: reviewStale,
+                    onCompleteReview: (notes) => { void inspection.handleReviewComplete(notes) },
+                    onReopenReview: () => { void inspection.handleReopenReview() },
+                    onIssued: (hash) => { void inspection.handleIssued(hash) },
+                    isReviewed: Boolean(activeSaved?.reviewedAt && activeSaved?.reviewContentHash),
+                    onConfirmReview: handleConfirmReview,
+                    onClearReview: handleClearReview,
+                  }}
+                  inspectProps={{
+                    vehicleType: inspection.vehicleType,
+                    viewType: inspection.viewType,
+                    vehicleInfo: inspection.vehicleInfo,
+                    formCollapsed: inspection.formCollapsed,
+                    formResetToken: inspection.formResetToken,
+                    viewDamages: inspection.viewDamages,
+                    allVehicleDamages: inspection.allVehicleDamages,
+                    visitedViews: inspection.visitedViews,
+                    previousReport: inspection.previousReport,
+                    liveCompare: inspection.liveCompare,
+                    onPlateConfirmed: inspection.handlePlateConfirmed,
+                    onVehicleTypeChange: inspection.handleVehicleTypeChange,
+                    onViewTypeChange: inspection.handleViewTypeChange,
+                    onVehicleInfoChange: inspection.setVehicleInfo,
+                    onToggleFormCollapse: inspection.toggleFormCollapse,
+                    onWizardComplete: shell.onWizardComplete,
+                    onSaveDraft: inspection.handleSaveDraft,
+                    onEnsureInspectionId: async () => {
+                      if (inspection.activeReportId) return inspection.activeReportId
+                      await inspection.handleSaveDraft()
+                      return inspection.activeReportId
+                    },
+                    onOpenSaved: shell.openSavedModal,
+                    onClearAll: inspection.handleClearAll,
+                    onClearDamages: inspection.handleClearDamages,
+                    inspectionPurpose: inspection.inspectionPurpose,
+                    previousSavedReport: inspection.previousSavedReport,
+                    onSelectPurpose: inspection.selectPurpose,
+                    onLookupRetorno: inspection.lookupRetorno,
+                    onClearRetornoBaseline: inspection.clearRetornoBaseline,
+                    inspectionId: inspection.activeReportId,
+                    vehicleId: activeSaved?.vehicleId ?? inspection.previousSavedReport?.vehicleId,
+                    publicCode: activeSaved?.publicCode,
+                    laudoVersion: activeSaved?.laudoVersion,
+                    correctionReason: activeSaved?.correctionReason,
+                    supersedesHash: activeSaved?.parentInspectionId
+                      ? saved.find(s => s.id === activeSaved.parentInspectionId)?.issuedHash
+                      : undefined,
+                    showActivationOnboarding: shell.showActivationOnboarding,
+                    savedReportCount: saved.length,
+                    onHideActivationOnboarding: () => shell.setShowActivationOnboarding(false),
+                    onReturnHome: () => shell.setActiveTab('dashboard'),
+                  }}
+                />
+              </div>
+            </main>
           </ErrorBoundary>
 
           <AppShellOverlays

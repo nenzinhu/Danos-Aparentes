@@ -11,19 +11,19 @@ import { IconShieldCheck, IconSignature, IconGps, IconDocument, IconShieldCheck 
 const TRUST_ITEMS = [
   {
     k: 'Integridade',
-    icon: <IconShieldCheck className="text-sky-400" size={24} />,
+    icon: <IconShieldCheck className="text-[var(--primary)]" size={24} />,
     title: 'Hash SHA-256 em cada laudo',
     desc: 'Todo PDF gerado carrega um código único de verificação. Se o arquivo for alterado depois da emissão, o hash deixa de bater — útil para conferir a integridade do documento.',
   },
   {
     k: 'Autenticação',
-    icon: <IconSignature className="text-emerald-400" size={24} />,
+    icon: <IconSignature className="text-[var(--success)]" size={24} />,
     title: 'Assinatura digital na tela',
     desc: 'Vistoriador e cliente assinam com o dedo, no próprio celular, no momento da vistoria. Sem impressão, sem "assino depois".',
   },
   {
     k: 'Rastreabilidade',
-    icon: <IconGps className="text-amber-400" size={24} />,
+    icon: <IconGps className="text-[var(--signal)]" size={24} />,
     title: 'Fotos com GPS e timestamp',
     desc: 'Cada foto anexada pode guardar local e horário de captura, adicionando contexto de quando e onde o registro foi feito.',
   },
@@ -90,17 +90,17 @@ export default function TrustSection() {
             href="/exemplos/modelo-relatorio-vistoria-veicular.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-lg border border-sky-500/30 bg-sky-500/10 text-sky-300 hover:bg-sky-500/20 transition-all"
+            className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-lg border border-[var(--primary)]/30 bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)]/20 transition-all"
           >
-            <IconDocument size={14} className="text-sky-400" /> PDF 1 · Laudo de Vistoria
+            <IconDocument size={14} className="text-[var(--primary)]" /> PDF 1 · Laudo de Vistoria
           </a>
           <a
             href="/exemplos/modelo-verificacao-autenticidade.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 transition-all"
+            className="inline-flex items-center gap-2 text-xs font-bold px-4 py-2 rounded-lg border border-[var(--success)]/30 bg-[var(--success)]/10 text-[var(--success)] hover:bg-[var(--success)]/20 transition-all"
           >
-            <IconShieldCheck size={14} className="text-emerald-400" /> PDF 2 · Certificado de Autenticidade
+            <IconShieldCheck size={14} className="text-[var(--success)]" /> PDF 2 · Certificado de Autenticidade
           </a>
           <a
             href="/verify"

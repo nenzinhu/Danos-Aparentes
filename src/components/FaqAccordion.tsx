@@ -58,7 +58,7 @@ export default function FaqAccordion() {
           placeholder="Buscar por palavra-chave (ex.: GPS, laudo, reembolso)…"
           aria-label="Buscar nas perguntas frequentes"
           autoComplete="off"
-          className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] text-[0.95rem] outline-none transition-[border-color,box-shadow] focus:border-sky-500/55 focus:shadow-[0_0_0_3px_rgba(31,182,255,0.15)] placeholder:text-[var(--text-muted)]"
+          className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--text-main)] text-[0.95rem] outline-none transition-[border-color,box-shadow] focus:border-[var(--primary)]/55 focus:shadow-[0_0_0_3px_var(--primary-glow)] placeholder:text-[var(--text-muted)]"
         />
       </div>
 
@@ -82,7 +82,7 @@ export default function FaqAccordion() {
             <div
               key={f.i}
               className={`glass-card overflow-hidden transition-colors ${
-                isOpen ? 'border-sky-500/35' : ''
+                isOpen ? 'border-[var(--primary)]/35' : ''
               }`}
             >
               <button
@@ -140,8 +140,8 @@ function CategoryPill({
       onClick={onClick}
       className={`px-4 py-2 rounded-full text-[0.8rem] font-bold border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)] ${
         active
-          ? 'bg-sky-500/15 border-sky-500/60 text-[var(--primary-hover)] shadow-[0_0_14px_rgba(31,182,255,0.18)]'
-          : 'bg-sky-500/[0.06] border-[var(--input-border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-sky-500/40'
+          ? 'bg-[var(--primary)]/15 border-[var(--primary)]/60 text-[var(--primary-hover)] shadow-[0_0_14px_var(--primary-glow)]'
+          : 'bg-[var(--primary)]/[0.06] border-[var(--input-border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--primary)]/40'
       }`}
     >
       {children}

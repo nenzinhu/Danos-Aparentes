@@ -80,8 +80,8 @@ export default function PhotoAttachButtons({
       />
 
       {compressing ? (
-        <div className={`${baseBtn} border-sky-500/40 bg-sky-500/10 text-sky-400 cursor-wait w-full`}>
-          <span className="animate-spin text-sky-400">⏳</span> Comprimindo…
+        <div className={`${baseBtn} border-[var(--primary)]/40 bg-[var(--primary)]/10 text-[var(--primary)] cursor-wait w-full`}>
+          <span className="animate-spin text-[var(--primary)]" aria-hidden>…</span> Comprimindo…
         </div>
       ) : (
         <>
@@ -91,7 +91,7 @@ export default function PhotoAttachButtons({
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => cameraRef.current?.click()}
-            className={`${baseBtn} border-sky-500/30 bg-sky-500/5 text-sky-500 hover:bg-sky-500/10 disabled:opacity-50`}
+            className={`${baseBtn} border-[var(--primary)]/30 bg-[var(--primary)]/5 text-[var(--primary)] hover:bg-[var(--primary)]/10 disabled:opacity-50`}
           >
             <IconCamera size={18} />
             <span>Tirar {label}</span>
@@ -102,7 +102,7 @@ export default function PhotoAttachButtons({
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => galleryRef.current?.click()}
-            className={`${baseBtn} border-emerald-500/30 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500/10 disabled:opacity-50`}
+            className={`${baseBtn} border-[var(--success)]/30 bg-[var(--success)]/5 text-[var(--success)] hover:bg-[var(--success)]/10 disabled:opacity-50`}
           >
             <IconGallery size={18} />
             <span>Galeria</span>

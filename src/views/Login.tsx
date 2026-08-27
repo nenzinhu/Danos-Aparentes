@@ -89,7 +89,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
 
   return (
     <main className="min-h-screen flex items-center justify-center p-6 bg-slate-950 text-slate-100 font-outfit relative overflow-hidden">
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full" aria-hidden="true" />
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[var(--primary)]/10 blur-[120px] rounded-full" aria-hidden="true" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-cyan-600/10 blur-[120px] rounded-full" aria-hidden="true" />
 
       <div className="w-full max-w-md bg-[var(--card-bg)]/60 border border-[var(--card-border)] rounded-2xl p-8 backdrop-blur-2xl shadow-2xl relative z-10">
@@ -123,7 +123,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
               required
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full bg-slate-950/50 border border-[var(--card-border)] text-slate-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-slate-600"
+              className="w-full bg-slate-950/50 border border-[var(--card-border)] text-slate-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-[var(--primary)]/50 focus:ring-4 focus:ring-[var(--primary)]/10 transition-all placeholder:text-slate-600"
             />
           </div>
 
@@ -135,7 +135,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
                   <button
                     type="button"
                     onClick={() => { setMode('reset'); setError(''); setInfo('') }}
-                    className="text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors"
+                    className="text-xs font-bold text-[var(--primary)] hover:text-[var(--primary-hover)] transition-colors"
                     aria-label="Esqueceu a senha? Recuperar acesso"
                   >
                     Esqueceu?
@@ -151,7 +151,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
                 minLength={6}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className="w-full bg-slate-950/50 border border-[var(--card-border)] text-slate-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-slate-600"
+                className="w-full bg-slate-950/50 border border-[var(--card-border)] text-slate-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-[var(--primary)]/50 focus:ring-4 focus:ring-[var(--primary)]/10 transition-all placeholder:text-slate-600"
               />
             </div>
           )}
@@ -163,8 +163,8 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
             </div>
           )}
           {info && (
-            <div role="status" className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs py-2.5 px-3 rounded-lg flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
+            <div role="status" className="bg-[var(--success)]/10 border border-[var(--success)]/20 text-[var(--success)] text-xs py-2.5 px-3 rounded-lg flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" aria-hidden="true" />
               {info}
             </div>
           )}
@@ -173,7 +173,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
             type="submit"
             disabled={busy}
             aria-busy={busy}
-            className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-blue-800 disabled:opacity-50 text-white font-bold text-sm py-3.5 rounded-xl transition-all shadow-lg shadow-blue-600/20 active:scale-[0.98] mt-2"
+            className="w-full bg-primary hover:bg-primary-hover disabled:opacity-50 text-[var(--bg-main)] font-bold text-sm py-3.5 rounded-xl transition-all shadow-lg shadow-[var(--primary)]/20 active:scale-[0.98] mt-2"
           >
             {busy ? 'Processando...' : mode === 'login' ? 'Entrar na plataforma' : mode === 'signup' ? 'Criar minha conta' : 'Enviar link de recuperação'}
           </button>
@@ -190,7 +190,7 @@ export default function Login({ onSignIn, onSignUp, onResetPassword }: Props) {
                   setInfo('')
                   trackSignupStart({ source: 'login_mode_toggle' })
                 }}
-                className="text-blue-400 hover:text-blue-300 font-bold"
+                className="text-[var(--primary)] hover:text-[var(--primary-hover)] font-bold"
               >
                 Cadastre-se
               </button>

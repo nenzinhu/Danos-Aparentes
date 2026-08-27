@@ -107,7 +107,7 @@ export default function CookieConsentBanner() {
         <div className="flex-1 flex flex-col gap-3">
           <p className="text-xs text-slate-300 leading-relaxed">
             Usamos cookies de marketing (Meta e TikTok) para medir cadastros vindos de anúncios.{' '}
-            <Link href="/privacidade" className="text-sky-400 underline">
+            <Link href="/privacidade" className="text-[var(--primary)] underline">
               Política de Privacidade
             </Link>.
           </p>

@@ -55,12 +55,12 @@ const MOCK_PARTS = [
 function SeverityDot({ level }: { level: 'ok' | 'leve' | 'medio' | 'grave' }) {
   const color =
     level === 'ok'
-      ? 'bg-emerald-500/80'
+      ? 'bg-[var(--success)]/80'
       : level === 'leve'
-        ? 'bg-amber-400'
+        ? 'bg-[var(--signal)]'
         : level === 'medio'
           ? 'bg-orange-500'
-          : 'bg-rose-500'
+          : 'bg-[var(--severity-high)]'
   const label = level === 'ok' ? 'OK' : level === 'leve' ? 'Leve' : level === 'medio' ? 'Média' : 'Grave'
   return (
     <span className="inline-flex items-center gap-1.5 text-[10px] font-mono-data uppercase tracking-wider text-[var(--text-muted)]">

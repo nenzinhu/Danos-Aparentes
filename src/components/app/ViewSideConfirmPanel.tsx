@@ -110,7 +110,7 @@ export default function ViewSideConfirmPanel({
       </ul>
 
       {!canConfirm && items.length > 0 && (
-        <p className="text-xs text-amber-400/90 font-semibold">
+        <p className="text-xs text-[var(--signal)] font-semibold">
           {gate.ok ? 'Assinale o lado de todas as 4 fotos.' : gate.reason}
         </p>
       )}

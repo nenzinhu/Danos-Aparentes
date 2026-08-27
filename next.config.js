@@ -3,15 +3,44 @@ import { withSentryConfig } from '@sentry/nextjs'
 /**
  * Cabeçalhos de segurança aplicados a todas as rotas.
  * A Vercel já envia HSTS (max-age=63072000); aqui reforçamos com includeSubDomains.
- * CSP fica de fora de propósito — exige inventário dos scripts de terceiros
- * (Meta Pixel, TikTok, Supabase, Vercel Analytics, Sentry, PostHog) para não quebrar o site.
+ *
+ * CSP: Report-Only (não bloqueia). NÃO ativar enforce nesta janela.
+ * Alvo sugerido para enforce: ~10–17 set 2026 (1–2 semanas após RO em produção).
+ * Rollout:
+ *  1. Manter RO por 1–2 semanas em produção
+ *  2. Auditar violações no DevTools / logs (console CSP)
+ *  3. Ajustar allowlist se necessário
+ *  4. Trocar Content-Security-Policy-Report-Only → Content-Security-Policy
+ * Critério de go: zero violações inesperadas em fluxos críticos (login, vistoria, PDF, pagamento).
  */
+const cspReportOnly = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'self'",
+  "form-action 'self'",
+  // Scripts de terceiros inventariados (GTM/GA Ads, Meta, TikTok, PostHog, Sentry, Vercel, Stripe).
+  // 'unsafe-inline'/'unsafe-eval' ainda necessários para Next + pixels — remover ao migrar para nonces.
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://googleads.g.doubleclick.net https://www.google.com https://connect.facebook.net https://analytics.tiktok.com https://cdn.posthog.com https://*.i.posthog.com https://browser.sentry-cdn.com https://*.sentry.io https://va.vercel-scripts.com https://vitals.vercel-insights.com https://js.stripe.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "media-src 'self' blob: data:",
+  "worker-src 'self' blob:",
+  "child-src 'self' blob:",
+  "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://www.youtube-nocookie.com https://td.doubleclick.net",
+  // connect: APIs próprias + Supabase + billing + analytics + IA providers + Upstash.
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://api.asaas.com https://api.mercadopago.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com https://www.facebook.com https://graph.facebook.com https://analytics.tiktok.com https://*.i.posthog.com https://us.i.posthog.com https://*.sentry.io https://vitals.vercel-insights.com https://api.groq.com https://generativelanguage.googleapis.com https://*.upstash.io",
+  "manifest-src 'self'",
+].join('; ')
+
 const securityHeaders = [
   { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'geolocation=(self), camera=(self), microphone=(), payment=(), interest-cohort=()' },
+  { key: 'Content-Security-Policy-Report-Only', value: cspReportOnly },
 ]
 
 /** @type {import('next').NextConfig} */

@@ -19,7 +19,6 @@
     "setup:stripe-plans": "node scripts/setup-stripe-plans.mjs",
     "configure:stripe": "node scripts/configure-stripe-billing.mjs",
     "configure:stripe:vercel": "node scripts/configure-stripe-billing.mjs --redeploy",
-    "indexnow": "node scripts/indexnow.mjs",
     "email:config": "node scripts/configure-email.mjs",
     "prospect:locadoras": "node scripts/email-marketing/buscar-locadoras.mjs",
     "logos": "node scripts/prepare-logos.mjs"

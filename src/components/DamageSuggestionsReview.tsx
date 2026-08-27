@@ -14,9 +14,9 @@ export interface DamageSuggestion {
 
 const SEVERITY_LABEL: Record<Severity, string> = { low: 'Leve', medium: 'Média', high: 'Grave' }
 const SEVERITY_CLASS: Record<Severity, string> = {
-  low: 'bg-amber-500/15 border-amber-500/30 text-amber-500',
-  medium: 'bg-orange-500/15 border-orange-500/30 text-orange-500',
-  high: 'bg-red-500/15 border-red-500/30 text-red-500',
+  low: 'bg-[color-mix(in_srgb,var(--severity-low)_15%,transparent)] border-[var(--severity-low)]/30 text-[var(--severity-low)]',
+  medium: 'bg-[color-mix(in_srgb,var(--severity-medium)_15%,transparent)] border-[var(--severity-medium)]/30 text-[var(--severity-medium)]',
+  high: 'bg-[color-mix(in_srgb,var(--severity-high)_15%,transparent)] border-[var(--severity-high)]/30 text-[var(--severity-high)]',
 }
 
 interface Props {
@@ -33,7 +33,7 @@ export default function DamageSuggestionsReview({ suggestions, onToggle, onConfi
     <div className="fixed inset-0 z-[9999] bg-black/70 flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div className="bg-[var(--card-bg)] w-full sm:max-w-lg sm:rounded-2xl rounded-t-2xl max-h-[85vh] flex flex-col border border-[var(--panel-border)]">
         <div className="p-5 border-b border-[var(--panel-border)]">
-          <h2 className="font-extrabold text-base text-[var(--text-main)]">🤖 Avarias detectadas</h2>
+          <h2 className="font-extrabold text-base text-[var(--text-main)]">Avarias detectadas</h2>
           <p className="text-xs text-[var(--text-muted)] mt-1">
             Revise as sugestões da IA. Desmarque o que não for uma avaria real antes de confirmar.
           </p>
@@ -49,14 +49,14 @@ export default function DamageSuggestionsReview({ suggestions, onToggle, onConfi
             <label
               key={s.partId}
               className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${
-                s.accepted ? 'bg-sky-500/5 border-sky-500/25' : 'bg-black/10 border-white/5 opacity-50'
+                s.accepted ? 'bg-[var(--primary)]/5 border-[var(--primary)]/25' : 'bg-black/10 border-white/5 opacity-50'
               }`}
             >
               <input
                 type="checkbox"
                 checked={s.accepted}
                 onChange={() => onToggle(s.partId)}
-                className="mt-0.5 accent-sky-500 w-4 h-4 shrink-0 cursor-pointer"
+                className="mt-0.5 accent-[var(--primary)] w-4 h-4 shrink-0 cursor-pointer"
               />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">

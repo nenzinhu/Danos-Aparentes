@@ -36,8 +36,8 @@ export class AppErrorBoundary extends Component<Props, State> {
     if (this.state.error) {
       if (this.props.fallback) return this.props.fallback;
       return (
-        <div className="rounded-2xl border border-rose-400/30 bg-rose-500/5 p-6 text-center">
-          <p className="text-sm font-bold text-rose-400">Algo saiu do esperado.</p>
+        <div className="rounded-2xl border border-[var(--severity-high)]/30 bg-[var(--severity-high)]/5 p-6 text-center">
+          <p className="text-sm font-bold text-[var(--severity-high)]">Algo saiu do esperado.</p>
           <p className="mt-1 text-xs text-[var(--text-muted)]">
             {this.state.error.message}
           </p>

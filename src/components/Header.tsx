@@ -22,14 +22,14 @@ interface Props {
 import { IconDocument, IconSignature, IconGps, IconShieldCheck, IconSearch, IconTeam, IconSparkles, IconSunMoon } from './ui/AnimatedIcons'
 
 const PRO_BENEFITS = [
-  { icon: <IconDocument className="text-sky-400" size={18} />, title: 'PDF Profissional', desc: 'Laudo com hash SHA-256 e QR Code de autenticidade' },
-  { icon: <IconSignature className="text-emerald-400" size={18} />, title: 'Assinatura Digital', desc: 'Vistoriador e cliente assinam na tela do celular' },
-  { icon: <IconGps className="text-amber-400" size={18} />, title: '100% Offline', desc: 'Funciona sem internet, sincroniza quando conectar' },
+  { icon: <IconDocument className="text-[var(--primary)]" size={18} />, title: 'PDF Profissional', desc: 'Laudo com hash SHA-256 e QR Code de autenticidade' },
+  { icon: <IconSignature className="text-[var(--success)]" size={18} />, title: 'Assinatura Digital', desc: 'Vistoriador e cliente assinam na tela do celular' },
+  { icon: <IconGps className="text-[var(--signal)]" size={18} />, title: '100% Offline', desc: 'Funciona sem internet, sincroniza quando conectar' },
   { icon: <IconShieldCheck className="text-[var(--primary)]" size={18} />, title: 'Marca Própria', desc: 'Logo e nome da empresa em todos os relatórios' },
   { icon: <IconSearch className="text-cyan-400" size={18} />, title: 'Consulta de Placas', desc: 'Preenchimento automático dos dados do veículo' },
   { icon: <IconTeam className="text-[var(--primary)]" size={18} />, title: 'Envio por WhatsApp', desc: 'Compartilhe o laudo em 1 clique diretamente pelo app' },
   { icon: <IconSparkles className="text-pink-400" size={18} />, title: 'Painel de Estatísticas', desc: 'Dashboard com histórico e análise das vistorias' },
-  { icon: <IconSparkles className="text-sky-400" size={18} />, title: 'Voz Antoni PT-BR', desc: 'Narração das peças via ElevenLabs em português' },
+  { icon: <IconSparkles className="text-[var(--primary)]" size={18} />, title: 'Voz Antoni PT-BR', desc: 'Narração das peças via ElevenLabs em português' },
 ]
 
 function ProBenefitsButton({
@@ -71,11 +71,11 @@ function ProBenefitsButton({
         onClick={() => setOpen(o => !o)}
         className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-[0.7rem] font-bold border transition-colors ${
           isActive
-            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+            ? 'bg-[var(--success)]/10 border-[var(--success)]/30 text-[var(--success)]'
             : 'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]'
         }`}
       >
-        <IconSparkles size={13} className={isActive ? 'text-emerald-400' : 'text-sky-400'} />
+        <IconSparkles size={13} className={isActive ? 'text-[var(--success)]' : 'text-[var(--primary)]'} />
         {isActive ? 'Pro' : isTrial ? `Trial ${subscription?.trialDaysLeft ?? 0}d` : 'Planos'}
       </button>
 
@@ -111,7 +111,7 @@ function ProBenefitsButton({
           )}
           {!isActive && !isTrial && (
             <p className="ds-caption text-center mt-2">
-              A partir de <strong className="text-sky-400">R$ 79,90/mês</strong>
+              A partir de <strong className="text-[var(--primary)]">R$ 79,90/mês</strong>
             </p>
           )}
         </div>
@@ -155,11 +155,11 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onSignOut, syncS
                 title={title}
                 className={`h-8 px-2 sm:px-2.5 rounded-lg border text-[0.65rem] font-bold flex items-center gap-1.5 transition-colors ${
                   synced
-                    ? 'border-emerald-500/35 bg-emerald-500/12 text-emerald-400'
+                    ? 'border-[var(--success)]/35 bg-[var(--success)]/12 text-[var(--success)]'
                     : 'border-red-500/35 bg-red-500/12 text-red-400'
                 } ${canRetry ? 'cursor-pointer hover:opacity-90' : ''}`}
               >
-                <span aria-hidden className={`inline-block w-2 h-2 rounded-full ${synced ? 'bg-emerald-400 shadow-[0_0_6px_#34d399]' : 'bg-red-400 shadow-[0_0_6px_#f87171]'}`} />
+                <span aria-hidden className={`inline-block w-2 h-2 rounded-full ${synced ? 'bg-[var(--success)] shadow-[0_0_6px_var(--success)]' : 'bg-red-400 shadow-[0_0_6px_#f87171]'}`} />
                 <span className="hidden sm:inline">{synced ? 'Sincronizado' : 'Não sincronizado'}</span>
               </Tag>
             )
@@ -180,7 +180,7 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onSignOut, syncS
             title={darkMode === false ? 'Modo claro' : 'Modo escuro'}
             className="h-8 w-8 rounded-lg border border-[var(--btn-secondary-border)] bg-[var(--btn-secondary-bg)] flex items-center justify-center transition-colors hover:bg-[var(--btn-secondary-hover)]"
           >
-            <IconSunMoon isDark={darkMode ?? true} className={darkMode === false ? 'text-slate-400' : 'text-amber-400'} size={16} />
+            <IconSunMoon isDark={darkMode ?? true} className={darkMode === false ? 'text-slate-400' : 'text-[var(--signal)]'} size={16} />
           </button>
 
           {onSignOut && (
@@ -188,7 +188,7 @@ function HeaderComponent({ darkMode, onToggleDark, onOpenSaved, onSignOut, syncS
               type="button"
               onClick={onSignOut}
               title="Sair"
-              className="h-8 w-8 rounded-lg border border-[var(--card-border)] text-[var(--text-muted)] hover:text-rose-400 hover:border-rose-500/40 flex items-center justify-center transition-colors"
+              className="h-8 w-8 rounded-lg border border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--severity-high)] hover:border-[var(--severity-high)]/40 flex items-center justify-center transition-colors"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.2" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />

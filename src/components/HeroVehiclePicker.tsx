@@ -197,7 +197,7 @@ export default function HeroVehiclePicker() {
             title="Ver só o contorno, sem cores"
             className={`px-2.5 py-1 rounded-lg border text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
               outlineMode
-                ? 'bg-sky-500/25 border-sky-400/50 text-sky-300'
+                ? 'bg-[var(--primary)]/25 border-[var(--primary)]/50 text-[var(--primary)]'
                 : 'bg-[var(--card-bg)] border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]'
             }`}
           >
@@ -275,13 +275,13 @@ export default function HeroVehiclePicker() {
               </span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+              <span className="flex items-center gap-1.5 text-[10px] font-black uppercase text-amber-500 bg-[var(--signal)]/10 px-2 py-0.5 rounded border border-[var(--signal)]/20">
                 {lastDamage.type === 'broken' ? (
                   <IconDamageBroken size={13} className="text-red-400" />
                 ) : lastDamage.type === 'dent' ? (
                   <IconDamageDent size={13} className="text-orange-400" />
                 ) : (
-                  <IconDamageScratch size={13} className="text-amber-400" />
+                  <IconDamageScratch size={13} className="text-[var(--signal)]" />
                 )}
                 Tipo: {lastDamage.typeName}
               </span>

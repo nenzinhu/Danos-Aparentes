@@ -25,9 +25,9 @@ export default function NewDamagesInspectorConfirm({
   const allDone = confirmedCount === newDamages.length
 
   return (
-    <div className="rounded-xl border border-amber-500/35 bg-amber-500/10 px-4 py-4 space-y-3">
+    <div className="rounded-xl border border-amber-500/35 bg-[var(--signal)]/10 px-4 py-4 space-y-3">
       <div>
-        <p className="text-[0.7rem] font-bold uppercase tracking-wider text-amber-400 mb-1">
+        <p className="text-[0.7rem] font-bold uppercase tracking-wider text-[var(--signal)] mb-1">
           Confirmação do responsável
         </p>
         <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed">
@@ -44,7 +44,7 @@ export default function NewDamagesInspectorConfirm({
               <label
                 className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${
                   checked
-                    ? 'bg-emerald-500/10 border-emerald-500/30'
+                    ? 'bg-[var(--success)]/10 border-[var(--success)]/30'
                     : 'bg-black/10 border-amber-500/25'
                 }`}
               >
@@ -52,7 +52,7 @@ export default function NewDamagesInspectorConfirm({
                   type="checkbox"
                   checked={checked}
                   onChange={() => onToggle(d.id)}
-                  className="mt-0.5 accent-emerald-500 w-4 h-4 shrink-0 cursor-pointer"
+                  className="mt-0.5 accent-[var(--success)] w-4 h-4 shrink-0 cursor-pointer"
                 />
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -85,7 +85,7 @@ export default function NewDamagesInspectorConfirm({
         )}
         <p
           className={`text-[0.72rem] font-bold ${
-            allDone ? 'text-emerald-400' : 'text-amber-400'
+            allDone ? 'text-[var(--success)]' : 'text-[var(--signal)]'
           }`}
         >
           {allDone

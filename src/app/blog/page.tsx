@@ -66,7 +66,7 @@ export default function BlogIndexPage() {
         {featured && (
           <Link
             href={`/blog/${featured.slug}`}
-            className="group block glass-card overflow-hidden mb-8 transition-all hover:border-sky-500/40 focus-visible:ring-2 ring-[var(--primary)] outline-none"
+            className="group block glass-card overflow-hidden mb-8 transition-all hover:border-[var(--primary)]/40 focus-visible:ring-2 ring-[var(--primary)] outline-none"
           >
             <BlogCover cover={featured.cover} className="h-44 sm:h-52">
               <span className="cover-badge absolute top-4 left-4 text-[0.62rem] font-extrabold uppercase tracking-widest bg-black/40 text-white px-2.5 py-1 rounded-full backdrop-blur-sm">

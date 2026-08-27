@@ -62,7 +62,7 @@ export const FullscreenOverlay = memo(function FullscreenOverlay() {
 
       <div className='flex justify-end mb-2 shrink-0'>
         {damages.length === 0 ? (
-          <div className='text-[0.72rem] text-sky-400/35 font-outfit italic'>
+          <div className='text-[0.72rem] text-[var(--primary)]/35 font-outfit italic'>
             Nenhuma avaria registrada nesta vista
           </div>
         ) : (
@@ -80,12 +80,12 @@ export const FullscreenOverlay = memo(function FullscreenOverlay() {
       </div>
 
       <ErrorBoundary>
-        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-sky-500/50 italic text-xs animate-pulse min-h-[220px]">Carregando visualizador…</div>}>
+        <Suspense fallback={<div className="flex-1 flex items-center justify-center text-[var(--primary)]/50 italic text-xs animate-pulse min-h-[220px]">Carregando visualizador…</div>}>
           <Viewport isFullscreen />
         </Suspense>
       </ErrorBoundary>
 
-      <div className='mt-1.5 text-[0.72rem] text-sky-200/50 text-center shrink-0'>
+      <div className='mt-1.5 text-[0.72rem] text-[var(--text-muted)] text-center shrink-0'>
         Clique em uma peça para registrar avaria • Arraste para girar • ESC para sair • Scroll para zoom
       </div>
     </div>,

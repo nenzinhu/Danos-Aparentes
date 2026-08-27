@@ -390,50 +390,50 @@ export default function Verify() {
 
   const ICONS: Record<string, { icon: string; bg: string; text: string; border: string; title: string; desc: string }> = {
     loading: {
-      icon: '⏳', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200',
+      icon: '…', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200',
       title: 'VERIFICANDO REGISTRO', desc: 'Aguarde enquanto consultamos o registro técnico deste documento.',
     },
     valid: {
-      icon: '✅', bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200',
+      icon: 'OK', bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200',
       title: presentation?.title || 'INTEGRIDADE CONFIRMADA',
       desc: presentation?.description || 'A integridade deste relatório foi confirmada no registro de emissão.',
     },
     integrity_confirmed: {
-      icon: '✅', bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200',
+      icon: 'OK', bg: 'bg-emerald-50', text: 'text-emerald-800', border: 'border-emerald-200',
       title: 'INTEGRIDADE CONFIRMADA',
       desc: presentVerifyOutcome('integrity_confirmed').description,
     },
     integrity_not_confirmed: {
-      icon: '❌', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200',
+      icon: 'X', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200',
       title: 'INTEGRIDADE NÃO CONFIRMADA',
       desc: presentVerifyOutcome('integrity_not_confirmed').description,
     },
     not_found: {
-      icon: '❌', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200',
+      icon: 'X', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200',
       title: 'DOCUMENTO NÃO ENCONTRADO',
       desc: presentVerifyOutcome('not_found').description,
     },
     cancelled: {
-      icon: '🚫', bg: 'bg-slate-100', text: 'text-slate-800', border: 'border-slate-300',
+      icon: '—', bg: 'bg-slate-100', text: 'text-slate-800', border: 'border-slate-300',
       title: 'DOCUMENTO CANCELADO',
       desc: presentVerifyOutcome('cancelled').description,
     },
     superseded_version: {
-      icon: '⚠️', bg: 'bg-amber-50', text: 'text-amber-900', border: 'border-amber-300',
+      icon: '!', bg: 'bg-amber-50', text: 'text-amber-900', border: 'border-amber-300',
       title: 'VERSÃO SUPERADA',
       desc: presentVerifyOutcome('superseded_version').description,
     },
     no_hash: {
-      icon: '⚠️', bg: 'bg-slate-50', text: 'text-slate-800', border: 'border-slate-200',
+      icon: '!', bg: 'bg-slate-50', text: 'text-slate-800', border: 'border-slate-200',
       title: 'INFORME O HASH, CÓDIGO OU O QR',
       desc: 'Digite o HASH / código público (DA-…) do laudo ou envie uma foto do QR Code impresso no documento.',
     },
     offline: {
-      icon: '⚠️', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200',
+      icon: '!', bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200',
       title: 'SISTEMA INDISPONÍVEL', desc: 'A verificação online não está ativa neste ambiente. Valide o HASH manualmente com a via impressa.',
     },
     error: {
-      icon: '⚠️', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200',
+      icon: '!', bg: 'bg-rose-50', text: 'text-rose-800', border: 'border-rose-200',
       title: 'ERRO DE CONEXÃO', desc: 'Ocorreu uma falha na comunicação com o servidor de autenticidade. Tente novamente em instantes.',
     },
   }
@@ -454,7 +454,7 @@ export default function Verify() {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-outfit text-slate-900">
       <div className="w-full max-w-2xl bg-white shadow-xl border border-slate-200 rounded-sm overflow-hidden relative">
-        <div className="bg-slate-900 text-white p-8 flex justify-between items-center border-b-4 border-blue-500">
+        <div className="bg-slate-900 text-white p-8 flex justify-between items-center border-b-4 border-[var(--primary)]">
           <div>
             <h1 className="text-xl font-black tracking-tighter italic">DANOS APARENTES</h1>
             <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400">Plataforma de Inteligência Histórica Veicular</p>
@@ -500,7 +500,7 @@ export default function Verify() {
                     autoComplete="off"
                     spellCheck={false}
                     inputMode="text"
-                    className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded px-4 py-3 font-mono text-sm text-slate-800 tracking-wide placeholder:text-slate-400 placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="flex-1 min-w-0 bg-slate-50 border border-slate-200 rounded px-4 py-3 font-mono text-sm text-slate-800 tracking-wide placeholder:text-slate-400 placeholder:tracking-normal focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]"
                   />
                   <button
                     type="submit"
@@ -591,20 +591,20 @@ export default function Verify() {
             versionInfo.isLatest ? (
               <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
                 <p className="text-xs font-bold text-emerald-800">
-                  ✓ Versão {versionInfo.version} de {versionInfo.total} — esta é a versão mais recente deste laudo.
+                  Versão {versionInfo.version} de {versionInfo.total} — esta é a versão mais recente deste laudo.
                 </p>
               </div>
             ) : (
               <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 flex flex-col gap-2">
                 <p className="text-xs font-bold text-amber-800">
-                  ⚠️ Versão {versionInfo.version} de {versionInfo.total} — este laudo foi substituído por uma versão mais recente.
+                  Versão {versionInfo.version} de {versionInfo.total} — este laudo foi substituído por uma versão mais recente.
                 </p>
                 <button
                   type="button"
                   onClick={() => void applyAndVerify(versionInfo.latestHash)}
                   className="self-start text-xs font-black uppercase tracking-wider text-amber-900 underline hover:no-underline"
                 >
-                  Ver a versão mais recente →
+                  Ver a versão mais recente
                 </button>
               </div>
             )
@@ -637,7 +637,7 @@ export default function Verify() {
                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2 flex items-center justify-between">
                   <span>Local da Vistoria</span>
                   {fromDb
-                    ? <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 border border-emerald-200 rounded px-2 py-0.5">✓ AUTENTICADO</span>
+                    ? <span className="text-[9px] font-black text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-2 py-0.5">AUTENTICADO</span>
                     : <span className="text-[9px] font-black text-amber-600 bg-amber-50 border border-amber-200 rounded px-2 py-0.5">NÃO CONFIRMADO</span>}
                 </h3>
                 <div className="flex flex-wrap items-center justify-between gap-3">

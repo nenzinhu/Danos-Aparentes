@@ -43,7 +43,7 @@ export default function FleetHistoryDashboard({ saved }: Props) {
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
-          <IconChart size={48} className="text-sky-400" />
+          <IconChart size={48} className="text-[var(--primary)]" />
         </div>
         <h3 style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: 6, color: '#f8fafc' }}>
           Sem históricos para gerenciar
@@ -66,7 +66,7 @@ export default function FleetHistoryDashboard({ saved }: Props) {
       label: 'Hist. Completo (entrada+saída)',
       value: `${kpis.histCompletePct}%`,
       sub: `${kpis.completeHistory}/${kpis.totalVehicles} veículos com ≥2 inspeções`,
-      icon: <IconCar size={12} className="text-sky-400" />,
+      icon: <IconCar size={12} className="text-[var(--primary)]" />,
       status: kpis.histCompletePct >= 90 ? 'green' : kpis.histCompletePct >= 70 ? 'yellow' : 'red',
     },
     {
@@ -80,21 +80,21 @@ export default function FleetHistoryDashboard({ saved }: Props) {
       label: 'Cobertura de Evidências',
       value: `${kpis.evidencePct}%`,
       sub: 'inspeções com foto (dano ou vista)',
-      icon: <IconFolder size={12} className="text-emerald-400" />,
+      icon: <IconFolder size={12} className="text-[var(--success)]" />,
       status: kpis.evidencePct >= 95 ? 'green' : kpis.evidencePct >= 80 ? 'yellow' : 'red',
     },
     {
       label: 'Dossiês Emitidos',
       value: `${kpis.issued}`,
       sub: 'laudos com validade jurídica',
-      icon: <IconSparkles size={12} className="text-emerald-400" />,
+      icon: <IconSparkles size={12} className="text-[var(--success)]" />,
       status: 'green',
     },
     {
       label: 'Integridade do Histórico',
       value: `${kpis.integrityPct}%`,
       sub: 'inspeções com selo (hash) íntegro',
-      icon: <IconBolt size={12} className="text-amber-400" />,
+      icon: <IconBolt size={12} className="text-[var(--signal)]" />,
       status: kpis.integrityPct >= 100 ? 'green' : 'yellow',
     },
   ]

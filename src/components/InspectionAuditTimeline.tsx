@@ -69,7 +69,7 @@ export default function InspectionAuditTimeline({ inspectionId, issued }: Inspec
             <p className="text-[0.75rem] text-[var(--text-muted)]">Carregando eventos…</p>
           )}
           {error && (
-            <p className="text-[0.75rem] text-rose-400" role="alert">{error}</p>
+            <p className="text-[0.75rem] text-[var(--severity-high)]" role="alert">{error}</p>
           )}
           {!loading && !error && items.length === 0 && (
             <p className="text-[0.75rem] text-[var(--text-muted)]">
@@ -104,7 +104,7 @@ export default function InspectionAuditTimeline({ inspectionId, issued }: Inspec
                   <ul className="mt-2 space-y-1 text-[0.7rem] text-[var(--text-main)]/85 list-none m-0 p-0">
                     {ev.bullets.map((b) => (
                       <li key={b} className="flex gap-1.5">
-                        <span className="text-emerald-400">✔</span>
+                        <span className="text-[var(--success)]">✔</span>
                         <span>{b}</span>
                       </li>
                     ))}

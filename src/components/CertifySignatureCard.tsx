@@ -171,7 +171,7 @@ export default function CertifySignatureCard({
       : null
     return (
       <div className={`glass-card p-4 text-center ${compact ? '' : 'mt-4'}`}>
-        <p className="text-sm font-bold text-emerald-400">Certificação iniciada</p>
+        <p className="text-sm font-bold text-[var(--success)]">Certificação iniciada</p>
         <p className="text-xs text-[var(--text-muted)] mt-1">
           Link de assinatura criado no app. Compartilhe para o signatário assinar.
         </p>
@@ -180,7 +180,7 @@ export default function CertifySignatureCard({
             href={result.signingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[0.75rem] font-bold text-emerald-400 hover:text-emerald-300 underline"
+            className="text-[0.75rem] font-bold text-[var(--success)] hover:text-[var(--success)] underline"
           >
             Abrir link de assinatura →
           </a>
@@ -208,17 +208,17 @@ export default function CertifySignatureCard({
 
   const tabBase =
     'flex-1 px-3 py-2 rounded-lg text-[0.74rem] font-bold transition-colors cursor-pointer border'
-  const tabOn = 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
+  const tabOn = 'bg-[var(--success)]/15 border-[var(--success)]/40 text-[var(--success)]'
   const tabOff =
     'bg-[var(--btn-secondary-bg)] border-[var(--btn-secondary-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]'
   const inputCls =
-    'w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg text-[0.8rem] outline-none focus:border-emerald-500/40'
+    'w-full bg-[var(--input-bg)] border border-[var(--input-border)] text-[var(--input-color)] px-3 py-2 rounded-lg text-[0.8rem] outline-none focus:border-[var(--success)]/40'
 
   return (
-    <div className={compact ? 'mt-3' : 'mt-4 pt-4 border-t border-emerald-500/20'}>
+    <div className={compact ? 'mt-3' : 'mt-4 pt-4 border-t border-[var(--success)]/20'}>
       <div className="flex items-center gap-2 mb-2">
-        <IconShieldCheck size={16} className="text-emerald-400" />
-        <span className="text-[0.7rem] font-black text-emerald-400 tracking-wider uppercase">
+        <IconShieldCheck size={16} className="text-[var(--success)]" />
+        <span className="text-[0.7rem] font-black text-[var(--success)] tracking-wider uppercase">
           Gerar laudo em PDF
         </span>
       </div>

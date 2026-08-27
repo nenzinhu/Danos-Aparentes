@@ -68,9 +68,9 @@ export default function RetornoLookupPanel({
     ].filter(([, val]) => Boolean(val))
 
     return (
-      <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-4 space-y-4">
+      <div className="rounded-xl border border-[var(--success)]/30 bg-[var(--success)]/10 px-4 py-4 space-y-4">
         <div>
-          <p className="text-[0.7rem] font-bold uppercase tracking-wider text-emerald-400 mb-1">
+          <p className="text-[0.7rem] font-bold uppercase tracking-wider text-[var(--success)] mb-1">
             Dados importados. Confirme
           </p>
           <p className="text-[0.72rem] text-[var(--text-muted)] leading-relaxed">
@@ -114,8 +114,8 @@ export default function RetornoLookupPanel({
   }
 
   return (
-    <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/[0.06] px-4 py-4">
-      <p className="text-[0.7rem] font-bold uppercase tracking-wider text-emerald-400 mb-2">
+    <div className="rounded-xl border border-[var(--success)]/25 bg-[var(--success)]/[0.06] px-4 py-4">
+      <p className="text-[0.7rem] font-bold uppercase tracking-wider text-[var(--success)] mb-2">
         Localizar inspeção anterior
       </p>
       <p className="text-[0.72rem] text-[var(--text-muted)] mb-3 leading-relaxed">
@@ -133,7 +133,7 @@ export default function RetornoLookupPanel({
             }}
             className={`text-xs px-3 py-2 rounded-lg font-bold border transition-all ${
               kind === k.id
-                ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
+                ? 'bg-[var(--success)]/20 border-[var(--success)]/40 text-[var(--success)]'
                 : 'border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--text-main)]'
             }`}
           >
@@ -153,7 +153,7 @@ export default function RetornoLookupPanel({
           onChange={(e) => setValue(e.target.value)}
           placeholder={active.placeholder}
           autoComplete="off"
-          className="flex-1 min-h-11 px-3 rounded-xl border border-[var(--card-border)] bg-[var(--bg-main)] text-sm text-[var(--text-main)] outline-none focus:ring-2 ring-emerald-500/40"
+          className="flex-1 min-h-11 px-3 rounded-xl border border-[var(--card-border)] bg-[var(--bg-main)] text-sm text-[var(--text-main)] outline-none focus:ring-2 ring-[var(--success)]/40"
         />
         <button
           type="submit"

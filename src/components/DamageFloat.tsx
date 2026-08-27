@@ -439,7 +439,7 @@ export default function DamageFloat({ partId, partName, position, currentType, a
               onChange={e => { setNotes(e.target.value); setNotesTouched(true) }}
               placeholder="Ex.: Arranhão profundo na lateral…"
               rows={2}
-              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-2 py-1.5 text-[var(--input-color)] text-[0.78rem] font-outfit resize-none outline-none focus:border-sky-500/50 transition-colors"
+              className="w-full bg-[var(--input-bg)] border border-[var(--input-border)] rounded-lg px-2 py-1.5 text-[var(--input-color)] text-[0.78rem] font-outfit resize-none outline-none focus:border-[var(--primary)]/50 transition-colors"
             />
           </div>
 
@@ -497,7 +497,7 @@ export default function DamageFloat({ partId, partName, position, currentType, a
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => { if (fileRef.current) { fileRef.current.removeAttribute('capture'); fileRef.current.setAttribute('capture', 'environment'); fileRef.current.click() } }}
-                  className="min-h-11 sm:min-h-9 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-sky-500/30 bg-sky-500/5 text-sky-400 text-[0.72rem] font-bold hover:bg-sky-500/10 transition-colors cursor-pointer"
+                  className="min-h-11 sm:min-h-9 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-[var(--primary)]/30 bg-[var(--primary)]/5 text-[var(--primary)] text-[0.72rem] font-bold hover:bg-[var(--primary)]/10 transition-colors cursor-pointer"
                 >
                   <IconCamera size={15} />
                   <span>Câmera</span>
@@ -507,7 +507,7 @@ export default function DamageFloat({ partId, partName, position, currentType, a
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.96 }}
                   onClick={() => { if (fileRef.current) { fileRef.current.removeAttribute('capture'); fileRef.current.click() } }}
-                  className="min-h-11 sm:min-h-9 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-emerald-500/30 bg-emerald-500/5 text-emerald-400 text-[0.72rem] font-bold hover:bg-emerald-500/10 transition-colors cursor-pointer"
+                  className="min-h-11 sm:min-h-9 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-dashed border-[var(--success)]/30 bg-[var(--success)]/5 text-[var(--success)] text-[0.72rem] font-bold hover:bg-[var(--success)]/10 transition-colors cursor-pointer"
                 >
                   <IconGallery size={15} />
                   <span>Galeria</span>
@@ -516,8 +516,8 @@ export default function DamageFloat({ partId, partName, position, currentType, a
             )}
 
             {aiState.status === 'loading' && (
-              <div className="mt-2.5 flex items-center gap-2 rounded-xl border border-sky-500/25 bg-sky-500/10 px-2.5 py-2 text-[0.72rem] font-bold text-sky-300">
-                <span className="h-2.5 w-2.5 rounded-full border-2 border-sky-400/40 border-t-sky-400 animate-spin shrink-0" />
+              <div className="mt-2.5 flex items-center gap-2 rounded-xl border border-[var(--primary)]/25 bg-[var(--primary)]/10 px-2.5 py-2 text-[0.72rem] font-bold text-[var(--primary)]">
+                <span className="h-2.5 w-2.5 rounded-full border-2 border-[var(--primary)]/40 border-t-[var(--primary)] animate-spin shrink-0" />
                 ✓ IA analisando imagens…
               </div>
             )}
@@ -542,7 +542,7 @@ export default function DamageFloat({ partId, partName, position, currentType, a
             )}
             {pendingEvidence?.evidenceStatus === 'confirmado' && (
               <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                <span className="rounded-full border border-emerald-500/35 bg-emerald-500/15 px-2 py-1 text-[0.65rem] font-black text-emerald-300">
+                <span className="rounded-full border border-[var(--success)]/35 bg-[var(--success)]/15 px-2 py-1 text-[0.65rem] font-black text-[var(--success)]">
                   {formatEvidenceStatusLabel('confirmado', {
                     decidedBy: pendingEvidence.evidenceDecidedBy,
                     decidedAt: pendingEvidence.evidenceDecidedAt,
@@ -551,14 +551,14 @@ export default function DamageFloat({ partId, partName, position, currentType, a
               </div>
             )}
             {aiState.status === 'done' && !showSuggestionPanel && (
-              <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-2">
-                <span className="text-[0.7rem] font-bold text-emerald-300">
+              <div className="mt-2 flex items-center justify-between gap-2 rounded-xl border border-[var(--success)]/25 bg-[var(--success)]/10 px-2.5 py-2">
+                <span className="text-[0.7rem] font-bold text-[var(--success)]">
                   ✓ Detectando danos… Gerando descrição…
                 </span>
                 <button
                   type="button"
                   onClick={() => {/* panel already gated by showSuggestionPanel */}}
-                  className="text-[0.65rem] font-bold text-sky-400 underline underline-offset-2"
+                  className="text-[0.65rem] font-bold text-[var(--primary)] underline underline-offset-2"
                   hidden
                 >
                   Ver análise
@@ -585,7 +585,7 @@ export default function DamageFloat({ partId, partName, position, currentType, a
             className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl border font-outfit text-sm font-black transition-all duration-200 cursor-pointer ${
               isNewVsPrevious
                 ? 'bg-red-500/15 hover:bg-red-500/25 border-red-500/40 hover:border-red-500/60 text-red-300'
-                : 'bg-sky-500/15 hover:bg-sky-500/25 border-sky-500/40 hover:border-sky-500/60 text-sky-400'
+                : 'bg-[var(--primary)]/15 hover:bg-[var(--primary)]/25 border-[var(--primary)]/40 hover:border-[var(--primary)]/60 text-[var(--primary)]'
             }`}
           >
             <IconCheck size={18} />

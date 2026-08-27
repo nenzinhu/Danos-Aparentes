@@ -9,17 +9,17 @@ interface Props {
 
 const STEPS = [
   {
-    icon: <IconDocument size={20} className="text-sky-400" />,
+    icon: <IconDocument size={20} className="text-[var(--primary)]" />,
     title: 'Identidade do Veículo',
     text: 'Comece pelo responsável. Depois consulte a placa: os dados preenchem sozinhos. No computador, use “Salvar prévia” para continuar no celular.',
   },
   {
-    icon: <IconCar size={20} className="text-sky-400" />,
+    icon: <IconCar size={20} className="text-[var(--primary)]" />,
     title: 'Marque os danos no diagrama',
     text: 'Toque nas peças do SVG para registrar danos e anexar evidências. Sem danos? Siga mesmo assim para o dossiê.',
   },
   {
-    icon: <IconSignature size={20} className="text-emerald-400" />,
+    icon: <IconSignature size={20} className="text-[var(--success)]" />,
     title: 'Assine e capture o GPS',
     text: 'Na aba Dossiê Técnico, revise os danos, capture a localização e colete as assinaturas.',
   },
@@ -48,7 +48,7 @@ export default function InspectionCoachMarks({ isOpen, onClose }: Props) {
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex items-center gap-2">
-          <span className="shrink-0 p-1.5 rounded-lg bg-sky-500/10 border border-[var(--primary)]/20">{current.icon}</span>
+          <span className="shrink-0 p-1.5 rounded-lg bg-[var(--primary)]/10 border border-[var(--primary)]/20">{current.icon}</span>
           <span className="font-outfit font-extrabold text-sm text-[var(--text-main)]">{current.title}</span>
         </div>
         <button
@@ -65,7 +65,7 @@ export default function InspectionCoachMarks({ isOpen, onClose }: Props) {
           {STEPS.map((_, i) => (
             <span
               key={i}
-              className={`h-1.5 w-1.5 rounded-full ${i === step ? 'bg-sky-400' : 'bg-[var(--card-border)]'}`}
+              className={`h-1.5 w-1.5 rounded-full ${i === step ? 'bg-[var(--primary)]' : 'bg-[var(--card-border)]'}`}
             />
           ))}
         </div>
