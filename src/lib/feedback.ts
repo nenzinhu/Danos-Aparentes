@@ -4,7 +4,7 @@ let audioCtx: AudioContext | null = null
 export function playConfirmBeep() {
   if (typeof window === 'undefined') return
   try {
-    const Ctx = window.AudioContext || (window as any).webkitAudioContext
+    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
     if (!Ctx) return
     if (!audioCtx) audioCtx = new Ctx()
     const ctx = audioCtx

@@ -69,7 +69,7 @@ export function usePerformanceTelemetry() {
         setTimeout(() => setMetrics((prev) => ({ ...prev, ttfb: ttfbVal })), 0);
       }
     } catch (e) {
-      console.warn('Navigation timing not supported:', e);
+      if (process.env.NODE_ENV !== 'production') console.warn('Navigation timing not supported:', e);
     }
 
     // 3. Performance Observers
@@ -87,7 +87,7 @@ export function usePerformanceTelemetry() {
       fcpObserver.observe({ type: 'paint', buffered: true });
       observers.push(fcpObserver);
     } catch (e) {
-      console.warn('Paint timing observer not supported:', e);
+      if (process.env.NODE_ENV !== 'production') console.warn('Paint timing observer not supported:', e);
     }
 
     // LCP Observer
@@ -103,7 +103,7 @@ export function usePerformanceTelemetry() {
       lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
       observers.push(lcpObserver);
     } catch (e) {
-      console.warn('LCP observer not supported:', e);
+      if (process.env.NODE_ENV !== 'production') console.warn('LCP observer not supported:', e);
     }
 
     // CLS Observer
@@ -111,7 +111,7 @@ export function usePerformanceTelemetry() {
     try {
       const clsObserver = new PerformanceObserver((entryList) => {
         for (const entry of entryList.getEntries()) {
-          const shiftEntry = entry as any;
+          const shiftEntry = entry as PerformanceEntry & { hadRecentInput: boolean; value: number };
           if (!shiftEntry.hadRecentInput) {
             clsValue += shiftEntry.value;
             setTimeout(() => setMetrics((prev) => ({ ...prev, cls: parseFloat(clsValue.toFixed(4)) })), 0);
@@ -121,7 +121,7 @@ export function usePerformanceTelemetry() {
       clsObserver.observe({ type: 'layout-shift', buffered: true });
       observers.push(clsObserver);
     } catch (e) {
-      console.warn('CLS observer not supported:', e);
+      if (process.env.NODE_ENV !== 'production') console.warn('CLS observer not supported:', e);
     }
 
     // FID Observer
@@ -129,7 +129,7 @@ export function usePerformanceTelemetry() {
       const fidObserver = new PerformanceObserver((entryList) => {
         const entries = entryList.getEntries();
         if (entries.length > 0) {
-          const firstInput = entries[0] as any;
+          const firstInput = entries[0] as PerformanceEventTiming;
           const fidVal = Math.round(firstInput.processingStart - firstInput.startTime);
           setMetrics((prev) => ({ ...prev, fid: fidVal }));
         }
@@ -137,17 +137,18 @@ export function usePerformanceTelemetry() {
       fidObserver.observe({ type: 'first-input', buffered: true });
       observers.push(fidObserver);
     } catch (e) {
-      console.warn('FID observer not supported:', e);
+      if (process.env.NODE_ENV !== 'production') console.warn('FID observer not supported:', e);
     }
 
     // 4. Memory Usage Check (Periodic)
     const checkMemory = () => {
-      const perf: any = window.performance;
-      if (perf && perf.memory) {
+      const perf = window.performance as Performance & { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } };
+      const mem = perf.memory;
+      if (perf && mem) {
         setMetrics((prev) => ({
           ...prev,
-          memoryUsed: Math.round(perf.memory.usedJSHeapSize / (1024 * 1024)),
-          memoryLimit: Math.round(perf.memory.jsHeapSizeLimit / (1024 * 1024)),
+          memoryUsed: Math.round(mem.usedJSHeapSize / (1024 * 1024)),
+          memoryLimit: Math.round(mem.jsHeapSizeLimit / (1024 * 1024)),
         }));
       }
     };
@@ -208,7 +209,7 @@ export function usePerformanceTelemetry() {
         });
       }, 0);
     } catch (e) {
-      console.warn('Failed to calculate historical baseline:', e);
+      if (process.env.NODE_ENV !== 'production') console.warn('Failed to calculate historical baseline:', e);
     }
   }, [metrics.ttfb, metrics.fcp, metrics.lcp, metrics.cls, metrics.fid]);
 

@@ -23,6 +23,17 @@ const config = [
       'react-hooks/set-state-in-effect': 'warn',
     },
   },
+  {
+    // A11y: eslint-config-next já registra o plugin `jsx-a11y` e suas regras
+    // recomendadas. Aqui apenas relaxamos os 2 itens em que o projeto usa
+    // <div role="button|tab|radio"> estilizado COM foco/teclado próprios
+    // (ex.: HeroVehiclePicker, InspectTab, NewInspectionDropdown) — eles são
+    // intencionais e não devem quebrar o lint. O restante fica em error.
+    rules: {
+      'jsx-a11y/no-static-element-interactions': 'warn',
+      'jsx-a11y/click-events-have-key-events': 'warn',
+    },
+  },
 ]
 
 export default config

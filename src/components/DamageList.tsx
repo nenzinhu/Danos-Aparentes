@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Damage, Severity, ViewType } from '../types'
 import { storePhotoEvidence } from '../lib/photoEvidence'
@@ -206,7 +206,7 @@ export default function DamageList({
                           }`}
                           style={{ 
                             '--severity-color': SEV_COLOR[sev]
-                          } as any}
+                          } as CSSProperties}
                         >
                           {SEV_LABEL[sev]}
                         </button>

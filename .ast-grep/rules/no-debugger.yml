@@ -1,0 +1,6 @@
+id: no-debugger
+language: TypeScript
+severity: error
+rule:
+  pattern: debugger
+message: "Instrução 'debugger' deixada no código — remove antes do commit."

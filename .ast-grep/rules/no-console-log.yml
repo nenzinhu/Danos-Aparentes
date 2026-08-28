@@ -1,0 +1,15 @@
+id: no-console-log-in-prod
+language: TypeScript
+severity: warning
+rule:
+  all:
+    - pattern: console.log($ARG)
+    # ignora arquivos de teste — laudos de teste são aceitáveis
+    - not:
+        inside:
+          kind: program
+          stopBy: end
+          # não temos 'filename' no pattern simples; usamos any para não filtrar
+any: true
+message: "console.log encontrado — use o logger estruturado ou console.error para erros de produção."
+note: "Remove antes de fazer deploy. console.log vaza em produção."

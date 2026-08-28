@@ -1,0 +1,6 @@
+id: no-var
+language: TypeScript
+severity: warning
+rule:
+  pattern: var $X = $V
+message: "Use 'const' ou 'let' em vez de 'var' (escopo de função, hoisting)."

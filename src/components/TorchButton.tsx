@@ -12,6 +12,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 type TorchTrack = MediaStreamTrack & {
   getCapabilities?: () => { torch?: boolean }
 }
+type TorchConstraintSet = MediaTrackConstraintSet & { torch?: boolean }
 
 interface Props {
   onToast?: (msg: string) => void
@@ -27,7 +28,7 @@ export default function TorchButton({ onToast }: Props) {
   const stopTorch = useCallback(async () => {
     const track = trackRef.current
     if (track) {
-      try { await track.applyConstraints({ advanced: [{ torch: false }] } as any) } catch { /* já desligando */ }
+      try { await track.applyConstraints({ advanced: [{ torch: false } as TorchConstraintSet] }) } catch { /* já desligando */ }
       try { track.stop() } catch { /* noop */ }
     }
     streamRef.current?.getTracks().forEach(t => { try { t.stop() } catch { /* noop */ } })
@@ -58,7 +59,7 @@ export default function TorchButton({ onToast }: Props) {
         onToast?.('🔦 Este aparelho não permite acender o flash pelo navegador.')
         return
       }
-      await track.applyConstraints({ advanced: [{ torch: true }] } as any)
+      await track.applyConstraints({ advanced: [{ torch: true } as TorchConstraintSet] })
       trackRef.current = track
       setOn(true)
     } catch (err) {

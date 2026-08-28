@@ -1,0 +1,9 @@
+id: no-empty-catch
+language: TypeScript
+severity: warning
+rule:
+  kind: catch_clause
+  has:
+    field: body
+    pattern: '{ }'
+message: "catch vazio silencia erros — ao menos registre (console.error/log) ou re-throw."
