@@ -109,8 +109,8 @@ export default function DamageList({
 
   return (
     <>
-      <div className="flex flex-col gap-2">
-        {damages.map(d => {
+      <ul role="list" className="flex flex-col gap-2">
+        {damages.map((d, i) => {
           const photoNotes = d.photoNotes ?? d.photos.map(() => '')
           const sevColor = SEV_COLOR[d.severity]
           const isNew = previousReport ? isNewDamage(d, previousReport) : false
@@ -125,8 +125,10 @@ export default function DamageList({
             : null
 
           return (
-            <div 
-              key={d.id} 
+            <li
+              role="listitem"
+              aria-label={`${d.partName} — ${SEV_LABEL[d.severity]}${isNew ? ' (nova)' : ''}, item ${i + 1} de ${damages.length}`}
+              key={d.id}
               className="bg-black/20 border border-white/5 rounded-xl overflow-hidden"
               style={{ borderLeft: `3px solid ${sevColor}` }}
             >
@@ -281,10 +283,10 @@ export default function DamageList({
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </li>
           )
         })}
-      </div>
+      </ul>
 
       {/* Photo viewer modal */}
       {photoViewer && (
