@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { IconCar } from '@/src/components/ui/AnimatedIcons'
 import TabEmptyState from '@/src/components/app/TabEmptyState'
+import { PaginatedList } from './PaginatedList'
 import type { VehicleHistorySummaryWithCloud } from '@/src/lib/vehicleEvidence'
 import { normalizePlate } from '@/src/lib/reportComparison'
 
@@ -67,14 +68,14 @@ export default function VehiclesListView({
         />
       </label>
 
-      {filtered.length === 0 ? (
-        <p className="text-sm text-[var(--text-muted)] text-center py-6">
-          Nenhum veículo corresponde a “{query}”.
-        </p>
-      ) : (
-        filtered.map((v) => (
+      <PaginatedList
+        items={filtered}
+        pageSize={10}
+        ariaLabel="veículos"
+        emptyText={`Nenhum veículo corresponde a “${query}”.`}
+        getItemKey={(v) => v.id}
+        renderItem={(v) => (
           <Link
-            key={v.id}
             href={`/app/vehicles/${encodeURIComponent(v.id)}`}
             className="group rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] p-4 flex items-center justify-between gap-4 hover:border-[var(--primary)]/40 transition-colors"
           >
@@ -112,8 +113,8 @@ export default function VehiclesListView({
             </div>
             <svg aria-hidden className="w-5 h-5 text-[var(--text-muted)] group-hover:text-[var(--primary)] transition-colors shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
           </Link>
-        ))
-      )}
+        )}
+      />
     </div>
   )
 }
