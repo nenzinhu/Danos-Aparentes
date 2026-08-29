@@ -43,11 +43,12 @@ export default function PdfPreviewSection() {
         <div
           className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 transition-opacity animate-in fade-in"
           onClick={() => setSelectedImage(null)}
+          onKeyDown={e => { if (e.key === 'Escape') setSelectedImage(null) }}
           role="dialog"
           aria-label="Visualização ampliada do laudo"
           aria-modal="true"
         >
-          <div className="relative max-w-5xl max-h-[92vh] w-full flex flex-col items-center overflow-auto" onClick={e => e.stopPropagation()}>
+          <div role="presentation" className="relative max-w-5xl max-h-[92vh] w-full flex flex-col items-center overflow-auto" onClick={e => e.stopPropagation()}>
             <div className="w-full flex justify-between items-center bg-slate-900/90 text-white px-4 py-3 rounded-t-xl border-b border-slate-700">
               <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[var(--signal-bright)]">
                 Dossiê Técnico Danos Aparentes — Visualização em Alta Resolução
@@ -142,7 +143,15 @@ export default function PdfPreviewSection() {
             {visiblePages.map((page) => (
               <div
                 key={page.id}
+                role="button"
+                tabIndex={0}
                 onClick={() => setSelectedImage(page.src)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setSelectedImage(page.src)
+                  }
+                }}
                 className="group relative bg-[var(--panel-bg)] border border-[var(--card-border)] hover:border-[var(--signal-bright)]/60 rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 hover:shadow-[0_12px_40px_-10px_var(--signal-glow)] cursor-pointer flex flex-col"
               >
                 {/* Header da Carta */}

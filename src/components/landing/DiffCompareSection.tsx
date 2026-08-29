@@ -453,12 +453,16 @@ function PdfZoomLightbox({
       </div>
 
       <div
+        role="presentation"
         className="flex-1 overflow-auto overscroll-contain p-4"
         onWheel={onWheel}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}
         onClick={(e) => {
           if (e.target === e.currentTarget) onClose()
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') onClose()
         }}
       >
         <div className="min-h-full flex items-start justify-center">

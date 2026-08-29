@@ -141,9 +141,11 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
 
   return (
     <>
-      <div 
+      <div
+        role="presentation"
         style={{ position: 'fixed', inset: 0, background: 'rgba(2,6,23,0.72)', zIndex: 9999, padding: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Outfit, sans-serif' }}
         onClick={e => { if (e.target === e.currentTarget) onClose() }}
+        onKeyDown={e => { if (e.key === 'Escape') onClose() }}
       >
       <div style={{ width: '100%', maxWidth: 500, background: 'rgba(15,23,42,0.97)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, overflow: 'hidden', color: '#f8fafc', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.5)' }}>
         {/* Header */}
@@ -237,10 +239,11 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
                   </div>
                 ) : (
                   /* SVG neon placeholder */
-                  <div 
-                    onClick={() => fileInputRef.current?.click()} 
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
                     title="Clique para carregar o logotipo"
-                    style={{ cursor: 'pointer', transition: 'transform 0.2s', display: 'flex', alignItems: 'center' }}
+                    style={{ cursor: 'pointer', transition: 'transform 0.2s', display: 'flex', alignItems: 'center', background: 'transparent', border: 'none', padding: 0 }}
                     onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.02)' }}
                     onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)' }}
                   >
@@ -354,7 +357,7 @@ export default function CompanySettingsModal({ isOpen, onClose, hasAccess }: Pro
                         <line x1="3.5" y1="7" x2="10.5" y2="7" stroke="#00dcff" strokeWidth="1.5" strokeLinecap="round" />
                       </g>
                     </svg>
-                  </div>
+                  </button>
                 )}
               </div>
 

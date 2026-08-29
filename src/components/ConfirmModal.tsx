@@ -33,6 +33,7 @@ export default function ConfirmModal({
 
   return (
     <div
+      role="presentation"
       style={{
         position: 'fixed',
         inset: 0,
@@ -46,6 +47,9 @@ export default function ConfirmModal({
       }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onCancel()
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') onCancel()
       }}
     >
       <div

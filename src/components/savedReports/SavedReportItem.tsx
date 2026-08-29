@@ -75,7 +75,17 @@ export function SavedReportItem({
     <div
       key={r.id}
       data-report-index={flatIdx}
+      role="button"
+      tabIndex={0}
+      aria-expanded={isExpanded}
       onClick={onToggleExpand}
+      onKeyDown={e => {
+        if ((e.target as HTMLElement).closest('button')) return
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onToggleExpand(e as unknown as React.MouseEvent)
+        }
+      }}
       style={{
         background: isActive ? 'rgba(0,170,255,0.06)' : 'rgba(0,0,0,0.2)',
         border: isActive ? '1px solid var(--primary)' : '1px solid rgba(255,255,255,0.06)',
@@ -150,7 +160,7 @@ export function SavedReportItem({
             {r.damages.length} avaria(s) • {new Date(r.savedAt).toLocaleString('pt-BR')}
           </div>
         </div>
-        <div style={{ display: 'flex', gap: 6, flexShrink: 0 }} onClick={e => e.stopPropagation()}>
+        <div role="presentation" style={{ display: 'flex', gap: 6, flexShrink: 0 }} onClick={e => e.stopPropagation()}>
           <button
             onClick={() => onDownloadPdf(r)}
             disabled={downloadingId !== null}
@@ -313,6 +323,7 @@ export function SavedReportItem({
 
       {isExpanded && (
         <div
+          role="presentation"
           style={{
             marginTop: 10,
             paddingTop: 10,

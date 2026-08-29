@@ -133,9 +133,18 @@ export default function DamageList({
               style={{ borderLeft: `3px solid ${sevColor}` }}
             >
               {/* Header row */}
-              <div 
+              <div
+                role="button"
+                tabIndex={0}
+                aria-expanded={expandedId === d.id}
                 className="flex items-center gap-2.5 p-2.5 cursor-pointer select-none"
                 onClick={() => setExpandedId(expandedId === d.id ? null : d.id)}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setExpandedId(expandedId === d.id ? null : d.id)
+                  }
+                }}
               >
                 <span 
                   className="w-2 h-2 rounded-full shrink-0" 
@@ -290,8 +299,10 @@ export default function DamageList({
 
       {/* Photo viewer modal */}
       {photoViewer && (
-        <div 
-          onClick={() => setPhotoViewer(null)} 
+        <div
+          role="presentation"
+          onClick={() => setPhotoViewer(null)}
+          onKeyDown={e => { if (e.key === 'Escape') setPhotoViewer(null) }}
           className="fixed inset-0 bg-black/95 z-[99999] flex items-center justify-center cursor-zoom-out p-4"
         >
           <ResolvedPhoto

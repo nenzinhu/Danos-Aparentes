@@ -63,9 +63,12 @@ export default function NewInspectionDropdown({ onSelect, active }: NewInspectio
   return (
     <div
       ref={wrapRef}
+      role="presentation"
       className="relative inline-flex items-center"
       onMouseEnter={() => setTooltip(true)}
       onMouseLeave={() => setTooltip(false)}
+      onFocus={() => setTooltip(true)}
+      onBlur={() => setTooltip(false)}
     >
       <button
         ref={btnRef}

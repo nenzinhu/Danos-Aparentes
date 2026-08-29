@@ -94,8 +94,10 @@ export default function PwaInstallButton() {
           aria-modal="true"
           className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70 p-4"
           onClick={() => setShowIosHelp(false)}
+          onKeyDown={(e) => { if (e.key === 'Escape') setShowIosHelp(false) }}
         >
           <div
+            role="presentation"
             className="max-w-sm w-full bg-slate-900 border border-[var(--success)]/30 rounded-2xl p-6 text-center shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >

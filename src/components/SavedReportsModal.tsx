@@ -231,8 +231,9 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
     )
   }
   return (
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(2,6,23,0.72)', zIndex: 9999, padding: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+    <div role="presentation" style={{ position: 'fixed', inset: 0, background: 'rgba(2,6,23,0.72)', zIndex: 9999, padding: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      onClick={e => { if (e.target === e.currentTarget) onClose() }}
+      onKeyDown={e => { if (e.key === 'Escape') onClose() }}>
       <div style={{ width: '100%', maxWidth: 700, background: 'rgba(15,23,42,0.97)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, overflow: 'hidden' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -342,8 +343,10 @@ export default function SavedReportsModal({ isOpen, saved, onClose, onSave, onLo
 
       {qrModal && (
         <div
+          role="presentation"
           style={{ position: 'fixed', inset: 0, background: 'rgba(2,6,23,0.85)', zIndex: 10000, padding: 18, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           onClick={e => { if (e.target === e.currentTarget) setQrModal(null) }}
+          onKeyDown={e => { if (e.key === 'Escape') setQrModal(null) }}
         >
           <div style={{ width: '100%', maxWidth: 340, background: 'rgba(15,23,42,0.98)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: 24, textAlign: 'center' }}>
             <div style={{ fontWeight: 800, fontSize: '0.95rem', marginBottom: 4 }}>Link público do veículo {qrModal.plate}</div>

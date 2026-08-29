@@ -163,7 +163,25 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
             return (
               <div
                 key={tr.report.id}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isExpanded}
                 onClick={toggleExpand}
+                onKeyDown={e => {
+                  if ((e.target as HTMLElement).closest('button, a')) return
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setExpandedReportIds(prev => {
+                      const next = new Set(prev)
+                      if (next.has(tr.report.id)) {
+                        next.delete(tr.report.id)
+                      } else {
+                        next.add(tr.report.id)
+                      }
+                      return next
+                    })
+                  }
+                }}
                 className="flex flex-col bg-black/10 border border-white/5 rounded-lg px-3 py-2.5 cursor-pointer hover:bg-white/[0.02] transition-colors"
               >
                 <div className="flex items-center gap-3 w-full">
@@ -204,7 +222,7 @@ export default function TeamTab({ accessToken, onToast, showAuditDashboard }: Pr
                   </div>                </div>
 
                 {isExpanded && (
-                  <div className="mt-2.5 pt-2.5 border-t border-white/5 flex flex-col gap-1.5" onClick={e => e.stopPropagation()}>
+                  <div role="presentation" className="mt-2.5 pt-2.5 border-t border-white/5 flex flex-col gap-1.5" onClick={e => e.stopPropagation()}>
                     <div className="text-[0.62rem] font-bold text-[var(--text-muted)] tracking-wider flex items-center gap-1">
                       <IconDocument size={12} className="text-[var(--primary)]" /> AVARIAS DETALHADAS
                     </div>

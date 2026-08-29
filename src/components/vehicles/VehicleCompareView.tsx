@@ -325,7 +325,7 @@ export default function VehicleCompareView({
   }
 
   return (
-    <div className="flex flex-col gap-6" onFocus={ensureReviewHydrated}>
+    <div className="flex flex-col gap-6" role="group" onFocus={ensureReviewHydrated}>
       <div>
         <Link
           href={`/app/vehicles/${encodeURIComponent(vehicleId)}`}

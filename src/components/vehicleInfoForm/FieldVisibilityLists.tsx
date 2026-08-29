@@ -74,6 +74,7 @@ export function StandardFieldList({
             <div
               key={key}
               data-field-key={key}
+              role="listitem"
               ref={(el) => { itemRefs.current[key] = el }}
               draggable
               onDragStart={() => {
@@ -272,6 +273,7 @@ export function CustomFieldList({
               <div
                 key={d.id}
                 data-field-key={d.id}
+                role="listitem"
                 ref={(el) => { itemRefs.current[d.id] = el }}
                 draggable
                 onDragStart={() => {

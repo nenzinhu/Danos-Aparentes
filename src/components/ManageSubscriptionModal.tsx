@@ -18,8 +18,10 @@ export default function ManageSubscriptionModal({ open, onClose, onChooseCartao,
       aria-label="Escolher forma de pagamento"
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4"
       onClick={onClose}
+      onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}
     >
       <div
+        role="presentation"
         className="glass-card w-full max-w-sm p-6 text-center"
         onClick={(e) => e.stopPropagation()}
       >

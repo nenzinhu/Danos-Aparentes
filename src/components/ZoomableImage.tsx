@@ -80,8 +80,10 @@ export default function ZoomableImage({ src, alt, className, lensSize = 160, zoo
 
       {open && (
         <div
+          role="presentation"
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
           onClick={() => setOpen(false)}
+          onKeyDown={(e) => { if (e.key === 'Escape') setOpen(false) }}
         >
           <button
             type="button"

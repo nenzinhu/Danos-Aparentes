@@ -53,8 +53,11 @@ export default function Logo({
 
   return (
     <div
+      role="presentation"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onFocus={handleMouseEnter}
+      onBlur={handleMouseLeave}
       className={`flex items-center gap-2.5 cursor-pointer select-none ${className ?? ''}`}
     >
       {variant === 'full' ? (

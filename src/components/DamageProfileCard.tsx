@@ -40,7 +40,18 @@ export default function DamageProfileCard({
 }: Props) {
   if (mode === '3d') {
     return (
-      <div onClick={onClick} className="cursor-pointer">
+      <div
+        onClick={onClick}
+        className="cursor-pointer"
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+            e.preventDefault()
+            onClick()
+          }
+        }}
+      >
         <ThreeDamageCanvas
           type={type}
           severity={severity}
@@ -85,6 +96,14 @@ export default function DamageProfileCard({
   return (
     <div
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+          e.preventDefault()
+          onClick()
+        }
+      }}
       className={`
         relative flex flex-col items-center justify-center p-1.5 rounded-2xl border-2 overflow-hidden transition-all duration-300 cursor-pointer select-none bg-[var(--card-bg-solid)] shadow-2xl group
         ${borderClass}
