@@ -45,9 +45,9 @@ export const B2B_HERO_MICRO = [
   'Você tem a evidência.',
 ]
 export const B2B_TRIAL_BADGE = '7 dias grátis • Sem cartão de crédito'
-export const B2B_HERO_HEADLINE_CONVERSION = 'Saiba exatamente quando um dano aconteceu.'
-export const B2B_HERO_SUB_CONVERSION =
-  'Cada inspeção vira um registro na Memória Digital do veículo, com fotos, localização e data/hora. Compare versões e comprove o que mudou — com IA, GPS, QR Code e Hash para validar a evidência.'
+export const B2B_HERO_HEADLINE_CONVERSION = 'Deixe de perder tempo em discussões: comprove o estado do veículo em minutos.'
+export const B2B_HERO_HEADLINE_SUB = 'Da vistoria ao PDF verificável — fotos, GPS, data/hora e hash SHA-256.'
+export const B2B_HERO_SUB_CONVERSION = 'Cada inspeção vira um registro na Memória Digital do veículo. Compare versões, identifique mudanças e comprove o estado com fotos, localização e data/hora. Tudo no mesmo relatório que abre na primeira inspeção.'
 export const B2B_PROBLEM_TITLE = 'Quem causou o dano?'
 export const B2B_FINAL_HEADLINE = 'Pare de discutir sobre quando o dano aconteceu.'
 export const B2B_FINAL_SUB =

@@ -25,7 +25,9 @@ import {
   B2B_TRIAL_BADGE,
   B2B_CTA_TRIAL_SHORT,
   B2B_HERO_HEADLINE_CONVERSION,
+  B2B_HERO_HEADLINE_SUB,
   B2B_HERO_SUB_CONVERSION,
+  B2B_HERO_MICRO,
 } from '../../lib/b2bPositioning'
 
 /** Sticky CTA depends on viewport — keep client-only. */
@@ -91,6 +93,24 @@ function HeroCopy() {
           {B2B_HERO_HEADLINE_CONVERSION}
         </GsapTextReveal>
       )}
+
+      {/* Subtítulo curto — apoio à headline (apenas desktop; mobile repete no <p> abaixo) */}
+      <p
+        className="mt-3 max-w-lg text-sm text-[var(--text-muted)] leading-relaxed hidden sm:block"
+        aria-label="Subtítulo complementar"
+      >
+        {B2B_HERO_HEADLINE_SUB}
+      </p>
+
+      {/* Micro-mensagens: reforço de confiança acima da ação */}
+      <ul className="mt-3 flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 text-xs font-medium text-[var(--text-muted)]">
+        {B2B_HERO_MICRO.map((m) => (
+          <li key={m} className="inline-flex items-center gap-1.5">
+            <span aria-hidden="true" className="w-1 h-1 rounded-full bg-[var(--signal-bright)]" />
+            {m}
+          </li>
+        ))}
+      </ul>
 
       {reduceMotion ? (
         <p className="mt-4 max-w-lg text-base lg:text-lg text-[var(--text-muted)] leading-relaxed">
