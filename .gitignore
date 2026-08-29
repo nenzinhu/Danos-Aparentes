@@ -94,3 +94,9 @@ labs/
 analysis/
 videoforge/
 archive/
+
+# Arquivos de teste/scratch gerados na raiz
+/pdf1.pdf
+/pdf2.pdf
+/pdf3.pdf
+/van lateral.png
