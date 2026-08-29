@@ -14,7 +14,7 @@ import {
   IconWhatsApp,
 } from './reportActions/icons'
 import PdfSectionsPanel from './reportActions/PdfSectionsPanel'
-import CertifySignatureCard from './CertifySignatureCard'
+import PlainPdfCard from './PlainPdfCard'
 import {
   blockExportWithoutReview,
   captureSvgs,
@@ -232,15 +232,10 @@ export default function ReportActions({
         />
       </section>
 
-      {/* Botão primário — Gerar Laudo PDF (sempre visível; desabilita em disclosure) */}
-      <CertifySignatureCard
-        inspectionId={inspectionId}
-        accessToken={accessToken}
-        defaultName={vehicleInfo?.owner || undefined}
-        onEnsureInspectionId={onEnsureInspectionId}
+      {/* Botão primário — Gerar Laudo PDF (QR + hash, sem certificação) */}
+      <PlainPdfCard
         onPlainPdf={() => handle('pdf', handlePdf, 'PDF gerado')}
         canExportPlainPdf={canExportOfficialPdf && photosReady}
-        compact
       />
 
       {/* Card: Compartilhar — exportação secundária (só após as 4 fotos) */}

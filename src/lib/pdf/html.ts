@@ -1,5 +1,5 @@
 import { Damage, VehicleInfo } from '../../types'
-import { computeHash, registerHash } from './hash'
+import { computeHash, registerHash, generateQrDataUrl } from './hash'
 import { buildIntegrityManifest } from './integrityManifest'
 import { collectOriginalPhotoHashes } from '../photoEvidence'
 import {
@@ -115,9 +115,9 @@ export async function buildFullHtml(
     process.env.NEXT_PUBLIC_BASE_URL ||
     'https://danosaparentes.com.br'
   const verifyUrl = `${origin.replace(/\/$/, '')}/verify?hash=${encodeURIComponent(hash)}${geoQuery}`
-  // QR Code de verificação removido do laudo: a verificação/assinatura passa a ser
-  // exclusivamente via certificação digital Assinafy (link de assinatura).
-  const qrDataUrl = ''
+  // QR Code de verificação: aponta para /verify?hash=… para conferir integridade
+  // (o hash quebra caso o PDF seja alterado após a emissão — ver /verify + comparePdfUpload).
+  const qrDataUrl = await generateQrDataUrl(verifyUrl)
   const qrImg = qrDataUrl
     ? `<img src="${qrDataUrl}" width="56" height="56" style="display:block;border:1px solid #E5E7EB;border-radius:6px;background:#fff;" />`
     : ''

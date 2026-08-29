@@ -17,7 +17,7 @@ interface Props {
 /**
  * GPS da vistoria — capturado automaticamente ao abrir o card (sem botão manual,
  * sem aba de "localizar"). A coordenada entra no laudo PDF junto do hash e do QR Code.
- * A certificação digital vive em ReportActions (card único).
+ * A geração do PDF (QR + hash) vive em ReportActions (PlainPdfCard).
  */
 export default function FinalizePanel({
   info,

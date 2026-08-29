@@ -1,6 +1,12 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { buildFullHtml, resolveEffectiveLayoutMode } from '../html'
 import type { Damage, VehicleInfo } from '../../../types'
+
+vi.mock('qrcode', () => ({
+  default: {
+    toDataURL: vi.fn(async () => 'data:image/png;base64,FAKEQRDATAURL'),
+  },
+}))
 
 function makeVehicleInfo(overrides: Partial<VehicleInfo> = {}): VehicleInfo {
   return {
@@ -82,13 +88,15 @@ describe('PdfSettings — Customization & Layout Modes (M1 & M2)', () => {
     expect(html).toContain('Documento registrado para fins de seguro.')
   })
 
-  it('never renders a QR code image (verification is via Assinafy link)', async () => {
-    const { html } = await buildFullHtml(makeVehicleInfo(), [makeDamage()], undefined, {
+  it('renders a QR code image linking to /verify (public verification)', async () => {
+    const { html } = await buildFullHtml(makeVehicleInfo({
+      geo: { lat: -23.55, lng: -46.63, accuracy: 12, capturedAt: Date.now() },
+    }), [makeDamage()], undefined, {
       headerFooter: { showGpsLocation: true },
     })
-    expect(html).toContain('Integridade do Documento')
-    expect(html).not.toContain('Escaneie o QR Code para atestar')
-    expect(html).not.toContain('<img src="data:image/png;base64,iVBOR')
+    expect(html).toContain('/verify?hash=')
+    expect(html).toContain('Escaneie o QR Code para atestar')
+    expect(html).toMatch(/<img src="data:image\/png;base64,[A-Za-z0-9+/=]+"/)
   })
 
   it('aligns logo to the right when logoPosition is right', async () => {
