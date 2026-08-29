@@ -1,6 +1,7 @@
 'use client'
 import type { VehicleInfo } from '../../types'
 import { UF_LIST, VEHICLE_TYPES, inputClasses, inputClassesAuto, labelClasses, type FoundData } from './constants'
+import { CITIES_BY_UF } from '../../lib/brazilCities'
 import { Chip } from './icons'
 
 export type PlateStatus = 'idle' | 'loading' | 'found' | 'error'
@@ -125,15 +126,50 @@ export default function WizardStepVehicle({
             </div>
           )}
           {show('city') && (
-            <div>
-              <label htmlFor="city-input" className={labelClasses}>Cidade</label>
-              <input id="city-input" className={inputClasses} value={info.city} onChange={e => set('city', e.target.value)} placeholder="Ex: São Paulo" />
+            <div className={info.state ? '' : 'sm:col-span-2'}>
+              <label htmlFor="city-select" className={labelClasses}>
+                {info.state ? 'Cidade' : 'Cidade'}
+              </label>
+              {info.state ? (
+                <select
+                  id="city-select"
+                  className={inputClassesAuto}
+                  value={info.city}
+                  onChange={e => set('city', e.target.value)}
+                >
+                  <option value="">— Selecione —</option>
+                  {(CITIES_BY_UF[info.state] ?? []).map(city => (
+                    <option key={city} value={city}>{city}</option>
+                  ))}
+                  {/* Cidade preenchida pela placa com grafia fora da lista oficial: preserva o valor. */}
+                  {info.city && !(CITIES_BY_UF[info.state] ?? []).includes(info.city) && (
+                    <option value={info.city}>{info.city}</option>
+                  )}
+                </select>
+              ) : (
+                <input id="city-input" className={inputClasses} value={info.city} onChange={e => set('city', e.target.value)} placeholder="Ex: São Paulo" />
+              )}
+              {!info.state && info.city && (
+                <p className="mt-0.5 text-[0.55rem] leading-tight text-[var(--text-muted)]">
+                  Escolha a UF para listar as cidades.
+                </p>
+              )}
             </div>
           )}
           {show('state') && (
             <div className="max-w-[4rem]">
               <label htmlFor="state-select" className={labelClasses}>UF</label>
-              <select id="state-select" className={inputClassesAuto} value={info.state} onChange={e => set('state', e.target.value)}>
+              <select
+                id="state-select"
+                className={inputClassesAuto}
+                value={info.state}
+                onChange={e => {
+                  const nextUf = e.target.value
+                  const nextCity = CITIES_BY_UF[nextUf]?.includes(info.city) ? info.city : ''
+                  set('state', nextUf)
+                  if (nextCity !== info.city) set('city', nextCity)
+                }}
+              >
                 <option value="">—</option>
                 {UF_LIST.map(uf => <option key={uf} value={uf}>{uf}</option>)}
               </select>

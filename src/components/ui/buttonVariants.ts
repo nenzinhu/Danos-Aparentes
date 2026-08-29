@@ -25,8 +25,8 @@ const VARIANTS: Record<ButtonVariant, string> = {
     'text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-white/[0.04] ' +
     'px-2',
   success:
-    'bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-600/15 ' +
-    'motion-safe:hover:-translate-y-0.5 focus-visible:ring-green-500',
+    'bg-success hover:bg-success-bright text-[var(--bg-main)] shadow-lg shadow-[var(--success)]/20 ' +
+    'motion-safe:hover:-translate-y-0.5 focus-visible:ring-[var(--success)]',
 }
 
 const SIZES: Record<ButtonSize, string> = {

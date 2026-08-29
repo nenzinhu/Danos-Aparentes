@@ -142,6 +142,46 @@ base em múltiplos de 8px (`sm 8 / md 16 / lg 24`).
 - `badge-signal` / `badge-severity-*` rotulam dados — texto escuro sobre cor
   saturada.
 
+## Buttons — estados e acessibilidade (heurísticas Nielsen)
+
+Regras reutilizáveis para qualquer botão/CTA do produto, mapeadas às heurísticas.
+
+### Hierarquia (heurística 8 — minimalismo)
+- **1 botão primário por view.** Ação principal da tela. Mais de um dilui a decisão.
+- `secondary` = ação de apoio; `ghost` = terciária (só texto); `success` = confirmação/conclusão.
+- Nunca usar `--signal` (âmbar) em botão de ação — âmbar é só estrutura/dado.
+
+### Alvos de toque (heurística 6 — reconhecimento)
+- Altura mínima **44px** em mobile, **40px** em desktop (área clicável real, com padding).
+- Espaçamento entre botões adjacentes ≥ 12px (evita toque acidental).
+- Em mobile, CTA primário único = **100% da largura** (ex.: `fullWidth`).
+
+### Estados (todos obrigatórios — heurística 1, visibilidade do status)
+- **Default / Hover / Active / Focus / Loading / Disabled.**
+- `Button` do design system já entrega: `focus-visible:ring`, `active:scale-[0.98]`,
+  `loading` com spinner + `aria-busy`, `disabled:opacity-60`, `motion-reduce`.
+- **Ação assíncrona** → estado loading imediato + bloqueio de reenvio. Nunca sem feedback.
+
+### Contraste (WCAG 2.1 AA — heurística 2, mundo real)
+- Padrão do sistema: **fundo acento + texto `--bg-main`** (ex.: `primary`, `success`).
+  Isso passa AA nos dois temas sem regra extra.
+- **Não** usar cores fora dos tokens (`green-500` hardcoded reprova AA em 2.28:1).
+  Troque por `bg-success hover:bg-success-bright`.
+- Verifique contraste de qualquer cor nova antes de aplicar (mín. 4.5:1 texto normal).
+
+### Microcopy (heurísticas 2, 4, 8)
+- Verbo de ação primeiro e conciso (1–3 palavras): "Começar grátis", "Salvar alterações".
+- Específico > genérico: "Ir ao diagrama" > "OK"; "Enviar mensagem" > "Confirmar".
+- Tom consistente (sentence-case) em todo o app — nunca misturar case.
+
+### Anti-padrões
+- ❌ Dois primários competindo na mesma view.
+- ❌ Texto longo truncado no botão (reduzir padding antes de reduzir fonte).
+- ❌ Disabled sem razão aparente (explicar quando bloqueado).
+- ❌ Clicar sem feedback visual (hover/active).
+- ❌ Ícone ambíguo sem texto ou `aria-label`.
+- ❌ Vermelho/âmbar para ação não-destrutiva.
+
 ## Do's and Don'ts
 
 - **Do** manter azul = ação e âmbar = estrutura.
