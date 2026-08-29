@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase, supabaseEnabled } from '../lib/supabase'
+import { db } from '../lib/db'
 
 /**
  * True when the browser already has a Supabase auth cookie.
@@ -46,6 +47,16 @@ export function useAuth() {
   async function signOut() {
     if (!supabase) return
     await supabase.auth.signOut()
+    // Isolamento de dados entre contas no mesmo dispositivo/navegador.
+    // O repositório local (IndexedDB) é compartilhado por dispositivo e os
+    // SavedReport não carregam userId/tenantId, então não há filtro de posse
+    // possível no cliente. Limpar os dados locais no logout evita que a próxima
+    // conta que logar no mesmo browser herde inspeções/veículos da anterior.
+    try {
+      await db.clearAllLocalData()
+    } catch {
+      // falha ao limpar storage local não deve impedir o logout da sessão
+    }
   }
 
   async function resetPassword(email: string) {

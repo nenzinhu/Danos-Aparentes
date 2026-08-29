@@ -1,5 +1,6 @@
 import nextConfig from 'eslint-config-next'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import jsxA11y from 'eslint-plugin-jsx-a11y'
 
 const config = [
   {
@@ -29,9 +30,10 @@ const config = [
     // <div role="button|tab|radio"> estilizado COM foco/teclado próprios
     // (ex.: HeroVehiclePicker, InspectTab, NewInspectionDropdown) — eles são
     // intencionais e não devem quebrar o lint. O restante fica em error.
+    plugins: { 'jsx-a11y-relaxed': jsxA11y },
     rules: {
-      'jsx-a11y/no-static-element-interactions': 'warn',
-      'jsx-a11y/click-events-have-key-events': 'warn',
+      'jsx-a11y-relaxed/no-static-element-interactions': 'warn',
+      'jsx-a11y-relaxed/click-events-have-key-events': 'warn',
     },
   },
 ]

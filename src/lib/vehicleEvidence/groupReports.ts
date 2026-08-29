@@ -43,19 +43,35 @@ export function groupReportsByVehicle(
   reports: SavedReport[],
   opts?: { tenantId?: string | null; userId?: string },
 ): VehicleHistorySummary[] {
+  const userId = opts?.userId ?? 'local'
+  const tenantId = opts?.tenantId ?? null
+  const scope = tenantScopeKey(tenantId, userId)
+
+  // Isolamento de posse (defesa em profundidade): quando um SavedReport carrega
+  // userId/tenantId, descarta os que não pertencem ao escopo atual. Hoje os
+  // reportes locais não carregam esses campos (bucket por dispositivo), então o
+  // filtro é no-op — o isolamento entre contas no mesmo navegador é feito no
+  // logout (useAuth.signOut → db.clearAllLocalData). Se o modelo ganhar
+  // userId/tenantId no futuro, este filtro passa a proteger automaticamente.
+  const scopeOwns = (r: SavedReport): boolean => {
+    const rUser = (r as SavedReport & { userId?: string | null }).userId
+    const rTenant = (r as SavedReport & { tenantId?: string | null }).tenantId
+    if (rUser === undefined && rTenant === undefined) return true
+    if (rTenant) return rTenant === tenantId
+    if (rUser) return `user:${rUser}` === scope
+    return true
+  }
+
   const map = new Map<string, SavedReport[]>()
 
   for (const r of reports) {
+    if (!scopeOwns(r)) continue
     const id = resolveReportVehicleId(r)
     if (!id) continue
     const list = map.get(id) ?? []
     list.push(r)
     map.set(id, list)
   }
-
-  const userId = opts?.userId ?? 'local'
-  const tenantId = opts?.tenantId ?? null
-  const scope = tenantScopeKey(tenantId, userId)
 
   const summaries: VehicleHistorySummary[] = []
 
@@ -78,8 +94,6 @@ export function groupReportsByVehicle(
           tenantId,
           userId,
         })
-        // force same tenant scope already via adapter
-        void scope
         newDamagesOnLast = compareInspections(prevInsp, currInsp).summary.newDamages
       } catch {
         newDamagesOnLast = 0
