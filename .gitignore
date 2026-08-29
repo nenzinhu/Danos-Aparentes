@@ -100,3 +100,6 @@ archive/
 /pdf2.pdf
 /pdf3.pdf
 /van lateral.png
+
+.vercel
+.env*
