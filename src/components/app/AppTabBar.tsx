@@ -40,6 +40,35 @@ function TabBadge({ count, tone }: { count: number; tone: 'action' | 'signal' })
   )
 }
 
+type MobileTab = {
+  value: string
+  label: string
+  icon: React.ReactNode
+  badge: React.ReactNode
+  aria: string
+}
+
+function HelpIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="text-[var(--signal)]"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" />
+      <line x1="12" y1="17" x2="12" y2="17" />
+    </svg>
+  )
+}
+
 /**
  * Navegação principal do app por verbo do trabalho.
  * Acentos do DESIGN.md: primary (ação) ativo; signal só para dado/pendência.
@@ -57,12 +86,27 @@ export default function AppTabBar({
   const tabIconClass = (active: boolean) =>
     active ? 'text-[var(--primary)]' : 'text-[var(--text-muted)]'
 
+  // Mobile tabs resolvidos uma vez (evita JSX inline dentro de array literal no render).
+  const mobileTabs: MobileTab[] = [
+    { value: 'vehicles', label: 'Veículos', icon: <IconCar size={20} className={tabIconClass(activeTab === 'vehicles')} />, badge: <TabBadge count={vehiclesCount} tone="action" />, aria: 'Ir para Veículos' },
+    { value: 'dashboard', label: 'Dossiês', icon: <IconFolder size={20} className={tabIconClass(activeTab === 'dashboard')} />, badge: unsyncedCount > 0 ? <TabBadge count={unsyncedCount} tone="signal" /> : null, aria: 'Ir para Dossiês' },
+    { value: 'ia', label: 'IA', icon: <IconSparkles size={20} className={tabIconClass(activeTab === 'ia')} />, badge: null, aria: 'Acessar Inteligência Artificial' },
+    { value: '__new__', label: 'Nova', icon: <span className="flex h-11 w-11 -mt-4 items-center justify-center rounded-full text-[var(--bg-main)] font-black text-2xl shadow-xl shadow-[var(--primary)]/30" style={{ backgroundImage: 'var(--primary-btn-gradient)' }}>+</span>, badge: null, aria: 'Nova inspeção de vistoria' },
+    { value: 'clients', label: 'Clientes', icon: <IconDocument size={20} className={tabIconClass(activeTab === 'clients')} />, badge: null, aria: 'Ir para Clientes' },
+    showTeamTab
+      ? { value: 'team', label: 'Equipe', icon: <IconTeam size={20} className={tabIconClass(activeTab === 'team')} />, badge: null, aria: 'Ir para Equipe' }
+      : { value: '__tutorial__', label: 'Ajuda', icon: <HelpIcon />, badge: null, aria: 'Ajuda / Como funciona' },
+  ]
+
   return (
     <>
     <div className="flex w-full min-w-0 flex-wrap items-center justify-center gap-1.5 mt-1 mb-1 px-2">
-      {/* Desktop: abas + ação primária alinhadas no header */}
-      <div className="hidden md:flex items-center gap-1.5">
+      {/* Desktop: abas + ação primária alinhadas no header. Scroll horizontal em
+          telas estreitas (~md) para não transbordar. O "Nova inspeção" gruda
+          na margem direita mantendo as abas navegáveis. */}
+      <div className="hidden md:flex items-center gap-1.5 overflow-x-auto [&::-webkit-scrollbar]:hidden -mx-2 pl-2 pr-1">
         <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as AppTabValue)}>
+          {/* TabsList já expõe role="tablist" + roving-tabindex por teclado. */}
           <TabsList aria-label="Navegação principal do aplicativo">
             <Tab value="vehicles">
               <IconCar size={14} className={tabIconClass(activeTab === 'vehicles')} />
@@ -128,25 +172,19 @@ export default function AppTabBar({
       <PwaInstallButton />
     </div>
 
-    {/* Barra inferior no mobile: onde o polegar alcança. Espelha as abas + ação primária. */}
+    {/* Barra inferior no mobile: onde o polegar alcança. Grid de 6 colunas
+        espelha todas as abas (incl. IA) + "Nova" (inspiração) ou "Ajuda".
+        Cada botão recebe aria-label; altura mínima 44px. */}
     <nav
       aria-label="Navegação principal do aplicativo"
       className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[var(--card-border)] bg-[var(--bg-main)]/95 backdrop-blur-xl pb-[env(safe-area-inset-bottom)]"
     >
       <div className="grid grid-cols-6 items-stretch h-16 max-w-lg mx-auto">
-        {([
-          { value: 'vehicles', label: 'Veículos', icon: <IconCar size={20} className={tabIconClass(activeTab === 'vehicles')} />, badge: <TabBadge count={vehiclesCount} tone="action" /> },
-          { value: 'dashboard', label: 'Dossiês', icon: <IconFolder size={20} className={tabIconClass(activeTab === 'dashboard')} />, badge: unsyncedCount > 0 ? <TabBadge count={unsyncedCount} tone="signal" /> : null },
-          { value: '__new__', label: 'Nova', icon: <span className="flex h-11 w-11 -mt-4 items-center justify-center rounded-full text-[var(--bg-main)] font-black text-2xl shadow-xl shadow-[var(--primary)]/30" style={{ backgroundImage: 'var(--primary-btn-gradient)' }}>+</span>, badge: null },
-          { value: 'clients', label: 'Clientes', icon: <IconDocument size={20} className={tabIconClass(activeTab === 'clients')} />, badge: null },
-          { value: 'ia', label: 'IA', icon: <IconSparkles size={20} className={tabIconClass(activeTab === 'ia')} />, badge: null },
-          showTeamTab
-            ? { value: 'team', label: 'Equipe', icon: <IconTeam size={20} className={tabIconClass(activeTab === 'team')} />, badge: null }
-            : { value: '__tutorial__', label: 'Ajuda', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-[var(--signal)]"><circle cx="12" cy="12" r="10" /><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12" y2="17" /></svg>, badge: null },
-        ] satisfies Array<{ value: string; label: string; icon: React.ReactNode; badge: React.ReactNode }>).map((item) => (
+        {mobileTabs.map((item) => (
           <button
             key={item.value}
             type="button"
+            aria-label={item.aria}
             aria-current={activeTab === item.value ? 'page' : undefined}
             onClick={() => {
               if (item.value === '__new__') {
@@ -159,9 +197,7 @@ export default function AppTabBar({
               }
               onTabChange(item.value as AppTabValue)
             }}
-            className={`flex flex-col items-center justify-center gap-0.5 text-[0.6rem] font-bold uppercase tracking-wide transition-colors cursor-pointer ${
-              activeTab === item.value ? 'text-[var(--text-main)]' : 'text-[var(--text-muted)]'
-            }`}
+            className={`flex flex-col items-center justify-center gap-0.5 text-[0.6rem] font-bold uppercase tracking-wide transition-colors cursor-pointer min-h-11 ${activeTab === item.value ? 'text-[var(--text-main)]' : 'text-[var(--text-muted)]'}`}
           >
             {item.icon}
             <span className="flex items-center">{item.label}{item.badge}</span>
