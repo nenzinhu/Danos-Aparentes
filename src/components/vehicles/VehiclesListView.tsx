@@ -7,6 +7,7 @@ import TabEmptyState from '@/src/components/app/TabEmptyState'
 import { PaginatedList } from './PaginatedList'
 import type { VehicleHistorySummaryWithCloud } from '@/src/lib/vehicleEvidence'
 import { normalizePlate } from '@/src/lib/reportComparison'
+import { RiskScoreBadge } from './RiskScoreBadge'
 
 function formatDate(ts: number | null): string {
   if (!ts) return '—'
@@ -80,7 +81,10 @@ export default function VehiclesListView({
             className="group rounded-xl border border-[var(--card-border)] bg-[var(--card-bg-solid)] p-4 flex items-center justify-between gap-4 hover:border-[var(--primary)]/40 transition-colors"
           >
             <div className="min-w-0 flex-1">
-              <p className="font-display text-xl font-bold tracking-wide text-[var(--text-main)]">{v.plate || '—'}</p>
+              <div className="flex items-center gap-2">
+                <p className="font-display text-xl font-bold tracking-wide text-[var(--text-main)]">{v.plate || '—'}</p>
+                {!v.cloudOnly && <RiskScoreBadge vehicle={v} />}
+              </div>
               <p
                 className="text-xs text-[var(--text-muted)] mt-0.5 truncate"
                 title={

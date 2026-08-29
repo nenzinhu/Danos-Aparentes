@@ -12,6 +12,7 @@ import type { FipePublicSummary } from '@/src/types'
 import { VehicleIconSvg } from '@/src/components/VehicleSelector'
 import VehicleHistoryTimeline from './VehicleHistoryTimeline'
 import VehicleLifeHistory from './VehicleLifeHistory'
+import { RiskScoreCard } from './RiskScoreBadge'
 
 type RemoteInspection = {
   id: string
@@ -360,6 +361,9 @@ export default function VehicleDetailView({
               ))}
             </div>
           )}
+
+          {/* Score de risco — só com histórico local disponível */}
+          {vehicle.reports.length > 0 && <RiskScoreCard vehicle={vehicle} />}
 
           {/* FIPE — grade fluida só com fatos preenchidos */}
           {fipe && fipeFacts.length > 0 && (
