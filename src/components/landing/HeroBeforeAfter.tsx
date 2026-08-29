@@ -15,6 +15,8 @@ export default function HeroBeforeAfter() {
           src="/exemplos/hero-vistoria-entrada-retorno.png"
           alt="Relatório de vistoria entrada e retorno lado a lado: evidência comparável do estado do veículo no check-out e check-in"
           fill
+          sizes="(min-width: 1024px) 50vw, 100vw"
+          priority
           className="w-full h-full object-cover object-top"
           draggable={false}
         />

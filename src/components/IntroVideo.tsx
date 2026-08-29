@@ -48,8 +48,15 @@ export default function IntroVideo() {
     // 3. Exit fade
     .to(containerRef.current, { opacity: 0, duration: 0.35, ease: 'power2.inOut', onStart: () => setPhase('fading') });
 
+    // Rede de segurança: se a timeline não completar (tab em background,
+    // throttle de rAF, interrupção por fast-refresh), nunca deixa o splash
+    // bloquear a página indefinidamente — a home é conteúdo real, não pode
+    // ficar refém de uma animação decorativa.
+    const safety = setTimeout(() => setPhase('done'), 2500);
+
     return () => {
       tl.kill();
+      clearTimeout(safety);
     };
   }, []);
 
