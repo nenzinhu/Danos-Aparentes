@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, memo } from 'react'
-import { Button } from '@/src/components/ui/Button'
+import Button from '@/src/components/ui/Button'
 import { buttonVariants } from '@/src/components/ui/buttonVariants'
 import { usePerformanceTelemetry } from '@/src/hooks/usePerformanceTelemetry'
 
