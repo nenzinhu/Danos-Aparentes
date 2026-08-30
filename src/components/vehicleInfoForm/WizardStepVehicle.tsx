@@ -49,7 +49,7 @@ export default function WizardStepVehicle({
               <div className="absolute -top-2 -right-2 bg-yellow-500/20 border border-yellow-500/50 text-yellow-500 rounded-full px-1.5 py-0.5 text-[0.6rem] font-black animate-pulse">⏳</div>
             )}
             {plateStatus === 'found' && (
-              <div className="absolute -top-2 -right-2 bg-green-500/20 border border-green-500/50 text-green-500 rounded-full px-1.5 py-0.5 text-[0.6rem] font-black">✓</div>
+              <div className="absolute -top-2 -right-2 bg-[var(--success-bg)] border border-[var(--success-border)] text-[var(--success-bright)] rounded-full px-1.5 py-0.5 text-[0.6rem] font-black">✓</div>
             )}
             {plateStatus === 'error' && (
               <div className="absolute -top-2 -right-2 bg-red-500/20 border border-red-500/50 text-red-500 rounded-full px-1.5 py-0.5 text-[0.6rem] font-black">✖</div>

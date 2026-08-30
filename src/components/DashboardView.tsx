@@ -6,6 +6,7 @@ import { resolveVehicleType } from '../lib/vehicleTypeInference'
 import { usePerformanceTelemetry } from '../hooks/usePerformanceTelemetry'
 import { groupReportsByVehicle } from '../lib/vehicleEvidence'
 import Link from 'next/link'
+import { buttonVariants } from './ui/buttonVariants'
 import {
   IconChart,
   IconFolder,
@@ -194,8 +195,7 @@ export default function DashboardView({ saved, accessToken, showAuditDashboard, 
           </p>
           <a
             href="/app"
-            className="inline-block px-6 py-3 min-h-12 rounded-xl font-black text-sm text-white transition-opacity hover:opacity-95"
-            style={{ backgroundImage: 'var(--primary-btn-gradient)' }}
+            className={buttonVariants({ variant: 'primary', size: 'md', className: 'w-full sm:w-auto' })}
           >
             Criar primeira inspeção →
           </a>

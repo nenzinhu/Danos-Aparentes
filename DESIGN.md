@@ -148,8 +148,11 @@ Regras reutilizáveis para qualquer botão/CTA do produto, mapeadas às heuríst
 
 ### Hierarquia (heurística 8 — minimalismo)
 - **1 botão primário por view.** Ação principal da tela. Mais de um dilui a decisão.
-- `secondary` = ação de apoio; `ghost` = terciária (só texto); `success` = confirmação/conclusão.
+- `secondary` = ação de apoio; `ghost` = terciária (só texto); `success` = confirmação/conclusão;
+  `danger` = ação destrutiva (excluir/limpar), texto claro sobre `--severity-high`.
 - Nunca usar `--signal` (âmbar) em botão de ação — âmbar é só estrutura/dado.
+- Ações destrutivas NUNCA usam `primary` nem `success`; usam `danger` (sólido) ou
+  `ghost` + `text-[var(--severity-high)]` (baixa ênfase). Nunca `text-red-400` hardcoded.
 
 ### Alvos de toque (heurística 6 — reconhecimento)
 - Altura mínima **44px** em mobile, **40px** em desktop (área clicável real, com padding).
@@ -173,6 +176,19 @@ Regras reutilizáveis para qualquer botão/CTA do produto, mapeadas às heuríst
 - Verbo de ação primeiro e conciso (1–3 palavras): "Começar grátis", "Salvar alterações".
 - Específico > genérico: "Ir ao diagrama" > "OK"; "Enviar mensagem" > "Confirmar".
 - Tom consistente (sentence-case) em todo o app — nunca misturar case.
+
+### Abas (Tabs — heurísticas 1, 6)
+- `Tabs`/`Tab` do `ui/Tabs.tsx` é a fonte única: role=tablist, roving tabindex e
+  indicador deslizante com tinta `--primary` (14%) + borda (28%).
+- Aba ativa: texto `--primary` + `font-extrabold` + indicador; inativa: `--text-muted`,
+  hover `--text-main`. O indicador usa `color-mix` — em tema claro herda `--primary`/`--signal` do tema.
+- Estado ativo de aba é AÇÃO → `--primary`. Nunca usar `--signal` para "selecionado".
+
+### Regras de lint (ast-grep) — impedem recorrência
+Rodar com `npm run lint:ast` (ast-grep scan src). Regras em `.ast-grep/rules/`:
+- `no-outside-radius-scale`: bloqueia `rounded-3xl` (fora da escala fechada).
+- `no-hardcoded-green`: bloqueia `green-500` hardcoded (fura tokens + reprova AA).
+Adicione aqui/regras novas ao criar tokens — não corrija à mão toda vez; codifique a regra.
 
 ### Anti-padrões
 - ❌ Dois primários competindo na mesma view.

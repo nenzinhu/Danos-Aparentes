@@ -127,7 +127,7 @@ export default function VehicleViewsDemo() {
       <div className="mb-6">
         <div className="h-1.5 rounded-full bg-[var(--btn-secondary-bg)] overflow-hidden">
           <div
-            className="h-full bg-green-500 transition-all"
+            className="h-full bg-[var(--success)] transition-all"
             style={{ width: `${((activeIndex + 1) / VIEWS.length) * 100}%` }}
           />
         </div>

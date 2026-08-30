@@ -48,7 +48,7 @@ export function Chip({ icon, label, color }: { icon: string; label: string; colo
     sky: 'bg-sky-500/15 border-sky-500/30 text-sky-400',
     violet: 'bg-[var(--primary)]/15 border-[var(--primary)]/30 text-[var(--signal)]',
     orange: 'bg-orange-500/15 border-orange-500/30 text-orange-400',
-    green: 'bg-green-500/15 border-green-500/30 text-green-400',
+    green: 'bg-[var(--success-bg)] border-[var(--success-border)] text-[var(--success-bright)]',
   }
 
   return (

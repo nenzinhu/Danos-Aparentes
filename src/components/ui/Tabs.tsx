@@ -164,7 +164,7 @@ export function TabsList({ 'aria-label': ariaLabel, children, className }: TabsL
       <span
         ref={indicatorRef}
         aria-hidden="true"
-        className="pointer-events-none absolute left-1 top-1 bottom-1 rounded-lg bg-[var(--btn-secondary-bg)] opacity-90 transition-[transform,width,height] duration-200 ease-out motion-reduce:transition-none"
+        className="pointer-events-none absolute left-1 top-1 bottom-1 rounded-lg bg-[color-mix(in_srgb,var(--primary)_14%,transparent)] border border-[color-mix(in_srgb,var(--primary)_28%,transparent)] opacity-90 transition-[transform,width,height] duration-200 ease-out motion-reduce:transition-none"
       />
     </div>
   )
@@ -203,8 +203,8 @@ export function Tab({ value, children, className, disabled }: TabProps) {
       className={
         'relative z-10 px-3 sm:px-4 py-2 rounded-lg text-xs font-bold font-outfit transition-colors cursor-pointer border inline-flex items-center gap-1.5 whitespace-nowrap scroll-snap-align-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-1 focus-visible:ring-offset-[var(--card-bg-solid)] disabled:opacity-40 disabled:cursor-not-allowed ' +
         (isActive
-          ? 'theme-tab-active text-[var(--primary)] border-transparent'
-          : 'theme-tab-idle text-[var(--text-muted)] hover:text-[var(--text-main)] border-transparent hover:bg-white/[0.03]') +
+          ? 'theme-tab-active text-[var(--primary)] border-transparent font-extrabold'
+          : 'theme-tab-idle text-[var(--text-muted)] hover:text-[var(--text-main)] border-transparent hover:bg-white/[0.04]') +
         (className ? ' ' + className : '')
       }
     >

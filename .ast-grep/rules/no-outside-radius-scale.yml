@@ -1,0 +1,8 @@
+id: no-outside-radius-scale
+language: TypeScript
+severity: warning
+rule:
+  kind: string
+  regex: "rounded-3xl"
+message: "rounded-3xl está FORA da escala de raio fechada do design system (máx. rounded-2xl = --radius-card). Use rounded-2xl, rounded-xl, rounded-lg ou rounded-full. Veja o bloco FORMA no topo de globals.css."
+note: "A escala fechada é: pill 9999px, card 20px (rounded-2xl), control 12px (rounded-xl), chip 6px. Não introduzir raios fora dela."

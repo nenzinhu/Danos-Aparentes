@@ -64,7 +64,7 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
         }
         aria-pressed={panLocked}
         aria-label={panLocked ? 'Destravar diagrama' : 'Travar diagrama'}
-        className={`${btnBase} px-2 py-1 flex items-center gap-1 ${panLocked ? 'bg-[var(--signal)]/25 border-[var(--signal)]/50 text-[var(--signal-bright)]' : ''}`}
+        className={`${btnBase} px-2 py-1 flex items-center gap-1 ${panLocked ? 'bg-[var(--primary)]/25 border-[var(--primary)]/50 text-[var(--primary)]' : ''}`}
       >
         <LockIcon locked={panLocked} />
       </button>
@@ -108,7 +108,7 @@ export const Controls = memo(function Controls({ variant = 'floating' }: { varia
             }
             aria-pressed={panLocked}
             aria-label={panLocked ? 'Destravar diagrama' : 'Travar diagrama'}
-            className={`${btnBase} px-2.5 py-1.5 flex items-center gap-1 shrink-0 ${panLocked ? 'bg-[var(--signal)]/25 border-[var(--signal)]/50 text-[var(--signal-bright)]' : ''}`}
+            className={`${btnBase} px-2.5 py-1.5 flex items-center gap-1 shrink-0 ${panLocked ? 'bg-[var(--primary)]/25 border-[var(--primary)]/50 text-[var(--primary)]' : ''}`}
           >
             <LockIcon locked={panLocked} />
           </button>

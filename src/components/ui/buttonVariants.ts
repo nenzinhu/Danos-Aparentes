@@ -3,30 +3,34 @@
  * Pode ser importado em Server Components e Client Components.
  */
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'success'
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'success' | 'danger'
 export type ButtonSize = 'auto' | 'sm' | 'md' | 'lg'
 export type ButtonAlign = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
 
 const BASE =
   'inline-flex items-center justify-center gap-2 font-bold rounded-xl select-none ' +
   'transition-[transform,background-color,box-shadow,color] duration-200 ease-out ' +
-  'outline-none focus-visible:ring-2 ring-[var(--primary)] ring-offset-2 ring-offset-[var(--bg-main)] ' +
+  'outline-none focus-visible:ring-2 ring-offset-2 ring-offset-[var(--bg-main)] ' +
   'active:scale-[0.98] disabled:opacity-60 disabled:pointer-events-none aria-disabled:opacity-60 aria-disabled:pointer-events-none ' +
   'motion-reduce:transition-none'
 
 const VARIANTS: Record<ButtonVariant, string> = {
   primary:
-    'bg-primary hover:bg-primary-hover text-[var(--bg-main)] shadow-lg shadow-[var(--primary)]/20 ' +
+    'bg-primary hover:bg-primary-hover text-[var(--bg-main)] shadow-lg shadow-[var(--primary)]/20 ring-[var(--primary)] ' +
     'motion-safe:hover:-translate-y-0.5 motion-safe:hover:shadow-xl',
   secondary:
     'bg-transparent border border-[var(--btn-secondary-border)] ' +
-    'hover:bg-[var(--btn-secondary-hover)] text-[var(--text-main)]',
+    'hover:bg-[var(--btn-secondary-hover)] text-[var(--text-main)] ring-[var(--primary)]',
   ghost:
     'text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-white/[0.04] ' +
-    'px-2',
+    'px-2 ring-[var(--primary)]',
   success:
     'bg-success hover:bg-success-bright text-[var(--bg-main)] shadow-lg shadow-[var(--success)]/20 ' +
-    'motion-safe:hover:-translate-y-0.5 focus-visible:ring-[var(--success)]',
+    'ring-[var(--success)] motion-safe:hover:-translate-y-0.5',
+  danger:
+    'bg-[var(--severity-high)] hover:brightness-110 text-white ' +
+    'shadow-lg shadow-[var(--severity-high)]/25 ring-[var(--severity-high)] ' +
+    'motion-safe:hover:-translate-y-0.5',
 }
 
 const SIZES: Record<ButtonSize, string> = {

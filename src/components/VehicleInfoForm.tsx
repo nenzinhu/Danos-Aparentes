@@ -381,7 +381,7 @@ function VehicleInfoFormComponent({ info, onChange, collapsed, onToggleCollapse,
   }
 
   const plateBorderClass =
-    plateStatus === 'found' ? 'border-green-500/60 shadow-[0_0_18px_rgba(34,197,94,0.25)]' :
+    plateStatus === 'found' ? 'border-[var(--success-border)] shadow-[0_0_18px_var(--success-glow)]' :
     plateStatus === 'error' ? 'border-red-500/50 shadow-[0_0_18px_rgba(239,68,68,0.2)]' :
     plateStatus === 'loading' ? 'border-yellow-500/50 shadow-[0_0_18px_rgba(234,179,8,0.2)]' :
     'border-sky-500/35 shadow-[0_0_18px_rgba(0,170,255,0.15)]'

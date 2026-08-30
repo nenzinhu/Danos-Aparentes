@@ -51,7 +51,7 @@ export default function DashboardHero({
       variants={reduceMotion ? undefined : container}
       initial={reduceMotion ? undefined : 'hidden'}
       animate={reduceMotion ? undefined : 'show'}
-      className="relative overflow-hidden rounded-3xl border border-[var(--card-border)] bg-[var(--panel-bg)] p-6 sm:p-8 backdrop-blur-md"
+      className="relative overflow-hidden rounded-2xl border border-[var(--card-border)] bg-[var(--panel-bg)] p-6 sm:p-8 backdrop-blur-md"
       style={{
         backgroundImage:
           'radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 55%)',

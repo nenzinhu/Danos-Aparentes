@@ -456,7 +456,7 @@ export default function InspectTab({
               <button
                 type="button"
                 onClick={onClearAll}
-                className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'inline-flex items-center gap-1.5 text-red-400' })}
+                className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'inline-flex items-center gap-1.5 text-[var(--severity-high)]' })}
               >
                 <ClearAllIcon /> Limpar
                 </button>
@@ -680,7 +680,7 @@ export default function InspectTab({
                   <button
                     type="button"
                     onClick={onClearDamages}
-                    className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'text-red-400 inline-flex items-center gap-1.5' })}
+                    className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'text-[var(--severity-high)] inline-flex items-center gap-1.5' })}
                   >
                     <ClearAllIcon size={12} /> Limpar
                   </button>

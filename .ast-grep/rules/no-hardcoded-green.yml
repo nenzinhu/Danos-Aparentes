@@ -1,0 +1,8 @@
+id: no-hardcoded-green
+language: TypeScript
+severity: warning
+rule:
+  kind: string
+  regex: "green-500"
+message: "green-500 hardcoded — reprova contraste AA e fura a governança de tokens. Use os tokens de sucesso: var(--success), --success-bright, --success-bg ou --success-border."
+note: "Cores fora dos tokens do globals.css reprovam WCAG 2.1 AA. Troque por bg-success / text-[var(--success-*)]."
