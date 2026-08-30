@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Danos Aparentes — Variações de Pricing (/planos)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  /* Tokens extraídos 1:1 do DESIGN.md / globals.css */
+  :root {
+    --bg-main: #0B0F17;
+    --card-bg: #111827;
+    --card-border: #1F2937;
+    --panel-bg: rgba(5,15,30,0.5);
+    --text-main: #E5EDF5;
+    --text-muted: #94A3B8;
+    --primary: #06B6D4;
+    --primary-hover: #22D3EE;
+    --primary-glow: rgba(6,182,212,0.4);
+    --signal: #f5a623;
+    --signal-bright: #ffb938;
+    --signal-glow: rgba(245,166,35,0.35);
+    --success: #34d399;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-pill: 9999px;
+    --font: 'Outfit', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font);
+    background:
+      radial-gradient(ellipse 120% 80% at 50% -10%, #0f1b33 0%, #0b0f17 55%, #070a10 100%);
+    color: var(--text-main);
+    min-height: 100vh;
+    padding: 0 0 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .stage { max-width: 1120px; margin: 0 auto; padding: 56px 24px 0; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.7rem; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--signal-bright);
+  }
+  .eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--signal); opacity: 0.5; }
+  h1.title { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1; margin: 14px 0 10px; }
+  .sub { color: var(--text-muted); font-size: 1rem; max-width: 620px; line-height: 1.5; }
+  .variant-tag {
+    display: inline-block; margin-top: 18px; font-size: 0.7rem; font-weight: 800;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);
+    border: 1px solid var(--card-border); border-radius: var(--radius-pill);
+    padding: 6px 14px;
+  }
+
+  /* Tabs / variants */
+  .switcher {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    padding: 14px; margin: 28px 0 36px;
+    background: rgba(11,15,23,0.8); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--card-border);
+  }
+  .switcher button {
+    font-family: var(--font); font-size: 0.8rem; font-weight: 700;
+    color: var(--text-muted); background: transparent;
+    border: 1px solid var(--card-border); border-radius: var(--radius-pill);
+    padding: 9px 18px; cursor: pointer; transition: all 0.18s ease;
+  }
+  .switcher button:hover { color: var(--text-main); border-color: var(--primary); }
+  .switcher button.active { background: var(--primary); color: #06121e; border-color: var(--primary); }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fade 0.3s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; align-items: stretch; }
+  @media (max-width: 880px) { .grid3 { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; } }
+
+  /* ---- Card base ---- */
+  .card {
+    position: relative; background: var(--card-bg);
+    border: 1px solid var(--card-border); border-radius: var(--radius-lg);
+    padding: 28px 24px; display: flex; flex-direction: column;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .card:hover { border-color: rgba(6,182,212,0.25); }
+  .card .badge {
+    position: absolute; top: 0; right: 0;
+    background: var(--signal); color: #0a1628;
+    font-size: 0.62rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 14px; border-bottom-left-radius: var(--radius-md);
+  }
+  .card h3 { font-size: 1.25rem; font-weight: 800; letter-spacing: 0.01em; }
+  .card .kicker { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--signal-bright); margin-top: 4px; }
+  .card .desc { font-size: 0.82rem; color: var(--text-muted); margin-top: 8px; min-height: 38px; line-height: 1.4; }
+  .price { font-size: 2.4rem; font-weight: 900; color: var(--primary); letter-spacing: -0.02em; margin: 18px 0 2px; }
+  .price span { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0; }
+  .feats { list-style: none; margin: 20px 0 24px; border-top: 1px solid rgba(31,41,55,0.6); padding-top: 18px; display: flex; flex-direction: column; gap: 11px; }
+  .feats li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.85rem; color: var(--text-main); }
+  .feats li::before { content: "✓"; color: var(--signal-bright); font-weight: 900; margin-top: 1px; }
+  .cta {
+    margin-top: auto; display: block; text-align: center; text-decoration: none;
+    font-family: var(--font); font-weight: 800; font-size: 0.9rem;
+    background: var(--primary); color: #06121e;
+    border-radius: var(--radius-md); padding: 13px; transition: background 0.18s ease;
+  }
+  .cta:hover { background: var(--primary-hover); }
+  .cta-sub { display: block; text-align: center; font-size: 0.72rem; color: var(--text-muted); margin-top: 10px; }
+  .cta-ghost {
+    display: block; text-align: center; text-decoration: none;
+    font-family: var(--font); font-weight: 700; font-size: 0.82rem;
+    color: var(--text-main); border: 1px solid var(--card-border);
+    border-radius: var(--radius-md); padding: 11px; margin-top: 8px; transition: border-color 0.18s;
+  }
+  .cta-ghost:hover { border-color: var(--primary); }
+
+  /* ---- Variant A: Conservadora (atual, só refinada) ---- */
+  .vA .card.popular { border-color: var(--primary); border-width: 2px; box-shadow: 0 0 40px var(--primary-glow); }
+  .vA .card.popular::after {
+    content: ""; position: absolute; inset: -3px; border-radius: var(--radius-lg);
+    background: var(--primary); filter: blur(22px); opacity: 0.18; z-index: -1;
+  }
+
+  /* ---- Variant B: Strong-fit (destaque invertido: Pro em card sólido escuro + acento ciano) ---- */
+  .vB .grid3 { gap: 18px; }
+  .vB .card { background: rgba(17,24,39,0.6); }
+  .vB .card.popular {
+    background: linear-gradient(160deg, #0d2230 0%, #0b1320 100%);
+    border: 1px solid rgba(6,182,212,0.5);
+  }
+  .vB .card.popular .price { color: var(--primary-hover); }
+  .vB .card.popular h3 { color: #fff; }
+  .vB .ribbon {
+    position: absolute; top: 18px; left: -34px; transform: rotate(-45deg);
+    background: var(--primary); color: #06121e; font-size: 0.6rem; font-weight: 900;
+    letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 40px;
+  }
+
+  /* ---- Variant C: Divergente (coluna de comparação com destaque de diferencial) ---- */
+  .vC .grid3 { grid-template-columns: repeat(3, 1fr); align-items: start; }
+  .vC .card { padding-top: 34px; }
+  .vC .card .num {
+    font-size: 0.7rem; font-weight: 900; color: var(--card-border); letter-spacing: 0.1em;
+  }
+  .vC .card .differential {
+    margin-top: 14px; font-size: 0.72rem; font-weight: 700; color: var(--signal-bright);
+    border-left: 2px solid var(--signal); padding-left: 10px; line-height: 1.35;
+  }
+  .vC .card.popular { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 12px 40px rgba(6,182,212,0.18); }
+  @media (max-width: 880px) { .vC .card.popular { transform: none; } }
+
+  /* Enterprise placeholder (shared) */
+  .enterprise {
+    margin-top: 22px; border: 1px dashed var(--card-border); border-radius: var(--radius-lg);
+    background: rgba(5,15,30,0.25); padding: 26px; text-align: center;
+  }
+  .enterprise p.muted { color: var(--text-muted); font-size: 0.85rem; margin-top: 6px; }
+  .enterprise .big { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.01em; margin: 10px 0; }
+  .enterprise .cta { display: inline-block; margin-top: 14px; padding: 11px 26px; }
+
+  .footnote { text-align: center; color: var(--text-muted); font-size: 0.72rem; margin-top: 40px; }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <span class="eyebrow">Planos &amp; Preços</span>
+    <h1 class="title">Construa o histórico dos seus veículos.</h1>
+    <p class="sub">7 dias grátis, sem cartão. Três direções de layout para os cards de plano — escolha antes de eu aplicar no componente React.</p>
+    <span class="variant-tag" id="currentVariant">Variante: Conservadora (A)</span>
+  </div>
+
+  <div class="switcher">
+    <button data-v="vA" class="active">A · Conservadora</button>
+    <button data-v="vB">B · Strong-fit</button>
+    <button data-v="vC">C · Divergente</button>
+  </div>
+
+  <!-- VARIANT A -->
+  <section class="panel active vA" id="vA">
+    <div class="stage">
+      <div class="grid3">
+        <div class="card">
+          <h3>Starter</h3>
+          <p class="kicker">Para começar</p>
+          <p class="desc">Organize o pátio com histórico digital do veículo.</p>
+          <div class="price">R$ 29,90<span>/mês</span></div>
+          <ul class="feats">
+            <li>Até 20 vistorias/mês</li>
+            <li>Diagrama visual + Fotos</li>
+            <li>Assinatura digital &amp; GPS</li>
+            <li>Funcionamento offline</li>
+          </ul>
+          <a class="cta" href="#">Começar grátis</a>
+          <span class="cta-sub">Sem cartão · cancele quando quiser</span>
+        </div>
+
+        <div class="card popular">
+          <span class="badge">Melhor custo-benefício</span>
+          <h3>Pro</h3>
+          <p class="kicker">Mais escolhido</p>
+          <p class="desc">Marca personalizada no PDF e IA para descrição de avarias.</p>
+          <div class="price">R$ 79,90<span>/mês</span></div>
+          <ul class="feats">
+            <li>Tudo do Starter</li>
+            <li>Até 80 vistorias/mês</li>
+            <li>Logo e marca no PDF</li>
+            <li>IA para descrição de avarias</li>
+          </ul>
+          <a class="cta" href="#">Testar Pro grátis</a>
+          <span class="cta-sub">Sem cartão · cancele quando quiser</span>
+        </div>
+
+        <div class="card">
+          <h3>Corporativo</h3>
+          <p class="kicker">Equipe</p>
+          <p class="desc">Até 5 usuários · vistorias ilimitadas para a operação.</p>
+          <div class="price">R$ 299<span>/mês</span></div>
+          <ul class="feats">
+            <li>Vistorias ilimitadas</li>
+            <li>Até 5 usuários</li>
+            <li>Gestão de equipe</li>
+            <li>Suporte prioritário</li>
+          </ul>
+          <a class="cta-ghost" href="#">Assinar Corporativo</a>
+          <a class="cta" href="#" style="margin-top:8px">Falar com consultor</a>
+        </div>
+      </div>
+
+      <div class="enterprise">
+        <p class="kicker">Frotas / Enterprise</p>
+        <p class="big">Sob consulta</p>
+        <p class="muted">Grandes volumes, múltiplos usuários, API e SLA dedicado.</p>
+        <a class="cta" href="#">Falar com especialista</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VARIANT B -->
+  <section class="panel vB" id="vB">
+    <div class="stage">
+      <div class="grid3">
+        <div class="card">
+          <h3>Starter</h3>
+          <p class="kicker">Para começar</p>
+          <p class="desc">Organize o pátio com histórico digital do veículo.</p>
+          <div class="price">R$ 29,90<span>/mês</span></div>
+          <ul class="feats">
+            <li>Até 20 vistorias/mês</li>
+            <li>Diagrama visual + Fotos</li>
+            <li>Assinatura digital &amp; GPS</li>
+            <li>Funcionamento offline</li>
+          </ul>
+          <a class="cta" href="#">Começar grátis</a>
+          <span class="cta-sub">Sem cartão · cancele quando quiser</span>
+        </div>
+
+        <div class="card popular">
+          <span class="ribbon">Mais escolhido</span>
+          <h3>Pro</h3>
+          <p class="kicker">Melhor custo-benefício</p>
+          <p class="desc">Marca personalizada no PDF e IA para descrição de avarias.</p>
+          <div class="price">R$ 79,90<span>/mês</span></div>
+          <ul class="feats">
+            <li>Tudo do Starter</li>
+            <li>Até 80 vistorias/mês</li>
+            <li>Logo e marca no PDF</li>
+            <li>IA para descrição de avarias</li>
+          </ul>
+          <a class="cta" href="#">Testar Pro grátis</a>
+          <span class="cta-sub">Sem cartão · cancele quando quiser</span>
+        </div>
+
+        <div class="card">
+          <h3>Corporativo</h3>
+          <p class="kicker">Equipe</p>
+          <p class="desc">Até 5 usuários · vistorias ilimitadas para a operação.</p>
+          <div class="price">R$ 299<span>/mês</span></div>
+          <ul class="feats">
+            <li>Vistorias ilimitadas</li>
+            <li>Até 5 usuários</li>
+            <li>Gestão de equipe</li>
+            <li>Suporte prioritário</li>
+          </ul>
+          <a class="cta-ghost" href="#">Assinar Corporativo</a>
+          <a class="cta" href="#" style="margin-top:8px">Falar com consultor</a>
+        </div>
+      </div>
+
+      <div class="enterprise">
+        <p class="kicker">Frotas / Enterprise</p>
+        <p class="big">Sob consulta</p>
+        <p class="muted">Grandes volumes, múltiplos usuários, API e SLA dedicado.</p>
+        <a class="cta" href="#">Falar com especialista</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VARIANT C -->
+  <section class="panel vC" id="vC">
+    <div class="stage">
+      <div class="grid3">
+        <div class="card">
+          <span class="num">01</span>
+          <h3>Starter</h3>
+          <p class="kicker">Para começar</p>
+          <p class="desc">Organize o pátio com histórico digital do veículo.</p>
+          <div class="price">R$ 29,90<span>/mês</span></div>
+          <p class="differential">Ideal para quem faz vistorias ocasionais.</p>
+          <ul class="feats">
+            <li>Até 20 vistorias/mês</li>
+            <li>Diagrama visual + Fotos</li>
+            <li>Assinatura digital &amp; GPS</li>
+            <li>Funcionamento offline</li>
+          </ul>
+          <a class="cta" href="#">Começar grátis</a>
+        </div>
+
+        <div class="card popular">
+          <span class="num">02</span>
+          <h3>Pro</h3>
+          <p class="kicker">Mais escolhido</p>
+          <p class="desc">Marca personalizada no PDF e IA para descrição de avarias.</p>
+          <div class="price">R$ 79,90<span>/mês</span></div>
+          <p class="differential">Melhor custo-benefício para volume constante.</p>
+          <ul class="feats">
+            <li>Tudo do Starter</li>
+            <li>Até 80 vistorias/mês</li>
+            <li>Logo e marca no PDF</li>
+            <li>IA para descrição de avarias</li>
+          </ul>
+          <a class="cta" href="#">Testar Pro grátis</a>
+        </div>
+
+        <div class="card">
+          <span class="num">03</span>
+          <h3>Corporativo</h3>
+          <p class="kicker">Equipe</p>
+          <p class="desc">Até 5 usuários · vistorias ilimitadas para a operação.</p>
+          <div class="price">R$ 299<span>/mês</span></div>
+          <p class="differential">Centralize múltiplos inspetores na mesma base.</p>
+          <ul class="feats">
+            <li>Vistorias ilimitadas</li>
+            <li>Até 5 usuários</li>
+            <li>Gestão de equipe</li>
+            <li>Suporte prioritário</li>
+          </ul>
+          <a class="cta" href="#">Falar com consultor</a>
+        </div>
+      </div>
+
+      <div class="enterprise">
+        <p class="kicker">Frotas / Enterprise</p>
+        <p class="big">Sob consulta</p>
+        <p class="muted">Grandes volumes, múltiplos usuários, API e SLA dedicado.</p>
+        <a class="cta" href="#">Falar com especialista</a>
+      </div>
+    </div>
+  </section>
+
+  <p class="footnote">Protótipo de referência — tokens do DESIGN.md. Nenhuma mudança foi feita no componente React ainda.</p>
+
+<script>
+  const labels = { vA: 'Conservadora (A)', vB: 'Strong-fit (B)', vC: 'Divergente (C)' };
+  const tag = document.getElementById('currentVariant');
+  document.querySelectorAll('.switcher button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const v = btn.dataset.v;
+      document.querySelectorAll('.switcher button').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'));
+      document.getElementById(v).classList.add('active');
+      tag.textContent = 'Variante: ' + labels[v];
+    });
+  });
+</script>
+</body>
+</html>
