@@ -1,0 +1,161 @@
+{
+  "periodo": {
+    "inicio": "2026-09-01",
+    "fim": "2026-09-07"
+  },
+  "pessoas": {
+    "Pessoa A": {
+      "merged": [
+        {
+          "id": "task-001",
+          "titulo": "Implementar autenticação",
+          "tipo": "feature",
+          "branch": "feature/auth"
+        },
+        {
+          "id": "task-002",
+          "titulo": "Corrigir login layout",
+          "tipo": "bug",
+          "branch": "bugfix/login"
+        }
+      ],
+      "running": [
+        {
+          "id": "task-003",
+          "titulo": "Refatorar API routes",
+          "tipo": "refactor",
+          "branch": "refactor/api",
+          "progresso": "60%"
+        }
+      ],
+      "review": [],
+      "blocked": [
+        {
+          "id": "task-004",
+          "titulo": "Cache Redis",
+          "tipo": "feature",
+          "bloqueado_por": "task-003",
+          "proxima_acao": "Aguardando refactor estar merged"
+        }
+      ]
+    },
+    "Pessoa B": {
+      "merged": [
+        {
+          "id": "task-005",
+          "titulo": "Design system colors",
+          "tipo": "design",
+          "branch": "design/colors"
+        },
+        {
+          "id": "task-006",
+          "titulo": "Documentar componentes",
+          "tipo": "doc",
+          "branch": "docs/components"
+        }
+      ],
+      "running": [
+        {
+          "id": "task-007",
+          "titulo": "Redesign de dashboard",
+          "tipo": "design",
+          "branch": "design/dashboard",
+          "progresso": "40%"
+        },
+        {
+          "id": "task-008",
+          "titulo": "Criar Storybook",
+          "tipo": "inovacao",
+          "branch": "feat/storybook",
+          "progresso": "30%"
+        }
+      ],
+      "review": [],
+      "blocked": []
+    },
+    "Pessoa C": {
+      "merged": [
+        {
+          "id": "task-009",
+          "titulo": "Corrigir validação forms",
+          "tipo": "bug",
+          "branch": "bugfix/forms"
+        },
+        {
+          "id": "task-010",
+          "titulo": "Refatorar database queries",
+          "tipo": "refactor",
+          "branch": "refactor/db"
+        }
+      ],
+      "running": [
+        {
+          "id": "task-011",
+          "titulo": "Adicionar testes E2E",
+          "tipo": "feature",
+          "branch": "feat/e2e-tests",
+          "progresso": "50%"
+        }
+      ],
+      "review": [
+        {
+          "id": "task-012",
+          "titulo": "Performance otimization",
+          "tipo": "refactor",
+          "branch": "perf/optimization",
+          "gates_faltando": "Performance benchmarks"
+        }
+      ],
+      "blocked": []
+    },
+    "Pessoa D": {
+      "merged": [
+        {
+          "id": "task-013",
+          "titulo": "Criar CI/CD pipeline",
+          "tipo": "feature",
+          "branch": "infra/ci-cd"
+        },
+        {
+          "id": "task-014",
+          "titulo": "Setup GitHub Actions",
+          "tipo": "doc",
+          "branch": "docs/github-actions"
+        }
+      ],
+      "running": [
+        {
+          "id": "task-015",
+          "titulo": "Integrar lint automático",
+          "tipo": "feature",
+          "branch": "feat/lint-auto",
+          "progresso": "75%"
+        }
+      ],
+      "review": [],
+      "blocked": []
+    }
+  },
+  "resumo": {
+    "total_merged": 10,
+    "total_running": 5,
+    "total_review": 1,
+    "total_blocked": 1,
+    "bloqueadores_ativos": [
+      {
+        "task_id": "task-004",
+        "bloqueado_por": "task-003",
+        "owner_bloqueador": "Pessoa A",
+        "eta_desbloqueio": "2026-09-03"
+      }
+    ],
+    "gates_falhando": [
+      {
+        "task_id": "task-012",
+        "gates_pendentes": "Performance benchmarks",
+        "proxima_acao": "Rodar benchmarks no CI"
+      }
+    ]
+  },
+  "notas_gerais": "Semana produtiva. Pessoa A liderando features, Pessoa B focando design, Pessoa C em testes, Pessoa D em infra."
+}
