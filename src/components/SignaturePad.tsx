@@ -122,6 +122,8 @@ export default function SignaturePad({ label, value, onChange }: Props) {
         <canvas
           ref={canvasRef}
           className="w-full h-[100px] block touch-none cursor-crosshair"
+          aria-label={`Campo de assinatura: ${label}`}
+          role="img"
           onPointerDown={startDrawing}
           onPointerMove={draw}
           onPointerUp={stopDrawing}

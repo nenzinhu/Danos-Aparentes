@@ -26,6 +26,7 @@ function categoryLabel(cat: ComparisonResult['items'][0]['category']): string {
     case 'severityChanged': return 'ALTERADO'
     case 'removedOrRepaired': return 'NÃO IDENTIFICADO'
     case 'uncertain': return 'INCERTO'
+    default: return 'DESCONHECIDO'
   }
 }
 

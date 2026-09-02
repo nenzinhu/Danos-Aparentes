@@ -17,6 +17,7 @@ function ForeignToggle({ checked, onChange, label = 'Doc. estrangeiro' }: { chec
         type="checkbox"
         checked={checked}
         onChange={e => onChange(e.target.checked)}
+        aria-label={label}
         className="w-3.5 h-3.5 rounded border-[var(--btn-secondary-border)] accent-[var(--primary)] cursor-pointer"
       />
       {label}

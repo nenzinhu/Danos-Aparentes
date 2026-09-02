@@ -36,6 +36,8 @@ function categoryPill(cat: ComparisonItem['category']) {
       return <span className={`${base} bg-[var(--primary)]/15 text-violet-300 border border-[var(--primary)]/30`}>Não identificado</span>
     case 'uncertain':
       return <span className={`${base} bg-orange-500/15 text-orange-300 border border-orange-500/30`}>Incerto</span>
+    default:
+      return <span className={`${base} bg-gray-500/15 text-gray-300 border border-gray-500/30`}>Desconhecido</span>
   }
 }
 

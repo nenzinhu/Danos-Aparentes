@@ -15,6 +15,12 @@ import SpeechButton from './SpeechButton'
 import { isNewDamage, type PreviousReportSummary } from '../lib/reportComparison'
 import { evidenceStatusBadgeColors, formatEvidenceStatusLabel } from '../lib/evidenceStatus'
 import { IconCamera, IconTag } from './ui/AnimatedIcons'
+import { SEV_LABEL } from '../lib/pdf/theme'
+
+const SEV_COLOR = { low: '#94a3b8', medium: '#f97316', high: '#ef4444' } satisfies Record<Severity, string>
+const VIEW_LABEL = {
+  'lateral-left': 'Lat. Esq.', 'lateral-right': 'Lat. Dir.', frontal: 'Frontal', traseira: 'Traseira'
+} satisfies Record<ViewType, string>
 
 interface Props {
   damages: Damage[]
@@ -27,11 +33,7 @@ interface Props {
   onToast?: (msg: string) => void
 }
 
-const SEV_LABEL = { low: 'Leve', medium: 'Média', high: 'Grave' } satisfies Record<Severity, string>
 const SEV_COLOR = { low: '#94a3b8', medium: '#f97316', high: '#ef4444' } satisfies Record<Severity, string>
-const VIEW_LABEL = {
-  'lateral-left': 'Lat. Esq.', 'lateral-right': 'Lat. Dir.', frontal: 'Frontal', traseira: 'Traseira'
-} satisfies Record<ViewType, string>
 
 export default function DamageList({
   damages,
