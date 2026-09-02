@@ -96,3 +96,20 @@ export interface PdfVerifyRecord {
   inspection_status: string | null
   is_superseded_version: boolean
 }
+
+/* -------------------------------------------------------------------------- */
+/* Re-exports do domínio vehicleEvidence — fonte canônica: vehicleEvidence/types.ts */
+/* -------------------------------------------------------------------------- */
+
+export type {
+  ComparisonCategory,
+  ComparisonItem,
+  ComparisonSummary,
+  ComparisonResult,
+  ComparisonDecision,
+  ComparisonReviewDecision,
+  VehicleEventType,
+  VehicleEvent,
+  VehicleEvidenceAuditEventType,
+  VehicleEvidenceAuditEvent,
+} from '../lib/vehicleEvidence/types'
