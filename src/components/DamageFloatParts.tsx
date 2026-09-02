@@ -6,6 +6,7 @@ import { IconEraser } from './ui/AnimatedIcons'
 import type { AiOriginalSuggestion } from '../lib/aiDecisions'
 import { formatEvidenceStatusLabel } from '../lib/evidenceStatus'
 import { SEV, TYPES, type AiClassifyState } from './damageFloatLogic'
+import { SharedSvgDefs } from './ui/DamageTypeIcons'
 
 export function TypePickerGrid({
   currentType,
@@ -15,7 +16,9 @@ export function TypePickerGrid({
   onPickType: (type: DamageType, label: string) => void
 }) {
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <>
+      <SharedSvgDefs />
+      <div className="grid grid-cols-3 gap-2">
       {TYPES.map((t, i) => {
         const isActive = currentType === t.type
         return (
@@ -47,6 +50,7 @@ export function TypePickerGrid({
         )
       })}
     </div>
+    </>
   )
 }
 

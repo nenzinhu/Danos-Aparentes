@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { resolveCalloutCollisions } from './DamageCallouts'
+import { resolveCalloutCollisions } from '../lib/calloutLayout'
 
 type Item = Parameters<typeof resolveCalloutCollisions>[0][number]
 

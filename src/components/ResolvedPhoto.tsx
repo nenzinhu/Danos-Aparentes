@@ -28,5 +28,17 @@ export function ResolvedPhoto({
     return <div className={`bg-black/20 animate-pulse ${className ?? ''}`} aria-hidden="true" />
   }
 
-  return <Image src={src} alt={alt} className={className} onClick={onClick} width={800} height={600} />
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      className={className}
+      onClick={onClick}
+      width={800}
+      height={600}
+      loading="lazy"
+      placeholder="blur"
+      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+    />
+  )
 }

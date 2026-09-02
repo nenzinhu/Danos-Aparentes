@@ -23,7 +23,7 @@ export function IconVehicleCar({ className = '', size = 20 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 1 12.5V16c0 .6.4 1 1 1h2" />
       <circle cx="7" cy="17" r="2" />
       <path d="M9 17h6" />
@@ -50,7 +50,7 @@ export function IconVehicleCar2d({ className = '', size = 20 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <path d="M5 17h14M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13v3a1 1 0 0 1-1 1h-1M4 17h-1a1 1 0 0 1-1-1v-3" />
       <circle cx="7.5" cy="16.5" r="2" />
       <circle cx="16.5" cy="16.5" r="2" />
@@ -78,7 +78,7 @@ export function IconVehicleMoto({ className = '', size = 20 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}
+      className={`animated-icon-base ${className}`}
       style={{ transformOrigin: '50% 100%' }}>
       <circle cx="5" cy="16" r="3" />
       <circle cx="19" cy="16" r="3" />
@@ -106,7 +106,7 @@ export function IconVehicleTruck({ className = '', size = 20 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <rect x="1" y="3" width="14" height="13" rx="1" />
       <path d="M15 8h4l3 3v5h-7V8z" />
       <circle cx="5.5" cy="18.5" r="2.5" />
@@ -133,7 +133,7 @@ export function IconVehicleVan({ className = '', size = 20 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <path d="M3 6h11a2 2 0 0 1 2 2v8H3V6z" />
       <path d="M16 8h3l3 3v5h-6V8z" />
       <circle cx="7" cy="18" r="2" />
@@ -161,7 +161,7 @@ export function IconVehicleBus({ className = '', size = 20 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <rect x="4" y="3" width="16" height="15" rx="2" />
       <line x1="4" y1="11" x2="20" y2="11" />
       <line x1="12" y1="3" x2="12" y2="11" />
@@ -190,7 +190,7 @@ export function IconVehicleMicrobus({ className = '', size = 20 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <path d="M2 6a2 2 0 0 1 2-2h12a3 3 0 0 1 3 3v9H2V6z" />
       <circle cx="6" cy="18" r="2" />
       <circle cx="15" cy="18" r="2" />
@@ -209,7 +209,7 @@ export function IconDamageScratch({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
     </svg>
   );
@@ -234,7 +234,7 @@ export function IconDamageDent({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}
+      className={`animated-icon-base ${className}`}
       style={{ transformOrigin: '100% 100%' }}>
       <path d="M15 12l-8.5 8.5a2.121 2.121 0 0 1-3-3L12 9" />
       <path d="M17.64 3.64a2 2 0 0 1 2.83 0l.89.89a2 2 0 0 1 0 2.83L17.5 11.23l-4.73-4.73 4.87-2.86z" />
@@ -260,7 +260,7 @@ export function IconDamageBroken({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}
+      className={`animated-icon-base ${className}`}
       style={{ transformOrigin: '50% 50%' }}>
       <path d="M12 2L2 7l10 5 10-5-10-5z" />
       <path d="M2 17l10 5 10-5" />

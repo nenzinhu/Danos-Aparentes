@@ -22,6 +22,34 @@ function PanelDefs({ id }: { id: string }) {
 const PANEL_D =
   'M21,4 L48,6 C54,6.5 58,11 57,17 L55,36 C54.5,41 50,44.5 44,44 L17,42.5 C11,42 7,37 7.5,31 L9,15 C9.5,9.5 14,4.5 21,4 Z';
 
+/**
+ * Shared SVG defs rendered once at the document level — filters are reused by all three
+ * badge components via document-wide ID lookup (inline SVG shares the same DOM).
+ * Render this component once near the root of any page that uses the badge icons.
+ */
+export function SharedSvgDefs() {
+  return (
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}
+    >
+      <defs>
+        {/* Badge pill glow — feGaussianBlur stdDeviation 3; used by all three level pills */}
+        <filter id="badge-pill-glow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+        {/* Badge pedestal / orb halo glow — feGaussianBlur stdDeviation 4 */}
+        <filter id="badge-pedestal-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="4" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
 /** Riscos / Abrasão — metal panel raked with parallel scratch scuffs. */
 export function IconScratchDamage({ className = '', size = 32, ...rest }: DamageIconProps) {
   return (
@@ -114,19 +142,10 @@ export function IconScratchDamageBadge({ className = '', size = 180, ...rest }: 
           <stop offset="100%" stopColor="#450a0a" />
         </linearGradient>
 
-        <filter id="green-glow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-
-        <filter id="rose-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
       </defs>
 
       {/* Top Green Badge Pill: NÍVEL 1: SUPERFICIAL */}
-      <g filter="url(#green-glow)">
+      <g filter="url(#badge-pill-glow)">
         <rect x="25" y="10" width="150" height="24" rx="12" fill="url(#green-pill-grad)" stroke="#86efac" strokeWidth="1" />
         <circle cx="37" cy="22" r="5" fill="#ffffff" />
         <circle cx="37" cy="22" r="3" fill="#22c55e" />
@@ -136,7 +155,7 @@ export function IconScratchDamageBadge({ className = '', size = 180, ...rest }: 
       </g>
 
       {/* Pedestal Base Rings */}
-      <ellipse cx="100" cy="152" rx="72" ry="16" fill="none" stroke="#f43f5e" strokeWidth="2" opacity="0.6" filter="url(#rose-glow)" />
+      <ellipse cx="100" cy="152" rx="72" ry="16" fill="none" stroke="#f43f5e" strokeWidth="2" opacity="0.6" filter="url(#badge-pedestal-glow)" />
       <ellipse cx="100" cy="156" rx="64" ry="13" fill="none" stroke="#e2e8f0" strokeWidth="1.5" opacity="0.8" />
       <ellipse cx="100" cy="160" rx="54" ry="10" fill="none" stroke="#fda4af" strokeWidth="1" opacity="0.4" />
 
@@ -202,19 +221,10 @@ export function IconDentDamageBadge({ className = '', size = 180, ...rest }: Dam
           <stop offset="100%" stopColor="#2563eb" stopOpacity="0" />
         </radialGradient>
 
-        <filter id="amber-glow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-
-        <filter id="cyan-glow-2" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
       </defs>
 
       {/* Top Amber Badge Pill: NÍVEL 2: ESTRUTURAL */}
-      <g filter="url(#amber-glow)">
+      <g filter="url(#badge-pill-glow)">
         <rect x="25" y="10" width="150" height="24" rx="12" fill="url(#amber-pill-grad)" stroke="#fde047" strokeWidth="1" />
         <circle cx="37" cy="22" r="5" fill="#ffffff" />
         <circle cx="37" cy="22" r="3" fill="#f59e0b" />
@@ -224,7 +234,7 @@ export function IconDentDamageBadge({ className = '', size = 180, ...rest }: Dam
       </g>
 
       {/* Pedestal Base Rings */}
-      <ellipse cx="100" cy="152" rx="72" ry="16" fill="none" stroke="#38bdf8" strokeWidth="2.5" opacity="0.85" filter="url(#cyan-glow-2)" />
+      <ellipse cx="100" cy="152" rx="72" ry="16" fill="none" stroke="#38bdf8" strokeWidth="2.5" opacity="0.85" filter="url(#badge-pedestal-glow)" />
       <ellipse cx="100" cy="156" rx="64" ry="13" fill="none" stroke="#0284c7" strokeWidth="1.5" opacity="0.6" />
       <ellipse cx="100" cy="160" rx="54" ry="10" fill="none" stroke="#e0f2fe" strokeWidth="1" opacity="0.4" />
 
@@ -275,20 +285,10 @@ export function IconBrokenGlassSphere({ className = '', size = 180, ...rest }: D
           <stop offset="100%" stopColor="#0f172a" stopOpacity="0.85" />
         </radialGradient>
 
-        {/* Outer Halo Glow Filter */}
-        <filter id="cyan-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="4" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-
-        <filter id="red-glow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
       </defs>
 
       {/* Top Red Badge Pill: NÍVEL 3: CRÍTICO */}
-      <g filter="url(#red-glow)">
+      <g filter="url(#badge-pill-glow)">
         <rect x="35" y="10" width="130" height="24" rx="12" fill="url(#red-pill-grad)" stroke="#fca5a5" strokeWidth="1" />
         <circle cx="47" cy="22" r="5" fill="#ffffff" />
         <circle cx="47" cy="22" r="3" fill="#ef4444" />
@@ -298,12 +298,12 @@ export function IconBrokenGlassSphere({ className = '', size = 180, ...rest }: D
       </g>
 
       {/* Holographic Pedestal / Base Rings */}
-      <ellipse cx="100" cy="152" rx="72" ry="16" fill="none" stroke="#38bdf8" strokeWidth="2.5" opacity="0.85" filter="url(#cyan-glow)" />
+      <ellipse cx="100" cy="152" rx="72" ry="16" fill="none" stroke="#38bdf8" strokeWidth="2.5" opacity="0.85" filter="url(#badge-pedestal-glow)" />
       <ellipse cx="100" cy="156" rx="64" ry="13" fill="none" stroke="#0284c7" strokeWidth="1.5" opacity="0.6" />
       <ellipse cx="100" cy="160" rx="54" ry="10" fill="none" stroke="#e0f2fe" strokeWidth="1" opacity="0.4" />
 
       {/* Central Glass Orb */}
-      <circle cx="100" cy="92" r="52" fill="url(#glass-orb-grad)" stroke="#38bdf8" strokeWidth="2" filter="url(#cyan-glow)" />
+      <circle cx="100" cy="92" r="52" fill="url(#glass-orb-grad)" stroke="#38bdf8" strokeWidth="2" filter="url(#badge-pedestal-glow)" />
 
       {/* Glass Orb Top Highlight Arc */}
       <path d="M 62 70 A 44 44 0 0 1 138 70" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" opacity="0.75" fill="none" />

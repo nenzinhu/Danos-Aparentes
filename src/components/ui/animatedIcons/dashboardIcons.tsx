@@ -22,7 +22,7 @@ export function IconChart({ className = '', size = 48 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 48 48" fill="none"
       stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <rect data-bar="" x="6" y="28" width="8" height="14" rx="2" opacity="0.5" />
       <rect data-bar="" x="20" y="18" width="8" height="24" rx="2" opacity="0.7" />
       <rect data-bar="" x="34" y="10" width="8" height="32" rx="2" />
@@ -38,7 +38,7 @@ export function IconFolder({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
     </svg>
   );
@@ -58,7 +58,7 @@ export function IconWarning({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}
+      className={`animated-icon-base ${className}`}
       style={{ transformOrigin: '50% 50%' }}>
       <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
       <line x1="12" y1="9" x2="12" y2="13" />
@@ -80,7 +80,7 @@ export function IconPin({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
       <circle cx="12" cy="10" r="3" />
     </svg>
@@ -102,7 +102,7 @@ export function IconBolt({ className = '', size = 14 }: IconProps) {
   }, []);
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="currentColor"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
     </svg>
   );
@@ -115,7 +115,7 @@ export function IconBarChart({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <line x1="18" y1="20" x2="18" y2="10" />
       <line x1="12" y1="20" x2="12" y2="4" />
       <line x1="6" y1="20" x2="6" y2="14" />
@@ -130,7 +130,7 @@ export function IconTrend({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
       <polyline points="17 6 23 6 23 12" />
     </svg>
@@ -150,7 +150,7 @@ export function IconBulb({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <line x1="9" y1="18" x2="15" y2="18" />
       <line x1="10" y1="22" x2="14" y2="22" />
       <path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14" />
@@ -170,7 +170,7 @@ export function IconSync({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}
+      className={`animated-icon-base ${className}`}
       style={{ transformOrigin: '50% 50%' }}>
       <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
     </svg>
@@ -190,7 +190,7 @@ export function IconOffline({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <line x1="1" y1="1" x2="23" y2="23" />
       <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55" />
       <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39" />
@@ -209,7 +209,7 @@ export function IconGift({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <polyline points="20 12 20 22 4 22 4 12" />
       <rect x="2" y="7" width="20" height="5" />
       <line x1="12" y1="22" x2="12" y2="7" />
@@ -238,7 +238,7 @@ export function IconSettings({ className = '', size = 14 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}
+      className={`animated-icon-base ${className}`}
       style={{ transformOrigin: '50% 50%' }}>
       <circle cx="12" cy="12" r="3" />
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -253,7 +253,7 @@ export function IconGlobe({ className = '', size = 12 }: IconProps) {
   return (
     <svg ref={ref} width={size} height={size} viewBox="0 0 24 24" fill="none"
       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={`inline-block ${className}`}>
+      className={`animated-icon-base ${className}`}>
       <circle cx="12" cy="12" r="10" />
       <line x1="2" y1="12" x2="22" y2="12" />
       <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />

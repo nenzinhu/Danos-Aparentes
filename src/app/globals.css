@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  /* Base class for all animated SVG icons.
+     Eliminates the repeated inline-block template literal across
+     dashboardIcons.tsx, generalIcons.tsx and vehicleIcons.tsx. */
+  .animated-icon-base {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
 /* ============================================================
    GOVERNANÇA DO DESIGN SYSTEM — Danos Aparentes
    Leia antes de adicionar cor ou forma nova.
