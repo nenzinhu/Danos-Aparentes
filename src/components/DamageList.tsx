@@ -33,8 +33,6 @@ interface Props {
   onToast?: (msg: string) => void
 }
 
-const SEV_COLOR = { low: '#94a3b8', medium: '#f97316', high: '#ef4444' } satisfies Record<Severity, string>
-
 export default function DamageList({
   damages,
   onRemove,
