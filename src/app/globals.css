@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Modo de manutenção: preserva rolagem vertical e oculta widgets globais. */
+body:has([data-maintenance-root]) {
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #070a10;
+}
+
+body:has([data-maintenance-root]) > :not([data-maintenance-root]) {
+  display: none !important;
+}
+
 @layer components {
   /* Base class for all animated SVG icons.
      Eliminates the repeated inline-block template literal across

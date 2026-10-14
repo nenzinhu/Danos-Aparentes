@@ -15,7 +15,6 @@
  *  Lei 9.279/96, Lei 9.610/98 e Código Penal Brasileiro.
  * ============================================================
  */
-import { Outfit, Saira_Condensed, IBM_Plex_Mono } from 'next/font/google'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
@@ -27,20 +26,6 @@ import {
   SEO_PRIMARY,
   SEO_KEYWORDS,
 } from '../lib/b2bPositioning'
-
-const outfit = Outfit({ subsets: ['latin'], display: 'swap', variable: '--font-outfit' })
-const sairaCondensed = Saira_Condensed({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  display: 'swap',
-  variable: '--font-display',
-})
-const plexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  display: 'swap',
-  variable: '--font-mono-data',
-})
 
 const SITE_URL = 'https://danosaparentes.com.br'
 
@@ -320,7 +305,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${outfit.variable} ${outfit.className} ${sairaCondensed.variable} ${plexMono.variable} min-h-screen selection:bg-primary selection:text-white`}>
+      <body className="min-h-screen font-sans selection:bg-primary selection:text-white">
         {children}
         <ChunkErrorReload />
         <CookieConsentBanner />
